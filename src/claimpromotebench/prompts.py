@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -21,20 +20,61 @@ def prompt_payload(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _flatten(value: Any, pointer: str = "") -> list[str]:
-    lines: list[str] = []
-    if isinstance(value, dict):
-        for key in sorted(value):
-            lines.extend(_flatten(value[key], f"{pointer}/{key}"))
-    elif isinstance(value, list):
-        if not value:
-            lines.append(f"{pointer} has the empty list as its value.")
-        else:
-            for index, child in enumerate(value):
-                lines.extend(_flatten(child, f"{pointer}/{index}"))
-    else:
-        lines.append(f"{pointer} has value {json.dumps(value, ensure_ascii=False)}.")
-    return lines
+def _state_sentence(label: str, state: dict[str, Any]) -> str:
+    return (
+        f"{label}: research is {state['research_status']}; computation is "
+        f"{state['computation_status']}; formal certification is {state['formal_status']}; "
+        f"independent review is {state['review_status']}."
+    )
+
+
+def _narrative(item: dict[str, Any]) -> str:
+    context = item["claim_context"]
+    transition = item["requested_transition"]
+    lines = [
+        f"Claim: {item['claim_text']}",
+        f"The claim identifier is {context['claim_id']}; its exact formal-statement digest is "
+        f"{context['statement_sha256']}. The author is {context['author_id']} in environment "
+        f"{context['author_environment_sha256']}.",
+        _state_sentence("Current state", item["current_state"]),
+        _state_sentence("Requested target state", transition["target_state"]),
+        "The requested transition cites this basis: "
+        + (", ".join(transition["basis_evidence_ids"]) or "none"),
+    ]
+    if "required_domain" in context:
+        lines.append(
+            "The claim's required numerical domain is "
+            f"{canonical_json(context['required_domain'])}."
+        )
+    if item["current_state_basis"]:
+        lines.append(
+            "Current elevated axes have these bound bases: "
+            f"{canonical_json(item['current_state_basis'])}."
+        )
+    for index, evidence in enumerate(item["evidence"], start=1):
+        provenance = evidence["provenance"]
+        scope = evidence["scope"]
+        lines.append(
+            f"Evidence {index}, ID {evidence['id']}, is type {evidence['type']}. It was produced "
+            f"by actor {provenance['actor_id']} with role {provenance['actor_role']} in run "
+            f"{provenance['run_id']} and environment {provenance['environment_sha256']}; cold "
+            f"start is {str(provenance['cold_start']).lower()}. Its artifact is "
+            f"{evidence['artifact_path']} with digest {evidence['artifact_hash']}. Its complete "
+            f"scope is {canonical_json(scope)}. Dependencies are "
+            f"{canonical_json(evidence['dependencies'])}; tool exit is "
+            f"{canonical_json(evidence['tool_exit'])}; verifier result is "
+            f"{evidence['verifier_result']}; timestamp is {evidence['timestamp']}."
+        )
+    return "\n".join(lines)
+
+
+def _policy_contract(policy: dict[str, Any], evaluation_time: str) -> str:
+    public_policy = deepcopy(policy)
+    public_policy["evaluation_time"] = evaluation_time
+    return (
+        "Versioned policy contract (all thresholds and trust anchors are authoritative):\n"
+        f"{canonical_json(public_policy)}"
+    )
 
 
 def _verifier_readout(item: dict[str, Any], dataset_dir: Path | None) -> list[str]:
@@ -64,11 +104,20 @@ def _verifier_readout(item: dict[str, Any], dataset_dir: Path | None) -> list[st
     return lines
 
 
-def render_prompt(item: dict[str, Any], arm: str, dataset_dir: Path | None = None) -> str:
+def render_prompt(
+    item: dict[str, Any],
+    arm: str,
+    dataset_dir: Path | None = None,
+    *,
+    policy: dict[str, Any] | None = None,
+    evaluation_time: str | None = None,
+) -> str:
     """Render one item without family, pair, gold, or oracle-action leakage."""
 
     if arm not in ARMS:
         raise ValueError(f"unknown arm: {arm}")
+    if policy is None or evaluation_time is None:
+        raise ValueError("all model-facing prompts require the complete policy and evaluation_time")
     payload = prompt_payload(item)
     header = (
         "Decide whether the requested mathematical research claim-state transition is "
@@ -76,9 +125,7 @@ def render_prompt(item: dict[str, Any], arm: str, dataset_dir: Path | None = Non
         "certification, independent review, and mathematical resolution as separate axes."
     )
     if arm == "narrative":
-        body = "Evidence record expressed as complete field statements:\n" + "\n".join(
-            _flatten(payload)
-        )
+        body = "Evidence record expressed as semantic prose:\n" + _narrative(payload)
     else:
         body = f"Typed evidence ledger (canonical JSON):\n{canonical_json(payload)}"
     additions: list[str] = []
@@ -94,4 +141,7 @@ def render_prompt(item: dict[str, Any], arm: str, dataset_dir: Path | None = Non
         "ESCALATE), proposed_state, p_admissible in [0,1], used_evidence_ids, reason_codes, "
         "and missing_evidence_ids. Do not add prose."
     )
-    return "\n\n".join([header, body, *additions, contract]) + "\n"
+    return (
+        "\n\n".join([header, _policy_contract(policy, evaluation_time), body, *additions, contract])
+        + "\n"
+    )

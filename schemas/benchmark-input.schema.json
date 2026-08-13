@@ -27,6 +27,15 @@
         }
       }}}
     },
+    "basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ids", "bound_artifact_sha256"],
+      "properties": {
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "bound_artifact_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "evidence": {
       "type": "object", "additionalProperties": false,
       "required": ["id", "type", "provenance", "artifact_path", "artifact_hash", "scope", "dependencies", "tool_exit", "verifier_result", "timestamp"],
@@ -47,7 +56,7 @@
         "artifact_path": {"type": "string", "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))artifacts/[A-Za-z0-9._/-]+$"},
         "artifact_hash": {"$ref": "#/$defs/sha256"},
         "scope": {
-          "type": "object", "additionalProperties": false, "required": ["claim_id"],
+          "type": "object", "additionalProperties": false, "required": ["claim_id", "statement_sha256"],
           "properties": {
             "claim_id": {"type": "string", "minLength": 1},
             "statement_sha256": {"$ref": "#/$defs/sha256"},
@@ -88,7 +97,6 @@
         "author_id": {"type": "string", "minLength": 1},
         "author_environment_sha256": {"$ref": "#/$defs/sha256"},
         "statement_sha256": {"$ref": "#/$defs/sha256"},
-        "bound_artifact_sha256": {"$ref": "#/$defs/sha256"},
         "required_domain": {"$ref": "#/$defs/domain"}
       }
     },
@@ -96,10 +104,9 @@
     "current_state_basis": {
       "type": "object", "additionalProperties": false,
       "properties": {
-        "research_status": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
-        "computation_status": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
-        "formal_status": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
-        "review_status": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+        "computation_status": {"$ref": "#/$defs/basis"},
+        "formal_status": {"$ref": "#/$defs/basis"},
+        "review_status": {"$ref": "#/$defs/basis"}
       }
     },
     "requested_transition": {

@@ -24,9 +24,20 @@ Primary metrics:
 3. Paired Transition Accuracy: both controlled members must have the exact action.
 
 Secondary metrics include promotion FDR and coverage, counterfactual flip accuracy, Brier
-score, NLL, risk–coverage / AURC, reason-code macro-F1, evidence-ID precision/recall, and
+score, NLL, risk–coverage / trapezoidal AURC, per-instance reason-code set-F1,
+evidence-ID precision/recall, and
 missing-evidence exact match. If there is no predicted promotion, FDR is `null` with
 `defined=false`, never zero or NaN.
+
+The alpha's AURC is the trapezoidal area under risk at unique `p_admissible` thresholds,
+starting at `(coverage=0, risk=0)` and adding all tied scores together. It is labelled
+`aurc_trapezoid` in machine output; it must not be compared to stepwise or rank-averaged AURC
+without recomputation.
+
+`false_hold_rate` counts every gold-valid transition whose prediction is not `ALLOW`; literal
+`HOLD` predictions on valid items are also reported separately as a diagnostic. The alpha's
+reason-code score averages set-F1 across instances and is named `reason_code_instance_set_f1`;
+it is not conventional label-wise macro-F1.
 
 Gate reports include intent FPR, effective FPR, catch rate, false-block rate, and recovery
 after a block. Operational reports include median/p95 latency, output tokens, and verifier
@@ -41,4 +52,3 @@ correction. Seeds are repeated stochastic runs, not independent datasets.
 
 Alpha family estimates contain only three or four pairs. They validate computation and
 report formatting and must be labelled preliminary pipeline checks, not scientific findings.
-

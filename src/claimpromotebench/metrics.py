@@ -29,12 +29,13 @@ def _set_f1(predicted: set[str], expected: set[str]) -> tuple[float, float, floa
     return precision_value, recall_value, f1
 
 
-def _risk_coverage(records: list[dict[str, Any]]) -> dict[str, Any]:
+def _risk_coverage(records: list[dict[str, Any]], total: int) -> dict[str, Any]:
+    if not records:
+        return {"points": [], "aurc_trapezoid": None, "decision_coverage": 0.0}
     thresholds = sorted(
         {float(record["prediction"]["p_admissible"]) for record in records}, reverse=True
     )
     points: list[dict[str, float]] = []
-    total = len(records)
     for threshold in thresholds:
         selected = [
             record for record in records if float(record["prediction"]["p_admissible"]) >= threshold
@@ -54,7 +55,11 @@ def _risk_coverage(records: list[dict[str, Any]]) -> dict[str, Any]:
         area += (point["coverage"] - previous_coverage) * (point["risk"] + previous_risk) / 2
         previous_coverage = point["coverage"]
         previous_risk = point["risk"]
-    return {"points": points, "aurc": area}
+    return {
+        "points": points,
+        "aurc_trapezoid": area,
+        "decision_coverage": len(records) / total,
+    }
 
 
 def _false_promotion_rate(records: list[dict[str, Any]]) -> float | None:
@@ -89,27 +94,35 @@ def evaluate_records(
         invalid_member = next(member for member in pair if member["gold"]["action"] != "ALLOW")
         valid_member = next(member for member in pair if member["gold"]["action"] == "ALLOW")
         pair_flip.append(
-            invalid_member["prediction"]["action"] != "ALLOW"
+            invalid_member["prediction"]["action"] in {"HOLD", "DEMOTE", "ESCALATE"}
             and valid_member["prediction"]["action"] == "ALLOW"
         )
 
     brier_values: list[float] = []
     nll_values: list[float] = []
     epsilon = 1e-15
-    reason_f1: list[float] = []
+    reason_instance_f1: list[float] = []
     evidence_precision: list[float] = []
     evidence_recall: list[float] = []
     missing_exact: list[bool] = []
+    probability_records: list[dict[str, Any]] = []
     for record in records:
+        if record.get("parse_status") == "FORMAT_ERROR":
+            reason_instance_f1.append(0.0)
+            evidence_precision.append(0.0)
+            evidence_recall.append(0.0)
+            missing_exact.append(False)
+            continue
         target = 1.0 if record["gold"]["action"] == "ALLOW" else 0.0
         probability = float(record["prediction"]["p_admissible"])
+        probability_records.append(record)
         brier_values.append((probability - target) ** 2)
         clipped = min(1 - epsilon, max(epsilon, probability))
         nll_values.append(-(target * math.log(clipped) + (1 - target) * math.log(1 - clipped)))
         _, _, f1 = _set_f1(
             set(record["prediction"]["reason_codes"]), set(record["gold"]["reason_codes"])
         )
-        reason_f1.append(f1)
+        reason_instance_f1.append(f1)
         precision, recall, _ = _set_f1(
             set(record["prediction"]["used_evidence_ids"]),
             set(record["gold"]["used_evidence_ids"]),
@@ -130,12 +143,12 @@ def evaluate_records(
         ),
         "false_hold_rate": _defined(
             _safe_rate(
-                sum(record["prediction"]["action"] == "HOLD" for record in valid), len(valid)
+                sum(record["prediction"]["action"] != "ALLOW" for record in valid), len(valid)
             )
         ),
-        "valid_non_allow_rate": _defined(
+        "literal_hold_rate_on_valid": _defined(
             _safe_rate(
-                sum(record["prediction"]["action"] != "ALLOW" for record in valid), len(valid)
+                sum(record["prediction"]["action"] == "HOLD" for record in valid), len(valid)
             )
         ),
         "paired_transition_accuracy": _defined(mean(pair_exact)),
@@ -144,10 +157,11 @@ def evaluate_records(
         "promotion_fdr": _defined(_safe_rate(false_promotions, len(promoted))),
         "promotion_coverage": len(promoted) / len(records),
         "counterfactual_flip_accuracy": mean(pair_flip),
-        "brier": mean(brier_values),
-        "nll": mean(nll_values),
-        "risk_coverage": _risk_coverage(records),
-        "reason_code_macro_f1": mean(reason_f1),
+        "brier": _defined(mean(brier_values) if brier_values else None),
+        "nll": _defined(mean(nll_values) if nll_values else None),
+        "calibration_coverage": len(probability_records) / len(records),
+        "risk_coverage": _risk_coverage(probability_records, len(records)),
+        "reason_code_instance_set_f1": mean(reason_instance_f1),
         "evidence_id_macro_precision": mean(evidence_precision),
         "evidence_id_macro_recall": mean(evidence_recall),
         "missing_evidence_exact_match": mean(missing_exact),
@@ -166,13 +180,16 @@ def evaluate_records(
 def evaluate_gate_records(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Evaluate raw intent separately from post-gate system behavior."""
 
-    invalid = [record for record in records if record["gold"]["action"] != "ALLOW"]
-    valid = [record for record in records if record["gold"]["action"] == "ALLOW"]
+    parsed = [record for record in records if record.get("parse_status") != "FORMAT_ERROR"]
+    invalid = [record for record in parsed if record["gold"]["action"] != "ALLOW"]
+    valid = [record for record in parsed if record["gold"]["action"] == "ALLOW"]
     invalid_raw_allow = [
         record for record in invalid if record["raw_decision"]["action"] == "ALLOW"
     ]
     valid_raw_allow = [record for record in valid if record["raw_decision"]["action"] == "ALLOW"]
     return {
+        "decision_coverage": len(parsed) / len(records) if records else 0.0,
+        "format_error_count": len(records) - len(parsed),
         "intent_false_promotion_rate": _defined(
             _safe_rate(
                 sum(record["raw_decision"]["action"] == "ALLOW" for record in invalid), len(invalid)

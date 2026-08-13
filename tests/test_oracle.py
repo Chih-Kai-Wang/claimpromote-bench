@@ -74,3 +74,109 @@ def test_formal_certificate_cannot_resolve_research_claim(inputs, policy, manife
     result = evaluate(item, policy, manifest["evaluation_time"])
     assert result["action"] == "HOLD"
     assert "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY" in result["reason_codes"]
+
+
+def test_dependency_must_finish_and_pass(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "dep-03" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    item = deepcopy(valid)
+    dependency = next(
+        evidence
+        for evidence in item["evidence"]
+        if evidence["id"] not in item["requested_transition"]["basis_evidence_ids"]
+    )
+    dependency["tool_exit"] = None
+    dependency["verifier_result"] = "UNKNOWN"
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "HOLD"
+    assert "DEPENDENCY_RUNTIME_FAILURE" in result["reason_codes"]
+    assert "DEPENDENCY_NOT_VERIFIED" in result["reason_codes"]
+
+
+def test_review_role_must_be_independent(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "prov-01" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    item = deepcopy(valid)
+    review = next(evidence for evidence in item["evidence"] if evidence["type"] == "REVIEW")
+    review["provenance"]["actor_role"] = "CLAIM_AUTHOR"
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "HOLD"
+    assert "REVIEWER_ROLE_NOT_INDEPENDENT" in result["reason_codes"]
+
+
+def test_transition_root_type_cannot_be_spoofed(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "formal-03" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    item = deepcopy(valid)
+    certificate_id = item["requested_transition"]["basis_evidence_ids"][0]
+    artifact = deepcopy(next(e for e in item["evidence"] if e["id"] == certificate_id))
+    artifact["id"] = "generic-root"
+    artifact["type"] = "ARTIFACT"
+    artifact["dependencies"] = [certificate_id]
+    item["evidence"].append(artifact)
+    item["requested_transition"]["basis_evidence_ids"] = ["generic-root"]
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "HOLD"
+    assert "FORMAL_BASIS_TYPE_MISMATCH" in result["reason_codes"]
+
+
+def test_formal_scope_and_provenance_fail_closed(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "formal-03" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    item = deepcopy(valid)
+    certificate = next(e for e in item["evidence"] if e["type"] == "FORMAL_CERTIFICATE")
+    certificate["scope"].pop("statement_sha256")
+    certificate["provenance"]["actor_role"] = "CLAIM_AUTHOR"
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "HOLD"
+    assert "STATEMENT_HASH_MISMATCH" in result["reason_codes"]
+    assert "FORMAL_PROVENANCE_NOT_TOOL" in result["reason_codes"]
+
+
+def test_elevated_current_axis_requires_typed_bound_basis(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "stale-02" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    missing = deepcopy(valid)
+    missing["current_state_basis"] = {}
+    missing_result = evaluate(missing, policy, manifest["evaluation_time"])
+    assert missing_result["action"] == "DEMOTE"
+    spoofed = deepcopy(valid)
+    basis_id = spoofed["current_state_basis"]["computation_status"]["evidence_ids"][0]
+    next(e for e in spoofed["evidence"] if e["id"] == basis_id)["type"] = "REVIEW"
+    spoofed_result = evaluate(spoofed, policy, manifest["evaluation_time"])
+    assert spoofed_result["action"] == "DEMOTE"
+
+
+def test_only_authoritative_contradiction_escalates(inputs, policy, manifest) -> None:
+    invalid = next(
+        item
+        for item in inputs
+        if "stale-03" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ESCALATE"
+    )
+    item = deepcopy(invalid)
+    contradiction = next(e for e in item["evidence"] if e["type"] == "CONTRADICTION")
+    contradiction["provenance"]["actor_role"] = "CLAIM_AUTHOR"
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "ALLOW"
+    assert "UNRESOLVED_CONTRADICTION" not in result["reason_codes"]

@@ -13,16 +13,17 @@ preserving valid promotion?
 The benchmark evaluates a requested **evidence-state transition**. It is not a general truth
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
-offline baselines, gate semantics, and evaluation pipeline before any model experiment.
+offline baselines, gate semantics, baseline evaluator, and complete run-record evaluator
+before any model experiment. The full arm-comparison automation remains pending.
 
 ## Current alpha
 
 | Artifact | Checkable status |
 |---|---|
 | Dataset | 20 controlled pairs / 40 instances; six mathematical-evidence families |
-| Gold decision | Versioned public policy + dependency closure + executable local checks |
+| Gold decision | Versioned public policy + dependency closure + executable integrity/policy checks over synthetic fixtures |
 | Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
-| Intervention renderers | Narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
+| Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
@@ -32,6 +33,11 @@ The alpha family distribution is `4/4/3/3/3/3`: dependency closure, numerical sc
 runtime failure, stale or contradictory evidence, independent provenance, and formal
 certificate identity. Each pair keeps the claim and requested state fixed and changes one
 policy prerequisite. The invalid member is balanced between neutral `a` and `b` IDs.
+
+Alpha evidence artifacts are synthetic two-line fixtures. The implementation executes their
+path/hash integrity checks and the policy oracle; it does not run Lean, numerical software,
+or an external review process. Type-specific executable fixtures are a precondition for model
+experiments.
 
 ## Orthogonal state
 
@@ -98,6 +104,11 @@ Primary metrics are false promotion rate, valid promotion recall / false hold ra
 paired transition accuracy. Reports must separate intent false promotions from effective
 post-gate false promotions. A successful veto is a system effect, not improved model
 calibration. See [Experiment protocol](docs/EXPERIMENTS.md).
+
+`evaluate-runs` validates complete run records, refuses `FORMAT_ERROR` as a silent hold,
+scores raw intent and post-gate decisions separately, and reports gate plus operational
+metrics. Family/model stratification and automated six-way arm comparison remain pre-run
+gates.
 
 ## Research boundary
 

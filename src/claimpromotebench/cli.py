@@ -12,7 +12,6 @@ from .baselines import BASELINES, baseline_decision
 from .dataset import (
     check_pairs,
     compile_author_items,
-    load_json,
     load_jsonl,
     repository_root,
     validate_dataset,
@@ -21,7 +20,8 @@ from .dataset import (
     write_jsonl,
 )
 from .errors import ClaimPromoteBenchError, DatasetIntegrityError, PredictionFormatError
-from .metrics import evaluate_records
+from .hashing import sha256_bytes, sha256_file
+from .metrics import evaluate_gate_records, evaluate_records, operational_metrics
 from .oracle import evaluate
 from .policy import load_policy
 from .prompts import ARMS, render_prompt
@@ -41,10 +41,15 @@ def _dataset_dir(source: Path) -> Path:
 
 def _context(dataset_dir: Path) -> tuple[dict[str, Any], dict[str, Any], str]:
     root = repository_root()
-    manifest = load_json(dataset_dir / "manifest.json")
+    manifest = verify_manifest(dataset_dir)
     if not isinstance(manifest, dict):
         raise DatasetIntegrityError("manifest must be an object")
-    policy = load_policy(root / "policies" / str(manifest["policy_file"]))
+    policy_path = root / "policies" / str(manifest["policy_file"])
+    if sha256_file(policy_path) != manifest.get("policy_sha256"):
+        raise DatasetIntegrityError("loaded policy does not match manifest policy_sha256")
+    policy = load_policy(policy_path)
+    if policy.get("evaluation_time") != manifest.get("evaluation_time"):
+        raise DatasetIntegrityError("policy and manifest evaluation_time differ")
     return manifest, policy, str(manifest["evaluation_time"])
 
 
@@ -84,6 +89,52 @@ def _load_joined(gold_path: Path, runs_path: Path) -> list[dict[str, Any]]:
             "family": gold_by_id[record_id]["family"],
             "gold": gold_by_id[record_id]["decision"],
             "prediction": runs_by_id[record_id]["decision"],
+        }
+        for record_id in sorted(gold_by_id)
+    ]
+
+
+def _load_run_records(gold_path: Path, runs_path: Path) -> list[dict[str, Any]]:
+    root = repository_root()
+    gold_records = load_jsonl(gold_path)
+    run_records = load_jsonl(runs_path)
+    gold_by_id = {str(record["id"]): record for record in gold_records}
+    inputs_by_id = {str(item["id"]): item for item in load_jsonl(gold_path.parent / "inputs.jsonl")}
+    runs_by_id: dict[str, dict[str, Any]] = {}
+    for record in run_records:
+        validate_with_schema(
+            record,
+            root / "schemas" / "run-record.schema.json",
+            f"run record {record.get('item_id')}",
+        )
+        record_id = str(record["item_id"])
+        if record_id not in gold_by_id or record_id in runs_by_id:
+            raise PredictionFormatError(f"unknown or duplicate run-record item_id: {record_id}")
+        if record["parse_status"] == "OK":
+            raw = record["raw_decision"]
+            final = record["final_decision"]
+            validate_decision_semantics(inputs_by_id[record_id], raw)
+            validate_decision_semantics(inputs_by_id[record_id], final)
+        runs_by_id[record_id] = record
+    if set(runs_by_id) != set(gold_by_id):
+        missing = sorted(set(gold_by_id) - set(runs_by_id))
+        extra = sorted(set(runs_by_id) - set(gold_by_id))
+        raise PredictionFormatError(
+            f"run-record coverage mismatch: missing={missing}, extra={extra}"
+        )
+    return [
+        {
+            "id": record_id,
+            "pair_id": gold_by_id[record_id]["pair_id"],
+            "family": gold_by_id[record_id]["family"],
+            "gold": gold_by_id[record_id]["decision"],
+            "raw_decision": runs_by_id[record_id]["raw_decision"],
+            "final_decision": runs_by_id[record_id]["final_decision"],
+            "current_state": inputs_by_id[record_id]["current_state"],
+            "parse_status": runs_by_id[record_id]["parse_status"],
+            "latency_ms": runs_by_id[record_id]["latency_ms"],
+            "output_tokens": runs_by_id[record_id]["output_tokens"],
+            "verifier_calls": runs_by_id[record_id]["verifier_calls"],
         }
         for record_id in sorted(gold_by_id)
     ]
@@ -129,6 +180,13 @@ def _build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument("--runs", type=Path, required=True)
     evaluate_parser.add_argument("--out", type=Path)
     evaluate_parser.add_argument("--bootstrap-samples", type=int, default=10_000)
+    run_evaluate_parser = subparsers.add_parser(
+        "evaluate-runs", help="score complete model run records with raw/final separation"
+    )
+    run_evaluate_parser.add_argument("--gold", type=Path, required=True)
+    run_evaluate_parser.add_argument("--runs", type=Path, required=True)
+    run_evaluate_parser.add_argument("--out", type=Path)
+    run_evaluate_parser.add_argument("--bootstrap-samples", type=int, default=10_000)
     return parser
 
 
@@ -174,19 +232,72 @@ def _run(args: argparse.Namespace) -> Any:
         return {"records": len(records), "out": str(args.out)}
     if command == "render":
         dataset_dir = args.inputs.parent
-        records = [
-            {
-                "id": item["id"],
-                "arm": args.arm,
-                "prompt": render_prompt(item, args.arm, dataset_dir),
-            }
-            for item in load_jsonl(args.inputs)
-        ]
+        _manifest, policy, evaluation_time = _context(dataset_dir)
+        records = []
+        for item in load_jsonl(args.inputs):
+            prompt = render_prompt(
+                item,
+                args.arm,
+                dataset_dir,
+                policy=policy,
+                evaluation_time=evaluation_time,
+            )
+            records.append(
+                {
+                    "id": item["id"],
+                    "arm": args.arm,
+                    "prompt_sha256": sha256_bytes(prompt.encode("utf-8")),
+                    "prompt": prompt,
+                }
+            )
         write_jsonl(args.out, records)
         return {"prompts": len(records), "arm": args.arm, "out": str(args.out)}
     if command == "evaluate":
         records = _load_joined(args.gold, args.runs)
         report = evaluate_records(records, bootstrap_samples=args.bootstrap_samples)
+        if args.out:
+            _write_json(args.out, report)
+        return report
+    if command == "evaluate-runs":
+        records = _load_run_records(args.gold, args.runs)
+
+        def scored_decision(record: dict[str, Any], field: str) -> dict[str, Any]:
+            if record["parse_status"] == "OK":
+                return dict(record[field])
+            return {
+                "action": "FORMAT_ERROR",
+                "proposed_state": record["current_state"],
+                "p_admissible": None,
+                "used_evidence_ids": [],
+                "reason_codes": ["FORMAT_ERROR"],
+                "missing_evidence_ids": [],
+            }
+
+        raw_records = [
+            {**record, "prediction": scored_decision(record, "raw_decision")} for record in records
+        ]
+        final_records = [
+            {**record, "prediction": scored_decision(record, "final_decision")}
+            for record in records
+        ]
+        gate_records = [
+            {
+                **record,
+                "raw_decision": scored_decision(record, "raw_decision"),
+                "final_decision": scored_decision(record, "final_decision"),
+            }
+            for record in records
+        ]
+        format_errors = sum(record["parse_status"] == "FORMAT_ERROR" for record in records)
+        report = {
+            "parse_status": {"ok": len(records) - format_errors, "format_error": format_errors},
+            "raw_intent": evaluate_records(raw_records, bootstrap_samples=args.bootstrap_samples),
+            "effective_system": evaluate_records(
+                final_records, bootstrap_samples=args.bootstrap_samples
+            ),
+            "gate": evaluate_gate_records(gate_records),
+            "operations": operational_metrics(records),
+        }
         if args.out:
             _write_json(args.out, report)
         return report

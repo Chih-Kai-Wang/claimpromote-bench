@@ -30,10 +30,10 @@
     "artifacts/artifact-d1f8ac143abcb2e1.txt": "sha256:ade8497f62b9b3392d708c96ec79549f48275ceb4eb5d38a2f559a40f5f859cd",
     "artifacts/artifact-e0752d302e59619f.txt": "sha256:00daf0e769f9c0dadf81d70dc0bff8f15ccdd6c6aa70f6c20e321339f61dce86",
     "artifacts/artifact-e6eddb6f35c0dfdb.txt": "sha256:e5b1a07b0b1e7eee8fca653b936ac2ab3fd4976c32c4de80fcde6a5cf1dd8843",
-    "author-items.jsonl": "sha256:c2e10b61666891e02df464d9e351e836807912cb39559ce540b0ca817c0dbff1",
+    "author-items.jsonl": "sha256:2373f81977359db3383598b6b58c4a0a51bc550025afebb6249e91b7157c3b8f",
     "gold.jsonl": "sha256:f3a714cb84bbed627a36bdbf2da2df44f65831958ba16af4d73c609d1aae27b8",
-    "inputs.jsonl": "sha256:8025e8b491f3a23503b5beb9f1bbe356d39535f938327d144d7954c9b2e4d4b8",
-    "pairs.json": "sha256:7bda026c1ee847c0221d3e1668a08d0c8a945c47d24cc7d9a012fb7ed866b65a"
+    "inputs.jsonl": "sha256:bd5ffd4c7ce98443e258b357c42ab1f831290fa233043efc52853e6b892d6c5b",
+    "pairs.json": "sha256:7b85caae864ca5b74321b62f8a988858895709e283971f4cfe639c1313289d6a"
   },
   "instances": 40,
   "invalid_side_counts": {
@@ -44,15 +44,15 @@
   "pairs": 20,
   "policy_file": "math-evidence-transition-1.0.0-alpha.json",
   "policy_id": "math-evidence-transition",
-  "policy_sha256": "sha256:4e86034b9e0a52d9597b1c906e40f095f9c800a79c3487cf060b3a1ddddeea95",
+  "policy_sha256": "sha256:117a92af77d5af881cc3f72825f9dbb56035e0ab2ced38c88eec306cb9fa9ed8",
   "policy_version": "1.0.0-alpha",
   "release_status": "ALPHA",
   "schema_sha256": {
     "agent-decision.schema.json": "sha256:f741bc11665efe5757bb9b7babc96bd3d54d7f133be2ea000bdd5e1b1d4ee2b0",
-    "benchmark-author-item.schema.json": "sha256:53ef396e74f6dee0cd54d2d93632e73dff1c25fa0ff7b13dcf774f757e01a71e",
-    "benchmark-input.schema.json": "sha256:f4c0f116e2fffbae9f9c9c950d77e300cd1997cedd99e2ea536e8a9d0c7c7510",
+    "benchmark-author-item.schema.json": "sha256:21b8060acf93712aa248c304845b1b3d7bf6e5f960fa3af24f911b4a7b4f04de",
+    "benchmark-input.schema.json": "sha256:6dc8ef4590335ff85533044e1517d7f1a049a99e879187bc0d65714a1232d061",
     "claim-state.schema.json": "sha256:ee156e8f31386deaf9ce80af952159993a7fbfc23780c5357ce0072b0fc4efe0",
-    "evidence.schema.json": "sha256:b090907c102efa0d46522d73204751269cb625d626b7cc785d8131048c9194bf",
+    "evidence.schema.json": "sha256:ceed3589f4e8ec8a5fc4b05e214c2e3a1b2ae1fd2d137194198e5228f47e8bd3",
     "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
     "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
     "run-record.schema.json": "sha256:697641054f05428c8e5ed3115abc3d912ce6b8e37e4f867c96039da7efa4d953"

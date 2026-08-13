@@ -170,7 +170,7 @@
   },
   {
     "controlled_json_pointers": [
-      "/claim_context/bound_artifact_sha256"
+      "/current_state_basis/computation_status/bound_artifact_sha256"
     ],
     "factor_id": "current_binding",
     "family": "STALE_CONTRADICTION",
