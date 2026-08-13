@@ -30,9 +30,9 @@
     "artifacts/artifact-d1f8ac143abcb2e1.txt": "sha256:ade8497f62b9b3392d708c96ec79549f48275ceb4eb5d38a2f559a40f5f859cd",
     "artifacts/artifact-e0752d302e59619f.txt": "sha256:00daf0e769f9c0dadf81d70dc0bff8f15ccdd6c6aa70f6c20e321339f61dce86",
     "artifacts/artifact-e6eddb6f35c0dfdb.txt": "sha256:e5b1a07b0b1e7eee8fca653b936ac2ab3fd4976c32c4de80fcde6a5cf1dd8843",
-    "author-items.jsonl": "sha256:c2e10b61666891e02df464d9e351e836807912cb39559ce540b0ca817c0dbff1",
+    "author-items.jsonl": "sha256:b847995708b8277999b95e8803393202752276b26f7e044f9c6143add97a60a7",
     "gold.jsonl": "sha256:f3a714cb84bbed627a36bdbf2da2df44f65831958ba16af4d73c609d1aae27b8",
-    "inputs.jsonl": "sha256:8025e8b491f3a23503b5beb9f1bbe356d39535f938327d144d7954c9b2e4d4b8",
+    "inputs.jsonl": "sha256:69e4a13744b510762163781003e4f7da4d06c7d1547db67acd0e182c886c8a29",
     "pairs.json": "sha256:7bda026c1ee847c0221d3e1668a08d0c8a945c47d24cc7d9a012fb7ed866b65a"
   },
   "instances": 40,
@@ -44,7 +44,7 @@
   "pairs": 20,
   "policy_file": "math-evidence-transition-1.0.0-alpha.json",
   "policy_id": "math-evidence-transition",
-  "policy_sha256": "sha256:a9b0bbd41ee0135861630b5bf633099dba2b1e5549eb15c6f980b34d4e25ad5e",
+  "policy_sha256": "sha256:117a92af77d5af881cc3f72825f9dbb56035e0ab2ced38c88eec306cb9fa9ed8",
   "policy_version": "1.0.0-alpha",
   "release_status": "ALPHA",
   "schema_sha256": {

@@ -54,7 +54,7 @@ def _risk_coverage(records: list[dict[str, Any]]) -> dict[str, Any]:
         area += (point["coverage"] - previous_coverage) * (point["risk"] + previous_risk) / 2
         previous_coverage = point["coverage"]
         previous_risk = point["risk"]
-    return {"points": points, "aurc": area}
+    return {"points": points, "aurc_trapezoid": area}
 
 
 def _false_promotion_rate(records: list[dict[str, Any]]) -> float | None:

@@ -61,6 +61,13 @@ def _demoted_state(item: dict[str, Any], invalid_axes: set[str]) -> dict[str, An
     return dict(state)
 
 
+CURRENT_AXIS_BASIS: dict[str, tuple[str, str]] = {
+    "computation_status": ("COMPUTATIONAL", "COMPUTATION"),
+    "formal_status": ("FORMALLY_CERTIFIED", "FORMAL_CERTIFICATE"),
+    "review_status": ("INDEPENDENTLY_VERIFIED", "REVIEW"),
+}
+
+
 def evaluate(
     item: dict[str, Any], policy: dict[str, Any], evaluation_time: str | datetime
 ) -> dict[str, Any]:
@@ -116,10 +123,10 @@ def evaluate(
 
         scope = evidence.get("scope", {})
         claim_id = scope.get("claim_id")
-        if claim_id is not None and claim_id != item["claim_context"]["claim_id"]:
+        if claim_id != item["claim_context"]["claim_id"]:
             hold_reasons.append("CLAIM_ID_MISMATCH")
         statement = scope.get("statement_sha256")
-        if statement is not None and statement != item["claim_context"]["statement_sha256"]:
+        if statement != item["claim_context"]["statement_sha256"]:
             hold_reasons.append("STATEMENT_HASH_MISMATCH")
 
         if evidence_id in root_set:
@@ -141,9 +148,21 @@ def evaluate(
         if evidence.get("type") != "CONTRADICTION":
             continue
         scope = evidence.get("scope", {})
+        provenance = evidence.get("provenance", {})
+        timestamp = parse_timestamp(str(evidence["timestamp"]))
+        age_days = (frozen_time - timestamp).total_seconds() / 86_400
         if (
             scope.get("claim_id") == item["claim_context"]["claim_id"]
+            and scope.get("statement_sha256") == item["claim_context"]["statement_sha256"]
             and scope.get("contradiction_status") == "OPEN"
+            and provenance.get("actor_role") == "INDEPENDENT_REVIEWER"
+            and provenance.get("actor_id") != item["claim_context"]["author_id"]
+            and provenance.get("environment_sha256")
+            != item["claim_context"]["author_environment_sha256"]
+            and provenance.get("cold_start") is True
+            and evidence.get("tool_exit") == 0
+            and evidence.get("verifier_result") == "PASS"
+            and 0 <= age_days <= float(policy["max_age_days"])
         ):
             escalate_reasons.append("UNRESOLVED_CONTRADICTION")
 
@@ -170,6 +189,8 @@ def evaluate(
         ]
         if not computations:
             hold_reasons.append("COMPUTATION_EVIDENCE_REQUIRED")
+        if not any(evidence_by_id.get(root, {}).get("type") == "COMPUTATION" for root in roots):
+            hold_reasons.append("COMPUTATION_BASIS_TYPE_MISMATCH")
         for evidence in computations:
             scope = evidence["scope"]
             if (
@@ -198,8 +219,14 @@ def evaluate(
         ]
         if not certificates:
             hold_reasons.append("FORMAL_CERTIFICATE_REQUIRED")
+        if not any(
+            evidence_by_id.get(root, {}).get("type") == "FORMAL_CERTIFICATE" for root in roots
+        ):
+            hold_reasons.append("FORMAL_BASIS_TYPE_MISMATCH")
         for evidence in certificates:
             scope = evidence["scope"]
+            if evidence["provenance"]["actor_role"] != "TOOL":
+                hold_reasons.append("FORMAL_PROVENANCE_NOT_TOOL")
             if scope.get("verifier") != formal["verifier"]:
                 hold_reasons.append("UNTRUSTED_FORMAL_VERIFIER")
             if scope.get("toolchain_lock_sha256") != formal["toolchain_lock_sha256"]:
@@ -214,6 +241,8 @@ def evaluate(
         ]
         if not reviews:
             hold_reasons.append("INDEPENDENT_REVIEW_REQUIRED")
+        if not any(evidence_by_id.get(root, {}).get("type") == "REVIEW" for root in roots):
+            hold_reasons.append("REVIEW_BASIS_TYPE_MISMATCH")
         for evidence in reviews:
             provenance = evidence["provenance"]
             if provenance["actor_role"] != "INDEPENDENT_REVIEWER":
@@ -230,12 +259,26 @@ def evaluate(
 
     invalid_basis_axes: set[str] = set()
     bound_hash = item["claim_context"].get("bound_artifact_sha256")
-    for axis, basis_ids in item.get("current_state_basis", {}).items():
-        if bound_hash is None:
+    current_basis = item.get("current_state_basis", {})
+    for axis, (elevated_value, expected_type) in CURRENT_AXIS_BASIS.items():
+        if current[axis] != elevated_value:
+            continue
+        basis_ids = current_basis.get(axis, [])
+        if not basis_ids or bound_hash is None:
+            invalid_basis_axes.add(axis)
             continue
         for basis_id in basis_ids:
             evidence = evidence_by_id.get(str(basis_id))
-            if evidence is None or evidence.get("artifact_hash") != bound_hash:
+            if (
+                evidence is None
+                or evidence.get("type") != expected_type
+                or evidence.get("artifact_hash") != bound_hash
+                or evidence.get("scope", {}).get("claim_id") != item["claim_context"]["claim_id"]
+                or evidence.get("scope", {}).get("statement_sha256")
+                != item["claim_context"]["statement_sha256"]
+                or evidence.get("tool_exit") != 0
+                or evidence.get("verifier_result") != "PASS"
+            ):
                 invalid_basis_axes.add(str(axis))
     if invalid_basis_axes:
         demote_reasons.append("CURRENT_STATE_BASIS_INVALID")

@@ -502,6 +502,10 @@ def configure_valid(spec: Json, item: Json, artifact_path: str, artifact_hash: s
             artifact_path,
             artifact_hash,
             scope_extra={"contradiction_status": "RESOLVED"},
+            actor_id=f"reviewer-{pair_id}",
+            actor_role="INDEPENDENT_REVIEWER",
+            environment_sha256=digest_label(f"contradiction-environment:{pair_id}"),
+            cold_start=True,
         )
         item["requested_transition"] = {
             "target_state": state(formal="FORMALLY_CERTIFIED"),
