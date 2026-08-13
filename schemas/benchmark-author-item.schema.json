@@ -25,6 +25,14 @@
         }
       }}}
     },
+    "basis": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_ids", "bound_artifact_sha256"],
+      "properties": {
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "bound_artifact_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "evidence": {
       "type": "object", "additionalProperties": false,
       "required": ["id", "type", "provenance", "artifact_path", "artifact_hash", "scope", "dependencies", "tool_exit", "verifier_result", "timestamp"],
@@ -37,7 +45,7 @@
         }},
         "artifact_path": {"type": "string", "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))artifacts/[A-Za-z0-9._/-]+$"},
         "artifact_hash": {"$ref": "#/$defs/sha256"},
-        "scope": {"type": "object", "additionalProperties": false, "required": ["claim_id"], "properties": {
+        "scope": {"type": "object", "additionalProperties": false, "required": ["claim_id", "statement_sha256"], "properties": {
           "claim_id": {"type": "string"}, "statement_sha256": {"$ref": "#/$defs/sha256"}, "domain": {"$ref": "#/$defs/domain"},
           "protocol_id": {"type": "string"}, "protocol_version": {"type": "string"}, "repetitions": {"type": "integer", "minimum": 0},
           "preregistered": {"type": "boolean"}, "precision_bits": {"type": "integer", "minimum": 1},
@@ -72,12 +80,13 @@
     "policy_version": {"const": "1.0.0-alpha"},
     "claim_context": {"type": "object", "additionalProperties": false, "required": ["claim_id", "author_id", "author_environment_sha256", "statement_sha256"], "properties": {
       "claim_id": {"type": "string"}, "author_id": {"type": "string"}, "author_environment_sha256": {"$ref": "#/$defs/sha256"},
-      "statement_sha256": {"$ref": "#/$defs/sha256"}, "bound_artifact_sha256": {"$ref": "#/$defs/sha256"}, "required_domain": {"$ref": "#/$defs/domain"}
+      "statement_sha256": {"$ref": "#/$defs/sha256"}, "required_domain": {"$ref": "#/$defs/domain"}
     }},
     "current_state": {"$ref": "#/$defs/state"},
     "current_state_basis": {"type": "object", "additionalProperties": false, "properties": {
-      "research_status": {"type": "array", "items": {"type": "string"}}, "computation_status": {"type": "array", "items": {"type": "string"}},
-      "formal_status": {"type": "array", "items": {"type": "string"}}, "review_status": {"type": "array", "items": {"type": "string"}}
+      "computation_status": {"$ref": "#/$defs/basis"},
+      "formal_status": {"$ref": "#/$defs/basis"},
+      "review_status": {"$ref": "#/$defs/basis"}
     }},
     "requested_transition": {"type": "object", "additionalProperties": false, "required": ["target_state", "basis_evidence_ids"], "properties": {
       "target_state": {"$ref": "#/$defs/state"}, "basis_evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}

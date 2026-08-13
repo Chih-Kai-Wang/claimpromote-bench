@@ -34,7 +34,8 @@ def test_always_allow_and_hold_expose_paired_failure(inputs, gold, policy, manif
     assert allow["primary"]["paired_transition_accuracy"]["value"] == 0.0
     assert hold["secondary"]["promotion_fdr"] == {"value": None, "defined": False}
     assert hold["primary"]["valid_promotion_recall"]["value"] == 0.0
-    assert not math.isnan(hold["secondary"]["brier"])
+    assert hold["primary"]["false_hold_rate"]["value"] == 1.0
+    assert not math.isnan(hold["secondary"]["brier"]["value"])
 
 
 def test_oracle_is_internal_upper_bound(inputs, gold, policy, manifest) -> None:

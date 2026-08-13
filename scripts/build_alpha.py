@@ -338,7 +338,7 @@ SPECS: list[Json] = [
         "invalid": "a",
         "factor": "current_binding",
         "action": "DEMOTE",
-        "pointers": ["/claim_context/bound_artifact_sha256"],
+        "pointers": ["/current_state_basis/computation_status/bound_artifact_sha256"],
     },
     {
         "pair": "alpha-stale-03",
@@ -465,9 +465,13 @@ def configure_valid(spec: Json, item: Json, artifact_path: str, artifact_hash: s
                 item["evidence"].append(leaf_evidence)
         return
     if factor == "current_binding":
-        context["bound_artifact_sha256"] = artifact_hash
         item["current_state"] = state(computation="COMPUTATIONAL")
-        item["current_state_basis"] = {"computation_status": [opaque_id(pair_id, "basis")]}
+        item["current_state_basis"] = {
+            "computation_status": {
+                "evidence_ids": [opaque_id(pair_id, "basis")],
+                "bound_artifact_sha256": artifact_hash,
+            }
+        }
         item["requested_transition"] = {
             "target_state": state(computation="COMPUTATIONAL", review="INDEPENDENTLY_VERIFIED"),
             "basis_evidence_ids": [opaque_id(pair_id, "review")],
@@ -543,7 +547,9 @@ def invalidate(spec: Json, item: Json) -> None:
     elif factor == "age":
         root["timestamp"] = "2026-07-13T00:00:00Z"
     elif factor == "current_binding":
-        item["claim_context"]["bound_artifact_sha256"] = digest_label("stale-binding")
+        item["current_state_basis"]["computation_status"]["bound_artifact_sha256"] = digest_label(
+            "stale-binding"
+        )
     elif factor == "contradiction":
         item["evidence"][1]["scope"]["contradiction_status"] = "OPEN"
     elif factor == "reviewer_identity":

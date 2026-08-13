@@ -161,7 +161,7 @@ def test_elevated_current_axis_requires_typed_bound_basis(inputs, policy, manife
     missing_result = evaluate(missing, policy, manifest["evaluation_time"])
     assert missing_result["action"] == "DEMOTE"
     spoofed = deepcopy(valid)
-    basis_id = spoofed["current_state_basis"]["computation_status"][0]
+    basis_id = spoofed["current_state_basis"]["computation_status"]["evidence_ids"][0]
     next(e for e in spoofed["evidence"] if e["id"] == basis_id)["type"] = "REVIEW"
     spoofed_result = evaluate(spoofed, policy, manifest["evaluation_time"])
     assert spoofed_result["action"] == "DEMOTE"

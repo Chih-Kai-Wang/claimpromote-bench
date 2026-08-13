@@ -42,3 +42,12 @@ Alpha publishes no placeholder digest and no model result.
 
 **Reason.** Kernel acceptance proves a fixed formal target. It does not by itself establish
 natural-language alignment, novelty, scope, or independent research review.
+
+## 2026-08-13 — Make interventions self-contained
+
+**Decision.** Every model-facing arm receives the same complete versioned policy, frozen
+evaluation time, thresholds, trust anchors, and reason vocabulary. The narrative arm uses
+semantic prose rather than JSON-pointer sentences.
+
+**Reason.** A model cannot decide under an unstated policy, and flattening a typed ledger does
+not create a meaningful narrative-versus-structure intervention.
