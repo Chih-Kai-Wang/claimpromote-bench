@@ -33,9 +33,13 @@ def repository_root() -> Path:
 
 def load_json(path: Path) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        return json.loads(path.read_text(encoding="utf-8"), parse_constant=_reject_constant)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
         raise DatasetIntegrityError(f"cannot load JSON {path}: {exc}") from exc
+
+
+def _reject_constant(value: str) -> None:
+    raise ValueError(f"non-finite JSON number is forbidden: {value}")
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -50,8 +54,8 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
         if not line.strip():
             continue
         try:
-            record = json.loads(line)
-        except json.JSONDecodeError as exc:
+            record = json.loads(line, parse_constant=_reject_constant)
+        except (json.JSONDecodeError, ValueError) as exc:
             raise DatasetIntegrityError(f"invalid JSON at {path}:{line_number}: {exc}") from exc
         if not isinstance(record, dict):
             raise DatasetIntegrityError(f"record at {path}:{line_number} is not an object")
@@ -238,6 +242,14 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
     if sha256_file(policy_path) != manifest.get("policy_sha256"):
         raise DatasetIntegrityError("loaded policy does not match manifest policy_sha256")
     policy = load_policy(policy_path)
+    if policy.get("evaluation_time") != manifest.get("evaluation_time"):
+        raise DatasetIntegrityError("policy and manifest evaluation_time differ")
+    schema_hashes = manifest.get("schema_sha256")
+    if not isinstance(schema_hashes, dict):
+        raise DatasetIntegrityError("manifest.schema_sha256 must bind the public schemas")
+    for name, expected in sorted(schema_hashes.items()):
+        if sha256_file(root / "schemas" / str(name)) != expected:
+            raise DatasetIntegrityError(f"schema does not match manifest: {name}")
     for item in inputs:
         validate_with_schema(item, _schema(root, "benchmark-input.schema.json"), str(item["id"]))
         for evidence in item["evidence"]:

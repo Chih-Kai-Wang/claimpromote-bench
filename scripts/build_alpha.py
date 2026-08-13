@@ -659,6 +659,10 @@ def build() -> None:
         "policy_version": policy["policy_version"],
         "policy_file": POLICY_PATH.name,
         "policy_sha256": file_digest(POLICY_PATH),
+        "schema_sha256": {
+            path.name: file_digest(path)
+            for path in sorted((ROOT / "schemas").glob("*.schema.json"))
+        },
         "instances": 40,
         "pairs": 20,
         "family_pair_counts": dict(sorted(family_counts.items())),

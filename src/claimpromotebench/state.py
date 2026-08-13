@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 from .errors import PredictionFormatError
@@ -51,6 +52,8 @@ def validate_decision_semantics(item: dict[str, Any], decision: dict[str, Any]) 
     proposed = decision["proposed_state"]
     current = item["current_state"]
     target = item["requested_transition"]["target_state"]
+    if not math.isfinite(float(decision["p_admissible"])):
+        raise PredictionFormatError("p_admissible must be finite")
     if action == "ALLOW" and not state_equal(proposed, target):
         raise PredictionFormatError("ALLOW must propose the requested target state")
     if action in {"HOLD", "ESCALATE"} and not state_equal(proposed, current):

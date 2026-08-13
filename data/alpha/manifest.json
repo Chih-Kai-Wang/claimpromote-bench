@@ -44,9 +44,19 @@
   "pairs": 20,
   "policy_file": "math-evidence-transition-1.0.0-alpha.json",
   "policy_id": "math-evidence-transition",
-  "policy_sha256": "sha256:870f8a0cd2e5fb2a0af2c908c89ac5806fc22b293c7eb50ad2e351c68ea63b90",
+  "policy_sha256": "sha256:4e86034b9e0a52d9597b1c906e40f095f9c800a79c3487cf060b3a1ddddeea95",
   "policy_version": "1.0.0-alpha",
   "release_status": "ALPHA",
+  "schema_sha256": {
+    "agent-decision.schema.json": "sha256:f741bc11665efe5757bb9b7babc96bd3d54d7f133be2ea000bdd5e1b1d4ee2b0",
+    "benchmark-author-item.schema.json": "sha256:53ef396e74f6dee0cd54d2d93632e73dff1c25fa0ff7b13dcf774f757e01a71e",
+    "benchmark-input.schema.json": "sha256:f4c0f116e2fffbae9f9c9c950d77e300cd1997cedd99e2ea536e8a9d0c7c7510",
+    "claim-state.schema.json": "sha256:ee156e8f31386deaf9ce80af952159993a7fbfc23780c5357ce0072b0fc4efe0",
+    "evidence.schema.json": "sha256:b090907c102efa0d46522d73204751269cb625d626b7cc785d8131048c9194bf",
+    "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
+    "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
+    "run-record.schema.json": "sha256:697641054f05428c8e5ed3115abc3d912ce6b8e37e4f867c96039da7efa4d953"
+  },
   "schema_version": "1.0.0-alpha",
   "test_manifest_commitment": "PENDING"
 }

@@ -73,4 +73,4 @@ def test_formal_certificate_cannot_resolve_research_claim(inputs, policy, manife
     item["requested_transition"]["target_state"]["research_status"] = "RESOLVED"
     result = evaluate(item, policy, manifest["evaluation_time"])
     assert result["action"] == "HOLD"
-    assert "RESOLUTION_NOT_SUPPORTED_BY_ALPHA_POLICY" in result["reason_codes"]
+    assert "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY" in result["reason_codes"]

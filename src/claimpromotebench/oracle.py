@@ -9,6 +9,7 @@ from typing import Any
 
 from .errors import DatasetIntegrityError
 from .policy import interval_covers, parse_timestamp
+from .state import changed_axes, state_leq
 
 
 def _ordered_unique(values: Iterable[str]) -> list[str]:
@@ -75,6 +76,13 @@ def evaluate(
         if evaluation_time.tzinfo is None:
             raise DatasetIntegrityError("evaluation_time must be timezone-aware")
         frozen_time = evaluation_time
+    if parse_timestamp(str(policy["evaluation_time"])) != frozen_time:
+        raise DatasetIntegrityError("evaluation_time does not match the loaded policy")
+
+    current = item["current_state"]
+    target = item["requested_transition"]["target_state"]
+    if not state_leq(current, target) or not changed_axes(current, target):
+        raise DatasetIntegrityError("requested transition must strictly promote at least one axis")
 
     evidence_values = item.get("evidence", [])
     evidence_ids = [str(evidence["id"]) for evidence in evidence_values]
@@ -149,9 +157,7 @@ def evaluate(
         target["formal_status"] == "FORMALLY_CERTIFIED"
         and current["formal_status"] != "FORMALLY_CERTIFIED"
     )
-    new_resolution = (
-        target["research_status"] == "RESOLVED" and current["research_status"] != "RESOLVED"
-    )
+    any_research_transition = target["research_status"] != current["research_status"]
     new_review = (
         target["review_status"] == "INDEPENDENTLY_VERIFIED"
         and current["review_status"] != "INDEPENDENTLY_VERIFIED"
@@ -199,8 +205,8 @@ def evaluate(
             if scope.get("toolchain_lock_sha256") != formal["toolchain_lock_sha256"]:
                 hold_reasons.append("UNTRUSTED_TOOLCHAIN")
 
-    if new_resolution:
-        hold_reasons.append("RESOLUTION_NOT_SUPPORTED_BY_ALPHA_POLICY")
+    if any_research_transition:
+        hold_reasons.append("RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY")
 
     if new_review:
         reviews = [
