@@ -74,3 +74,39 @@ def test_formal_certificate_cannot_resolve_research_claim(inputs, policy, manife
     result = evaluate(item, policy, manifest["evaluation_time"])
     assert result["action"] == "HOLD"
     assert "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY" in result["reason_codes"]
+
+
+def test_dependency_must_finish_and_pass(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "dep-03" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    item = deepcopy(valid)
+    dependency = next(
+        evidence
+        for evidence in item["evidence"]
+        if evidence["id"] not in item["requested_transition"]["basis_evidence_ids"]
+    )
+    dependency["tool_exit"] = None
+    dependency["verifier_result"] = "UNKNOWN"
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "HOLD"
+    assert "DEPENDENCY_RUNTIME_FAILURE" in result["reason_codes"]
+    assert "DEPENDENCY_NOT_VERIFIED" in result["reason_codes"]
+
+
+def test_review_role_must_be_independent(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "prov-01" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    item = deepcopy(valid)
+    review = next(evidence for evidence in item["evidence"] if evidence["type"] == "REVIEW")
+    review["provenance"]["actor_role"] = "CLAIM_AUTHOR"
+    result = evaluate(item, policy, manifest["evaluation_time"])
+    assert result["action"] == "HOLD"
+    assert "REVIEWER_ROLE_NOT_INDEPENDENT" in result["reason_codes"]

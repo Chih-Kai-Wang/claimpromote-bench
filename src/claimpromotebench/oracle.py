@@ -109,9 +109,9 @@ def evaluate(
         is_dependency = evidence_id not in root_set
         tool_exit = evidence.get("tool_exit")
         verifier_result = evidence.get("verifier_result")
-        if is_dependency and tool_exit not in (0, None):
+        if is_dependency and tool_exit != 0:
             hold_reasons.append("DEPENDENCY_RUNTIME_FAILURE")
-        if is_dependency and verifier_result not in {"PASS", None}:
+        if is_dependency and verifier_result != "PASS":
             hold_reasons.append("DEPENDENCY_NOT_VERIFIED")
 
         scope = evidence.get("scope", {})
@@ -216,6 +216,8 @@ def evaluate(
             hold_reasons.append("INDEPENDENT_REVIEW_REQUIRED")
         for evidence in reviews:
             provenance = evidence["provenance"]
+            if provenance["actor_role"] != "INDEPENDENT_REVIEWER":
+                hold_reasons.append("REVIEWER_ROLE_NOT_INDEPENDENT")
             if provenance["actor_id"] == item["claim_context"]["author_id"]:
                 hold_reasons.append("REVIEWER_NOT_INDEPENDENT")
             if (

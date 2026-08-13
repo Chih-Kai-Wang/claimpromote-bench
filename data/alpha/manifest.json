@@ -44,7 +44,7 @@
   "pairs": 20,
   "policy_file": "math-evidence-transition-1.0.0-alpha.json",
   "policy_id": "math-evidence-transition",
-  "policy_sha256": "sha256:4e86034b9e0a52d9597b1c906e40f095f9c800a79c3487cf060b3a1ddddeea95",
+  "policy_sha256": "sha256:a9b0bbd41ee0135861630b5bf633099dba2b1e5549eb15c6f980b34d4e25ad5e",
   "policy_version": "1.0.0-alpha",
   "release_status": "ALPHA",
   "schema_sha256": {
