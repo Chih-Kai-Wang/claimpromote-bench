@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from copy import deepcopy
 
+import pytest
+
+from claimpromotebench.errors import DatasetIntegrityError
 from claimpromotebench.oracle import evaluate
 
 
@@ -62,7 +65,7 @@ def test_numeric_boundaries(inputs, policy, manifest) -> None:
     )
 
 
-def test_formal_certificate_cannot_resolve_research_claim(inputs, policy, manifest) -> None:
+def test_alpha_rejects_resolved_research_status_without_basis(inputs, policy, manifest) -> None:
     valid = next(
         item
         for item in inputs
@@ -71,9 +74,48 @@ def test_formal_certificate_cannot_resolve_research_claim(inputs, policy, manife
     )
     item = deepcopy(valid)
     item["requested_transition"]["target_state"]["research_status"] = "RESOLVED"
-    result = evaluate(item, policy, manifest["evaluation_time"])
+    with pytest.raises(
+        DatasetIntegrityError,
+        match="RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY",
+    ):
+        evaluate(item, policy, manifest["evaluation_time"])
+
+    elevated_current = deepcopy(valid)
+    elevated_current["current_state"]["research_status"] = "RESOLVED"
+    elevated_current["requested_transition"]["target_state"]["research_status"] = "RESOLVED"
+    with pytest.raises(DatasetIntegrityError):
+        evaluate(elevated_current, policy, manifest["evaluation_time"])
+
+
+def test_policy_root_type_mutation_changes_oracle(inputs, policy, manifest) -> None:
+    valid = next(
+        item
+        for item in inputs
+        if "formal-03" in item["id"]
+        and evaluate(item, policy, manifest["evaluation_time"])["action"] == "ALLOW"
+    )
+    mutated = deepcopy(policy)
+    mutated["transition_axes"]["formal_status"]["root_evidence_type"] = "ARTIFACT"
+    result = evaluate(valid, mutated, manifest["evaluation_time"])
     assert result["action"] == "HOLD"
-    assert "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY" in result["reason_codes"]
+    assert "FORMAL_CERTIFICATE_REQUIRED" in result["reason_codes"]
+
+
+def test_policy_action_precedence_mutation_changes_oracle(inputs, policy, manifest) -> None:
+    item = deepcopy(
+        next(
+            value
+            for value in inputs
+            if "stale-03" in value["id"]
+            and evaluate(value, policy, manifest["evaluation_time"])["action"] == "ESCALATE"
+        )
+    )
+    root_id = item["requested_transition"]["basis_evidence_ids"][0]
+    next(e for e in item["evidence"] if e["id"] == root_id)["tool_exit"] = 1
+    assert evaluate(item, policy, manifest["evaluation_time"])["action"] == "ESCALATE"
+    mutated = deepcopy(policy)
+    mutated["action_policy"]["precedence"] = ["DEMOTE", "HOLD", "ESCALATE", "ALLOW"]
+    assert evaluate(item, mutated, manifest["evaluation_time"])["action"] == "HOLD"
 
 
 def test_dependency_must_finish_and_pass(inputs, policy, manifest) -> None:

@@ -81,7 +81,8 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
 
 - `schemas/benchmark-input.schema.json`: model-independent benchmark input.
 - `schemas/agent-decision.schema.json`: required JSON decision.
-- `policies/math-evidence-transition-1.0.0-alpha.json`: frozen alpha thresholds and trust base.
+- `policies/math-evidence-transition-1.0.1-alpha.json`: complete, schema-validated alpha
+  decision contract, thresholds, and trust base.
 - `data/alpha/author-items.jsonl`: auditable authoring source with gold labels.
 - `data/alpha/inputs.jsonl`: public input with gold removed.
 - `data/alpha/gold.jsonl`: scorer labels generated from the authoring source.

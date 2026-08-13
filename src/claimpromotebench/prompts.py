@@ -6,7 +6,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from .hashing import canonical_json, resolve_artifact, sha256_file
+from .hashing import canonical_json, resolve_artifact, sha256_bytes, sha256_file
 
 ARMS = ("narrative", "ledger", "ledger_verifier", "ledger_verifier_gate")
 PROMPT_EXCLUDED_FIELDS = {"id", "pair_id", "split", "family", "gold"}
@@ -71,9 +71,14 @@ def _narrative(item: dict[str, Any]) -> str:
 def _policy_contract(policy: dict[str, Any], evaluation_time: str) -> str:
     public_policy = deepcopy(policy)
     public_policy["evaluation_time"] = evaluation_time
+    serialized = canonical_json(public_policy)
     return (
-        "Versioned policy contract (all thresholds and trust anchors are authoritative):\n"
-        f"{canonical_json(public_policy)}"
+        "Versioned policy contract (this complete contract is authoritative; apply its "
+        "root-type rules, transitive dependency closure, contradiction authority, review "
+        "independence, alpha research-status scope, reason ordering, and action precedence "
+        "exactly).\n"
+        f"Contract SHA-256: {sha256_bytes(serialized.encode('utf-8'))}\n"
+        f"{serialized}"
     )
 
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from copy import deepcopy
+
 from jsonschema import Draft202012Validator
 
 from claimpromotebench.dataset import load_json, validate_with_schema
@@ -35,3 +37,11 @@ def test_run_record_requires_decisions_for_success(root) -> None:
     valid["parse_status"] = "OK"
     validator = Draft202012Validator(load_json(schema))
     assert list(validator.iter_errors(valid))
+
+
+def test_alpha_input_schema_rejects_resolved_research_status(root, inputs) -> None:
+    item = deepcopy(inputs[0])
+    item["current_state"]["research_status"] = "RESOLVED"
+    validator = Draft202012Validator(load_json(root / "schemas" / "benchmark-input.schema.json"))
+    errors = list(validator.iter_errors(item))
+    assert any("OPEN" in error.message for error in errors)

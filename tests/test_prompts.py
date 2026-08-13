@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from claimpromotebench.hashing import canonical_json, sha256_bytes
 from claimpromotebench.prompts import ARMS, prompt_payload, render_prompt
 
 
@@ -47,10 +48,14 @@ def test_all_arms_receive_the_same_complete_policy(inputs, dataset_dir, policy, 
             policy=policy,
             evaluation_time=manifest["evaluation_time"],
         )
-        assert str(policy["max_age_days"]) in prompt
+        assert str(policy["evidence_validity"]["max_age_days"]) in prompt
         assert policy["formal"]["toolchain_lock_sha256"] in prompt
         assert policy["evaluation_time"] in prompt
         assert "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY" in prompt
+        assert policy["transition_axes"]["formal_status"]["root_evidence_type"] in prompt
+        assert canonical_json(policy["action_policy"]["precedence"]) in prompt
+        expected_hash = sha256_bytes(canonical_json(policy).encode("utf-8"))
+        assert f"Contract SHA-256: {expected_hash}" in prompt
 
 
 def test_narrative_is_semantic_prose_not_json_pointers(
