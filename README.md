@@ -13,7 +13,7 @@ preserving valid promotion?
 The benchmark evaluates a requested **evidence-state transition**. It is not a general truth
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
-offline baselines, gate semantics, baseline evaluator, and complete run-record evaluator
+offline baselines, gate semantics, baseline evaluator, and alpha run-record evaluator
 before any model experiment. The full arm-comparison automation remains pending.
 
 ## Current alpha
@@ -107,8 +107,9 @@ calibration. See [Experiment protocol](docs/EXPERIMENTS.md).
 
 `evaluate-runs` validates complete run records, refuses `FORMAT_ERROR` as a silent hold,
 scores raw intent and post-gate decisions separately, and reports gate plus operational
-metrics. Family/model stratification and automated six-way arm comparison remain pre-run
-gates.
+metrics. Format errors reduce explicit coverage and are included in a worst-case safety
+sensitivity analysis. Family/model stratification and automated six-way arm comparison remain
+pre-run gates.
 
 ## Research boundary
 
