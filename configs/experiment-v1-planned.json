@@ -1,0 +1,17 @@
+{
+  "arms": [
+    "narrative",
+    "ledger",
+    "ledger_verifier",
+    "ledger_verifier_gate"
+  ],
+  "expected_decisions": 9600,
+  "instances": 400,
+  "models": [
+    "configs/models/qwen3-0.6b.json",
+    "configs/models/qwen3-1.7b.json"
+  ],
+  "seeds": [104729, 130363, 169087],
+  "status": "PENDING_ARTIFACT_AND_TEST_FREEZE"
+}
+

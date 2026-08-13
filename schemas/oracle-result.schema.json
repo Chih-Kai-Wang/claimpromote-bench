@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/oracle-result.schema.json",
+  "title": "OracleResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "proposed_state", "p_admissible", "used_evidence_ids", "reason_codes", "missing_evidence_ids", "minimal_missing_evidence"],
+  "properties": {
+    "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+    "proposed_state": {"type": "object"},
+    "p_admissible": {"type": "number", "minimum": 0, "maximum": 1},
+    "used_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "missing_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "minimal_missing_evidence": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  }
+}

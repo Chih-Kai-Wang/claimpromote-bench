@@ -1,0 +1,47 @@
+{
+  "policy_id": "math-evidence-transition",
+  "policy_version": "1.0.0-alpha",
+  "evaluation_time": "2026-08-13T00:00:00Z",
+  "max_age_days": 30,
+  "numerical": {
+    "protocol_id": "cpb-numeric-v1",
+    "protocol_version": "1.0.0",
+    "min_repetitions": 3,
+    "min_precision_bits": 53,
+    "requires_preregistration": true
+  },
+  "formal": {
+    "verifier": "lean",
+    "toolchain_lock_sha256": "sha256:68118ac04a64ac0748e4d338f7306a76e2c74cb88f806f3724d47ea2f45fb3c0"
+  },
+  "reason_precedence": [
+    "CURRENT_STATE_BASIS_INVALID",
+    "UNRESOLVED_CONTRADICTION",
+    "MISSING_DEPENDENCY",
+    "DEPENDENCY_CYCLE",
+    "DEPENDENCY_RUNTIME_FAILURE",
+    "DEPENDENCY_NOT_VERIFIED",
+    "CLAIM_ID_MISMATCH",
+    "STATEMENT_HASH_MISMATCH",
+    "TOOL_EXIT_NONZERO",
+    "RUN_INCOMPLETE",
+    "VERIFIER_NOT_PASS",
+    "EVIDENCE_FROM_FUTURE",
+    "EVIDENCE_STALE",
+    "COMPUTATION_EVIDENCE_REQUIRED",
+    "NUMERICAL_PROTOCOL_MISMATCH",
+    "INSUFFICIENT_REPETITIONS",
+    "PREREGISTRATION_REQUIRED",
+    "INSUFFICIENT_PRECISION",
+    "DOMAIN_NOT_COVERED",
+    "FORMAL_CERTIFICATE_REQUIRED",
+    "UNTRUSTED_FORMAL_VERIFIER",
+    "UNTRUSTED_TOOLCHAIN",
+    "RESOLUTION_NOT_SUPPORTED_BY_ALPHA_POLICY",
+    "INDEPENDENT_REVIEW_REQUIRED",
+    "REVIEWER_NOT_INDEPENDENT",
+    "REVIEW_ENVIRONMENT_NOT_INDEPENDENT",
+    "REVIEW_NOT_COLD_START",
+    "POLICY_SATISFIED"
+  ]
+}

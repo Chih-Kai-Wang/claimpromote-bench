@@ -1,0 +1,52 @@
+{
+  "dataset_id": "claimpromotebench-alpha-20-pair",
+  "evaluation_time": "2026-08-13T00:00:00Z",
+  "family_pair_counts": {
+    "DEPENDENCY": 4,
+    "FORMAL": 3,
+    "NUMERICAL": 4,
+    "PROVENANCE": 3,
+    "RUNTIME": 3,
+    "STALE_CONTRADICTION": 3
+  },
+  "files": {
+    "artifacts/artifact-05ea773921e75ca7.txt": "sha256:6b235b0facd5ceb7263bbe867d37f91eebf3fac48e4ef4984004b6102b9efc6c",
+    "artifacts/artifact-2b5e7cdc7667d97c.txt": "sha256:11b1f8dfc9504d2d0cdaa7f23c61396f4d65b1988e8db1b50102dc99fcf68e44",
+    "artifacts/artifact-2ba79717eb66f4f4.txt": "sha256:99dc5b7ccda33d514fac95f47bec016646ee42714376d69f689a3d2bcb820804",
+    "artifacts/artifact-34967248c868185b.txt": "sha256:7e09f195c55027184897dcabdbbe7a2916caa847faaeacb62a04584801d7c892",
+    "artifacts/artifact-3752178cfadd40c6.txt": "sha256:5d9542e46e9c800f53e19ecabea513541d8310a91ac777a4a2e192d09111c11d",
+    "artifacts/artifact-395815149536bca9.txt": "sha256:e0e0ce85f8d743ce510bbe3cfec5e565344fc5676016ceafa2ae3fe309b7acd5",
+    "artifacts/artifact-4d0a38ae25e34a24.txt": "sha256:56812f7bff51a693c0cc60cf4375b00521d86a71cb6c3af2683a3a9c8dcd456d",
+    "artifacts/artifact-51e4c53deebc7d34.txt": "sha256:85f4488aba61e61cc7559205864d7ba7abaab4596245c9a4f584572a30835215",
+    "artifacts/artifact-59232022cc78bdeb.txt": "sha256:938b1bc236a63871351658ac6bdfc29eecab8adcf62854eb40d77e27c1035acc",
+    "artifacts/artifact-63bfea76ad1dc9f8.txt": "sha256:c5d7bac28cb80857bf9dff875baea3722a945f64db5fefa91a3524842caa6afb",
+    "artifacts/artifact-780e4616ea88b31d.txt": "sha256:de88cdeab61a5acf0bfcf11f93852b14892bb835c97f79917dfbe63e503beb4e",
+    "artifacts/artifact-78b42127b7953d84.txt": "sha256:1a2654f9bb518197a5baa1b0b0241ff0bb82fd8da2e4a7ed8f619a1465be0b4a",
+    "artifacts/artifact-7920cd00e4467f0d.txt": "sha256:21b0c47e25610026353d6a82bea3db81c4a14a2c110f6381848fc0536aa048ec",
+    "artifacts/artifact-9aee80201d5e4a73.txt": "sha256:a583df907f8629d01b9c1d716ffc95faeead2a5bdc2d74fa2331957532fcad7d",
+    "artifacts/artifact-9e4141dbaa315d10.txt": "sha256:e49e9a55ca29f8b7e08f9fbf656afb7bc17033af4c0e682cbf53c2ba8aeb7569",
+    "artifacts/artifact-cbd08eca3924fdfe.txt": "sha256:e3324a45370840b6ffbbdae125cb863ff2bc5a626617def467371dc0f790b332",
+    "artifacts/artifact-cd37faec4bf7dd65.txt": "sha256:f851f04ca1e23aa82be350ff71df39066c229c53ffd6ae506b8c03266d620c14",
+    "artifacts/artifact-d1f8ac143abcb2e1.txt": "sha256:ade8497f62b9b3392d708c96ec79549f48275ceb4eb5d38a2f559a40f5f859cd",
+    "artifacts/artifact-e0752d302e59619f.txt": "sha256:00daf0e769f9c0dadf81d70dc0bff8f15ccdd6c6aa70f6c20e321339f61dce86",
+    "artifacts/artifact-e6eddb6f35c0dfdb.txt": "sha256:e5b1a07b0b1e7eee8fca653b936ac2ab3fd4976c32c4de80fcde6a5cf1dd8843",
+    "author-items.jsonl": "sha256:c2e10b61666891e02df464d9e351e836807912cb39559ce540b0ca817c0dbff1",
+    "gold.jsonl": "sha256:f3a714cb84bbed627a36bdbf2da2df44f65831958ba16af4d73c609d1aae27b8",
+    "inputs.jsonl": "sha256:8025e8b491f3a23503b5beb9f1bbe356d39535f938327d144d7954c9b2e4d4b8",
+    "pairs.json": "sha256:7bda026c1ee847c0221d3e1668a08d0c8a945c47d24cc7d9a012fb7ed866b65a"
+  },
+  "instances": 40,
+  "invalid_side_counts": {
+    "A": 10,
+    "B": 10
+  },
+  "model_experiments": "PENDING",
+  "pairs": 20,
+  "policy_file": "math-evidence-transition-1.0.0-alpha.json",
+  "policy_id": "math-evidence-transition",
+  "policy_sha256": "sha256:870f8a0cd2e5fb2a0af2c908c89ac5806fc22b293c7eb50ad2e351c68ea63b90",
+  "policy_version": "1.0.0-alpha",
+  "release_status": "ALPHA",
+  "schema_version": "1.0.0-alpha",
+  "test_manifest_commitment": "PENDING"
+}

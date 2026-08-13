@@ -1,0 +1,44 @@
+# Research decisions
+
+This log records decisions that materially affect the benchmark claim. Changes to a frozen
+policy, dataset, prompt, model artifact, or seed require a new version and an explicit entry.
+
+## 2026-08-13 — Evaluate transitions, not truth in general
+
+**Decision.** The unit of evaluation is a requested transition in an orthogonal claim state:
+research, computation, formal certification, and independent review. The benchmark does not
+score general truth classification or answer abstention.
+
+**Reason.** Static claim verification, abstention, and claim-level specificity already have
+direct prior work. A narrower transition decision is both testable and aligned with the
+existing deterministic evidence infrastructure.
+
+## 2026-08-13 — Separate model intent from enforced outcome
+
+**Decision.** Store the raw agent decision and the post-gate decision separately. A gate may
+veto an invalid `ALLOW`; it may never promote a claim on the agent's behalf.
+
+**Rejected alternative.** Reporting only post-gate decisions. That would make a deterministic
+veto look like improved model calibration.
+
+## 2026-08-13 — Use controlled pairs and a frozen clock
+
+**Decision.** Alpha consists of 20 counterfactual pairs (40 instances). Each pair changes one
+policy-relevant factor. Time-sensitive rules use the manifest's evaluation time, never the
+machine clock.
+
+**Limitation.** Three or four pairs per family validate the pipeline; they do not support a
+research conclusion.
+
+## 2026-08-13 — Do not fabricate a hidden-test commitment
+
+**Decision.** The 150-pair test commitment remains `PENDING` until those items are frozen.
+Alpha publishes no placeholder digest and no model result.
+
+## 2026-08-13 — Keep formal certification below research resolution
+
+**Decision.** Alpha may promote the formal axis only. It rejects any requested transition to
+`research_status=RESOLVED`, even when an exact Lean certificate passes.
+
+**Reason.** Kernel acceptance proves a fixed formal target. It does not by itself establish
+natural-language alignment, novelty, scope, or independent research review.

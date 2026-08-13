@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/gold-label.schema.json",
+  "title": "GoldLabel",
+  "$defs": {
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["research_status", "computation_status", "formal_status", "review_status"],
+      "properties": {
+        "research_status": {"enum": ["PROPOSED", "OPEN", "RESOLVED"]},
+        "computation_status": {"enum": ["NONE", "COMPUTATIONAL"]},
+        "formal_status": {"enum": ["NONE", "FORMALLY_CERTIFIED"]},
+        "review_status": {"enum": ["UNREVIEWED", "INDEPENDENTLY_VERIFIED"]}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "pair_id", "family", "decision"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "pair_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "family": {"enum": ["DEPENDENCY", "NUMERICAL", "RUNTIME", "STALE_CONTRADICTION", "PROVENANCE", "FORMAL"]},
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "proposed_state", "p_admissible", "used_evidence_ids", "reason_codes", "missing_evidence_ids", "minimal_missing_evidence"],
+      "properties": {
+        "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+        "proposed_state": {"$ref": "#/$defs/state"},
+        "p_admissible": {"type": "number", "minimum": 0, "maximum": 1},
+        "used_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"}},
+        "missing_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "minimal_missing_evidence": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

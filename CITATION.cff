@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "ClaimPromoteBench: Policy-Governed Evidence-State Transitions for Mathematical Research Agents"
+message: "This repository is an alpha research scaffold. Cite a future archived release when one exists."
+type: software
+authors:
+  - family-names: Wang
+    given-names: Chih-Kai
+repository-code: "https://github.com/f0909172434/claimpromote-bench"
+license: MIT
+version: 0.1.0-alpha

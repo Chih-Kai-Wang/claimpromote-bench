@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/run-record.schema.json",
+  "title": "RunRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["item_id", "model_id", "model_artifact_sha256", "arm", "seed", "prompt_sha256", "parse_status", "latency_ms", "output_tokens", "verifier_calls"],
+  "properties": {
+    "item_id": {"type": "string"},
+    "model_id": {"type": "string"},
+    "model_artifact_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "quantization": {"type": ["string", "null"]},
+    "runtime_commit": {"type": ["string", "null"]},
+    "arm": {"enum": ["narrative", "ledger", "ledger_verifier", "ledger_verifier_gate"]},
+    "seed": {"type": "integer"},
+    "prompt_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "parse_status": {"enum": ["OK", "FORMAT_ERROR"]},
+    "raw_decision": {"type": ["object", "null"]},
+    "final_decision": {"type": ["object", "null"]},
+    "latency_ms": {"type": "number", "minimum": 0},
+    "output_tokens": {"type": "integer", "minimum": 0},
+    "verifier_calls": {"type": "integer", "minimum": 0},
+    "hardware": {"type": ["string", "null"]}
+  }
+}

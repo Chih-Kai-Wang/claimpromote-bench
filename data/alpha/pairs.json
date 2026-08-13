@@ -1,0 +1,283 @@
+[
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "alpha-dep-01-a",
+    "member_ids": [
+      "alpha-dep-01-a",
+      "alpha-dep-01-b"
+    ],
+    "pair_id": "alpha-dep-01",
+    "valid_id": "alpha-dep-01-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "alpha-dep-02-b",
+    "member_ids": [
+      "alpha-dep-02-a",
+      "alpha-dep-02-b"
+    ],
+    "pair_id": "alpha-dep-02",
+    "valid_id": "alpha-dep-02-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "alpha-dep-03-a",
+    "member_ids": [
+      "alpha-dep-03-a",
+      "alpha-dep-03-b"
+    ],
+    "pair_id": "alpha-dep-03",
+    "valid_id": "alpha-dep-03-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "alpha-dep-04-b",
+    "member_ids": [
+      "alpha-dep-04-a",
+      "alpha-dep-04-b"
+    ],
+    "pair_id": "alpha-dep-04",
+    "valid_id": "alpha-dep-04-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "alpha-num-01-b",
+    "member_ids": [
+      "alpha-num-01-a",
+      "alpha-num-01-b"
+    ],
+    "pair_id": "alpha-num-01",
+    "valid_id": "alpha-num-01-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "alpha-num-02-a",
+    "member_ids": [
+      "alpha-num-02-a",
+      "alpha-num-02-b"
+    ],
+    "pair_id": "alpha-num-02",
+    "valid_id": "alpha-num-02-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "alpha-num-03-b",
+    "member_ids": [
+      "alpha-num-03-a",
+      "alpha-num-03-b"
+    ],
+    "pair_id": "alpha-num-03",
+    "valid_id": "alpha-num-03-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "alpha-num-04-a",
+    "member_ids": [
+      "alpha-num-04-a",
+      "alpha-num-04-b"
+    ],
+    "pair_id": "alpha-num-04",
+    "valid_id": "alpha-num-04-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "alpha-run-01-a",
+    "member_ids": [
+      "alpha-run-01-a",
+      "alpha-run-01-b"
+    ],
+    "pair_id": "alpha-run-01",
+    "valid_id": "alpha-run-01-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "alpha-run-02-b",
+    "member_ids": [
+      "alpha-run-02-a",
+      "alpha-run-02-b"
+    ],
+    "pair_id": "alpha-run-02",
+    "valid_id": "alpha-run-02-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "alpha-run-03-a",
+    "member_ids": [
+      "alpha-run-03-a",
+      "alpha-run-03-b"
+    ],
+    "pair_id": "alpha-run-03",
+    "valid_id": "alpha-run-03-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "alpha-stale-01-b",
+    "member_ids": [
+      "alpha-stale-01-a",
+      "alpha-stale-01-b"
+    ],
+    "pair_id": "alpha-stale-01",
+    "valid_id": "alpha-stale-01-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/claim_context/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "alpha-stale-02-a",
+    "member_ids": [
+      "alpha-stale-02-a",
+      "alpha-stale-02-b"
+    ],
+    "pair_id": "alpha-stale-02",
+    "valid_id": "alpha-stale-02-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "alpha-stale-03-b",
+    "member_ids": [
+      "alpha-stale-03-a",
+      "alpha-stale-03-b"
+    ],
+    "pair_id": "alpha-stale-03",
+    "valid_id": "alpha-stale-03-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "alpha-prov-01-a",
+    "member_ids": [
+      "alpha-prov-01-a",
+      "alpha-prov-01-b"
+    ],
+    "pair_id": "alpha-prov-01",
+    "valid_id": "alpha-prov-01-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "alpha-prov-02-b",
+    "member_ids": [
+      "alpha-prov-02-a",
+      "alpha-prov-02-b"
+    ],
+    "pair_id": "alpha-prov-02",
+    "valid_id": "alpha-prov-02-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "alpha-prov-03-a",
+    "member_ids": [
+      "alpha-prov-03-a",
+      "alpha-prov-03-b"
+    ],
+    "pair_id": "alpha-prov-03",
+    "valid_id": "alpha-prov-03-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "alpha-formal-01-b",
+    "member_ids": [
+      "alpha-formal-01-a",
+      "alpha-formal-01-b"
+    ],
+    "pair_id": "alpha-formal-01",
+    "valid_id": "alpha-formal-01-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "alpha-formal-02-a",
+    "member_ids": [
+      "alpha-formal-02-a",
+      "alpha-formal-02-b"
+    ],
+    "pair_id": "alpha-formal-02",
+    "valid_id": "alpha-formal-02-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "alpha-formal-03-b",
+    "member_ids": [
+      "alpha-formal-03-a",
+      "alpha-formal-03-b"
+    ],
+    "pair_id": "alpha-formal-03",
+    "valid_id": "alpha-formal-03-a"
+  }
+]

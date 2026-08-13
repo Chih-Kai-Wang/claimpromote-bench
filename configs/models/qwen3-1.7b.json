@@ -1,0 +1,11 @@
+{
+  "artifact_sha256": "PENDING_ARTIFACT_FREEZE",
+  "backend": "llama.cpp",
+  "backend_commit": "PENDING_RUNTIME_FREEZE",
+  "model_id": "Qwen/Qwen3-1.7B",
+  "quantization": "Q4_K_M_TARGET_PENDING_VALIDATION",
+  "revision": "PENDING_REVISION_FREEZE",
+  "status": "PENDING",
+  "weights_file": "PENDING"
+}
+
