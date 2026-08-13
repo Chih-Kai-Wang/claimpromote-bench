@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/transition-policy.schema.json",
+  "title": "ClaimPromoteBenchTransitionPolicy",
+  "$defs": {
+    "reason": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+    "evidence_type": {"enum": ["DEPENDENCY", "COMPUTATION", "FORMAL_CERTIFICATE", "REVIEW", "CONTRADICTION", "ARTIFACT"]},
+    "root_runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_tool_exit", "required_verifier_result", "missing_tool_exit_reason", "tool_exit_mismatch_reason", "verifier_mismatch_reason"],
+      "properties": {
+        "required_tool_exit": {"type": "integer"},
+        "required_verifier_result": {"enum": ["PASS", "FAIL", "NOT_RUN", "UNKNOWN"]},
+        "missing_tool_exit_reason": {"$ref": "#/$defs/reason"},
+        "tool_exit_mismatch_reason": {"$ref": "#/$defs/reason"},
+        "verifier_mismatch_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "axis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bottom_value", "elevated_value", "root_evidence_type", "evidence_required_reason", "root_type_mismatch_reason"],
+      "properties": {
+        "bottom_value": {"type": "string", "minLength": 1},
+        "elevated_value": {"type": "string", "minLength": 1},
+        "root_evidence_type": {"$ref": "#/$defs/evidence_type"},
+        "evidence_required_reason": {"$ref": "#/$defs/reason"},
+        "root_type_mismatch_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "independence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_actor_role", "actor_must_differ_from_author", "environment_must_differ_from_author", "cold_start_required", "role_reason", "actor_reason", "environment_reason", "cold_start_reason"],
+      "properties": {
+        "required_actor_role": {"enum": ["CLAIM_AUTHOR", "TOOL", "INDEPENDENT_REVIEWER"]},
+        "actor_must_differ_from_author": {"type": "boolean"},
+        "environment_must_differ_from_author": {"type": "boolean"},
+        "cold_start_required": {"type": "boolean"},
+        "role_reason": {"$ref": "#/$defs/reason"},
+        "actor_reason": {"$ref": "#/$defs/reason"},
+        "environment_reason": {"$ref": "#/$defs/reason"},
+        "cold_start_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p_admissible", "proposed_state_source"],
+      "properties": {
+        "p_admissible": {"type": "number", "minimum": 0, "maximum": 1},
+        "proposed_state_source": {"enum": ["DEMOTED_CURRENT", "CURRENT", "TARGET"]}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "policy_id", "policy_version", "contract_schema_version", "evaluation_time",
+    "alpha_scope", "evidence_validity", "dependency_closure", "transition_axes",
+    "numerical", "formal", "review_independence", "contradiction_authority",
+    "current_state_basis", "action_policy", "reason_precedence"
+  ],
+  "properties": {
+    "policy_id": {"const": "math-evidence-transition"},
+    "policy_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[a-z0-9.-]+)?$"},
+    "contract_schema_version": {"const": "1.0.0"},
+    "evaluation_time": {"type": "string", "format": "date-time"},
+    "alpha_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["research_status"],
+      "properties": {
+        "research_status": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allowed_current_values", "allowed_target_values", "unsupported_transition_reason", "violation_behavior"],
+          "properties": {
+            "allowed_current_values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["PROPOSED", "OPEN", "RESOLVED"]}},
+            "allowed_target_values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["PROPOSED", "OPEN", "RESOLVED"]}},
+            "unsupported_transition_reason": {"$ref": "#/$defs/reason"},
+            "violation_behavior": {"const": "REJECT_INPUT"}
+          }
+        }
+      }
+    },
+    "evidence_validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_age_days", "claim_id_scope_field", "statement_hash_scope_field", "claim_id_mismatch_reason", "statement_hash_mismatch_reason", "future_reason", "stale_reason", "root_runtime"],
+      "properties": {
+        "max_age_days": {"type": "integer", "minimum": 0},
+        "claim_id_scope_field": {"const": "claim_id"},
+        "statement_hash_scope_field": {"const": "statement_sha256"},
+        "claim_id_mismatch_reason": {"$ref": "#/$defs/reason"},
+        "statement_hash_mismatch_reason": {"$ref": "#/$defs/reason"},
+        "future_reason": {"$ref": "#/$defs/reason"},
+        "stale_reason": {"$ref": "#/$defs/reason"},
+        "root_runtime": {"$ref": "#/$defs/root_runtime"}
+      }
+    },
+    "dependency_closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis_root_path", "dependency_ids_field", "transitive", "ordering", "missing_reason", "cycle_reason", "required_tool_exit", "required_verifier_result", "runtime_reason", "verification_reason"],
+      "properties": {
+        "basis_root_path": {"const": ["requested_transition", "basis_evidence_ids"]},
+        "dependency_ids_field": {"const": "dependencies"},
+        "transitive": {"const": true},
+        "ordering": {"const": "LEXICOGRAPHIC"},
+        "missing_reason": {"$ref": "#/$defs/reason"},
+        "cycle_reason": {"$ref": "#/$defs/reason"},
+        "required_tool_exit": {"type": "integer"},
+        "required_verifier_result": {"enum": ["PASS", "FAIL", "NOT_RUN", "UNKNOWN"]},
+        "runtime_reason": {"$ref": "#/$defs/reason"},
+        "verification_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "transition_axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["computation_status", "formal_status", "review_status"],
+      "properties": {
+        "computation_status": {"$ref": "#/$defs/axis"},
+        "formal_status": {"$ref": "#/$defs/axis"},
+        "review_status": {"$ref": "#/$defs/axis"}
+      }
+    },
+    "numerical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol_id", "protocol_version", "min_repetitions", "min_precision_bits", "requires_preregistration", "protocol_reason", "repetitions_reason", "preregistration_reason", "precision_reason", "domain_reason"],
+      "properties": {
+        "protocol_id": {"type": "string", "minLength": 1},
+        "protocol_version": {"type": "string", "minLength": 1},
+        "min_repetitions": {"type": "integer", "minimum": 1},
+        "min_precision_bits": {"type": "integer", "minimum": 1},
+        "requires_preregistration": {"type": "boolean"},
+        "protocol_reason": {"$ref": "#/$defs/reason"},
+        "repetitions_reason": {"$ref": "#/$defs/reason"},
+        "preregistration_reason": {"$ref": "#/$defs/reason"},
+        "precision_reason": {"$ref": "#/$defs/reason"},
+        "domain_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "formal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verifier", "toolchain_lock_sha256", "required_actor_role", "provenance_reason", "verifier_reason", "toolchain_reason"],
+      "properties": {
+        "verifier": {"type": "string", "minLength": 1},
+        "toolchain_lock_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "required_actor_role": {"enum": ["CLAIM_AUTHOR", "TOOL", "INDEPENDENT_REVIEWER"]},
+        "provenance_reason": {"$ref": "#/$defs/reason"},
+        "verifier_reason": {"$ref": "#/$defs/reason"},
+        "toolchain_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "review_independence": {"allOf": [{"$ref": "#/$defs/independence"}]},
+    "contradiction_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_type", "status_scope_field", "open_status_value", "require_claim_identity", "require_fresh", "required_tool_exit", "required_verifier_result", "required_actor_role", "actor_must_differ_from_author", "environment_must_differ_from_author", "cold_start_required", "escalation_reason"],
+      "properties": {
+        "evidence_type": {"$ref": "#/$defs/evidence_type"},
+        "status_scope_field": {"type": "string", "minLength": 1},
+        "open_status_value": {"type": "string", "minLength": 1},
+        "require_claim_identity": {"type": "boolean"},
+        "require_fresh": {"type": "boolean"},
+        "required_tool_exit": {"type": "integer"},
+        "required_verifier_result": {"enum": ["PASS", "FAIL", "NOT_RUN", "UNKNOWN"]},
+        "required_actor_role": {"enum": ["CLAIM_AUTHOR", "TOOL", "INDEPENDENT_REVIEWER"]},
+        "actor_must_differ_from_author": {"type": "boolean"},
+        "environment_must_differ_from_author": {"type": "boolean"},
+        "cold_start_required": {"type": "boolean"},
+        "escalation_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "current_state_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis_ids_field", "bound_artifact_hash_field", "evidence_artifact_hash_field", "unexpected_bottom_basis_behavior", "invalid_reason"],
+      "properties": {
+        "basis_ids_field": {"const": "evidence_ids"},
+        "bound_artifact_hash_field": {"const": "bound_artifact_sha256"},
+        "evidence_artifact_hash_field": {"const": "artifact_hash"},
+        "unexpected_bottom_basis_behavior": {"const": "REJECT_INPUT"},
+        "invalid_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "action_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precedence", "outcomes", "allow_reason"],
+      "properties": {
+        "precedence": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"enum": ["DEMOTE", "ESCALATE", "HOLD", "ALLOW"]}},
+        "outcomes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["DEMOTE", "ESCALATE", "HOLD", "ALLOW"],
+          "properties": {
+            "DEMOTE": {"$ref": "#/$defs/outcome"},
+            "ESCALATE": {"$ref": "#/$defs/outcome"},
+            "HOLD": {"$ref": "#/$defs/outcome"},
+            "ALLOW": {"$ref": "#/$defs/outcome"}
+          }
+        },
+        "allow_reason": {"$ref": "#/$defs/reason"}
+      }
+    },
+    "reason_precedence": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/reason"}
+    }
+  }
+}

@@ -18,7 +18,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "data" / "alpha"
 ARTIFACTS = DATASET / "artifacts"
-POLICY_PATH = ROOT / "policies" / "math-evidence-transition-1.0.0-alpha.json"
+POLICY_PATH = ROOT / "policies" / "math-evidence-transition-1.0.1-alpha.json"
 sys.path.insert(0, str(ROOT / "src"))
 
 from claimpromotebench.dataset import validate_dataset  # noqa: E402
@@ -158,7 +158,7 @@ def base_item(pair_id: str, family: str, artifact_hash: str) -> Json:
         "family": family,
         "claim_text": claim_text,
         "policy_id": "math-evidence-transition",
-        "policy_version": "1.0.0-alpha",
+        "policy_version": "1.0.1-alpha",
         "claim_context": {
             "claim_id": claim_id,
             "author_id": f"author-{digest_label(f'author:{pair_id}')[7:19]}",

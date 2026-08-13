@@ -8,11 +8,33 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 from .errors import DatasetIntegrityError
+
+POLICY_SCHEMA = "transition-policy.schema.json"
+
+
+def _policy_schema_path(path: Path) -> Path:
+    return path.resolve().parents[1] / "schemas" / POLICY_SCHEMA
+
+
+def _validate_policy(value: dict[str, Any], path: Path) -> None:
+    schema_path = _policy_schema_path(path)
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DatasetIntegrityError(f"cannot load policy schema {schema_path}: {exc}") from exc
+    validator = Draft202012Validator(schema)
+    errors = sorted(validator.iter_errors(value), key=lambda error: list(error.absolute_path))
+    if errors:
+        first = errors[0]
+        location = "/".join(str(part) for part in first.absolute_path) or "<root>"
+        raise DatasetIntegrityError(f"policy violates schema at {location}: {first.message}")
 
 
 def load_policy(path: Path) -> dict[str, Any]:
-    """Load a policy JSON object."""
+    """Load and validate a complete, machine-readable policy contract."""
 
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -20,6 +42,7 @@ def load_policy(path: Path) -> dict[str, Any]:
         raise DatasetIntegrityError(f"cannot load policy {path}: {exc}") from exc
     if not isinstance(value, dict):
         raise DatasetIntegrityError("policy root must be an object")
+    _validate_policy(value, path)
     return value
 
 
