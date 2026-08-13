@@ -15,11 +15,86 @@
     "seed": {"type": "integer"},
     "prompt_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "parse_status": {"enum": ["OK", "FORMAT_ERROR"]},
-    "raw_decision": {"type": ["object", "null"]},
-    "final_decision": {"type": ["object", "null"]},
+    "raw_decision": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "proposed_state", "p_admissible", "used_evidence_ids", "reason_codes", "missing_evidence_ids"],
+          "properties": {
+            "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+            "proposed_state": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["research_status", "computation_status", "formal_status", "review_status"],
+              "properties": {
+                "research_status": {"enum": ["PROPOSED", "OPEN", "RESOLVED"]},
+                "computation_status": {"enum": ["NONE", "COMPUTATIONAL"]},
+                "formal_status": {"enum": ["NONE", "FORMALLY_CERTIFIED"]},
+                "review_status": {"enum": ["UNREVIEWED", "INDEPENDENTLY_VERIFIED"]}
+              }
+            },
+            "p_admissible": {"type": "number", "minimum": 0, "maximum": 1},
+            "used_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "missing_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+          }
+        }
+      ]
+    },
+    "final_decision": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "proposed_state", "p_admissible", "used_evidence_ids", "reason_codes", "missing_evidence_ids"],
+          "properties": {
+            "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+            "proposed_state": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["research_status", "computation_status", "formal_status", "review_status"],
+              "properties": {
+                "research_status": {"enum": ["PROPOSED", "OPEN", "RESOLVED"]},
+                "computation_status": {"enum": ["NONE", "COMPUTATIONAL"]},
+                "formal_status": {"enum": ["NONE", "FORMALLY_CERTIFIED"]},
+                "review_status": {"enum": ["UNREVIEWED", "INDEPENDENTLY_VERIFIED"]}
+              }
+            },
+            "p_admissible": {"type": "number", "minimum": 0, "maximum": 1},
+            "used_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "missing_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+          }
+        }
+      ]
+    },
     "latency_ms": {"type": "number", "minimum": 0},
     "output_tokens": {"type": "integer", "minimum": 0},
     "verifier_calls": {"type": "integer", "minimum": 0},
     "hardware": {"type": ["string", "null"]}
-  }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"parse_status": {"const": "OK"}}},
+      "then": {
+        "required": ["raw_decision", "final_decision"],
+        "properties": {
+          "raw_decision": {"type": "object"},
+          "final_decision": {"type": "object"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"parse_status": {"const": "FORMAT_ERROR"}}},
+      "then": {
+        "properties": {
+          "raw_decision": {"type": "null"},
+          "final_decision": {"type": "null"}
+        }
+      }
+    }
+  ]
 }
