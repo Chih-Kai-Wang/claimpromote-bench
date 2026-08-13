@@ -39,9 +39,16 @@ without recomputation.
 reason-code score averages set-F1 across instances and is named `reason_code_instance_set_f1`;
 it is not conventional label-wise macro-F1.
 
-Gate reports include intent FPR, effective FPR, catch rate, false-block rate, and recovery
-after a block. Operational reports include median/p95 latency, output tokens, and verifier
-calls. Gate catches are system-level effects and must not be described as model calibration.
+Gate reports include intent FPR, effective FPR, catch rate, and false-block rate. Operational
+reports include median/p95 latency, output tokens, and verifier calls. Recovery after a block
+is not implemented in the alpha evaluator. Gate catches are system-level effects and must not
+be described as model calibration.
+
+`FORMAT_ERROR` rows are excluded from decision-conditioned rates and paired metrics, with
+decision and complete-pair coverage reported explicitly. They never receive a correct HOLD or
+safe-transition credit. For the primary false-promotion rate, the report also publishes a
+worst-case sensitivity analysis that counts every format error on a gold-invalid item as a
+false promotion.
 
 ## Statistics
 

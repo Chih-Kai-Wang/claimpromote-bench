@@ -63,7 +63,11 @@ def _risk_coverage(records: list[dict[str, Any]], total: int) -> dict[str, Any]:
 
 
 def _false_promotion_rate(records: list[dict[str, Any]]) -> float | None:
-    invalid = [record for record in records if record["gold"]["action"] != "ALLOW"]
+    invalid = [
+        record
+        for record in records
+        if record["gold"]["action"] != "ALLOW" and record.get("parse_status") != "FORMAT_ERROR"
+    ]
     return _safe_rate(
         sum(record["prediction"]["action"] == "ALLOW" for record in invalid), len(invalid)
     )
@@ -76,8 +80,9 @@ def evaluate_records(
 
     if not records:
         raise ValueError("evaluation requires at least one record")
-    valid = [record for record in records if record["gold"]["action"] == "ALLOW"]
-    promoted = [record for record in records if record["prediction"]["action"] == "ALLOW"]
+    parsed_records = [record for record in records if record.get("parse_status") != "FORMAT_ERROR"]
+    valid = [record for record in parsed_records if record["gold"]["action"] == "ALLOW"]
+    promoted = [record for record in parsed_records if record["prediction"]["action"] == "ALLOW"]
     false_promotions = sum(record["gold"]["action"] != "ALLOW" for record in promoted)
 
     pair_records: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -85,9 +90,13 @@ def evaluate_records(
         pair_records[str(record["pair_id"])].append(record)
     pair_exact: list[bool] = []
     pair_flip: list[bool] = []
+    complete_parsed_pairs = 0
     for pair in pair_records.values():
         if len(pair) != 2:
             raise ValueError("every evaluated pair must contain exactly two members")
+        if any(member.get("parse_status") == "FORMAT_ERROR" for member in pair):
+            continue
+        complete_parsed_pairs += 1
         pair_exact.append(
             all(member["prediction"]["action"] == member["gold"]["action"] for member in pair)
         )
@@ -151,12 +160,14 @@ def evaluate_records(
                 sum(record["prediction"]["action"] == "HOLD" for record in valid), len(valid)
             )
         ),
-        "paired_transition_accuracy": _defined(mean(pair_exact)),
+        "paired_transition_accuracy": _defined(mean(pair_exact) if pair_exact else None),
     }
     secondary = {
         "promotion_fdr": _defined(_safe_rate(false_promotions, len(promoted))),
         "promotion_coverage": len(promoted) / len(records),
-        "counterfactual_flip_accuracy": mean(pair_flip),
+        "decision_coverage": len(parsed_records) / len(records),
+        "complete_pair_coverage": complete_parsed_pairs / len(pair_records),
+        "counterfactual_flip_accuracy": _defined(mean(pair_flip) if pair_flip else None),
         "brier": _defined(mean(brier_values) if brier_values else None),
         "nll": _defined(mean(nll_values) if nll_values else None),
         "calibration_coverage": len(probability_records) / len(records),
@@ -166,12 +177,31 @@ def evaluate_records(
         "evidence_id_macro_recall": mean(evidence_recall),
         "missing_evidence_exact_match": mean(missing_exact),
     }
-    primary["false_promotion_rate"]["ci95_pair_bootstrap"] = pair_cluster_bootstrap(
-        pair_records, _false_promotion_rate, samples=bootstrap_samples
+    parsed_pair_records = {
+        pair_id: [record for record in pair if record.get("parse_status") != "FORMAT_ERROR"]
+        for pair_id, pair in pair_records.items()
+    }
+    parsed_pair_records = {pair_id: pair for pair_id, pair in parsed_pair_records.items() if pair}
+    primary["false_promotion_rate"]["ci95_pair_bootstrap"] = (
+        pair_cluster_bootstrap(
+            parsed_pair_records, _false_promotion_rate, samples=bootstrap_samples
+        )
+        if parsed_pair_records
+        else None
+    )
+    format_error_count = len(records) - len(parsed_records)
+    invalid_total = sum(record["gold"]["action"] != "ALLOW" for record in records)
+    invalid_format_errors = sum(
+        record["gold"]["action"] != "ALLOW" and record.get("parse_status") == "FORMAT_ERROR"
+        for record in records
+    )
+    primary["false_promotion_rate"]["worst_case_format_error_sensitivity"] = _defined(
+        _safe_rate(false_promotions + invalid_format_errors, invalid_total)
     )
     return {
         "instances": len(records),
         "pairs": len(pair_records),
+        "format_error_count": format_error_count,
         "primary": primary,
         "secondary": secondary,
     }

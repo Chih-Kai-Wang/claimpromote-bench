@@ -101,6 +101,8 @@ def _load_run_records(gold_path: Path, runs_path: Path) -> list[dict[str, Any]]:
     gold_by_id = {str(record["id"]): record for record in gold_records}
     inputs_by_id = {str(item["id"]): item for item in load_jsonl(gold_path.parent / "inputs.jsonl")}
     runs_by_id: dict[str, dict[str, Any]] = {}
+    run_identity: tuple[Any, ...] | None = None
+    _manifest, policy, evaluation_time = _context(gold_path.parent)
     for record in run_records:
         validate_with_schema(
             record,
@@ -110,6 +112,33 @@ def _load_run_records(gold_path: Path, runs_path: Path) -> list[dict[str, Any]]:
         record_id = str(record["item_id"])
         if record_id not in gold_by_id or record_id in runs_by_id:
             raise PredictionFormatError(f"unknown or duplicate run-record item_id: {record_id}")
+        identity = (
+            record["model_id"],
+            record["model_artifact_sha256"],
+            record.get("quantization"),
+            record.get("runtime_commit"),
+            record["arm"],
+            record["seed"],
+            record.get("hardware"),
+        )
+        if run_identity is None:
+            run_identity = identity
+        elif identity != run_identity:
+            raise PredictionFormatError(
+                "one run-record file must use one model artifact, runtime, arm, seed, and hardware"
+            )
+        expected_prompt = render_prompt(
+            inputs_by_id[record_id],
+            str(record["arm"]),
+            gold_path.parent,
+            policy=policy,
+            evaluation_time=evaluation_time,
+        )
+        expected_prompt_hash = sha256_bytes(expected_prompt.encode("utf-8"))
+        if record["prompt_sha256"] != expected_prompt_hash:
+            raise PredictionFormatError(
+                f"run record {record_id} prompt_sha256 does not match the frozen renderer"
+            )
         if record["parse_status"] == "OK":
             raw = record["raw_decision"]
             final = record["final_decision"]
@@ -128,8 +157,8 @@ def _load_run_records(gold_path: Path, runs_path: Path) -> list[dict[str, Any]]:
             "pair_id": gold_by_id[record_id]["pair_id"],
             "family": gold_by_id[record_id]["family"],
             "gold": gold_by_id[record_id]["decision"],
-            "raw_decision": runs_by_id[record_id]["raw_decision"],
-            "final_decision": runs_by_id[record_id]["final_decision"],
+            "raw_decision": runs_by_id[record_id].get("raw_decision"),
+            "final_decision": runs_by_id[record_id].get("final_decision"),
             "current_state": inputs_by_id[record_id]["current_state"],
             "parse_status": runs_by_id[record_id]["parse_status"],
             "latency_ms": runs_by_id[record_id]["latency_ms"],

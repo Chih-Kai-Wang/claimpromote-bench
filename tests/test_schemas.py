@@ -27,6 +27,10 @@ def test_run_record_requires_decisions_for_success(root) -> None:
         "verifier_calls": 0,
     }
     validate_with_schema(base, schema, "format error")
+    omitted = dict(base)
+    omitted.pop("raw_decision")
+    omitted.pop("final_decision")
+    validate_with_schema(omitted, schema, "format error without decision fields")
     valid = dict(base)
     valid["parse_status"] = "OK"
     validator = Draft202012Validator(load_json(schema))
