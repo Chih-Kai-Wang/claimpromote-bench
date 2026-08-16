@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build the deterministic 20-pair ClaimPromoteBench alpha dataset.
 
-This generator creates synthetic policy fixtures only. It does not run models,
-contact networks, or promote any mathematical claim.
+This generator creates policy fixtures and exact-rational numerical artifacts only. It does
+not run models, contact networks, or promote any mathematical claim.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ POLICY_PATH = ROOT / "policies" / "math-evidence-transition-1.0.1-alpha.json"
 sys.path.insert(0, str(ROOT / "src"))
 
 from claimpromotebench.dataset import validate_dataset  # noqa: E402
+from claimpromotebench.executable import build_exact_grid_artifact  # noqa: E402
 from claimpromotebench.oracle import evaluate  # noqa: E402
 
 Json = dict[str, Any]
@@ -91,13 +92,27 @@ def domain(upper: str = "1") -> Json:
     }
 
 
-def artifact_for(pair_id: str) -> tuple[str, str]:
+def artifact_for(pair_id: str, *, executable: bool) -> tuple[str, str]:
     opaque = digest_label(pair_id)[7:23]
-    relative = f"artifacts/artifact-{opaque}.txt"
-    content = (
-        f"ClaimPromoteBench synthetic alpha artifact: {opaque}\n"
-        "This fixture is policy-evaluation data, not a mathematical result.\n"
-    ).encode()
+    if executable:
+        pair_index = int(pair_id.rsplit("-", 1)[-1])
+        relative = f"artifacts/artifact-{opaque}.json"
+        artifact = build_exact_grid_artifact(
+            coefficients=[str(pair_index), "-1", "1"],
+            grid=["0", "1/4", "1/2", "3/4", "1"],
+            relation=">=",
+            threshold="0",
+            repetitions=3,
+        )
+        content = (
+            json.dumps(artifact, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+        ).encode("utf-8")
+    else:
+        relative = f"artifacts/artifact-{opaque}.txt"
+        content = (
+            f"ClaimPromoteBench synthetic alpha artifact: {opaque}\n"
+            "This fixture is policy-evaluation data, not a mathematical result.\n"
+        ).encode()
     path = DATASET / relative
     path.write_bytes(content)
     return relative, digest_bytes(content)
@@ -147,10 +162,16 @@ def evidence(
 
 def base_item(pair_id: str, family: str, artifact_hash: str) -> Json:
     claim_id = f"claim-{digest_label(pair_id)[7:19]}"
-    claim_text = (
-        "For the supplied bounded mathematical object, the stated invariant holds "
-        "for every x in [0, 1]."
-    )
+    if family == "NUMERICAL":
+        claim_text = (
+            "For the supplied bounded mathematical object, the stated invariant holds at "
+            "every registered rational grid point in [0, 1]."
+        )
+    else:
+        claim_text = (
+            "For the supplied bounded mathematical object, the stated invariant holds "
+            "for every x in [0, 1]."
+        )
     return {
         "schema_version": "1.0.0-alpha",
         "pair_id": pair_id,
@@ -584,7 +605,10 @@ def build() -> None:
 
     for spec in SPECS:
         pair_id = spec["pair"]
-        artifact_path, artifact_hash = artifact_for(pair_id)
+        artifact_path, artifact_hash = artifact_for(
+            pair_id,
+            executable=spec["family"] == "NUMERICAL",
+        )
         valid = base_item(pair_id, spec["family"], artifact_hash)
         configure_valid(spec, valid, artifact_path, artifact_hash)
         valid.pop("_artifact_hash")
