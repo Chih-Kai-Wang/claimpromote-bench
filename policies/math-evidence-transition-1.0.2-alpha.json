@@ -1,0 +1,161 @@
+{
+  "policy_id": "math-evidence-transition",
+  "policy_version": "1.0.2-alpha",
+  "contract_schema_version": "1.0.0",
+  "evaluation_time": "2026-08-13T00:00:00Z",
+  "alpha_scope": {
+    "research_status": {
+      "allowed_current_values": ["OPEN"],
+      "allowed_target_values": ["OPEN"],
+      "unsupported_transition_reason": "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY",
+      "violation_behavior": "REJECT_INPUT"
+    }
+  },
+  "evidence_validity": {
+    "max_age_days": 30,
+    "claim_id_scope_field": "claim_id",
+    "statement_hash_scope_field": "statement_sha256",
+    "claim_id_mismatch_reason": "CLAIM_ID_MISMATCH",
+    "statement_hash_mismatch_reason": "STATEMENT_HASH_MISMATCH",
+    "future_reason": "EVIDENCE_FROM_FUTURE",
+    "stale_reason": "EVIDENCE_STALE",
+    "root_runtime": {
+      "required_tool_exit": 0,
+      "required_verifier_result": "PASS",
+      "missing_tool_exit_reason": "RUN_INCOMPLETE",
+      "tool_exit_mismatch_reason": "TOOL_EXIT_NONZERO",
+      "verifier_mismatch_reason": "VERIFIER_NOT_PASS"
+    }
+  },
+  "dependency_closure": {
+    "basis_root_path": ["requested_transition", "basis_evidence_ids"],
+    "dependency_ids_field": "dependencies",
+    "transitive": true,
+    "ordering": "LEXICOGRAPHIC",
+    "missing_reason": "MISSING_DEPENDENCY",
+    "cycle_reason": "DEPENDENCY_CYCLE",
+    "required_tool_exit": 0,
+    "required_verifier_result": "PASS",
+    "runtime_reason": "DEPENDENCY_RUNTIME_FAILURE",
+    "verification_reason": "DEPENDENCY_NOT_VERIFIED"
+  },
+  "transition_axes": {
+    "computation_status": {
+      "bottom_value": "NONE",
+      "elevated_value": "COMPUTATIONAL",
+      "root_evidence_type": "COMPUTATION",
+      "evidence_required_reason": "COMPUTATION_EVIDENCE_REQUIRED",
+      "root_type_mismatch_reason": "COMPUTATION_BASIS_TYPE_MISMATCH"
+    },
+    "formal_status": {
+      "bottom_value": "NONE",
+      "elevated_value": "FORMALLY_CERTIFIED",
+      "root_evidence_type": "FORMAL_CERTIFICATE",
+      "evidence_required_reason": "FORMAL_CERTIFICATE_REQUIRED",
+      "root_type_mismatch_reason": "FORMAL_BASIS_TYPE_MISMATCH"
+    },
+    "review_status": {
+      "bottom_value": "UNREVIEWED",
+      "elevated_value": "INDEPENDENTLY_VERIFIED",
+      "root_evidence_type": "REVIEW",
+      "evidence_required_reason": "INDEPENDENT_REVIEW_REQUIRED",
+      "root_type_mismatch_reason": "REVIEW_BASIS_TYPE_MISMATCH"
+    }
+  },
+  "numerical": {
+    "protocol_id": "cpb-numeric-v1",
+    "protocol_version": "1.0.0",
+    "min_repetitions": 3,
+    "min_precision_bits": 53,
+    "requires_preregistration": true,
+    "protocol_reason": "NUMERICAL_PROTOCOL_MISMATCH",
+    "repetitions_reason": "INSUFFICIENT_REPETITIONS",
+    "preregistration_reason": "PREREGISTRATION_REQUIRED",
+    "precision_reason": "INSUFFICIENT_PRECISION",
+    "domain_reason": "DOMAIN_NOT_COVERED"
+  },
+  "formal": {
+    "verifier": "lean",
+    "toolchain_lock_sha256": "sha256:302cd63c54178885b89e669f33b38f12f4dd7ae7e5cac537b3203e3768d8fb2b",
+    "required_actor_role": "TOOL",
+    "provenance_reason": "FORMAL_PROVENANCE_NOT_TOOL",
+    "verifier_reason": "UNTRUSTED_FORMAL_VERIFIER",
+    "toolchain_reason": "UNTRUSTED_TOOLCHAIN"
+  },
+  "review_independence": {
+    "required_actor_role": "INDEPENDENT_REVIEWER",
+    "actor_must_differ_from_author": true,
+    "environment_must_differ_from_author": true,
+    "cold_start_required": true,
+    "role_reason": "REVIEWER_ROLE_NOT_INDEPENDENT",
+    "actor_reason": "REVIEWER_NOT_INDEPENDENT",
+    "environment_reason": "REVIEW_ENVIRONMENT_NOT_INDEPENDENT",
+    "cold_start_reason": "REVIEW_NOT_COLD_START"
+  },
+  "contradiction_authority": {
+    "evidence_type": "CONTRADICTION",
+    "status_scope_field": "contradiction_status",
+    "open_status_value": "OPEN",
+    "require_claim_identity": true,
+    "require_fresh": true,
+    "required_tool_exit": 0,
+    "required_verifier_result": "PASS",
+    "required_actor_role": "INDEPENDENT_REVIEWER",
+    "actor_must_differ_from_author": true,
+    "environment_must_differ_from_author": true,
+    "cold_start_required": true,
+    "escalation_reason": "UNRESOLVED_CONTRADICTION"
+  },
+  "current_state_basis": {
+    "basis_ids_field": "evidence_ids",
+    "bound_artifact_hash_field": "bound_artifact_sha256",
+    "evidence_artifact_hash_field": "artifact_hash",
+    "unexpected_bottom_basis_behavior": "REJECT_INPUT",
+    "invalid_reason": "CURRENT_STATE_BASIS_INVALID"
+  },
+  "action_policy": {
+    "precedence": ["DEMOTE", "ESCALATE", "HOLD", "ALLOW"],
+    "outcomes": {
+      "DEMOTE": {"p_admissible": 0.0, "proposed_state_source": "DEMOTED_CURRENT"},
+      "ESCALATE": {"p_admissible": 0.0, "proposed_state_source": "CURRENT"},
+      "HOLD": {"p_admissible": 0.0, "proposed_state_source": "CURRENT"},
+      "ALLOW": {"p_admissible": 1.0, "proposed_state_source": "TARGET"}
+    },
+    "allow_reason": "POLICY_SATISFIED"
+  },
+  "reason_precedence": [
+    "CURRENT_STATE_BASIS_INVALID",
+    "UNRESOLVED_CONTRADICTION",
+    "MISSING_DEPENDENCY",
+    "DEPENDENCY_CYCLE",
+    "DEPENDENCY_RUNTIME_FAILURE",
+    "DEPENDENCY_NOT_VERIFIED",
+    "CLAIM_ID_MISMATCH",
+    "STATEMENT_HASH_MISMATCH",
+    "TOOL_EXIT_NONZERO",
+    "RUN_INCOMPLETE",
+    "VERIFIER_NOT_PASS",
+    "EVIDENCE_FROM_FUTURE",
+    "EVIDENCE_STALE",
+    "COMPUTATION_EVIDENCE_REQUIRED",
+    "COMPUTATION_BASIS_TYPE_MISMATCH",
+    "NUMERICAL_PROTOCOL_MISMATCH",
+    "INSUFFICIENT_REPETITIONS",
+    "PREREGISTRATION_REQUIRED",
+    "INSUFFICIENT_PRECISION",
+    "DOMAIN_NOT_COVERED",
+    "FORMAL_CERTIFICATE_REQUIRED",
+    "FORMAL_BASIS_TYPE_MISMATCH",
+    "FORMAL_PROVENANCE_NOT_TOOL",
+    "UNTRUSTED_FORMAL_VERIFIER",
+    "UNTRUSTED_TOOLCHAIN",
+    "RESEARCH_STATUS_TRANSITION_NOT_SUPPORTED_BY_ALPHA_POLICY",
+    "INDEPENDENT_REVIEW_REQUIRED",
+    "REVIEW_BASIS_TYPE_MISMATCH",
+    "REVIEWER_ROLE_NOT_INDEPENDENT",
+    "REVIEWER_NOT_INDEPENDENT",
+    "REVIEW_ENVIRONMENT_NOT_INDEPENDENT",
+    "REVIEW_NOT_COLD_START",
+    "POLICY_SATISFIED"
+  ]
+}
