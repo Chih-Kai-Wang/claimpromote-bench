@@ -1,0 +1,56 @@
+name: Offer a model run
+description: Offer access to a model or hardware configuration for a frozen benchmark run
+title: "[MODEL RUN] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for offering compute. Do not post API keys, access tokens, private model files, or personal data. A run is accepted only through the hash-bound contribution contract in `CONTRIBUTING_RUNS.md`.
+  - type: input
+    id: model
+    attributes:
+      label: Model and immutable revision
+      description: Give the exact model ID and revision, not a mutable alias such as latest.
+      placeholder: Qwen/Qwen3-0.6B at <revision>
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime and commit
+      placeholder: llama.cpp <commit>
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Available hardware
+      placeholder: GPU/CPU, memory, operating system
+    validations:
+      required: true
+  - type: dropdown
+    id: arms
+    attributes:
+      label: Runs you can provide
+      multiple: true
+      options:
+        - narrative
+        - ledger
+        - ledger_verifier
+        - ledger_verifier_gate
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints or expected limitations
+      description: Note quotas, network requirements, unavailable logprobs, or other reproducibility limits.
+  - type: checkboxes
+    id: attestations
+    attributes:
+      label: Safety and publication
+      options:
+        - label: I will not share credentials, secrets, personal data, or restricted model files.
+          required: true
+        - label: I understand accepted results and metadata will be public under the repository contribution terms.
+          required: true
