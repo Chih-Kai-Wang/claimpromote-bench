@@ -1,4 +1,4 @@
-name = "claimpromote-formal-alpha"
+name = "claimpromote_formal_alpha"
 version = "0.1.0"
 defaultTargets = ["ClaimPromoteFormal"]
 srcDir = "artifacts"
