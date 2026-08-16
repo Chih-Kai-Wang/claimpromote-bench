@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-analysis.schema.json",
+  "title": "ReviewAnalysisReport",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "metric": {"type": "number", "minimum": -1, "maximum": 1},
+    "nullableMetric": {
+      "anyOf": [
+        {"$ref": "#/$defs/metric"},
+        {"type": "null"}
+      ]
+    },
+    "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+    "confusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"],
+      "properties": {
+        "ALLOW": {"$ref": "#/$defs/confusionRow"},
+        "HOLD": {"$ref": "#/$defs/confusionRow"},
+        "DEMOTE": {"$ref": "#/$defs/confusionRow"},
+        "ESCALATE": {"$ref": "#/$defs/confusionRow"}
+      }
+    },
+    "confusionRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"],
+      "properties": {
+        "ALLOW": {"type": "integer", "minimum": 0},
+        "HOLD": {"type": "integer", "minimum": 0},
+        "DEMOTE": {"type": "integer", "minimum": 0},
+        "ESCALATE": {"type": "integer", "minimum": 0}
+      }
+    },
+    "reviewerDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_id",
+        "action",
+        "reason_codes",
+        "confidence",
+        "rationale"
+      ],
+      "properties": {
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "action": {"$ref": "#/$defs/action"},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "confidence": {"type": "integer", "minimum": 1, "maximum": 5},
+        "rationale": {"type": "string", "maxLength": 2000}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "packet_id",
+    "dataset_manifest_sha256",
+    "policy_sha256",
+    "item_count",
+    "reviewer_count",
+    "thresholds",
+    "reviewers",
+    "inter_reviewer",
+    "disagreements",
+    "gate"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "packet_id": {"$ref": "#/$defs/sha256"},
+    "dataset_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "policy_sha256": {"$ref": "#/$defs/sha256"},
+    "item_count": {"type": "integer", "minimum": 1},
+    "reviewer_count": {"type": "integer", "minimum": 1},
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_reviewers",
+        "minimum_per_reviewer_action_agreement",
+        "minimum_pairwise_action_agreement"
+      ],
+      "properties": {
+        "minimum_reviewers": {"type": "integer", "minimum": 2},
+        "minimum_per_reviewer_action_agreement": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minimum_pairwise_action_agreement": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "reviewers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reviewer_id",
+          "submission_sha256",
+          "action_agreement_with_gold",
+          "exact_reason_set_agreement_with_gold",
+          "mean_reason_jaccard_with_gold",
+          "mean_confidence",
+          "action_confusion_with_gold"
+        ],
+        "properties": {
+          "reviewer_id": {"type": "string", "minLength": 1},
+          "submission_sha256": {"$ref": "#/$defs/sha256"},
+          "action_agreement_with_gold": {"type": "number", "minimum": 0, "maximum": 1},
+          "exact_reason_set_agreement_with_gold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "mean_reason_jaccard_with_gold": {"type": "number", "minimum": 0, "maximum": 1},
+          "mean_confidence": {"type": "number", "minimum": 1, "maximum": 5},
+          "action_confusion_with_gold": {"$ref": "#/$defs/confusion"}
+        }
+      }
+    },
+    "inter_reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pairwise",
+        "minimum_pairwise_action_agreement",
+        "mean_pairwise_action_agreement",
+        "unanimous_action_rate",
+        "fleiss_kappa"
+      ],
+      "properties": {
+        "pairwise": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reviewer_a",
+              "reviewer_b",
+              "raw_action_agreement",
+              "cohen_kappa",
+              "exact_reason_set_agreement",
+              "mean_reason_jaccard"
+            ],
+            "properties": {
+              "reviewer_a": {"type": "string", "minLength": 1},
+              "reviewer_b": {"type": "string", "minLength": 1},
+              "raw_action_agreement": {"type": "number", "minimum": 0, "maximum": 1},
+              "cohen_kappa": {"$ref": "#/$defs/nullableMetric"},
+              "exact_reason_set_agreement": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "mean_reason_jaccard": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        },
+        "minimum_pairwise_action_agreement": {
+          "anyOf": [
+            {"type": "number", "minimum": 0, "maximum": 1},
+            {"type": "null"}
+          ]
+        },
+        "mean_pairwise_action_agreement": {
+          "anyOf": [
+            {"type": "number", "minimum": 0, "maximum": 1},
+            {"type": "null"}
+          ]
+        },
+        "unanimous_action_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "fleiss_kappa": {"$ref": "#/$defs/nullableMetric"}
+      }
+    },
+    "disagreements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "disagreement_id",
+          "review_item_id",
+          "item_id",
+          "pair_id",
+          "family",
+          "kinds",
+          "gold_action",
+          "gold_reason_codes",
+          "reviewer_decisions"
+        ],
+        "properties": {
+          "disagreement_id": {"$ref": "#/$defs/sha256"},
+          "review_item_id": {"type": "string", "pattern": "^review-[0-9a-f]{32}$"},
+          "item_id": {"type": "string", "minLength": 1},
+          "pair_id": {"type": "string", "minLength": 1},
+          "family": {"type": "string", "minLength": 1},
+          "kinds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "GOLD_ACTION",
+                "REVIEWER_ACTION",
+                "GOLD_REASON_SET",
+                "REVIEWER_REASON_SET"
+              ]
+            }
+          },
+          "gold_action": {"$ref": "#/$defs/action"},
+          "gold_reason_codes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "reviewer_decisions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"$ref": "#/$defs/reviewerDecision"}
+          }
+        }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewer_count_pass",
+        "per_reviewer_action_agreement_pass",
+        "pairwise_action_agreement_pass",
+        "metrics_pass",
+        "disagreement_count"
+      ],
+      "properties": {
+        "status": {
+          "enum": ["PENDING", "PASS", "NEEDS_ADJUDICATION", "REVISION_REQUIRED"]
+        },
+        "reviewer_count_pass": {"type": "boolean"},
+        "per_reviewer_action_agreement_pass": {"type": "boolean"},
+        "pairwise_action_agreement_pass": {"type": "boolean"},
+        "metrics_pass": {"type": "boolean"},
+        "disagreement_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
