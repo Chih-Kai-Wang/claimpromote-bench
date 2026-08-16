@@ -45,6 +45,11 @@ jobs:
           python -m claimpromotebench.shortcuts
           --dataset data/alpha
           --out work/shortcut-audit.json
+      - name: Verify executable computation fixtures
+        run: >-
+          python -m claimpromotebench.executable
+          --fixtures fixtures/executable
+          --out work/executable-fixtures.json
       - name: Test with branch coverage
         run: python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
 

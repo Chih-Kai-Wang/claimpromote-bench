@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/executable-fixture-case.schema.json",
+  "title": "ExecutableFixtureCase",
+  "$defs": {
+    "rational": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^-?(0|[1-9][0-9]*)(/[1-9][0-9]*)?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_kind",
+        "protocol_id",
+        "protocol_version",
+        "claim_scope",
+        "arithmetic",
+        "repetitions",
+        "preregistered",
+        "program",
+        "observed"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "artifact_kind": {"type": "string", "minLength": 1},
+        "protocol_id": {"type": "string", "minLength": 1},
+        "protocol_version": {"type": "string", "minLength": 1},
+        "claim_scope": {"type": "string", "minLength": 1},
+        "arithmetic": {"type": "string", "minLength": 1},
+        "repetitions": {"type": "integer", "minimum": 1, "maximum": 32},
+        "preregistered": {"type": "boolean"},
+        "program": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["domain", "coefficients", "grid", "predicate"],
+          "properties": {
+            "domain": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["lower", "upper"],
+              "properties": {
+                "lower": {"$ref": "#/$defs/rational"},
+                "upper": {"$ref": "#/$defs/rational"}
+              }
+            },
+            "coefficients": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {"$ref": "#/$defs/rational"}
+            },
+            "grid": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 4096,
+              "items": {"$ref": "#/$defs/rational"}
+            },
+            "predicate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["relation", "threshold"],
+              "properties": {
+                "relation": {"enum": [">=", "<=", "=="]},
+                "threshold": {"$ref": "#/$defs/rational"}
+              }
+            }
+          }
+        },
+        "observed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "values",
+            "minimum",
+            "maximum",
+            "predicate_holds",
+            "repetition_digests"
+          ],
+          "properties": {
+            "values": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 4096,
+              "items": {"$ref": "#/$defs/rational"}
+            },
+            "minimum": {"$ref": "#/$defs/rational"},
+            "maximum": {"$ref": "#/$defs/rational"},
+            "predicate_holds": {"type": "boolean"},
+            "repetition_digests": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "expected_status", "artifact"],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "expected_status": {"enum": ["PASS", "REJECT"]},
+    "expected_error_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "artifact": {"$ref": "#/$defs/artifact"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"expected_status": {"const": "REJECT"}},
+        "required": ["expected_status"]
+      },
+      "then": {"required": ["expected_error_code"]}
+    }
+  ]
+}

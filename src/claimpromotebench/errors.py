@@ -13,3 +13,11 @@ class DatasetIntegrityError(ClaimPromoteBenchError):
 
 class PredictionFormatError(ClaimPromoteBenchError):
     """A model output is missing or violates the public decision contract."""
+
+
+class ExecutableFixtureError(ClaimPromoteBenchError):
+    """A registered executable fixture failed with a stable error code."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(f"{code}: {message}")
+        self.code = code

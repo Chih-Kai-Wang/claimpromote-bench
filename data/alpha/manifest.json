@@ -53,6 +53,7 @@
     "benchmark-input.schema.json": "sha256:5d77335ec51eee170c43e6bcfc1e3dd7d20714586051a5be3fa5e480512ab0ac",
     "claim-state.schema.json": "sha256:ee156e8f31386deaf9ce80af952159993a7fbfc23780c5357ce0072b0fc4efe0",
     "evidence.schema.json": "sha256:ceed3589f4e8ec8a5fc4b05e214c2e3a1b2ae1fd2d137194198e5228f47e8bd3",
+    "executable-fixture-case.schema.json": "sha256:8a6796ad125948ad09a3bdf08af4a9d96d7b00452d94a5902e976e9b4838cafe",
     "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
     "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
     "run-record.schema.json": "sha256:697641054f05428c8e5ed3115abc3d912ce6b8e37e4f867c96039da7efa4d953",
