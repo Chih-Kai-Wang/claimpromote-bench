@@ -27,6 +27,7 @@ jobs:
         shell: bash
         env:
           SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
+          RECIPIENT_CERT_PEM_B64: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVQekNDQXFlZ0F3SUJBZ0lVRVpyUHZyZ0VVWWRpUWRqSGlvRy96NUJlVGtjd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0x6RXRNQ3NHQTFVRUF3d2tZMnhoYVcxd2NtOXRiM1JsTFhKbGRtbGxkeTFoYkhCb1lTMHlNREkyTFRBNApMVEUyTUI0WERUSTJNRGd4TmpBNU1EUXpNMW9YRFRJMk1EZ3hPREE1TURRek0xb3dMekV0TUNzR0ExVUVBd3drClkyeGhhVzF3Y205dGIzUmxMWEpsZG1sbGR5MWhiSEJvWVMweU1ESTJMVEE0TFRFMk1JSUJvakFOQmdrcWhraUcKOXcwQkFRRUZBQU9DQVk4QU1JSUJpZ0tDQVlFQXZzYmtRMG1HTlZ1aU1HOHZhZndzSXczY0lCYWpFZjlUUkdPMAphdGl3Vmlmd29FQjhWSUx4a2t2TC95WmU4SkhNSG1YL0Y3QStrRzhuUzN3akdzZzVLbklWMndPNEVtUTNYQ0NMCldwVnY5QzF2SHRTNjJrc0tlQXdFckpySWp1NFFXMDA3QWdqUEdld011Nnl5b29vV3ZHaXNzRVRwUUNpWkhzVG0KZFV3VjlGYUkxWVVwVnFEWEppdlI3WHBMQTk1cUhVTnM3aWh3SUgvclllUWxNUmRzNFo3emRJM2p2VldjSWtKNQpuY2hZVmZFZWo1N05wNU1HUnRQR1ZuNVVXRlA2N2FuNmh0SHFRY3lGSW9KWUFqRktHT05ua2htMGhuS0dFTnN0CjcwNWw4YVl0SWRVUjVjeERkejdoY2lqUkp5UnQvWkZ2MjBnak40d0s4NksvTGdnaUFYQ0pXTGMzbXJDTFBRTGkKaTBVY1JMa1BHallxclQ1TlFLTDhpYjVLY3QvMmt3dWl0YmkycytPMEF1N0drclNVRkdDSUFRVlByNXQranBPNwpybEVaZnVwNHhPVnhUQnRlV05QUTNOS0puSUZXRktSQWYyM3NvWUNaWlY5M3o4MkNINkpXUEtQWnlNSlAyRnJHCkxtMGhHUXlJb3B6MGJTbkVBbk0rcUR1QXREOHJBZ01CQUFHalV6QlJNQjBHQTFVZERnUVdCQlJZSyszRjltM1gKcm9tRFdGdjhqdlhyUXBRNnFUQWZCZ05WSFNNRUdEQVdnQlJZSyszRjltM1hyb21EV0Z2OGp2WHJRcFE2cVRBUApCZ05WSFJNQkFmOEVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQmdRQ1k4RXU4QUpISDBUNmNINk1YCjVUZnJvSEJuL2kvdTJaenlnOHVqc3JSMHBUMng1akJKdmpPOWt2VEc0Rnd1eUpteWFkNjJTQzlmbk1mQVBiYVgKYnVsQXd4VUhPUDBGRVMyWkFMc3hubHBEK1RIQ08yU2pzekFEM2pacmNZWUF1WFJJZ0txVWQzVE54SUJmUVRGYwpnT2loVTdjNkNBTWNlaUF6WE1sNmlXUisvTE1hVWVaRWZTRnNSU1pGdUVQbGZvekVDZE1YVjVtbDNISmxmSmdVClZleTN0SFdHVTBibFhRZURwMnh4NTFYTnZWcUdoUDFiTmRtV0o2UFI5NXpuTVRHQzh2R0kzQUhVNE85dS9qM3MKb0hzVkJIOEpseEVJVCtKcWNsZVV4S3BCanE3YVQ4UjhsU3p2ZDdPZkdMdytaa2E1dWNvZjU1VEZxQlA4d3ZPMQpSWGtjV0dZMFp1dG5EMXl2UTJQUW42bFEzejRKbkhPVklleW95TUExazJMb0oycVdOallqVXNjZ2Fzb05HY3gyCnRCTTZkOGpZK3lSSTF1R0Y3aHVoYlhVaEkrbG9hWVc1RXFlcUNDV0k1dmRqUkpnMU5KZUV0K2pNa1JvaUt3ZGUKZXhNR2JqOWJES3NlM3ZsWEEwWVZCMTF0djhHOERURzJwUENCbHp2YVdSNS9UWDA9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
         run: |
           set -euo pipefail
           umask 077
@@ -37,80 +38,27 @@ jobs:
             --dataset data/alpha \
             --out work/review-alpha \
             > work/review-export/prepare-report.json
-
           python -m claimpromotebench.review init-submission \
             --package work/review-alpha \
             --reviewer-id reviewer-01 \
             --out work/review-export/reviewer-01.json \
-            > work/review-export/reviewer-01-init.json
-
+            > /dev/null
           python -m claimpromotebench.review init-submission \
             --package work/review-alpha \
             --reviewer-id reviewer-02 \
             --out work/review-export/reviewer-02.json \
-            > work/review-export/reviewer-02-init.json
+            > /dev/null
 
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          manifest = json.loads(Path('data/alpha/manifest.json').read_text(encoding='utf-8'))
-          policy = Path('policies') / manifest['policy_file']
-          out = Path('work/review-export')
-          (out / 'policy').mkdir(parents=True, exist_ok=True)
-          (out / 'schema').mkdir(parents=True, exist_ok=True)
-          (out / 'policy' / policy.name).write_bytes(policy.read_bytes())
-          schema = Path('schemas/review-submission.schema.json')
-          (out / 'schema' / schema.name).write_bytes(schema.read_bytes())
-          PY
-
-          cat > work/review-export/REVIEWER_INSTRUCTIONS.md <<'EOF'
-          # ClaimPromoteBench alpha blinded review
-
-          Work independently. Do not access `gold.jsonl`, model outputs, another reviewer's
-          decisions, or the organizer's private mapping. Review only `packet.jsonl`, the bound
-          policy, and the supplied submission draft.
-
-          For every decision, replace the null action/confidence fields, choose only policy
-          reason codes, add a concise rationale, set `completed_at` to an ISO 8601 timestamp
-          with timezone, and set each attestation flag to true only when it is factually true.
-
-          Return only your completed `reviewer-XX.json` file to the organizer. Do not rename
-          `review_item_id` values or modify packet identity/hash fields.
-          EOF
-
-          cat > work/review-export/recipient.pem <<'PEM'
-          -----BEGIN CERTIFICATE-----
-          MIIEPzCCAqegAwIBAgIUEZrPvrgEUYdiQdjHioG/z5BeTkcwDQYJKoZIhvcNAQEL
-          BQAwLzEtMCsGA1UEAwwkY2xhaW1wcm9tb3RlLXJldmlldy1hbHBoYS0yMDI2LTA4
-          LTE2MB4XDTI2MDgxNjA5MDQzM1oXDTI2MDgxODA5MDQzM1owLzEtMCsGA1UEAwwk
-          Y2xhaW1wcm9tb3RlLXJldmlldy1hbHBoYS0yMDI2LTA4LTE2MIIBojANBgkqhkiG
-          9w0BAQEFAAOCAY8AMIIBigKCAYEAvsbkQ0mGNVuiMG8vafwsIw3cIBajEf9TRGO0
-          atiwVifwoEB8VILxkkvL/yZe8JHMHmX/F7A+kG8nS3wjGsg5KnIV2wO4EmQ3XCCL
-          WpVv9C1vHtS62ksKeAwErJrIju4QW007AgjPGewMu6yyoooWvGissETpQCiZHsTm
-          dEwV9FaI1YUpVqDXJivR7XpLA95qHUNs7ihwIH/rYeQlMRds4Z7zdI3jvVWcIkJ5
-          nchYVfEej57Np5MGRtPGVn5UWFP67an6htHqQcyFIoJYAjFKGONnkhm0hnKGENst
-          705l8aYtIdUR5cxDdz7hcijRJyRt/ZFv20gjN4wK86K/LggiAXCJWLc3mrCLPQLi
-          i0UcRLkPGjYqrT5NQKL8ib5Kct/2kwuitbi2s+O0Au7GkrSUFGCIAQVPr5t+jpO7
-          rlEZfup4xOVxTBteWNPQ3NKJnIFWFKRAf23soYCZZV93z82CH6JWPKPZyMJP2FrG
-          Lm0hGQyIopz0bSnEAnM+qDuAtD8rAgMBAAGjUzBRMB0GA1UdDgQWBBRYK+3F9m3X
-          romDWFv8jvXromDWFv8jvXrQpQ6qTAfBgNVHSMEGDAWgBRYK+3F9m3XromDWFv8jvXrQpQ6qTAP
-          BgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBgQCY8Eu8AJHH0T6cH6MX
-          5TfroHBn/i/u2Zzyg8ujsrR0pT2x5jBJvjO9kvTG4FwuyJmyad62SC9fnMfAPbaX
-          bulAwxUHOP0FES2ZALsxnlpD+THCO2SjszAD3jZrcYYAuXREgKqUd3TNxIBfQTFc
-          gOihU7c6CAMceiAzXMl6iWR+/LMaUeZEfSFsRSZFuEPlfozECdMXV5ml3HJlfJgU
-          Vey3tHWGU0blXQeDp2xx51XNvVqGhP1bNdmWJ6PR95znMTGC8vGI3AHU4O9u/j3s
-          oHsVBH8JlxEIT+JqcleUxKpBjq7aT8R8lSzvd7OfGLw+Zka5ucof55TFqBP8wvO1
-          RXkcWGY0ZutnD1yvQ2PQn6lQ3z4JnHOVIeyoyMA1k2LoJ2qWNjYjUscgasoNGcx2
-          tBM6d8jY+yRI1uGF7huhbXUhI+loaYW5EqeqCCWI5vdjRJg1NJeEt+jMkRoiKwde
-          exMGbj9bDKse3vlXA0YVB11tv8G8DTG2pPCBlzvaWR5/TX0=
-          -----END CERTIFICATE-----
-          PEM
-
+          printf '%s' "$RECIPIENT_CERT_PEM_B64" | base64 --decode \
+            > work/review-export/recipient.pem
+          fingerprint="$(openssl x509 -in work/review-export/recipient.pem \
+            -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':')"
+          test "$fingerprint" = "5EC885F6A2B6D52E2AE9DFA6D812FB2AD09B862B1505C27E59EBBAEEA6B09160"
           openssl cms -encrypt -binary -aes256 -outform DER \
             -in work/review-alpha/private-key.json \
             -out work/review-export/private-key.p7m \
             work/review-export/recipient.pem
-          rm -f work/review-alpha/private-key.json
+          rm -f work/review-alpha/private-key.json work/review-export/recipient.pem
 
           python - <<'PY'
           import hashlib
@@ -121,16 +69,32 @@ jobs:
 
           export = Path('work/review-export')
           package = Path('work/review-alpha')
+          dataset_manifest = json.loads(Path('data/alpha/manifest.json').read_text(encoding='utf-8'))
           packet_manifest = json.loads((package / 'packet-manifest.json').read_text(encoding='utf-8'))
-          policy_files = list((export / 'policy').iterdir())
-          schema_files = list((export / 'schema').iterdir())
-
+          policy = Path('policies') / dataset_manifest['policy_file']
+          schema = Path('schemas/review-submission.schema.json')
+          instructions = export / 'REVIEWER_INSTRUCTIONS.md'
+          instructions.write_text(
+              "\n".join([
+                  '# ClaimPromoteBench alpha blinded review',
+                  '',
+                  'Work independently. Do not access `gold.jsonl`, model outputs, another',
+                  "reviewer's decisions, or the organizer's private mapping. Review only",
+                  '`packet.jsonl`, the bound policy, and your supplied submission draft.',
+                  '',
+                  'For every decision, replace the null action and confidence fields, use only',
+                  'policy reason codes, add a concise rationale, set `completed_at` to an ISO 8601',
+                  'timestamp with timezone, and set each attestation flag to true only when it is',
+                  'factually true. Return only your completed `reviewer-XX.json`.',
+              ]) + "\n",
+              encoding='utf-8',
+          )
           common = [
               (package / 'packet.jsonl', 'packet.jsonl'),
               (package / 'packet-manifest.json', 'packet-manifest.json'),
-              (export / 'REVIEWER_INSTRUCTIONS.md', 'REVIEWER_INSTRUCTIONS.md'),
-              *[(path, f'policy/{path.name}') for path in policy_files],
-              *[(path, f'schema/{path.name}') for path in schema_files],
+              (policy, f'policy/{policy.name}'),
+              (schema, f'schema/{schema.name}'),
+              (instructions, instructions.name),
           ]
           for reviewer in ('reviewer-01', 'reviewer-02'):
               archive = export / f'{reviewer}-package.zip'
@@ -146,7 +110,7 @@ jobs:
                       digest.update(chunk)
               return digest.hexdigest()
 
-          files = [
+          names = [
               'reviewer-01-package.zip',
               'reviewer-02-package.zip',
               'private-key.p7m',
@@ -158,7 +122,7 @@ jobs:
               'packet_id': packet_manifest['packet_id'],
               'packet_sha256': packet_manifest['packet_sha256'],
               'item_count': packet_manifest['item_count'],
-              'files': {name: {'sha256': sha256(export / name), 'bytes': (export / name).stat().st_size} for name in files},
+              'files': {name: {'sha256': sha256(export / name), 'bytes': (export / name).stat().st_size} for name in names},
               'private_key_encryption': {
                   'format': 'CMS EnvelopedData DER',
                   'cipher': 'AES-256-CBC',
@@ -166,16 +130,13 @@ jobs:
               },
           }
           (export / 'export-manifest.json').write_text(
-              json.dumps(report, indent=2, sort_keys=True) + '\n',
-              encoding='utf-8',
+              json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8'
           )
           PY
 
-          rm -f work/review-export/recipient.pem \
-            work/review-export/reviewer-01.json \
+          rm -f work/review-export/reviewer-01.json \
             work/review-export/reviewer-02.json \
-            work/review-export/reviewer-01-init.json \
-            work/review-export/reviewer-02-init.json
+            work/review-export/REVIEWER_INSTRUCTIONS.md
 
       - name: Upload encrypted review export
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
