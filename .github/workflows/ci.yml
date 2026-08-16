@@ -49,22 +49,25 @@ jobs:
               raise SystemExit("typing import fragment changed")
           text = text.replace(old_import, new_import)
           marker = 'SCHEMA_VERSION = "1.0.0"\n\n\n'
-          definitions = '''SCHEMA_VERSION = "1.0.0"
-
-
-class TransformStats(TypedDict):
-    """Typed counters for one registered metamorphic transformation."""
-
-    transform_id: str
-    description: str
-    applicable_items: int
-    variants: int
-    prompt_identical_variants: int
-    prompt_changed_variants: int
-    changed_prompt_arms: dict[str, int]
-
-
-'''
+          definitions = "\n".join(
+              [
+                  'SCHEMA_VERSION = "1.0.0"',
+                  "",
+                  "",
+                  "class TransformStats(TypedDict):",
+                  '    """Typed counters for one registered metamorphic transformation."""',
+                  "",
+                  "    transform_id: str",
+                  "    description: str",
+                  "    applicable_items: int",
+                  "    variants: int",
+                  "    prompt_identical_variants: int",
+                  "    prompt_changed_variants: int",
+                  "    changed_prompt_arms: dict[str, int]",
+                  "",
+                  "",
+              ]
+          )
           if text.count(marker) != 1:
               raise SystemExit("schema-version marker changed")
           text = text.replace(marker, definitions)
