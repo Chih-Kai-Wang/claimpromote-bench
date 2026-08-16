@@ -77,3 +77,33 @@ superseded revision, so no result migration or pooling is permitted or required.
 **Rejected alternatives.** Treating grid evidence as continuous proof, giving the two sides
 different artifact bytes, or skipping recomputation for the invalid side would each weaken
 the benchmark's scope or counterfactual interpretation.
+
+## 2026-08-16 — Execute formal alpha under a pinned Lean 4 trust base
+
+**Decision.** The three `FORMAL` controlled pairs now reference three generated Lean source
+artifacts and policy version `1.0.2-alpha`. The exact `lean-toolchain` bytes pin Lean
+`v4.33.0` and are bound by SHA-256. CI builds the Lake package, replays the compiled library
+with `leanchecker ClaimPromoteFormal`, and executes one positive and two negative standalone
+fixtures.
+
+**Claim alignment.** Generic continuous-domain placeholder text was removed from formal
+items. Each natural-language claim now names the exact elementary theorem compiled in its
+source: right-zero addition, left-zero addition, or conjunction commutativity. Every source
+also embeds the pair ID, claim ID, statement SHA-256, and toolchain-lock SHA-256.
+
+**Controlled-pair rule.** Both members of each formal pair share identical compilable source
+bytes. The invalid member changes only its registered statement, claim, or toolchain scope
+field. A compiler failure is not introduced as a second difference.
+
+**Trust boundary.** A successful build and checker replay establish kernel acceptance of the
+three exact declarations under the pinned toolchain. They do not establish novelty,
+publication value, correctness of a broader informal proof, independent human review, or
+`research_status=RESOLVED`.
+
+**Versioning.** The prior `1.0.1-alpha` policy remains committed for historical inspection,
+but the current alpha manifest binds `1.0.2-alpha`. Results from different dataset or policy
+hashes must never be silently pooled.
+
+**Rejected alternatives.** Trusting only a stored `verifier_result: PASS`, making the invalid
+side syntactically uncompilable, using a mutable Lean release alias, or treating kernel
+acceptance as research resolution would each confound or overstate the benchmark claim.
