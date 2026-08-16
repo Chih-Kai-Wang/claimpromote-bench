@@ -175,9 +175,7 @@ def validate_contribution(
         raise DatasetIntegrityError("dataset manifest does not exist")
     actual_dataset_hash = sha256_file(dataset_manifest_path)
     if actual_dataset_hash != manifest["dataset_manifest_sha256"]:
-        raise DatasetIntegrityError(
-            "dataset_manifest_sha256 does not match the selected dataset"
-        )
+        raise DatasetIntegrityError("dataset_manifest_sha256 does not match the selected dataset")
 
     actual_run_hash = sha256_file(run_path)
     if actual_run_hash != manifest["run_file_sha256"]:
@@ -228,9 +226,7 @@ def validate_contribution_tree(
     """Validate every contribution.json below one directory."""
 
     if not contributions_root.is_dir():
-        raise DatasetIntegrityError(
-            f"contribution root does not exist: {contributions_root}"
-        )
+        raise DatasetIntegrityError(f"contribution root does not exist: {contributions_root}")
     manifests = sorted(contributions_root.rglob(CONTRIBUTION_FILENAME))
     reports = [validate_contribution(manifest_path, root=root) for manifest_path in manifests]
 
