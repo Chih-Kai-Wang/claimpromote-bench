@@ -13,7 +13,12 @@ python -m pytest
 ruff check .
 ruff format --check .
 python -m claimpromotebench validate data/alpha
+python -m claimpromotebench.contributions --root contributions
 ```
 
 Dataset or policy changes require an entry in `RESEARCH_DECISIONS.md` and a version review.
 
+Externally executed model results use a separate data-only workflow. Read
+[`CONTRIBUTING_RUNS.md`](CONTRIBUTING_RUNS.md) before offering compute or opening a model-run
+pull request. The contribution validator derives hashes and immutable identity from the
+actual run file; do not invent or copy those fields manually.
