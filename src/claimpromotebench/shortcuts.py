@@ -28,15 +28,13 @@ def _summary(report: dict[str, Any]) -> dict[str, Any]:
     for tier, tier_report in report["tiers"].items():
         evaluation = tier_report["evaluation"]
         tiers[tier] = {
-            "auprc_stepwise": evaluation["secondary"]["precision_recall"][
-                "auprc_stepwise"
-            ]["value"],
-            "paired_score_strict_accuracy": evaluation["secondary"][
-                "paired_score_ranking"
-            ]["strict_accuracy"]["value"],
-            "pair_exposure_rate": tier_report["pair_differences"][
-                "pair_exposure_rate"
+            "auprc_stepwise": evaluation["secondary"]["precision_recall"]["auprc_stepwise"][
+                "value"
             ],
+            "paired_score_strict_accuracy": evaluation["secondary"]["paired_score_ranking"][
+                "strict_accuracy"
+            ]["value"],
+            "pair_exposure_rate": tier_report["pair_differences"]["pair_exposure_rate"],
         }
     return {
         "instances": report["instances"],
