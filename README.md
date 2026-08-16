@@ -3,7 +3,7 @@
 **Policy-Governed Evidence-State Transitions for Mathematical Research Agents**
 
 > **ALPHA RESEARCH SCAFFOLD — MODEL EXPERIMENTS: PENDING**  
-> No quantitative model result, technical report, external review, or independent
+> No quantitative model result, technical report, completed external review, or independent
 > reproduction is claimed in this repository yet.
 
 ClaimPromoteBench asks a narrow question: can a machine-checkable evidence ledger and a
@@ -14,8 +14,9 @@ The benchmark evaluates a requested **evidence-state transition**. It is not a g
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
 offline baselines, gate semantics, ranking metrics, run-record evaluator, exact matched-arm
-comparison pipeline, shortcut diagnostics, numerical exact-grid recomputation, and pinned
-Lean formal-artifact execution before any model experiment. Model execution remains pending.
+comparison pipeline, shortcut diagnostics, numerical exact-grid recomputation, pinned Lean
+formal-artifact execution, and blinded human-review infrastructure before any model
+experiment. Model execution and real independent review remain pending.
 
 ## Current alpha
 
@@ -31,10 +32,12 @@ Lean formal-artifact execution before any model experiment. Model execution rema
 | Executable numerical alpha | Four numerical pairs / eight items use four exact-rational finite-grid JSON artifacts, recomputed during dataset validation |
 | Executable numerical negative suite | Tamper, scope, protocol, preregistration, and repetition-digest failures are checked independently |
 | Executable formal alpha | Three formal pairs / six items use three generated Lean sources under `leanprover/lean4:v4.33.0`; CI runs `lake build`, `leanchecker`, one positive fixture, and two negative fixtures |
+| Blinded human-review workflow | HMAC-blinded packets, unbiased drafts, exact-coverage submission validation, reviewer-vs-gold and inter-reviewer statistics, disagreement export, and adjudication gate are implemented |
+| Published independent reviews | **PENDING** — `reviews/` contains no completed reviewer package or empirical agreement result |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
-| External review / reproduction | **PENDING** |
+| Independent model reproduction | **PENDING** |
 
 The alpha family distribution is `4/4/3/3/3/3`: dependency closure, numerical scope,
 runtime failure, stale or contradictory evidence, independent provenance, and formal
@@ -60,7 +63,14 @@ informal theorem, independent review, or research resolution.
 
 The remaining thirteen pairs retain synthetic two-line artifacts because their current role
 is to test dependency, runtime, staleness, contradiction, and provenance transition policy.
-Independent human-review execution remains pending.
+
+The review workflow can produce a procedurally blinded packet, validate complete independent
+submissions, unblind only after review closure, and compute per-reviewer action agreement,
+confusion matrices, reason-set agreement, pairwise raw agreement, Cohen kappa, unanimous
+agreement, and Fleiss kappa. It gates on every reviewer reaching at least 0.80 action
+agreement with frozen gold and the minimum reviewer-pair raw action agreement reaching at
+least 0.80. Every action or reason disagreement requires adjudication. No actual reviewer or
+agreement value is present yet.
 
 ## Orthogonal state
 
@@ -92,6 +102,16 @@ python -m claimpromotebench.shortcuts \
 python -m claimpromotebench.executable \
   --fixtures fixtures/executable \
   --out work/executable-fixtures.json
+python -m claimpromotebench.review validate-root \
+  --dataset data/alpha \
+  --root reviews \
+  --allow-empty \
+  --out work/reviews.json
+python -m claimpromotebench.review_analysis validate-root \
+  --dataset data/alpha \
+  --root reviews \
+  --allow-empty \
+  --out work/review-analysis.json
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
 
@@ -116,7 +136,8 @@ finite-grid fixtures. The formal command compiles three unique alpha sources and
 valid plus two intentionally invalid Lean fixtures to have their declared outcomes. These
 gates do not establish a result outside their exact finite-grid or Lean statements. See
 [Executable numerical fixtures](docs/EXECUTABLE_FIXTURES.md),
-[Pinned Lean formal alpha](docs/FORMAL_FIXTURES.md), and
+[Pinned Lean formal alpha](docs/FORMAL_FIXTURES.md),
+[Blinded review workflow](docs/REVIEW_WORKFLOW.md), and
 [Shortcut audit](docs/SHORTCUT_AUDIT.md) for the frozen information and scope boundaries.
 
 Generate and score all three offline baselines:
@@ -157,11 +178,60 @@ records.
 See [Reproduction](docs/REPRODUCTION.md) for clean-environment steps and expected structural
 checks. A passing oracle baseline proves internal pipeline agreement, not a research result.
 
+## Independent review commands
+
+Prepare an active private packet and initialize a reviewer draft:
+
+```bash
+cpb-review prepare \
+  --dataset data/alpha \
+  --out work/review-alpha
+
+cpb-review init-submission \
+  --package work/review-alpha \
+  --reviewer-id reviewer-01 \
+  --out reviewer-01.json
+```
+
+After at least two independent reviewers have submitted and all decisions are frozen, unblind
+and compute the deterministic report:
+
+```bash
+cpb-review-report analyze \
+  --dataset data/alpha \
+  --package work/review-alpha \
+  --out work/review-alpha/review-report.json
+```
+
+When disagreements exist, create and validate complete adjudication:
+
+```bash
+cpb-review-report init-adjudication \
+  --report work/review-alpha/review-report.json \
+  --adjudicator-id adjudicator-01 \
+  --out work/review-alpha/adjudication.json
+
+cpb-review-report validate-adjudication \
+  --dataset data/alpha \
+  --package work/review-alpha \
+  --report work/review-alpha/review-report.json \
+  --adjudication work/review-alpha/adjudication.json
+```
+
+A failed numeric threshold remains `REVISION_REQUIRED`; adjudication cannot convert it into a
+pass. See [the full workflow](docs/REVIEW_WORKFLOW.md).
+
 ## Public contracts
 
 - `schemas/benchmark-input.schema.json`: model-independent benchmark input.
 - `schemas/agent-decision.schema.json`: required JSON decision.
 - `schemas/executable-fixture-case.schema.json`: positive/negative executable numerical cases.
+- `schemas/review-packet-item.schema.json`: blinded reviewer-facing item.
+- `schemas/review-packet-manifest.schema.json`: immutable packet identity.
+- `schemas/review-private-key.schema.json`: private HMAC mapping used only after review closure.
+- `schemas/review-submission.schema.json`: complete independent reviewer submission.
+- `schemas/review-analysis.schema.json`: deterministic agreement and disagreement report.
+- `schemas/review-adjudication.schema.json`: exact disagreement disposition record.
 - `policies/math-evidence-transition-1.0.2-alpha.json`: current schema-validated alpha
   decision contract, thresholds, and pinned formal trust base.
 - `policies/math-evidence-transition-1.0.1-alpha.json`: retained superseded policy for
@@ -178,6 +248,8 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
   environment.
 - `fixtures/executable/`: standalone positive and negative exact-rational fixture suite.
 - `fixtures/formal/`: one passing and two rejected Lean fixture programs.
+- `reviews/`: completed, unblinded, immutable review packages only; currently empty apart from
+  instructions.
 
 Prompt renderers remove item IDs, pair IDs, split labels, family labels, and gold fields. A
 missing or malformed model output is a `FORMAT_ERROR`; it is never silently counted as
@@ -218,6 +290,11 @@ recomputation supports a finite computational state only. Lean kernel acceptance
 exact formal declaration only. Neither substitutes for scope alignment, novelty assessment,
 independent review, or a model experiment.
 
+Review infrastructure is not review evidence. A generated packet, passing unit tests, or an
+empty `reviews/` directory does not establish external agreement. Only completed independent
+submissions, a reproducible unblinded report, and complete adjudication can produce a review
+gate result. A negative result remains publishable and requires revision rather than concealment.
+
 ## Status and accountability
 
 - [Research decisions](RESEARCH_DECISIONS.md) records assumptions, rejected alternatives,
@@ -225,6 +302,8 @@ independent review, or a model experiment.
 - [AI assistance](AI_ASSISTANCE.md) separates tool assistance from human responsibility.
 - [Roadmap](docs/ROADMAP.md) exposes the 2026–2027 gates without marking future work complete.
 - [Mentor review](docs/MENTOR_REVIEW.md) defines the external-review gate.
+- [Blinded review workflow](docs/REVIEW_WORKFLOW.md) defines preparation, statistics,
+  adjudication, and publication.
 - `technical-report/` remains explicitly unpublished until a reproducible pilot exists.
 
 Created and maintained by **Chih-Kai Wang**, B.S. student, Mathematics Education Division,
