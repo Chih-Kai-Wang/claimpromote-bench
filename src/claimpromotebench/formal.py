@@ -49,7 +49,7 @@ FORMAL_CLAIMS: dict[str, tuple[str, str, str]] = {
     ),
 }
 
-_MARKER = re.compile(r"^CPB_([A-Z_]+)=(.+)$", re.MULTILINE)
+_MARKER = re.compile(r"^CPB_([A-Z0-9_]+)=(.+)$", re.MULTILINE)
 Runner = Callable[[Path, Path], dict[str, Any]]
 
 
