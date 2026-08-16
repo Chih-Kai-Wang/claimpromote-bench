@@ -38,6 +38,7 @@ cpb-audit-shortcuts = "claimpromotebench.shortcuts:main"
 cpb-verify-fixtures = "claimpromotebench.executable:main"
 cpb-verify-formal = "claimpromotebench.formal:main"
 cpb-review = "claimpromotebench.review:main"
+cpb-review-report = "claimpromotebench.review_analysis:main"
 cpb-validate-contribution = "claimpromotebench.contributions:main"
 
 [project.urls]
