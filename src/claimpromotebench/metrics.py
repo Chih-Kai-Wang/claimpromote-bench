@@ -315,7 +315,7 @@ def evaluate_records(
         ),
         "paired_transition_accuracy": _defined(mean(pair_exact) if pair_exact else None),
     }
-    secondary = {
+    secondary: dict[str, Any] = {
         "promotion_fdr": _defined(_safe_rate(false_promotions, len(promoted))),
         "promotion_coverage": len(promoted) / len(records),
         "decision_coverage": len(parsed_records) / len(records),
