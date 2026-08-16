@@ -40,6 +40,11 @@ jobs:
         run: git diff --exit-code
       - name: Validate dataset and oracle labels
         run: python -m claimpromotebench validate data/alpha
+      - name: Audit non-semantic shortcuts
+        run: >-
+          python -m claimpromotebench.shortcuts
+          --dataset data/alpha
+          --out work/shortcut-audit.json
       - name: Test with branch coverage
         run: python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
 
