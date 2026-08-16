@@ -1,11 +1,11 @@
 # Blinded independent review workflow
 
 **Status: INFRASTRUCTURE READY; EXTERNAL REVIEWS PENDING.** No person is represented as an
-external reviewer, and no agreement result is claimed.
+external reviewer, and no empirical agreement result is claimed.
 
-The review workflow checks whether independent humans can apply the versioned transition
-policy to benchmark items without seeing gold labels or model outputs. It is a policy and
-annotation audit, not an independent reproduction of a model experiment.
+The workflow checks whether independent humans can apply the versioned transition policy to
+benchmark items without seeing gold labels or model outputs. It is a policy and annotation
+audit, not an independent reproduction of a model experiment.
 
 ## Privacy and blinding boundary
 
@@ -35,11 +35,11 @@ reviewers only:
 - these instructions.
 
 Do not send `private-key.json`, `gold.jsonl`, pair descriptors, model outputs, aggregate
-scores, or another reviewer's submission.
+scores, a disagreement list, or another reviewer's submission.
 
 This is procedural blinding, not contamination-proof blinding. Alpha inputs and gold are
 public in the repository, so reviewers must attest that they did not inspect them during the
-review. A future hidden review set must be prepared before its gold labels are disclosed.
+review. A future hidden review set must be packetized before its gold labels are disclosed.
 
 ## Prepare a packet
 
@@ -120,31 +120,170 @@ cpb-review validate-package \
 Reviewer IDs must be unique. The validator never infers missing judgments and never treats an
 incomplete item as `HOLD`.
 
+## Freeze submissions before unblinding
+
+Do not run the agreement report while reviewers can still change their submissions. First:
+
+1. validate each submission;
+2. record its SHA-256;
+3. declare the review closed;
+4. prohibit further reviewer edits;
+5. reveal the private mapping only after closure.
+
+Any correction after closure creates a new submission hash and therefore a new review
+package revision. Never silently replace a reviewed decision.
+
+## Compute the agreement report
+
+After unblinding, generate the deterministic report:
+
+```bash
+cpb-review-report analyze \
+  --dataset data/alpha \
+  --package work/review-alpha \
+  --out work/review-alpha/review-report.json
+```
+
+The report binds the packet, dataset manifest, policy, and every submission hash. It computes:
+
+### Reviewer versus frozen gold
+
+For each reviewer:
+
+- action agreement;
+- exact reason-set agreement;
+- mean reason-set Jaccard similarity;
+- mean confidence;
+- a four-by-four action confusion matrix.
+
+### Reviewer versus reviewer
+
+For every reviewer pair:
+
+- raw action agreement;
+- Cohen's kappa when defined;
+- exact reason-set agreement;
+- mean reason-set Jaccard similarity.
+
+Across all reviewers it also reports the unanimous-action rate and Fleiss' kappa when
+defined. Kappa is diagnostic rather than the primary gate because class imbalance and
+degenerate marginals can make it unstable or undefined.
+
+### Conservative review thresholds
+
+The action gate requires all of the following:
+
+```text
+reviewer_count >= 2
+EVERY reviewer action agreement with gold >= 0.80
+MINIMUM reviewer-pair raw action agreement >= 0.80
+```
+
+The gate does not use an average that could hide one poor reviewer or one poorly agreeing
+reviewer pair. Reason-code agreement is reported and adjudicated, but is not currently a
+separate numeric pass threshold.
+
+## Disagreement export
+
+Every item with any of the following is exported with a stable SHA-256 disagreement ID:
+
+- a reviewer action differs from gold;
+- reviewers disagree on action;
+- a reviewer reason set differs from gold;
+- reviewers disagree on the reason set.
+
+The export contains the unblinded item ID, pair ID, family, gold decision, reviewer decisions,
+confidence, and rationale. It is generated only after review closure and must not be sent back
+to active reviewers.
+
+## Adjudicate every disagreement
+
+Create a deliberately incomplete draft:
+
+```bash
+cpb-review-report init-adjudication \
+  --report work/review-alpha/review-report.json \
+  --adjudicator-id adjudicator-01 \
+  --out work/review-alpha/adjudication.json
+```
+
+Every disagreement starts as `UNRESOLVED`, with no recommendation and an empty note. The
+adjudicator chooses exactly one disposition:
+
+- `KEEP_GOLD`: the frozen item and policy remain unchanged;
+- `REVISE_ITEM`: the item is ambiguous or incorrect and needs a new dataset version;
+- `REVISE_POLICY`: the policy is ambiguous or incomplete and needs a new version;
+- `UNRESOLVED`: further review is required.
+
+`KEEP_GOLD` must reproduce the exact frozen action and reason list. Revision dispositions
+must contain a valid recommended action and policy reason codes. Every disagreement ID must
+appear exactly once; unknown, duplicate, or missing entries fail validation.
+
+Validate the report and adjudication together:
+
+```bash
+cpb-review-report validate-adjudication \
+  --dataset data/alpha \
+  --package work/review-alpha \
+  --report work/review-alpha/review-report.json \
+  --adjudication work/review-alpha/adjudication.json
+```
+
+Adjudication cannot repair a failed agreement threshold. When any reviewer or reviewer pair
+falls below 0.80, the final status remains `REVISION_REQUIRED` even if every disagreement is
+marked `KEEP_GOLD`.
+
+## Final gate meanings
+
+| Status | Meaning |
+|---|---|
+| `PENDING` | Fewer than two complete independent reviewers |
+| `NEEDS_ADJUDICATION` | Numeric thresholds pass, but one or more disagreements remain unresolved |
+| `REVISION_REQUIRED` | A numeric threshold failed, or adjudication requires an item or policy revision |
+| `PASS` | Numeric thresholds pass and every disagreement is resolved as `KEEP_GOLD`, or no disagreement exists |
+
+A `REVISION_REQUIRED` report is a valid scientific negative result. It must remain publishable
+and must not be hidden by making CI fail merely because the review did not support the current
+version. CI fails only when files are missing, stale, malformed, tampered with, or not
+reproducible from the immutable submissions.
+
 ## Publish only after review closure
 
-After every reviewer has submitted and no further judgment changes are allowed, unblind the
-package and publish the complete immutable directory under:
+After review, reporting, and adjudication are complete, publish the immutable directory under:
 
 ```text
 reviews/<descriptive-packet-name>/
+  packet.jsonl
+  packet-manifest.json
+  private-key.json
+  submissions/
+    reviewer-01.json
+    reviewer-02.json
+  review-report.json
+  adjudication.json   # required only when disagreements exist
 ```
 
 At that point the private mapping may be public because the review is closed. Repository CI
-runs:
+runs both integrity and analysis validation:
 
 ```bash
 cpb-review validate-root \
   --dataset data/alpha \
   --root reviews \
   --allow-empty
+
+cpb-review-report validate-root \
+  --dataset data/alpha \
+  --root reviews \
+  --allow-empty
 ```
 
-An empty root reports `PENDING`, not `PASSING_EXTERNAL_REVIEW`. A published package must
-contain the packet, manifest, private key, and at least one complete submission.
+An empty root reports `PENDING`, not a passing external-review result. A published analyzed
+package requires at least two reviewers and a deterministic `review-report.json`. When the
+report contains disagreements, `adjudication.json` is mandatory.
 
-## What this stage does not yet claim
+## Current claim boundary
 
-This first stage establishes blinded packet preparation and submission integrity. Agreement,
-confusion tables, adjudication coverage, and the 0.80 review gate are computed by the next
-review-analysis stage. Until real independent submissions exist, the repository must continue
-to display external review as `PENDING`.
+The repository currently contains no completed review package. The workflow, statistics,
+and adjudication gate are executable infrastructure only. Until real independent submissions
+are published and recompute successfully, external review remains `PENDING`.
