@@ -177,3 +177,44 @@ are published.
 **Rejected alternatives.** Gating only on average agreement, treating kappa as the sole
 criterion, ignoring reason-code disagreements, allowing partial adjudication, or suppressing
 a failed review package would each overstate reliability or weaken auditability.
+
+## 2026-08-16 — Register metamorphic equivalence rather than assume it
+
+**Decision.** The alpha now has an explicit model-free metamorphic audit. Registered
+transformations cover recursive JSON object-key reordering, consistent evidence-ID renaming,
+consistent principal and environment renaming, provenance run-ID renaming, evidence-array
+reversal, unrelated passing evidence, unrelated stale failed evidence, and a resolved
+contradiction. Every applicable variant must pass the public input schema, artifact checks,
+type-specific numerical or Lean binding, complete oracle evaluation, and all four prompt
+renderers.
+
+**Decision comparison.** Evidence identifiers are mapped back to the original namespace
+before comparison. Evidence-ID collections in oracle output are canonicalized as sorted sets,
+because a semantics-preserving rename can change lexicographic traversal order without
+changing dependency-closure membership. Action, proposed state, probability, reason codes,
+and all non-ID fields must remain exactly equal.
+
+**Prompt boundary.** Recursive JSON object-key reordering must leave every rendered prompt
+byte-identical. Transformations that alter model-visible identifiers, evidence order, or
+records must change at least one prompt while preserving the normalized oracle decision. This
+separates deterministic pipeline invariance from future model consistency measurement.
+
+**Closure boundary.** A fresh unrelated artifact, a stale failed unrelated artifact, and a
+resolved contradiction are intentionally inert. A failure outside the requested transition's
+dependency closure must not invalidate the selected basis, while only a valid open
+contradiction may escalate.
+
+**Observed deterministic result.** The current 40-item alpha produces 331 applicable variants
+and 1,324 prompt renderings. Every variant passed schema validation, artifact binding, and
+normalized oracle equality with zero failures. This is a result about the registered
+deterministic transformations only; it is not evidence that a language model is invariant.
+
+**Versioning.** The invariance-report schema becomes part of the manifest-bound public
+contract. The underlying 40 item payloads and gold decisions are unchanged. Future additions
+or changes to the transformation registry require a new report identity and explicit
+research-decision entry.
+
+**Rejected alternatives.** Assuming identifier or ordering invariance without testing it,
+comparing renamed IDs literally, treating irrelevant evidence failures as basis failures, or
+reporting deterministic oracle invariance as model robustness would each weaken or overstate
+the benchmark claim.
