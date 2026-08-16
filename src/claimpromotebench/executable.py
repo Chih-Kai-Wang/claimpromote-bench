@@ -8,7 +8,7 @@ import re
 import sys
 from fractions import Fraction
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 from .dataset import load_json, repository_root, validate_with_schema
 from .errors import ClaimPromoteBenchError, DatasetIntegrityError, ExecutableFixtureError
@@ -20,10 +20,11 @@ PROTOCOL_VERSION = "1.0.0"
 MAX_COEFFICIENTS = 32
 MAX_GRID_POINTS = 4096
 MAX_RATIONAL_CHARS = 96
+MAX_REPETITIONS = 32
 _RATIONAL = re.compile(r"^-?(?:0|[1-9][0-9]*)(?:/[1-9][0-9]*)?$")
 
 
-def _fail(code: str, message: str) -> None:
+def _fail(code: str, message: str) -> NoReturn:
     raise ExecutableFixtureError(code, message)
 
 
@@ -31,7 +32,7 @@ def _fraction(value: Any, label: str) -> Fraction:
     if not isinstance(value, str):
         _fail("INVALID_RATIONAL", f"{label} must be a rational string")
     if len(value) > MAX_RATIONAL_CHARS or not _RATIONAL.fullmatch(value):
-        _fail("INVALID_RATIONAL", f"{label} is not a bounded canonical rational")
+        _fail("INVALID_RATIONAL", f"{label} is not a bounded rational")
     try:
         return Fraction(value)
     except (ValueError, ZeroDivisionError) as exc:
@@ -61,7 +62,6 @@ def _predicate_holds(values: list[Fraction], relation: str, threshold: Fraction)
     if relation == "==":
         return all(value == threshold for value in values)
     _fail("UNSUPPORTED_PREDICATE", f"unsupported predicate relation: {relation}")
-    raise AssertionError("unreachable")
 
 
 def _repetition_digest(
@@ -94,6 +94,17 @@ def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
         _fail("SCOPE_MISMATCH", "executable fixture must declare finite-grid-only scope")
     if artifact.get("arithmetic") != "EXACT_RATIONAL":
         _fail("UNSUPPORTED_ARITHMETIC", "only exact rational arithmetic is registered")
+    if artifact.get("preregistered") is not True:
+        _fail("PREREGISTRATION_REQUIRED", "fixture must declare preregistration")
+
+    repetition_value = artifact.get("repetitions")
+    if (
+        isinstance(repetition_value, bool)
+        or not isinstance(repetition_value, int)
+        or not 1 <= repetition_value <= MAX_REPETITIONS
+    ):
+        _fail("RESOURCE_LIMIT", "repetition count is outside the registered limit")
+    repetitions = repetition_value
 
     program = artifact["program"]
     coefficient_text = list(program["coefficients"])
@@ -107,9 +118,7 @@ def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
         _fraction(value, f"coefficient[{index}]")
         for index, value in enumerate(coefficient_text)
     ]
-    grid = [
-        _fraction(value, f"grid[{index}]") for index, value in enumerate(grid_text)
-    ]
+    grid = [_fraction(value, f"grid[{index}]") for index, value in enumerate(grid_text)]
     lower = _fraction(program["domain"]["lower"], "domain.lower")
     upper = _fraction(program["domain"]["upper"], "domain.upper")
     if lower >= upper:
@@ -138,7 +147,6 @@ def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
     ):
         _fail("OBSERVATION_MISMATCH", "observed values do not match exact recomputation")
 
-    repetitions = int(artifact["repetitions"])
     expected_digests = [
         _repetition_digest(artifact, value_text, repetition)
         for repetition in range(repetitions)
