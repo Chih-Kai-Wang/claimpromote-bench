@@ -24,24 +24,57 @@ policy and frozen evaluation time.
 
 Use the blinded workflow in [`REVIEW_WORKFLOW.md`](REVIEW_WORKFLOW.md). Active packet mappings
 remain private until every reviewer has submitted and judgments are frozen. After closure,
-publish the packet, mapping, submissions, agreement report, disagreement table, and
-adjudication record as one immutable package under `reviews/`.
+publish the packet, mapping, submissions, deterministic agreement report, disagreement table,
+and adjudication record as one immutable package under `reviews/`.
 
-The review report must include:
+The executable report includes:
 
 - per-reviewer action agreement with gold;
-- raw inter-reviewer action agreement;
-- Cohen pairwise kappa and multi-rater nominal agreement statistics;
-- action confusion tables;
-- exact reason-set agreement and partial reason overlap;
-- every disagreement, its adjudication, and any resulting policy or item revision;
-- packet, dataset, policy, submission, and report hashes.
+- per-reviewer action confusion matrices;
+- exact reason-set agreement and mean reason-set Jaccard similarity with gold;
+- raw action agreement for every reviewer pair;
+- pairwise Cohen kappa when defined;
+- pairwise exact reason agreement and mean reason-set Jaccard similarity;
+- unanimous-action rate and Fleiss kappa when defined;
+- every gold or inter-reviewer action/reason disagreement with a stable ID;
+- packet, dataset, policy, submission, report, and adjudication hashes.
 
-The primary gate is defined conservatively: every reviewer must reach at least 0.80 action
-agreement with the frozen gold, and raw inter-reviewer action agreement must be at least 0.80.
-Kappa is reported but is not the sole gate because class imbalance can make it unstable. If
-either threshold fails, revise the policy or items, create a new version, and conduct a fresh
-review rather than opening the hidden test.
+## Primary thresholds
+
+The gate is deliberately conservative:
+
+```text
+reviewer_count >= 2
+EVERY reviewer action agreement with frozen gold >= 0.80
+MINIMUM reviewer-pair raw action agreement >= 0.80
+```
+
+An average is insufficient because it can hide one poor reviewer or one poorly agreeing
+reviewer pair. Kappa is reported but is not the sole gate because class imbalance and
+single-category marginals can make it unstable or undefined. Reason agreement is disclosed
+and adjudicated but is not currently assigned a separate numeric pass threshold.
+
+If either action threshold fails, the result is `REVISION_REQUIRED`. Adjudication cannot turn
+a failed threshold into a pass. Revise the policy or items, create a new version, and conduct
+a fresh blind review before opening the hidden test.
+
+## Disagreement and adjudication rule
+
+Even when numeric thresholds pass, every action or reason disagreement must be adjudicated.
+The allowed dispositions are:
+
+- `KEEP_GOLD`;
+- `REVISE_ITEM`;
+- `REVISE_POLICY`;
+- `UNRESOLVED`.
+
+The final gate is `PASS` only when numeric thresholds pass and every disagreement is resolved
+as `KEEP_GOLD`, or no disagreement exists. `REVISE_ITEM` or `REVISE_POLICY` requires a new
+version and fresh review; `UNRESOLVED` remains `NEEDS_ADJUDICATION`.
+
+A negative external-review result is still valid evidence and must remain publishable. CI
+checks reproducibility and completeness, not whether reviewers happened to support the
+current version.
 
 External annotation review is not independent model reproduction. Both remain separate
 completion requirements. Until real submissions pass the complete gate, the repository must
