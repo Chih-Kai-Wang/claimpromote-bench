@@ -17,7 +17,7 @@ from .hashing import sha256_bytes, sha256_file
 
 TOOLCHAIN_CONTENT = "leanprover/lean4:v4.33.0\n"
 TOOLCHAIN_SHA256 = sha256_bytes(TOOLCHAIN_CONTENT.encode("utf-8"))
-LAKEFILE_CONTENT = """name = \"claimpromote-formal-alpha\"
+LAKEFILE_CONTENT = """name = \"claimpromote_formal_alpha\"
 version = \"0.1.0\"
 defaultTargets = [\"ClaimPromoteFormal\"]
 srcDir = \"artifacts\"
@@ -29,7 +29,7 @@ LAKE_MANIFEST_CONTENT = """{
   "version": "1.1.0",
   "packagesDir": ".lake/packages",
   "packages": [],
-  "name": "claimpromote-formal-alpha",
+  "name": "claimpromote_formal_alpha",
   "lakeDir": ".lake"
 }
 """
