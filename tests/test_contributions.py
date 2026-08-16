@@ -19,7 +19,6 @@ from claimpromotebench.errors import DatasetIntegrityError
 from claimpromotebench.hashing import sha256_bytes, sha256_file
 from claimpromotebench.prompts import render_prompt
 
-
 IDENTITY = {
     "model_id": "contributor/local-smoke",
     "model_artifact_sha256": "sha256:" + "1" * 64,
