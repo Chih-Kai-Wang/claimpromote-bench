@@ -10,6 +10,7 @@ from claimpromotebench.baselines import baseline_decision
 from claimpromotebench.contributions import (
     main,
     make_contribution_id,
+    prepare_contribution,
     validate_contribution,
     validate_contribution_tree,
 )
@@ -141,6 +142,35 @@ def contribution_package(
         run_path=run_path,
     )
     return manifest_path, run_path
+
+
+def test_prepare_contribution_derives_immutable_fields(
+    root: Path,
+    contribution_package: tuple[Path, Path],
+    capsys,
+) -> None:
+    manifest_path, _run_path = contribution_package
+    value = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for field in (
+        "contribution_id",
+        "dataset_manifest_sha256",
+        "run_file_sha256",
+        "expected_run",
+    ):
+        value.pop(field)
+    manifest_path.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    prepared = prepare_contribution(manifest_path, root=root)
+    assert prepared["expected_run"] == IDENTITY
+    assert prepared["contribution_id"] == make_contribution_id(prepared)
+
+    assert main(["--prepare", str(manifest_path), "--write"]) == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["status"] == "PREPARED"
+    assert validate_contribution(manifest_path, root=root)["status"] == "PASS"
 
 
 def test_valid_contribution_is_hash_bound(
