@@ -1,0 +1,32 @@
+{
+  "case_id": "reject-tampered-observation",
+  "expected_status": "REJECT",
+  "expected_error_code": "OBSERVATION_MISMATCH",
+  "artifact": {
+    "schema_version": "1.0.0",
+    "artifact_kind": "CPB_EXACT_RATIONAL_GRID",
+    "protocol_id": "cpb-exact-grid-v1",
+    "protocol_version": "1.0.0",
+    "claim_scope": "FINITE_GRID_ONLY",
+    "arithmetic": "EXACT_RATIONAL",
+    "repetitions": 3,
+    "preregistered": true,
+    "program": {
+      "domain": {"lower": "0", "upper": "1"},
+      "coefficients": ["1", "-1", "1"],
+      "grid": ["0", "1/4", "1/2", "3/4", "1"],
+      "predicate": {"relation": ">=", "threshold": "0"}
+    },
+    "observed": {
+      "values": ["1", "13/16", "3/4", "13/16", "1"],
+      "minimum": "1/2",
+      "maximum": "1",
+      "predicate_holds": true,
+      "repetition_digests": [
+        "sha256:49a8c43c5d51c80cefd4110fce126c521cb96aca556aefbc1e6fc1b41c01b29a",
+        "sha256:120a7c66947c4c01816807ccbce29a352c19b1d887c6f475147a6d56366bc79a",
+        "sha256:a2f3bc8aaa519fca06c395242e2e933798535aade8d96554f71dfba4ef10e5ba"
+      ]
+    }
+  }
+}
