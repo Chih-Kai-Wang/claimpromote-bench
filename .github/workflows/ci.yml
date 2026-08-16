@@ -50,6 +50,11 @@ jobs:
           python -m claimpromotebench.executable
           --fixtures fixtures/executable
           --out work/executable-fixtures.json
+      - name: Validate contributed model runs
+        run: >-
+          python -m claimpromotebench.contributions
+          --root contributions
+          --out work/contributions.json
       - name: Test with branch coverage
         run: python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
 

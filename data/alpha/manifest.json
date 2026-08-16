@@ -56,6 +56,7 @@
     "executable-fixture-case.schema.json": "sha256:8a6796ad125948ad09a3bdf08af4a9d96d7b00452d94a5902e976e9b4838cafe",
     "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
     "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
+    "run-contribution.schema.json": "sha256:db3422d3b48e9cf576e18b6df35085eac317e3f455a5650a65832404e9d137e4",
     "run-record.schema.json": "sha256:697641054f05428c8e5ed3115abc3d912ce6b8e37e4f867c96039da7efa4d953",
     "transition-policy.schema.json": "sha256:6c4f5f5b1f71a110ee4915f34d7434215dac4c3631ac7f8af48e33faea356eb7"
   },
