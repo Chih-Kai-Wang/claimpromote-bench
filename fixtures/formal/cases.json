@@ -1,0 +1,17 @@
+[
+  {
+    "case_id": "valid-add-zero",
+    "source": "valid-add-zero.lean",
+    "expected_status": "PASS"
+  },
+  {
+    "case_id": "reject-type-mismatch",
+    "source": "reject-type-mismatch.lean",
+    "expected_status": "REJECT"
+  },
+  {
+    "case_id": "reject-unknown-identifier",
+    "source": "reject-unknown-identifier.lean",
+    "expected_status": "REJECT"
+  }
+]
