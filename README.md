@@ -13,8 +13,8 @@ preserving valid promotion?
 The benchmark evaluates a requested **evidence-state transition**. It is not a general truth
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
-offline baselines, gate semantics, baseline evaluator, and alpha run-record evaluator
-before any model experiment. The full arm-comparison automation remains pending.
+offline baselines, gate semantics, baseline evaluator, and alpha run-record evaluator before
+any model experiment. The full arm-comparison automation remains pending.
 
 ## Current alpha
 
@@ -24,6 +24,7 @@ before any model experiment. The full arm-comparison automation remains pending.
 | Gold decision | Versioned public policy + dependency closure + executable integrity/policy checks over synthetic fixtures |
 | Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
 | Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
+| Evaluator | Fail-closed actions, tie-aware AUPRC, paired score ranking, family diagnostics, pair bootstrap intervals |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
@@ -74,6 +75,11 @@ python -m claimpromotebench baseline policy_oracle --out work/policy-oracle.json
 python -m claimpromotebench evaluate --gold data/alpha/gold.jsonl --runs work/policy-oracle.jsonl
 ```
 
+The evaluation JSON includes the full threshold-grouped precision-recall curve,
+`auprc_stepwise`, prevalence lift, paired valid-versus-invalid score ranking, pair-bootstrap
+intervals, and per-family diagnostics. See [Experiment protocol](docs/EXPERIMENTS.md) for the
+exact definitions.
+
 See [Reproduction](docs/REPRODUCTION.md) for clean-environment steps and expected structural
 checks. A passing oracle baseline proves internal pipeline agreement, not a research result.
 
@@ -102,15 +108,16 @@ The checked-in model configurations are currently `PENDING_ARTIFACT_FREEZE`; the
 not executed runs.
 
 Primary metrics are false promotion rate, valid promotion recall / false hold rate, and
-paired transition accuracy. Reports must separate intent false promotions from effective
+paired transition accuracy. Ranking diagnostics include tie-aware stepwise AUPRC and direct
+within-pair score ordering. Reports must separate intent false promotions from effective
 post-gate false promotions. A successful veto is a system effect, not improved model
 calibration. See [Experiment protocol](docs/EXPERIMENTS.md).
 
 `evaluate-runs` validates complete run records, refuses `FORMAT_ERROR` as a silent hold,
 scores raw intent and post-gate decisions separately, and reports gate plus operational
 metrics. Format errors reduce explicit coverage and are included in a worst-case safety
-sensitivity analysis. Family/model stratification and automated six-way arm comparison remain
-pre-run gates.
+sensitivity analysis. Family stratification is automatic; automated model/seed arm
+comparison remains a pre-run gate.
 
 ## Research boundary
 
