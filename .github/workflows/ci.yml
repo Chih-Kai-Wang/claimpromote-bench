@@ -55,6 +55,13 @@ jobs:
           python -m claimpromotebench.contributions
           --root contributions
           --out work/contributions.json
+      - name: Validate published independent reviews
+        run: >-
+          python -m claimpromotebench.review validate-root
+          --dataset data/alpha
+          --root reviews
+          --allow-empty
+          --out work/reviews.json
       - name: Test with branch coverage
         run: python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
 
