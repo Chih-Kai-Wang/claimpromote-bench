@@ -223,7 +223,7 @@ def check_pairs(dataset_dir: Path) -> dict[str, int]:
 
 
 def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, Any]:
-    """Run schema, integrity, pairing, and oracle/gold equality checks."""
+    """Run schema, integrity, pairing, executable-artifact, and oracle/gold checks."""
 
     root = root or repository_root()
     manifest = verify_manifest(dataset_dir)
@@ -250,12 +250,34 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
     for name, expected in sorted(schema_hashes.items()):
         if sha256_file(root / "schemas" / str(name)) != expected:
             raise DatasetIntegrityError(f"schema does not match manifest: {name}")
+
+    from .executable import verify_dataset_artifact
+
+    executable_artifacts: set[str] = set()
+    executable_evidence = 0
     for item in inputs:
         validate_with_schema(item, _schema(root, "benchmark-input.schema.json"), str(item["id"]))
-        for evidence in item["evidence"]:
-            verify_artifact(dataset_dir, evidence)
         gold_record = gold_by_id[str(item["id"])]
         validate_with_schema(gold_record, _schema(root, "gold-label.schema.json"), str(item["id"]))
+        require_scope_match = gold_record["decision"]["action"] == "ALLOW"
+        item_has_executable = False
+        for evidence in item["evidence"]:
+            verify_artifact(dataset_dir, evidence)
+            artifact_path = str(evidence["artifact_path"])
+            if evidence["type"] == "COMPUTATION" and artifact_path.endswith(".json"):
+                verify_dataset_artifact(
+                    dataset_dir,
+                    evidence,
+                    require_scope_match=require_scope_match,
+                )
+                executable_artifacts.add(artifact_path)
+                executable_evidence += 1
+                item_has_executable = True
+        if item["family"] == "NUMERICAL" and not item_has_executable:
+            raise DatasetIntegrityError(
+                f"numerical alpha item lacks executable computation evidence: {item['id']}"
+            )
+
         actual = evaluate(item, policy, str(manifest["evaluation_time"]))
         expected = gold_record["decision"]
         if canonical_json(actual) != canonical_json(expected):
@@ -268,5 +290,7 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
         "pairs": 20,
         "families": distribution,
         "evaluation_time": manifest["evaluation_time"],
+        "executable_computation_artifacts": len(executable_artifacts),
+        "executable_computation_evidence": executable_evidence,
         "model_experiments": "PENDING",
     }
