@@ -213,11 +213,11 @@ def test_packet_and_private_mapping_tampering_fail_closed(
     prepare_review_package(dataset_dir, package, secret=SECRET)
 
     packet_path = package / "packet.jsonl"
-    original_packet = packet_path.read_text(encoding="utf-8")
-    packet_path.write_text(original_packet + "\n", encoding="utf-8")
+    original_packet = packet_path.read_bytes()
+    packet_path.write_bytes(original_packet + b"\n")
     with pytest.raises(DatasetIntegrityError, match="packet hash"):
         validate_review_package_material(dataset_dir, package)
-    packet_path.write_text(original_packet, encoding="utf-8")
+    packet_path.write_bytes(original_packet)
 
     key_path = package / "private-key.json"
     key = _load_object(key_path)
