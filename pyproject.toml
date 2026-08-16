@@ -34,6 +34,7 @@ dev = [
 
 [project.scripts]
 cpb = "claimpromotebench.cli:main"
+cpb-audit-shortcuts = "claimpromotebench.shortcuts:main"
 
 [project.urls]
 Repository = "https://github.com/f0909172434/claimpromote-bench"
