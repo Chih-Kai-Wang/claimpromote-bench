@@ -74,7 +74,7 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install runtime dependencies
         run: python -m pip install -e .
-      - name: Build and independently check Lean environment
+      - name: Build pinned Lean environment
         uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
         with:
           lake-package-directory: data/alpha
@@ -82,8 +82,11 @@ jobs:
           build: true
           test: false
           lint: false
-          leanchecker: true
+          leanchecker: false
           use-mathlib-cache: false
+      - name: Replay built declarations with Lean checker
+        working-directory: data/alpha
+        run: lake env leanchecker ClaimPromoteFormal
       - name: Execute formal alpha and negative fixtures
         run: >-
           python -m claimpromotebench.formal
