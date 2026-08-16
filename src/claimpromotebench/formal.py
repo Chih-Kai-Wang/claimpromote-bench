@@ -7,10 +7,11 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
-from .dataset import load_json, load_jsonl, repository_root
+from .dataset import load_json, load_jsonl
 from .errors import ClaimPromoteBenchError, DatasetIntegrityError
 from .hashing import sha256_bytes, sha256_file
 
@@ -172,7 +173,9 @@ def verify_formal_artifact_binding(
     if markers["STATEMENT_SHA256"] != context["statement_sha256"]:
         raise DatasetIntegrityError("formal artifact statement marker does not match the item")
     if markers["TOOLCHAIN_LOCK_SHA256"] != actual_toolchain_hash:
-        raise DatasetIntegrityError("formal artifact toolchain marker is not pinned to lean-toolchain")
+        raise DatasetIntegrityError(
+            "formal artifact toolchain marker is not pinned to lean-toolchain"
+        )
 
     scope = evidence.get("scope")
     if not isinstance(scope, dict) or scope.get("verifier") != "lean":
@@ -206,7 +209,9 @@ def _run_lean(package_dir: Path, source: Path) -> dict[str, Any]:
             check=False,
         )
     except FileNotFoundError as exc:
-        raise DatasetIntegrityError("lake is unavailable; install the pinned Lean toolchain") from exc
+        raise DatasetIntegrityError(
+            "lake is unavailable; install the pinned Lean toolchain"
+        ) from exc
     except subprocess.TimeoutExpired as exc:
         raise DatasetIntegrityError(f"Lean verification timed out: {source}") from exc
     output = f"{completed.stdout}\0{completed.stderr}".encode("utf-8", errors="replace")
@@ -231,7 +236,11 @@ def verify_formal_fixture_suite(
     results: list[dict[str, Any]] = []
     root = cases_path.parent.resolve()
     for case in value:
-        if not isinstance(case, dict) or set(case) != {"case_id", "source", "expected_status"}:
+        if not isinstance(case, dict) or set(case) != {
+            "case_id",
+            "source",
+            "expected_status",
+        }:
             raise DatasetIntegrityError("formal fixture case has an unsupported shape")
         case_id = str(case["case_id"])
         if not case_id or case_id in seen:
@@ -241,7 +250,9 @@ def verify_formal_fixture_suite(
         try:
             source.relative_to(root)
         except ValueError as exc:
-            raise DatasetIntegrityError(f"formal fixture path escapes its directory: {case_id}") from exc
+            raise DatasetIntegrityError(
+                f"formal fixture path escapes its directory: {case_id}"
+            ) from exc
         if not source.is_file() or source.suffix != ".lean":
             raise DatasetIntegrityError(f"formal fixture source is missing: {case_id}")
         execution = runner(package_dir, source)
