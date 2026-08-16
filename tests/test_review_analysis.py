@@ -42,17 +42,11 @@ def _write_object(path: Path, value: dict[str, Any]) -> None:
 
 def _mapping(package_dir: Path) -> dict[str, str]:
     key = _load_object(package_dir / "private-key.json")
-    return {
-        str(value["review_item_id"]): str(value["item_id"])
-        for value in key["mapping"]
-    }
+    return {str(value["review_item_id"]): str(value["item_id"]) for value in key["mapping"]}
 
 
 def _gold(dataset_dir: Path) -> dict[str, dict[str, Any]]:
-    return {
-        str(record["id"]): record
-        for record in load_jsonl(dataset_dir / "gold.jsonl")
-    }
+    return {str(record["id"]): record for record in load_jsonl(dataset_dir / "gold.jsonl")}
 
 
 def _write_submission(
@@ -107,9 +101,10 @@ def _prepare_two_reviewer_package(
     dataset_dir: Path,
     tmp_path: Path,
     *,
+    package_name: str = "package",
     second_mutations: dict[str, tuple[str, list[str]]] | None = None,
 ) -> Path:
-    package = tmp_path / "package"
+    package = tmp_path / package_name
     prepare_review_package(dataset_dir, package, secret=SECRET)
     _write_submission(dataset_dir, package, "reviewer-one")
     _write_submission(
@@ -124,23 +119,16 @@ def _prepare_two_reviewer_package(
 def _one_allow_item(dataset_dir: Path) -> str:
     gold = _gold(dataset_dir)
     return next(
-        item_id
-        for item_id, value in sorted(gold.items())
-        if value["decision"]["action"] == "ALLOW"
+        item_id for item_id, value in sorted(gold.items()) if value["decision"]["action"] == "ALLOW"
     )
 
 
 def _low_agreement_mutations(dataset_dir: Path) -> dict[str, tuple[str, list[str]]]:
     gold = _gold(dataset_dir)
     allow_items = [
-        item_id
-        for item_id, value in sorted(gold.items())
-        if value["decision"]["action"] == "ALLOW"
+        item_id for item_id, value in sorted(gold.items()) if value["decision"]["action"] == "ALLOW"
     ]
-    return {
-        item_id: ("HOLD", ["MISSING_DEPENDENCY"])
-        for item_id in allow_items[:10]
-    }
+    return {item_id: ("HOLD", ["MISSING_DEPENDENCY"]) for item_id in allow_items[:10]}
 
 
 def _write_adjudication(
@@ -194,10 +182,7 @@ def test_perfect_review_report_passes_all_metrics(
         "metrics_pass": True,
         "disagreement_count": 0,
     }
-    assert all(
-        reviewer["action_agreement_with_gold"] == 1.0
-        for reviewer in report["reviewers"]
-    )
+    assert all(reviewer["action_agreement_with_gold"] == 1.0 for reviewer in report["reviewers"])
     pairwise = report["inter_reviewer"]["pairwise"]
     assert len(pairwise) == 1
     assert pairwise[0]["raw_action_agreement"] == 1.0
@@ -236,7 +221,7 @@ def test_single_high_agreement_disagreement_requires_adjudication(
         "GOLD_REASON_SET",
         "REVIEWER_REASON_SET",
     }
-    with pytest.raises(DatasetIntegrityError, match="requires adjudication"):
+    with pytest.raises(DatasetIntegrityError, match="require adjudication"):
         validate_analysis_package(dataset_dir, package)
 
     draft_path = tmp_path / "adjudication-draft.json"
@@ -379,13 +364,14 @@ def test_analysis_root_preserves_pass_and_revision_required_results(
     assert pending["status"] == "PENDING"
     assert pending["packages"] == 0
 
-    passing = _prepare_two_reviewer_package(dataset_dir, reviews_root / "passing")
+    passing = _prepare_two_reviewer_package(dataset_dir, reviews_root, package_name="passing")
     passing_report = analyze_review_package(dataset_dir, passing)
     _write_object(passing / REPORT_FILENAME, passing_report)
 
     failing = _prepare_two_reviewer_package(
         dataset_dir,
-        reviews_root / "revision",
+        reviews_root,
+        package_name="revision",
         second_mutations=_low_agreement_mutations(dataset_dir),
     )
     failing_report = analyze_review_package(dataset_dir, failing)
@@ -405,7 +391,7 @@ def test_review_analysis_cli_analyze_and_validate_root(
     capsys,
 ) -> None:
     reviews_root = tmp_path / "reviews"
-    package = _prepare_two_reviewer_package(dataset_dir, reviews_root / "package")
+    package = _prepare_two_reviewer_package(dataset_dir, reviews_root, package_name="package")
     report_path = package / REPORT_FILENAME
     assert (
         main(

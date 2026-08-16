@@ -66,10 +66,7 @@ def _reason_jaccard(left: dict[str, Any], right: dict[str, Any]) -> float:
 
 
 def _empty_confusion() -> dict[str, dict[str, int]]:
-    return {
-        expected: {observed: 0 for observed in ACTION_ORDER}
-        for expected in ACTION_ORDER
-    }
+    return {expected: {observed: 0 for observed in ACTION_ORDER} for expected in ACTION_ORDER}
 
 
 def _cohen_kappa(left: list[str], right: list[str]) -> float | None:
@@ -105,8 +102,7 @@ def _fleiss_kappa(action_rows: list[list[str]]) -> float | None:
     item_count = len(action_rows)
     observed = _mean(per_item_agreement)
     category_proportions = {
-        action: total_counts[action] / (item_count * reviewer_count)
-        for action in ACTION_ORDER
+        action: total_counts[action] / (item_count * reviewer_count) for action in ACTION_ORDER
     }
     expected = sum(value * value for value in category_proportions.values())
     if expected == 1.0:
@@ -160,14 +156,8 @@ def _load_package_data(
     if not all(isinstance(value, dict) for value in (manifest, key, dataset_manifest)):
         raise DatasetIntegrityError("review analysis package metadata is malformed")
 
-    mapping = {
-        str(value["review_item_id"]): str(value["item_id"])
-        for value in key["mapping"]
-    }
-    gold = {
-        str(record["id"]): record
-        for record in load_jsonl(dataset_dir / "gold.jsonl")
-    }
+    mapping = {str(value["review_item_id"]): str(value["item_id"]) for value in key["mapping"]}
+    gold = {str(record["id"]): record for record in load_jsonl(dataset_dir / "gold.jsonl")}
     paths = sorted((package_dir / SUBMISSIONS_DIRECTORY).glob("*.json"))
     submissions: list[dict[str, Any]] = []
     for path in paths:
@@ -261,8 +251,7 @@ def _disagreements(
     submissions: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     decision_maps = {
-        str(submission["reviewer_id"]): _decision_map(submission)
-        for submission in submissions
+        str(submission["reviewer_id"]): _decision_map(submission) for submission in submissions
     }
     disagreements: list[dict[str, Any]] = []
     for review_item_id in sorted(mapping):
@@ -291,8 +280,7 @@ def _disagreements(
         if len(actions) > 1:
             kinds.append("REVIEWER_ACTION")
         if any(
-            frozenset(str(reason) for reason in value["reason_codes"])
-            != expected_reason_set
+            frozenset(str(reason) for reason in value["reason_codes"]) != expected_reason_set
             for value in reviewer_decisions
         ):
             kinds.append("GOLD_REASON_SET")
@@ -327,13 +315,9 @@ def analyze_review_package(dataset_dir: Path, package_dir: Path) -> dict[str, An
     """Compute deterministic agreement, disagreement, and pre-adjudication gate results."""
 
     manifest, mapping, gold, submissions = _load_package_data(dataset_dir, package_dir)
-    reviewer_metrics = [
-        _reviewer_metrics(mapping, gold, submission)
-        for submission in submissions
-    ]
+    reviewer_metrics = [_reviewer_metrics(mapping, gold, submission) for submission in submissions]
     pairwise = [
-        _pairwise_metrics(mapping, left, right)
-        for left, right in combinations(submissions, 2)
+        _pairwise_metrics(mapping, left, right) for left, right in combinations(submissions, 2)
     ]
     pairwise_agreements = [float(value["raw_action_agreement"]) for value in pairwise]
     decision_maps = [_decision_map(submission) for submission in submissions]
@@ -351,8 +335,7 @@ def analyze_review_package(dataset_dir: Path, package_dir: Path) -> dict[str, An
 
     reviewer_count_pass = len(submissions) >= MINIMUM_REVIEWERS
     per_reviewer_pass = reviewer_count_pass and all(
-        float(value["action_agreement_with_gold"])
-        >= MINIMUM_PER_REVIEWER_ACTION_AGREEMENT
+        float(value["action_agreement_with_gold"]) >= MINIMUM_PER_REVIEWER_ACTION_AGREEMENT
         for value in reviewer_metrics
     )
     minimum_pairwise = min(pairwise_agreements) if pairwise_agreements else None
@@ -381,9 +364,7 @@ def analyze_review_package(dataset_dir: Path, package_dir: Path) -> dict[str, An
         "reviewer_count": len(submissions),
         "thresholds": {
             "minimum_reviewers": MINIMUM_REVIEWERS,
-            "minimum_per_reviewer_action_agreement": (
-                MINIMUM_PER_REVIEWER_ACTION_AGREEMENT
-            ),
+            "minimum_per_reviewer_action_agreement": (MINIMUM_PER_REVIEWER_ACTION_AGREEMENT),
             "minimum_pairwise_action_agreement": MINIMUM_PAIRWISE_ACTION_AGREEMENT,
         },
         "reviewers": reviewer_metrics,
@@ -514,7 +495,10 @@ def _validate_adjudication_value(
                     "UNRESOLVED adjudication cannot contain a recommendation"
                 )
         elif disposition == "KEEP_GOLD":
-            if action != disagreement["gold_action"] or reasons != disagreement["gold_reason_codes"]:
+            if (
+                action != disagreement["gold_action"]
+                or reasons != disagreement["gold_reason_codes"]
+            ):
                 raise DatasetIntegrityError("KEEP_GOLD must reproduce the frozen gold decision")
         else:
             if not isinstance(action, str):
