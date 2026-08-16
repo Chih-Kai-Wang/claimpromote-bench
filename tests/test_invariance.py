@@ -115,9 +115,10 @@ def test_principal_and_environment_renaming_preserve_equality_relations(
         actor_variant.item["evidence"][0]["provenance"]["actor_id"]
         == actor_variant.item["claim_context"]["author_id"]
     )
-    assert evaluate(actor_variant.item, policy, evaluation_time)["reason_codes"] == evaluate(
-        actor_item, policy, evaluation_time
-    )["reason_codes"]
+    assert (
+        evaluate(actor_variant.item, policy, evaluation_time)["reason_codes"]
+        == evaluate(actor_item, policy, evaluation_time)["reason_codes"]
+    )
 
     environment_item = next(value for value in items if value["id"] == "alpha-prov-02-b")
     environment_variant = _transform("rename_environment_identifiers").apply(environment_item)
@@ -126,9 +127,10 @@ def test_principal_and_environment_renaming_preserve_equality_relations(
         environment_variant.item["evidence"][0]["provenance"]["environment_sha256"]
         == environment_variant.item["claim_context"]["author_environment_sha256"]
     )
-    assert evaluate(environment_variant.item, policy, evaluation_time)["reason_codes"] == evaluate(
-        environment_item, policy, evaluation_time
-    )["reason_codes"]
+    assert (
+        evaluate(environment_variant.item, policy, evaluation_time)["reason_codes"]
+        == evaluate(environment_item, policy, evaluation_time)["reason_codes"]
+    )
 
 
 def test_unreferenced_failures_and_resolved_contradictions_are_inert(

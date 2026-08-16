@@ -55,15 +55,11 @@ def _opaque(prefix: str, label: str, length: int = 24) -> str:
 
 
 def _all_evidence_identifiers(item: dict[str, Any]) -> set[str]:
-    identifiers = {
-        str(evidence["id"])
-        for evidence in item["evidence"]
-    }
+    identifiers = {str(evidence["id"]) for evidence in item["evidence"]}
     for evidence in item["evidence"]:
         identifiers.update(str(value) for value in evidence.get("dependencies", []))
     identifiers.update(
-        str(value)
-        for value in item["requested_transition"].get("basis_evidence_ids", [])
+        str(value) for value in item["requested_transition"].get("basis_evidence_ids", [])
     )
     for basis in item.get("current_state_basis", {}).values():
         if isinstance(basis, dict):
@@ -77,10 +73,7 @@ def _identity_inverse(item: dict[str, Any]) -> dict[str, str]:
 
 def _reverse_object_key_order(value: Any) -> Any:
     if isinstance(value, dict):
-        return {
-            key: _reverse_object_key_order(value[key])
-            for key in reversed(list(value))
-        }
+        return {key: _reverse_object_key_order(value[key]) for key in reversed(list(value))}
     if isinstance(value, list):
         return [_reverse_object_key_order(element) for element in value]
     return deepcopy(value)
@@ -96,10 +89,7 @@ def _reverse_key_order(item: dict[str, Any]) -> Variant:
 def _rename_evidence_ids(item: dict[str, Any]) -> Variant:
     variant = deepcopy(item)
     identifiers = sorted(_all_evidence_identifiers(variant))
-    mapping = {
-        old: _opaque("ev-", f"{item['id']}:evidence-id:{old}")
-        for old in identifiers
-    }
+    mapping = {old: _opaque("ev-", f"{item['id']}:evidence-id:{old}") for old in identifiers}
     if len(set(mapping.values())) != len(mapping):
         raise DatasetIntegrityError("evidence-ID metamorphic mapping collided")
 
@@ -114,9 +104,7 @@ def _rename_evidence_ids(item: dict[str, Any]) -> Variant:
     ]
     for basis in variant.get("current_state_basis", {}).values():
         if isinstance(basis, dict):
-            basis["evidence_ids"] = [
-                mapping[str(value)] for value in basis.get("evidence_ids", [])
-            ]
+            basis["evidence_ids"] = [mapping[str(value)] for value in basis.get("evidence_ids", [])]
     return Variant(
         variant,
         {new: old for old, new in mapping.items()},
@@ -128,13 +116,9 @@ def _rename_principals(item: dict[str, Any]) -> Variant:
     variant = deepcopy(item)
     context = variant["claim_context"]
     values = {str(context["author_id"])}
-    values.update(
-        str(evidence["provenance"]["actor_id"])
-        for evidence in variant["evidence"]
-    )
+    values.update(str(evidence["provenance"]["actor_id"]) for evidence in variant["evidence"])
     mapping = {
-        old: _opaque("principal-", f"{item['id']}:principal:{old}")
-        for old in sorted(values)
+        old: _opaque("principal-", f"{item['id']}:principal:{old}") for old in sorted(values)
     }
     context["author_id"] = mapping[str(context["author_id"])]
     for evidence in variant["evidence"]:
@@ -148,34 +132,22 @@ def _rename_environments(item: dict[str, Any]) -> Variant:
     context = variant["claim_context"]
     values = {str(context["author_environment_sha256"])}
     values.update(
-        str(evidence["provenance"]["environment_sha256"])
-        for evidence in variant["evidence"]
+        str(evidence["provenance"]["environment_sha256"]) for evidence in variant["evidence"]
     )
     mapping = {
-        old: sha256_bytes(f"{item['id']}:environment:{old}".encode("utf-8"))
-        for old in sorted(values)
+        old: sha256_bytes(f"{item['id']}:environment:{old}".encode()) for old in sorted(values)
     }
-    context["author_environment_sha256"] = mapping[
-        str(context["author_environment_sha256"])
-    ]
+    context["author_environment_sha256"] = mapping[str(context["author_environment_sha256"])]
     for evidence in variant["evidence"]:
         provenance = evidence["provenance"]
-        provenance["environment_sha256"] = mapping[
-            str(provenance["environment_sha256"])
-        ]
+        provenance["environment_sha256"] = mapping[str(provenance["environment_sha256"])]
     return Variant(variant, _identity_inverse(variant), False)
 
 
 def _rename_run_ids(item: dict[str, Any]) -> Variant:
     variant = deepcopy(item)
-    values = {
-        str(evidence["provenance"]["run_id"])
-        for evidence in variant["evidence"]
-    }
-    mapping = {
-        old: _opaque("run-", f"{item['id']}:run:{old}")
-        for old in sorted(values)
-    }
+    values = {str(evidence["provenance"]["run_id"]) for evidence in variant["evidence"]}
+    mapping = {old: _opaque("run-", f"{item['id']}:run:{old}") for old in sorted(values)}
     for evidence in variant["evidence"]:
         provenance = evidence["provenance"]
         provenance["run_id"] = mapping[str(provenance["run_id"])]
@@ -213,13 +185,11 @@ def _new_unreferenced_evidence(
         scope["contradiction_status"] = contradiction_status
     actor_role = "INDEPENDENT_REVIEWER" if evidence_type == "CONTRADICTION" else "TOOL"
     actor_id = _opaque("principal-", f"{item['id']}:{transform_id}:actor")
-    environment = sha256_bytes(
-        f"{item['id']}:{transform_id}:environment".encode("utf-8")
-    )
+    environment = sha256_bytes(f"{item['id']}:{transform_id}:environment".encode())
     if actor_id == context["author_id"]:
         actor_id = f"{actor_id}-independent"
     if environment == context["author_environment_sha256"]:
-        environment = sha256_bytes(f"{environment}:independent".encode("utf-8"))
+        environment = sha256_bytes(f"{environment}:independent".encode())
     return {
         "id": evidence_id,
         "type": evidence_type,
@@ -290,7 +260,8 @@ def _append_resolved_contradiction(item: dict[str, Any]) -> Variant:
 TRANSFORMS = (
     Transform(
         "reverse_json_object_key_order",
-        "Reverse object insertion order recursively; JSON object semantics and prompts must remain identical.",
+        "Reverse object insertion order recursively; JSON object semantics "
+        "and prompts must remain identical.",
         _reverse_key_order,
     ),
     Transform(
@@ -305,7 +276,8 @@ TRANSFORMS = (
     ),
     Transform(
         "rename_environment_identifiers",
-        "Rename author and evidence environment digests consistently while preserving equality relations.",
+        "Rename author and evidence environment digests consistently while "
+        "preserving equality relations.",
         _rename_environments,
     ),
     Transform(
@@ -389,11 +361,13 @@ def _failure(
     error: BaseException | str,
 ) -> dict[str, str]:
     message = str(error)
+    if not message and isinstance(error, BaseException):
+        message = error.__class__.__name__
     return {
         "item_id": item_id,
         "transform_id": transform_id,
         "stage": stage,
-        "message": message or error.__class__.__name__ if isinstance(error, BaseException) else message,
+        "message": message,
     }
 
 
@@ -547,9 +521,7 @@ def audit_invariance(dataset_dir: Path) -> dict[str, Any]:
         "failures": failures,
         "status": "PASS" if not failures else "FAIL",
     }
-    report["report_id"] = sha256_bytes(
-        canonical_json(_report_identity(report)).encode("utf-8")
-    )
+    report["report_id"] = sha256_bytes(canonical_json(_report_identity(report)).encode("utf-8"))
     validate_with_schema(
         report,
         root / "schemas" / "invariance-report.schema.json",
