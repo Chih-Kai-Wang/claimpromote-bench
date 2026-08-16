@@ -141,9 +141,7 @@ def _load_packet_records(
             raise DatasetIntegrityError("review packet payload must be an object")
         leaked = HIDDEN_PACKET_FIELDS & set(payload)
         if leaked:
-            raise DatasetIntegrityError(
-                f"review packet exposes hidden fields: {sorted(leaked)}"
-            )
+            raise DatasetIntegrityError(f"review packet exposes hidden fields: {sorted(leaked)}")
     return records
 
 
@@ -216,9 +214,7 @@ def prepare_review_package(
         "packet_sha256": sha256_file(packet_path),
         "blinding_method": BLINDING_METHOD,
     }
-    manifest["packet_id"] = sha256_bytes(
-        canonical_json(_packet_identity(manifest)).encode("utf-8")
-    )
+    manifest["packet_id"] = sha256_bytes(canonical_json(_packet_identity(manifest)).encode("utf-8"))
     _write_json(out_dir / MANIFEST_FILENAME, manifest)
 
     key = {
@@ -396,7 +392,9 @@ def validate_review_submission(
     expected_ids = {str(record["review_item_id"]) for record in records}
     observed_ids: set[str] = set()
     allowed_reasons = _allowed_reason_codes(
-        repository_root() / "policies" / str(load_json(dataset_dir / "manifest.json")["policy_file"])
+        repository_root()
+        / "policies"
+        / str(load_json(dataset_dir / "manifest.json")["policy_file"])
     )
     for decision in decisions:
         if not isinstance(decision, dict):
@@ -447,10 +445,7 @@ def validate_review_package(
     paths = sorted(submissions_dir.glob("*.json"))
     if not paths:
         raise DatasetIntegrityError("completed review package has no submissions")
-    reports = [
-        validate_review_submission(dataset_dir, package_dir, path)
-        for path in paths
-    ]
+    reports = [validate_review_submission(dataset_dir, package_dir, path) for path in paths]
     reviewer_ids = [str(report["reviewer_id"]) for report in reports]
     if len(reviewer_ids) != len(set(reviewer_ids)):
         raise DatasetIntegrityError("review package contains duplicate reviewer IDs")
@@ -497,7 +492,9 @@ def _read_secret(path: Path | None) -> bytes | None:
         value = path.read_text(encoding="utf-8").strip()
         secret = bytes.fromhex(value)
     except (OSError, ValueError) as exc:
-        raise DatasetIntegrityError("secret file must contain exactly 64 hexadecimal digits") from exc
+        raise DatasetIntegrityError(
+            "secret file must contain exactly 64 hexadecimal digits"
+        ) from exc
     if len(secret) != 32:
         raise DatasetIntegrityError("secret file must contain exactly 64 hexadecimal digits")
     return secret
@@ -507,9 +504,7 @@ def _emit(report: dict[str, Any], out_path: Path | None) -> None:
     if out_path is not None:
         _write_json(out_path, report)
         summary = {
-            key: value
-            for key, value in report.items()
-            if key not in {"reports", "submissions"}
+            key: value for key, value in report.items() if key not in {"reports", "submissions"}
         }
         summary["out"] = str(out_path)
         print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))

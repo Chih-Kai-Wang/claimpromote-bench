@@ -45,10 +45,7 @@ def _complete_submission(
     manifest = _load_object(package_dir / "packet-manifest.json")
     key = _load_object(package_dir / "private-key.json")
     gold = {record["id"]: record for record in load_jsonl(dataset_dir / "gold.jsonl")}
-    mapping = {
-        value["review_item_id"]: value["item_id"]
-        for value in key["mapping"]
-    }
+    mapping = {value["review_item_id"]: value["item_id"] for value in key["mapping"]}
     submission = {
         "schema_version": "1.0.0",
         "reviewer_id": reviewer_id,
@@ -95,9 +92,7 @@ def test_prepare_review_package_is_deterministic_and_blinded(
     assert (first / "packet-manifest.json").read_bytes() == (
         second / "packet-manifest.json"
     ).read_bytes()
-    assert (first / "private-key.json").read_bytes() == (
-        second / "private-key.json"
-    ).read_bytes()
+    assert (first / "private-key.json").read_bytes() == (second / "private-key.json").read_bytes()
 
     records = load_jsonl(first / "packet.jsonl")
     assert len(records) == 40
@@ -197,9 +192,7 @@ def test_submission_rejects_coverage_reason_and_attestation_failures(
         validate_review_submission(dataset_dir, package, path)
 
     invalid_hold = deepcopy(base)
-    hold = next(
-        decision for decision in invalid_hold["decisions"] if decision["action"] != "ALLOW"
-    )
+    hold = next(decision for decision in invalid_hold["decisions"] if decision["action"] != "ALLOW")
     hold["reason_codes"] = ["POLICY_SATISFIED"]
     _write_object(path, invalid_hold)
     with pytest.raises(DatasetIntegrityError, match="cannot use POLICY_SATISFIED"):
