@@ -77,9 +77,7 @@ def _evaluation_summary(report: dict[str, Any]) -> dict[str, Any]:
     return {
         "instances": raw["instances"],
         "format_errors": report["parse_status"]["format_error"],
-        "raw_false_promotion_rate": _metric_value(
-            raw, "primary", "false_promotion_rate"
-        ),
+        "raw_false_promotion_rate": _metric_value(raw, "primary", "false_promotion_rate"),
         "effective_false_promotion_rate": _metric_value(
             effective, "primary", "false_promotion_rate"
         ),
@@ -234,10 +232,7 @@ def validate_contribution_tree(
             f"contribution root does not exist: {contributions_root}"
         )
     manifests = sorted(contributions_root.rglob(CONTRIBUTION_FILENAME))
-    reports = [
-        validate_contribution(manifest_path, root=root)
-        for manifest_path in manifests
-    ]
+    reports = [validate_contribution(manifest_path, root=root) for manifest_path in manifests]
 
     contribution_ids = [str(report["contribution_id"]) for report in reports]
     if len(contribution_ids) != len(set(contribution_ids)):
