@@ -34,6 +34,7 @@
     "author-items.jsonl": "sha256:bd01d28ed1fea5016f8b5b72235ce1bc516199b5a352e53dea7861be46cebeae",
     "gold.jsonl": "sha256:f3a714cb84bbed627a36bdbf2da2df44f65831958ba16af4d73c609d1aae27b8",
     "inputs.jsonl": "sha256:0923eda601ca4ebac6a1dfde80d18c49c98a865522abe2d646d98e73c292d973",
+    "lake-manifest.json": "sha256:bd4667b9e6f97a5f1d351f27681b1684fe3921bcc7bf6c407897bc0c4d7b50a5",
     "lakefile.toml": "sha256:cdf41bfe5bb46b9d22f3db3d23530bd72d957f93d7bec8de2870c744cf4aab4e",
     "lean-toolchain": "sha256:302cd63c54178885b89e669f33b38f12f4dd7ae7e5cac537b3203e3768d8fb2b",
     "pairs.json": "sha256:7b85caae864ca5b74321b62f8a988858895709e283971f4cfe639c1313289d6a"
