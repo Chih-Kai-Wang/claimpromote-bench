@@ -29,7 +29,7 @@ def _stub_runner(_package_dir: Path, source: Path) -> dict[str, object]:
 
 
 def test_pinned_toolchain_hash_is_derived_from_exact_file_bytes() -> None:
-    assert TOOLCHAIN_SHA256 == sha256_bytes(TOOLCHAIN_CONTENT.encode("utf-8"))
+    assert sha256_bytes(TOOLCHAIN_CONTENT.encode("utf-8")) == TOOLCHAIN_SHA256
     assert TOOLCHAIN_CONTENT == "leanprover/lean4:v4.33.0\n"
 
 
