@@ -16,6 +16,22 @@ from .study import evaluate_run_records, make_run_id
 
 CONTRIBUTION_FILENAME = "contribution.json"
 
+_DRAFT_REQUIRED = {
+    "schema_version",
+    "contributor",
+    "dataset_gold_file",
+    "run_file",
+    "license",
+    "consent",
+    "reproduction",
+}
+_ALLOWED_FIELDS = _DRAFT_REQUIRED | {
+    "contribution_id",
+    "dataset_manifest_sha256",
+    "run_file_sha256",
+    "expected_run",
+}
+
 
 def _resolve_file(base: Path, relative: str, label: str) -> Path:
     value = Path(relative)
@@ -80,6 +96,53 @@ def _evaluation_summary(report: dict[str, Any]) -> dict[str, Any]:
             "auprc_stepwise",
         ),
     }
+
+
+def prepare_contribution(
+    manifest_path: Path,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    """Derive immutable hashes, run identity, and contribution ID for one draft."""
+
+    repository = (root or repository_root()).resolve()
+    draft = load_json(manifest_path)
+    if not isinstance(draft, dict):
+        raise DatasetIntegrityError("contribution draft must be an object")
+    missing = sorted(_DRAFT_REQUIRED - set(draft))
+    if missing:
+        raise DatasetIntegrityError(f"contribution draft is missing fields: {missing}")
+    extra = sorted(set(draft) - _ALLOWED_FIELDS)
+    if extra:
+        raise DatasetIntegrityError(f"contribution draft has unknown fields: {extra}")
+
+    run_path = _resolve_file(
+        manifest_path.parent,
+        str(draft["run_file"]),
+        "run_file",
+    )
+    gold_path = _resolve_file(
+        repository,
+        str(draft["dataset_gold_file"]),
+        "dataset_gold_file",
+    )
+    dataset_manifest_path = gold_path.parent / "manifest.json"
+    if not dataset_manifest_path.is_file():
+        raise DatasetIntegrityError("dataset manifest does not exist")
+
+    context = _build_run_context(gold_path)
+    bundle = _load_run_bundle(context, run_path)
+    prepared = dict(draft)
+    prepared["dataset_manifest_sha256"] = sha256_file(dataset_manifest_path)
+    prepared["run_file_sha256"] = sha256_file(run_path)
+    prepared["expected_run"] = bundle["identity"]
+    prepared["contribution_id"] = make_contribution_id(prepared)
+    validate_with_schema(
+        prepared,
+        repository / "schemas" / "run-contribution.schema.json",
+        str(manifest_path),
+    )
+    return prepared
 
 
 def validate_contribution(
@@ -216,28 +279,54 @@ def _summary(report: dict[str, Any]) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Validate one externally contributed run or the full contribution tree."""
+    """Prepare or validate externally contributed model runs."""
 
     parser = argparse.ArgumentParser(
         prog="cpb-validate-contribution",
         description=__doc__,
     )
     target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument("--prepare", type=Path)
     target.add_argument("--manifest", type=Path)
     target.add_argument("--root", type=Path)
+    parser.add_argument("--write", action="store_true")
     parser.add_argument("--out", type=Path)
     args = parser.parse_args(argv)
 
+    if args.write and not args.prepare:
+        parser.error("--write is only valid with --prepare")
+    if args.write and args.out:
+        parser.error("--write and --out cannot be used together")
+
     try:
-        if args.manifest:
-            report = validate_contribution(args.manifest)
+        if args.prepare:
+            prepared = prepare_contribution(args.prepare)
+            if args.write:
+                _write_json(args.prepare, prepared)
+                result: dict[str, Any] = {
+                    "status": "PREPARED",
+                    "manifest": str(args.prepare),
+                    "contribution_id": prepared["contribution_id"],
+                }
+            elif args.out:
+                _write_json(args.out, prepared)
+                result = {
+                    "status": "PREPARED",
+                    "out": str(args.out),
+                    "contribution_id": prepared["contribution_id"],
+                }
+            else:
+                result = prepared
         else:
-            report = validate_contribution_tree(args.root)
-        if args.out:
-            _write_json(args.out, report)
-            result = {"out": str(args.out), **_summary(report)}
-        else:
-            result = report
+            if args.manifest:
+                report = validate_contribution(args.manifest)
+            else:
+                report = validate_contribution_tree(args.root)
+            if args.out:
+                _write_json(args.out, report)
+                result = {"out": str(args.out), **_summary(report)}
+            else:
+                result = report
     except (ClaimPromoteBenchError, OSError, ValueError, KeyError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
