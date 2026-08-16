@@ -52,7 +52,8 @@ def write_instructions(path: Path) -> None:
 
 
 def make_reviewer_archives() -> None:
-    dataset_manifest = json.loads((ROOT / "data" / "alpha" / "manifest.json").read_text(encoding="utf-8"))
+    manifest_path = ROOT / "data" / "alpha" / "manifest.json"
+    dataset_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     policy = ROOT / "policies" / dataset_manifest["policy_file"]
     schema = ROOT / "schemas" / "review-submission.schema.json"
     instructions = EXPORT / "REVIEWER_INSTRUCTIONS.md"
