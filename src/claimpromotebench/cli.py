@@ -79,30 +79,21 @@ def _load_joined(gold_path: Path, runs_path: Path) -> list[dict[str, Any]]:
     run_records = load_jsonl(runs_path)
     gold_by_id = {str(record["id"]): record for record in gold_records}
     runs_by_id: dict[str, dict[str, Any]] = {}
-    inputs_by_id = {
-        str(item["id"]): item
-        for item in load_jsonl(gold_path.parent / "inputs.jsonl")
-    }
+    inputs_by_id = {str(item["id"]): item for item in load_jsonl(gold_path.parent / "inputs.jsonl")}
     for record in run_records:
         record_id = str(record.get("id", ""))
         if not record_id or record_id in runs_by_id:
-            raise PredictionFormatError(
-                f"missing or duplicate prediction ID: {record_id!r}"
-            )
+            raise PredictionFormatError(f"missing or duplicate prediction ID: {record_id!r}")
         decision = record.get("decision")
         if not isinstance(decision, dict):
-            raise PredictionFormatError(
-                f"prediction {record_id} has no decision object"
-            )
+            raise PredictionFormatError(f"prediction {record_id} has no decision object")
         validate_with_schema(
             decision,
             root / "schemas" / "agent-decision.schema.json",
             f"prediction {record_id}",
         )
         if record_id not in inputs_by_id:
-            raise PredictionFormatError(
-                f"prediction has unknown ID: {record_id}"
-            )
+            raise PredictionFormatError(f"prediction has unknown ID: {record_id}")
         validate_decision_semantics(inputs_by_id[record_id], decision)
         runs_by_id[record_id] = record
     if set(runs_by_id) != set(gold_by_id):
@@ -129,16 +120,10 @@ def _build_run_context(gold_path: Path) -> _RunContext:
     manifest, policy, evaluation_time = _context(dataset_dir)
     inputs_path = dataset_dir / "inputs.jsonl"
     manifest_path = dataset_dir / "manifest.json"
-    gold_by_id = {
-        str(record["id"]): record for record in load_jsonl(gold_path)
-    }
-    inputs_by_id = {
-        str(record["id"]): record for record in load_jsonl(inputs_path)
-    }
+    gold_by_id = {str(record["id"]): record for record in load_jsonl(gold_path)}
+    inputs_by_id = {str(record["id"]): record for record in load_jsonl(inputs_path)}
     if set(gold_by_id) != set(inputs_by_id):
-        raise DatasetIntegrityError(
-            "gold and input files must contain identical item IDs"
-        )
+        raise DatasetIntegrityError("gold and input files must contain identical item IDs")
     return _RunContext(
         root=root,
         dataset_dir=dataset_dir,
@@ -168,9 +153,7 @@ def _run_identity(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _expected_prompt_hash(
-    context: _RunContext, record_id: str, arm: str
-) -> str:
+def _expected_prompt_hash(context: _RunContext, record_id: str, arm: str) -> str:
     key = (arm, record_id)
     if key not in context.prompt_hashes:
         prompt = render_prompt(
@@ -197,25 +180,19 @@ def _load_run_bundle(context: _RunContext, runs_path: Path) -> RunBundle:
         )
         record_id = str(record["item_id"])
         if record_id not in context.gold_by_id or record_id in runs_by_id:
-            raise PredictionFormatError(
-                f"unknown or duplicate run-record item_id: {record_id}"
-            )
+            raise PredictionFormatError(f"unknown or duplicate run-record item_id: {record_id}")
         identity = _run_identity(record)
         if run_identity is None:
             run_identity = identity
         elif identity != run_identity:
             raise PredictionFormatError(
-                "one run-record file must use one model artifact, runtime, "
-                "arm, seed, and hardware"
+                "one run-record file must use one model artifact, runtime, arm, seed, and hardware"
             )
 
-        expected_prompt_hash = _expected_prompt_hash(
-            context, record_id, str(record["arm"])
-        )
+        expected_prompt_hash = _expected_prompt_hash(context, record_id, str(record["arm"]))
         if record["prompt_sha256"] != expected_prompt_hash:
             raise PredictionFormatError(
-                f"run record {record_id} prompt_sha256 does not match "
-                "the frozen renderer"
+                f"run record {record_id} prompt_sha256 does not match the frozen renderer"
             )
         if record["parse_status"] == "OK":
             validate_decision_semantics(
@@ -270,35 +247,23 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     compile_parser.add_argument("source", type=Path)
 
-    validate_parser = subparsers.add_parser(
-        "validate", help="validate a complete dataset"
-    )
+    validate_parser = subparsers.add_parser("validate", help="validate a complete dataset")
     validate_parser.add_argument("dataset", type=Path)
 
-    manifest_parser = subparsers.add_parser(
-        "verify-manifest", help="verify committed file hashes"
-    )
+    manifest_parser = subparsers.add_parser("verify-manifest", help="verify committed file hashes")
     manifest_parser.add_argument("manifest", type=Path)
 
-    pairs_parser = subparsers.add_parser(
-        "check-pairs", help="check counterfactual invariants"
-    )
+    pairs_parser = subparsers.add_parser("check-pairs", help="check counterfactual invariants")
     pairs_parser.add_argument("dataset", type=Path)
 
-    gold_parser = subparsers.add_parser(
-        "check-gold", help="recompute oracle labels"
-    )
+    gold_parser = subparsers.add_parser("check-gold", help="recompute oracle labels")
     gold_parser.add_argument("dataset", type=Path)
 
-    oracle_parser = subparsers.add_parser(
-        "oracle", help="generate deterministic oracle decisions"
-    )
+    oracle_parser = subparsers.add_parser("oracle", help="generate deterministic oracle decisions")
     oracle_parser.add_argument("inputs", type=Path)
     oracle_parser.add_argument("--out", type=Path, required=True)
 
-    baseline_parser = subparsers.add_parser(
-        "baseline", help="generate a non-model baseline"
-    )
+    baseline_parser = subparsers.add_parser("baseline", help="generate a non-model baseline")
     baseline_parser.add_argument("name", choices=BASELINES)
     baseline_parser.add_argument(
         "--inputs",
@@ -307,9 +272,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     baseline_parser.add_argument("--out", type=Path, required=True)
 
-    render_parser = subparsers.add_parser(
-        "render", help="render model-facing prompts"
-    )
+    render_parser = subparsers.add_parser("render", help="render model-facing prompts")
     render_parser.add_argument("--arm", choices=ARMS, required=True)
     render_parser.add_argument(
         "--inputs",
@@ -318,15 +281,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     render_parser.add_argument("--out", type=Path, required=True)
 
-    evaluate_parser = subparsers.add_parser(
-        "evaluate", help="score one complete decision file"
-    )
+    evaluate_parser = subparsers.add_parser("evaluate", help="score one complete decision file")
     evaluate_parser.add_argument("--gold", type=Path, required=True)
     evaluate_parser.add_argument("--runs", type=Path, required=True)
     evaluate_parser.add_argument("--out", type=Path)
-    evaluate_parser.add_argument(
-        "--bootstrap-samples", type=int, default=10_000
-    )
+    evaluate_parser.add_argument("--bootstrap-samples", type=int, default=10_000)
 
     run_evaluate_parser = subparsers.add_parser(
         "evaluate-runs",
@@ -335,22 +294,16 @@ def _build_parser() -> argparse.ArgumentParser:
     run_evaluate_parser.add_argument("--gold", type=Path, required=True)
     run_evaluate_parser.add_argument("--runs", type=Path, required=True)
     run_evaluate_parser.add_argument("--out", type=Path)
-    run_evaluate_parser.add_argument(
-        "--bootstrap-samples", type=int, default=10_000
-    )
+    run_evaluate_parser.add_argument("--bootstrap-samples", type=int, default=10_000)
 
     compare_parser = subparsers.add_parser(
         "compare-runs",
         help="build a hash-bound cumulative study from complete run files",
     )
     compare_parser.add_argument("--gold", type=Path, required=True)
-    compare_parser.add_argument(
-        "--runs", type=Path, nargs="+", required=True
-    )
+    compare_parser.add_argument("--runs", type=Path, nargs="+", required=True)
     compare_parser.add_argument("--out", type=Path)
-    compare_parser.add_argument(
-        "--bootstrap-samples", type=int, default=0
-    )
+    compare_parser.add_argument("--bootstrap-samples", type=int, default=0)
     return parser
 
 
@@ -421,9 +374,7 @@ def _run(args: argparse.Namespace) -> Any:
                 {
                     "id": item["id"],
                     "arm": args.arm,
-                    "prompt_sha256": sha256_bytes(
-                        prompt.encode("utf-8")
-                    ),
+                    "prompt_sha256": sha256_bytes(prompt.encode("utf-8")),
                     "prompt": prompt,
                 }
             )
@@ -435,9 +386,7 @@ def _run(args: argparse.Namespace) -> Any:
         }
     if command == "evaluate":
         records = _load_joined(args.gold, args.runs)
-        report = evaluate_records(
-            records, bootstrap_samples=args.bootstrap_samples
-        )
+        report = evaluate_records(records, bootstrap_samples=args.bootstrap_samples)
         if args.out:
             _write_json(args.out, report)
         return report
@@ -466,10 +415,7 @@ def _run(args: argparse.Namespace) -> Any:
         return report
     if command == "compare-runs":
         context = _build_run_context(args.gold)
-        bundles = [
-            _load_run_bundle(context, path)
-            for path in args.runs
-        ]
+        bundles = [_load_run_bundle(context, path) for path in args.runs]
         report = compare_run_bundles(
             bundles,
             dataset=context.dataset_fingerprint,
