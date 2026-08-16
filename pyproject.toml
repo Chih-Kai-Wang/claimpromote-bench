@@ -34,6 +34,7 @@ dev = [
 
 [project.scripts]
 cpb = "claimpromotebench.cli:main"
+cpb-audit-invariance = "claimpromotebench.invariance:main"
 cpb-audit-shortcuts = "claimpromotebench.shortcuts:main"
 cpb-verify-fixtures = "claimpromotebench.executable:main"
 cpb-verify-formal = "claimpromotebench.formal:main"

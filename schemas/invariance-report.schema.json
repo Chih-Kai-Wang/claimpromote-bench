@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/invariance-report.schema.json",
+  "title": "MetamorphicInvarianceReport",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "armCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["narrative", "ledger", "ledger_verifier", "ledger_verifier_gate"],
+      "properties": {
+        "narrative": {"type": "integer", "minimum": 0},
+        "ledger": {"type": "integer", "minimum": 0},
+        "ledger_verifier": {"type": "integer", "minimum": 0},
+        "ledger_verifier_gate": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "dataset_manifest_sha256",
+    "policy_sha256",
+    "evaluation_time",
+    "base_items",
+    "total_variants",
+    "oracle_equivalent_variants",
+    "schema_validated_variants",
+    "artifact_validated_variants",
+    "prompt_renderings",
+    "transformations",
+    "failures",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "dataset_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "policy_sha256": {"$ref": "#/$defs/sha256"},
+    "evaluation_time": {"type": "string", "format": "date-time"},
+    "base_items": {"type": "integer", "minimum": 1},
+    "total_variants": {"type": "integer", "minimum": 1},
+    "oracle_equivalent_variants": {"type": "integer", "minimum": 0},
+    "schema_validated_variants": {"type": "integer", "minimum": 0},
+    "artifact_validated_variants": {"type": "integer", "minimum": 0},
+    "prompt_renderings": {"type": "integer", "minimum": 0},
+    "transformations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transform_id",
+          "description",
+          "applicable_items",
+          "variants",
+          "prompt_identical_variants",
+          "prompt_changed_variants",
+          "changed_prompt_arms"
+        ],
+        "properties": {
+          "transform_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "description": {"type": "string", "minLength": 1},
+          "applicable_items": {"type": "integer", "minimum": 0},
+          "variants": {"type": "integer", "minimum": 0},
+          "prompt_identical_variants": {"type": "integer", "minimum": 0},
+          "prompt_changed_variants": {"type": "integer", "minimum": 0},
+          "changed_prompt_arms": {"$ref": "#/$defs/armCounts"}
+        }
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "transform_id", "stage", "message"],
+        "properties": {
+          "item_id": {"type": "string", "minLength": 1},
+          "transform_id": {"type": "string", "minLength": 1},
+          "stage": {
+            "enum": [
+              "TRANSFORM",
+              "SCHEMA",
+              "ARTIFACT",
+              "ORACLE",
+              "PROMPT",
+              "PROMPT_EXPECTATION"
+            ]
+          },
+          "message": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "status": {"enum": ["PASS", "FAIL"]}
+  }
+}
