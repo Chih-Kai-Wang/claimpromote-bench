@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -23,17 +25,13 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install runtime dependencies
         run: python -m pip install -e .
-      - name: Prepare and encrypt the alpha review package
+      - name: Prepare blinded review material
         shell: bash
-        env:
-          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
-          RECIPIENT_CERT_PEM_B64: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVQekNDQXFlZ0F3SUJBZ0lVRVpyUHZyZ0VVWWRpUWRqSGlvRy96NUJlVGtjd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0x6RXRNQ3NHQTFVRUF3d2tZMnhoYVcxd2NtOXRiM1JsTFhKbGRtbGxkeTFoYkhCb1lTMHlNREkyTFRBNApMVEUyTUI0WERUSTJNRGd4TmpBNU1EUXpNMW9YRFRJMk1EZ3hPREE1TURRek0xb3dMekV0TUNzR0ExVUVBd3drClkyeGhhVzF3Y205dGIzUmxMWEpsZG1sbGR5MWhiSEJvWVMweU1ESTJMVEE0TFRFMk1JSUJvakFOQmdrcWhraUcKOXcwQkFRRUZBQU9DQVk4QU1JSUJpZ0tDQVlFQXZzYmtRMG1HTlZ1aU1HOHZhZndzSXczY0lCYWpFZjlUUkdPMAphdGl3Vmlmd29FQjhWSUx4a2t2TC95WmU4SkhNSG1YL0Y3QStrRzhuUzN3akdzZzVLbklWMndPNEVtUTNYQ0NMCldwVnY5QzF2SHRTNjJrc0tlQXdFckpySWp1NFFXMDA3QWdqUEdld011Nnl5b29vV3ZHaXNzRVRwUUNpWkhzVG0KZFV3VjlGYUkxWVVwVnFEWEppdlI3WHBMQTk1cUhVTnM3aWh3SUgvclllUWxNUmRzNFo3emRJM2p2VldjSWtKNQpuY2hZVmZFZWo1N05wNU1HUnRQR1ZuNVVXRlA2N2FuNmh0SHFRY3lGSW9KWUFqRktHT05ua2htMGhuS0dFTnN0CjcwNWw4YVl0SWRVUjVjeERkejdoY2lqUkp5UnQvWkZ2MjBnak40d0s4NksvTGdnaUFYQ0pXTGMzbXJDTFBRTGkKaTBVY1JMa1BHallxclQ1TlFLTDhpYjVLY3QvMmt3dWl0YmkycytPMEF1N0drclNVRkdDSUFRVlByNXQranBPNwpybEVaZnVwNHhPVnhUQnRlV05QUTNOS0puSUZXRktSQWYyM3NvWUNaWlY5M3o4MkNINkpXUEtQWnlNSlAyRnJHCkxtMGhHUXlJb3B6MGJTbkVBbk0rcUR1QXREOHJBZ01CQUFHalV6QlJNQjBHQTFVZERnUVdCQlJZSyszRjltM1gKcm9tRFdGdjhqdlhyUXBRNnFUQWZCZ05WSFNNRUdEQVdnQlJZSyszRjltM1hyb21EV0Z2OGp2WHJRcFE2cVRBUApCZ05WSFJNQkFmOEVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQmdRQ1k4RXU4QUpISDBUNmNINk1YCjVUZnJvSEJuL2kvdTJaenlnOHVqc3JSMHBUMng1akJKdmpPOWt2VEc0Rnd1eUpteWFkNjJTQzlmbk1mQVBiYVgKYnVsQXd4VUhPUDBGRVMyWkFMc3hubHBEK1RIQ08yU2pzekFEM2pacmNZWUF1WFJJZ0txVWQzVE54SUJmUVRGYwpnT2loVTdjNkNBTWNlaUF6WE1sNmlXUisvTE1hVWVaRWZTRnNSU1pGdUVQbGZvekVDZE1YVjVtbDNISmxmSmdVClZleTN0SFdHVTBibFhRZURwMnh4NTFYTnZWcUdoUDFiTmRtV0o2UFI5NXpuTVRHQzh2R0kzQUhVNE85dS9qM3MKb0hzVkJIOEpseEVJVCtKcWNsZVV4S3BCanE3YVQ4UjhsU3p2ZDdPZkdMdytaa2E1dWNvZjU1VEZxQlA4d3ZPMQpSWGtjV0dZMFp1dG5EMXl2UTJQUW42bFEzejRKbkhPVklleW95TUExazJMb0oycVdOallqVXNjZ2Fzb05HY3gyCnRCTTZkOGpZK3lSSTF1R0Y3aHVoYlhVaEkrbG9hWVc1RXFlcUNDV0k1dmRqUkpnMU5KZUV0K2pNa1JvaUt3ZGUKZXhNR2JqOWJES3NlM3ZsWEEwWVZCMTF0djhHOERURzJwUENCbHp2YVdSNS9UWDA9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
         run: |
           set -euo pipefail
           umask 077
           rm -rf work/review-alpha work/review-export
           mkdir -p work/review-export
-
           python -m claimpromotebench.review prepare \
             --dataset data/alpha \
             --out work/review-alpha \
@@ -48,96 +46,15 @@ jobs:
             --reviewer-id reviewer-02 \
             --out work/review-export/reviewer-02.json \
             > /dev/null
-
-          printf '%s' "$RECIPIENT_CERT_PEM_B64" | base64 --decode \
-            > work/review-export/recipient.pem
-          fingerprint="$(openssl x509 -in work/review-export/recipient.pem \
-            -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':')"
-          test "$fingerprint" = "5EC885F6A2B6D52E2AE9DFA6D812FB2AD09B862B1505C27E59EBBAEEA6B09160"
-          openssl cms -encrypt -binary -aes256 -outform DER \
-            -in work/review-alpha/private-key.json \
-            -out work/review-export/private-key.p7m \
-            work/review-export/recipient.pem
-          rm -f work/review-alpha/private-key.json work/review-export/recipient.pem
-
-          python - <<'PY'
-          import hashlib
-          import json
-          import os
-          import zipfile
-          from pathlib import Path
-
-          export = Path('work/review-export')
-          package = Path('work/review-alpha')
-          dataset_manifest = json.loads(Path('data/alpha/manifest.json').read_text(encoding='utf-8'))
-          packet_manifest = json.loads((package / 'packet-manifest.json').read_text(encoding='utf-8'))
-          policy = Path('policies') / dataset_manifest['policy_file']
-          schema = Path('schemas/review-submission.schema.json')
-          instructions = export / 'REVIEWER_INSTRUCTIONS.md'
-          instructions.write_text(
-              "\n".join([
-                  '# ClaimPromoteBench alpha blinded review',
-                  '',
-                  'Work independently. Do not access `gold.jsonl`, model outputs, another',
-                  "reviewer's decisions, or the organizer's private mapping. Review only",
-                  '`packet.jsonl`, the bound policy, and your supplied submission draft.',
-                  '',
-                  'For every decision, replace the null action and confidence fields, use only',
-                  'policy reason codes, add a concise rationale, set `completed_at` to an ISO 8601',
-                  'timestamp with timezone, and set each attestation flag to true only when it is',
-                  'factually true. Return only your completed `reviewer-XX.json`.',
-              ]) + "\n",
-              encoding='utf-8',
-          )
-          common = [
-              (package / 'packet.jsonl', 'packet.jsonl'),
-              (package / 'packet-manifest.json', 'packet-manifest.json'),
-              (policy, f'policy/{policy.name}'),
-              (schema, f'schema/{schema.name}'),
-              (instructions, instructions.name),
-          ]
-          for reviewer in ('reviewer-01', 'reviewer-02'):
-              archive = export / f'{reviewer}-package.zip'
-              with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
-                  for source, target in common:
-                      zf.write(source, target)
-                  zf.write(export / f'{reviewer}.json', f'{reviewer}.json')
-
-          def sha256(path: Path) -> str:
-              digest = hashlib.sha256()
-              with path.open('rb') as handle:
-                  for chunk in iter(lambda: handle.read(1024 * 1024), b''):
-                      digest.update(chunk)
-              return digest.hexdigest()
-
-          names = [
-              'reviewer-01-package.zip',
-              'reviewer-02-package.zip',
-              'private-key.p7m',
-              'prepare-report.json',
-          ]
-          report = {
-              'schema_version': '1.0.0',
-              'source_commit': os.environ['SOURCE_COMMIT'],
-              'packet_id': packet_manifest['packet_id'],
-              'packet_sha256': packet_manifest['packet_sha256'],
-              'item_count': packet_manifest['item_count'],
-              'files': {name: {'sha256': sha256(export / name), 'bytes': (export / name).stat().st_size} for name in names},
-              'private_key_encryption': {
-                  'format': 'CMS EnvelopedData DER',
-                  'cipher': 'AES-256-CBC',
-                  'recipient_certificate_sha256_fingerprint': '5EC885F6A2B6D52E2AE9DFA6D812FB2AD09B862B1505C27E59EBBAEEA6B09160',
-              },
-          }
-          (export / 'export-manifest.json').write_text(
-              json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8'
-          )
-          PY
-
-          rm -f work/review-export/reviewer-01.json \
-            work/review-export/reviewer-02.json \
-            work/review-export/REVIEWER_INSTRUCTIONS.md
-
+      - name: Package reviewer files and encrypt organizer mapping
+        shell: bash
+        env:
+          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
+          RECIPIENT_PUBLIC_KEY_DER_B64: MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAvsbkQ0mGNVuiMG8vafwsIw3cIBajEf9TRGO0atiwVifwoEB8VILxkkvL/yZe8JHMHmX/F7A+kG8nS3wjGsg5KnIV2wO4EmQ3XCCLWpVv9C1vHtS62ksKeAwErJrIju4QW007AgjPGewMu6yyoooWvGissETpQCiZHsTmdEwV9FaI1YUpVqDXJivR7XpLA95qHUNs7ihwIH/rYeQlMRds4Z7zdI3jvVWcIkJ5nchYVfEej57Np5MGRtPGVn5UWFP67an6htHqQcyFIoJYAjFKGONnkhm0hnKGENst705l8aYtIdUR5cxDdz7hcijRJyRt/ZFv20gjN4wK86K/LggiAXCJWLc3mrCLPQLii0UcRLkPGjYqrT5NQKL8ib5Kct/2kwuitbi2s+O0Au7GkrSUFGCIAQVPr5t+jpO7rlEZfup4xOVxTBteWNPQ3NKJnIFWFKRAf23soYCZZV93z82CH6JWPKPZyMJP2FrGLm0hGQyIopz0bSnEAnM+qDuAtD8rAgMBAAE=
+        run: |
+          set -euo pipefail
+          umask 077
+          python .github/prepare-review-alpha.py
       - name: Upload encrypted review export
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -145,7 +62,8 @@ jobs:
           path: |
             work/review-export/reviewer-01-package.zip
             work/review-export/reviewer-02-package.zip
-            work/review-export/private-key.p7m
+            work/review-export/organizer-mapping.enc
+            work/review-export/organizer-envelope-key.enc
             work/review-export/prepare-report.json
             work/review-export/export-manifest.json
           if-no-files-found: error
