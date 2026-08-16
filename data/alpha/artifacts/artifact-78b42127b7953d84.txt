@@ -1,2 +1,0 @@
-ClaimPromoteBench synthetic alpha artifact: 78b42127b7953d84
-This fixture is policy-evaluation data, not a mathematical result.

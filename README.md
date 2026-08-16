@@ -13,21 +13,23 @@ preserving valid promotion?
 The benchmark evaluates a requested **evidence-state transition**. It is not a general truth
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
-offline baselines, gate semantics, ranking metrics, run-record evaluator, and exact matched-arm
-comparison pipeline before any model experiment. Model execution remains pending.
+offline baselines, gate semantics, ranking metrics, run-record evaluator, exact matched-arm
+comparison pipeline, shortcut diagnostics, and numerical exact-grid artifact binding before
+any model experiment. Model execution remains pending.
 
 ## Current alpha
 
 | Artifact | Checkable status |
 |---|---|
 | Dataset | 20 controlled pairs / 40 instances; six mathematical-evidence families |
-| Gold decision | Versioned public policy + dependency closure + executable integrity/policy checks over synthetic fixtures |
+| Gold decision | Versioned public policy + dependency closure + artifact integrity; numerical `ALLOW` cases additionally require exact recomputation and artifact-scope agreement |
 | Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
 | Shortcut audit | Leave-one-pair-out metadata-only and shallow-structure diagnostics run in CI |
 | Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
 | Evaluator | Fail-closed actions, tie-aware AUPRC, paired score ranking, family diagnostics, pair bootstrap intervals |
 | Study comparison | Hash-bound run/study IDs, exact matched McNemar tests, Holm correction, metric deltas |
-| Executable fixture pilot | Exact-rational finite-grid recomputation with tamper, scope, protocol, and preregistration rejection |
+| Executable numerical alpha | Four numerical pairs / eight items use four exact-rational finite-grid JSON artifacts, recomputed during dataset validation |
+| Executable negative suite | Tamper, scope, protocol, preregistration, and repetition-digest failures are checked independently |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
@@ -38,11 +40,17 @@ runtime failure, stale or contradictory evidence, independent provenance, and fo
 certificate identity. Each pair keeps the claim and requested state fixed and changes one
 policy prerequisite. The invalid member is balanced between neutral `a` and `b` IDs.
 
-The evidence artifacts bound into the 20-pair alpha remain synthetic two-line fixtures. The
-implementation executes their path/hash integrity checks and the policy oracle. A separate
-safe exact-rational fixture suite now validates one executable computation contract, but it
-is not yet bound into every alpha item. Lean execution and external-review execution remain
-pending.
+The four numerical pairs are bound to four generated exact-rational JSON artifacts. Both
+members of each pair share identical artifact bytes. Dataset validation checks their paths
+and SHA-256 values, validates the registered protocol, and recomputes every grid value,
+extremum, predicate, and repetition digest. An `ALLOW` member must also match the artifact's
+repetitions, preregistration, closed domain, runtime result, and true predicate. Numerical
+claim text is limited to the registered rational grid; no continuous-domain conclusion is
+made.
+
+The other sixteen pairs retain synthetic two-line artifacts because their current role is to
+test dependency, runtime, staleness, provenance, and formal-identity transition policy. Lean
+execution and independent human-review execution remain pending.
 
 ## Orthogonal state
 
@@ -76,9 +84,11 @@ python -m claimpromotebench.executable \
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
 
-The executable suite performs bounded exact-rational recomputation over finite grids. It does
-not execute submitted program text or establish a result outside the listed grid. See
-[Executable fixtures](docs/EXECUTABLE_FIXTURES.md) and
+`validate data/alpha` recomputes the four manifest-bound numerical artifacts in addition to
+checking schemas, pair controls, hashes, policy decisions, and gold labels. The standalone
+executable suite performs bounded exact-rational recomputation over positive and negative
+finite-grid fixtures. Neither path executes submitted program text or establishes a result
+outside the listed grid. See [Executable fixtures](docs/EXECUTABLE_FIXTURES.md) and
 [Shortcut audit](docs/SHORTCUT_AUDIT.md) for the frozen information and scope boundaries.
 
 Generate and score all three offline baselines:
@@ -131,7 +141,9 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
 - `data/alpha/gold.jsonl`: scorer labels generated from the authoring source.
 - `data/alpha/pairs.json`: controlled factors and permitted JSON-pointer differences.
 - `data/alpha/manifest.json`: frozen evaluation time and committed file hashes.
-- `fixtures/executable/`: standalone exact-rational executable fixture pilot.
+- `data/alpha/artifacts/*.json`: manifest-bound exact-rational artifacts used by the four
+  numerical controlled pairs.
+- `fixtures/executable/`: standalone positive and negative exact-rational fixture suite.
 
 Prompt renderers remove item IDs, pair IDs, split labels, family labels, and gold fields. A
 missing or malformed model output is a `FORMAT_ERROR`; it is never silently counted as

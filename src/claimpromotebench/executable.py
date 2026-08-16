@@ -12,11 +12,13 @@ from typing import Any, NoReturn
 
 from .dataset import load_json, repository_root, validate_with_schema
 from .errors import ClaimPromoteBenchError, DatasetIntegrityError, ExecutableFixtureError
-from .hashing import canonical_json, sha256_bytes
+from .hashing import canonical_json, sha256_bytes, sha256_file
 
 ARTIFACT_KIND = "CPB_EXACT_RATIONAL_GRID"
 PROTOCOL_ID = "cpb-exact-grid-v1"
 PROTOCOL_VERSION = "1.0.0"
+ALPHA_EVIDENCE_PROTOCOL_ID = "cpb-numeric-v1"
+ALPHA_EVIDENCE_PROTOCOL_VERSION = "1.0.0"
 MAX_COEFFICIENTS = 32
 MAX_GRID_POINTS = 4096
 MAX_RATIONAL_CHARS = 96
@@ -78,6 +80,61 @@ def _repetition_digest(
         "values": values,
     }
     return sha256_bytes(canonical_json(payload).encode("utf-8"))
+
+
+def build_exact_grid_artifact(
+    *,
+    coefficients: list[str],
+    grid: list[str],
+    relation: str = ">=",
+    threshold: str = "0",
+    repetitions: int = 3,
+) -> dict[str, Any]:
+    """Build one deterministic registered artifact and derive all observations."""
+
+    if isinstance(repetitions, bool) or not isinstance(repetitions, int):
+        _fail("RESOURCE_LIMIT", "repetition count must be an integer")
+    if not 1 <= repetitions <= MAX_REPETITIONS:
+        _fail("RESOURCE_LIMIT", "repetition count is outside the registered limit")
+    if len(grid) < 2:
+        _fail("INVALID_GRID", "a generated artifact needs at least two grid points")
+
+    coefficient_values = [
+        _fraction(value, f"coefficient[{index}]") for index, value in enumerate(coefficients)
+    ]
+    grid_values = [_fraction(value, f"grid[{index}]") for index, value in enumerate(grid)]
+    threshold_value = _fraction(threshold, "predicate.threshold")
+    values = [_evaluate_polynomial(coefficient_values, value) for value in grid_values]
+    value_text = [_format_fraction(value) for value in values]
+
+    artifact: dict[str, Any] = {
+        "schema_version": "1.0.0",
+        "artifact_kind": ARTIFACT_KIND,
+        "protocol_id": PROTOCOL_ID,
+        "protocol_version": PROTOCOL_VERSION,
+        "claim_scope": "FINITE_GRID_ONLY",
+        "arithmetic": "EXACT_RATIONAL",
+        "repetitions": repetitions,
+        "preregistered": True,
+        "program": {
+            "domain": {"lower": grid[0], "upper": grid[-1]},
+            "coefficients": coefficients,
+            "grid": grid,
+            "predicate": {"relation": relation, "threshold": threshold},
+        },
+        "observed": {
+            "values": value_text,
+            "minimum": _format_fraction(min(values)),
+            "maximum": _format_fraction(max(values)),
+            "predicate_holds": _predicate_holds(values, relation, threshold_value),
+            "repetition_digests": [],
+        },
+    }
+    artifact["observed"]["repetition_digests"] = [
+        _repetition_digest(artifact, value_text, repetition) for repetition in range(repetitions)
+    ]
+    verify_exact_grid_artifact(artifact)
+    return artifact
 
 
 def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
@@ -164,6 +221,94 @@ def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
         "predicate_holds": holds,
         "repetitions": repetitions,
     }
+
+
+def _verify_alpha_scope_binding(
+    evidence: dict[str, Any],
+    artifact: dict[str, Any],
+    result: dict[str, Any],
+) -> None:
+    scope = evidence.get("scope")
+    if not isinstance(scope, dict):
+        raise DatasetIntegrityError("executable computation evidence scope must be an object")
+    if (
+        scope.get("protocol_id") != ALPHA_EVIDENCE_PROTOCOL_ID
+        or scope.get("protocol_version") != ALPHA_EVIDENCE_PROTOCOL_VERSION
+    ):
+        raise DatasetIntegrityError(
+            "executable artifact is not bound to the alpha numeric protocol"
+        )
+    if scope.get("repetitions") != artifact["repetitions"]:
+        raise DatasetIntegrityError("evidence repetitions do not match executable artifact")
+    if scope.get("preregistered") is not artifact["preregistered"]:
+        raise DatasetIntegrityError("evidence preregistration does not match executable artifact")
+
+    domain = scope.get("domain")
+    variables = domain.get("variables") if isinstance(domain, dict) else None
+    if not isinstance(variables, list) or len(variables) != 1:
+        raise DatasetIntegrityError("executable alpha evidence must bind one domain variable")
+    variable = variables[0]
+    if (
+        not isinstance(variable, dict)
+        or variable.get("name") != "x"
+        or variable.get("lower_inclusive") is not True
+        or variable.get("upper_inclusive") is not True
+    ):
+        raise DatasetIntegrityError("executable alpha evidence domain must be closed in x")
+    program_domain = artifact["program"]["domain"]
+    if _fraction(variable.get("lower"), "evidence.domain.lower") != _fraction(
+        program_domain["lower"], "artifact.domain.lower"
+    ) or _fraction(variable.get("upper"), "evidence.domain.upper") != _fraction(
+        program_domain["upper"], "artifact.domain.upper"
+    ):
+        raise DatasetIntegrityError("evidence domain does not match executable artifact domain")
+    if evidence.get("tool_exit") != 0 or evidence.get("verifier_result") != "PASS":
+        raise DatasetIntegrityError(
+            "valid executable evidence must record a completed passing verifier"
+        )
+    if result.get("predicate_holds") is not True:
+        raise DatasetIntegrityError("valid executable evidence recomputed a false predicate")
+
+
+def verify_dataset_artifact(
+    dataset_dir: Path,
+    evidence: dict[str, Any],
+    *,
+    require_scope_match: bool,
+) -> dict[str, Any]:
+    """Validate and recompute one JSON artifact referenced by alpha evidence."""
+
+    relative = evidence.get("artifact_path")
+    if not isinstance(relative, str):
+        raise DatasetIntegrityError("executable evidence artifact_path must be a string")
+    path = (dataset_dir / relative).resolve()
+    try:
+        path.relative_to(dataset_dir.resolve())
+    except ValueError as exc:
+        raise DatasetIntegrityError(
+            f"executable artifact path escapes dataset: {relative}"
+        ) from exc
+    if not path.is_file():
+        raise DatasetIntegrityError(f"executable artifact is missing: {relative}")
+    if evidence.get("artifact_hash") != sha256_file(path):
+        raise DatasetIntegrityError(f"executable artifact hash mismatch: {relative}")
+
+    artifact = load_json(path)
+    if not isinstance(artifact, dict):
+        raise DatasetIntegrityError(f"executable artifact is not an object: {relative}")
+    validate_with_schema(
+        {
+            "case_id": "dataset-executable-artifact",
+            "expected_status": "PASS",
+            "artifact": artifact,
+        },
+        repository_root() / "schemas" / "executable-fixture-case.schema.json",
+        relative,
+    )
+    result = verify_exact_grid_artifact(artifact)
+    if require_scope_match:
+        _verify_alpha_scope_binding(evidence, artifact, result)
+    return result
 
 
 def verify_fixture_case(case: dict[str, Any]) -> dict[str, Any]:

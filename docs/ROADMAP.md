@@ -3,8 +3,8 @@
 | Target | Deliverable | Gate | Current state |
 |---|---|---|---|
 | 2026-08 | Identity, CV, research boundary, related-work matrix | Public wording and versions agree | IN PROGRESS |
-| 2026-09 | Schema, policy, oracle, 20-pair alpha | Schema, oracle, pair and integrity tests pass | IN PROGRESS |
-| Before model runs | Self-contained policy prompts, genuine narrative arm, type-specific fixture verification, run-record/gate evaluator | Independent audit has no open P1; clean run-record smoke passes | PARTIAL — prompts, narrative, run-record evaluator, and exact-rational computation fixture pilot implemented; alpha binding, Lean, and review fixtures pending |
+| 2026-09 | Schema, policy, oracle, 20-pair alpha | Schema, oracle, pair and integrity tests pass | IN PROGRESS — numerical pairs now use manifest-bound exact-rational executable artifacts |
+| Before model runs | Self-contained policy prompts, genuine narrative arm, type-specific fixture verification, run-record/gate evaluator | Independent audit has no open P1; clean run-record smoke passes | PARTIAL — prompts, narrative, run-record evaluator, shortcut audit, exact-rational fixture suite, numerical alpha binding, and external-run contribution validation implemented; Lean and review execution pending |
 | 2026-11 | 50-pair public dev set, two models, four arms | Fresh one-command run; CIs and negatives reported | PENDING |
 | 2027-02 | 150-pair hidden test and 40 externally reviewed pairs | Reviewer agreement ≥ 0.80 or revise | PENDING |
 | 2027-05 | Frozen 9,600-decision experiment | No post-test policy edits; every artifact hash-bound | PENDING |

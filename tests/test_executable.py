@@ -6,10 +6,12 @@ from pathlib import Path
 
 import pytest
 
-from claimpromotebench.dataset import load_json
+from claimpromotebench.dataset import load_json, load_jsonl
 from claimpromotebench.errors import DatasetIntegrityError, ExecutableFixtureError
 from claimpromotebench.executable import (
+    build_exact_grid_artifact,
     main,
+    verify_dataset_artifact,
     verify_exact_grid_artifact,
     verify_fixture_case,
     verify_fixture_suite,
@@ -33,6 +35,51 @@ def test_exact_grid_fixture_recomputes_expected_values(root: Path) -> None:
     assert result["maximum"] == "1"
     assert result["predicate_holds"] is True
     assert result["repetitions"] == 3
+
+
+def test_exact_grid_builder_reproduces_registered_positive_fixture(root: Path) -> None:
+    case = _valid_case(root)
+    assert (
+        build_exact_grid_artifact(
+            coefficients=["1", "-1", "1"],
+            grid=["0", "1/4", "1/2", "3/4", "1"],
+            relation=">=",
+            threshold="0",
+            repetitions=3,
+        )
+        == case["artifact"]
+    )
+
+
+def test_alpha_numerical_artifacts_are_executable_and_bound(dataset_dir: Path) -> None:
+    inputs = load_jsonl(dataset_dir / "inputs.jsonl")
+    gold = {record["id"]: record for record in load_jsonl(dataset_dir / "gold.jsonl")}
+    artifact_paths: set[str] = set()
+    evidence_count = 0
+    for item in inputs:
+        if item["family"] != "NUMERICAL":
+            continue
+        evidence = item["evidence"][0]
+        result = verify_dataset_artifact(
+            dataset_dir,
+            evidence,
+            require_scope_match=gold[item["id"]]["decision"]["action"] == "ALLOW",
+        )
+        assert result["status"] == "PASS"
+        assert result["predicate_holds"] is True
+        artifact_paths.add(evidence["artifact_path"])
+        evidence_count += 1
+    assert len(artifact_paths) == 4
+    assert evidence_count == 8
+
+
+def test_alpha_valid_member_rejects_scope_artifact_mismatch(dataset_dir: Path) -> None:
+    inputs = load_jsonl(dataset_dir / "inputs.jsonl")
+    item = next(value for value in inputs if value["id"] == "alpha-num-01-a")
+    evidence = deepcopy(item["evidence"][0])
+    evidence["scope"]["repetitions"] = 4
+    with pytest.raises(DatasetIntegrityError, match="repetitions"):
+        verify_dataset_artifact(dataset_dir, evidence, require_scope_match=True)
 
 
 def test_executable_fixture_suite_covers_positive_and_negative_cases(root: Path) -> None:

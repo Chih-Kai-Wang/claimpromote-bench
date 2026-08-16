@@ -51,3 +51,29 @@ semantic prose rather than JSON-pointer sentences.
 
 **Reason.** A model cannot decide under an unstated policy, and flattening a typed ledger does
 not create a meaningful narrative-versus-structure intervention.
+
+## 2026-08-16 — Bind numerical alpha to finite-grid executable evidence
+
+**Decision.** The four `NUMERICAL` controlled pairs now reference four registered
+exact-rational finite-grid JSON artifacts. Both members of a pair share identical artifact
+bytes. Dataset validation recomputes all eight numerical evidence records; an `ALLOW` member
+must additionally match the artifact's protocol, repetitions, preregistration, closed domain,
+runtime result, and true predicate.
+
+**Scope correction.** Numerical claim text is limited to the registered rational grid. The
+artifact and validator do not establish a continuous-interval result. The other sixteen
+pairs retain synthetic artifacts because their present purpose is to exercise dependency,
+runtime, staleness, provenance, and formal-identity policy transitions rather than execute
+those external systems.
+
+**Controlled-pair rule.** Invalid numerical members still point to a valid recomputable
+artifact. Their single declared metadata prerequisite remains intentionally invalid. This
+prevents artifact corruption from becoming a second uncontrolled difference.
+
+**Versioning.** This change creates a new immutable alpha dataset revision through the
+refreshed manifest digest. No model run or external contribution was accepted against the
+superseded revision, so no result migration or pooling is permitted or required.
+
+**Rejected alternatives.** Treating grid evidence as continuous proof, giving the two sides
+different artifact bytes, or skipping recomputation for the invalid side would each weaken
+the benchmark's scope or counterfactual interpretation.
