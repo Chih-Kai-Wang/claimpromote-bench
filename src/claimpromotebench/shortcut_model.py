@@ -55,10 +55,7 @@ def pair_records(records: list[Record]) -> Pairs:
 def enriched_records(joined: list[Record], tier: str) -> list[Record]:
     """Attach one policy-blind feature vector to every joined record."""
 
-    return [
-        {**record, "features": extract_features(record["item"], tier)}
-        for record in joined
-    ]
+    return [{**record, "features": extract_features(record["item"], tier)} for record in joined]
 
 
 def _standardization(
@@ -90,9 +87,7 @@ def _sigmoid(value: float) -> float:
 
 
 def _member(pair: list[Record], allow: bool) -> Record:
-    return next(
-        record for record in pair if (record["gold"]["action"] == "ALLOW") is allow
-    )
+    return next(record for record in pair if (record["gold"]["action"] == "ALLOW") is allow)
 
 
 def _weights(
@@ -120,9 +115,7 @@ def _weights(
         )
         deltas.append([left - right for left, right in zip(valid, invalid, strict=True)])
 
-    weights = [
-        mean(delta[index] for delta in deltas) for index in range(len(feature_names))
-    ]
+    weights = [mean(delta[index] for delta in deltas) for index in range(len(feature_names))]
     norm = math.sqrt(sum(weight * weight for weight in weights))
     return [weight / norm for weight in weights] if norm > 0 else weights
 
@@ -139,10 +132,7 @@ def cross_fitted_predictions(joined: list[Record], tier: str) -> list[Record]:
     predictions: dict[str, Record] = {}
     for held_pair_id, held_pair in sorted(pairs.items()):
         training = [
-            record
-            for pair_id, pair in pairs.items()
-            if pair_id != held_pair_id
-            for record in pair
+            record for pair_id, pair in pairs.items() if pair_id != held_pair_id for record in pair
         ]
         centers, scales = _standardization(training, feature_names)
         weights = _weights(pairs, held_pair_id, feature_names, centers, scales)
@@ -155,14 +145,10 @@ def cross_fitted_predictions(joined: list[Record], tier: str) -> list[Record]:
                 centers,
                 scales,
             )
-            score = sum(
-                weight * value for weight, value in zip(weights, vector, strict=True)
-            )
+            score = sum(weight * value for weight, value in zip(weights, vector, strict=True))
             scores.append((record, score))
 
-        valid_mean = mean(
-            score for record, score in scores if record["gold"]["action"] == "ALLOW"
-        )
+        valid_mean = mean(score for record, score in scores if record["gold"]["action"] == "ALLOW")
         invalid_mean = mean(
             score for record, score in scores if record["gold"]["action"] != "ALLOW"
         )
@@ -176,9 +162,7 @@ def cross_fitted_predictions(joined: list[Record], tier: str) -> list[Record]:
                 centers,
                 scales,
             )
-            score = sum(
-                weight * value for weight, value in zip(weights, vector, strict=True)
-            )
+            score = sum(weight * value for weight, value in zip(weights, vector, strict=True))
             probability = _sigmoid((score - midpoint) / score_scale)
             action = "ALLOW" if probability > 0.5 else "HOLD"
             predictions[str(record["id"])] = {
