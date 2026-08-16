@@ -9,7 +9,7 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from .dataset import (
     load_json,
@@ -27,6 +27,18 @@ from .policy import load_policy
 from .prompts import ARMS, render_prompt
 
 SCHEMA_VERSION = "1.0.0"
+
+
+class TransformStats(TypedDict):
+    """Typed counters for one registered metamorphic transformation."""
+
+    transform_id: str
+    description: str
+    applicable_items: int
+    variants: int
+    prompt_identical_variants: int
+    prompt_changed_variants: int
+    changed_prompt_arms: dict[str, int]
 
 
 @dataclass(frozen=True)
@@ -391,7 +403,7 @@ def audit_invariance(dataset_dir: Path) -> dict[str, Any]:
     items = load_jsonl(dataset_dir / "inputs.jsonl")
     input_schema = root / "schemas" / "benchmark-input.schema.json"
 
-    stats = {
+    stats: dict[str, TransformStats] = {
         transform.transform_id: {
             "transform_id": transform.transform_id,
             "description": transform.description,
