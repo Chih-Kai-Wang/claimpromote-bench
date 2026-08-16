@@ -13,6 +13,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  refresh-alpha:
+    name: refresh deterministic Lake manifest
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/formal-lean-binding'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out pull-request branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install runtime dependencies
+        run: python -m pip install -e .
+      - name: Rebuild deterministic alpha
+        run: python scripts/build_alpha.py
+      - name: Commit generated Lake manifest
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/alpha
+          if git diff --cached --quiet; then
+            echo "Generated alpha is already current."
+          else
+            git commit -m "data: add deterministic Lake manifest"
+            git push origin "HEAD:${{ github.head_ref }}"
+          fi
+
   quality:
     name: quality and primary test
     runs-on: ubuntu-latest
