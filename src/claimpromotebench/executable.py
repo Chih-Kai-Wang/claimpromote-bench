@@ -256,11 +256,10 @@ def _verify_alpha_scope_binding(
     ):
         raise DatasetIntegrityError("executable alpha evidence domain must be closed in x")
     program_domain = artifact["program"]["domain"]
-    if (
-        _fraction(variable.get("lower"), "evidence.domain.lower")
-        != _fraction(program_domain["lower"], "artifact.domain.lower")
-        or _fraction(variable.get("upper"), "evidence.domain.upper")
-        != _fraction(program_domain["upper"], "artifact.domain.upper")
+    if _fraction(variable.get("lower"), "evidence.domain.lower") != _fraction(
+        program_domain["lower"], "artifact.domain.lower"
+    ) or _fraction(variable.get("upper"), "evidence.domain.upper") != _fraction(
+        program_domain["upper"], "artifact.domain.upper"
     ):
         raise DatasetIntegrityError("evidence domain does not match executable artifact domain")
     if evidence.get("tool_exit") != 0 or evidence.get("verifier_result") != "PASS":
