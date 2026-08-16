@@ -52,7 +52,7 @@ def pair_cluster_bootstrap_many(
         raise ValueError("bootstrap samples must be positive")
 
     rng = random.Random(seed)
-    estimates = {name: [] for name in statistics}
+    estimates: dict[str, list[float]] = {name: [] for name in statistics}
     for _ in range(samples):
         sample: list[dict[str, Any]] = []
         for _pair_index in pair_ids:
