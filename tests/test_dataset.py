@@ -23,6 +23,8 @@ def test_full_dataset_contract(dataset_dir: Path) -> None:
     assert report["families"] == EXPECTED_FAMILY_COUNTS
     assert report["executable_computation_artifacts"] == 4
     assert report["executable_computation_evidence"] == 8
+    assert report["formal_lean_artifacts"] == 3
+    assert report["formal_lean_evidence"] == 6
     assert report["model_experiments"] == "PENDING"
 
 
