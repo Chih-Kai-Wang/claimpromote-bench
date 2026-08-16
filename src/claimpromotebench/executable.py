@@ -235,7 +235,9 @@ def _verify_alpha_scope_binding(
         scope.get("protocol_id") != ALPHA_EVIDENCE_PROTOCOL_ID
         or scope.get("protocol_version") != ALPHA_EVIDENCE_PROTOCOL_VERSION
     ):
-        raise DatasetIntegrityError("executable artifact is not bound to the alpha numeric protocol")
+        raise DatasetIntegrityError(
+            "executable artifact is not bound to the alpha numeric protocol"
+        )
     if scope.get("repetitions") != artifact["repetitions"]:
         raise DatasetIntegrityError("evidence repetitions do not match executable artifact")
     if scope.get("preregistered") is not artifact["preregistered"]:
@@ -262,7 +264,9 @@ def _verify_alpha_scope_binding(
     ):
         raise DatasetIntegrityError("evidence domain does not match executable artifact domain")
     if evidence.get("tool_exit") != 0 or evidence.get("verifier_result") != "PASS":
-        raise DatasetIntegrityError("valid executable evidence must record a completed passing verifier")
+        raise DatasetIntegrityError(
+            "valid executable evidence must record a completed passing verifier"
+        )
     if result.get("predicate_holds") is not True:
         raise DatasetIntegrityError("valid executable evidence recomputed a false predicate")
 
@@ -282,7 +286,9 @@ def verify_dataset_artifact(
     try:
         path.relative_to(dataset_dir.resolve())
     except ValueError as exc:
-        raise DatasetIntegrityError(f"executable artifact path escapes dataset: {relative}") from exc
+        raise DatasetIntegrityError(
+            f"executable artifact path escapes dataset: {relative}"
+        ) from exc
     if not path.is_file():
         raise DatasetIntegrityError(f"executable artifact is missing: {relative}")
     if evidence.get("artifact_hash") != sha256_file(path):
