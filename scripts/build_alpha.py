@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Build the deterministic 20-pair ClaimPromoteBench alpha dataset.
 
-This generator creates policy fixtures and exact-rational numerical artifacts only. It does
-not run models, contact networks, or promote any mathematical claim.
+This generator creates policy fixtures, exact-rational numerical artifacts, and narrow Lean
+formal artifacts only. It does not run models, contact networks, or promote any research
+claim.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sys
 from collections import Counter
 from copy import deepcopy
@@ -18,11 +20,18 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "data" / "alpha"
 ARTIFACTS = DATASET / "artifacts"
-POLICY_PATH = ROOT / "policies" / "math-evidence-transition-1.0.1-alpha.json"
+POLICY_PATH = ROOT / "policies" / "math-evidence-transition-1.0.2-alpha.json"
 sys.path.insert(0, str(ROOT / "src"))
 
 from claimpromotebench.dataset import validate_dataset  # noqa: E402
 from claimpromotebench.executable import build_exact_grid_artifact  # noqa: E402
+from claimpromotebench.formal import (  # noqa: E402
+    TOOLCHAIN_SHA256,
+    build_formal_artifact,
+    formal_artifact_path,
+    formal_claim_text,
+    write_formal_package,
+)
 from claimpromotebench.oracle import evaluate  # noqa: E402
 
 Json = dict[str, Any]
@@ -92,9 +101,9 @@ def domain(upper: str = "1") -> Json:
     }
 
 
-def artifact_for(pair_id: str, *, executable: bool) -> tuple[str, str]:
+def artifact_for(pair_id: str, family: str, item: Json) -> tuple[str, str]:
     opaque = digest_label(pair_id)[7:23]
-    if executable:
+    if family == "NUMERICAL":
         pair_index = int(pair_id.rsplit("-", 1)[-1])
         relative = f"artifacts/artifact-{opaque}.json"
         artifact = build_exact_grid_artifact(
@@ -107,6 +116,13 @@ def artifact_for(pair_id: str, *, executable: bool) -> tuple[str, str]:
         content = (
             json.dumps(artifact, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
         ).encode("utf-8")
+    elif family == "FORMAL":
+        relative = formal_artifact_path(pair_id)
+        content = build_formal_artifact(
+            pair_id,
+            str(item["claim_context"]["claim_id"]),
+            str(item["claim_context"]["statement_sha256"]),
+        ).encode("utf-8")
     else:
         relative = f"artifacts/artifact-{opaque}.txt"
         content = (
@@ -114,6 +130,7 @@ def artifact_for(pair_id: str, *, executable: bool) -> tuple[str, str]:
             "This fixture is policy-evaluation data, not a mathematical result.\n"
         ).encode()
     path = DATASET / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
     return relative, digest_bytes(content)
 
@@ -160,13 +177,15 @@ def evidence(
     }
 
 
-def base_item(pair_id: str, family: str, artifact_hash: str) -> Json:
+def base_item(pair_id: str, family: str) -> Json:
     claim_id = f"claim-{digest_label(pair_id)[7:19]}"
     if family == "NUMERICAL":
         claim_text = (
             "For the supplied bounded mathematical object, the stated invariant holds at "
             "every registered rational grid point in [0, 1]."
         )
+    elif family == "FORMAL":
+        claim_text = formal_claim_text(pair_id)
     else:
         claim_text = (
             "For the supplied bounded mathematical object, the stated invariant holds "
@@ -179,7 +198,7 @@ def base_item(pair_id: str, family: str, artifact_hash: str) -> Json:
         "family": family,
         "claim_text": claim_text,
         "policy_id": "math-evidence-transition",
-        "policy_version": "1.0.1-alpha",
+        "policy_version": "1.0.2-alpha",
         "claim_context": {
             "claim_id": claim_id,
             "author_id": f"author-{digest_label(f'author:{pair_id}')[7:19]}",
@@ -190,7 +209,6 @@ def base_item(pair_id: str, family: str, artifact_hash: str) -> Json:
         "current_state_basis": {},
         "requested_transition": {"target_state": state(), "basis_evidence_ids": []},
         "evidence": [],
-        "_artifact_hash": artifact_hash,
     }
 
 
@@ -232,9 +250,7 @@ def formal_evidence(
         artifact_hash,
         scope_extra={
             "verifier": "lean",
-            "toolchain_lock_sha256": (
-                "sha256:68118ac04a64ac0748e4d338f7306a76e2c74cb88f806f3724d47ea2f45fb3c0"
-            ),
+            "toolchain_lock_sha256": TOOLCHAIN_SHA256,
         },
         dependencies=dependencies,
     )
@@ -595,8 +611,11 @@ def build() -> None:
     DATASET.mkdir(parents=True, exist_ok=True)
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
     for old in ARTIFACTS.iterdir():
-        if old.is_file():
+        if old.is_dir():
+            shutil.rmtree(old)
+        else:
             old.unlink()
+    formal_package_files = write_formal_package(DATASET)
     policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
     author_items: list[Json] = []
     pairs: list[Json] = []
@@ -605,13 +624,9 @@ def build() -> None:
 
     for spec in SPECS:
         pair_id = spec["pair"]
-        artifact_path, artifact_hash = artifact_for(
-            pair_id,
-            executable=spec["family"] == "NUMERICAL",
-        )
-        valid = base_item(pair_id, spec["family"], artifact_hash)
+        valid = base_item(pair_id, spec["family"])
+        artifact_path, artifact_hash = artifact_for(pair_id, spec["family"], valid)
         configure_valid(spec, valid, artifact_path, artifact_hash)
-        valid.pop("_artifact_hash")
         invalid = deepcopy(valid)
         invalidate(spec, invalid)
 
@@ -676,14 +691,21 @@ def build() -> None:
     write_jsonl(DATASET / "gold.jsonl", gold)
     write_json(DATASET / "pairs.json", pairs)
 
-    generated = ["author-items.jsonl", "inputs.jsonl", "gold.jsonl", "pairs.json"]
+    generated = [
+        "author-items.jsonl",
+        "inputs.jsonl",
+        "gold.jsonl",
+        "pairs.json",
+        *formal_package_files,
+    ]
     generated.extend(
         sorted(
             str(path.relative_to(DATASET)).replace("\\", "/")
-            for path in ARTIFACTS.iterdir()
+            for path in ARTIFACTS.rglob("*")
             if path.is_file()
         )
     )
+    generated = sorted(set(generated))
     manifest = {
         "schema_version": "1.0.0-alpha",
         "dataset_id": "claimpromotebench-alpha-20-pair",

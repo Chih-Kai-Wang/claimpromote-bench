@@ -223,7 +223,7 @@ def check_pairs(dataset_dir: Path) -> dict[str, int]:
 
 
 def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, Any]:
-    """Run schema, integrity, pairing, executable-artifact, and oracle/gold checks."""
+    """Run schemas, integrity, pairs, artifact bindings, and oracle/gold checks."""
 
     root = root or repository_root()
     manifest = verify_manifest(dataset_dir)
@@ -252,15 +252,19 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
             raise DatasetIntegrityError(f"schema does not match manifest: {name}")
 
     from .executable import verify_dataset_artifact
+    from .formal import verify_formal_artifact_binding
 
     executable_artifacts: set[str] = set()
     executable_evidence = 0
+    formal_artifacts: set[str] = set()
+    formal_evidence = 0
     for item in inputs:
         validate_with_schema(item, _schema(root, "benchmark-input.schema.json"), str(item["id"]))
         gold_record = gold_by_id[str(item["id"])]
         validate_with_schema(gold_record, _schema(root, "gold-label.schema.json"), str(item["id"]))
         require_scope_match = gold_record["decision"]["action"] == "ALLOW"
         item_has_executable = False
+        item_has_formal = False
         for evidence in item["evidence"]:
             verify_artifact(dataset_dir, evidence)
             artifact_path = str(evidence["artifact_path"])
@@ -273,9 +277,23 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
                 executable_artifacts.add(artifact_path)
                 executable_evidence += 1
                 item_has_executable = True
+            if item["family"] == "FORMAL" and evidence["type"] == "FORMAL_CERTIFICATE":
+                verify_formal_artifact_binding(
+                    dataset_dir,
+                    item,
+                    evidence,
+                    require_scope_match=require_scope_match,
+                )
+                formal_artifacts.add(artifact_path)
+                formal_evidence += 1
+                item_has_formal = True
         if item["family"] == "NUMERICAL" and not item_has_executable:
             raise DatasetIntegrityError(
                 f"numerical alpha item lacks executable computation evidence: {item['id']}"
+            )
+        if item["family"] == "FORMAL" and not item_has_formal:
+            raise DatasetIntegrityError(
+                f"formal alpha item lacks a bound Lean certificate: {item['id']}"
             )
 
         actual = evaluate(item, policy, str(manifest["evaluation_time"]))
@@ -292,5 +310,7 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
         "evaluation_time": manifest["evaluation_time"],
         "executable_computation_artifacts": len(executable_artifacts),
         "executable_computation_evidence": executable_evidence,
+        "formal_lean_artifacts": len(formal_artifacts),
+        "formal_lean_evidence": formal_evidence,
         "model_experiments": "PENDING",
     }

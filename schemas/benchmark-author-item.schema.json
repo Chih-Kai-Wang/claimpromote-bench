@@ -77,7 +77,7 @@
     "pair_id": {"type": "string", "pattern": "^alpha-[a-z]+-[0-9]{2}$"}, "split": {"const": "alpha"},
     "family": {"enum": ["DEPENDENCY", "NUMERICAL", "RUNTIME", "STALE_CONTRADICTION", "PROVENANCE", "FORMAL"]},
     "claim_text": {"type": "string", "minLength": 1}, "policy_id": {"const": "math-evidence-transition"},
-    "policy_version": {"const": "1.0.1-alpha"},
+    "policy_version": {"const": "1.0.2-alpha"},
     "claim_context": {"type": "object", "additionalProperties": false, "required": ["claim_id", "author_id", "author_environment_sha256", "statement_sha256"], "properties": {
       "claim_id": {"type": "string"}, "author_id": {"type": "string"}, "author_environment_sha256": {"$ref": "#/$defs/sha256"},
       "statement_sha256": {"$ref": "#/$defs/sha256"}, "required_domain": {"$ref": "#/$defs/domain"}
