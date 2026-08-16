@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-packet-manifest.schema.json",
+  "title": "ReviewPacketManifest",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "dataset_manifest_sha256",
+    "policy_sha256",
+    "evaluation_time",
+    "item_count",
+    "packet_file",
+    "packet_sha256",
+    "blinding_method"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "packet_id": {"$ref": "#/$defs/sha256"},
+    "dataset_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "policy_sha256": {"$ref": "#/$defs/sha256"},
+    "evaluation_time": {"type": "string", "format": "date-time"},
+    "item_count": {"type": "integer", "minimum": 1},
+    "packet_file": {
+      "type": "string",
+      "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+\\.jsonl$"
+    },
+    "packet_sha256": {"$ref": "#/$defs/sha256"},
+    "blinding_method": {"const": "HMAC-SHA256-128"}
+  }
+}

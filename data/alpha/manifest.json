@@ -60,6 +60,10 @@
     "executable-fixture-case.schema.json": "sha256:8a6796ad125948ad09a3bdf08af4a9d96d7b00452d94a5902e976e9b4838cafe",
     "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
     "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
+    "review-packet-item.schema.json": "sha256:9f7c53547e10ef0d51e77db538ece959a9def299177cd11d5df4d93f2e440bf2",
+    "review-packet-manifest.schema.json": "sha256:6014bd2fa83132f58fa064c07df2f880b293ae1da537b1ec6aec2b33c8c2f248",
+    "review-private-key.schema.json": "sha256:1d9245c0cf19053a2df72fa33e960b736056f7a1ef5b4873478d838b968858b0",
+    "review-submission.schema.json": "sha256:3f9a98576257c08f1f58385cb97deef0ae3ea2cc5081e662a94b0c90bd9f5e7c",
     "run-contribution.schema.json": "sha256:db3422d3b48e9cf576e18b6df35085eac317e3f455a5650a65832404e9d137e4",
     "run-record.schema.json": "sha256:697641054f05428c8e5ed3115abc3d912ce6b8e37e4f867c96039da7efa4d953",
     "transition-policy.schema.json": "sha256:6c4f5f5b1f71a110ee4915f34d7434215dac4c3631ac7f8af48e33faea356eb7"

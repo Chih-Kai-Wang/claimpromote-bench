@@ -107,3 +107,35 @@ hashes must never be silently pooled.
 **Rejected alternatives.** Trusting only a stored `verifier_result: PASS`, making the invalid
 side syntactically uncompilable, using a mutable Lean release alias, or treating kernel
 acceptance as research resolution would each confound or overstate the benchmark claim.
+
+## 2026-08-16 — Separate active blind review from published unblinded evidence
+
+**Decision.** Independent annotation review uses a private working package containing a
+public reviewer packet, an immutable packet manifest, and a secret HMAC mapping. The packet
+removes item ID, pair ID, split, family, and gold fields. Review IDs and ordering are derived
+from a random 32-byte secret. Reviewers receive neither the private mapping nor gold, pair
+descriptors, model outputs, aggregate results, or another reviewer's submission.
+
+**Submission discipline.** Reviewer drafts contain no default action or confidence and begin
+with every independence attestation set to false. Completed submissions must cover every
+blinded item exactly once, use only the bound policy vocabulary, obey action/reason
+constraints, and affirm independent work without gold, model output, or collaboration.
+Missing judgments are never interpreted as `HOLD`.
+
+**Release boundary.** Active packages remain outside the public repository. After every
+reviewer has submitted and judgments are frozen, the packet, mapping, submissions, agreement
+report, and adjudication record may be published together as an immutable package under
+`reviews/`. An empty review root remains `PENDING`; it is not a passing external-review gate.
+
+**Contamination limitation.** Because alpha inputs and gold are already public, alpha review
+is procedurally blinded and depends on explicit reviewer attestations. It is not equivalent
+to a contamination-resistant hidden review set. The future hidden set must be packetized
+before its labels become public.
+
+**Versioning.** Adding the review schemas changes the manifest-bound public contract but does
+not alter the 40 item payloads or their gold decisions. No real review submission, agreement
+result, or external reviewer is claimed by this infrastructure change.
+
+**Rejected alternatives.** Publishing the mapping during active review, exposing family or
+pair membership, pre-filling `HOLD`, accepting partial submissions, or counting repository
+maintainer judgments as external review would each bias or overstate the review evidence.

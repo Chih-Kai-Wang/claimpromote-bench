@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-packet-item.schema.json",
+  "title": "ReviewPacketItem",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["review_item_id", "payload"],
+  "properties": {
+    "review_item_id": {
+      "type": "string",
+      "pattern": "^review-[0-9a-f]{32}$"
+    },
+    "payload": {
+      "type": "object",
+      "minProperties": 1,
+      "not": {
+        "anyOf": [
+          {"required": ["id"]},
+          {"required": ["pair_id"]},
+          {"required": ["split"]},
+          {"required": ["family"]},
+          {"required": ["gold"]}
+        ]
+      }
+    }
+  }
+}

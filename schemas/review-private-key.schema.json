@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-private-key.schema.json",
+  "title": "ReviewPrivateKey",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "packet_sha256",
+    "dataset_manifest_sha256",
+    "policy_sha256",
+    "blinding_secret_hex",
+    "mapping"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "packet_id": {"$ref": "#/$defs/sha256"},
+    "packet_sha256": {"$ref": "#/$defs/sha256"},
+    "dataset_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "policy_sha256": {"$ref": "#/$defs/sha256"},
+    "blinding_secret_hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "mapping": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["review_item_id", "item_id"],
+        "properties": {
+          "review_item_id": {
+            "type": "string",
+            "pattern": "^review-[0-9a-f]{32}$"
+          },
+          "item_id": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

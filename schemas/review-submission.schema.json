@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-submission.schema.json",
+  "title": "ReviewSubmission",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_item_id",
+        "action",
+        "reason_codes",
+        "confidence",
+        "rationale"
+      ],
+      "properties": {
+        "review_item_id": {
+          "type": "string",
+          "pattern": "^review-[0-9a-f]{32}$"
+        },
+        "action": {
+          "enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "confidence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "rationale": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reviewer_id",
+    "packet_id",
+    "packet_sha256",
+    "policy_sha256",
+    "completed_at",
+    "attestation",
+    "decisions"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "reviewer_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$"
+    },
+    "packet_id": {"$ref": "#/$defs/sha256"},
+    "packet_sha256": {"$ref": "#/$defs/sha256"},
+    "policy_sha256": {"$ref": "#/$defs/sha256"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independent",
+        "no_gold_access",
+        "no_model_outputs",
+        "no_collaboration",
+        "public_release_after_unblinding"
+      ],
+      "properties": {
+        "independent": {"const": true},
+        "no_gold_access": {"const": true},
+        "no_model_outputs": {"const": true},
+        "no_collaboration": {"const": true},
+        "public_release_after_unblinding": {"const": true}
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/decision"}
+    }
+  }
+}
