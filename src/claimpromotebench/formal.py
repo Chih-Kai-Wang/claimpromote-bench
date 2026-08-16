@@ -25,6 +25,14 @@ srcDir = \"artifacts\"
 [[lean_lib]]
 name = \"ClaimPromoteFormal\"
 """
+LAKE_MANIFEST_CONTENT = """{
+  "version": "1.1.0",
+  "packagesDir": ".lake/packages",
+  "packages": [],
+  "name": "claimpromote-formal-alpha",
+  "lakeDir": ".lake"
+}
+"""
 ROOT_MODULE_CONTENT = """import ClaimPromoteFormal.Formal01
 import ClaimPromoteFormal.Formal02
 import ClaimPromoteFormal.Formal03
@@ -102,12 +110,19 @@ def write_formal_package(dataset_dir: Path) -> list[str]:
 
     toolchain = dataset_dir / "lean-toolchain"
     lakefile = dataset_dir / "lakefile.toml"
+    lake_manifest = dataset_dir / "lake-manifest.json"
     root_module = dataset_dir / "artifacts" / "ClaimPromoteFormal.lean"
     root_module.parent.mkdir(parents=True, exist_ok=True)
     toolchain.write_text(TOOLCHAIN_CONTENT, encoding="utf-8", newline="\n")
     lakefile.write_text(LAKEFILE_CONTENT, encoding="utf-8", newline="\n")
+    lake_manifest.write_text(LAKE_MANIFEST_CONTENT, encoding="utf-8", newline="\n")
     root_module.write_text(ROOT_MODULE_CONTENT, encoding="utf-8", newline="\n")
-    return ["lean-toolchain", "lakefile.toml", "artifacts/ClaimPromoteFormal.lean"]
+    return [
+        "lean-toolchain",
+        "lakefile.toml",
+        "lake-manifest.json",
+        "artifacts/ClaimPromoteFormal.lean",
+    ]
 
 
 def _artifact_file(dataset_dir: Path, relative: str) -> Path:
