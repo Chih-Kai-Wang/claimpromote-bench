@@ -115,8 +115,7 @@ def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
         _fail("RESOURCE_LIMIT", "grid size is outside the registered limit")
 
     coefficients = [
-        _fraction(value, f"coefficient[{index}]")
-        for index, value in enumerate(coefficient_text)
+        _fraction(value, f"coefficient[{index}]") for index, value in enumerate(coefficient_text)
     ]
     grid = [_fraction(value, f"grid[{index}]") for index, value in enumerate(grid_text)]
     lower = _fraction(program["domain"]["lower"], "domain.lower")
@@ -148,8 +147,7 @@ def verify_exact_grid_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
         _fail("OBSERVATION_MISMATCH", "observed values do not match exact recomputation")
 
     expected_digests = [
-        _repetition_digest(artifact, value_text, repetition)
-        for repetition in range(repetitions)
+        _repetition_digest(artifact, value_text, repetition) for repetition in range(repetitions)
     ]
     if observed["repetition_digests"] != expected_digests:
         _fail(
