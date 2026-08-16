@@ -17,9 +17,7 @@ from .shortcut_model import (
 
 
 def _member(pair: list[Record], allow: bool) -> Record:
-    return next(
-        record for record in pair if (record["gold"]["action"] == "ALLOW") is allow
-    )
+    return next(record for record in pair if (record["gold"]["action"] == "ALLOW") is allow)
 
 
 def _pair_difference_report(joined: list[Record], tier: str) -> dict[str, Any]:
