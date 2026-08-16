@@ -59,6 +59,7 @@
     "evidence.schema.json": "sha256:ceed3589f4e8ec8a5fc4b05e214c2e3a1b2ae1fd2d137194198e5228f47e8bd3",
     "executable-fixture-case.schema.json": "sha256:8a6796ad125948ad09a3bdf08af4a9d96d7b00452d94a5902e976e9b4838cafe",
     "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
+    "invariance-report.schema.json": "sha256:597fc12fa45e07a2d246a68862fce21a8e64684f76db299c7320e96b86a7da71",
     "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
     "review-adjudication.schema.json": "sha256:bfad18f33a246f18286d1040f4dd15c1a5fbf8edb735b08f08471f0e51ea3e2c",
     "review-analysis.schema.json": "sha256:b43adcdefead7a52754eb7fefde420b01acc81b040d92efef9538317cd219e98",
