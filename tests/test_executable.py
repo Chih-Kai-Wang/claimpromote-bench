@@ -39,13 +39,16 @@ def test_exact_grid_fixture_recomputes_expected_values(root: Path) -> None:
 
 def test_exact_grid_builder_reproduces_registered_positive_fixture(root: Path) -> None:
     case = _valid_case(root)
-    assert build_exact_grid_artifact(
-        coefficients=["1", "-1", "1"],
-        grid=["0", "1/4", "1/2", "3/4", "1"],
-        relation=">=",
-        threshold="0",
-        repetitions=3,
-    ) == case["artifact"]
+    assert (
+        build_exact_grid_artifact(
+            coefficients=["1", "-1", "1"],
+            grid=["0", "1/4", "1/2", "3/4", "1"],
+            relation=">=",
+            threshold="0",
+            repetitions=3,
+        )
+        == case["artifact"]
+    )
 
 
 def test_alpha_numerical_artifacts_are_executable_and_bound(dataset_dir: Path) -> None:
