@@ -60,6 +60,8 @@
     "executable-fixture-case.schema.json": "sha256:8a6796ad125948ad09a3bdf08af4a9d96d7b00452d94a5902e976e9b4838cafe",
     "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
     "oracle-result.schema.json": "sha256:eb16b49eb3b030296bc8c4d1f72c5df5f69230b81675e3d873b27ad7383224eb",
+    "review-adjudication.schema.json": "sha256:bfad18f33a246f18286d1040f4dd15c1a5fbf8edb735b08f08471f0e51ea3e2c",
+    "review-analysis.schema.json": "sha256:b43adcdefead7a52754eb7fefde420b01acc81b040d92efef9538317cd219e98",
     "review-packet-item.schema.json": "sha256:9f7c53547e10ef0d51e77db538ece959a9def299177cd11d5df4d93f2e440bf2",
     "review-packet-manifest.schema.json": "sha256:6014bd2fa83132f58fa064c07df2f880b293ae1da537b1ec6aec2b33c8c2f248",
     "review-private-key.schema.json": "sha256:1d9245c0cf19053a2df72fa33e960b736056f7a1ef5b4873478d838b968858b0",

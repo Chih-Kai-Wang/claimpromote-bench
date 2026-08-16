@@ -139,3 +139,41 @@ result, or external reviewer is claimed by this infrastructure change.
 **Rejected alternatives.** Publishing the mapping during active review, exposing family or
 pair membership, pre-filling `HOLD`, accepting partial submissions, or counting repository
 maintainer judgments as external review would each bias or overstate the review evidence.
+
+## 2026-08-16 — Gate review on the weakest reviewer and weakest reviewer pair
+
+**Decision.** The external annotation gate requires at least two reviewers, every reviewer to
+reach at least 0.80 action agreement with frozen gold, and the minimum raw action agreement
+across every reviewer pair to reach at least 0.80. The gate does not use the average reviewer
+score or average pairwise agreement.
+
+**Reason.** An average can conceal one reviewer who did not understand the policy or one pair
+whose interpretations diverge materially. The weakest-reviewer rule is more conservative and
+makes the gate's meaning easier to audit.
+
+**Secondary statistics.** The report also computes action confusion matrices, exact
+reason-set agreement, reason-set Jaccard similarity, Cohen kappa for every reviewer pair,
+unanimous-action rate, and Fleiss kappa. Kappa is diagnostic rather than decisive because
+class imbalance or degenerate marginals can make it unstable or undefined.
+
+**Disagreement scope.** An item enters adjudication when any reviewer differs from gold on
+action or reason set, or when reviewers differ from each other on action or reason set. Each
+such item receives a deterministic disagreement ID bound to the packet and blinded item ID.
+
+**Adjudication rule.** Every disagreement must be marked exactly once as `KEEP_GOLD`,
+`REVISE_ITEM`, `REVISE_POLICY`, or `UNRESOLVED`. `KEEP_GOLD` must reproduce the exact frozen
+gold action and reason list. A failed numeric threshold cannot be repaired by adjudication;
+it requires revision and a fresh blind review.
+
+**Negative-result preservation.** `REVISION_REQUIRED` is a valid scientific result. Published
+negative review outcomes must remain reproducible and visible. CI therefore rejects missing,
+stale, tampered, incomplete, or non-recomputable packages, but does not reject a package
+merely because reviewers failed to support the current version.
+
+**Versioning.** The analysis and adjudication schemas become part of the alpha manifest-bound
+public contract. No empirical agreement value is added until real independent submissions
+are published.
+
+**Rejected alternatives.** Gating only on average agreement, treating kappa as the sole
+criterion, ignoring reason-code disagreements, allowing partial adjudication, or suppressing
+a failed review package would each overstate reliability or weaken auditability.

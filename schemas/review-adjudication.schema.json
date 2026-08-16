@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-adjudication.schema.json",
+  "title": "ReviewAdjudication",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "actionOrNull": {
+      "anyOf": [
+        {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+        {"type": "null"}
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_report_id",
+    "packet_id",
+    "adjudicator_id",
+    "completed_at",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis_report_id": {"$ref": "#/$defs/sha256"},
+    "packet_id": {"$ref": "#/$defs/sha256"},
+    "adjudicator_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$"
+    },
+    "completed_at": {"type": "string", "format": "date-time"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "disagreement_id",
+          "disposition",
+          "recommended_action",
+          "recommended_reason_codes",
+          "note"
+        ],
+        "properties": {
+          "disagreement_id": {"$ref": "#/$defs/sha256"},
+          "disposition": {
+            "enum": ["KEEP_GOLD", "REVISE_ITEM", "REVISE_POLICY", "UNRESOLVED"]
+          },
+          "recommended_action": {"$ref": "#/$defs/actionOrNull"},
+          "recommended_reason_codes": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "note": {"type": "string", "minLength": 1, "maxLength": 4000}
+        }
+      }
+    }
+  }
+}

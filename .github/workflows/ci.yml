@@ -62,6 +62,13 @@ jobs:
           --root reviews
           --allow-empty
           --out work/reviews.json
+      - name: Recompute published review agreement gates
+        run: >-
+          python -m claimpromotebench.review_analysis validate-root
+          --dataset data/alpha
+          --root reviews
+          --allow-empty
+          --out work/review-analysis.json
       - name: Test with branch coverage
         run: python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
 
