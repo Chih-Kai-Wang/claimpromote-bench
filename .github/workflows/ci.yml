@@ -35,10 +35,43 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install development dependencies
         run: python -m pip install -e ".[dev]"
-      - name: Apply Ruff formatting and safe fixes
+      - name: Repair long expressions and apply Ruff
+        shell: bash
         run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("src/claimpromotebench/invariance.py")
+          text = path.read_text(encoding="utf-8")
+          replacements = {
+              '        "Reverse object insertion order recursively; JSON object semantics and prompts must remain identical.",\n': (
+                  '        "Reverse object insertion order recursively; JSON object semantics "\n'
+                  '        "and prompts must remain identical.",\n'
+              ),
+              '        "Rename author and evidence environment digests consistently while preserving equality relations.",\n': (
+                  '        "Rename author and evidence environment digests consistently while "\n'
+                  '        "preserving equality relations.",\n'
+              ),
+              '    return {\n        "item_id": item_id,\n        "transform_id": transform_id,\n        "stage": stage,\n        "message": message or error.__class__.__name__ if isinstance(error, BaseException) else message,\n    }\n': (
+                  '    if not message and isinstance(error, BaseException):\n'
+                  '        message = error.__class__.__name__\n'
+                  '    return {\n'
+                  '        "item_id": item_id,\n'
+                  '        "transform_id": transform_id,\n'
+                  '        "stage": stage,\n'
+                  '        "message": message,\n'
+                  '    }\n'
+              ),
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f"expected invariance fragment not found: {old!r}")
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8", newline="\n")
+          PY
           ruff check --fix src/claimpromotebench/invariance.py tests/test_invariance.py
           ruff format src/claimpromotebench/invariance.py tests/test_invariance.py
+          ruff check src/claimpromotebench/invariance.py tests/test_invariance.py
       - name: Commit formatting
         shell: bash
         run: |
