@@ -23,6 +23,48 @@ def percentile(values: Sequence[float], probability: float) -> float:
     return float(ordered[lower] * (1 - weight) + ordered[upper] * weight)
 
 
+def _bootstrap_summary(estimates: list[float], seed: int) -> dict[str, float | int | None]:
+    if not estimates:
+        return {"low": None, "high": None, "samples_defined": 0, "seed": seed}
+    return {
+        "low": percentile(estimates, 0.025),
+        "high": percentile(estimates, 0.975),
+        "samples_defined": len(estimates),
+        "seed": seed,
+    }
+
+
+def pair_cluster_bootstrap_many(
+    pair_records: dict[str, list[dict[str, Any]]],
+    statistics: dict[str, Callable[[list[dict[str, Any]]], float | None]],
+    *,
+    samples: int = 10_000,
+    seed: int = 20_260_813,
+) -> dict[str, dict[str, float | int | None]]:
+    """Bootstrap several statistics in one shared sequence of pair resamples."""
+
+    pair_ids = sorted(pair_records)
+    if not pair_ids:
+        raise ValueError("bootstrap requires at least one pair")
+    if not statistics:
+        raise ValueError("bootstrap requires at least one statistic")
+    if samples <= 0:
+        raise ValueError("bootstrap samples must be positive")
+
+    rng = random.Random(seed)
+    estimates: dict[str, list[float]] = {name: [] for name in statistics}
+    for _ in range(samples):
+        sample: list[dict[str, Any]] = []
+        for _pair_index in pair_ids:
+            chosen = rng.choice(pair_ids)
+            sample.extend(pair_records[chosen])
+        for name, statistic in statistics.items():
+            value = statistic(sample)
+            if value is not None and math.isfinite(value):
+                estimates[name].append(value)
+    return {name: _bootstrap_summary(values, seed) for name, values in estimates.items()}
+
+
 def pair_cluster_bootstrap(
     pair_records: dict[str, list[dict[str, Any]]],
     statistic: Callable[[list[dict[str, Any]]], float | None],
@@ -32,27 +74,12 @@ def pair_cluster_bootstrap(
 ) -> dict[str, float | int | None]:
     """Bootstrap pairs, carrying both pair members into each resample."""
 
-    pair_ids = sorted(pair_records)
-    if not pair_ids:
-        raise ValueError("bootstrap requires at least one pair")
-    rng = random.Random(seed)
-    estimates: list[float] = []
-    for _ in range(samples):
-        sample: list[dict[str, Any]] = []
-        for _pair_index in pair_ids:
-            chosen = rng.choice(pair_ids)
-            sample.extend(pair_records[chosen])
-        value = statistic(sample)
-        if value is not None and math.isfinite(value):
-            estimates.append(value)
-    if not estimates:
-        return {"low": None, "high": None, "samples_defined": 0, "seed": seed}
-    return {
-        "low": percentile(estimates, 0.025),
-        "high": percentile(estimates, 0.975),
-        "samples_defined": len(estimates),
-        "seed": seed,
-    }
+    return pair_cluster_bootstrap_many(
+        pair_records,
+        {"statistic": statistic},
+        samples=samples,
+        seed=seed,
+    )["statistic"]
 
 
 def mcnemar_exact(correct_a: Sequence[bool], correct_b: Sequence[bool]) -> dict[str, Any]:
