@@ -14,22 +14,23 @@ The benchmark evaluates a requested **evidence-state transition**. It is not a g
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
 offline baselines, gate semantics, ranking metrics, run-record evaluator, exact matched-arm
-comparison pipeline, shortcut diagnostics, and numerical exact-grid artifact binding before
-any model experiment. Model execution remains pending.
+comparison pipeline, shortcut diagnostics, numerical exact-grid recomputation, and pinned
+Lean formal-artifact execution before any model experiment. Model execution remains pending.
 
 ## Current alpha
 
 | Artifact | Checkable status |
 |---|---|
 | Dataset | 20 controlled pairs / 40 instances; six mathematical-evidence families |
-| Gold decision | Versioned public policy + dependency closure + artifact integrity; numerical `ALLOW` cases additionally require exact recomputation and artifact-scope agreement |
+| Gold decision | Versioned public policy + dependency closure + artifact integrity; numerical and formal `ALLOW` cases additionally require executable artifact-to-scope agreement |
 | Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
 | Shortcut audit | Leave-one-pair-out metadata-only and shallow-structure diagnostics run in CI |
 | Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
 | Evaluator | Fail-closed actions, tie-aware AUPRC, paired score ranking, family diagnostics, pair bootstrap intervals |
 | Study comparison | Hash-bound run/study IDs, exact matched McNemar tests, Holm correction, metric deltas |
 | Executable numerical alpha | Four numerical pairs / eight items use four exact-rational finite-grid JSON artifacts, recomputed during dataset validation |
-| Executable negative suite | Tamper, scope, protocol, preregistration, and repetition-digest failures are checked independently |
+| Executable numerical negative suite | Tamper, scope, protocol, preregistration, and repetition-digest failures are checked independently |
+| Executable formal alpha | Three formal pairs / six items use three generated Lean sources under `leanprover/lean4:v4.33.0`; CI runs `lake build`, `leanchecker`, one positive fixture, and two negative fixtures |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
@@ -48,9 +49,18 @@ repetitions, preregistration, closed domain, runtime result, and true predicate.
 claim text is limited to the registered rational grid; no continuous-domain conclusion is
 made.
 
-The other sixteen pairs retain synthetic two-line artifacts because their current role is to
-test dependency, runtime, staleness, provenance, and formal-identity transition policy. Lean
-execution and independent human-review execution remain pending.
+The three formal pairs are bound to three generated Lean source artifacts. Their natural-
+language claims name the exact elementary declarations being compiled: right-zero addition,
+left-zero addition, and conjunction commutativity. Both members of a pair share identical
+compilable source bytes; the invalid member changes only the registered statement, claim, or
+toolchain scope field. The exact `lean-toolchain` file is SHA-256-bound, CI builds the Lake
+package, and `leanchecker ClaimPromoteFormal` replays the compiled library. This establishes
+kernel acceptance of those exact declarations only; it does not establish novelty, a broader
+informal theorem, independent review, or research resolution.
+
+The remaining thirteen pairs retain synthetic two-line artifacts because their current role
+is to test dependency, runtime, staleness, contradiction, and provenance transition policy.
+Independent human-review execution remains pending.
 
 ## Orthogonal state
 
@@ -68,8 +78,9 @@ computational evidence. Independent reproduction is separate from both.
 
 ## Reproduce the alpha checks
 
-Python 3.11 or newer is required. No network, model, GPU, or paid API is used after the
-development dependencies are installed.
+Python 3.11 or newer is required. The Python-only checks use no model, GPU, or paid API.
+Formal execution additionally requires the pinned Lean toolchain; installing it may download
+the public Lean release when it is not already present.
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -84,11 +95,28 @@ python -m claimpromotebench.executable \
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
 
-`validate data/alpha` recomputes the four manifest-bound numerical artifacts in addition to
+With Elan installed, run the formal gate:
+
+```bash
+cd data/alpha
+lake build
+lake env leanchecker ClaimPromoteFormal
+cd ../..
+python -m claimpromotebench.formal \
+  --dataset data/alpha \
+  --fixtures fixtures/formal/cases.json \
+  --out work/formal-fixtures.json
+```
+
+`validate data/alpha` recomputes the four manifest-bound numerical artifacts and verifies the
+source, identity markers, and toolchain binding of the three formal artifacts in addition to
 checking schemas, pair controls, hashes, policy decisions, and gold labels. The standalone
-executable suite performs bounded exact-rational recomputation over positive and negative
-finite-grid fixtures. Neither path executes submitted program text or establishes a result
-outside the listed grid. See [Executable fixtures](docs/EXECUTABLE_FIXTURES.md) and
+numerical suite performs bounded exact-rational recomputation over positive and negative
+finite-grid fixtures. The formal command compiles three unique alpha sources and requires one
+valid plus two intentionally invalid Lean fixtures to have their declared outcomes. These
+gates do not establish a result outside their exact finite-grid or Lean statements. See
+[Executable numerical fixtures](docs/EXECUTABLE_FIXTURES.md),
+[Pinned Lean formal alpha](docs/FORMAL_FIXTURES.md), and
 [Shortcut audit](docs/SHORTCUT_AUDIT.md) for the frozen information and scope boundaries.
 
 Generate and score all three offline baselines:
@@ -133,9 +161,11 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
 
 - `schemas/benchmark-input.schema.json`: model-independent benchmark input.
 - `schemas/agent-decision.schema.json`: required JSON decision.
-- `schemas/executable-fixture-case.schema.json`: positive/negative executable fixture cases.
-- `policies/math-evidence-transition-1.0.1-alpha.json`: complete, schema-validated alpha
-  decision contract, thresholds, and trust base.
+- `schemas/executable-fixture-case.schema.json`: positive/negative executable numerical cases.
+- `policies/math-evidence-transition-1.0.2-alpha.json`: current schema-validated alpha
+  decision contract, thresholds, and pinned formal trust base.
+- `policies/math-evidence-transition-1.0.1-alpha.json`: retained superseded policy for
+  historical inspection; it is not the policy bound by the current alpha manifest.
 - `data/alpha/author-items.jsonl`: auditable authoring source with gold labels.
 - `data/alpha/inputs.jsonl`: public input with gold removed.
 - `data/alpha/gold.jsonl`: scorer labels generated from the authoring source.
@@ -143,7 +173,11 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
 - `data/alpha/manifest.json`: frozen evaluation time and committed file hashes.
 - `data/alpha/artifacts/*.json`: manifest-bound exact-rational artifacts used by the four
   numerical controlled pairs.
+- `data/alpha/artifacts/ClaimPromoteFormal/*.lean`: three pair-specific formal artifacts.
+- `data/alpha/lean-toolchain`, `lakefile.toml`, and `lake-manifest.json`: pinned formal package
+  environment.
 - `fixtures/executable/`: standalone positive and negative exact-rational fixture suite.
+- `fixtures/formal/`: one passing and two rejected Lean fixture programs.
 
 Prompt renderers remove item IDs, pair IDs, split labels, family labels, and gold fields. A
 missing or malformed model output is a `FORMAT_ERROR`; it is never silently counted as
@@ -178,6 +212,11 @@ verification, claim-level specificity control, or general evidence audit trails.
 claim and a comparison matrix are in [Related work](docs/RELATED_WORK.md). We use "we did not
 find a public benchmark directly evaluating policy-governed research-claim state
 transitions," not an unqualified first-of-kind claim.
+
+Executable artifact success is also narrower than research correctness. Exact-rational grid
+recomputation supports a finite computational state only. Lean kernel acceptance supports the
+exact formal declaration only. Neither substitutes for scope alignment, novelty assessment,
+independent review, or a model experiment.
 
 ## Status and accountability
 
