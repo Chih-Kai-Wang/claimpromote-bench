@@ -41,15 +41,15 @@ def pair_cluster_bootstrap_many(
     samples: int = 10_000,
     seed: int = 20_260_813,
 ) -> dict[str, dict[str, float | int | None]]:
-    """Bootstrap several statistics in one shared sequence of pair resamples."""
+    """Bootstrap statistics together; zero samples returns empty interval metadata."""
 
     pair_ids = sorted(pair_records)
     if not pair_ids:
         raise ValueError("bootstrap requires at least one pair")
     if not statistics:
         raise ValueError("bootstrap requires at least one statistic")
-    if samples <= 0:
-        raise ValueError("bootstrap samples must be positive")
+    if samples < 0:
+        raise ValueError("bootstrap samples must be non-negative")
 
     rng = random.Random(seed)
     estimates: dict[str, list[float]] = {name: [] for name in statistics}

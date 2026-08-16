@@ -85,9 +85,36 @@ not standalone scientific estimates.
 Confidence intervals resample whole pairs with replacement, never 40 individual instances;
 the fixed bootstrap seed is `20260813`. Metrics requested in the same evaluation share one
 sequence of pair resamples, which preserves comparability while avoiding duplicate bootstrap
-work. Arm comparisons use exact two-sided McNemar tests on matched item correctness within
-each `model × seed`. Six pairwise arm comparisons use Holm correction. Seeds are repeated
-stochastic runs, not independent datasets.
+work. A request for zero bootstrap samples records `samples_defined=0` with null bounds and
+does no resampling.
+
+Arm comparisons use exact two-sided McNemar tests on matched item correctness within each
+`model artifact × runtime × seed × hardware` group. Every pair of available arms is compared
+for raw intent and effective post-gate correctness. Holm correction is applied separately to
+the raw and effective p-values within that group. Metric output also reports `arm_b - arm_a`
+for false promotion rate, valid promotion recall, paired transition accuracy, and stepwise
+AUPRC. Seeds are repeated stochastic runs, not independent datasets.
+
+### Run accumulation and provenance
+
+`evaluate-runs` first validates complete item coverage, the run-record schema, frozen prompt
+hashes, action/state semantics, and one uniform identity per file. The identity consists of
+model ID, model artifact SHA-256, quantization, runtime commit, arm, seed, and hardware. Its
+output includes:
+
+- a dataset fingerprint containing gold, input, manifest, and policy hashes;
+- the SHA-256 of the run-record file;
+- a path-independent `run_id` over the dataset fingerprint, run identity, and file hash.
+
+`compare-runs` accepts one or more validated run-record files. It rejects duplicate file
+content and duplicate run identities, groups comparable arms, lists missing arms, and
+requires identical item IDs before running a matched test. Input order does not affect the
+resulting `study_id`. The study ID binds the dataset fingerprint and sorted run IDs, so adding
+a new run creates a new cumulative study while leaving earlier run IDs unchanged.
+
+Comparison defaults to zero bootstrap samples because exact matched tests and metric deltas do
+not require recomputing each run's confidence interval. A positive
+`--bootstrap-samples` value includes per-run pair-bootstrap intervals in the same study report.
 
 Alpha family estimates contain only three or four pairs. They validate computation and
 report formatting and must be labelled preliminary pipeline checks, not scientific findings.

@@ -13,8 +13,8 @@ preserving valid promotion?
 The benchmark evaluates a requested **evidence-state transition**. It is not a general truth
 classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
 claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
-offline baselines, gate semantics, baseline evaluator, and alpha run-record evaluator before
-any model experiment. The full arm-comparison automation remains pending.
+offline baselines, gate semantics, ranking metrics, run-record evaluator, and exact matched-arm
+comparison pipeline before any model experiment. Model execution remains pending.
 
 ## Current alpha
 
@@ -25,6 +25,7 @@ any model experiment. The full arm-comparison automation remains pending.
 | Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
 | Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
 | Evaluator | Fail-closed actions, tie-aware AUPRC, paired score ranking, family diagnostics, pair bootstrap intervals |
+| Study comparison | Hash-bound run/study IDs, exact matched McNemar tests, Holm correction, metric deltas |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
@@ -80,6 +81,27 @@ The evaluation JSON includes the full threshold-grouped precision-recall curve,
 intervals, and per-family diagnostics. See [Experiment protocol](docs/EXPERIMENTS.md) for the
 exact definitions.
 
+Complete model run-record files can be evaluated individually or accumulated directly:
+
+```bash
+python -m claimpromotebench evaluate-runs \
+  --gold data/alpha/gold.jsonl \
+  --runs work/qwen3-0.6b-narrative-seed-104729.jsonl \
+  --out work/qwen3-0.6b-narrative-seed-104729.report.json
+
+python -m claimpromotebench compare-runs \
+  --gold data/alpha/gold.jsonl \
+  --runs work/qwen3-0.6b-*-seed-104729.jsonl \
+  --out work/qwen3-0.6b-seed-104729.study.json
+```
+
+`evaluate-runs` emits a path-independent run ID tied to the dataset fingerprint, immutable
+model/run identity, and run-file hash. `compare-runs` accepts any number of complete run files,
+deduplicates content and run identities, groups matched arms, reports missing arms, applies
+exact McNemar tests with Holm correction, and emits a deterministic study ID. Re-running the
+command with additional run files produces a larger cumulative study without rewriting prior
+records.
+
 See [Reproduction](docs/REPRODUCTION.md) for clean-environment steps and expected structural
 checks. A passing oracle baseline proves internal pipeline agreement, not a research result.
 
@@ -116,8 +138,10 @@ calibration. See [Experiment protocol](docs/EXPERIMENTS.md).
 `evaluate-runs` validates complete run records, refuses `FORMAT_ERROR` as a silent hold,
 scores raw intent and post-gate decisions separately, and reports gate plus operational
 metrics. Format errors reduce explicit coverage and are included in a worst-case safety
-sensitivity analysis. Family stratification is automatic; automated model/seed arm
-comparison remains a pre-run gate.
+sensitivity analysis. Family stratification and matched arm comparison are automatic.
+`compare-runs` defaults to zero bootstrap resamples because its exact matched tests and metric
+deltas do not require recomputing every run interval; a positive sample count can be requested
+when a cumulative report also needs per-run intervals.
 
 ## Research boundary
 
