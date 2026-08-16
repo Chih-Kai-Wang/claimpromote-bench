@@ -1,11 +1,11 @@
 # Executable computation fixtures
 
-The executable fixture pilot replaces trust in stored output with deterministic
+The executable evidence contract replaces trust in stored numerical output with deterministic
 recomputation. It is deliberately narrow: the registered verifier evaluates a polynomial on
 a finite rational grid and checks an exact predicate over those grid values. It does not
 prove a statement over a continuous interval.
 
-## Run the suite
+## Run the standalone suite
 
 ```bash
 cpb-verify-fixtures \
@@ -40,6 +40,29 @@ The only registered artifact kind is `CPB_EXACT_RATIONAL_GRID`, protocol
 All arithmetic uses exact rational values. The verifier imposes bounds on coefficient count,
 grid size, rational-string size, and repetitions before recomputation.
 
+## Numerical alpha binding
+
+The four `NUMERICAL` controlled pairs in `data/alpha` are bound to four generated JSON
+artifacts under this protocol. Each pair's valid and invalid members reference the same
+artifact bytes, so the only within-pair difference remains the declared policy factor.
+
+`python -m claimpromotebench validate data/alpha` now:
+
+1. checks each evidence path and SHA-256 against the manifest-bound artifact;
+2. validates the artifact structure against the registered schema;
+3. recomputes every grid value, minimum, maximum, predicate result, and repetition digest;
+4. rejects unknown protocols, invalid arithmetic, malformed grids, or observation tampering;
+5. requires an `ALLOW` member's evidence metadata to agree with artifact repetitions,
+   preregistration, closed domain, runtime result, and true predicate.
+
+The intentionally invalid member is still recomputed. Its artifact remains valid while one
+metadata prerequisite—such as repetitions, domain coverage, preregistration, or precision—is
+held invalid by the controlled-pair design. This avoids introducing artifact corruption as a
+second counterfactual difference.
+
+The numerical claim text is explicitly limited to the registered rational grid. Passing
+artifact recomputation therefore supports a finite-grid computational state transition only.
+
 ## Execution boundary
 
 The verifier accepts data for one fixed operation set. It does not execute user-provided
@@ -48,7 +71,7 @@ Unknown artifact kinds and protocol versions are rejected.
 
 ## Negative fixtures
 
-The committed suite checks rejection of:
+The standalone suite checks rejection of:
 
 - a tampered observed minimum;
 - a tampered repetition digest;
@@ -58,12 +81,13 @@ The committed suite checks rejection of:
 
 ## Research boundary
 
-This is a standalone computation-fixture pilot. The current 20-pair alpha dataset still uses
-its original synthetic two-line evidence artifacts and hash checks. The pilot is not yet
-bound into every alpha item, and the repository still does not execute Lean certificates or
-independent human review.
+Executable binding currently covers the four numerical pairs, or eight of the forty alpha
+items. The remaining sixteen pairs retain synthetic two-line artifacts because they test
+policy transitions for dependency closure, runtime records, staleness or contradiction,
+independent provenance, and formal-certificate identity. The repository still does not run
+Lean certificates or execute independent human review.
 
-Passing this suite supports only the claim that the registered finite-grid fixtures can be
-recomputed exactly and that the tested tampering, protocol, scope, and preregistration
-violations fail closed. It does not establish truth outside the listed grid or validate
-arbitrary numerical software.
+Passing the alpha and standalone checks supports only the claim that the registered
+finite-grid artifacts can be recomputed exactly and that the tested integrity, protocol,
+scope, and preregistration violations fail closed. It does not establish truth outside the
+listed grid or validate arbitrary numerical software.
