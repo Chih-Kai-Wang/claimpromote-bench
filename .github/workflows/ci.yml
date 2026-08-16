@@ -45,6 +45,11 @@ jobs:
           python -m claimpromotebench.shortcuts
           --dataset data/alpha
           --out work/shortcut-audit.json
+      - name: Audit metamorphic invariance
+        run: >-
+          python -m claimpromotebench.invariance
+          --dataset data/alpha
+          --out work/invariance-audit.json
       - name: Verify executable computation fixtures
         run: >-
           python -m claimpromotebench.executable
