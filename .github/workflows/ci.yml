@@ -43,44 +43,44 @@ jobs:
 
           path = Path("tests/test_review_analysis.py")
           text = path.read_text(encoding="utf-8")
-          replacements = {
-              '''def _prepare_two_reviewer_package(
-              dataset_dir: Path,
-              tmp_path: Path,
-              *,
-              second_mutations: dict[str, tuple[str, list[str]]] | None = None,
-          ) -> Path:
-              package = tmp_path / "package"
-          ''': '''def _prepare_two_reviewer_package(
-              dataset_dir: Path,
-              tmp_path: Path,
-              *,
-              package_name: str = "package",
-              second_mutations: dict[str, tuple[str, list[str]]] | None = None,
-          ) -> Path:
-              package = tmp_path / package_name
-          ''',
-              'match="requires adjudication"': 'match="require adjudication"',
-              '_prepare_two_reviewer_package(dataset_dir, reviews_root / "passing")': (
+          replacements = [
+              (
+                  "    second_mutations: dict[str, tuple[str, list[str]]] | None = None,\n"
+                  ") -> Path:\n"
+                  "    package = tmp_path / \"package\"\n",
+                  "    package_name: str = \"package\",\n"
+                  "    second_mutations: dict[str, tuple[str, list[str]]] | None = None,\n"
+                  ") -> Path:\n"
+                  "    package = tmp_path / package_name\n",
+                  1,
+              ),
+              ('match="requires adjudication"', 'match="require adjudication"', 1),
+              (
+                  '_prepare_two_reviewer_package(dataset_dir, reviews_root / "passing")',
                   '_prepare_two_reviewer_package(\n'
                   '        dataset_dir, reviews_root, package_name="passing"\n'
-                  '    )'
+                  '    )',
+                  1,
               ),
-              '''        reviews_root / "revision",
-              second_mutations=_low_agreement_mutations(dataset_dir),
-          )''': '''        reviews_root,
-              package_name="revision",
-              second_mutations=_low_agreement_mutations(dataset_dir),
-          )''',
-              '_prepare_two_reviewer_package(dataset_dir, reviews_root / "package")': (
+              (
+                  '        reviews_root / "revision",\n',
+                  '        reviews_root,\n        package_name="revision",\n',
+                  1,
+              ),
+              (
+                  '_prepare_two_reviewer_package(dataset_dir, reviews_root / "package")',
                   '_prepare_two_reviewer_package(\n'
                   '        dataset_dir, reviews_root, package_name="package"\n'
-                  '    )'
+                  '    )',
+                  1,
               ),
-          }
-          for old, new in replacements.items():
-              if old not in text:
-                  raise SystemExit(f"expected test fragment not found: {old!r}")
+          ]
+          for old, new, expected_count in replacements:
+              actual = text.count(old)
+              if actual != expected_count:
+                  raise SystemExit(
+                      f"expected {expected_count} occurrence(s), found {actual}: {old!r}"
+                  )
               text = text.replace(old, new)
           path.write_text(text, encoding="utf-8", newline="\n")
           PY
