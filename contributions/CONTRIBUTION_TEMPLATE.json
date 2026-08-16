@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "contributor": {
+    "github_login": "replace-with-your-login",
+    "display_name": "Replace with your name",
+    "attestation": true
+  },
+  "dataset_gold_file": "data/alpha/gold.jsonl",
+  "run_file": "run.jsonl",
+  "license": "MIT",
+  "consent": {
+    "redistribution": true,
+    "public_attribution": true,
+    "contains_secrets": false,
+    "contains_personal_data": false,
+    "terms_accepted": true
+  },
+  "reproduction": {
+    "command": [
+      "replace-with-exact-runtime-command"
+    ],
+    "runtime": "replace-with-runtime-and-commit",
+    "source_revision": "replace-with-immutable-model-revision",
+    "network_access": false,
+    "notes": "Replace with reproduction details."
+  }
+}
