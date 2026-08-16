@@ -23,9 +23,11 @@ comparison pipeline before any model experiment. Model execution remains pending
 | Dataset | 20 controlled pairs / 40 instances; six mathematical-evidence families |
 | Gold decision | Versioned public policy + dependency closure + executable integrity/policy checks over synthetic fixtures |
 | Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
+| Shortcut audit | Leave-one-pair-out metadata-only and shallow-structure diagnostics run in CI |
 | Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
 | Evaluator | Fail-closed actions, tie-aware AUPRC, paired score ranking, family diagnostics, pair bootstrap intervals |
 | Study comparison | Hash-bound run/study IDs, exact matched McNemar tests, Holm correction, metric deltas |
+| Executable fixture pilot | Exact-rational finite-grid recomputation with tamper, scope, protocol, and preregistration rejection |
 | Model runs | **PENDING** — no Qwen result is reported |
 | Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
 | Technical report | **NOT YET PUBLISHED** |
@@ -36,10 +38,11 @@ runtime failure, stale or contradictory evidence, independent provenance, and fo
 certificate identity. Each pair keeps the claim and requested state fixed and changes one
 policy prerequisite. The invalid member is balanced between neutral `a` and `b` IDs.
 
-Alpha evidence artifacts are synthetic two-line fixtures. The implementation executes their
-path/hash integrity checks and the policy oracle; it does not run Lean, numerical software,
-or an external review process. Type-specific executable fixtures are a precondition for model
-experiments.
+The evidence artifacts bound into the 20-pair alpha remain synthetic two-line fixtures. The
+implementation executes their path/hash integrity checks and the policy oracle. A separate
+safe exact-rational fixture suite now validates one executable computation contract, but it
+is not yet bound into every alpha item. Lean execution and external-review execution remain
+pending.
 
 ## Orthogonal state
 
@@ -64,8 +67,19 @@ development dependencies are installed.
 python -m pip install -e ".[dev]"
 python scripts/build_alpha.py
 python -m claimpromotebench validate data/alpha
+python -m claimpromotebench.shortcuts \
+  --dataset data/alpha \
+  --out work/shortcut-audit.json
+python -m claimpromotebench.executable \
+  --fixtures fixtures/executable \
+  --out work/executable-fixtures.json
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
+
+The executable suite performs bounded exact-rational recomputation over finite grids. It does
+not execute submitted program text or establish a result outside the listed grid. See
+[Executable fixtures](docs/EXECUTABLE_FIXTURES.md) and
+[Shortcut audit](docs/SHORTCUT_AUDIT.md) for the frozen information and scope boundaries.
 
 Generate and score all three offline baselines:
 
@@ -109,6 +123,7 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
 
 - `schemas/benchmark-input.schema.json`: model-independent benchmark input.
 - `schemas/agent-decision.schema.json`: required JSON decision.
+- `schemas/executable-fixture-case.schema.json`: positive/negative executable fixture cases.
 - `policies/math-evidence-transition-1.0.1-alpha.json`: complete, schema-validated alpha
   decision contract, thresholds, and trust base.
 - `data/alpha/author-items.jsonl`: auditable authoring source with gold labels.
@@ -116,6 +131,7 @@ checks. A passing oracle baseline proves internal pipeline agreement, not a rese
 - `data/alpha/gold.jsonl`: scorer labels generated from the authoring source.
 - `data/alpha/pairs.json`: controlled factors and permitted JSON-pointer differences.
 - `data/alpha/manifest.json`: frozen evaluation time and committed file hashes.
+- `fixtures/executable/`: standalone exact-rational executable fixture pilot.
 
 Prompt renderers remove item IDs, pair IDs, split labels, family labels, and gold fields. A
 missing or malformed model output is a `FORMAT_ERROR`; it is never silently counted as
