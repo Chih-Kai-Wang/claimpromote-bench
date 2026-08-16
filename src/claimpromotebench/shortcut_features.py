@@ -65,13 +65,9 @@ def _metadata_features(item: dict[str, Any]) -> dict[str, float]:
         "artifact_path_chars": float(
             sum(len(str(record.get("artifact_path", ""))) for record in evidence)
         ),
-        "evidence_id_chars": float(
-            sum(len(str(record.get("id", ""))) for record in evidence)
-        ),
+        "evidence_id_chars": float(sum(len(str(record.get("id", ""))) for record in evidence)),
         "dependency_id_chars": float(sum(len(str(value)) for value in dependencies)),
-        "scope_field_count": float(
-            sum(len(record.get("scope", {})) for record in evidence)
-        ),
+        "scope_field_count": float(sum(len(record.get("scope", {})) for record in evidence)),
         "provenance_field_count": float(
             sum(len(record.get("provenance", {})) for record in evidence)
         ),
@@ -83,9 +79,7 @@ def _dependency_shape(evidence: list[dict[str, Any]]) -> tuple[int, bool]:
     evidence_ids = {str(record.get("id")) for record in evidence}
     graph = {
         str(record.get("id")): [
-            str(value)
-            for value in record.get("dependencies", [])
-            if str(value) in evidence_ids
+            str(value) for value in record.get("dependencies", []) if str(value) in evidence_ids
         ]
         for record in evidence
     }
@@ -113,12 +107,9 @@ def _shallow_features(item: dict[str, Any]) -> dict[str, float]:
     features = _metadata_features(item)
     evidence = list(item.get("evidence", []))
     evidence_ids = {str(record.get("id")) for record in evidence}
-    referenced = {
-        str(value) for record in evidence for value in record.get("dependencies", [])
-    }
+    referenced = {str(value) for record in evidence for value in record.get("dependencies", [])}
     basis = {
-        str(value)
-        for value in item.get("requested_transition", {}).get("basis_evidence_ids", [])
+        str(value) for value in item.get("requested_transition", {}).get("basis_evidence_ids", [])
     }
     maximum_depth, has_cycle = _dependency_shape(evidence)
 
