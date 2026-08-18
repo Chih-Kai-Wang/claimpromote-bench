@@ -1,0 +1,133 @@
+name: SAIR Lean toolchain export
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sair-lean-toolchain-export.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  OFFICIAL_COMMIT: '2848228ff490422442878fd6f5abaf4cfa95257d'
+  LEAN_TOOLCHAIN: 'leanprover/lean4:v4.30.0-rc2'
+
+jobs:
+  package-toolchain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out pinned official evaluator
+        uses: actions/checkout@v4
+        with:
+          repository: SAIRcompetition/equational-theories-lean-stage2
+          ref: ${{ env.OFFICIAL_COMMIT }}
+          path: official
+
+      - name: Install pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd official && SKIP_DOCKER=1 bash scripts/setup.sh)
+          source official/.env.judge
+          lean --version
+          lake --version
+          TOOLCHAIN_DIR="$(cd "$(dirname "$(readlink -f "$(command -v lean)")")/.." && pwd)"
+          printf '%s\n' "$TOOLCHAIN_DIR" > toolchain-dir.txt
+          du -sh "$TOOLCHAIN_DIR"
+
+      - name: Package and split pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLCHAIN_DIR="$(cat toolchain-dir.txt)"
+          TOOLCHAIN_NAME="$(basename "$TOOLCHAIN_DIR")"
+          mkdir -p parts
+          tar -C "$(dirname "$TOOLCHAIN_DIR")" -czf lean-toolchain-v4.30.0-rc2.tar.gz "$TOOLCHAIN_NAME"
+          sha256sum lean-toolchain-v4.30.0-rc2.tar.gz > lean-toolchain-archive-sha256.txt
+          split -b 400M -d -a 2 lean-toolchain-v4.30.0-rc2.tar.gz parts/toolchain.part.
+          for i in 00 01 02 03 04 05 06 07; do
+            test -e "parts/toolchain.part.$i" || : > "parts/toolchain.part.$i.empty"
+          done
+          sha256sum parts/toolchain.part.* > lean-toolchain-parts-sha256.txt
+          wc -c parts/toolchain.part.* > lean-toolchain-parts-bytes.txt
+          du -h lean-toolchain-v4.30.0-rc2.tar.gz parts/toolchain.part.*
+
+      - name: Upload toolchain part 00
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-00
+          path: parts/toolchain.part.00
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 01
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-01
+          path: parts/toolchain.part.01
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 02
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-02
+          path: parts/toolchain.part.02
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-03
+          path: parts/toolchain.part.03
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 04
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-04
+          path: parts/toolchain.part.04
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 05
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-05
+          path: parts/toolchain.part.05
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 06
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-06
+          path: parts/toolchain.part.06
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 07
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-part-07
+          path: parts/toolchain.part.07
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-lean-toolchain-metadata
+          path: |
+            lean-toolchain-archive-sha256.txt
+            lean-toolchain-parts-sha256.txt
+            lean-toolchain-parts-bytes.txt
+            toolchain-dir.txt
+          compression-level: 0
+          retention-days: 1
