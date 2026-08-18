@@ -1,0 +1,115 @@
+name: SAIR Lean toolchain from runtime
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sair-lean-toolchain-from-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SOURCE_RUN_ID: '32153590830'
+  SOURCE_ARTIFACT: 'sair-official-judge-runtime-2848228ff490422442878fd6f5abaf4cfa95257d'
+  SOURCE_ARCHIVE: 'sair-official-judge-runtime-2848228ff490422442878fd6f5abaf4cfa95257d.tar.gz'
+  SOURCE_SHA256: '6b37d5887b35feb58d3d6df32dea1c82374ce3df3005334cb18e0ccc41300002'
+
+jobs:
+  extract-toolchain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Download built runtime artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.SOURCE_ARTIFACT }}
+          path: source
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Verify and extract only Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$SOURCE_SHA256  source/$SOURCE_ARCHIVE" | sha256sum -c -
+          mkdir -p extracted
+          tar -C extracted -xzf "source/$SOURCE_ARCHIVE" --wildcards './home/.elan/toolchains/*'
+          test -x extracted/home/.elan/toolchains/*/bin/lean
+          test -x extracted/home/.elan/toolchains/*/bin/lake
+          extracted/home/.elan/toolchains/*/bin/lean --version
+          extracted/home/.elan/toolchains/*/bin/lake --version
+
+      - name: Repackage and split toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p parts
+          tar -C extracted -czf lean-toolchain-v4.30.0-rc2.tar.gz home/.elan/toolchains
+          sha256sum lean-toolchain-v4.30.0-rc2.tar.gz > toolchain-archive-sha256.txt
+          split -b 400M -d -a 2 lean-toolchain-v4.30.0-rc2.tar.gz parts/toolchain.part.
+          sha256sum parts/toolchain.part.* > toolchain-parts-sha256.txt
+          wc -c parts/toolchain.part.* > toolchain-parts-bytes.txt
+          find parts -maxdepth 1 -type f -printf '%f %s\n' | sort
+
+      - name: Upload toolchain part 00
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-part-00
+          path: parts/toolchain.part.00
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 01
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-part-01
+          path: parts/toolchain.part.01
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 02
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-part-02
+          path: parts/toolchain.part.02
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-part-03
+          path: parts/toolchain.part.03
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 04
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-part-04
+          path: parts/toolchain.part.04
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload toolchain part 05
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-part-05
+          path: parts/toolchain.part.05
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 1
+      - name: Upload metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-toolchain-runtime-metadata
+          path: |
+            toolchain-archive-sha256.txt
+            toolchain-parts-sha256.txt
+            toolchain-parts-bytes.txt
+          compression-level: 0
+          retention-days: 1
