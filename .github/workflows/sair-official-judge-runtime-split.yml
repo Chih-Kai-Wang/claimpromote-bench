@@ -1,0 +1,113 @@
+name: SAIR official Judge runtime split
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sair-official-judge-runtime-split.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SOURCE_RUN_ID: '32153590830'
+  SOURCE_ARTIFACT: 'sair-official-judge-runtime-2848228ff490422442878fd6f5abaf4cfa95257d'
+  ARCHIVE: 'sair-official-judge-runtime-2848228ff490422442878fd6f5abaf4cfa95257d.tar.gz'
+
+jobs:
+  split-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Download hash-bound runtime artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.SOURCE_ARTIFACT }}
+          path: source
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Verify and split archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "source/$ARCHIVE"
+          (cd source && sha256sum -c runtime-sha256.txt)
+          mkdir -p parts
+          split -b 400M -d -a 2 "source/$ARCHIVE" parts/runtime.part.
+          test "$(find parts -maxdepth 1 -type f | wc -l)" -eq 8
+          sha256sum parts/runtime.part.* > runtime-parts-sha256.txt
+          wc -c parts/runtime.part.* > runtime-parts-bytes.txt
+          sha256sum "source/$ARCHIVE" > runtime-archive-sha256.txt
+
+      - name: Upload runtime part 00
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-00
+          path: parts/runtime.part.00
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 01
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-01
+          path: parts/runtime.part.01
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 02
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-02
+          path: parts/runtime.part.02
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-03
+          path: parts/runtime.part.03
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 04
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-04
+          path: parts/runtime.part.04
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 05
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-05
+          path: parts/runtime.part.05
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 06
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-06
+          path: parts/runtime.part.06
+          compression-level: 0
+          retention-days: 1
+      - name: Upload runtime part 07
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-part-07
+          path: parts/runtime.part.07
+          compression-level: 0
+          retention-days: 1
+      - name: Upload split metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-runtime-split-metadata
+          path: |
+            runtime-parts-sha256.txt
+            runtime-parts-bytes.txt
+            runtime-archive-sha256.txt
+            source/runtime-manifest.json
+            source/runtime-sha256.txt
+          compression-level: 0
+          retention-days: 1
