@@ -21,6 +21,11 @@ def pct(value: float, digits: int = 1) -> str:
     return f"{100 * value:.{digits}f}"
 
 
+def require_regex(tex: str, pattern: str, description: str) -> None:
+    if not re.search(pattern, tex, flags=re.IGNORECASE | re.DOTALL):
+        fail(f"required frozen result/boundary missing: {description}")
+
+
 def main() -> int:
     tex = TEX.read_text(encoding="utf-8")
     bib = BIB.read_text(encoding="utf-8")
@@ -49,6 +54,23 @@ def main() -> int:
         if re.search(pattern, tex, flags=re.IGNORECASE):
             fail(f"unqualified novelty/performance claim found: {pattern}")
 
+    # Avoid jargon-heavy phrases that were useful during internal analysis but make the paper
+    # sound less natural. The scientific meaning should be stated in ordinary technical prose.
+    style_smells = [
+        "artifact-bound",
+        "fail-closed",
+        "enforcement-consistency property",
+        "first-order failure",
+        "operationally important",
+        "correspondingly narrow",
+        "frozen empirical diagnosis",
+        "conditional enforcement boundary",
+        "normative by benchmark definition",
+    ]
+    for phrase in style_smells:
+        if phrase in lower:
+            fail(f"internal/jargon-heavy wording remains in manuscript: {phrase!r}")
+
     if frozen["source_study_sha256"] != (
         "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664"
     ):
@@ -64,24 +86,41 @@ def main() -> int:
 
     m06 = frozen["models"]["Qwen/Qwen3-0.6B"]
     m17 = frozen["models"]["Qwen/Qwen3-1.7B"]
-    required = [
-        f"{frozen['format_error_count']:,}/{frozen['total_decisions']:,}",
-        f"{100 * frozen['format_error_rate']:.2f}\\%",
-        f"{frozen['parseable_raw_decisions']:,}",
-        f"Exactly {frozen['semantic_format_reclassified']} of {frozen['total_decisions']:,}",
+
+    total = f"{frozen['total_decisions']:,}"
+    errors = f"{frozen['format_error_count']:,}"
+    parseable = f"{frozen['parseable_raw_decisions']:,}"
+    reclassified = frozen["semantic_format_reclassified"]
+
+    require_regex(
+        tex,
+        rf"{re.escape(errors)}\s*(?:/|of)\s*{re.escape(total)}",
+        f"format-error count {errors}/{total}",
+    )
+    require_regex(
+        tex,
+        rf"{100 * frozen['format_error_rate']:.2f}\\%",
+        "73.99 percent format-error rate",
+    )
+    require_regex(tex, re.escape(parseable), f"parseable raw decision count {parseable}")
+    require_regex(
+        tex,
+        rf"Exactly\s+{reclassified}\s+of\s+{re.escape(total)}",
+        "semantic-format recovery count",
+    )
+
+    required_plain = [
         str(frozen["source_scored_workflow_run_id"]),
         str(frozen["source_recovery_workflow_run_id"]),
         "3eb5b534...e8bfe664",
-        "Raw pre-enforcement behavior only",
         "Effective FPR",
         "decision coverage",
+        "same fixed policy used to define the benchmark labels",
         "not evidence that the model learned the policy",
-        "same frozen policy",
-        "deterministic enforcement-consistency property",
         f"{pct(m06['gate_complete_pair_coverage_range'][0])}--{pct(m06['gate_complete_pair_coverage_range'][1])}\\%",
         f"{pct(m17['gate_complete_pair_coverage_range'][0])}--{pct(m17['gate_complete_pair_coverage_range'][1])}\\%",
     ]
-    for phrase in required:
+    for phrase in required_plain:
         if phrase.lower() not in lower:
             fail(f"required frozen result/boundary missing: {phrase!r}")
 
@@ -124,18 +163,17 @@ def main() -> int:
     abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract_match.group(1))
     abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
     if len(abstract_words) > 250:
-        word_count = len(abstract_words)
-        fail(f"abstract is too long for a concise conference submission: {word_count} words")
+        fail(f"abstract is too long for a concise conference submission: {len(abstract_words)} words")
 
     contrib_match = re.search(
-        r"Our contributions are fourfold:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
+        r"Our contributions are:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
         tex,
         flags=re.DOTALL,
     )
     if not contrib_match:
-        fail("fourfold contributions block not found")
+        fail("contributions block not found")
     if len(re.findall(r"\\item\b", contrib_match.group(1))) != 4:
-        fail("contributions block must contain exactly four non-overlapping items")
+        fail("contributions block must contain exactly four items")
 
     raw_table = re.search(r"\\label\{tab:main-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
     if not raw_table:
@@ -151,7 +189,10 @@ def main() -> int:
 
     gate_table = re.search(r"\\label\{tab:gate-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
     if not gate_table or "Effective FPR" not in gate_table.group(1):
-        fail("separate gate-enforcement table with Effective FPR is required")
+        fail("separate gate table with Effective FPR is required")
+
+    if "The author" not in tex or "AI systems are not listed as authors" not in tex:
+        fail("AI assistance disclosure must state author responsibility and non-authorship of AI")
 
     print(
         "paper-lint: PASS "
