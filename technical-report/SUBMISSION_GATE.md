@@ -4,9 +4,9 @@ This file is deliberately fail-closed. A polished manuscript is not evidence tha
 
 ## Current verdict
 
-**PRIMARY STUDY COMPLETE — PREPRINT FINALIZATION GATES STILL OPEN**
+**PREPRINT READY — ARCHIVAL RELEASE GATES STILL OPEN**
 
-The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, and primary manuscript Results now exist and are hash-bound. The empirical tables no longer depend on partial workflow state. The bibliography and ICLR 2027 AI-disclosure policy have been checked against current authoritative sources; remaining work is final compile/PDF/value verification plus release/clean-environment verification and explicit preservation of the v1 infrastructure-identity limitation described below.
+The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, primary manuscript Results, authoritative bibliography check, ICLR 2027 AI-disclosure check, final hosted CI, LaTeX/submission-package builds, quantitative cross-check, and PDF visual/anonymity audit are complete. Archival-submission readiness remains separate and still requires the release/clean-environment gates below. The v1 infrastructure-identity limitation remains disclosed and unchanged.
 
 ## Gate A — research boundary and novelty
 
@@ -97,9 +97,9 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Exact source/recovery workflow IDs and core commitment/study identities are recorded.
 - [x] External audit remains supplementary mixed evidence, not a PASS.
 - [x] Limitations disclose high format-error rate, non-retention of free-form text for pre-existing parse failures, exact-identity group drift, gate-prompt disclosure, small-model scope, synthetic control, and author-constructed benchmark risk.
-- [ ] Final LaTeX compile and unresolved-reference/citation check succeeds on the post-results manuscript.
-- [ ] Inspect the compiled PDF for table overflow, broken references, anonymity leaks, and stale blocker text.
-- [ ] Recheck quantitative manuscript values against the recovered artifact after the final text edit.
+- [x] Final hosted paper workflow and submission-package LaTeX builds succeed on the post-results manuscript with unresolved citations/references and horizontal overflow treated fail-closed.
+- [x] Compiled ICLR and arXiv PDFs were rendered and inspected for table overflow, broken references, anonymity/identity placement, stale blocker text, and obvious layout defects; the ICLR PDF carries no author metadata and visually remains anonymous.
+- [x] Final quantitative manuscript values were cross-checked against the validated recovered artifact after the final scientific-text edit: 24 normalized runs × 300 records = 7,200 decisions, 5,327 `FORMAT_ERROR`, 1,873 parseable raw decisions all `ALLOW`, gate conditional metrics and coverage ranges match the artifact.
 - [x] AI-assistance disclosure checked on 2026-08-20 against the official ICLR 2027 AI Policy for Authors and Author Guidelines; the venue wrapper includes a mandatory detailed AI-use section and human-responsibility statement.
 
 ## Gate G — reproducibility release
@@ -112,6 +112,6 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 
 ## Readiness rule
 
-The empirical study is complete, but the repository is not yet labeled archival-submission-ready. **PREPRINT READY** requires Gate F's remaining compile/PDF/final-value checks; the current bibliography-authority and ICLR 2027 AI-policy checks are complete. **ARCHIVAL SUBMISSION READY** additionally requires Gate G and any venue-specific artifact/release requirements still applicable at submission time.
+The empirical study and preprint-finalization checks are complete. **PREPRINT READY** is satisfied for the current v1 paper state. **ARCHIVAL SUBMISSION READY** remains fail-closed until Gate G and any venue-specific artifact/release requirements applicable at submission time are complete.
 
 Do not rerun or rewrite the frozen v1 primary inference to make the negative result cleaner. A future replication that pins the exact Python patch version or retains raw malformed model text must be labeled as a new or supplementary study, not a replacement for v1.
