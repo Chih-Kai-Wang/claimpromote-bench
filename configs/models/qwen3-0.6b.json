@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+  "artifact_sha256": "12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
   "backend": "llama.cpp",
   "backend_commit": "de699957b92f490efebad149665b0dccf127eaff",
   "model_id": "Qwen/Qwen3-0.6B",
