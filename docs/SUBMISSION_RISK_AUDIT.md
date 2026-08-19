@@ -6,7 +6,7 @@ This is an adversarial review checklist for the submission-facing v1 paper. It i
 
 The paper's strongest defensible contribution is the benchmark/evaluation formulation and the separation of **structured-output coverage -> raw transition intent -> deterministic enforcement**. The v1 model study is a useful stress test and negative result, but it should not be sold as broad evidence about modern frontier research agents.
 
-The paper is most vulnerable to reviewer criticism if it overstates the gate result, treats the frozen policy as human truth, hides the structured-output contract as a measurement confound, or generalizes from the two small Qwen3 models.
+The paper is most vulnerable to reviewer criticism if it overstates the gate result, treats the frozen policy as human truth, hides the structured-output contract as a measurement confound, generalizes from the two small Qwen3 models, or claims novelty for counterfactual/evidence-reversal techniques that now have clear neighboring precedents.
 
 ## Critical reviewer attacks and mitigations
 
@@ -75,23 +75,39 @@ The gate is disclosed in the gate-arm prompt, so passive-verifier vs gate raw-in
 **Severity:** HIGH  
 **Status:** MITIGATED BY NARROW CLAIM
 
-The paper must not claim invention of claim ledgers, evidence-state maintenance, or verifier-governed research agents. The defensible novelty is the controlled-pair, four-action, policy-governed **transition-admissibility evaluation target**, with prompt/hidden commitment, executable evidence bindings, and explicit raw-intent vs enforcement separation.
+The paper must not claim invention of claim ledgers, evidence-state maintenance, or verifier-governed research agents. The defensible novelty is the controlled-pair, four-action, policy-governed **scientific transition-admissibility evaluation target**, with prompt/hidden commitment, executable evidence bindings, and explicit raw-intent vs enforcement separation.
 
-### 10. "Preregistration language may overstate what was registered"
+### 10. "SteerBench-Work and policy-agent benchmarks already test evidence-conditioned action boundaries"
+
+**Severity:** HIGH  
+**Status:** MITIGATED BY UPDATED RELATED WORK / MUST MONITOR
+
+SteerBench-Work is a contemporaneous and unusually close neighbor: it evaluates proceed/hold decisions at workplace action boundaries and includes evidence-reversed mirrors. ST-WebAgentBench evaluates policy compliance during enterprise web-agent tasks. Counterfactual evaluation itself is also established by work such as CofCA, while MEDSYN already uses the term `Evidence Sensitivity` for clinical evidence use.
+
+Therefore, do **not** claim any of the following as unique to ClaimPromoteBench:
+
+- using counterfactual or evidence-reversed examples;
+- testing whether an action should proceed under evidence and policy;
+- the general phrase `evidence sensitivity`;
+- policy compliance as a benchmark target.
+
+The narrower distinction to defend is the scientific epistemic object: whether typed research evidence licenses a change in a claim-state vector with separate research/computation/formal/review axes, four transition actions, explicit dependency/provenance/scope/staleness rules, and executable numerical/formal bindings. The manuscript must cite the closest action-boundary and counterfactual benchmarks directly rather than relying on a generic novelty statement.
+
+### 11. "Preregistration language may overstate what was registered"
 
 **Severity:** MEDIUM  
 **Status:** MONITOR
 
 Use `preregistered` only for quantities/procedures demonstrably frozen in Git before scored inference. Prefer `precommitted`, `frozen before scoring`, or exact commit chronology when discussing engineering identities. Do not imply registration in an external registry unless one exists.
 
-### 11. "Main results omit uncertainty"
+### 12. "Main results omit uncertainty"
 
 **Severity:** MEDIUM  
 **Status:** PARTIALLY MITIGATED
 
 The recovered artifact contains 10,000-pair bootstrap intervals. Because all defined raw FPR values equal 1.0, their pair-bootstrap 95% intervals are exactly [1.0, 1.0] under the frozen analysis. The manuscript should note this without pretending the interval resolves the much larger coverage problem. Conditional metrics remain secondary to coverage interpretation.
 
-### 12. "Strong statistical significance may simply reflect format/coverage differences"
+### 13. "Strong statistical significance may simply reflect format/coverage differences"
 
 **Severity:** MEDIUM  
 **Status:** MITIGATED BY NON-EMPHASIS
@@ -107,6 +123,7 @@ McNemar/Holm results exist only within exact matched identity groups and can be 
 - A sentence says the gate `improves model reasoning`, `calibration`, or `policy learning`.
 - A sentence calls the benchmark a theorem prover, truth evaluator, or proof of research correctness.
 - A sentence generalizes v1 to larger models without a new replication.
+- A sentence claims counterfactual pairs, evidence reversal, generic policy compliance, or `evidence sensitivity` as a new technique introduced by ClaimPromoteBench.
 - Human review is called validation of universal gold truth.
 - Infrastructure drift is omitted to make a cleaner significance panel.
 - Full hashes create layout overflow in the submission PDF.
