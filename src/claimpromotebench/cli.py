@@ -153,16 +153,25 @@ def _run_identity(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _exact_model_prompt(rendered: str, root: Path) -> str:
+    decoding = json.loads(
+        (root / "configs" / "decoding-v1.json").read_text(encoding="utf-8")
+    )
+    control_instruction = str(decoding["control_instruction"])
+    return f"{rendered.rstrip()}\n\n{control_instruction}\n"
+
+
 def _expected_prompt_hash(context: _RunContext, record_id: str, arm: str) -> str:
     key = (arm, record_id)
     if key not in context.prompt_hashes:
-        prompt = render_prompt(
+        rendered = render_prompt(
             context.inputs_by_id[record_id],
             arm,
             context.dataset_dir,
             policy=context.policy,
             evaluation_time=context.evaluation_time,
         )
+        prompt = _exact_model_prompt(rendered, context.root)
         context.prompt_hashes[key] = sha256_bytes(prompt.encode("utf-8"))
     return context.prompt_hashes[key]
 
@@ -192,7 +201,7 @@ def _load_run_bundle(context: _RunContext, runs_path: Path) -> RunBundle:
         expected_prompt_hash = _expected_prompt_hash(context, record_id, str(record["arm"]))
         if record["prompt_sha256"] != expected_prompt_hash:
             raise PredictionFormatError(
-                f"run record {record_id} prompt_sha256 does not match the frozen renderer"
+                f"run record {record_id} prompt_sha256 does not match the exact frozen model prompt"
             )
         if record["parse_status"] == "OK":
             validate_decision_semantics(
@@ -272,7 +281,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     baseline_parser.add_argument("--out", type=Path, required=True)
 
-    render_parser = subparsers.add_parser("render", help="render model-facing prompts")
+    render_parser = subparsers.add_parser("render", help="render exact model-facing prompts")
     render_parser.add_argument("--arm", choices=ARMS, required=True)
     render_parser.add_argument(
         "--inputs",
@@ -361,15 +370,17 @@ def _run(args: argparse.Namespace) -> Any:
     if command == "render":
         dataset_dir = args.inputs.parent
         _manifest, policy, evaluation_time = _context(dataset_dir)
+        root = repository_root()
         records = []
         for item in load_jsonl(args.inputs):
-            prompt = render_prompt(
+            rendered = render_prompt(
                 item,
                 args.arm,
                 dataset_dir,
                 policy=policy,
                 evaluation_time=evaluation_time,
             )
+            prompt = _exact_model_prompt(rendered, root)
             records.append(
                 {
                     "id": item["id"],
