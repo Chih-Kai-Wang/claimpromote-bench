@@ -5,12 +5,14 @@
 AI tools assisted with:
 
 - literature triage and related-work comparison;
-- adversarial review of the research boundary and novelty wording;
+- research-gap exploration and adversarial review of the research boundary and novelty wording;
+- methodology and experiment-design feedback;
 - schema, test, and CI/workflow drafting;
-- code drafting and debugging;
+- implementation, code drafting, and debugging;
 - diagnosis of the post-inference evaluator/recovery failure;
-- programmatic inspection of the validated recovered study artifact;
-- documentation and manuscript editing.
+- programmatic inspection and interpretation of the validated recovered study artifact;
+- documentation and manuscript drafting/editing;
+- reference formatting and citation cross-check support.
 
 AI assistance is not treated as authorship, independent human review, external reproduction, or evidence that a benchmark/model result is correct.
 
@@ -40,8 +42,10 @@ The recovered v1 result is negative at the raw-model layer: structured-output co
 
 Likewise, AI-generated suggestions do not authorize changes to the frozen hidden gold, policy, prompts, seeds, or source inference after results are known. Any future study that changes those elements must be labeled as a new or supplementary study.
 
-## Verification and disclosure policy
+## Verification and venue disclosure policy
 
 Repository validators, artifact hashes, GitHub workflow provenance, exact prompt/run identities, deterministic policy/oracle code, human review records, and reproducible statistics—not AI self-assessment—determine what claims are admissible in the paper.
 
-Before submission, this disclosure must be checked against the target venue's current AI-assistance policy. If the venue requires a different placement, wording, or level of detail, the disclosure may be reformatted without changing the factual division of work described here.
+The disclosure was checked on 2026-08-20 against the official ICLR 2027 AI Policy for Authors and Author Guidelines. ICLR 2027 requires a mandatory AI-use statement in the paper (outside the main-text page limit) and explicit disclosure of relevant AI-assisted research and writing tasks. The ICLR submission wrapper therefore discloses literature search/triage and gap exploration, methodology and experiment-design feedback, implementation and code drafting, CI debugging, artifact analysis, quantitative-result interpretation, manuscript drafting/editing, and reference formatting, while stating that the human author reviewed the work and takes responsibility for the research question, benchmark and policy semantics, experimental decisions, released artifacts, quantitative claims, citation accuracy, and final manuscript.
+
+This policy check is time-sensitive and should be repeated immediately before actual submission if ICLR updates its author policy or submission form. Reformatting the disclosure for venue requirements must not change the factual division of work described here.
