@@ -1,0 +1,56 @@
+name: v2 naturalistic case validation
+
+on:
+  pull_request:
+    paths:
+      - "v2/naturalistic-candidates.json"
+      - "v2/naturalistic-cases/**"
+      - "v2/schemas/naturalistic-case.schema.json"
+      - "scripts/validate_v2_naturalistic_cases.py"
+      - "tests/test_v2_naturalistic_cases.py"
+      - ".github/workflows/v2-naturalistic-case-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v2-naturalistic-case-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate source, licensing, time, and leakage boundaries
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate case schema and current curated root
+        run: >-
+          python scripts/validate_v2_naturalistic_cases.py
+          --root v2/naturalistic-cases
+          --allow-empty
+          --out work/v2-naturalistic-case-validation.json
+
+      - name: Test provenance and leakage guards
+        run: python -m pytest -q tests/test_v2_naturalistic_cases.py
+
+      - name: Upload validation report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v2-naturalistic-case-validation
+          path: work/v2-naturalistic-case-validation.json
+          if-no-files-found: error
+          retention-days: 30
