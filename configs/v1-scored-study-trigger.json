@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "protocol_version": "1.0.0",
+  "commitment_commit_sha": "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
+  "commitment_sha256": "sha256:55a3d2bffb6f23b7253715a9f091d951daaf589e205033d3f46dfd9e6ff6590e",
+  "dataset_manifest_sha256": "sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba",
+  "prompt_manifest_sha256": "sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957",
+  "models": 2,
+  "arms": 4,
+  "seeds": 3,
+  "runs": 24,
+  "instances_per_run": 300,
+  "expected_decisions": 7200,
+  "primary_split": "private_hidden_test_only",
+  "public_dev_in_primary_metrics": false,
+  "rule": "No scored inference may precede the committed hidden-test and prompt-manifest commitment."
+}
