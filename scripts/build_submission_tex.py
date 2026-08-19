@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Evaluating Policy-Governed Evidence-State Transitions in AI Research Agents"
+TITLE = r"\cpb: Evaluating Whether Evidence Licenses Claim-State Transitions in AI Research Agents"
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
@@ -43,13 +43,9 @@ def canonical_body() -> str:
     conclusion_start = body.index(r"\section{Conclusion}", ai_start)
     body = body[:ai_start] + AI_DISCLOSURE + body[conclusion_start:]
 
-    # Submission copies keep exact identities in the public repository/artifact manifest while
-    # abbreviating long monospace hashes in prose so neither the one-column arXiv PDF nor the
-    # narrower ICLR format can overflow. These substitutions do not alter study semantics.
+    # Keep exact identities in public repository/provenance records while avoiding long
+    # monospace strings in venue-formatted prose. These substitutions never alter study data.
     replacements = {
-        "Coverage triplets are ordered as seeds 104729/130363/169087.": (
-            "Coverage triplets are ordered as seeds 104729, 130363, and 169087."
-        ),
         r"\texttt{aa5268dcde2aa44f8eabf0246631efbca27de7e5}": r"\texttt{aa5268dc...de7e5}",
         r"\texttt{8d9b3f5c831f432cf6b321e6402724c4f52bb3e1}": r"\texttt{8d9b3f5c...bb3e1}",
         r"\texttt{e2b09f30b0573cf7bcb244eef1917691755f2877}": r"\texttt{e2b09f30...f2877}",
@@ -63,7 +59,7 @@ def canonical_body() -> str:
 
 
 def shared_commands() -> str:
-    return r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}}
+    return r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
 \newcommand{\allow}{\texttt{ALLOW}}
 \newcommand{\hold}{\texttt{HOLD}}
 \newcommand{\demote}{\texttt{DEMOTE}}
@@ -78,9 +74,9 @@ def without_ai_disclosure(body: str) -> str:
 
 
 def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
-    # ICLR excludes the mandatory AI-use statement from the page limit. The diagnostic probe
-    # therefore removes only that section; it keeps the full scientific text, including the
-    # conclusion and our reproducibility/artifact discussion. References are omitted below.
+    # ICLR excludes the mandatory AI-use statement from the main-text page limit. The diagnostic
+    # probe removes only that section; it retains the complete scientific narrative and omits
+    # the bibliography below.
     body_for_output = without_ai_disclosure(body) if main_text_probe else body
 
     bibliography_tail = (
@@ -97,6 +93,7 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
+\usepackage{xspace}
 
 """
         + shared_commands()
@@ -128,6 +125,7 @@ def arxiv_tex(body: str) -> str:
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
+\usepackage{xspace}
 
 """
         + shared_commands()
