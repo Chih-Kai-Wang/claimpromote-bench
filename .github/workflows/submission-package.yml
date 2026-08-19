@@ -25,9 +25,31 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install submission dependencies
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
+          set -euo pipefail
+          # GitHub's Azure Ubuntu mirror can intermittently stall. Prefer the canonical
+          # archive directly so submission verification does not depend on mirror fallback.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i \
+              's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' \
+              /etc/apt/apt-mirrors.txt
+          fi
+          if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then
+            sudo sed -i \
+              's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' \
+              /etc/apt/sources.list.d/ubuntu.sources
+          fi
+          sudo apt-get \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=20 \
+            -o Acquire::https::Timeout=20 \
+            update
+          sudo apt-get \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=20 \
+            -o Acquire::https::Timeout=20 \
+            install -y --no-install-recommends \
             texlive-latex-base \
             texlive-latex-recommended \
             texlive-latex-extra \
@@ -89,13 +111,18 @@ jobs:
           pdflatex -interaction=nonstopmode -halt-on-error arxiv.tex
           pdflatex -interaction=nonstopmode -halt-on-error arxiv.tex
 
-      - name: Fail on unresolved citations or references
+      - name: Fail on unresolved citations, references, or overflow
         working-directory: work/submission
         shell: bash
         run: |
+          set -euo pipefail
           for log in iclr2027.log arxiv.log; do
             if grep -E "LaTeX Warning: (Citation|Reference).*(undefined|multiply defined)|There were undefined references" "$log"; then
               echo "$log contains unresolved citations or references." >&2
+              exit 1
+            fi
+            if grep -F 'Overfull \\hbox' "$log"; then
+              echo "$log contains an overfull horizontal box; visual overflow is not upload-ready." >&2
               exit 1
             fi
           done
