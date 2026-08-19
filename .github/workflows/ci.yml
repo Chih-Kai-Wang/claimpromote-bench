@@ -6,6 +6,7 @@ on:
   pull_request:
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -34,6 +35,8 @@ jobs:
         run: ruff format --check .
       - name: Type-check
         run: mypy
+      - name: Validate public v1 paper results
+        run: python scripts/validate_v1_release_results.py
       - name: Rebuild deterministic alpha
         run: python scripts/build_alpha.py
       - name: Require generated files to remain stable
@@ -188,3 +191,63 @@ jobs:
         run: python -m pip install -e ".[test]"
       - name: Run compatibility tests
         run: python -m pytest -q
+
+  v2-source-discovery:
+    name: discover canonical v2 pilot source
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/iclr2027-v2-low-cost-study'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CANONICAL_TRIGGER_SHA: f998a05fec36b84e59230fe241f1e9961647ad2e
+    steps:
+      - name: Query and freeze observable source-run diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work
+          gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/actions/runs" \
+            -f branch="${GITHUB_HEAD_REF}" \
+            -f per_page=100 \
+            > work/branch-runs.json
+          jq --arg sha "$CANONICAL_TRIGGER_SHA" '
+            [
+              .workflow_runs[]
+              | select(.path == ".github/workflows/v2-low-cost-pilot.yml")
+              | {
+                  id,
+                  name,
+                  path,
+                  event,
+                  status,
+                  conclusion,
+                  run_attempt,
+                  head_branch,
+                  head_sha,
+                  created_at,
+                  updated_at,
+                  html_url,
+                  artifacts_url
+                }
+            ] as $candidates
+            | [$candidates[] | select(.head_sha == $sha)] as $matches
+            | {
+                schema_version: "1.0.0",
+                canonical_trigger_sha: $sha,
+                exact_match_count: ($matches | length),
+                exact_matches: $matches,
+                branch_workflow_candidates: $candidates
+              }
+          ' work/branch-runs.json > work/v2-pilot-source-discovery.json
+          cat work/v2-pilot-source-discovery.json
+
+      - name: Upload source-run diagnostics
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v2-pilot-source-ci-discovery
+          path: work/v2-pilot-source-discovery.json
+          if-no-files-found: error
+          retention-days: 30
