@@ -15,7 +15,7 @@
 \newcommand{\demote}{\texttt{DEMOTE}}
 \newcommand{\escalate}{\texttt{ESCALATE}}
 
-\title{\cpb: Benchmarking Whether Evidence Licenses Claim-State Transitions in AI Research Agents}
+\title{\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents}
 \author{Anonymous Author(s)}
 \date{}
 
@@ -23,105 +23,105 @@
 \maketitle
 
 \begin{abstract}
-AI research agents can produce valid evidence and still overstate what that evidence licenses. Existing evaluations primarily test answer correctness, factual support, reproducibility, task execution, or abstention; they do not isolate whether an explicit body of evidence licenses an explicit change in research status. We introduce \cpb, a controlled benchmark for this transition-admissibility problem under a frozen, machine-checkable policy. Version~1 contains 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test; numerical and formal cases bind executable artifacts, and the hidden set plus exact model-facing prompts were committed before scored inference. Across 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three fixed seeds, 5,327 outputs (73.99\%) are \texttt{FORMAT\_ERROR}, and every one of the 1,873 parseable raw intents is \allow{}. A deterministic gate catches every measured false promotion among covered parseable decisions without blocking a covered valid promotion, but gate-arm decision coverage remains only 14.0--49.0\% for Qwen3-0.6B and 21.7--48.3\% for Qwen3-1.7B. Thus v1 exposes two distinct bottlenecks---structured decision production and policy-sensitive raw intent---while showing that deterministic enforcement can provide a conditional enforcement boundary once a structured intent exists; a supplementary blinded human audit remains mixed rather than passing.
+AI research agents may have valid evidence and still make a claim that is too strong. We study a narrower decision problem: given a claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy? We introduce \cpb, a controlled benchmark for this problem. Version~1 contains 200 matched pairs over 20 policy factors, including a preregistered 150-pair hidden test. Numerical and formal cases are tied to executable artifacts, and the hidden set and exact model prompts were committed before scored inference. The primary study contains 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three fixed seeds. The main result is negative: 5,327 outputs (73.99\%) are \texttt{FORMAT\_ERROR}, and all 1,873 parseable raw decisions are \allow{}. A deterministic gate prevents false promotion among the parseable cases on which it can act, but decision coverage in the gate arm is only 14.0--49.0\% for Qwen3-0.6B and 21.7--48.3\% for Qwen3-1.7B. Because the gate applies the same fixed policy used to define the benchmark labels, this result is evidence about rule enforcement rather than improved model reasoning. A small blinded human audit is mixed rather than passing.
 \end{abstract}
 
 \section{Introduction}
 
-A research agent can be wrong in a subtle way even when its underlying evidence is genuine: it can ask to promote a claim further than the evidence warrants. A finite computation may be correct without proving a theorem over an infinite domain; a Lean certificate may prove the exact encoded statement without establishing a broader natural-language claim; an internal reproduction may succeed without constituting independent external review. In each case, the evidence can be valid while the requested \emph{claim-state transition} is not.
+A research agent can have valid evidence and still make the wrong decision about what that evidence supports. A finite computation may be correct without proving a theorem over an infinite domain. A Lean certificate may prove the exact encoded statement without establishing a broader natural-language claim. An internal reproduction may succeed without counting as independent external review. In each example, the evidence itself can be sound while the requested \emph{claim-state transition} is not justified.
 
-Most existing evaluations target a neighboring problem. They test scientific claim verification, computational reproducibility, data-driven research tasks, hypothesis falsification, or abstention \cite{javaji2025claimbench,huang2026deepfact,siegel2025corebench,chen2025scienceagentbench,huang2025popper,kirichenko2025abstentionbench}. Those questions matter, but they do not isolate whether an explicit body of evidence licenses an explicit change in research status.
+Most existing evaluations ask nearby questions. They test scientific claim verification, computational reproducibility, data-driven research tasks, hypothesis falsification, or abstention \cite{javaji2025claimbench,huang2026deepfact,siegel2025corebench,chen2025scienceagentbench,huang2025popper,kirichenko2025abstentionbench}. We focus on the decision in between: whether the evidence already on record is enough to justify a specific change in research status.
 
-We therefore ask one question:
+Our question is therefore:
 \begin{quote}
-\emph{Given a claim, typed evidence, a current evidence state, and a requested transition, can an AI system decide whether the transition is licensed by a frozen, machine-checkable policy?}
+\emph{Given a claim, typed evidence, a current evidence state, and a requested transition, can an AI system decide whether that transition is allowed by a fixed, machine-checkable policy?}
 \end{quote}
 
-\cpb turns this question into a controlled evaluation. Evidence state is represented along separate research, computation, formal-certification, and independent-review axes. Each matched pair fixes the claim and requested transition while changing a policy-relevant prerequisite. The deterministic oracle evaluates transition admissibility rather than theorem truth. Numerical and formal cases bind executable artifacts, while the hidden dataset and exact model-facing prompts are frozen before scored inference.
+\cpb turns this question into a controlled evaluation. It keeps research status, computational evidence, formal certification, and independent review as separate parts of the evidence state. Each matched pair keeps the claim and requested transition fixed while changing one policy-relevant prerequisite. The oracle checks whether the requested transition satisfies the policy; it does not try to decide whether an unrestricted mathematical statement is true. Numerical and formal cases use executable artifacts, and the hidden data and exact prompts were fixed before the scored runs.
 
 \begin{figure}[t]
 \centering
 \fbox{\parbox{0.94\linewidth}{\small
-\textbf{Claim + typed evidence + current state + requested transition}
-$\longrightarrow$ \textbf{model raw intent}
-$\longrightarrow$ \textbf{deterministic transition gate}
-$\longrightarrow$ \textbf{effective action}.\\[-1mm]
-The model always produces the raw intent. Only the enforced-gate arm may replace a policy-invalid \allow{} with the policy-prescribed effective action. Raw model behavior and post-gate system behavior are evaluated separately.}}
-\caption{Evaluation boundary. \cpb separates what the model requests from what an enforced system ultimately permits.}
+\textbf{Claim + evidence + current state + requested transition}
+$\longrightarrow$ \textbf{model decision}
+$\longrightarrow$ \textbf{deterministic gate}
+$\longrightarrow$ \textbf{final action}.\\[-1mm]
+The model first produces a raw decision. Only the gate arm may replace an invalid \allow{} with the action required by the fixed policy. We report the model decision and the post-gate action separately.}}
+\caption{Evaluation setup. The model's raw decision is kept separate from the action taken after the deterministic gate.}
 \label{fig:overview}
 \end{figure}
 
-The hidden v1 study gives a simple but unfavorable answer at the raw-intent level. Across 7,200 decisions, 73.99\% are malformed under the frozen output contract. Every one of the 1,873 parseable raw decisions is \allow{}, so the small models do not discriminate admissible from inadmissible transitions whenever they produce a valid structured decision. Deterministic enforcement changes the system outcome sharply on covered decisions, but low decision coverage remains a first-order failure. The result is therefore a diagnosis of the interface between probabilistic generation and deterministic governance, not evidence that the gate makes the model reason better.
+The hidden study produced a clear negative result. Of 7,200 decisions, 73.99\% fail the required output format. Every one of the 1,873 parseable raw decisions is \allow{}, so the tested models do not distinguish allowed from disallowed transitions when they do return a valid structured answer. The gate changes the final system action on the cases it can process, but it does not fix the low coverage or the nonselective model behavior. This distinction is central to the paper.
 
-Our contributions are fourfold:
+Our contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{A transition-admissibility benchmark.} We formalize a four-action evidence-state decision task and construct 200 controlled pairs over 20 policy factors.
-  \item \textbf{Artifact-bound, preregistered evaluation.} Numerical cases bind exact-rational computations, formal cases bind pinned Lean artifacts, and the hidden set plus exact prompts are committed before scored inference.
-  \item \textbf{Separation of model intent from system enforcement.} Four intervention arms distinguish representation and verifier information from deterministic post-generation enforcement, preventing model behavior from being conflated with effective system behavior.
-  \item \textbf{A frozen empirical diagnosis.} The 7,200-decision hidden study reveals severe structured-output failure and an all-\allow{} raw-intent collapse, while showing that deterministic gating eliminates measured false promotion only on the subset of decisions with valid structured output.
+  \item We define a four-action benchmark for deciding whether evidence justifies a requested claim-state transition, with 200 matched pairs over 20 policy factors.
+  \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, and we commit the hidden set and exact prompts before scored inference.
+  \item We evaluate model decisions separately from deterministic gate actions, so an engineering safeguard is not mistaken for better model reasoning.
+  \item We report the complete hidden study, including the high format-error rate, the all-\allow{} raw behavior, the low coverage of the gate arm, and a small human audit that did not meet the preregistered pass criterion.
 \end{enumerate}
 
 \section{Related Work}
 
 \paragraph{Scientific claim verification.}
-CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports \cite{huang2026deepfact}, while ClaimDB evaluates fact verification over large structured databases \cite{theologitis2026claimdb}. These tasks ask whether evidence supports a factual claim. \cpb instead assumes an explicit evidence record and asks whether that evidence licenses a requested \emph{change in evidentiary status}.
+CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports \cite{huang2026deepfact}, while ClaimDB evaluates fact verification over large structured databases \cite{theologitis2026claimdb}. These tasks ask whether evidence supports a factual claim. \cpb instead starts from an explicit evidence record and asks whether it is enough for a particular change in claim status.
 
 \paragraph{Research-agent evaluation and reproducibility.}
-ScienceAgentBench evaluates executable data-driven research tasks \cite{chen2025scienceagentbench}; CORE-Bench evaluates computational reproduction of published work \cite{siegel2025corebench}; and POPPER studies agentic hypothesis falsification with sequential statistical control \cite{huang2025popper}. \cpb does not attempt end-to-end scientific discovery or truth determination. It isolates the governance decision between producing evidence and assigning a stronger claim status.
+ScienceAgentBench evaluates executable data-driven research tasks \cite{chen2025scienceagentbench}; CORE-Bench evaluates computational reproduction of published work \cite{siegel2025corebench}; and POPPER studies agentic hypothesis falsification with sequential statistical control \cite{huang2025popper}. \cpb does not attempt end-to-end scientific discovery or truth determination. It studies the narrower decision between producing evidence and assigning a stronger status to a claim.
 
 \paragraph{Evidence-state maintenance and verifier-governed workflows.}
-SeekBench evaluates grounding, recovery, and answer calibration as evidence quality changes \cite{shao2025seekbench}. Omni-Decision maintains a structured evidence state for multimodal question answering \cite{ma2026omnidecision}; EviGraph tracks claim--support consistency in autonomous research \cite{ren2026evigraph}; and the contemporaneous ClaimLedger report proposes verifier-governed claim maintenance \cite{elliman2026claimledger}. These are close conceptual neighbors. Our narrower target is transition admissibility itself: the policy is frozen, decisive prerequisites are manipulated in matched pairs, the oracle has an exact four-way action space, and raw intent is measured separately from enforcement. We do not claim that claim ledgers or verifier-governed maintenance are new.
+SeekBench evaluates grounding, recovery, and answer calibration as evidence quality changes \cite{shao2025seekbench}. Omni-Decision maintains a structured evidence state for multimodal question answering \cite{ma2026omnidecision}; EviGraph tracks claim--support consistency in autonomous research \cite{ren2026evigraph}; and the contemporaneous ClaimLedger report proposes verifier-governed claim maintenance \cite{elliman2026claimledger}. These systems are close in motivation. Our benchmark is narrower: the policy is fixed, each pair changes a specific prerequisite, the answer space has four actions, and the model decision is evaluated separately from any deterministic gate. We do not claim that claim ledgers or verifier-governed maintenance are new.
 
 \paragraph{Abstention and formal verification.}
-AbstentionBench highlights failures on unanswerable or underspecified questions \cite{kirichenko2025abstentionbench}. A \hold{} decision is related to abstention but is not equivalent: \cpb also includes \demote{} for an invalid current basis and \escalate{} for an authoritative unresolved contradiction. OSVBench shows that formal-specification generation remains difficult \cite{li2026osvbench}; in \cpb, proof artifacts are one typed evidence family rather than a universal ``verified'' label.
+AbstentionBench shows that models remain unreliable on unanswerable or underspecified questions \cite{kirichenko2025abstentionbench}. A \hold{} decision is related to abstention but is not the same: \cpb also includes \demote{} for a claim whose current status no longer has a valid basis and \escalate{} for an unresolved authoritative contradiction. OSVBench shows that formal-specification generation remains difficult \cite{li2026osvbench}. In \cpb, a proof artifact is one kind of evidence rather than a general-purpose ``verified'' label.
 
 \section{Task Definition}
 
-Each instance contains a claim record, typed evidence records, dependency and provenance metadata, a current evidence-state vector, and a requested transition. The model emits one action in
+Each instance contains a claim record, typed evidence records, dependency and provenance metadata, a current evidence-state vector, and a requested transition. The model returns one action from
 \[
 \{\allow,\hold,\demote,\escalate\}
 \]
-plus a probability-like admissibility score and structured reason/evidence identifiers. \allow{} means the requested transition is licensed by policy; \hold{} means it is not currently licensed; \demote{} means an already elevated current state has an invalid basis; and \escalate{} is reserved for an authoritative unresolved contradiction. Malformed output is a distinct \texttt{FORMAT\_ERROR}; it is never silently converted into a safe hold.
+plus an admissibility score and structured reason and evidence identifiers. \allow{} means the requested transition satisfies the policy; \hold{} means it is not currently justified; \demote{} means an already elevated state has lost its valid basis; and \escalate{} is reserved for an authoritative unresolved contradiction. Malformed output is recorded separately as \texttt{FORMAT\_ERROR}; it is not silently treated as a safe hold.
 
-\subsection{Orthogonal evidence state}
+\subsection{Separate evidence states}
 
-The benchmark uses four non-substitutable state axes:
+The benchmark tracks four state axes:
 \begin{align*}
 \texttt{research\_status} &\in \{\texttt{PROPOSED},\texttt{OPEN},\texttt{RESOLVED}\},\\
 \texttt{computation\_status} &\in \{\texttt{NONE},\texttt{COMPUTATIONAL}\},\\
 \texttt{formal\_status} &\in \{\texttt{NONE},\texttt{FORMALLY\_CERTIFIED}\},\\
 \texttt{review\_status} &\in \{\texttt{UNREVIEWED},\texttt{INDEPENDENTLY\_VERIFIED}\}.
 \end{align*}
-Formal certification therefore does not imply independent review, and a successful computation does not imply formal certification or research resolution.
+The axes are kept separate. Formal certification does not imply independent review, and a successful computation does not imply formal certification or research resolution.
 
-\subsection{Versioned transition oracle}
+\subsection{Fixed policy oracle}
 
-A public policy specifies the prerequisites for each transition at a fixed evaluation time. The oracle checks dependency closure, evidence status, scope, staleness, provenance, runtime success, contradiction state, and artifact integrity. Numerical and formal \allow{} cases additionally require executable artifact-to-scope agreement. The oracle decides whether the registered evidence satisfies the transition policy; it is not a theorem prover or scientific truth oracle.
+A public policy lists the requirements for each transition at a fixed evaluation time. The oracle checks dependencies, evidence status, scope, staleness, provenance, runtime success, contradictions, and artifact integrity. Numerical and formal \allow{} cases also require the executable artifact to match the registered scope. The oracle answers a policy question about the registered evidence; it is not a theorem prover or a general scientific truth oracle.
 
 \section{Benchmark Construction}
 
-\subsection{Controlled pairs and frozen factors}
+\subsection{Controlled pairs}
 
-Within each pair, the natural-language claim and requested transition are fixed. The two members differ only in registered policy-relevant fields. This construction asks a counterfactual question: when the decisive prerequisite changes, does the model change its decision?
+Within each pair, the natural-language claim and requested transition are fixed. The two members differ only in registered fields that matter to the policy. This lets us ask a direct question: when the decisive prerequisite changes, does the model change its decision?
 
-Version~1 contains 200 pairs (400 instances) over 20 factors spanning dependency closure, numerical sufficiency and scope, runtime completion, freshness and contradiction handling, provenance and independent review, statement/claim identity, and formal trust-base binding. Fifty pairs (100 instances) are public development data. Primary scoring uses only the preregistered 150-pair private hidden split (300 instances).
+Version~1 contains 200 pairs (400 instances) over 20 factors covering dependency closure, numerical sufficiency and scope, runtime completion, freshness and contradictions, provenance and independent review, statement identity, and formal trust-base binding. Fifty pairs (100 instances) are public development data. Primary scoring uses only the preregistered 150-pair private hidden split (300 instances).
 
-The public constructor is exercised end to end in hosted CI. Its inputs, frozen gold labels, pair descriptors, exact-rational artifacts, and generated Lean package pass dataset, executable, and formal audits. The private hidden split was separately constructed, validated, prompt-frozen, and cryptographically committed before scored inference.
+The public development split is rebuilt and checked end to end in hosted CI. Its inputs, fixed gold labels, pair descriptors, exact-rational artifacts, and generated Lean package pass the dataset, executable, and formal checks. The private hidden split was constructed and validated separately, and both the hidden data and exact model prompts were cryptographically committed before scored inference.
 
-\subsection{Executable evidence and shortcut controls}
+\subsection{Executable evidence and shortcut checks}
 
-Numerical cases use manifest-bound exact-rational finite-grid artifacts whose values, extrema, predicates, repetition digests, and scope fields are recomputed during validation. They support only the declared finite computational claim. Formal cases use generated Lean sources under a pinned toolchain; kernel acceptance supports only the exact encoded declaration in that environment.
+Numerical cases use exact-rational finite-grid artifacts. Validation recomputes their registered values, extrema, predicates, repetition digests, and scope fields. These artifacts support only the finite computational claim that was registered. Formal cases use generated Lean sources under a pinned toolchain; kernel acceptance supports only the exact encoded declaration in that environment.
 
-We additionally audit metadata-only and shallow-structure shortcuts and apply registered semantics-preserving transformations such as identifier renaming, evidence-order changes, and insertion of irrelevant evidence. The deterministic oracle and prompt renderers must remain invariant after normalization. These checks reduce avoidable leakage and post-hoc flexibility without turning a synthetic benchmark into independent authorship or real-world deployment evidence.
+We also check for metadata-only and shallow structural shortcuts. Registered meaning-preserving transformations include identifier renaming, changes in evidence order, and insertion of irrelevant evidence. The oracle and prompt renderers must give the same result after normalization. These checks reduce obvious leakage and reduce room for changes after results are known, but they do not make the synthetic benchmark equivalent to real research records.
 
 \section{Intervention Arms}
 
-Table~\ref{tab:arms} summarizes the frozen interventions. The first three arms change what information is presented to the model but do not automatically change its action. Only the final arm applies deterministic enforcement.
+Table~\ref{tab:arms} summarizes the four fixed arms. The first three change what the model sees. Only the last arm changes the final action after the model has responded.
 
 \begin{table}[t]
 \centering
 \small
-\caption{Frozen intervention arms. ``Gate'' indicates whether a policy-invalid raw \allow{} may be replaced after generation.}
+\caption{Intervention arms. ``Gate'' indicates whether an invalid raw \allow{} may be replaced after generation.}
 \label{tab:arms}
 \begin{tabular}{lll}
 \toprule
@@ -135,7 +135,7 @@ Ledger + verifier + gate & Same information + disclosed enforcement & Yes \\
 \end{tabular}
 \end{table}
 
-The gate never promotes a claim for the model. A successful veto is therefore a system-level enforcement effect, not evidence that the model learned the policy or became better calibrated. Because the final prompt discloses the presence of enforcement, raw-intent differences between the passive-verifier and gate arms may also include an anticipation effect. The raw-versus-effective comparison \emph{within} the gate arm isolates the actual enforcement step.
+The gate never promotes a claim on the model's behalf. It can only block or replace an invalid \allow{} according to the fixed policy. Because the gate arm tells the model that enforcement may occur, raw differences between the passive-verifier and gate arms may partly reflect that prompt difference. The cleanest measure of the gate itself is therefore the difference between raw and final actions within the gate arm.
 
 \section{Experimental Protocol}
 
@@ -143,33 +143,28 @@ The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.
 \[
 300\times 2\times 4\times 3 = 7{,}200
 \]
-scored decisions. Public development instances are excluded from primary scoring. The hidden commitment entered Git history before scored inference; the frozen inference source is workflow run \texttt{32255636879}. Both models use llama.cpp commit \texttt{de699957b92f490efebad149665b0dccf127eaff}.
+scored decisions. Public development instances are not included in primary scoring. The hidden set was committed to Git before the scored runs; the inference source is workflow run \texttt{32255636879}. Both models use llama.cpp commit \texttt{de699957b92f490efebad149665b0dccf127eaff}.
 
-Primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Decision coverage is the fraction of hidden instances for which the model emits a parseable decision under the frozen output contract; complete-pair coverage requires both members of a controlled pair to be parseable. Secondary metrics include promotion false discovery rate, counterfactual flip accuracy, calibration metrics, structured reason/evidence scores, and format-error rate. Missing or malformed output remains observable and is never imputed as \hold{}; all conditional rates must therefore be read together with coverage.
+The primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Decision coverage is the fraction of hidden instances for which the model returns a parseable decision under the fixed output contract. Complete-pair coverage requires both members of a controlled pair to be parseable. Secondary metrics include promotion false discovery rate, counterfactual flip accuracy, calibration metrics, structured reason and evidence scores, and format-error rate. Missing or malformed output remains visible in the evaluation and is never counted as \hold{}, so conditional rates must be read together with coverage.
 
-Confidence intervals resample whole controlled pairs. Arm comparisons use exact two-sided McNemar tests within exact model-artifact/runtime/seed/hardware identity groups, with Holm correction applied separately to raw-intent and effective-system comparisons.
+Confidence intervals resample whole controlled pairs. Arm comparisons use exact two-sided McNemar tests within exact model-artifact/runtime/seed/hardware identity groups, with Holm correction applied separately to comparisons of raw decisions and final system actions.
 
-\subsection{Artifact-only semantic recovery}
+\subsection{Recovery after evaluator failures}
 
-Some source jobs completed all 300 inference records but failed the original evaluator because a model output could satisfy the JSON schema while violating a frozen cross-field decision invariant, such as requesting \allow{} without proposing the requested target state. We repaired the evaluator rather than the model output. Recovery downloads the 24 immutable source artifacts, reconstructs the committed hidden set and prompt identity from the original scoring source, and reclassifies only those frozen semantic violations as \texttt{FORMAT\_ERROR}. It does not query either model again or rewrite any legally structured decision. Exactly 27 of 7,200 records were reclassified. Recovery run \texttt{32274814703} validated all 24 normalized runs, exact prompt hashes, and the complete matrix before aggregate statistics were produced.
+Some source jobs completed all 300 model calls but failed during evaluation because an output could satisfy the JSON schema while still violating a cross-field rule, for example by returning \allow{} without proposing the requested target state. We fixed the evaluator rather than changing the model outputs. The recovery procedure downloads the 24 original source artifacts, reconstructs the committed hidden set and prompt identity from the original scoring source, and reclassifies only these invalid structured outputs as \texttt{FORMAT\_ERROR}. It does not query either model again and does not rewrite any otherwise valid decision. Exactly 27 of 7,200 records were reclassified. Recovery run \texttt{32274814703} then validated all 24 normalized runs, their prompt hashes, and the complete matrix before the aggregate statistics were produced.
 
 \section{Results}
 
-Three findings dominate the frozen v1 study:
-\begin{enumerate}[leftmargin=*]
-  \item \textbf{Structured decision production fails often.} 5,327/7,200 outputs (73.99\%) are \texttt{FORMAT\_ERROR}.
-  \item \textbf{Parseable raw intent collapses to one action.} All 1,873 parseable raw decisions are \allow{}; the models do not discriminate admissible from inadmissible transitions on covered cases.
-  \item \textbf{Deterministic enforcement works only conditionally on coverage.} In the gate arm, every covered false promotion is caught and no covered valid promotion is blocked, but decision coverage remains low.
-\end{enumerate}
+The main result is not an advantage for one intervention arm. The larger problem is that the models often fail to produce a usable decision at all, and the decisions that are usable all choose the same action. Across the full study, 5,327 of 7,200 outputs (73.99\%) are \texttt{FORMAT\_ERROR}. The remaining 1,873 raw decisions are all \allow{}. The gate changes the final action on invalid promotions that reach it, but this happens only on the subset of cases with parseable output.
 
 \subsection{Raw model behavior}
 
-Table~\ref{tab:main-results} reports \emph{raw pre-enforcement behavior only} for every arm, so every row has the same semantics. Coverage triplets are ordered by seeds 104729, 130363, and 169087. FPR, VPR, and PTA are conditional on parseable decisions; ``undef.'' means zero decision coverage.
+Table~\ref{tab:main-results} reports raw behavior before enforcement for every arm. Coverage triplets are ordered by seeds 104729, 130363, and 169087. FPR, VPR, and PTA are conditional on parseable decisions; ``undef.'' means that no decision in that run was parseable.
 
 \begin{table}[t]
 \centering
 \small
-\caption{Primary hidden-test raw model behavior across all three seeds. Gate-arm rows are shown \emph{before} enforcement.}
+\caption{Primary hidden-test raw model behavior across all three seeds. Gate-arm rows are shown before enforcement.}
 \label{tab:main-results}
 \begin{tabular}{llcccc}
 \toprule
@@ -188,18 +183,18 @@ Qwen3-1.7B & Ledger + verifier + gate & .483/.217/.480 & 1.00 & 1.00 & 0.00 \\
 \end{tabular}
 \end{table}
 
-Across the 900 decisions in each model--arm cell, the Qwen3-0.6B format-error counts are 900, 261, 335, and 585 for narrative, ledger, passive-verifier, and gate, respectively. For Qwen3-1.7B they are 900, 900, 900, and 546. The ledger therefore improves structured-output coverage over narrative for Qwen3-0.6B, but neither the ledger nor passive verifier produces selectivity among parseable decisions. Qwen3-1.7B has no parseable decisions in the first three arms under this frozen protocol. For every run in which raw FPR is defined, the preregistered 10,000-pair bootstrap 95\% interval is exactly $[1.0,1.0]$; this degeneracy reflects the all-\allow{} raw policy, not broad certainty about end-to-end performance.
+Each model--arm cell contains 900 decisions. For Qwen3-0.6B, the format-error counts are 900, 261, 335, and 585 for narrative, ledger, passive verifier, and gate. For Qwen3-1.7B they are 900, 900, 900, and 546. The ledger improves output coverage over narrative for Qwen3-0.6B, but neither the ledger nor the passive verifier makes the parseable decisions selective. Qwen3-1.7B produces no parseable decisions in the first three arms under this protocol. In every run where raw FPR can be computed, the preregistered 10,000-pair bootstrap 95\% interval is $[1.0,1.0]$. This happens because every parseable raw decision is \allow{}; it should not be read as uncertainty being small for the full system.
 
-The source records preserve parse status and structured decisions but not the original free-form response text for outputs already classified as parse failures. We can count those failures exactly, but cannot responsibly assign them a post-hoc linguistic cause without new inference. Consequently, the 73.99\% format-error rate should be interpreted as a failure of the tested model--prompt--output-contract interface; v1 does not identify how much of that failure is syntax, schema adherence, or deeper reasoning. We do not rerun the frozen models after unblinding.
+The source records keep the parse status and any structured decision, but they do not keep the original free-form text for outputs that had already been classified as parse failures. We can therefore count these failures exactly, but we cannot tell from v1 how many came from syntax, schema adherence, interface compatibility, or the underlying reasoning task. We do not rerun the models after seeing the hidden results.
 
-\subsection{Raw intent versus deterministic enforcement}
+\subsection{What the gate changes}
 
-In every gate-arm run with coverage, every parseable raw intent is \allow{}. The gate catches every covered false promotion and introduces no covered false block. Effective FPR is therefore 0 and effective VPR remains 1 on covered decisions. Table~\ref{tab:gate-results} reports coverage beside the enforcement metrics so these conditional rates cannot be read as full-system reliability.
+In every gate-arm run with nonzero coverage, every parseable raw decision is \allow{}. The gate catches every false promotion among those decisions and does not block any covered valid promotion. Effective FPR is therefore 0 and effective VPR remains 1 on covered decisions. Table~\ref{tab:gate-results} reports coverage next to these numbers.
 
 \begin{table}[t]
 \centering
 \small
-\caption{Gate-arm raw intent versus effective post-gate behavior. Rates are conditional on parseable decisions.}
+\caption{Raw and final behavior in the gate arm. Rates are conditional on parseable decisions.}
 \label{tab:gate-results}
 \begin{tabular}{lccccc}
 \toprule
@@ -211,20 +206,20 @@ Qwen3-1.7B & .217--.483 & 1.00 & 0.00 & 1.00 & 0.00 \\
 \end{tabular}
 \end{table}
 
-Complete-pair coverage in the gate arm ranges from 7.3--35.3\% for Qwen3-0.6B and 10.0--38.0\% for Qwen3-1.7B. Moreover, the gate applies the same frozen transition policy that defines benchmark admissibility. Its zero effective FPR and unit catch rate are therefore best read as a deterministic enforcement-consistency property under that policy, not as an independently learned empirical capability. The nontrivial empirical failure lies upstream: raw model intent is nonselective and often not structurally evaluable. Reporting only effective FPR would hide both facts.
+Complete-pair coverage in the gate arm ranges from 7.3--35.3\% for Qwen3-0.6B and 10.0--38.0\% for Qwen3-1.7B. The gate also applies the same fixed policy used to define the benchmark labels. Its perfect conditional numbers mainly confirm that the gate implementation follows that policy on parseable cases. They are not evidence that the model learned the policy or became better at reasoning. The empirical failure is earlier in the pipeline: the raw model decisions are both hard to obtain reliably and nonselective when they are obtained.
 
-\subsection{Matched comparisons and infrastructure identity}
+\subsection{Matched comparisons}
 
-The preregistered comparison pipeline groups runs by exact model artifact, runtime, seed, and hardware-summary identity. Most hosted jobs recorded Python 3.11.15, while three recorded Python 3.11.16. Because the patch version is part of the frozen hardware-summary string, the aggregate contains nine identity groups rather than the intended six model--seed groups; only three contain all four arms. We retain this fail-closed grouping rather than regrouping after observing results. Exact McNemar/Holm comparisons are therefore available only where the required arms coexist within an exact identity group. The missing comparisons are an infrastructure limitation, not evidence for or against an intervention.
+The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Most hosted jobs recorded Python 3.11.15, while three recorded Python 3.11.16. Because the Python patch version is part of the recorded identity, the final aggregate has nine identity groups rather than the intended six model--seed groups, and only three groups contain all four arms. We keep the preregistered grouping instead of combining runs after seeing the results. Exact McNemar/Holm comparisons are therefore available only when the required arms occur in the same recorded group. Missing comparisons here are a limitation of the run environment, not evidence for or against an intervention.
 
-\subsection{Supplementary blinded human policy audit}
+\subsection{Supplementary human audit}
 
-Two independent reviewers completed a frozen 20-item blinded policy-application audit over the public alpha scaffold. Both immutable submissions passed the validator before unblinding. Reviewer~1 matched the frozen gold action on 18/20 items (0.90) and the exact reason set on 18/20 (0.90). Reviewer~2 matched the gold action on 15/20 (0.75) and the exact reason set on 14/20 (0.70). The reviewers agreed with each other on 17/20 actions (0.85); Cohen's $\kappa\approx0.716$ is reported only as a diagnostic because the sample is small and action frequencies are imbalanced. Under the preregistered supplementary gate, this audit is \emph{mixed}, not a pass.
+Two independent reviewers completed a fixed 20-item blinded policy-application audit using the public alpha data. Both submissions passed the validator before the answers were revealed. Reviewer~1 matched the gold action on 18/20 items (0.90) and the exact reason set on 18/20 (0.90). Reviewer~2 matched the gold action on 15/20 (0.75) and the exact reason set on 14/20 (0.70). The reviewers agreed with each other on 17/20 actions (0.85). Cohen's $\kappa\approx0.716$ is included only as a descriptive check because the sample is small and the action frequencies are imbalanced. Under the preregistered criterion, the audit is \emph{mixed}, not a pass.
 
 \begin{table}[t]
 \centering
 \small
-\caption{Supplementary blinded human policy-application audit on 20 frozen alpha items.}
+\caption{Supplementary blinded human audit on 20 public alpha items.}
 \label{tab:human-audit}
 \begin{tabular}{lccc}
 \toprule
@@ -236,53 +231,47 @@ Reviewer 2 & 0.75 & 0.70 & 4.95 \\
 \end{tabular}
 \end{table}
 
-Both reviewers missed an insufficient-repetitions \hold{} case and an invalid-current-basis \demote{} case. These disagreements are retained rather than used to revise gold labels or policy after review closure. The oracle is normative by benchmark definition---it deterministically applies the frozen public policy to registered evidence---whereas this small human audit measures how consistently independent people apply that policy. It should not be read as validation of a universal human ground truth.
+Both reviewers missed an insufficient-repetitions \hold{} case and an invalid-current-basis \demote{} case. We keep these disagreements and do not change the gold labels or policy after the audit. The fixed oracle is the benchmark rule; the human audit only measures how consistently two independent people applied that rule. It should not be treated as proof of a universal human ground truth.
 
 \section{Discussion}
 
-\subsection{What v1 establishes}
+\subsection{Main interpretation}
 
-Under the frozen small-model protocol, raw model intent is not meaningfully selective: every parseable decision requests \allow{}. The best non-gated Qwen3-0.6B arms improve the probability of producing a structured decision, but they do not discriminate licensed from unlicensed transitions. The gate, by contrast, changes system behavior after generation: on covered parseable decisions it prevents every measured false promotion without blocking a covered valid promotion.
+The central empirical result is not that the gate solved the task. The tested models often fail before the gate has a useful decision to act on. When a raw decision is parseable, it is always \allow{}, so the models do not show the policy sensitivity that the benchmark is designed to test. For Qwen3-0.6B, the ledger helps the model return structured output more often than the narrative arm, but this does not improve the selectivity of the resulting decisions.
 
-Because the gate enforces the same frozen policy used to define admissibility, this perfect covered enforcement is mechanically expected when the implementation is correct. The result validates the separation between model intent and deterministic system action; it is not evidence that the gate discovered a new decision rule. The broader systems claim is correspondingly narrow: machine-checkable policy constraints can provide an enforcement boundary \emph{once a structured intent exists}. They do not rescue failures that occur before that boundary. A policy-sensitive benchmark must therefore expose at least three layers separately---structured-output coverage, raw model intent, and effective post-gate action---rather than collapse them into a single success rate.
+The deterministic gate is still useful as an engineering safeguard. On parseable cases it changes invalid promotions to the action required by the fixed policy. But because the gate uses the same policy that defines the benchmark labels, its perfect conditional scores should be interpreted as correct rule enforcement, not as a learned capability. The practical lesson is that model quality and rule enforcement need to be measured separately.
 
-\subsection{What v1 does not establish}
+\subsection{Implications for system design}
 
-The gate result does not show that either model learned the transition policy, became calibrated, or reasoned better. It does not establish full-system reliability because the gate metrics are conditioned on low decision coverage. It does not establish that larger or API-hosted models will show the same structured-output failure. The high format-error rate may also reflect compatibility between these small models and the frozen structured-output interface, not only difficulty of the underlying policy task. The mixed 20-item human audit is too small to treat the deterministic oracle as a human ceiling.
-
-The benchmark itself evaluates registered transition prerequisites, not theorem truth, scientific novelty, or the semantic correctness of arbitrary natural-language claims. Formal certification and computation remain scoped evidence types rather than universal proof labels.
-
-\subsection{Design implication}
-
-The v1 result points to a layered design requirement for research agents. Generation must first produce a structured, inspectable decision; policy-sensitive reasoning must then distinguish licensed from unlicensed transitions; finally, deterministic enforcement can constrain the effective action. The present models fail at the first two layers, while the gate succeeds conditionally at the third. This decomposition is operationally important: deterministic enforcement cannot recover an intent that never arrives in the required schema, and structured output alone does not imply a licensed decision. Evaluation should therefore report coverage, raw intent quality, and enforcement behavior as separate quantities.
+A research agent needs at least two things to make this kind of decision reliably. First, it must return a structured decision often enough for the surrounding system to inspect and act on it. Second, a system that cannot tolerate an invalid promotion needs an explicit rule-enforcement layer rather than relying only on the model's judgment. The present experiments show a failure of the first requirement and, among parseable outputs, a failure of model selectivity. They also show that a deterministic gate can enforce a fixed rule on the cases that reach it. Reporting coverage alongside gate performance is therefore necessary for judging the whole system.
 
 \section{Limitations and Threats to Validity}
 
-\paragraph{External validity.}
-Version~1 focuses on mathematical-research evidence states, uses synthetic controlled pairs, and evaluates only Qwen3-0.6B and Qwen3-1.7B Q8\_0. Controlled pairs improve causal interpretability but are less natural than unconstrained research records, and the severe structured-output failures may not extrapolate to larger or API-hosted models.
+\paragraph{Model and dataset scope.}
+Version~1 focuses on mathematical-research evidence states, uses synthetic controlled pairs, and evaluates only Qwen3-0.6B and Qwen3-1.7B Q8\_0. The controlled pairs make the policy difference easy to isolate, but they are less natural than unconstrained research records. The high format-error rates may not carry over to larger or API-hosted models.
 
-\paragraph{Measurement.}
-Source records retain parse status and structured decisions but not the original free-form text for pre-existing parse failures. Their frequency is exactly measurable, but their linguistic causes are not recoverable without new inference. Accordingly, \texttt{FORMAT\_ERROR} conflates failures that v1 cannot retrospectively separate, including possible syntax/schema/interface incompatibilities and cross-field semantic invalidity. Gate FPR, VPR, PTA, catch rate, and false-block rate are also conditional on covered decisions or complete covered pairs; low coverage prevents interpreting effective FPR=0 as end-to-end reliability.
+\paragraph{Output-format failures.}
+The source records keep parse status and structured decisions but not the original free-form text for earlier parse failures. We therefore cannot separate syntax errors, schema failures, interface incompatibilities, and failures of the underlying reasoning task after the fact. The reported \texttt{FORMAT\_ERROR} rate covers all of these possibilities. Gate FPR, VPR, PTA, catch rate, and false-block rate are also conditional on covered decisions or complete covered pairs, so effective FPR=0 is not a measure of end-to-end reliability.
 
-\paragraph{Causal interpretation and infrastructure.}
-The gate arm discloses that an invalid \allow{} may be vetoed, so raw differences from the passive-verifier arm are not a pure post-processing contrast. The within-gate raw-versus-effective comparison isolates enforcement itself, but that enforcement applies the same frozen policy as the oracle and should be interpreted as deterministic consistency rather than independent prediction. Separately, three runs recorded Python 3.11.16 rather than 3.11.15, splitting three intended matched identity groups. We preserve the preregistered exact-identity grouping rather than regrouping after seeing the data.
+\paragraph{Gate interpretation and runtime variation.}
+The gate arm tells the model that an invalid \allow{} may be replaced, so raw differences from the passive-verifier arm are not a pure post-processing comparison. The raw-to-final comparison within the gate arm measures the gate itself, but the gate applies the same fixed policy as the oracle. Separately, three runs recorded Python 3.11.16 rather than 3.11.15, which split three intended matched groups. We keep the original grouping rather than combining runs after seeing the results.
 
-\paragraph{Benchmark construction and external audit.}
-The policy, controlled-pair design, and item generation originate with the author. Deterministic regeneration, executable replay, hidden commitment, shortcut diagnostics, and metamorphic audits reduce post-hoc flexibility but do not create independent authorship. A passing Lean artifact proves only its exact encoded statement in the pinned trust base. Finally, two independent reviewers completed only a 20-item procedural-blind audit; their 0.90 and 0.75 action agreements provide useful but limited evidence about human policy application, not proof that the frozen policy is a universal human ground truth.
+\paragraph{Benchmark construction and human audit.}
+The author designed the policy, the controlled pairs, and the item-generation procedure. Deterministic rebuilding, executable checks, the hidden commitment, shortcut checks, and meaning-preserving transformations reduce opportunities for changing the benchmark after results are known, but they are not substitutes for independent benchmark construction. A passing Lean artifact proves only the exact encoded statement in the pinned environment. The two-reviewer, 20-item audit is also small; its 0.90 and 0.75 action agreements provide limited evidence about human use of the policy rather than validating a universal ground truth.
 
 \section{Reproducibility and Artifact Policy}
 
-The frozen inference source is workflow run \texttt{32255636879}; the hidden commitment precedes that run in Git history. Artifact-only recovery run \texttt{32274814703} reconstructed the frozen dataset/prompt identity, validated 24 source and 24 normalized runs, and produced the 7,200-record aggregate without querying the models again. The recovered study file has SHA-256 \texttt{3eb5b534...e8bfe664}. Full commit and manifest hashes are retained in the repository and recovery provenance artifact.
+The primary hidden inference comes from workflow run \texttt{32255636879}; the hidden set was committed before that run. Recovery run \texttt{32274814703} reconstructed the fixed dataset and prompt identity, validated 24 original and 24 normalized runs, and produced the 7,200-record aggregate without querying the models again. The recovered study file has SHA-256 \texttt{3eb5b534...e8bfe664}. Full commit and manifest hashes are kept in the repository and recovery record.
 
-The raw hidden seed remains a GitHub Actions secret and is never printed or committed. The one-shot recovery trigger was removed after successful recovery. Any future change to labels, policy rules, prompts, controlled factors, or hidden-test bytes requires a new benchmark revision rather than silently mutating v1.
+The raw hidden seed remains a GitHub Actions secret and is not printed or committed. The one-time recovery trigger was removed after recovery succeeded. Any future change to labels, policy rules, prompts, controlled factors, or hidden-test bytes is treated as a new benchmark version rather than a change to v1.
 
 \section{AI Assistance Disclosure}
 
-AI tools assisted with literature triage, research-gap exploration, adversarial review, code and documentation drafting, CI debugging, artifact analysis, interpretation of quantitative outputs, and manuscript editing. Quantitative claims in this version were derived from the validated recovered study artifact rather than invented or inferred from partial logs. The human author is responsible for the research question, benchmark and policy semantics, experimental decisions, released artifacts, quantitative claims, citation accuracy, and final manuscript. AI systems are not treated as authors, independent human reviewers, or external reproductions.
+Generative AI tools were used as research and writing assistants during literature search, code drafting and debugging, checks on the analysis, and language editing. The author set the research question and benchmark policy, designed the experimental protocol, made the study decisions, checked the reported results against the released artifacts, checked the references, and made the final decisions about the manuscript. All quantitative results reported here come from the validated study artifacts. AI systems are not listed as authors and were not used as independent human reviewers.
 
 \section{Conclusion}
 
-\cpb isolates a failure that conventional answer accuracy can miss: evidence may be genuine while a requested claim-state transition is not licensed. In the frozen hidden v1 study, the tested small Qwen3 models fail both to produce structured decisions reliably and, when parseable, to distinguish licensed from unlicensed transitions. Deterministic enforcement removes measured false promotion on covered decisions by applying the frozen policy, but it neither repairs low coverage nor improves raw model reasoning. The resulting design lesson is deliberately narrow: research-agent evaluation should separate structured-output reliability, policy-sensitive model intent, and deterministic enforcement, and system-level safety claims should be conditioned on the coverage at which enforcement can actually operate.
+\cpb studies a simple failure that answer accuracy alone does not capture: valid evidence can still be used to justify a claim-state change that is too strong. In the hidden v1 study, the tested Qwen3 models often fail to return a valid structured decision, and every parseable raw decision is \allow{}. A deterministic gate prevents invalid promotion on the parseable cases by applying the fixed policy, but it does not improve the model's own decisions and it cannot act when the output is unusable. For research-agent evaluation, model behavior and deterministic safeguards should therefore be reported separately, with coverage shown alongside any conditional gate result.
 
 \bibliographystyle{plain}
 \bibliography{references}
