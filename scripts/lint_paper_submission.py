@@ -6,11 +6,14 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "technical-report" / "main.tex"
 BIB = ROOT / "technical-report" / "references.bib"
 RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
+V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
+V2_PILOT_SHA = "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
 
 
 def fail(message: str) -> None:
@@ -26,10 +29,72 @@ def require_regex(tex: str, pattern: str, description: str) -> None:
         fail(f"required frozen result/boundary missing: {description}")
 
 
+def load_object(path: Path, label: str) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        fail(f"{label} must contain a JSON object")
+    return value
+
+
+def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
+    if pilot.get("study_sha256") != V2_PILOT_SHA:
+        fail("post-v1 public pilot is not bound to the validated aggregate SHA")
+    if pilot.get("source_workflow_run_id") != 32291482079:
+        fail("post-v1 public pilot source workflow changed")
+    if pilot.get("aggregate_status_counts") != {"OK": 108, "SCHEMA_ERROR": 52}:
+        fail("post-v1 public pilot status counts changed")
+
+    protocol = pilot.get("protocol")
+    if not isinstance(protocol, dict):
+        fail("post-v1 public pilot protocol is missing")
+    expected_protocol = {
+        "instances": 40,
+        "pairs": 20,
+        "seed": 104729,
+        "total_decisions": 160,
+        "paid_api_calls": 0,
+    }
+    for key, expected in expected_protocol.items():
+        if protocol.get(key) != expected:
+            fail(f"post-v1 public pilot protocol.{key} changed")
+
+    required_patterns = [
+        (r"post-v1 public", "post-v1 public scope label"),
+        (r"all\s+78\s+constrained parseable decisions remain", "78 constrained decisions"),
+        (r"38\s+complete pairs", "38 constrained complete pairs"),
+        (r"coverage from 75\\% to 100\\%", "Qwen3-0.6B constrained coverage change"),
+        (r"from 0\\% to 95\\%", "Qwen3-1.7B constrained coverage change"),
+        (r"raw pair accuracy and flip rate remain zero", "zero pair accuracy and flip rate"),
+        (r"workflow run \\texttt\{32291482079\}", "public pilot source workflow"),
+        (r"\\texttt\{83dbee49\.\.\.25c0b264e\}", "public pilot aggregate SHA"),
+    ]
+    for pattern, description in required_patterns:
+        require_regex(tex, pattern, description)
+
+    pilot_table = re.search(
+        r"\\label\{tab:v2-pilot\}(.*?)\\end\{table\}",
+        tex,
+        flags=re.DOTALL,
+    )
+    if not pilot_table:
+        fail("post-v1 public pilot table not found")
+    table = pilot_table.group(1)
+    expected_rows = [
+        r"Qwen3-0\.6B\s*&\s*Free\s*&\s*\.75\s*&\s*\.70\s*&\s*\.50\s*&\s*\.00",
+        r"Qwen3-0\.6B\s*&\s*Schema\s*&\s*1\.00\s*&\s*1\.00\s*&\s*\.50\s*&\s*\.00",
+        r"Qwen3-1\.7B\s*&\s*Free\s*&\s*\.00\s*&\s*\.00\s*&\s*undef\.\s*&\s*undef\.",
+        r"Qwen3-1\.7B\s*&\s*Schema\s*&\s*\.95\s*&\s*\.90\s*&\s*\.50\s*&\s*\.00",
+    ]
+    for pattern in expected_rows:
+        if not re.search(pattern, table):
+            fail(f"post-v1 public pilot table row changed: {pattern}")
+
+
 def main() -> int:
     tex = TEX.read_text(encoding="utf-8")
     bib = BIB.read_text(encoding="utf-8")
-    frozen = json.loads(RESULTS_FREEZE.read_text(encoding="utf-8"))
+    frozen = load_object(RESULTS_FREEZE, "results-freeze.json")
+    pilot = load_object(V2_PILOT, "v2 public pilot study")
     lower = tex.lower()
 
     stale = [
@@ -117,8 +182,14 @@ def main() -> int:
         "decision coverage",
         "same fixed policy used to define the benchmark labels",
         "not evidence that the model learned the policy",
-        f"{pct(m06['gate_complete_pair_coverage_range'][0])}--{pct(m06['gate_complete_pair_coverage_range'][1])}\\%",
-        f"{pct(m17['gate_complete_pair_coverage_range'][0])}--{pct(m17['gate_complete_pair_coverage_range'][1])}\\%",
+        (
+            f"{pct(m06['gate_complete_pair_coverage_range'][0])}--"
+            f"{pct(m06['gate_complete_pair_coverage_range'][1])}\\%"
+        ),
+        (
+            f"{pct(m17['gate_complete_pair_coverage_range'][0])}--"
+            f"{pct(m17['gate_complete_pair_coverage_range'][1])}\\%"
+        ),
     ]
     for phrase in required_plain:
         if phrase.lower() not in lower:
@@ -133,6 +204,8 @@ def main() -> int:
             fail("frozen gate catch values changed")
         if model["false_block_values"] != [0.0]:
             fail("frozen false-block values changed")
+
+    validate_v2_pilot_binding(tex, pilot)
 
     if r"\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}" not in tex:
         fail("ClaimPromoteBench macro must use xspace to prevent concatenated prose")
@@ -198,7 +271,8 @@ def main() -> int:
     print(
         "paper-lint: PASS "
         f"({len(cite_keys)} citation keys, {len(label_set)} labels, "
-        f"{len(abstract_words)} abstract words; frozen study {frozen['source_study_sha256']})"
+        f"{len(abstract_words)} abstract words; frozen study {frozen['source_study_sha256']}; "
+        f"public pilot {pilot['study_sha256']})"
     )
     return 0
 
