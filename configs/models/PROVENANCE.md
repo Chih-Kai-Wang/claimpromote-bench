@@ -2,7 +2,7 @@
 
 **Freeze date:** 2026-08-19
 
-This document records the external identities selected for the preregistered v1 study. It does not claim that the model files have been downloaded or that any experiment has been executed.
+This document records the external identities selected for the preregistered v1 study. It does not claim that the model files have been downloaded or that any scored experiment has been executed.
 
 ## Runtime
 
@@ -20,7 +20,13 @@ The full commit is recorded rather than relying on the moving release label.
 - repository revision: `ef4088322893040952513f532f736ddeab518403`
 - file: `Qwen3-0.6B-Q8_0.gguf`
 - quantization: `Q8_0`
-- file SHA-256: `9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031`
+- file SHA-256: `12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735`
+
+### 2026-08-19 provenance correction
+
+An earlier submission-prep draft incorrectly paired the moving `main` file SHA-256 `9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031` with the pinned repository revision above. The fail-closed alpha preflight rejected that mismatch. Rechecking the official Qwen file page at revision `ef4088322893040952513f532f736ddeab518403` and rehashing the downloaded bytes both identify `12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735` as the Q8_0 artifact for that pinned revision.
+
+This correction predates the frozen hidden-test commitment and the preregistered 9,600-decision scored study. No scored v1 result was produced under the incorrect hash. The rejected preflight remains evidence that the identity check failed closed rather than silently accepting moving upstream bytes.
 
 ## Qwen3-1.7B
 
