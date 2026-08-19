@@ -135,6 +135,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import json
+          import re
           from pathlib import Path
 
           p = Path('work/v1-hidden-commitment.json')
@@ -144,7 +145,14 @@ jobs:
           assert r['contains_hidden_rows'] is False
           assert r['contains_gold_labels'] is False
           assert r['contains_seed_bytes'] is False
-          assert len(r['commitment_sha256']) == 64
+          digest = re.compile(r'^sha256:[0-9a-f]{64}$')
+          for key in (
+              'commitment_sha256',
+              'dataset_manifest_sha256',
+              'prompt_manifest_sha256',
+              'hidden_seed_sha256',
+          ):
+              assert digest.fullmatch(r[key]), key
           print(json.dumps({
               'status': 'COMMITMENT_READY',
               'pairs': r['pairs'],
