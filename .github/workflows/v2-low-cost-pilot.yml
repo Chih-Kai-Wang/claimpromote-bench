@@ -154,3 +154,78 @@ jobs:
             work/server-${{ matrix.short }}.log
           if-no-files-found: warn
           retention-days: 30
+
+  publish-summary:
+    name: publish public-safe aggregate summary
+    needs: pilot
+    if: ${{ always() && needs.pilot.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out v2 branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: agent/iclr2027-v2-low-cost-study
+
+      - name: Download this run's pilot artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: claimpromotebench-v2-pilot-*
+          path: work/v2-collected
+          merge-multiple: true
+
+      - name: Build public-safe summary
+        env:
+          RUN_ID: ${{ github.run_id }}
+          SOURCE_HEAD_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          studies = []
+          for path in sorted(Path("work/v2-collected").glob("v2-study-*.json")):
+              value = json.loads(path.read_text(encoding="utf-8"))
+              studies.append({"source_file": path.name, "study": value})
+          if len(studies) != 2:
+              raise SystemExit(f"expected two model study summaries, found {len(studies)}")
+          payload = {
+              "schema_version": "1.0.0",
+              "status": "COMPLETE_PUBLIC_SAFE_SUMMARY",
+              "workflow_run_id": int(os.environ["RUN_ID"]),
+              "source_head_sha": os.environ["SOURCE_HEAD_SHA"],
+              "protocol": {
+                  "pairs": 20,
+                  "instances": 40,
+                  "seed": 104729,
+                  "models": ["Qwen/Qwen3-0.6B", "Qwen/Qwen3-1.7B"],
+                  "decoding_modes": ["free", "json_schema"],
+                  "paid_api_calls": 0,
+                  "raw_responses_published": False,
+              },
+              "studies": studies,
+              "interpretation_boundary": (
+                  "This is a post-v1 public alpha pilot. It diagnoses output-interface and "
+                  "controlled-pair behavior and is not preregistered v1 hidden evidence."
+              ),
+          }
+          out_dir = Path("v2/pilot-results")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          run_path = out_dir / f"run-{os.environ['RUN_ID']}.json"
+          text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+          run_path.write_text(text, encoding="utf-8")
+          (out_dir / "latest.json").write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit public-safe summary
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v2/pilot-results
+          git commit -m "v2: publish pilot summary run ${RUN_ID}"
+          git push origin HEAD:agent/iclr2027-v2-low-cost-study
