@@ -221,12 +221,13 @@ def main() -> int:
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     write_jsonl(args.out, records)
+    format_errors = sum(record["parse_status"] == "FORMAT_ERROR" for record in records)
     print(
         json.dumps(
             {
                 "status": "COMPLETE",
                 "records": len(records),
-                "format_errors": sum(record["parse_status"] == "FORMAT_ERROR" for record in records),
+                "format_errors": format_errors,
                 "output": str(args.out),
             },
             sort_keys=True,
