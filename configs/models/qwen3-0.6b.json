@@ -1,11 +1,10 @@
 {
-  "artifact_sha256": "PENDING_ARTIFACT_FREEZE",
+  "artifact_sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
   "backend": "llama.cpp",
-  "backend_commit": "PENDING_RUNTIME_FREEZE",
+  "backend_commit": "de699957b92f490efebad149665b0dccf127eaff",
   "model_id": "Qwen/Qwen3-0.6B",
-  "quantization": "Q4_K_M_TARGET_PENDING_VALIDATION",
-  "revision": "PENDING_REVISION_FREEZE",
-  "status": "PENDING",
-  "weights_file": "PENDING"
+  "quantization": "Q8_0",
+  "revision": "ef4088322893040952513f532f736ddeab518403",
+  "status": "FROZEN_UNEXECUTED",
+  "weights_file": "Qwen/Qwen3-0.6B-GGUF/Qwen3-0.6B-Q8_0.gguf"
 }
-
