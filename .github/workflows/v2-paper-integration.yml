@@ -1,0 +1,60 @@
+name: v2 paper integration
+
+on:
+  push:
+    branches:
+      - agent/iclr2027-v2-low-cost-study
+    paths:
+      - "v2/pilot-results/v2-public-pilot-study.json"
+      - "scripts/validate_v2_public_pilot_study.py"
+      - "scripts/integrate_v2_public_pilot_into_paper.py"
+      - ".github/workflows/v2-paper-integration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v2-paper-integration-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    name: add validated post-v1 pilot to manuscript
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+
+      - name: Validate frozen public pilot
+        run: python scripts/validate_v2_public_pilot_study.py
+
+      - name: Integrate pilot into canonical manuscript
+        run: python scripts/integrate_v2_public_pilot_into_paper.py
+
+      - name: Run manuscript truth and style checks
+        run: python scripts/lint_paper_submission.py
+
+      - name: Commit manuscript update when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- technical-report/main.tex)" ]; then
+            echo "Manuscript already contains the validated public pilot."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add technical-report/main.tex
+          git commit -m "paper: report post-v1 public formatting-control pilot"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
