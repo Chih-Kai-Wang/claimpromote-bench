@@ -74,7 +74,7 @@ _V1_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
     ),
     (
         "For all propositions p and q, p or q holds exactly when q or p holds.",
-        """theorem {name} (p q : Prop) : p ∨ q ↔ q ∨ p :=
+        """theorem {name} (p q : Prop) : Or p q ↔ Or q p :=
   ⟨fun h => h.elim Or.inr Or.inl, fun h => h.elim Or.inr Or.inl⟩""",
     ),
     (
@@ -84,7 +84,7 @@ _V1_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
     ),
     (
         "For every proposition p, p or False holds exactly when p holds.",
-        """theorem {name} (p : Prop) : p ∨ False ↔ p :=
+        """theorem {name} (p : Prop) : Or p False ↔ p :=
   ⟨fun h => h.elim (fun hp => hp) False.elim, fun h => Or.inl h⟩""",
     ),
     (
@@ -297,7 +297,9 @@ def _run_lean(package_dir: Path, source: Path) -> dict[str, Any]:
             check=False,
         )
     except FileNotFoundError as exc:
-        raise DatasetIntegrityError("lake is unavailable; install the pinned Lean toolchain") from exc
+        raise DatasetIntegrityError(
+            "lake is unavailable; install the pinned Lean toolchain"
+        ) from exc
     except subprocess.TimeoutExpired as exc:
         raise DatasetIntegrityError(f"Lean verification timed out: {source}") from exc
     output = f"{completed.stdout}\0{completed.stderr}".encode("utf-8", errors="replace")
