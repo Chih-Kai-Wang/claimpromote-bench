@@ -81,18 +81,13 @@ def main() -> int:
     if missing_labels:
         fail(f"references without labels: {missing_labels}")
 
-    abstract_match = re.search(
-        r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL
-    )
+    abstract_match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL)
     if not abstract_match:
         fail("abstract not found")
     abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract_match.group(1))
     abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
     if len(abstract_words) > 250:
-        fail(
-            "abstract is too long for a concise conference submission: "
-            f"{len(abstract_words)} words"
-        )
+        fail(f"abstract is too long for a concise conference submission: {len(abstract_words)} words")
 
     contrib_match = re.search(
         r"Our contributions are fourfold:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
@@ -104,9 +99,7 @@ def main() -> int:
     if len(re.findall(r"\\item\b", contrib_match.group(1))) != 4:
         fail("contributions block must contain exactly four non-overlapping items")
 
-    raw_table = re.search(
-        r"\\label\{tab:main-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL
-    )
+    raw_table = re.search(r"\\label\{tab:main-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
     if not raw_table:
         fail("raw main-results table not found")
     raw_text = raw_table.group(1)
@@ -118,9 +111,7 @@ def main() -> int:
         if not re.search(pattern, raw_text):
             fail(f"gate row for {model} must report raw pre-enforcement FPR/VPR/PTA = 1/1/0")
 
-    gate_table = re.search(
-        r"\\label\{tab:gate-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL
-    )
+    gate_table = re.search(r"\\label\{tab:gate-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
     if not gate_table or "Effective FPR" not in gate_table.group(1):
         fail("separate gate-enforcement table with Effective FPR is required")
 
