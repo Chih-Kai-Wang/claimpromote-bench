@@ -35,6 +35,7 @@ from claimpromotebench.formal import (  # noqa: E402
 from claimpromotebench.oracle import evaluate  # noqa: E402
 
 Json = dict[str, Any]
+POST_ALPHA_SCHEMA_NAMES = {"benchmark-input-v1.schema.json"}
 
 
 def canonical(value: Any) -> str:
@@ -718,6 +719,7 @@ def build() -> None:
         "schema_sha256": {
             path.name: file_digest(path)
             for path in sorted((ROOT / "schemas").glob("*.schema.json"))
+            if path.name not in POST_ALPHA_SCHEMA_NAMES
         },
         "instances": 40,
         "pairs": 20,
