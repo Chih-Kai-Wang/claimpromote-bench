@@ -164,7 +164,10 @@ def build(artifact_root: Path, dataset_dir: Path, workflow_run_id: int) -> Json:
         records_by_identity[identity] = records
         run_path_by_identity[identity] = run_path
 
-    expected = {(model, mode, EXPECTED_SEED) for model in EXPECTED_MODELS for mode in EXPECTED_MODES}
+    expected: set[Identity] = set()
+    for model in EXPECTED_MODELS:
+        for mode in EXPECTED_MODES:
+            expected.add((model, mode, EXPECTED_SEED))
     if set(records_by_identity) != expected:
         missing = sorted(expected - set(records_by_identity))
         extra = sorted(set(records_by_identity) - expected)
