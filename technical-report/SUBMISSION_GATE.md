@@ -4,9 +4,11 @@ This file is deliberately fail-closed. A polished manuscript is not evidence tha
 
 ## Current verdict
 
-**NOT SUBMISSION READY — DATASET, EXECUTION, AND REVIEW GATES OPEN**
+**NOT SUBMISSION READY — DATASET AND EXECUTION GATES OPEN**
 
 The manuscript may be edited, compiled, and circulated as a work in progress. It must not be described as a completed benchmark study, and its blank result tables must not be filled from hand-copied aggregate scores.
+
+This project supports a solo-author publication path. Independent external benchmark review is welcome but is not a prerequisite for preprint or archival submission. If no external audit is obtained, that absence must be disclosed explicitly as a limitation; it must never be represented as completed review.
 
 ## Gate A — research boundary and novelty
 
@@ -53,21 +55,27 @@ The frozen identities are recorded in `configs/models/*.json`, `configs/models/P
 - [ ] Negative and null results are retained; no post-hoc metric substitution.
 - [ ] Report runtime/cost fields without interpreting a successful deterministic veto as improved model calibration.
 
-## Gate E — independent benchmark review
+## Gate E — solo-author benchmark integrity
 
-- [ ] At least two independent reviewers complete the blinded review package.
-- [ ] Every reviewer reaches the preregistered minimum action agreement with frozen gold.
-- [ ] Minimum reviewer-pair raw action agreement reaches the preregistered threshold.
-- [ ] Every disagreement is adjudicated.
-- [ ] Review artifacts and deterministic agreement report are released without leaking private material.
+These checks replace mandatory independent benchmark review. They reduce author-induced errors and post-hoc flexibility, but they do not create independence and must not be described as external review.
 
-Infrastructure for review is not review evidence.
+- [ ] Gold labels for the frozen study are regenerated from the versioned deterministic policy oracle, not manually edited after model results are observed.
+- [ ] Every controlled pair passes schema, one-factor-difference, artifact-integrity, and oracle/gold consistency checks.
+- [ ] Every applicable numerical artifact is independently recomputed by the deterministic executable verifier, and every applicable formal artifact is replayed under the pinned Lean trust base.
+- [ ] Shortcut diagnostics and registered semantics-preserving metamorphic audits pass on the frozen benchmark before scored test results are inspected.
+- [ ] The hidden-test commitment predates test-label opening and scored test execution, with the commitment and relevant hashes retained in repository history.
+- [ ] Any post-freeze defect that changes a label, policy rule, prompt, or controlled factor creates a new benchmark version and invalidates affected scored runs rather than being patched in place.
+- [ ] The manuscript states that benchmark construction and policy selection were performed by the author and that no independent external benchmark audit was obtained if that remains true at submission.
+
+### Optional external validation
+
+The existing blinded-review and contribution infrastructure is retained as an optional strengthening path. If qualified volunteers later become available, their completed review packages may be reported as supplementary external validation. No reviewer count or agreement statistic is required for the core solo-author study, and empty review infrastructure is never presented as evidence.
 
 ## Gate F — manuscript integrity
 
 - [x] Anonymous manuscript scaffold exists.
 - [x] Claims explicitly separate transition admissibility from theorem/scientific truth.
-- [x] Limitations include narrow domain, synthetic control, small-model coverage, formal-scope limits, and human-gold validation.
+- [x] Limitations include narrow domain, synthetic control, small-model coverage, formal-scope limits, and author-constructed benchmark risk.
 - [ ] Replace every `--` result cell from validated study artifacts only.
 - [ ] Remove the red `SUBMISSION BLOCKER` boxes only after Gates A–E pass.
 - [ ] Add exact dataset/model/runtime/study identifiers to the final paper and appendix.
@@ -87,4 +95,4 @@ Infrastructure for review is not review evidence.
 
 The study becomes **PREPRINT READY** only when Gates A–F pass and the manuscript contains no unbound empirical claim.
 
-The repository's stricter **ARCHIVAL SUBMISSION READY** label additionally requires Gate G and the independent-review requirement already declared by the project. Do not weaken an existing gate merely to meet a conference deadline.
+The repository's **ARCHIVAL SUBMISSION READY** label additionally requires Gate G and compliance with the chosen venue's submission, disclosure, and artifact rules. Independent external benchmark review is optional rather than a repository-defined blocker. Do not weaken the empirical, freeze, or reproducibility gates merely to meet a conference deadline.
