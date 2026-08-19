@@ -58,7 +58,8 @@ def main() -> int:
     expected_rate = frozen["format_error_count"] / frozen["total_decisions"]
     if abs(expected_rate - frozen["format_error_rate"]) > 1e-15:
         fail("frozen format-error rate is inconsistent with count/denominator")
-    if frozen["total_decisions"] - frozen["format_error_count"] != frozen["parseable_raw_decisions"]:
+    parseable_expected = frozen["total_decisions"] - frozen["format_error_count"]
+    if parseable_expected != frozen["parseable_raw_decisions"]:
         fail("frozen parseable count is inconsistent")
 
     m06 = frozen["models"]["Qwen/Qwen3-0.6B"]
