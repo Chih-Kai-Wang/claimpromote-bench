@@ -148,6 +148,15 @@ jobs:
           --dataset work/v1-dev
           --fixtures fixtures/formal/cases.json
           --out work/v1-dev-formal.json
+      - name: Remove Lean build cache before artifact export
+        run: rm -rf work/v1-dev/.lake
+      - name: Upload validated v1 public dev
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v1-public-dev
+          path: work/v1-dev
+          if-no-files-found: error
+          retention-days: 7
 
   compatibility:
     name: compatibility (${{ matrix.os }}, Python ${{ matrix.python-version }})
