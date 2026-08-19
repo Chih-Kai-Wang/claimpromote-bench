@@ -89,7 +89,10 @@ def main() -> int:
     abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract_match.group(1))
     abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
     if len(abstract_words) > 250:
-        fail(f"abstract is too long for a concise conference submission: {len(abstract_words)} words")
+        fail(
+            "abstract is too long for a concise conference submission: "
+            f"{len(abstract_words)} words"
+        )
 
     contrib_match = re.search(
         r"Our contributions are fourfold:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
@@ -108,7 +111,10 @@ def main() -> int:
         fail("raw main-results table not found")
     raw_text = raw_table.group(1)
     for model in ("Qwen3-0.6B", "Qwen3-1.7B"):
-        pattern = rf"{re.escape(model)}\s*&\s*Ledger \+ verifier \+ gate\s*&.*?&\s*1\.00\s*&\s*1\.00\s*&\s*0\.00"
+        pattern = (
+            rf"{re.escape(model)}\s*&\s*Ledger \+ verifier \+ gate\s*&.*?"
+            rf"&\s*1\.00\s*&\s*1\.00\s*&\s*0\.00"
+        )
         if not re.search(pattern, raw_text):
             fail(f"gate row for {model} must report raw pre-enforcement FPR/VPR/PTA = 1/1/0")
 
@@ -120,7 +126,8 @@ def main() -> int:
 
     print(
         "paper-lint: PASS "
-        f"({len(cite_keys)} citation keys, {len(label_set)} labels, {len(abstract_words)} abstract words)"
+        f"({len(cite_keys)} citation keys, {len(label_set)} labels, "
+        f"{len(abstract_words)} abstract words)"
     )
     return 0
 
