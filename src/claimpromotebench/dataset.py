@@ -112,13 +112,9 @@ def _manifest_counter(manifest: dict[str, Any], key: str) -> Counter[str]:
 
 def _schema_name(manifest: dict[str, Any], key: str, default: str) -> str:
     value = manifest.get(key, default)
-    unsafe = (
-        not isinstance(value, str)
-        or not value
-        or value.startswith("/")
-        or ".." in Path(value).parts
-    )
-    if unsafe:
+    if not isinstance(value, str):
+        raise DatasetIntegrityError(f"manifest.{key} must be a safe relative schema path")
+    if not value or value.startswith("/") or ".." in Path(value).parts:
         raise DatasetIntegrityError(f"manifest.{key} must be a safe relative schema path")
     return value
 
