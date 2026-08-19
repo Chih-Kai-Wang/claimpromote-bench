@@ -268,9 +268,9 @@ def artifact_for(
             threshold="0",
             repetitions=3,
         )
-        content = (json.dumps(artifact, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode(
-            "utf-8"
-        )
+        content = (
+            json.dumps(artifact, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+        ).encode()
     elif family == "FORMAL":
         relative = formal_artifact_path(pair_id)
         content = build_formal_artifact(
@@ -284,7 +284,7 @@ def artifact_for(
             "ClaimPromoteBench v1 synthetic evidence fixture.\n"
             f"object={opaque(f'object:{pair_id}', 20)}\n"
             "This artifact is benchmark evidence, not an asserted research result.\n"
-        ).encode("utf-8")
+        ).encode()
     path = dataset_dir / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
@@ -694,11 +694,11 @@ def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
         "policy_version": policy["policy_version"],
         "policy_file": POLICY_PATH.name,
         "policy_sha256": sha256_file(POLICY_PATH),
-        "input_schema": "schemas/benchmark-input-v1.schema.json",
-        "gold_schema": "schemas/gold-label.schema.json",
+        "input_schema": "benchmark-input-v1.schema.json",
+        "gold_schema": "gold-label.schema.json",
         "schema_sha256": {
-            "schemas/benchmark-input-v1.schema.json": sha256_file(INPUT_SCHEMA),
-            "schemas/gold-label.schema.json": sha256_file(GOLD_SCHEMA),
+            "benchmark-input-v1.schema.json": sha256_file(INPUT_SCHEMA),
+            "gold-label.schema.json": sha256_file(GOLD_SCHEMA),
         },
         "instances": len(inputs),
         "pairs": len(pairs),
@@ -709,9 +709,7 @@ def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
         "construction_seed_sha256": sha256_bytes(seed),
         "test_manifest_commitment": "NOT_APPLICABLE" if split == "dev" else "PENDING",
         "model_experiments": "PENDING",
-        "files": {
-            relative: sha256_file(out_dir / relative) for relative in generated
-        },
+        "files": {relative: sha256_file(out_dir / relative) for relative in generated},
     }
     write_json(out_dir / "manifest.json", manifest)
     summary = validate_dataset(out_dir, ROOT)
