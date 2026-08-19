@@ -1,21 +1,19 @@
 name: model alpha pilot
 
+# Manual-only by design. Pull-request synchronize events repeatedly restarted the CPU pilot
+# whenever unrelated paper/benchmark files changed because PR path filters are evaluated over
+# the whole PR diff. Keeping this workflow manual preserves zero-cost runs while the paper
+# branch continues to evolve. Re-enable automatic triggering only with an explicit protocol
+# change and do not treat workflow scheduling as part of the scored-study identity.
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/model-alpha-pilot.yml"
-      - "scripts/run_llama_study.py"
-      - "scripts/preflight_v1_models.py"
-      - "configs/models/**"
-      - "configs/decoding-v1.json"
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   qwen-alpha:
