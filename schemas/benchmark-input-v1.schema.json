@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/benchmark-input-v1.schema.json",
+  "title": "BenchmarkInputV1",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["research_status", "computation_status", "formal_status", "review_status"],
+      "properties": {
+        "research_status": {"const": "OPEN"},
+        "computation_status": {"enum": ["NONE", "COMPUTATIONAL"]},
+        "formal_status": {"enum": ["NONE", "FORMALLY_CERTIFIED"]},
+        "review_status": {"enum": ["UNREVIEWED", "INDEPENDENTLY_VERIFIED"]}
+      }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["variables"],
+      "properties": {
+        "variables": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "lower", "upper", "lower_inclusive", "upper_inclusive"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "lower": {"type": "string", "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"},
+              "upper": {"type": "string", "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"},
+              "lower_inclusive": {"type": "boolean"},
+              "upper_inclusive": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ids", "bound_artifact_sha256"],
+      "properties": {
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "bound_artifact_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "provenance",
+        "artifact_path",
+        "artifact_hash",
+        "scope",
+        "dependencies",
+        "tool_exit",
+        "verifier_result",
+        "timestamp"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "type": {
+          "enum": [
+            "DEPENDENCY",
+            "COMPUTATION",
+            "FORMAL_CERTIFICATE",
+            "REVIEW",
+            "CONTRADICTION",
+            "ARTIFACT"
+          ]
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["actor_id", "actor_role", "run_id", "environment_sha256", "cold_start"],
+          "properties": {
+            "actor_id": {"type": "string", "minLength": 1},
+            "actor_role": {"enum": ["CLAIM_AUTHOR", "TOOL", "INDEPENDENT_REVIEWER"]},
+            "run_id": {"type": "string", "minLength": 1},
+            "environment_sha256": {"$ref": "#/$defs/sha256"},
+            "cold_start": {"type": "boolean"}
+          }
+        },
+        "artifact_path": {
+          "type": "string",
+          "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))artifacts/[A-Za-z0-9._/-]+$"
+        },
+        "artifact_hash": {"$ref": "#/$defs/sha256"},
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["claim_id", "statement_sha256"],
+          "properties": {
+            "claim_id": {"type": "string", "minLength": 1},
+            "statement_sha256": {"$ref": "#/$defs/sha256"},
+            "domain": {"$ref": "#/$defs/domain"},
+            "protocol_id": {"type": "string", "minLength": 1},
+            "protocol_version": {"type": "string", "minLength": 1},
+            "repetitions": {"type": "integer", "minimum": 0},
+            "preregistered": {"type": "boolean"},
+            "precision_bits": {"type": "integer", "minimum": 1},
+            "contradiction_status": {"enum": ["OPEN", "RESOLVED"]},
+            "verifier": {"type": "string", "minLength": 1},
+            "toolchain_lock_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"}
+        },
+        "tool_exit": {"type": ["integer", "null"]},
+        "verifier_result": {"enum": ["PASS", "FAIL", "NOT_RUN", "UNKNOWN"]},
+        "timestamp": {"type": "string", "format": "date-time"}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "pair_id",
+    "split",
+    "family",
+    "claim_text",
+    "policy_id",
+    "policy_version",
+    "claim_context",
+    "current_state",
+    "current_state_basis",
+    "requested_transition",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "pattern": "^v1-(?:dev|test)-[a-z]+-[0-9]{3}-[ab]$"},
+    "pair_id": {"type": "string", "pattern": "^v1-(?:dev|test)-[a-z]+-[0-9]{3}$"},
+    "split": {"enum": ["dev", "test"]},
+    "family": {
+      "enum": [
+        "DEPENDENCY",
+        "NUMERICAL",
+        "RUNTIME",
+        "STALE_CONTRADICTION",
+        "PROVENANCE",
+        "FORMAL"
+      ]
+    },
+    "claim_text": {"type": "string", "minLength": 1},
+    "policy_id": {"const": "math-evidence-transition"},
+    "policy_version": {"const": "1.0.0"},
+    "claim_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "author_id", "author_environment_sha256", "statement_sha256"],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "author_id": {"type": "string", "minLength": 1},
+        "author_environment_sha256": {"$ref": "#/$defs/sha256"},
+        "statement_sha256": {"$ref": "#/$defs/sha256"},
+        "required_domain": {"$ref": "#/$defs/domain"}
+      }
+    },
+    "current_state": {"$ref": "#/$defs/state"},
+    "current_state_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "computation_status": {"$ref": "#/$defs/basis"},
+        "formal_status": {"$ref": "#/$defs/basis"},
+        "review_status": {"$ref": "#/$defs/basis"}
+      }
+    },
+    "requested_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_state", "basis_evidence_ids"],
+      "properties": {
+        "target_state": {"$ref": "#/$defs/state"},
+        "basis_evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}}
+  }
+}
