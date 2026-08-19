@@ -131,9 +131,7 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
     # probe removes only that section; it retains the complete scientific narrative and omits
     # the bibliography below.
     anonymous_body = anonymize_for_iclr(body)
-    body_for_output = (
-        without_ai_disclosure(anonymous_body) if main_text_probe else anonymous_body
-    )
+    body_for_output = without_ai_disclosure(anonymous_body) if main_text_probe else anonymous_body
 
     bibliography_tail = (
         "\n\\bibliographystyle{iclr2027_conference}\n"
