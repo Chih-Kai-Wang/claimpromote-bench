@@ -154,11 +154,17 @@ python -m claimpromotebench compare-runs \
 
 ## Scope
 
-ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, or verifier-governed research agents. Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations.
+ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, counterfactual examples, evidence reversal, generic policy-compliance evaluation, or verifier-governed research agents. Recent close neighbors include SteerBench-Work, ST-WebAgentBench, CofCA, MEDSYN, RECV, SeekBench, Omni-Decision, EviGraph, and ClaimLedger, in addition to scientific claim-verification and reproducibility benchmarks.
 
-The contribution is narrower: a preregistered controlled-pair benchmark for deciding whether registered evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, and separate reporting of raw model decisions and deterministic gate actions.
+The contribution is narrower: evaluating whether **typed scientific evidence licenses a requested change in a research claim's epistemic state** under a fixed policy. The benchmark separates research, computation, formal-certification, and independent-review status; applies dependency, provenance, scope, staleness, contradiction, and artifact checks; and reports raw model decisions separately from deterministic enforcement.
 
 The paper does not make an unqualified “first benchmark” or “first system” claim.
+
+## Post-v1 follow-up
+
+A separate Draft PR (#20) contains a low-cost post-v1 study designed to diagnose the main unresolved interface confound without changing the frozen v1 results. The pilot retains complete raw responses, separates JSON syntax/schema/semantic failures, compares free generation with schema-constrained decoding under identical model-facing prompts, and evaluates the deterministic gate only after generation.
+
+This follow-up uses the existing public alpha data and existing Qwen3 model artifacts. It is **not preregistered v1 evidence**, and no result from it should be quoted until the corresponding run artifacts and aggregate summary are complete.
 
 ## Paper and project status
 
@@ -166,7 +172,8 @@ The paper does not make an unqualified “first benchmark” or “first system�
 - Submission checklist: `technical-report/SUBMISSION_GATE.md`
 - Experiment protocol/history: `docs/EXPERIMENTS.md`
 - Roadmap: `docs/ROADMAP.md`
-- Related work: `docs/RELATED_WORK.md`
+- Related-work boundary: `docs/RELATED_WORK.md`
+- Submission risk audit: `docs/SUBMISSION_RISK_AUDIT.md`
 - AI assistance disclosure: `AI_ASSISTANCE.md`
 
-The v1 hidden model outputs are fixed and should not be rerun or rewritten to make the result cleaner. Remaining work is release preparation and the account-side steps needed to submit the preprint and conference paper.
+The v1 hidden model outputs are fixed and should not be rerun or rewritten to make the result cleaner. The post-v1 study remains separate until its own protocol and evidence are complete.
