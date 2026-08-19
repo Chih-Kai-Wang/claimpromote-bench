@@ -74,6 +74,8 @@ def hardware_summary() -> dict[str, Any]:
 
 
 def check_model(config_path: Path, model_dir: Path) -> tuple[dict[str, Any], list[str]]:
+    config_path = config_path.resolve()
+    model_dir = model_dir.resolve()
     config = load_json(config_path)
     failures: list[str] = []
     filename = Path(str(config["weights_file"])).name
@@ -127,8 +129,7 @@ def main() -> int:
         failures.append(f"cannot resolve llama.cpp git commit in {args.llama_dir}")
     elif expected_runtime is not None and observed_runtime != expected_runtime:
         failures.append(
-            "llama.cpp commit mismatch: "
-            f"expected {expected_runtime}, got {observed_runtime}"
+            f"llama.cpp commit mismatch: expected {expected_runtime}, got {observed_runtime}"
         )
 
     for config_path in model_configs:
