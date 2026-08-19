@@ -54,20 +54,17 @@ def shared_commands() -> str:
 """
 
 
+def without_ai_disclosure(body: str) -> str:
+    ai_start = body.index(r"\section{AI Assistance Disclosure}")
+    conclusion_start = body.index(r"\section{Conclusion}", ai_start)
+    return body[:ai_start] + body[conclusion_start:]
+
+
 def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
-    if main_text_probe:
-        # The page-limit probe intentionally removes the bibliography while preserving the
-        # complete main text. ICLR excludes references from the 9-page main-text limit.
-        end = body.find(r"\section{Reproducibility and Artifact Policy}")
-        if end == -1:
-            raise ValueError("cannot locate reproducibility section for page-limit probe")
-        # Keep all scientific discussion/limitations, but exclude reproducibility + AI sections
-        # only from this diagnostic probe because ICLR explicitly excludes the AI-use statement
-        # from the page limit and treats the reproducibility statement as non-main-text.
-        probe_body = body[:end]
-        body_for_output = probe_body
-    else:
-        body_for_output = body
+    # ICLR excludes the mandatory AI-use statement from the page limit. The diagnostic probe
+    # therefore removes only that section; it keeps the full scientific text, including the
+    # conclusion and our reproducibility/artifact discussion. References are omitted below.
+    body_for_output = without_ai_disclosure(body) if main_text_probe else body
 
     return (
         r"""\documentclass{article}
