@@ -678,9 +678,7 @@ def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
     if invalid_sides != Counter(split_plan["invalid_side_counts"]):
         raise AssertionError(f"invalid-side count mismatch: {dict(invalid_sides)}")
     expected_actions = Counter(
-        plan["dev_invalid_action_counts"]
-        if split == "dev"
-        else plan["test_invalid_action_counts"]
+        plan["dev_invalid_action_counts"] if split == "dev" else plan["test_invalid_action_counts"]
     )
     if invalid_actions != expected_actions:
         raise AssertionError(f"invalid-action count mismatch: {dict(invalid_actions)}")
