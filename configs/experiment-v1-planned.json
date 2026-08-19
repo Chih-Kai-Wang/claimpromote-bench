@@ -5,12 +5,14 @@
     "ledger_verifier",
     "ledger_verifier_gate"
   ],
-  "expected_decisions": 9600,
-  "instances": 400,
+  "expected_decisions": 7200,
+  "instances": 300,
   "models": [
     "configs/models/qwen3-0.6b.json",
     "configs/models/qwen3-1.7b.json"
   ],
   "seeds": [104729, 130363, 169087],
-  "status": "MODEL_RUNTIME_FROZEN_DATASET_AND_EXECUTION_PENDING"
+  "scored_split": "test",
+  "public_dev_role": "IMPLEMENTATION_DEBUGGING_AND_DESCRIPTIVE_PILOT_ONLY",
+  "status": "MODEL_RUNTIME_FROZEN_HIDDEN_DATASET_AND_EXECUTION_PENDING"
 }
