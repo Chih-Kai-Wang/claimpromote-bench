@@ -1,0 +1,5 @@
+ClaimPromoteBench v2 low-cost pilot trigger.
+
+Created only after CI, pinned Lean verification, v1 hidden freeze, v1 scored guard, and v1 recovery guard were all green on the preceding head.
+
+Protocol: 20 public controlled pairs, two existing Qwen3 model artifacts, one seed, free vs schema-constrained decoding, no paid API, no paid GPU runner.
