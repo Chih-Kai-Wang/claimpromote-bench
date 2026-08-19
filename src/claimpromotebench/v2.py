@@ -60,7 +60,11 @@ def postgate_decision(raw_decision: Json, item: Json, policy: Json, evaluation_t
     """Apply the deterministic gate after generation without changing the model-facing prompt."""
 
     oracle_result = evaluate(item, policy, evaluation_time)
-    return apply_gate(raw_decision, oracle_result)["final_decision"]
+    gate_result = apply_gate(raw_decision, oracle_result)
+    final_decision = gate_result.get("final_decision")
+    if not isinstance(final_decision, dict):
+        raise RuntimeError("gate result lacks a final_decision object")
+    return final_decision
 
 
 def _safe_rate(numerator: int, denominator: int) -> float | None:
