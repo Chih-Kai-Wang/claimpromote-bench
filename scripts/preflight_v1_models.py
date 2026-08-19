@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_CONFIGS = (
+DEFAULT_MODEL_CONFIGS = (
     ROOT / "configs" / "models" / "qwen3-0.6b.json",
     ROOT / "configs" / "models" / "qwen3-1.7b.json",
 )
@@ -107,14 +107,19 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-dir", type=Path, required=True)
     parser.add_argument("--llama-dir", type=Path, required=True)
+    parser.add_argument("--model-config", type=Path, action="append")
     parser.add_argument("--out", type=Path, default=ROOT / "work" / "v1-model-preflight.json")
     args = parser.parse_args()
 
+    model_configs = tuple(args.model_config or DEFAULT_MODEL_CONFIGS)
+    if not model_configs:
+        raise RuntimeError("at least one model config is required")
+
     failures: list[str] = []
     model_reports: list[dict[str, Any]] = []
-    runtime_commits = {str(load_json(path)["backend_commit"]) for path in MODEL_CONFIGS}
+    runtime_commits = {str(load_json(path)["backend_commit"]) for path in model_configs}
     if len(runtime_commits) != 1:
-        failures.append("model configs do not agree on one frozen llama.cpp commit")
+        failures.append("selected model configs do not agree on one frozen llama.cpp commit")
     expected_runtime = next(iter(runtime_commits)) if len(runtime_commits) == 1 else None
 
     observed_runtime = command_output(["git", "rev-parse", "HEAD"], cwd=args.llama_dir)
@@ -126,7 +131,7 @@ def main() -> int:
             f"expected {expected_runtime}, got {observed_runtime}"
         )
 
-    for config_path in MODEL_CONFIGS:
+    for config_path in model_configs:
         report, model_failures = check_model(config_path, args.model_dir)
         model_reports.append(report)
         failures.extend(model_failures)
