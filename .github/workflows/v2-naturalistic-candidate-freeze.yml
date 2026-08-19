@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- v2/naturalistic-candidates.json; then
+          if [ -z "$(git status --porcelain -- v2/naturalistic-candidates.json)" ]; then
             echo "Frozen candidate pool is already current."
             exit 0
           fi
