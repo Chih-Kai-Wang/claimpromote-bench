@@ -2,133 +2,132 @@
 
 **Policy-Governed Evidence-State Transitions for Mathematical Research Agents**
 
-> **ALPHA RESEARCH SCAFFOLD — MODEL EXPERIMENTS: PENDING**  
-> No quantitative model result, technical report, completed external review, or independent
-> reproduction is claimed in this repository yet.
+> **v1 primary hidden study complete; manuscript finalization in progress.**  
+> The frozen primary study contains 24 runs / 7,200 scored hidden decisions. Results below are bound to the validated recovered aggregate artifact, not partial logs.
 
-ClaimPromoteBench asks a narrow question: can a machine-checkable evidence ledger and a
-versioned deterministic transition gate reduce policy-invalid claim promotion while
-preserving valid promotion?
+ClaimPromoteBench asks a narrow question: **given a mathematical research claim, typed evidence, a current evidence state, and a requested transition, is that transition admissible under a frozen versioned policy?**
 
-The benchmark evaluates a requested **evidence-state transition**. It is not a general truth
-classifier, an answer-abstention benchmark, or a proof that a natural-language mathematical
-claim is true. The alpha validates the public contracts, oracle, controlled-pair design,
-offline baselines, gate semantics, ranking metrics, run-record evaluator, exact matched-arm
-comparison pipeline, shortcut diagnostics, model-free metamorphic invariance, numerical
-exact-grid recomputation, pinned Lean formal-artifact execution, and blinded human-review
-infrastructure before any model experiment. Model execution, model consistency measurement,
-and real independent review remain pending.
+It is **not** a theorem-truth classifier, general scientific fact checker, or a claim that Lean acceptance implies an unrestricted natural-language conclusion. It separates four orthogonal state axes—research, computation, formal certification, and independent review—and evaluates one of four actions:
 
-## Current alpha
+`ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
 
-| Artifact | Checkable status |
+A deterministic gate may veto an invalid `ALLOW`, but gate catches are reported as **system-level enforcement effects**, not improved model reasoning or calibration.
+
+## v1 benchmark
+
+| Component | Frozen v1 status |
 |---|---|
-| Dataset | 20 controlled pairs / 40 instances; six mathematical-evidence families |
-| Gold decision | Versioned public policy + dependency closure + artifact integrity; numerical and formal `ALLOW` cases additionally require executable artifact-to-scope agreement |
-| Non-model baselines | `always_allow`, `always_hold`, deterministic `policy_oracle` |
-| Shortcut audit | Leave-one-pair-out metadata-only and shallow-structure diagnostics run in CI |
-| Metamorphic invariance audit | 331 semantics-preserving variants across all 40 items; 1,324 four-arm prompt renderings; zero schema, artifact, oracle, or prompt-expectation failures |
-| Intervention renderers | Semantic narrative, typed ledger, ledger + passive verifier, ledger + verifier + gate notice |
-| Evaluator | Fail-closed actions, tie-aware AUPRC, paired score ranking, family diagnostics, pair bootstrap intervals |
-| Study comparison | Hash-bound run/study IDs, exact matched McNemar tests, Holm correction, metric deltas |
-| Executable numerical alpha | Four numerical pairs / eight items use four exact-rational finite-grid JSON artifacts, recomputed during dataset validation |
-| Executable numerical negative suite | Tamper, scope, protocol, preregistration, and repetition-digest failures are checked independently |
-| Executable formal alpha | Three formal pairs / six items use three generated Lean sources under `leanprover/lean4:v4.33.0`; CI runs `lake build`, `leanchecker`, one positive fixture, and two negative fixtures |
-| Blinded human-review workflow | HMAC-blinded packets, unbiased drafts, exact-coverage submission validation, reviewer-vs-gold and inter-reviewer statistics, disagreement export, and adjudication gate are implemented |
-| Published independent reviews | **PENDING** — `reviews/` contains no completed reviewer package or empirical agreement result |
-| Model runs | **PENDING** — no Qwen result is reported |
-| Hidden test commitment | **PENDING** — no digest exists until 150 test pairs are frozen |
-| Technical report | **NOT YET PUBLISHED** |
-| Independent model reproduction | **PENDING** |
+| Total benchmark | 200 controlled pairs / 400 instances |
+| Public development | 50 pairs / 100 instances |
+| Private hidden primary test | 150 pairs / 300 instances |
+| Policy factors | 20 |
+| Primary models | Qwen3-0.6B Q8_0; Qwen3-1.7B Q8_0 |
+| Arms | narrative; ledger; ledger + passive verifier; ledger + verifier + gate |
+| Seeds | 104729; 130363; 169087 |
+| Primary matrix | 300 × 2 × 4 × 3 = **7,200 decisions** |
+| llama.cpp | `de699957b92f490efebad149665b0dccf127eaff` |
+| Hidden commitment commit | `8d9b3f5c831f432cf6b321e6402724c4f52bb3e1` |
+| Frozen inference source | workflow `32255636879`, head `aa5268dcde2aa44f8eabf0246631efbca27de7e5` |
+| Artifact-only recovery | workflow `32274814703`, head `e2b09f30b0573cf7bcb244eef1917691755f2877` |
+| Recovered matrix | 24 source runs + 24 normalized runs; 7,200 records each side |
+| Study file SHA-256 | `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664` |
 
-The alpha family distribution is `4/4/3/3/3/3`: dependency closure, numerical scope,
-runtime failure, stale or contradictory evidence, independent provenance, and formal
-certificate identity. Each pair keeps the claim and requested state fixed and changes one
-policy prerequisite. The invalid member is balanced between neutral `a` and `b` IDs.
+Public development is for implementation debugging and descriptive pilot work only. **Primary scoring uses only the 300 hidden instances.**
 
-The four numerical pairs are bound to four generated exact-rational JSON artifacts. Both
-members of each pair share identical artifact bytes. Dataset validation checks their paths
-and SHA-256 values, validates the registered protocol, and recomputes every grid value,
-extremum, predicate, and repetition digest. An `ALLOW` member must also match the artifact's
-repetitions, preregistration, closed domain, runtime result, and true predicate. Numerical
-claim text is limited to the registered rational grid; no continuous-domain conclusion is
-made.
+## Primary hidden result
 
-The three formal pairs are bound to three generated Lean source artifacts. Their natural-
-language claims name the exact elementary declarations being compiled: right-zero addition,
-left-zero addition, and conjunction commutativity. Both members of a pair share identical
-compilable source bytes; the invalid member changes only the registered statement, claim, or
-toolchain scope field. The exact `lean-toolchain` file is SHA-256-bound, CI builds the Lake
-package, and `leanchecker ClaimPromoteFormal` replays the compiled library. This establishes
-kernel acceptance of those exact declarations only; it does not establish novelty, a broader
-informal theorem, independent review, or research resolution.
+The main result is a structured-output failure, not a small difference between intervention means:
 
-The remaining thirteen pairs retain synthetic two-line artifacts because their current role
-is to test dependency, runtime, staleness, contradiction, and provenance transition policy.
+- **5,327 / 7,200 decisions (73.99%) are `FORMAT_ERROR`.**
+- Across all **1,873 parseable raw model decisions, the raw action is always `ALLOW`.**
+- Therefore, whenever raw primary rates are defined, raw false-promotion rate is 1.00, valid-promotion recall is 1.00, and paired transition accuracy is 0.
+- In the enforced-gate arm, among parseable decisions, effective false-promotion rate is 0, valid-promotion recall is 1, gate catch rate is 1, and false-block rate is 0 across every seed.
+- Those gate rates are **conditional on low coverage**: Qwen3-0.6B gate-arm decision coverage ranges from 14.0% to 49.0%; Qwen3-1.7B ranges from 21.7% to 48.3%.
 
-The review workflow can produce a procedurally blinded packet, validate complete independent
-submissions, unblind only after review closure, and compute per-reviewer action agreement,
-confusion matrices, reason-set agreement, pairwise raw agreement, Cohen kappa, unanimous
-agreement, and Fleiss kappa. It gates on every reviewer reaching at least 0.80 action
-agreement with frozen gold and the minimum reviewer-pair raw action agreement reaching at
-least 0.80. Every action or reason disagreement requires adjudication. No actual reviewer or
-agreement value is present yet.
+The correct interpretation is therefore: **deterministic enforcement can prevent policy-invalid promotion when a structured intent exists, but it does not make the model selective and it does not solve structured-output reliability.**
 
-The metamorphic audit applies nine registered transformations to every applicable item. It
-renames evidence, principal, environment, and provenance-run identifiers; changes evidence
-presentation order; and inserts unrelated passing, failed, stale, or resolved evidence. It
-then re-runs public schemas, artifact hashes, numerical and Lean bindings, the complete oracle
-decision, and all four prompt renderers. Evidence IDs are mapped back before comparison. The
-current alpha generated 331 variants and 1,324 prompt renderings with zero failures. This is
-a deterministic pipeline result, not a claim that any language model is invariant.
+### Per-model/arm format-error counts
 
-## Orthogonal state
+Each model/arm cell contains 900 decisions across three seeds.
 
-```text
-ClaimState
-  research_status:    PROPOSED | OPEN | RESOLVED
-  computation_status: NONE | COMPUTATIONAL
-  formal_status:      NONE | FORMALLY_CERTIFIED
-  review_status:      UNREVIEWED | INDEPENDENTLY_VERIFIED
-```
+| Model | Narrative | Ledger | Ledger + verifier | Ledger + verifier + gate |
+|---|---:|---:|---:|---:|
+| Qwen3-0.6B | 900 | 261 | 335 | 585 |
+| Qwen3-1.7B | 900 | 900 | 900 | 546 |
 
-These axes are not a single confidence ladder. A Lean certificate applies only to the exact
-formal statement and pinned trust base it checked. A completed numerical run remains
-computational evidence. Independent reproduction is separate from both.
+All three seeds are retained. No result was removed because it was inconvenient.
 
-## Reproduce the alpha checks
+## Transparent artifact-only recovery
 
-Python 3.11 or newer is required. The Python-only checks use no model, GPU, or paid API.
-Formal execution additionally requires the pinned Lean toolchain; installing it may download
-the public Lean release when it is not already present.
+The original source inference finished, but some jobs failed at evaluation because a model output could be JSON-schema-valid while violating a frozen cross-field decision invariant—for example, `ALLOW` without proposing the requested target state.
+
+The recovery path did **not** rerun either model and did **not** rewrite any legal model decision. It:
+
+1. bound exactly 24 immutable source artifacts from workflow `32255636879`;
+2. required exactly 24 source `run.jsonl` and 7,200 inference records;
+3. reconstructed the committed hidden set and prompt identity from the frozen scoring source;
+4. reclassified only frozen cross-field semantic violations as `FORMAT_ERROR`;
+5. validated all 24 normalized runs and exact prompt hashes;
+6. generated the 10,000-pair-bootstrap aggregate and recovery provenance.
+
+Exactly **27 records** were reclassified by `semantic-format-error-v1`. The one-shot recovery trigger was removed immediately after successful recovery.
+
+Frozen public-safe identities:
+
+- commitment SHA-256: `sha256:55a3d2bffb6f23b7253715a9f091d951daaf589e205033d3f46dfd9e6ff6590e`
+- dataset-manifest SHA-256: `sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba`
+- prompt-manifest SHA-256: `sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957`
+- hidden-seed SHA-256: `sha256:b91b5b36268bf2af3acc4c2d0890613b92c02a125db3fe5a1e12c099800fe285`
+
+The raw hidden seed remains a GitHub Actions secret and is never printed or committed.
+
+## Matched-comparison limitation
+
+The preregistered comparison pipeline groups runs by exact model artifact, runtime, seed, and hardware-summary identity. Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Because the Python patch version is part of that exact identity string, the official aggregate contains nine identity groups rather than the intended six model×seed groups; only three contain all four arms.
+
+We **do not regroup them post hoc** after seeing the results. Exact McNemar/Holm comparisons remain available only for arm pairs that coexist in an exact recorded identity group. A future replication should pin the exact Python patch release, but it must not replace frozen v1.
+
+## Supplementary real-human audit
+
+Two real independent reviewers completed the frozen 20-item procedural-blind alpha audit.
+
+| Evidence | Result |
+|---|---:|
+| reviewer-01 action agreement | 18/20 = 0.90 |
+| reviewer-01 exact reason agreement | 18/20 = 0.90 |
+| `reviwer-02` action agreement | 15/20 = 0.75 |
+| `reviwer-02` exact reason agreement | 14/20 = 0.70 |
+| pairwise action agreement | 17/20 = 0.85 |
+| pairwise exact reason agreement | 16/20 = 0.80 |
+| diagnostic Cohen κ | ≈ 0.716 |
+
+The repository's supplementary gate requires every reviewer to reach 0.80 action agreement, so this is a **mixed result / not PASS**. The immutable `reviwer-02` identifier typo is intentionally preserved.
+
+## Evidence and executable bindings
+
+ClaimPromoteBench deliberately prevents one kind of successful evidence from being treated as universal research proof:
+
+- numerical cases use exact-rational finite-grid artifacts whose registered values, extrema, predicates, repetitions, and scope are recomputed;
+- formal cases bind generated Lean sources and a pinned trust base;
+- provenance, freshness, dependencies, contradiction state, review independence, statement identity, and runtime success remain separate policy prerequisites.
+
+Kernel acceptance proves the exact formal declaration in the pinned environment. A successful finite computation proves only its registered computational scope. Neither automatically promotes research status.
+
+## Reproduce public checks
+
+Python 3.11+:
 
 ```bash
 python -m pip install -e ".[dev]"
 python scripts/build_alpha.py
 python -m claimpromotebench validate data/alpha
-python -m claimpromotebench.shortcuts \
-  --dataset data/alpha \
-  --out work/shortcut-audit.json
-python -m claimpromotebench.invariance \
-  --dataset data/alpha \
-  --out work/invariance-audit.json
-python -m claimpromotebench.executable \
-  --fixtures fixtures/executable \
-  --out work/executable-fixtures.json
-python -m claimpromotebench.review validate-root \
-  --dataset data/alpha \
-  --root reviews \
-  --allow-empty \
-  --out work/reviews.json
-python -m claimpromotebench.review_analysis validate-root \
-  --dataset data/alpha \
-  --root reviews \
-  --allow-empty \
-  --out work/review-analysis.json
+python -m claimpromotebench.shortcuts --dataset data/alpha --out work/shortcut-audit.json
+python -m claimpromotebench.invariance --dataset data/alpha --out work/invariance-audit.json
+python -m claimpromotebench.executable --fixtures fixtures/executable --out work/executable-fixtures.json
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
 
-With Elan installed, run the formal gate:
+Formal gate with the pinned Lean environment:
 
 ```bash
 cd data/alpha
@@ -141,209 +140,37 @@ python -m claimpromotebench.formal \
   --out work/formal-fixtures.json
 ```
 
-`validate data/alpha` recomputes the four manifest-bound numerical artifacts and verifies the
-source, identity markers, and toolchain binding of the three formal artifacts in addition to
-checking schemas, pair controls, hashes, policy decisions, and gold labels. The invariance
-audit generates semantics-preserving variants, revalidates every applicable artifact
-binding, compares normalized complete oracle decisions, and renders every intervention arm.
-The standalone numerical suite performs bounded exact-rational recomputation over positive
-and negative finite-grid fixtures. The formal command compiles three unique alpha sources and
-requires one valid plus two intentionally invalid Lean fixtures to have their declared
-outcomes. These gates do not establish a result outside their registered transformations,
-finite grids, or exact Lean statements. See
-[Metamorphic invariance audit](docs/INVARIANCE_AUDIT.md),
-[Executable numerical fixtures](docs/EXECUTABLE_FIXTURES.md),
-[Pinned Lean formal alpha](docs/FORMAL_FIXTURES.md),
-[Blinded review workflow](docs/REVIEW_WORKFLOW.md), and
-[Shortcut audit](docs/SHORTCUT_AUDIT.md) for the frozen information and scope boundaries.
-
-Generate and score all three offline baselines:
-
-```bash
-python -m claimpromotebench baseline always_allow --out work/always-allow.jsonl
-python -m claimpromotebench baseline always_hold --out work/always-hold.jsonl
-python -m claimpromotebench baseline policy_oracle --out work/policy-oracle.jsonl
-python -m claimpromotebench evaluate --gold data/alpha/gold.jsonl --runs work/policy-oracle.jsonl
-```
-
-The evaluation JSON includes the full threshold-grouped precision-recall curve,
-`auprc_stepwise`, prevalence lift, paired valid-versus-invalid score ranking, pair-bootstrap
-intervals, and per-family diagnostics. See [Experiment protocol](docs/EXPERIMENTS.md) for the
-exact definitions.
-
-Complete model run-record files can be evaluated individually or accumulated directly:
+Evaluate a complete run or compare matched runs:
 
 ```bash
 python -m claimpromotebench evaluate-runs \
   --gold data/alpha/gold.jsonl \
-  --runs work/qwen3-0.6b-narrative-seed-104729.jsonl \
-  --out work/qwen3-0.6b-narrative-seed-104729.report.json
+  --runs work/example-run.jsonl \
+  --out work/example-run.eval.json
 
 python -m claimpromotebench compare-runs \
   --gold data/alpha/gold.jsonl \
-  --runs work/qwen3-0.6b-*-seed-104729.jsonl \
-  --out work/qwen3-0.6b-seed-104729.study.json
+  --runs work/*.jsonl \
+  --out work/study.json
 ```
 
-`evaluate-runs` emits a path-independent run ID tied to the dataset fingerprint, immutable
-model/run identity, and run-file hash. `compare-runs` accepts any number of complete run files,
-deduplicates content and run identities, groups matched arms, reports missing arms, applies
-exact McNemar tests with Holm correction, and emits a deterministic study ID. Re-running the
-command with additional run files produces a larger cumulative study without rewriting prior
-records.
+`FORMAT_ERROR` is never silently counted as `HOLD`. Decision coverage and worst-case format-error sensitivity remain explicit.
 
-See [Reproduction](docs/REPRODUCTION.md) for clean-environment steps and expected structural
-checks. A passing oracle baseline or metamorphic audit proves internal pipeline agreement,
-not a model result.
+## Research boundary and novelty claim
 
-## Independent review commands
+ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, or verifier-governed research agents. Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations.
 
-Prepare an active private packet and initialize a reviewer draft:
+The defensible contribution is narrower: **a preregistered, controlled-pair, four-action, artifact-bound, prompt-frozen, hidden-test-committed benchmark for policy-governed research-claim evidence-state transition admissibility, with raw model intent separated from deterministic enforcement.**
 
-```bash
-cpb-review prepare \
-  --dataset data/alpha \
-  --out work/review-alpha
+The manuscript uses cautious language such as: *we did not find a public benchmark directly evaluating policy-governed research-claim evidence-state transitions under matched, machine-checkable prerequisites.* It does not make an unqualified “first benchmark” or “first system” claim.
 
-cpb-review init-submission \
-  --package work/review-alpha \
-  --reviewer-id reviewer-01 \
-  --out reviewer-01.json
-```
+## Paper and project status
 
-After at least two independent reviewers have submitted and all decisions are frozen, unblind
-and compute the deterministic report:
+- Technical report: `technical-report/main.tex`
+- Fail-closed readiness checklist: `technical-report/SUBMISSION_GATE.md`
+- Experiment protocol/history: `docs/EXPERIMENTS.md`
+- Roadmap: `docs/ROADMAP.md`
+- Related work: `docs/RELATED_WORK.md`
+- AI assistance disclosure: `AI_ASSISTANCE.md`
 
-```bash
-cpb-review-report analyze \
-  --dataset data/alpha \
-  --package work/review-alpha \
-  --out work/review-alpha/review-report.json
-```
-
-When disagreements exist, create and validate complete adjudication:
-
-```bash
-cpb-review-report init-adjudication \
-  --report work/review-alpha/review-report.json \
-  --adjudicator-id adjudicator-01 \
-  --out work/review-alpha/adjudication.json
-
-cpb-review-report validate-adjudication \
-  --dataset data/alpha \
-  --package work/review-alpha \
-  --report work/review-alpha/review-report.json \
-  --adjudication work/review-alpha/adjudication.json
-```
-
-A failed numeric threshold remains `REVISION_REQUIRED`; adjudication cannot convert it into a
-pass. See [the full workflow](docs/REVIEW_WORKFLOW.md).
-
-## Public contracts
-
-- `schemas/benchmark-input.schema.json`: model-independent benchmark input.
-- `schemas/agent-decision.schema.json`: required JSON decision.
-- `schemas/executable-fixture-case.schema.json`: positive/negative executable numerical cases.
-- `schemas/invariance-report.schema.json`: deterministic metamorphic audit result and failure
-  diagnostics.
-- `schemas/review-packet-item.schema.json`: blinded reviewer-facing item.
-- `schemas/review-packet-manifest.schema.json`: immutable packet identity.
-- `schemas/review-private-key.schema.json`: private HMAC mapping used only after review closure.
-- `schemas/review-submission.schema.json`: complete independent reviewer submission.
-- `schemas/review-analysis.schema.json`: deterministic agreement and disagreement report.
-- `schemas/review-adjudication.schema.json`: exact disagreement disposition record.
-- `policies/math-evidence-transition-1.0.2-alpha.json`: current schema-validated alpha
-  decision contract, thresholds, and pinned formal trust base.
-- `policies/math-evidence-transition-1.0.1-alpha.json`: retained superseded policy for
-  historical inspection; it is not the policy bound by the current alpha manifest.
-- `data/alpha/author-items.jsonl`: auditable authoring source with gold labels.
-- `data/alpha/inputs.jsonl`: public input with gold removed.
-- `data/alpha/gold.jsonl`: scorer labels generated from the authoring source.
-- `data/alpha/pairs.json`: controlled factors and permitted JSON-pointer differences.
-- `data/alpha/manifest.json`: frozen evaluation time and committed file hashes.
-- `data/alpha/artifacts/*.json`: manifest-bound exact-rational artifacts used by the four
-  numerical controlled pairs.
-- `data/alpha/artifacts/ClaimPromoteFormal/*.lean`: three pair-specific formal artifacts.
-- `data/alpha/lean-toolchain`, `lakefile.toml`, and `lake-manifest.json`: pinned formal package
-  environment.
-- `fixtures/executable/`: standalone positive and negative exact-rational fixture suite.
-- `fixtures/formal/`: one passing and two rejected Lean fixture programs.
-- `reviews/`: completed, unblinded, immutable review packages only; currently empty apart from
-  instructions.
-
-Prompt renderers remove item IDs, pair IDs, split labels, family labels, and gold fields. A
-missing or malformed model output is a `FORMAT_ERROR`; it is never silently counted as
-`HOLD`.
-
-## Intended experiments
-
-The frozen full-study design uses two local Qwen3 sizes, four intervention arms, 400
-instances, and three seeds: 9,600 short decisions. Model artifacts, 4-bit quantization,
-llama.cpp commit, prompts, and hardware must be hash-bound before the test set is opened.
-The checked-in model configurations are currently `PENDING_ARTIFACT_FREEZE`; they are plans,
-not executed runs.
-
-Primary metrics are false promotion rate, valid promotion recall / false hold rate, and
-paired transition accuracy. Ranking diagnostics include tie-aware stepwise AUPRC and direct
-within-pair score ordering. Reports must separate intent false promotions from effective
-post-gate false promotions. A successful veto is a system effect, not improved model
-calibration. See [Experiment protocol](docs/EXPERIMENTS.md).
-
-`evaluate-runs` validates complete run records, refuses `FORMAT_ERROR` as a silent hold,
-scores raw intent and post-gate decisions separately, and reports gate plus operational
-metrics. Format errors reduce explicit coverage and are included in a worst-case safety
-sensitivity analysis. Family stratification and matched arm comparison are automatic.
-`compare-runs` defaults to zero bootstrap resamples because its exact matched tests and metric
-deltas do not require recomputing every run interval; a positive sample count can be requested
-when a cumulative report also needs per-run intervals.
-
-The registered metamorphic transformations are intended to become a separate consistency
-slice for future model runs. Any model consistency score must be reported separately from
-ordinary action accuracy and AUPRC, because a correct base decision can still be unstable
-under a semantics-preserving prompt transformation.
-
-## Research boundary
-
-The contribution is deliberately narrower than abstention, static scientific-claim
-verification, claim-level specificity control, or general evidence audit trails. The working
-claim and a comparison matrix are in [Related work](docs/RELATED_WORK.md). We use "we did not
-find a public benchmark directly evaluating policy-governed research-claim state
-transitions," not an unqualified first-of-kind claim.
-
-Executable artifact success is also narrower than research correctness. Exact-rational grid
-recomputation supports a finite computational state only. Lean kernel acceptance supports the
-exact formal declaration only. Neither substitutes for scope alignment, novelty assessment,
-independent review, or a model experiment.
-
-Review infrastructure is not review evidence. A generated packet, passing unit tests, or an
-empty `reviews/` directory does not establish external agreement. Only completed independent
-submissions, a reproducible unblinded report, and complete adjudication can produce a review
-gate result. A negative result remains publishable and requires revision rather than
-concealment.
-
-Metamorphic oracle invariance is not model robustness. The 331 passing variants establish
-only that the current deterministic schemas, artifact bindings, oracle, and prompt renderer
-satisfy the nine registered equivalence expectations. Unregistered transformations and model
-responses remain unmeasured.
-
-## Status and accountability
-
-- [Research decisions](RESEARCH_DECISIONS.md) records assumptions, rejected alternatives,
-  negative results, and version changes.
-- [AI assistance](AI_ASSISTANCE.md) separates tool assistance from human responsibility.
-- [Roadmap](docs/ROADMAP.md) exposes the 2026–2027 gates without marking future work complete.
-- [Metamorphic invariance audit](docs/INVARIANCE_AUDIT.md) defines the registered equivalence
-  transformations and model-consistency boundary.
-- [Mentor review](docs/MENTOR_REVIEW.md) defines the external-review gate.
-- [Blinded review workflow](docs/REVIEW_WORKFLOW.md) defines preparation, statistics,
-  adjudication, and publication.
-- `technical-report/` remains explicitly unpublished until a reproducible pilot exists.
-
-Created and maintained by **Chih-Kai Wang**, B.S. student, Mathematics Education Division,
-Department of Mathematics and Information Education, National Taipei University of
-Education. Expected 2028.
-
-## License
-
-Code and the alpha dataset are released under the [MIT License](LICENSE). Artifact hashes are
-integrity digests, not digital signatures, identity proofs, or provenance guarantees.
+The frozen v1 primary inference should **not** be rerun or rewritten to make the result cleaner. Remaining work is final manuscript/CI/PDF verification, bibliography authority checks, and release-quality clean-environment reproduction. See `technical-report/SUBMISSION_GATE.md` for the exact distinction between primary-study completion, preprint readiness, and archival-submission readiness.
