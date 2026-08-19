@@ -1,0 +1,129 @@
+name: v2 pilot artifact recovery
+
+on:
+  push:
+    branches:
+      - agent/iclr2027-v2-low-cost-study
+    paths:
+      - "v2/pilot-recovery-run-id.txt"
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Completed v2 low-cost pilot workflow run ID"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: v2-pilot-artifact-recovery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    name: validate and publish 160-decision pilot aggregate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Resolve source workflow run ID
+        id: source
+        shell: bash
+        env:
+          DISPATCH_RUN_ID: ${{ inputs.source_run_id }}
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            run_id="${DISPATCH_RUN_ID}"
+          else
+            test -f v2/pilot-recovery-run-id.txt
+            run_id="$(tr -d '[:space:]' < v2/pilot-recovery-run-id.txt)"
+          fi
+          if ! [[ "$run_id" =~ ^[0-9]+$ ]]; then
+            echo "Pilot recovery run ID must be a positive integer." >&2
+            exit 1
+          fi
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download both immutable pilot artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.source.outputs.run_id }}
+          pattern: claimpromotebench-v2-pilot-*
+          path: work/pilot-artifacts
+
+      - name: Require exactly two model artifact directories
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(find work/pilot-artifacts -mindepth 1 -maxdepth 1 -type d | wc -l)"
+          if [ "$count" -ne 2 ]; then
+            find work/pilot-artifacts -maxdepth 3 -type f -print
+            echo "Expected exactly two downloaded model artifacts; found $count." >&2
+            exit 1
+          fi
+
+      - name: Recompute complete public pilot aggregate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/recovered
+          python scripts/aggregate_v2_pilot_artifacts.py \
+            --artifact-root work/pilot-artifacts \
+            --source-workflow-run-id "${{ steps.source.outputs.run_id }}" \
+            --out work/recovered/v2-public-pilot-study-a.json
+          python scripts/aggregate_v2_pilot_artifacts.py \
+            --artifact-root work/pilot-artifacts \
+            --source-workflow-run-id "${{ steps.source.outputs.run_id }}" \
+            --out work/recovered/v2-public-pilot-study-b.json
+          cmp \
+            work/recovered/v2-public-pilot-study-a.json \
+            work/recovered/v2-public-pilot-study-b.json
+
+      - name: Stage public-safe aggregate
+        run: |
+          mkdir -p v2/pilot-results
+          cp \
+            work/recovered/v2-public-pilot-study-a.json \
+            v2/pilot-results/v2-public-pilot-study.json
+
+      - name: Commit recovered aggregate when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- v2/pilot-results/v2-public-pilot-study.json; then
+            echo "Pilot aggregate is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v2/pilot-results/v2-public-pilot-study.json
+          git commit -m "v2: publish artifact-only public pilot aggregate"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload recovered aggregate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v2-public-pilot-study
+          path: work/recovered/v2-public-pilot-study-a.json
+          if-no-files-found: error
+          retention-days: 30
