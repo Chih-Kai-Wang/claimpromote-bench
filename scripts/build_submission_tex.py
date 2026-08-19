@@ -83,6 +83,11 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
     # conclusion and our reproducibility/artifact discussion. References are omitted below.
     body_for_output = without_ai_disclosure(body) if main_text_probe else body
 
+    bibliography_tail = (
+        "\n\\bibliographystyle{iclr2027_conference}\n"
+        "\\bibliography{references}\n\n"
+        "\\end{document}\n"
+    )
     return (
         r"""\documentclass{article}
 \usepackage{iclr2027_conference,times}
@@ -101,15 +106,15 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
         + r"\begin{document}" + "\n"
         + r"\maketitle" + "\n\n"
         + body_for_output
-        + (
-            "\n\\end{document}\n"
-            if main_text_probe
-            else "\n\\bibliographystyle{iclr2027_conference}\n\\bibliography{references}\n\n\\end{document}\n"
-        )
+        + ("\n\\end{document}\n" if main_text_probe else bibliography_tail)
     )
 
 
 def arxiv_tex(body: str) -> str:
+    author = (
+        r"\author{Chih-Kai Wang\\Department of Mathematics and Information Education\\"
+        r"National Taipei University of Education}"
+    )
     return (
         r"""\documentclass[10pt]{article}
 \usepackage[margin=1in]{geometry}
@@ -124,7 +129,7 @@ def arxiv_tex(body: str) -> str:
         + shared_commands()
         + "\n"
         + rf"\title{{{TITLE}}}" + "\n"
-        + r"\author{Chih-Kai Wang\\Department of Mathematics and Information Education\\National Taipei University of Education}" + "\n"
+        + author + "\n"
         + r"\date{}" + "\n\n"
         + r"\begin{document}" + "\n"
         + r"\maketitle" + "\n\n"
