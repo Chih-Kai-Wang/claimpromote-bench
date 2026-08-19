@@ -60,6 +60,33 @@ For every model and decoding condition, report:
 
 Raw response text is diagnostic evidence. It must not be manually repaired before scoring.
 
+## Completed pilot result
+
+The canonical source workflow is `32291482079`, triggered by commit
+`f998a05fec36b84e59230fe241f1e9961647ad2e`. Artifact-only recovery workflow `32297818154`
+downloaded both immutable model artifacts, required the four-run / 160-record matrix, recomputed
+the aggregate twice, and required byte-identical output. The public aggregate is
+`v2/pilot-results/v2-public-pilot-study.json`, with SHA-256
+`sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`.
+
+| Model | Decoding | OK | Schema errors | Decision coverage | Pair coverage | Raw action accuracy | Raw pair accuracy | Raw flip rate |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Qwen3-0.6B | Free | 30 | 10 | 0.75 | 0.70 | 0.50 | 0.00 | 0.00 |
+| Qwen3-0.6B | JSON schema | 40 | 0 | 1.00 | 1.00 | 0.50 | 0.00 | 0.00 |
+| Qwen3-1.7B | Free | 0 | 40 | 0.00 | 0.00 | undefined | undefined | undefined |
+| Qwen3-1.7B | JSON schema | 38 | 2 | 0.95 | 0.90 | 0.50 | 0.00 | 0.00 |
+
+Across the constrained runs, 78 of 80 decisions are parseable and 38 of 40 pairs are complete.
+Every parseable action remains `ALLOW`; raw pair accuracy and raw flip rate remain zero. Schema
+constraints therefore solve most of the output-contract problem without recovering sensitivity to
+the policy-relevant evidence change for these two models on the public set.
+
+The two remaining constrained errors duplicate an entry in `reason_codes` and are retained as
+schema errors. No response is manually repaired.
+
+A complete scientific interpretation and limitation record is in
+`docs/V2_PUBLIC_PILOT_RESULTS.md`.
+
 ## Interpretation rules
 
 The pilot is an interface-selection study, not the new ICLR primary result.
@@ -74,6 +101,11 @@ The pilot is an interface-selection study, not the new ICLR primary result.
   Fix or redesign the interface on public pilot data first, then freeze a new protocol.
 - Gate performance is never evidence of model learning. In v2 it is a pure post-processing result
   because the model-facing prompt is identical with and without the gate.
+
+The observed result follows the first branch: coverage rises sharply, but raw controlled-pair
+accuracy remains zero. This supports reporting the pilot as a post-v1 public formatting control.
+It does not by itself justify an expensive model matrix. Any stronger-model extension should first
+show that it answers a new external-validity question and fits the explicit cost boundary.
 
 No threshold is allowed to convert an inconvenient pilot result into a hidden rerun. Any change to
 the prompt, decision schema, runtime, decoding settings, or pilot dataset after observing outputs is
@@ -90,12 +122,18 @@ Construct a new v2 development/hidden split after the pilot interface is frozen.
 pairs and factor identities. Commit the hidden dataset and exact prompts before scored inference.
 Raw response text must be retained in the v2 source artifacts.
 
+This remains future work. The public pilot is not renamed as a new hidden primary split.
+
 ### B. Naturalistic research records
 
 Add a separate, clearly labeled naturalistic set sourced from public research records. Its purpose
 is external validity, not replacement of the controlled benchmark. Every case should include source
 provenance, an evidence snapshot, the requested transition, and a policy-grounded label. Sources and
 labeling rules must be frozen before model scoring.
+
+A deterministic, unlabeled, pointer-only pool of 12 CORE-Bench candidates is now frozen in
+`v2/naturalistic-candidates.json`. Every record remains pending source-level review; none is yet a
+scored ClaimPromoteBench item.
 
 ### C. Model breadth under a cost cap
 
@@ -104,11 +142,17 @@ standard public GitHub runners can execute them within resource limits, prefer o
 open-weight models before considering any paid API. Candidate additions must have a pinned public
 artifact, a recorded hash, and the same prompt/decoding protocol.
 
+The current branch does not authorize paid inference. A stronger open-weight extension is optional,
+not a condition for preserving or reporting the completed pilot.
+
 ### D. Analysis
 
 The ICLR-facing result should emphasize controlled-pair evidence sensitivity, complete-pair
 coverage, failure taxonomy, factor-level failure patterns, and the difference between raw model
 behavior and deterministic post-processing. Instance accuracy alone is insufficient.
+
+The completed pilot demonstrates this point directly: always returning `ALLOW` yields 0.50 instance
+accuracy on the balanced public set while yielding zero controlled-pair accuracy and zero flips.
 
 ## Human-review constraint
 
@@ -125,4 +169,6 @@ The following are prohibited:
 - manually fixing raw v2 model responses before scoring;
 - selecting only favorable factors or seeds after seeing the pilot;
 - treating post-gate correctness as model correctness;
-- paying for API/GPU inference without a separate cost decision.
+- paying for API/GPU inference without a separate cost decision;
+- changing the completed pilot's prompt, schema, seed, or decoding settings and calling it the same
+  run.
