@@ -18,13 +18,14 @@ TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
-Generative AI tools were used as assistants during literature search, early code drafting and
-debugging, checks on the analysis, and manuscript editing. The author chose the research question,
-defined the benchmark policy and experimental protocol, made the study decisions, checked the
-reported results against the released artifacts, checked the references, and made the final
-manuscript decisions. The quantitative results reported in this paper come from the validated
-study artifacts. AI systems are not listed as authors and were not used as independent human
-reviewers.
+Generative AI tools were used as assistants during literature search, research planning and
+methodological discussion, early code drafting and debugging, analysis checks and result
+interpretation, and parts of manuscript drafting and editing. The author chose the research
+question, defined the benchmark policy and experimental protocol, made the final study and
+analysis decisions, checked the reported results against the released artifacts, checked the
+references, and is responsible for the final manuscript and submission. The quantitative results
+reported in this paper come from the validated study artifacts. AI systems are not listed as
+authors and were not used as independent human reviewers.
 
 """
 
