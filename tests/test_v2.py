@@ -11,7 +11,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _model_decision(gold_decision: dict[str, object]) -> dict[str, object]:
-    return {key: deepcopy(value) for key, value in gold_decision.items() if key != "minimal_missing_evidence"}
+    return {
+        key: deepcopy(value)
+        for key, value in gold_decision.items()
+        if key != "minimal_missing_evidence"
+    }
 
 
 def test_llama_response_format_is_non_mutating() -> None:
