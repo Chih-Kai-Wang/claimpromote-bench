@@ -1,0 +1,152 @@
+name: v1 hidden freeze
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  freeze:
+    name: private hidden construction and public commitment
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Materialize private seed without logging it
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CPB_V1_HIDDEN_SEED:-}" ]; then
+            echo "::error::CPB_V1_HIDDEN_SEED is not configured"
+            exit 1
+          fi
+          if ! printf '%s' "$CPB_V1_HIDDEN_SEED" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo "::error::CPB_V1_HIDDEN_SEED must be exactly 64 hexadecimal characters"
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+
+      - name: Build and audit private hidden split
+        run: |
+          set -euo pipefail
+          rm -rf work/v1-hidden
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --out work/v1-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          python scripts/validate_v1_plan.py --test-dir work/v1-hidden
+          python -m claimpromotebench.shortcuts \
+            --dataset work/v1-hidden \
+            --out work/v1-hidden-shortcut-audit.json >/dev/null
+          python -m claimpromotebench.invariance \
+            --dataset work/v1-hidden \
+            --out work/v1-hidden-invariance-audit.json >/dev/null
+
+      - name: Freeze exact hidden prompt hashes privately
+        run: |
+          set -euo pipefail
+          python scripts/freeze_prompt_manifest.py \
+            --dataset work/v1-hidden \
+            --out work/v1-hidden-prompt-manifest.json >/dev/null
+
+      - name: Set up pinned Lean for hidden formal replay
+        uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
+        with:
+          lake-package-directory: work/v1-hidden
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          leanchecker: false
+          use-mathlib-cache: false
+
+      - name: Replay hidden formal artifacts without exposing private sources
+        run: |
+          set -euo pipefail
+          if ! (cd work/v1-hidden && lake build >/dev/null 2>&1); then
+            echo "::error::private hidden Lean build failed; source output suppressed to preserve hidden data"
+            exit 1
+          fi
+          if ! (cd work/v1-hidden && lake env leanchecker ClaimPromoteFormal >/dev/null 2>&1); then
+            echo "::error::private hidden leanchecker replay failed; source output suppressed to preserve hidden data"
+            exit 1
+          fi
+          if ! python -m claimpromotebench.formal \
+            --dataset work/v1-hidden \
+            --fixtures fixtures/formal/cases.json \
+            --out work/v1-hidden-formal.json >/dev/null 2>&1; then
+            echo "::error::private hidden formal-artifact validation failed; detailed output suppressed"
+            exit 1
+          fi
+
+      - name: Emit public-safe hidden commitment
+        run: |
+          set -euo pipefail
+          python scripts/make_hidden_test_commitment.py \
+            --dataset work/v1-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
+            --prompt-manifest work/v1-hidden-prompt-manifest.json \
+            --out work/v1-hidden-commitment.json
+
+      - name: Assert commitment contains no private payload
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path('work/v1-hidden-commitment.json')
+          r = json.loads(p.read_text(encoding='utf-8'))
+          assert r['pairs'] == 150
+          assert r['instances'] == 300
+          assert r['contains_hidden_rows'] is False
+          assert r['contains_gold_labels'] is False
+          assert r['contains_seed_bytes'] is False
+          assert len(r['commitment_sha256']) == 64
+          print(json.dumps({
+              'status': 'COMMITMENT_READY',
+              'pairs': r['pairs'],
+              'instances': r['instances'],
+              'commitment_sha256': r['commitment_sha256'],
+              'dataset_manifest_sha256': r['dataset_manifest_sha256'],
+              'prompt_manifest_sha256': r['prompt_manifest_sha256'],
+              'hidden_seed_sha256': r['hidden_seed_sha256'],
+          }, sort_keys=True))
+          PY
+
+      - name: Upload public-safe commitment only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v1-hidden-commitment
+          path: work/v1-hidden-commitment.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Destroy private working material
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          rm -rf work/v1-hidden
+          rm -f work/v1-hidden-prompt-manifest.json
+          rm -f work/v1-hidden-shortcut-audit.json
+          rm -f work/v1-hidden-invariance-audit.json
+          rm -f work/v1-hidden-formal.json
