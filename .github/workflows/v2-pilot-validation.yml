@@ -1,0 +1,44 @@
+name: v2 pilot validation
+
+on:
+  pull_request:
+    paths:
+      - "v2/pilot-results/**"
+      - "v2/schemas/**"
+      - "scripts/validate_v2_public_pilot_study.py"
+      - "scripts/aggregate_v2_pilot_artifacts.py"
+      - "src/claimpromotebench/v2.py"
+      - ".github/workflows/v2-pilot-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v2-pilot-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate 160-decision public pilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate public-safe pilot aggregate
+        run: python scripts/validate_v2_public_pilot_study.py
+
+      - name: Run v2 diagnostic tests
+        run: python -m pytest -q tests/test_v2.py tests/test_v2_naturalistic.py
