@@ -15,7 +15,7 @@
 \newcommand{\demote}{\texttt{DEMOTE}}
 \newcommand{\escalate}{\texttt{ESCALATE}}
 
-\title{\cpb: Evaluating Whether Evidence Licenses Claim-State Transitions in AI Research Agents}
+\title{\cpb: Benchmarking Whether Evidence Licenses Claim-State Transitions in AI Research Agents}
 \author{Anonymous Author(s)}
 \date{}
 
@@ -23,7 +23,7 @@
 \maketitle
 
 \begin{abstract}
-AI research agents can produce valid evidence and still overstate what that evidence licenses. Existing evaluations primarily ask whether an answer is correct, whether evidence supports a claim, whether a result can be reproduced, or whether a model should abstain. We study a different question: \emph{does the available evidence license a requested change in research status under a frozen policy?} We introduce \cpb, a benchmark for this evidence-state decision problem. Version~1 contains 200 controlled pairs over 20 policy factors, with 50 public-development pairs and a preregistered 150-pair hidden test. Numerical and formal cases bind executable artifacts, and the hidden set plus exact model-facing prompts were committed before scored inference. The primary study contains 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three fixed seeds. The dominant result is not improved model reasoning but a failure of structured decision production: 5,327/7,200 outputs (73.99\%) are \texttt{FORMAT\_ERROR}, and all 1,873 parseable raw model intents are \allow{}. A deterministic gate eliminates measured false promotion among covered parseable decisions, but gate-arm decision coverage is only 14.0--49.0\% for Qwen3-0.6B and 21.7--48.3\% for Qwen3-1.7B. A supplementary blinded human audit is mixed rather than passing. These results motivate evaluating raw model intent separately from deterministic enforcement and reporting coverage alongside conditional safety rates.
+AI research agents can produce valid evidence and still overstate what that evidence licenses. Existing evaluations primarily test answer correctness, factual support, reproducibility, task execution, or abstention; they do not isolate whether an explicit body of evidence licenses an explicit change in research status. We introduce \cpb, a controlled benchmark for this transition-admissibility problem under a frozen, machine-checkable policy. Version~1 contains 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test; numerical and formal cases bind executable artifacts, and the hidden set plus exact model-facing prompts were committed before scored inference. Across 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three fixed seeds, 5,327 outputs (73.99\%) are \texttt{FORMAT\_ERROR}, and every one of the 1,873 parseable raw intents is \allow{}. A deterministic gate catches every measured false promotion among covered parseable decisions without blocking a covered valid promotion, but gate-arm decision coverage remains only 14.0--49.0\% for Qwen3-0.6B and 21.7--48.3\% for Qwen3-1.7B. Thus v1 exposes two distinct bottlenecks---structured decision production and policy-sensitive raw intent---while showing that deterministic enforcement can provide a conditional safety boundary once a structured intent exists; a supplementary blinded human audit remains mixed rather than passing.
 \end{abstract}
 
 \section{Introduction}
@@ -56,9 +56,9 @@ The hidden v1 study gives a simple but unfavorable answer at the raw-intent leve
 Our contributions are fourfold:
 \begin{enumerate}[leftmargin=*]
   \item \textbf{A transition-admissibility benchmark.} We formalize a four-action evidence-state decision task and construct 200 controlled pairs over 20 policy factors.
-  \item \textbf{Artifact-bound evaluation.} Numerical cases bind exact-rational computations, formal cases bind pinned Lean artifacts, and the hidden set plus exact prompts are committed before scored inference.
-  \item \textbf{Intent-versus-enforcement measurement.} Four intervention arms separate representation and verifier information from deterministic enforcement, so raw model intent is not conflated with the effective system action.
-  \item \textbf{A frozen negative result with external checks.} The 7,200-decision hidden study exposes severe structured-output failure and all-\allow{} raw intent; a supplementary blinded human audit is retained as a mixed result rather than used to revise the frozen policy after unblinding.
+  \item \textbf{Artifact-bound, preregistered evaluation.} Numerical cases bind exact-rational computations, formal cases bind pinned Lean artifacts, and the hidden set plus exact prompts are committed before scored inference.
+  \item \textbf{Separation of model intent from system enforcement.} Four intervention arms distinguish representation and verifier information from deterministic post-generation enforcement, preventing model behavior from being conflated with effective system behavior.
+  \item \textbf{A frozen empirical diagnosis.} The 7,200-decision hidden study reveals severe structured-output failure and an all-\allow{} raw-intent collapse, while showing that deterministic gating eliminates measured false promotion only on the subset of decisions with valid structured output.
 \end{enumerate}
 
 \section{Related Work}
@@ -145,7 +145,7 @@ The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.
 \]
 scored decisions. Public development instances are excluded from primary scoring. The hidden commitment entered Git history before scored inference; the frozen inference source is workflow run \texttt{32255636879}. Both models use llama.cpp commit \texttt{de699957b92f490efebad149665b0dccf127eaff}.
 
-Primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Secondary metrics include promotion false discovery rate, decision and complete-pair coverage, counterfactual flip accuracy, calibration metrics, structured reason/evidence scores, and format-error rate. Missing or malformed output remains observable and is never imputed as \hold{}; all conditional rates must therefore be read together with coverage.
+Primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Decision coverage is the fraction of hidden instances for which the model emits a parseable decision under the frozen output contract; complete-pair coverage requires both members of a controlled pair to be parseable. Secondary metrics include promotion false discovery rate, counterfactual flip accuracy, calibration metrics, structured reason/evidence scores, and format-error rate. Missing or malformed output remains observable and is never imputed as \hold{}; all conditional rates must therefore be read together with coverage.
 
 Confidence intervals resample whole controlled pairs. Arm comparisons use exact two-sided McNemar tests within exact model-artifact/runtime/seed/hardware identity groups, with Holm correction applied separately to raw-intent and effective-system comparisons.
 
@@ -244,7 +244,7 @@ Both reviewers missed an insufficient-repetitions \hold{} case and an invalid-cu
 
 Under the frozen small-model protocol, raw model intent is not meaningfully selective: every parseable decision requests \allow{}. The best non-gated Qwen3-0.6B arms improve the probability of producing a structured decision, but they do not discriminate licensed from unlicensed transitions. The gate, by contrast, changes system behavior after generation: on covered parseable decisions it prevents every measured false promotion without blocking a covered valid promotion.
 
-These observations support a narrow systems claim. Machine-checkable policy constraints can provide a reliable enforcement boundary \emph{once a structured intent exists}. They also show why a benchmark of policy-sensitive research agents must report model intent and system enforcement separately.
+These observations support a narrow systems claim: machine-checkable policy constraints can provide an enforcement boundary \emph{once a structured intent exists}. They do not rescue failures that occur before that boundary. A policy-sensitive benchmark must therefore expose at least three layers separately---structured-output coverage, raw model intent, and effective post-gate action---rather than collapse them into a single success rate.
 
 \subsection{What v1 does not establish}
 
@@ -254,7 +254,7 @@ The benchmark itself evaluates registered transition prerequisites, not theorem 
 
 \subsection{Design implication}
 
-The v1 result points to a two-layer design requirement for research agents. The first layer must reliably produce structured, inspectable decisions. The second must enforce claim-state transitions against machine-checkable evidence and policy. Deterministic enforcement cannot recover an intent that never arrives in the required schema, while model-side reliability alone cannot guarantee that a valid-looking intent is licensed. Both layers must therefore be measured, and safety rates at the enforcement layer should be reported together with decision coverage at the generation layer.
+The v1 result points to a layered design requirement for research agents. Generation must first produce a structured, inspectable decision; policy-sensitive reasoning must then distinguish licensed from unlicensed transitions; finally, deterministic enforcement can constrain the effective action. The present models fail at the first two layers, while the gate succeeds conditionally at the third. This decomposition is operationally important: deterministic enforcement cannot recover an intent that never arrives in the required schema, and structured output alone does not imply a licensed decision. Evaluation should therefore report coverage, raw intent quality, and enforcement behavior as separate quantities.
 
 \section{Limitations and Threats to Validity}
 
@@ -282,7 +282,7 @@ AI tools assisted with literature triage, research-gap exploration, adversarial 
 
 \section{Conclusion}
 
-\cpb evaluates a narrow failure that answer-centric benchmarks can miss: evidence may be genuine while a requested claim-state transition is not licensed. In the frozen hidden v1 study, the tested small Qwen3 models fail at the raw-intent level through severe structured-output errors and an all-\allow{} collapse whenever output is parseable. Deterministic enforcement prevents measured false promotion on covered decisions, but it does not repair low coverage or improve model reasoning. The central design lesson is therefore layered: research agents need both reliable structured decision production and deterministic, machine-checkable enforcement of evidence-state transitions.
+\cpb isolates a failure that conventional answer accuracy can miss: evidence may be genuine while a requested claim-state transition is not licensed. In the frozen hidden v1 study, the tested small Qwen3 models fail both to produce structured decisions reliably and, when parseable, to distinguish licensed from unlicensed transitions. Deterministic enforcement removes measured false promotion on covered decisions, but it neither repairs low coverage nor improves raw model reasoning. The resulting design lesson is deliberately narrow: research-agent evaluation should separate structured-output reliability, policy-sensitive model intent, and deterministic enforcement, and system-level safety claims should be conditioned on the coverage at which enforcement can actually operate.
 
 \bibliographystyle{plain}
 \bibliography{references}
