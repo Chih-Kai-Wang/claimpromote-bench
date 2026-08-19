@@ -1,0 +1,47 @@
+{
+  "audit_id": "external-policy-audit-v1",
+  "status": "FROZEN_BEFORE_REVIEW",
+  "source_dataset": "data/alpha",
+  "source_dataset_id": "claimpromotebench-alpha-20-pair",
+  "item_count": 20,
+  "selection_rule": "exactly_one_item_per_controlled_pair",
+  "target_gold_balance": {
+    "ALLOW": 10,
+    "NON_ALLOW": 10
+  },
+  "selected_item_ids": [
+    "alpha-dep-01-a",
+    "alpha-dep-02-a",
+    "alpha-dep-03-a",
+    "alpha-dep-04-a",
+    "alpha-num-01-b",
+    "alpha-num-02-b",
+    "alpha-num-03-b",
+    "alpha-num-04-b",
+    "alpha-run-01-a",
+    "alpha-run-02-a",
+    "alpha-run-03-b",
+    "alpha-stale-01-b",
+    "alpha-stale-02-a",
+    "alpha-stale-03-b",
+    "alpha-prov-01-b",
+    "alpha-prov-02-a",
+    "alpha-prov-03-a",
+    "alpha-formal-01-a",
+    "alpha-formal-02-a",
+    "alpha-formal-03-a"
+  ],
+  "required_non_allow_actions": [
+    "HOLD",
+    "DEMOTE",
+    "ESCALATE"
+  ],
+  "reviewer_time_target_minutes": {
+    "policy_reading": 10,
+    "audit": 40
+  },
+  "reviewer_count_current": 0,
+  "reviewer_count_target": 2,
+  "public_identity_required": false,
+  "blinding_note": "Procedural blinding only: the source alpha dataset is public. Reviewers must attest that they did not inspect source gold labels or model outputs during the audit."
+}

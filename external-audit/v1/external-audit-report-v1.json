@@ -1,0 +1,185 @@
+{
+  "audit_id": "external-policy-audit-v1",
+  "freeze": {
+    "action_distribution": {
+      "ALLOW": 10,
+      "DEMOTE": 1,
+      "ESCALATE": 1,
+      "HOLD": 8
+    },
+    "audit_id": "external-policy-audit-v1",
+    "gold_reason_count_distribution": {
+      "1": 20
+    },
+    "selected_item_ids": [
+      "alpha-dep-01-a",
+      "alpha-dep-02-a",
+      "alpha-dep-03-a",
+      "alpha-dep-04-a",
+      "alpha-num-01-b",
+      "alpha-num-02-b",
+      "alpha-num-03-b",
+      "alpha-num-04-b",
+      "alpha-run-01-a",
+      "alpha-run-02-a",
+      "alpha-run-03-b",
+      "alpha-stale-01-b",
+      "alpha-stale-02-a",
+      "alpha-stale-03-b",
+      "alpha-prov-01-b",
+      "alpha-prov-02-a",
+      "alpha-prov-03-a",
+      "alpha-formal-01-a",
+      "alpha-formal-02-a",
+      "alpha-formal-03-a"
+    ],
+    "selected_pair_ids": [
+      "alpha-dep-01",
+      "alpha-dep-02",
+      "alpha-dep-03",
+      "alpha-dep-04",
+      "alpha-num-01",
+      "alpha-num-02",
+      "alpha-num-03",
+      "alpha-num-04",
+      "alpha-run-01",
+      "alpha-run-02",
+      "alpha-run-03",
+      "alpha-stale-01",
+      "alpha-stale-02",
+      "alpha-stale-03",
+      "alpha-prov-01",
+      "alpha-prov-02",
+      "alpha-prov-03",
+      "alpha-formal-01",
+      "alpha-formal-02",
+      "alpha-formal-03"
+    ],
+    "selection_config_sha256": "sha256:6565a102ef6bd6906881748ef35a63b721651bac7bbc5a072bc9a0847397f2ec",
+    "source_dataset": "data/alpha"
+  },
+  "packet_id": "sha256:e43fbc3a9c6279b3dfd5aa5511ba55bfce2bd2f49a290358431822de9f44231a",
+  "packet_sha256": "sha256:56fa9e86a3132e9101c3c3e1ae16b5163224c863af6c671063e4db772efbc336",
+  "pairwise": [
+    {
+      "raw_action_agreement": 0.85,
+      "reviewer_a": "reviewer-01",
+      "reviewer_b": "reviwer-02"
+    }
+  ],
+  "reviewers": [
+    {
+      "action_agreement": 0.9,
+      "disagreements": [
+        {
+          "gold_action": "HOLD",
+          "gold_reasons": [
+            "INSUFFICIENT_REPETITIONS"
+          ],
+          "review_action": "ALLOW",
+          "review_item_id": "review-2bb614e49d116c39aa2d093297154cf4",
+          "review_reasons": [
+            "POLICY_SATISFIED"
+          ]
+        },
+        {
+          "gold_action": "DEMOTE",
+          "gold_reasons": [
+            "CURRENT_STATE_BASIS_INVALID"
+          ],
+          "review_action": "ALLOW",
+          "review_item_id": "review-4b490bc43af91ed03d634b18fb5c5264",
+          "review_reasons": [
+            "POLICY_SATISFIED"
+          ]
+        }
+      ],
+      "exact_reason_agreement": 0.9,
+      "items": 20,
+      "mean_confidence": 5.0,
+      "packet_id": "sha256:e43fbc3a9c6279b3dfd5aa5511ba55bfce2bd2f49a290358431822de9f44231a",
+      "reviewer_id": "reviewer-01",
+      "status": "PASS",
+      "submission_sha256": "sha256:6bcfbf8bc366daf2687fb7e05c2ed65a190baa9438eb7345232b0fd6809bf2f7"
+    },
+    {
+      "action_agreement": 0.75,
+      "disagreements": [
+        {
+          "gold_action": "HOLD",
+          "gold_reasons": [
+            "INSUFFICIENT_REPETITIONS"
+          ],
+          "review_action": "ALLOW",
+          "review_item_id": "review-2bb614e49d116c39aa2d093297154cf4",
+          "review_reasons": [
+            "POLICY_SATISFIED"
+          ]
+        },
+        {
+          "gold_action": "HOLD",
+          "gold_reasons": [
+            "EVIDENCE_STALE"
+          ],
+          "review_action": "ALLOW",
+          "review_item_id": "review-3312eef68d66456ce2147cbfe5523ea1",
+          "review_reasons": [
+            "POLICY_SATISFIED"
+          ]
+        },
+        {
+          "gold_action": "DEMOTE",
+          "gold_reasons": [
+            "CURRENT_STATE_BASIS_INVALID"
+          ],
+          "review_action": "ALLOW",
+          "review_item_id": "review-4b490bc43af91ed03d634b18fb5c5264",
+          "review_reasons": [
+            "POLICY_SATISFIED"
+          ]
+        },
+        {
+          "gold_action": "ALLOW",
+          "gold_reasons": [
+            "POLICY_SATISFIED"
+          ],
+          "review_action": "HOLD",
+          "review_item_id": "review-62b2997f4e36544eb98a24f72ef23b5a",
+          "review_reasons": [
+            "UNTRUSTED_TOOLCHAIN"
+          ]
+        },
+        {
+          "gold_action": "HOLD",
+          "gold_reasons": [
+            "MISSING_DEPENDENCY"
+          ],
+          "review_action": "HOLD",
+          "review_item_id": "review-cc22b874a92775147316d4bbff71702c",
+          "review_reasons": [
+            "DEPENDENCY_NOT_VERIFIED"
+          ]
+        },
+        {
+          "gold_action": "ALLOW",
+          "gold_reasons": [
+            "POLICY_SATISFIED"
+          ],
+          "review_action": "HOLD",
+          "review_item_id": "review-e1a1eb10473458e103d6ebe3ec66820e",
+          "review_reasons": [
+            "CLAIM_ID_MISMATCH"
+          ]
+        }
+      ],
+      "exact_reason_agreement": 0.7,
+      "items": 20,
+      "mean_confidence": 4.95,
+      "packet_id": "sha256:e43fbc3a9c6279b3dfd5aa5511ba55bfce2bd2f49a290358431822de9f44231a",
+      "reviewer_id": "reviwer-02",
+      "status": "PASS",
+      "submission_sha256": "sha256:3887b16fa723ad3b5c585031eebc22a07dd7ab1ce392aed481139e656b9aef68"
+    }
+  ],
+  "schema_version": "external-audit-report-v1"
+}

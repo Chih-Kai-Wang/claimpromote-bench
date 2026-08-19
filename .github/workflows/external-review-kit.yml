@@ -1,0 +1,71 @@
+name: external review kit
+
+# Optional supplementary validation only. Keep manual so ordinary benchmark/paper commits do
+# not rebuild reviewer materials while the external audit is not on the critical path.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-review-kit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e ".[dev]"
+
+      - name: Build frozen 20-item external audit kit
+        run: |
+          mkdir -p work
+          python scripts/build_external_review_v1.py build --out work/external-review-v1 | tee work/external-review-v1-build.json
+
+      - name: Build human-readable single-file reviewer page
+        run: |
+          python scripts/build_external_review_friendly_html.py \
+            --package-dir work/external-review-v1 \
+            --out work/ClaimPromoteBench_external_review_v1_friendly.html
+
+      - name: Show immutable identities
+        run: |
+          cat work/external-review-v1/FREEZE.json
+          sha256sum work/external-review-v1/SEND_THIS_TO_REVIEWER.zip
+          sha256sum work/external-review-v1/DO_NOT_SEND_PRIVATE.zip
+          sha256sum work/ClaimPromoteBench_external_review_v1_friendly.html
+
+      - name: Upload human-readable reviewer page
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: claimpromotebench-external-review-v1-FRIENDLY-HTML
+          path: work/ClaimPromoteBench_external_review_v1_friendly.html
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload reviewer-safe package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: claimpromotebench-external-review-v1-SEND-THIS
+          path: work/external-review-v1/SEND_THIS_TO_REVIEWER.zip
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload private unblinding material
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: claimpromotebench-external-review-v1-PRIVATE-DO-NOT-SEND
+          path: |
+            work/external-review-v1/DO_NOT_SEND_PRIVATE.zip
+            work/external-review-v1/FREEZE.json
+          if-no-files-found: error
+          retention-days: 90

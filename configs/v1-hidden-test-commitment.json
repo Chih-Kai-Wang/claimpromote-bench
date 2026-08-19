@@ -1,0 +1,65 @@
+{
+  "benchmark_id": "claimpromotebench-v1",
+  "benchmark_plan_sha256": "sha256:60a87c61ed23e9a834182f51956380bb9dd53bff778e4fae4b8e619de1ae83fc",
+  "commitment_sha256": "sha256:55a3d2bffb6f23b7253715a9f091d951daaf589e205033d3f46dfd9e6ff6590e",
+  "commitment_version": "1.0.0",
+  "contains_gold_labels": false,
+  "contains_hidden_rows": false,
+  "contains_seed_bytes": false,
+  "dataset_components": {
+    "author-items.jsonl": "sha256:5a71f7d09bf7d1ce2bc321867eaf7bed4e97984a16d8818e80500a599f762f7e",
+    "gold.jsonl": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
+    "inputs.jsonl": "sha256:14eaa74f6d5ef045fbaf89ce6b805f25effa6dd9b11122048db98aaa5c6f2b92",
+    "manifest.json": "sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba",
+    "pairs.json": "sha256:34fb2a69bcb43e829ac9ad3c82f1a540a3beb850b5cd5bc52583402d9b6f342d"
+  },
+  "dataset_manifest_sha256": "sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba",
+  "family_pair_counts": {
+    "DEPENDENCY": 28,
+    "FORMAL": 24,
+    "NUMERICAL": 28,
+    "PROVENANCE": 24,
+    "RUNTIME": 22,
+    "STALE_CONTRADICTION": 24
+  },
+  "freeze_rule": "Any post-commitment change to policy semantics, controlled factor, prompt semantics, or gold label creates a new benchmark version and invalidates affected scored runs.",
+  "hidden_seed_sha256": "sha256:b91b5b36268bf2af3acc4c2d0890613b92c02a125db3fe5a1e12c099800fe285",
+  "instances": 300,
+  "invalid_action_counts": {
+    "DEMOTE": 8,
+    "ESCALATE": 8,
+    "HOLD": 134
+  },
+  "invalid_side_counts": {
+    "A": 75,
+    "B": 75
+  },
+  "pairs": 150,
+  "policy_id": "math-evidence-transition",
+  "policy_sha256": "sha256:97f865336b34a62038b6556037d986e67441c7196ac64817bfc721ba3aeae018",
+  "policy_version": "1.0.0",
+  "prompt_manifest_sha256": "sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957",
+  "schema_sha256": {
+    "benchmark-input-v1.schema.json": "sha256:cec8fb5ee65172aa5708859755230bf5be0aab57f78ea418e746af00f075ab1f",
+    "gold-label.schema.json": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491"
+  },
+  "split": "test",
+  "validator_summary": {
+    "evaluation_time": "2026-08-13T00:00:00Z",
+    "executable_computation_artifacts": 28,
+    "executable_computation_evidence": 56,
+    "families": {
+      "DEPENDENCY": 28,
+      "FORMAL": 24,
+      "NUMERICAL": 28,
+      "PROVENANCE": 24,
+      "RUNTIME": 22,
+      "STALE_CONTRADICTION": 24
+    },
+    "formal_lean_artifacts": 24,
+    "formal_lean_evidence": 48,
+    "instances": 300,
+    "model_experiments": "PENDING",
+    "pairs": 150
+  }
+}

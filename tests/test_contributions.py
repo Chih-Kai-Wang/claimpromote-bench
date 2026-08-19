@@ -14,7 +14,7 @@ from claimpromotebench.contributions import (
     validate_contribution,
     validate_contribution_tree,
 )
-from claimpromotebench.dataset import write_jsonl
+from claimpromotebench.dataset import repository_root, write_jsonl
 from claimpromotebench.errors import DatasetIntegrityError
 from claimpromotebench.hashing import sha256_bytes, sha256_file
 from claimpromotebench.prompts import render_prompt
@@ -28,6 +28,13 @@ IDENTITY = {
     "seed": 104729,
     "hardware": "community-test-hardware",
 }
+
+
+def _exact_prompt(rendered: str) -> str:
+    decoding = json.loads(
+        (repository_root() / "configs" / "decoding-v1.json").read_text(encoding="utf-8")
+    )
+    return f"{rendered.rstrip()}\n\n{decoding['control_instruction']}\n"
 
 
 def _write_run(
@@ -48,13 +55,14 @@ def _write_run(
             policy,
             evaluation_time,
         )
-        prompt = render_prompt(
+        rendered = render_prompt(
             item,
             str(run_identity["arm"]),
             dataset_dir,
             policy=policy,
             evaluation_time=evaluation_time,
         )
+        prompt = _exact_prompt(rendered)
         records.append(
             {
                 "item_id": item["id"],

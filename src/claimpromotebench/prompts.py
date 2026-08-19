@@ -75,7 +75,7 @@ def _policy_contract(policy: dict[str, Any], evaluation_time: str) -> str:
     return (
         "Versioned policy contract (this complete contract is authoritative; apply its "
         "root-type rules, transitive dependency closure, contradiction authority, review "
-        "independence, alpha research-status scope, reason ordering, and action precedence "
+        "independence, research-status scope, reason ordering, and action precedence "
         "exactly).\n"
         f"Contract SHA-256: {sha256_bytes(serialized.encode('utf-8'))}\n"
         f"{serialized}"

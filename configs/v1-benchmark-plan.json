@@ -1,0 +1,85 @@
+{
+  "benchmark_id": "claimpromotebench-v1",
+  "design_status": "PREREGISTERED_CONSTRUCTION_PLAN",
+  "pairs": 200,
+  "instances": 400,
+  "pair_members": 2,
+  "splits": {
+    "dev": {
+      "pairs": 50,
+      "instances": 100,
+      "public": true,
+      "invalid_side_counts": {"A": 25, "B": 25}
+    },
+    "test": {
+      "pairs": 150,
+      "instances": 300,
+      "public_before_unblinding": false,
+      "invalid_side_counts": {"A": 75, "B": 75}
+    }
+  },
+  "family_pair_counts": {
+    "DEPENDENCY": 40,
+    "NUMERICAL": 40,
+    "RUNTIME": 30,
+    "STALE_CONTRADICTION": 30,
+    "PROVENANCE": 30,
+    "FORMAL": 30
+  },
+  "factors": [
+    {"factor_id": "direct_dependency", "family": "DEPENDENCY", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "transitive_dependency", "family": "DEPENDENCY", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "dependency_verifier", "family": "DEPENDENCY", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "dependency_statement", "family": "DEPENDENCY", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "repetitions", "family": "NUMERICAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "domain", "family": "NUMERICAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "preregistration", "family": "NUMERICAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "precision", "family": "NUMERICAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "tool_exit", "family": "RUNTIME", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "verifier_execution", "family": "RUNTIME", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1, 2]},
+    {"factor_id": "run_completion", "family": "RUNTIME", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "age", "family": "STALE_CONTRADICTION", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "current_binding", "family": "STALE_CONTRADICTION", "pairs": 10, "invalid_action": "DEMOTE", "dev_variants": [0, 1]},
+    {"factor_id": "contradiction", "family": "STALE_CONTRADICTION", "pairs": 10, "invalid_action": "ESCALATE", "dev_variants": [0, 1]},
+    {"factor_id": "reviewer_identity", "family": "PROVENANCE", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "review_environment", "family": "PROVENANCE", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "cold_start", "family": "PROVENANCE", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "statement_identity", "family": "FORMAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "claim_identity", "family": "FORMAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "trust_base", "family": "FORMAL", "pairs": 10, "invalid_action": "HOLD", "dev_variants": [0, 1]}
+  ],
+  "invalid_side_rule": "A iff (factor_index_zero_based + variant_index) is even; otherwise B",
+  "overall_invalid_side_counts": {"A": 100, "B": 100},
+  "overall_invalid_action_counts": {"HOLD": 180, "DEMOTE": 10, "ESCALATE": 10},
+  "dev_invalid_action_counts": {"HOLD": 46, "DEMOTE": 2, "ESCALATE": 2},
+  "test_invalid_action_counts": {"HOLD": 134, "DEMOTE": 8, "ESCALATE": 8},
+  "surface_profiles": [
+    "algebraic_identity",
+    "order_inequality",
+    "finite_sequence",
+    "polynomial_grid",
+    "matrix_property",
+    "graph_property",
+    "recurrence",
+    "probability_bound",
+    "number_theory",
+    "set_relation"
+  ],
+  "surface_requirements": {
+    "same_within_pair": true,
+    "distinct_across_variants_when_semantically_possible": true,
+    "no_family_or_factor_label_in_model_prompt": true,
+    "no_gold_or_split_label_in_model_prompt": true,
+    "formal_profiles_must_bind_to_executable_pinned_lean": true,
+    "numerical_profiles_must_bind_to_recomputable_exact_rational_artifacts": true
+  },
+  "hidden_generation": {
+    "requires_private_seed": true,
+    "seed_bytes": 32,
+    "default_seed_forbidden": true,
+    "seed_must_not_enter_public_repository": true,
+    "public_record_before_scored_test": "sha256 commitment to hidden dataset manifest and seed hash only",
+    "gold_opening_before_commitment_forbidden": true
+  },
+  "freeze_rule": "Any post-commitment change to policy semantics, controlled factor, prompt semantics, or gold label creates a new benchmark version and invalidates affected scored runs."
+}

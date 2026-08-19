@@ -1,0 +1,13 @@
+{
+  "chat_mode": "qwen3_non_thinking",
+  "control_instruction": "/no_think",
+  "max_output_tokens": 768,
+  "min_p": 0.0,
+  "presence_penalty": 1.5,
+  "repeat_penalty": 1.0,
+  "seed_source": "configs/experiment-v1-planned.json",
+  "temperature": 0.7,
+  "top_k": 20,
+  "top_p": 0.8,
+  "version": "1.0.0"
+}

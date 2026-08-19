@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "claimpromotebench-v1-dev",
+  "release_status": "PUBLIC_DEV",
+  "source_head_sha": "329f5343963cab84b36a782887ef842eb223ddff",
+  "source_ci_run_id": 32249140253,
+  "source_actions_artifact_id": 9363764733,
+  "source_actions_artifact_sha256": "sha256:4af8bf89a3d0f5151acfde57d6b368293c8ab80089c58f547b6ac660450d66d2",
+  "evaluation_time": "2026-08-13T00:00:00Z",
+  "pairs": 50,
+  "instances": 100,
+  "policy_file": "math-evidence-transition-1.0.0.json",
+  "manifest_sha256": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
+  "canonical_files": {
+    "author-items.jsonl": "sha256:76f7546877b4b70668bca47cfb5444ec5942d9ea36dd377f1b78872a3f827d4a",
+    "gold.jsonl": "sha256:bddb97ab374b050dd961c05f5a382948bab87ed9432c8dacd7ff6eb583e8642e",
+    "inputs.jsonl": "sha256:53a1ffbafb2ec201b81830bbc95a617036fc625dc9dc4435f21bc7c656011a1b",
+    "lake-manifest.json": "sha256:3bf50f838dcb7a800f3302373206cac3b252fabef90d261fcdbce79d9a6d8a2b",
+    "lakefile.toml": "sha256:20ef10cbd8a2ab4bbf67587c81077b92ecbbfc77ee356b3064e68f8993cebca4",
+    "lean-toolchain": "sha256:302cd63c54178885b89e669f33b38f12f4dd7ae7e5cac537b3203e3768d8fb2b",
+    "manifest.json": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
+    "pairs.json": "sha256:8db520cc2b15ca348a399dd27bcc1a45cd1fdd1a3770e235357125d5fd1ab1c1"
+  },
+  "formal_files": {
+    "artifacts/ClaimPromoteFormal.lean": "sha256:2ffc1d7bfef386e5553adf3ff8c30ed99810dca988ab0a24d431a5189a0ed490",
+    "artifacts/ClaimPromoteFormal/V1DevFormal001.lean": "sha256:918b121ea3c99a9c3fc0df1e9fe0b2a1f571a89362314a38d5c285bd2b701642",
+    "artifacts/ClaimPromoteFormal/V1DevFormal002.lean": "sha256:6b59686e6ae33292773de4b43b4ac32ba63613d8af3a458c4e41d60448008ca5",
+    "artifacts/ClaimPromoteFormal/V1DevFormal003.lean": "sha256:293cadadb47c4eb6c30fd2e8e514929fe792177f1e55606c034c3a6fa7b4391b",
+    "artifacts/ClaimPromoteFormal/V1DevFormal004.lean": "sha256:343e3712e30fabcb4c41f7b7959110477779b0fdfd29725d5f7fec958a2bf43f",
+    "artifacts/ClaimPromoteFormal/V1DevFormal005.lean": "sha256:9459bbf65997d92da0b7fac510b0fe24fb7ffdefe73b2913739bacfd1e6f19ef",
+    "artifacts/ClaimPromoteFormal/V1DevFormal006.lean": "sha256:8817abc54b37d9022fb624052da4cc7c03f0836a8542e2ff4757496c8e9d6854"
+  },
+  "integrity_notes": [
+    "The source artifact was emitted only after v1 dev construction, preregistration audit, pinned Lean build, leanchecker replay, and formal artifact execution passed in hosted CI.",
+    "The Actions ZIP was independently unpacked and every file named in manifest.json was rehashed with zero mismatches.",
+    "No hidden-test seed, hidden-test item, or hidden-test gold label is contained in this public-dev freeze record."
+  ]
+}

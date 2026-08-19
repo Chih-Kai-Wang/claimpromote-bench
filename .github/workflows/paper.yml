@@ -1,0 +1,57 @@
+name: paper
+
+on:
+  pull_request:
+    paths:
+      - "technical-report/**"
+      - "release/v1-paper-results.json"
+      - "scripts/lint_paper_submission.py"
+      - "scripts/validate_v1_release_results.py"
+      - ".github/workflows/paper.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    name: compile technical report
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Fail-closed manuscript lint
+        run: python scripts/lint_paper_submission.py
+      - name: Validate public result release
+        run: python scripts/validate_v1_release_results.py
+      - name: Install TeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended
+      - name: Compile manuscript
+        working-directory: technical-report
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+          bibtex main
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+      - name: Fail on undefined citations or references
+        working-directory: technical-report
+        shell: bash
+        run: |
+          if grep -E "LaTeX Warning: (Citation|Reference).*(undefined|multiply defined)|There were undefined references" main.log; then
+            echo "Manuscript contains unresolved citations or references." >&2
+            exit 1
+          fi
+      - name: Confirm PDF exists
+        working-directory: technical-report
+        run: test -s main.pdf

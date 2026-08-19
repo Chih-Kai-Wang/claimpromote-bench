@@ -15,6 +15,8 @@ from .hashing import canonical_json, sha256_file, verify_artifact
 from .oracle import evaluate
 from .policy import load_policy
 
+# Backward-compatible public constant for the frozen alpha tests and downstream users.
+# Dataset validation itself is manifest-driven so future frozen splits need not reuse it.
 EXPECTED_FAMILY_COUNTS = {
     "DEPENDENCY": 4,
     "NUMERICAL": 4,
@@ -87,7 +89,42 @@ def _schema(root: Path, name: str) -> Path:
     return root / "schemas" / name
 
 
-def compile_author_items(dataset_dir: Path, root: Path | None = None) -> None:
+def _positive_manifest_int(manifest: dict[str, Any], key: str) -> int:
+    value = manifest.get(key)
+    if not isinstance(value, int) or isinstance(value, bool) or value <= 0:
+        raise DatasetIntegrityError(f"manifest.{key} must be a positive integer")
+    return value
+
+
+def _manifest_counter(manifest: dict[str, Any], key: str) -> Counter[str]:
+    value = manifest.get(key)
+    if not isinstance(value, dict) or not value:
+        raise DatasetIntegrityError(f"manifest.{key} must be a non-empty object")
+    counts: Counter[str] = Counter()
+    for label, count in value.items():
+        if not isinstance(label, str) or not label:
+            raise DatasetIntegrityError(f"manifest.{key} contains an invalid label")
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            raise DatasetIntegrityError(f"manifest.{key}.{label} must be a non-negative integer")
+        counts[label] = count
+    return counts
+
+
+def _schema_name(manifest: dict[str, Any], key: str, default: str) -> str:
+    value = manifest.get(key, default)
+    if not isinstance(value, str):
+        raise DatasetIntegrityError(f"manifest.{key} must be a safe relative schema path")
+    if not value or value.startswith("/") or ".." in Path(value).parts:
+        raise DatasetIntegrityError(f"manifest.{key} must be a safe relative schema path")
+    return value
+
+
+def compile_author_items(
+    dataset_dir: Path,
+    root: Path | None = None,
+    *,
+    author_schema: str = "benchmark-author-item.schema.json",
+) -> None:
     """Split author records into public inputs and scorer-only gold labels."""
 
     root = root or repository_root()
@@ -95,9 +132,7 @@ def compile_author_items(dataset_dir: Path, root: Path | None = None) -> None:
     inputs: list[dict[str, Any]] = []
     gold: list[dict[str, Any]] = []
     for item in author_items:
-        validate_with_schema(
-            item, _schema(root, "benchmark-author-item.schema.json"), str(item.get("id"))
-        )
+        validate_with_schema(item, _schema(root, author_schema), str(item.get("id")))
         public = deepcopy(item)
         decision = public.pop("gold")
         inputs.append(public)
@@ -161,13 +196,32 @@ def _walk_diff(left: Any, right: Any, pointer: str = "") -> set[str]:
     return set() if left == right else {pointer or "/"}
 
 
-def check_pairs(dataset_dir: Path) -> dict[str, int]:
+def check_pairs(
+    dataset_dir: Path,
+    manifest: dict[str, Any] | None = None,
+) -> dict[str, int]:
     """Check controlled-pair invariants without consulting a model."""
+
+    manifest = manifest or verify_manifest(dataset_dir)
+    expected_pairs = _positive_manifest_int(manifest, "pairs")
+    expected_instances = _positive_manifest_int(manifest, "instances")
+    expected_family_counts = _manifest_counter(manifest, "family_pair_counts")
+    expected_invalid_sides = _manifest_counter(manifest, "invalid_side_counts")
+    if sum(expected_family_counts.values()) != expected_pairs:
+        raise DatasetIntegrityError("manifest family_pair_counts do not sum to manifest.pairs")
+    if sum(expected_invalid_sides.values()) != expected_pairs:
+        raise DatasetIntegrityError("manifest invalid_side_counts do not sum to manifest.pairs")
+    if expected_instances != expected_pairs * 2:
+        raise DatasetIntegrityError(
+            "controlled-pair datasets require exactly two instances per pair"
+        )
 
     items = {str(item["id"]): item for item in load_jsonl(dataset_dir / "author-items.jsonl")}
     pairs = load_json(dataset_dir / "pairs.json")
-    if not isinstance(pairs, list) or len(pairs) != 20:
-        raise DatasetIntegrityError("alpha must contain exactly 20 pair descriptors")
+    if not isinstance(pairs, list) or len(pairs) != expected_pairs:
+        raise DatasetIntegrityError(
+            f"dataset must contain exactly {expected_pairs} pair descriptors"
+        )
     family_counts: Counter[str] = Counter()
     invalid_sides: Counter[str] = Counter()
     seen_members: set[str] = set()
@@ -213,12 +267,14 @@ def check_pairs(dataset_dir: Path) -> dict[str, int]:
         if invalid_action == "ALLOW" or valid_action != "ALLOW":
             raise DatasetIntegrityError(f"{pair['pair_id']} is not invalid-to-valid")
 
-    if family_counts != Counter(EXPECTED_FAMILY_COUNTS):
+    if family_counts != expected_family_counts:
         raise DatasetIntegrityError(f"unexpected family distribution: {dict(family_counts)}")
-    if invalid_sides != Counter({"A": 10, "B": 10}):
-        raise DatasetIntegrityError(f"invalid sides are not balanced: {dict(invalid_sides)}")
-    if seen_members != set(items) or len(items) != 40:
-        raise DatasetIntegrityError("alpha must contain 40 items, each in exactly one pair")
+    if invalid_sides != expected_invalid_sides:
+        raise DatasetIntegrityError(f"unexpected invalid-side distribution: {dict(invalid_sides)}")
+    if seen_members != set(items) or len(items) != expected_instances:
+        raise DatasetIntegrityError(
+            f"dataset must contain {expected_instances} items, each in exactly one pair"
+        )
     return dict(sorted(family_counts.items()))
 
 
@@ -227,10 +283,16 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
 
     root = root or repository_root()
     manifest = verify_manifest(dataset_dir)
+    expected_instances = _positive_manifest_int(manifest, "instances")
+    expected_pairs = _positive_manifest_int(manifest, "pairs")
+    input_schema = _schema_name(manifest, "input_schema", "benchmark-input.schema.json")
+    gold_schema = _schema_name(manifest, "gold_schema", "gold-label.schema.json")
     inputs = load_jsonl(dataset_dir / "inputs.jsonl")
     gold_records = load_jsonl(dataset_dir / "gold.jsonl")
-    if len(inputs) != 40 or len(gold_records) != 40:
-        raise DatasetIntegrityError("alpha inputs and gold must each contain 40 records")
+    if len(inputs) != expected_instances or len(gold_records) != expected_instances:
+        raise DatasetIntegrityError(
+            f"inputs and gold must each contain exactly {expected_instances} records"
+        )
     input_ids = [str(item["id"]) for item in inputs]
     if len(input_ids) != len(set(input_ids)):
         raise DatasetIntegrityError("input IDs must be unique")
@@ -248,7 +310,7 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
     if not isinstance(schema_hashes, dict):
         raise DatasetIntegrityError("manifest.schema_sha256 must bind the public schemas")
     for name, expected in sorted(schema_hashes.items()):
-        if sha256_file(root / "schemas" / str(name)) != expected:
+        if sha256_file(_schema(root, str(name))) != expected:
             raise DatasetIntegrityError(f"schema does not match manifest: {name}")
 
     from .executable import verify_dataset_artifact
@@ -259,9 +321,9 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
     formal_artifacts: set[str] = set()
     formal_evidence = 0
     for item in inputs:
-        validate_with_schema(item, _schema(root, "benchmark-input.schema.json"), str(item["id"]))
+        validate_with_schema(item, _schema(root, input_schema), str(item["id"]))
         gold_record = gold_by_id[str(item["id"])]
-        validate_with_schema(gold_record, _schema(root, "gold-label.schema.json"), str(item["id"]))
+        validate_with_schema(gold_record, _schema(root, gold_schema), str(item["id"]))
         require_scope_match = gold_record["decision"]["action"] == "ALLOW"
         item_has_executable = False
         item_has_formal = False
@@ -289,12 +351,10 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
                 item_has_formal = True
         if item["family"] == "NUMERICAL" and not item_has_executable:
             raise DatasetIntegrityError(
-                f"numerical alpha item lacks executable computation evidence: {item['id']}"
+                f"numerical item lacks executable computation evidence: {item['id']}"
             )
         if item["family"] == "FORMAL" and not item_has_formal:
-            raise DatasetIntegrityError(
-                f"formal alpha item lacks a bound Lean certificate: {item['id']}"
-            )
+            raise DatasetIntegrityError(f"formal item lacks a bound Lean certificate: {item['id']}")
 
         actual = evaluate(item, policy, str(manifest["evaluation_time"]))
         expected = gold_record["decision"]
@@ -302,15 +362,15 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
             raise DatasetIntegrityError(
                 f"oracle/gold mismatch for {item['id']}: {actual} != {expected}"
             )
-    distribution = check_pairs(dataset_dir)
+    distribution = check_pairs(dataset_dir, manifest)
     return {
         "instances": len(inputs),
-        "pairs": 20,
+        "pairs": expected_pairs,
         "families": distribution,
         "evaluation_time": manifest["evaluation_time"],
         "executable_computation_artifacts": len(executable_artifacts),
         "executable_computation_evidence": executable_evidence,
         "formal_lean_artifacts": len(formal_artifacts),
         "formal_lean_evidence": formal_evidence,
-        "model_experiments": "PENDING",
+        "model_experiments": manifest.get("model_experiments", "PENDING"),
     }

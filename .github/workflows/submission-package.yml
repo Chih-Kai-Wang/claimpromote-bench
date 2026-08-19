@@ -1,0 +1,193 @@
+name: submission package
+
+on:
+  pull_request:
+    paths:
+      - "technical-report/**"
+      - "release/v1-paper-results.json"
+      - "scripts/build_submission_tex.py"
+      - "scripts/lint_paper_submission.py"
+      - "scripts/validate_v1_release_results.py"
+      - ".github/workflows/submission-package.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build arXiv and ICLR 2027 kit
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fail-closed manuscript lint
+        run: python scripts/lint_paper_submission.py
+
+      - name: Validate public result release
+        run: python scripts/validate_v1_release_results.py
+
+      - name: Install submission dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          # GitHub's Azure Ubuntu mirror can intermittently stall. Prefer the canonical
+          # archive directly so submission verification does not depend on mirror fallback.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i \
+              's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' \
+              /etc/apt/apt-mirrors.txt
+          fi
+          if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then
+            sudo sed -i \
+              's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' \
+              /etc/apt/sources.list.d/ubuntu.sources
+          fi
+          sudo apt-get \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=20 \
+            -o Acquire::https::Timeout=20 \
+            update
+          sudo apt-get \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=20 \
+            -o Acquire::https::Timeout=20 \
+            install -y --no-install-recommends \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            poppler-utils \
+            curl \
+            unzip \
+            zip
+
+      - name: Generate venue-specific TeX sources
+        run: python scripts/build_submission_tex.py --out work/submission
+
+      - name: Fetch official ICLR 2027 style files
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 \
+            https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip \
+            --output /tmp/iclr2027.zip
+          rm -rf /tmp/iclr2027-style
+          mkdir -p /tmp/iclr2027-style
+          unzip -q /tmp/iclr2027.zip -d /tmp/iclr2027-style
+          sty="$(find /tmp/iclr2027-style -type f -name 'iclr2027_conference.sty' -print -quit)"
+          bst="$(find /tmp/iclr2027-style -type f -name 'iclr2027_conference.bst' -print -quit)"
+          test -n "$sty"
+          test -n "$bst"
+          cp "$sty" work/submission/iclr2027_conference.sty
+          cp "$bst" work/submission/iclr2027_conference.bst
+          sha256sum /tmp/iclr2027.zip \
+            work/submission/iclr2027_conference.sty \
+            work/submission/iclr2027_conference.bst \
+            > work/submission/iclr-style-sha256.txt
+
+      - name: Compile ICLR 2027 submission
+        working-directory: work/submission
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error iclr2027.tex
+          bibtex iclr2027
+          pdflatex -interaction=nonstopmode -halt-on-error iclr2027.tex
+          pdflatex -interaction=nonstopmode -halt-on-error iclr2027.tex
+
+      - name: Compile ICLR main-text page-limit probe
+        working-directory: work/submission
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error iclr2027-maintext-probe.tex
+          pages="$(pdfinfo iclr2027-maintext-probe.pdf | awk '/^Pages:/ {print $2}')"
+          test -n "$pages"
+          echo "ICLR main-text pages: $pages"
+          if [ "$pages" -gt 9 ]; then
+            echo "ICLR 2027 main text exceeds the 9-page submission limit." >&2
+            exit 1
+          fi
+
+      - name: Compile arXiv preprint
+        working-directory: work/submission
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error arxiv.tex
+          bibtex arxiv
+          pdflatex -interaction=nonstopmode -halt-on-error arxiv.tex
+          pdflatex -interaction=nonstopmode -halt-on-error arxiv.tex
+
+      - name: Fail on unresolved citations, references, or overflow
+        working-directory: work/submission
+        shell: bash
+        run: |
+          set -euo pipefail
+          for log in iclr2027.log arxiv.log; do
+            if grep -E "LaTeX Warning: (Citation|Reference).*(undefined|multiply defined)|There were undefined references" "$log"; then
+              echo "$log contains unresolved citations or references." >&2
+              exit 1
+            fi
+            if grep -F 'Overfull \\hbox' "$log"; then
+              echo "$log contains an overfull horizontal box; visual overflow is not upload-ready." >&2
+              exit 1
+            fi
+          done
+
+      - name: Enforce ICLR anonymity and arXiv provenance
+        working-directory: work/submission
+        shell: bash
+        run: |
+          set -euo pipefail
+          pdftotext iclr2027.pdf iclr2027.txt
+          pdftotext arxiv.pdf arxiv.txt
+
+          sensitive='Chih-Kai Wang|National Taipei University of Education|f0909172434|gmail\.com|32255636879|32274814703|aa5268dc|8d9b3f5c|e2b09f30|3eb5b534|github\.com/f0909172434'
+          for target in iclr2027.tex iclr2027.txt; do
+            if grep -E -i "$sensitive" "$target"; then
+              echo "ICLR submission leaks searchable author/provenance identity in $target." >&2
+              exit 1
+            fi
+          done
+          if pdfinfo iclr2027.pdf | grep -E -i 'Chih-Kai Wang|f0909172434|gmail\.com'; then
+            echo 'ICLR PDF metadata leaks author identity.' >&2
+            exit 1
+          fi
+
+          grep -F 'Chih-Kai Wang' arxiv.txt >/dev/null
+          grep -F 'National Taipei University of Education' arxiv.txt >/dev/null
+          grep -F '32255636879' arxiv.txt >/dev/null
+          grep -F '32274814703' arxiv.txt >/dev/null
+
+      - name: Assemble upload-ready bundles
+        working-directory: work/submission
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p arxiv-source iclr-source
+          cp arxiv.tex references.bib arxiv-source/
+          cp iclr2027.tex references.bib iclr2027_conference.sty iclr2027_conference.bst iclr-source/
+          zip -qr claimpromotebench-arxiv-source.zip arxiv-source
+          zip -qr claimpromotebench-iclr2027-source.zip iclr-source
+          sha256sum \
+            arxiv.pdf \
+            iclr2027.pdf \
+            claimpromotebench-arxiv-source.zip \
+            claimpromotebench-iclr2027-source.zip \
+            > SHA256SUMS.txt
+
+      - name: Upload submission kit
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-submission-kit
+          path: |
+            work/submission/arxiv.pdf
+            work/submission/iclr2027.pdf
+            work/submission/claimpromotebench-arxiv-source.zip
+            work/submission/claimpromotebench-iclr2027-source.zip
+            work/submission/SHA256SUMS.txt
+            work/submission/iclr-style-sha256.txt
+          if-no-files-found: error
+          retention-days: 30

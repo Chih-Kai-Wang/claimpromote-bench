@@ -5,9 +5,16 @@ from pathlib import Path
 
 from claimpromotebench.baselines import baseline_decision
 from claimpromotebench.cli import main
-from claimpromotebench.dataset import load_jsonl, write_jsonl
+from claimpromotebench.dataset import load_jsonl, repository_root, write_jsonl
 from claimpromotebench.hashing import sha256_bytes
 from claimpromotebench.prompts import render_prompt
+
+
+def _exact_prompt(rendered: str) -> str:
+    decoding = json.loads(
+        (repository_root() / "configs" / "decoding-v1.json").read_text(encoding="utf-8")
+    )
+    return f"{rendered.rstrip()}\n\n{decoding['control_instruction']}\n"
 
 
 def _write_run(
@@ -27,13 +34,14 @@ def _write_run(
             policy,
             evaluation_time,
         )
-        prompt = render_prompt(
+        rendered = render_prompt(
             item,
             arm,
             dataset_dir,
             policy=policy,
             evaluation_time=evaluation_time,
         )
+        prompt = _exact_prompt(rendered)
         records.append(
             {
                 "item_id": item["id"],
