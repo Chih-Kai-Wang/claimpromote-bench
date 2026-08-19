@@ -1,117 +1,117 @@
 # Submission gate
 
-This file is deliberately fail-closed. A polished manuscript is not evidence that the scored study is complete.
+This file is deliberately fail-closed. A polished manuscript is not evidence that every archival release gate is complete.
 
 ## Current verdict
 
-**NOT SUBMISSION READY — HIDDEN FREEZE AND SCORED EXECUTION GATES OPEN**
+**PRIMARY STUDY COMPLETE — PREPRINT FINALIZATION GATES STILL OPEN**
 
-The public v1 development path, formal replay, and supplementary external audit now have reproducible evidence. The manuscript may be edited, compiled, and circulated as a work in progress, but the primary hidden-study result tables must remain blank until the hidden commitment and 9,600-decision study are complete and artifact-bound.
+The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, and primary manuscript Results now exist and are hash-bound. The empirical tables no longer depend on partial workflow state. Remaining work is final citation/release/clean-environment verification and explicit handling of the v1 infrastructure-identity limitation described below.
 
 ## Gate A — research boundary and novelty
 
 - [x] Narrow target: policy-governed evidence-state transition admissibility, not general truth classification.
 - [x] Distinguish claim/evidence verification, abstention, computational reproducibility, hypothesis validation, evidence-state maintenance, verifier-governed claim workflows, and formal-specification generation from the transition benchmark.
-- [x] Use cautious priority language; do not claim “first” without a fresh systematic search immediately before submission.
-- [x] Fresh related-work search recorded on 2026-08-19 with queries and newly adjacent work in `docs/RELATED_WORK.md`; positioning was narrowed after finding SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report.
-- [ ] Check every bibliography entry against its authoritative publication record immediately before archival submission; keep technical reports/preprints explicitly labeled as such.
+- [x] Use cautious priority language; do not claim “first” without qualification.
+- [x] Fresh related-work search recorded on 2026-08-19 in `docs/RELATED_WORK.md`; positioning was narrowed after finding SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report.
+- [ ] Recheck every bibliography entry against its authoritative publication/preprint record immediately before archival submission.
 
 ## Gate B — v1 benchmark freeze
 
-### Completed public/frozen structure
-
-- [x] Machine-readable preregistration fixes 200 pairs / 400 instances, 20 policy factors, family totals, invalid-side balance, and action balance before hidden generation.
-- [x] Stable v1 policy identity is frozen separately from the alpha identity.
-- [x] Shared dev/test constructor exists and is covered by end-to-end tests.
-- [x] Public development split is deterministically generated as 50 pairs / 100 instances.
-- [x] Public development split passes schema, pair, oracle, artifact, preregistration, and hosted pinned-Lean replay gates.
-- [x] Public development bytes are hash-frozen in `configs/v1-public-dev-freeze.json`; CI reconstructs the dataset and checks the frozen hashes.
-
-### Still open before scored inference
-
-- [ ] Generate the private 150-pair / 300-instance hidden test from a private 32-byte seed kept outside the public repository.
-- [ ] Validate the hidden split with the same schema, pair, oracle, artifact, shortcut, metamorphic, and formal gates without exposing the private seed.
-- [ ] Publish the hidden-test manifest commitment **before** scored inference.
-- [ ] Freeze all rendered prompts and prompt hashes for the committed hidden split before scored inference.
-- [ ] No policy, controlled-factor, prompt, or hidden-label edit after commitment except through a new benchmark version that invalidates affected runs.
+- [x] Machine-readable preregistration fixes 200 pairs / 400 instances, 20 policy factors, family totals, invalid-side balance, and action balance.
+- [x] Stable v1 policy identity is frozen separately from alpha.
+- [x] Shared dev/test constructor exists and is covered end-to-end.
+- [x] Public development split is 50 pairs / 100 instances and passes schema, pair, oracle, artifact, shortcut, metamorphic, and pinned-Lean gates.
+- [x] Private hidden test was generated as 150 pairs / 300 instances from a private seed kept outside the public repository.
+- [x] Hidden split passed the private freeze validation before scored inference.
+- [x] Hidden commitment commit `8d9b3f5c831f432cf6b321e6402724c4f52bb3e1` predates scored trigger commit `aa5268dcde2aa44f8eabf0246631efbca27de7e5`.
+- [x] Frozen dataset-manifest SHA-256 is `sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba`.
+- [x] Frozen prompt-manifest SHA-256 is `sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957`.
+- [x] Raw `CPB_V1_HIDDEN_SEED` remains secret and is not printed, committed, or embedded in artifacts.
+- [x] No hidden gold, policy, prompt, or controlled-factor edit was made to improve scored results.
 
 ## Gate C — model/runtime freeze
 
 For both preregistered Qwen3 model sizes:
 
-- [x] exact upstream model revision recorded;
-- [x] exact weights/GGUF file recorded;
-- [x] SHA-256 of model artifact recorded;
-- [x] exact quantization recorded;
-- [x] exact llama.cpp/runtime commit recorded;
-- [x] deterministic invocation and decoding settings recorded;
-- [ ] scored-study hardware summary recorded;
-- [ ] downloaded model bytes and runtime identity pass preflight on the machine that executes the scored study;
-- [ ] scored-study smoke run passes the complete run-record validator.
+- [x] exact upstream model/revision identity recorded;
+- [x] exact GGUF/model artifact SHA-256 recorded;
+- [x] Q8_0 quantization recorded;
+- [x] llama.cpp commit `de699957b92f490efebad149665b0dccf127eaff` recorded;
+- [x] frozen decoding settings and seeds recorded;
+- [x] scored-study preflight identities are present in all 24 source artifacts;
+- [x] 24 complete source `run.jsonl` files exist with 300 records each;
+- [x] recovery validated exact frozen prompt hashes for every normalized run.
 
-A previous zero-cost alpha engineering pilot is not a substitute for these scored-study gates. Any pilot run that fails frozen prompt/run validation remains an engineering failure and is not promoted into the primary result table.
+### v1 infrastructure identity limitation
+
+Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Because the preregistered `compare-runs` grouping includes the exact hardware-summary string, this splits three intended model×seed sets into separate identity groups. The official aggregate therefore has 9 identity groups and only 3 all-four-arm complete groups. This is retained and disclosed; no post-hoc regrouping is used to manufacture a complete significance panel.
 
 ## Gate D — frozen quantitative study
 
-- [ ] Run all 2 models × 4 arms × 3 seeds × 400 instances = **9,600 decisions**.
-- [ ] Every run has complete item coverage or is explicitly failed; missing/malformed output is never silently converted to `HOLD`.
-- [ ] Every run passes the repository run-record validator against the committed hidden dataset and prompt hashes.
-- [ ] Primary metrics are reported exactly as preregistered: false-promotion rate, valid-promotion recall, and paired transition accuracy.
-- [ ] Four-way action accuracy and structured reason/evidence diagnostics are generated from artifacts.
-- [ ] Raw model intent and effective post-gate behavior are reported separately.
-- [ ] Pair-bootstrap intervals and exact matched McNemar tests with Holm correction are generated by the repository evaluator.
-- [ ] Family diagnostics, format-error sensitivity, paired score ranking, calibration/coverage, and metamorphic consistency are included.
-- [ ] Negative and null results are retained; no post-hoc metric substitution.
-- [ ] Runtime/cost fields are reported without interpreting a successful deterministic veto as improved model calibration.
+- [x] Primary scoring uses only the private hidden test: 300 instances × 2 models × 4 arms × 3 seeds = **7,200 decisions**.
+- [x] Source workflow run `32255636879` produced exactly 24 `cpb-v1-scored-*` immutable source artifacts.
+- [x] Artifact-only recovery run `32274814703` reconstructed the committed hidden set from the frozen scoring source and verified the same commitment/prompt identity.
+- [x] Exactly 24 source `run.jsonl`, 24 normalized `run.jsonl`, and 7,200 records were validated.
+- [x] Semantic recovery reclassified only frozen cross-field semantic violations as `FORMAT_ERROR`; 27 records were affected and no legal model decision was rewritten.
+- [x] Primary metrics are reported from the recovered aggregate artifact only.
+- [x] Raw intent and effective post-gate behavior are reported separately.
+- [x] Pair-bootstrap intervals and exact matched McNemar/Holm comparisons were generated by the repository evaluator wherever an exact identity group contained both arms.
+- [x] All three seeds are retained; no seed is cherry-picked or removed.
+- [x] Negative results and high `FORMAT_ERROR` rates are retained.
+- [x] Deterministic gate catches are described as system-level enforcement, not improved model reasoning/calibration.
+- [x] Study-file SHA-256 is `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664`.
+- [x] Recovered GitHub artifact `claimpromotebench-v1-scored-study-recovered` is bound to recovery run `32274814703`.
+- [x] The one-shot recovery trigger was removed after successful recovery.
 
 ## Gate E — benchmark and annotation integrity
 
 ### Deterministic engineering evidence
 
-- [x] Alpha dataset is deterministically rebuildable and stable under `git diff --exit-code`.
-- [x] Public v1 dev gold labels are generated by the versioned deterministic policy/oracle rather than hand-edited after results.
-- [x] Public v1 dev controlled pairs pass the preregistered construction audit.
+- [x] Alpha/public-dev datasets are deterministically rebuildable.
+- [x] Public v1 dev gold labels are generated by the versioned policy/oracle rather than hand-edited after results.
 - [x] Applicable numerical artifacts are executable and hash-bound.
-- [x] Public v1 dev formal artifacts build under the pinned Lean toolchain, replay with `leanchecker`, and pass the formal artifact executor.
+- [x] Public v1 dev formal artifacts build under the pinned Lean toolchain and replay with `leanchecker`.
 - [x] Registered shortcut and metamorphic infrastructure is executable and fail-closed.
-- [ ] Repeat all applicable integrity gates on the committed hidden split before scored results are inspected.
-- [ ] Hidden-test commitment demonstrably predates scored inference.
+- [x] Hidden-test commitment demonstrably predates scored inference.
+- [x] Recovery revalidated hidden construction and prompt freeze before reading source artifacts.
 
 ### Supplementary independent human audit
 
 - [x] Two real independent reviewers returned complete submissions for the frozen 20-item procedural-blind alpha audit.
 - [x] Both submissions were validated and SHA-256 frozen before unblinding.
-- [x] Closed submissions, unblinding mapping, and deterministic report are retained under `external-audit/v1/` and recomputed in CI.
-- [x] Reviewer-versus-gold action agreement is reported as 0.90 and 0.75; pairwise action agreement is 0.85.
-- [x] The conservative multi-reviewer supplementary gate is reported as **mixed / not PASS**, because one reviewer is below 0.80.
-- [x] Review disagreements are retained and are not used to silently rewrite frozen gold or policy.
-
-The external audit strengthens transparency but is not a substitute for deterministic benchmark integrity or the hidden scored study.
+- [x] Reviewer-versus-gold action agreement is 0.90 and 0.75; pairwise action agreement is 0.85.
+- [x] The conservative multi-reviewer supplementary gate is reported as **mixed / not PASS** because one reviewer is below 0.80.
+- [x] Review disagreements are retained and are not used to rewrite frozen gold or policy.
 
 ## Gate F — manuscript integrity
 
-- [x] Anonymous manuscript scaffold exists.
-- [x] Claims explicitly separate transition admissibility from theorem/scientific truth.
-- [x] Task Definition uses the complete `ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE` action space.
-- [x] Manuscript reports the closed external audit as a supplementary mixed result rather than a benchmark-validation PASS.
-- [x] Limitations include narrow domain, synthetic control, small-model coverage, formal-scope limits, author-constructed benchmark risk, and limited external-audit reliability.
-- [ ] Replace every primary-study `--` result cell from validated study artifacts only.
-- [ ] Remove the red `SUBMISSION BLOCKER` boxes only after Gates A–E are complete.
-- [ ] Add exact hidden dataset/model/runtime/study identifiers to the final paper and appendix.
-- [ ] Verify that every quantitative value in the final manuscript can be regenerated from released artifacts.
-- [ ] Run final citation, equation, table, cross-reference, anonymity, and PDF metadata checks.
-- [ ] Update `AI_ASSISTANCE.md` after the final experimental state is known and check the target venue's disclosure policy.
+- [x] Anonymous manuscript exists.
+- [x] Claims separate transition admissibility from theorem/scientific truth.
+- [x] Complete `ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE` action space is documented.
+- [x] Primary Results are populated from the validated recovered aggregate rather than partial metrics.
+- [x] Manuscript reports 5,327/7,200 `FORMAT_ERROR` outputs and conditional decision coverage instead of hiding them.
+- [x] Manuscript states that all 1,873 parseable raw intents were `ALLOW`.
+- [x] Manuscript distinguishes raw-intent behavior from deterministic gate enforcement.
+- [x] Semantic recovery is disclosed and explicitly states that legal model answers were not changed.
+- [x] Exact source/recovery workflow IDs and core commitment/study identities are recorded.
+- [x] External audit remains supplementary mixed evidence, not a PASS.
+- [x] Limitations disclose high format-error rate, non-retention of free-form text for pre-existing parse failures, exact-identity group drift, gate-prompt disclosure, small-model scope, synthetic control, and author-constructed benchmark risk.
+- [ ] Final LaTeX compile and unresolved-reference/citation check succeeds on the post-results manuscript.
+- [ ] Inspect the compiled PDF for table overflow, broken references, anonymity leaks, and stale blocker text.
+- [ ] Recheck quantitative manuscript values against the recovered artifact after the final text edit.
+- [ ] Update/check final AI-assistance disclosure against the target venue policy.
 
 ## Gate G — reproducibility release
 
-- [ ] Clean-environment reproduction of the final frozen benchmark validation succeeds from the tagged release.
-- [ ] Clean-environment reproduction of all paper tables/figures succeeds from released run artifacts.
+- [ ] Clean-environment reproduction of final benchmark validation succeeds from the release candidate.
+- [ ] Clean-environment reproduction of all paper tables/statistics succeeds from released artifact inputs.
 - [ ] Release/tag is immutable and all cited artifact hashes match it.
 - [ ] Archive code/data artifacts in a citable long-term repository if required by the target venue.
 - [ ] `CITATION.cff`, README, manuscript, and release notes agree on title/version/status.
 
 ## Readiness rule
 
-The study becomes **PREPRINT READY** only when Gates A–F pass and the manuscript contains no unbound empirical claim.
+The empirical study is complete, but the repository is not yet labeled archival-submission-ready. **PREPRINT READY** requires Gate F's remaining compile/PDF/value checks plus the bibliography authority check in Gate A. **ARCHIVAL SUBMISSION READY** additionally requires Gate G and venue-specific disclosure/artifact requirements.
 
-The repository's **ARCHIVAL SUBMISSION READY** label additionally requires Gate G and compliance with the chosen venue's submission, disclosure, and artifact rules. Do not weaken the hidden freeze, scored-study, integrity, or reproducibility gates merely to meet a deadline.
+Do not rerun or rewrite the frozen v1 primary inference to make the negative result cleaner. A future replication that pins the exact Python patch version or retains raw malformed model text must be labeled as a new or supplementary study, not a replacement for v1.
