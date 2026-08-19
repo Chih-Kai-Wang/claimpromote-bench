@@ -1,0 +1,2494 @@
+{
+  "aggregate_status_counts": {
+    "OK": 108,
+    "SCHEMA_ERROR": 52
+  },
+  "interpretation_boundary": "This is a post-v1 public interface pilot. It does not alter the frozen v1 hidden study, and post-gate correctness is not model correctness.",
+  "interpretation_status": "PENDING_AUTHOR_REVIEW",
+  "model_comparisons": [
+    {
+      "constraint_effect": {
+        "decision_coverage_delta": 0.25,
+        "json_syntax_errors_removed": 0,
+        "pair_coverage_delta": 0.30000000000000004,
+        "raw_action_accuracy_delta": 0.0,
+        "raw_pair_accuracy_delta": 0.0,
+        "schema_errors_removed": 10,
+        "semantic_errors_delta": 0
+      },
+      "invariants": {
+        "items_compared": 40,
+        "model_runtime_seed_hardware_identical": true,
+        "only_registered_difference": "response_format",
+        "prompt_hashes_identical": true,
+        "status": "PASS"
+      },
+      "model_id": "Qwen/Qwen3-0.6B",
+      "seed": 104729
+    },
+    {
+      "constraint_effect": {
+        "decision_coverage_delta": 0.95,
+        "json_syntax_errors_removed": 0,
+        "pair_coverage_delta": 0.9,
+        "raw_action_accuracy_delta": null,
+        "raw_pair_accuracy_delta": null,
+        "schema_errors_removed": 38,
+        "semantic_errors_delta": 0
+      },
+      "invariants": {
+        "items_compared": 40,
+        "model_runtime_seed_hardware_identical": true,
+        "only_registered_difference": "response_format",
+        "prompt_hashes_identical": true,
+        "status": "PASS"
+      },
+      "model_id": "Qwen/Qwen3-1.7B",
+      "seed": 104729
+    }
+  ],
+  "protocol": {
+    "dataset": "data/alpha",
+    "decoding_modes": [
+      "free",
+      "json_schema"
+    ],
+    "instances": 40,
+    "models": [
+      "Qwen/Qwen3-0.6B",
+      "Qwen/Qwen3-1.7B"
+    ],
+    "paid_api_calls": 0,
+    "pairs": 20,
+    "prompt_arm": "ledger_verifier",
+    "seed": 104729,
+    "total_decisions": 160
+  },
+  "runs": [
+    {
+      "decoding_mode": "free",
+      "model_id": "Qwen/Qwen3-0.6B",
+      "run_sha256": "sha256:b97e775f7ea72a819be8309ac162a1aec47fb57bfaa0b8650be8501d9596c306",
+      "seed": 104729,
+      "summary": {
+        "covered_pairs": 14,
+        "decision_coverage": 0.75,
+        "factor_metrics": [
+          {
+            "covered_pairs": 1,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          }
+        ],
+        "pair_coverage": 0.7,
+        "pair_metrics": [
+          {
+            "covered": false,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-02"
+          },
+          {
+            "covered": true,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-dep-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": false,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-04"
+          },
+          {
+            "covered": true,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-num-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-num-02",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-num-03",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-num-04",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-run-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": false,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "pair_id": "alpha-run-02"
+          },
+          {
+            "covered": true,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-run-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-stale-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": false,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "pair_id": "alpha-stale-02"
+          },
+          {
+            "covered": true,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "ALLOW",
+              "ESCALATE"
+            ],
+            "pair_id": "alpha-stale-03",
+            "postgate_actions": [
+              "ALLOW",
+              "ESCALATE"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-prov-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-prov-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": false,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "pair_id": "alpha-prov-03"
+          },
+          {
+            "covered": true,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-formal-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-formal-02",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-formal-03",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          }
+        ],
+        "pairs": 20,
+        "postgate_action_accuracy": 1.0,
+        "postgate_pair_accuracy": 1.0,
+        "raw_action_accuracy": 0.5,
+        "raw_flip_rate": 0.0,
+        "raw_fpr": 1.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_vpr": 1.0,
+        "records": 40,
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 30,
+          "SCHEMA_ERROR": 10,
+          "SEMANTIC_ERROR": 0
+        }
+      }
+    },
+    {
+      "decoding_mode": "json_schema",
+      "model_id": "Qwen/Qwen3-0.6B",
+      "run_sha256": "sha256:5104c035fabb2cc8f55170fb944236366385fb6eba23405e7472d849c44359d8",
+      "seed": 104729,
+      "summary": {
+        "covered_pairs": 20,
+        "decision_coverage": 1.0,
+        "factor_metrics": [
+          {
+            "covered_pairs": 1,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          }
+        ],
+        "pair_coverage": 1.0,
+        "pair_metrics": [
+          {
+            "covered": true,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-dep-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-dep-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-dep-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-dep-04",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-num-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-num-02",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-num-03",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-num-04",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-run-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-run-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-run-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-stale-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "DEMOTE",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-stale-02",
+            "postgate_actions": [
+              "DEMOTE",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "ALLOW",
+              "ESCALATE"
+            ],
+            "pair_id": "alpha-stale-03",
+            "postgate_actions": [
+              "ALLOW",
+              "ESCALATE"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-prov-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-prov-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-prov-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-formal-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-formal-02",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-formal-03",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          }
+        ],
+        "pairs": 20,
+        "postgate_action_accuracy": 1.0,
+        "postgate_pair_accuracy": 1.0,
+        "raw_action_accuracy": 0.5,
+        "raw_flip_rate": 0.0,
+        "raw_fpr": 1.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_vpr": 1.0,
+        "records": 40,
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 40,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0
+        }
+      }
+    },
+    {
+      "decoding_mode": "free",
+      "model_id": "Qwen/Qwen3-1.7B",
+      "run_sha256": "sha256:ee26693cfdfe781927456bc8e954f5c31e05c70382188738eef89b052e7d5f8d",
+      "seed": 104729,
+      "summary": {
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "factor_metrics": [
+          {
+            "covered_pairs": 0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          }
+        ],
+        "pair_coverage": 0.0,
+        "pair_metrics": [
+          {
+            "covered": false,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-02"
+          },
+          {
+            "covered": false,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-03"
+          },
+          {
+            "covered": false,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "pair_id": "alpha-dep-04"
+          },
+          {
+            "covered": false,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_id": "alpha-num-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "pair_id": "alpha-num-02"
+          },
+          {
+            "covered": false,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "pair_id": "alpha-num-03"
+          },
+          {
+            "covered": false,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "pair_id": "alpha-num-04"
+          },
+          {
+            "covered": false,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_id": "alpha-run-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "pair_id": "alpha-run-02"
+          },
+          {
+            "covered": false,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "pair_id": "alpha-run-03"
+          },
+          {
+            "covered": false,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_id": "alpha-stale-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "pair_id": "alpha-stale-02"
+          },
+          {
+            "covered": false,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "pair_id": "alpha-stale-03"
+          },
+          {
+            "covered": false,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_id": "alpha-prov-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "pair_id": "alpha-prov-02"
+          },
+          {
+            "covered": false,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "pair_id": "alpha-prov-03"
+          },
+          {
+            "covered": false,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "pair_id": "alpha-formal-01"
+          },
+          {
+            "covered": false,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "pair_id": "alpha-formal-02"
+          },
+          {
+            "covered": false,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "pair_id": "alpha-formal-03"
+          }
+        ],
+        "pairs": 20,
+        "postgate_action_accuracy": null,
+        "postgate_pair_accuracy": null,
+        "raw_action_accuracy": null,
+        "raw_flip_rate": null,
+        "raw_fpr": null,
+        "raw_pair_accuracy": null,
+        "raw_vpr": null,
+        "records": 40,
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 0,
+          "SCHEMA_ERROR": 40,
+          "SEMANTIC_ERROR": 0
+        }
+      }
+    },
+    {
+      "decoding_mode": "json_schema",
+      "model_id": "Qwen/Qwen3-1.7B",
+      "run_sha256": "sha256:8404f5c9df10a256647fa015d2a3eb4311612633cb3e4716a14a7dd9d122c7b6",
+      "seed": 104729,
+      "summary": {
+        "covered_pairs": 18,
+        "decision_coverage": 0.95,
+        "factor_metrics": [
+          {
+            "covered_pairs": 1,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 0,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": null,
+            "postgate_pair_correct": 0,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": null,
+            "raw_pair_accuracy": null,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          },
+          {
+            "covered_pairs": 1,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "pair_coverage": 1.0,
+            "pairs": 1,
+            "postgate_pair_accuracy": 1.0,
+            "postgate_pair_correct": 1,
+            "raw_flip_pairs": 0,
+            "raw_flip_rate": 0.0,
+            "raw_pair_accuracy": 0.0,
+            "raw_pair_correct": 0
+          }
+        ],
+        "pair_coverage": 0.9,
+        "pair_metrics": [
+          {
+            "covered": true,
+            "factor_id": "direct_dependency",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-dep-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "transitive_dependency",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-dep-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-dep-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "dependency_statement",
+            "family": "DEPENDENCY",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-dep-04",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-num-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "domain",
+            "family": "NUMERICAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-num-02",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": false,
+            "factor_id": "preregistration",
+            "family": "NUMERICAL",
+            "pair_id": "alpha-num-03"
+          },
+          {
+            "covered": false,
+            "factor_id": "precision",
+            "family": "NUMERICAL",
+            "pair_id": "alpha-num-04"
+          },
+          {
+            "covered": true,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-run-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "verifier_execution",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-run-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "run_completion",
+            "family": "RUNTIME",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-run-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-stale-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "current_binding",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "DEMOTE",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-stale-02",
+            "postgate_actions": [
+              "DEMOTE",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "contradiction",
+            "family": "STALE_CONTRADICTION",
+            "gold_actions": [
+              "ALLOW",
+              "ESCALATE"
+            ],
+            "pair_id": "alpha-stale-03",
+            "postgate_actions": [
+              "ALLOW",
+              "ESCALATE"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-prov-01",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "review_environment",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-prov-02",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "cold_start",
+            "family": "PROVENANCE",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-prov-03",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "statement_identity",
+            "family": "FORMAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-formal-01",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "claim_identity",
+            "family": "FORMAL",
+            "gold_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "pair_id": "alpha-formal-02",
+            "postgate_actions": [
+              "HOLD",
+              "ALLOW"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          },
+          {
+            "covered": true,
+            "factor_id": "trust_base",
+            "family": "FORMAL",
+            "gold_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "pair_id": "alpha-formal-03",
+            "postgate_actions": [
+              "ALLOW",
+              "HOLD"
+            ],
+            "postgate_pair_correct": true,
+            "raw_actions": [
+              "ALLOW",
+              "ALLOW"
+            ],
+            "raw_flip": false,
+            "raw_pair_correct": false
+          }
+        ],
+        "pairs": 20,
+        "postgate_action_accuracy": 1.0,
+        "postgate_pair_accuracy": 1.0,
+        "raw_action_accuracy": 0.5,
+        "raw_flip_rate": 0.0,
+        "raw_fpr": 1.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_vpr": 1.0,
+        "records": 40,
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 38,
+          "SCHEMA_ERROR": 2,
+          "SEMANTIC_ERROR": 0
+        }
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source_workflow_run_id": 32291482079,
+  "status": "COMPLETE",
+  "study_kind": "POST_V1_PUBLIC_INTERFACE_PILOT",
+  "study_sha256": "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
+}
