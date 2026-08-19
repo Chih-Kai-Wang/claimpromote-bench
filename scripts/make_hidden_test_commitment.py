@@ -73,9 +73,7 @@ def build_commitment(dataset_dir: Path, seed_file: Path, prompt_manifest: Path) 
     if not isinstance(pairs, list) or len(pairs) != expected_pairs:
         raise ValueError("private hidden pairs.json does not match the preregistered pair count")
     family_counts = Counter(str(pair["family"]) for pair in pairs)
-    invalid_sides = Counter(
-        str(pair["invalid_id"]).rsplit("-", 1)[-1].upper() for pair in pairs
-    )
+    invalid_sides = Counter(str(pair["invalid_id"]).rsplit("-", 1)[-1].upper() for pair in pairs)
     if invalid_sides != Counter(test_plan["invalid_side_counts"]):
         raise ValueError(
             f"hidden invalid-side distribution differs from plan: {dict(invalid_sides)}"
@@ -105,9 +103,7 @@ def build_commitment(dataset_dir: Path, seed_file: Path, prompt_manifest: Path) 
         "gold.jsonl",
         "pairs.json",
     )
-    components = {
-        name: sha256_file(_safe_component(dataset_dir, name)) for name in component_names
-    }
+    components = {name: sha256_file(_safe_component(dataset_dir, name)) for name in component_names}
     record: dict[str, Any] = {
         "commitment_version": "1.0.0",
         "benchmark_id": str(plan["benchmark_id"]),
