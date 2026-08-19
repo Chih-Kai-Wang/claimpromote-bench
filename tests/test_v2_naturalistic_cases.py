@@ -165,5 +165,5 @@ def test_pointer_only_case_cannot_claim_copied_bytes(tmp_path: Path) -> None:
     case = deepcopy(_case())
     case["model_visible"]["evidence_snapshot"][0]["copied_source_bytes"] = True
     root, candidate_path = _write_fixture(tmp_path, case)
-    with pytest.raises(SystemExit, match="schema violation"):
+    with pytest.raises(SystemExit, match="copied_source_bytes disagrees"):
         module.validate_root(root, schema_path=SCHEMA, candidate_path=candidate_path)
