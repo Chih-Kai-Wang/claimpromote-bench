@@ -5,6 +5,7 @@ on:
     paths:
       - "configs/external-review-v1.json"
       - "scripts/build_external_review_v1.py"
+      - "scripts/build_external_review_friendly_html.py"
       - ".github/workflows/external-review-kit.yml"
       - "data/alpha/**"
       - "policies/**"
@@ -37,11 +38,26 @@ jobs:
           mkdir -p work
           python scripts/build_external_review_v1.py build --out work/external-review-v1 | tee work/external-review-v1-build.json
 
+      - name: Build human-readable single-file reviewer page
+        run: |
+          python scripts/build_external_review_friendly_html.py \
+            --package-dir work/external-review-v1 \
+            --out work/ClaimPromoteBench_external_review_v1_friendly.html
+
       - name: Show immutable identities
         run: |
           cat work/external-review-v1/FREEZE.json
           sha256sum work/external-review-v1/SEND_THIS_TO_REVIEWER.zip
           sha256sum work/external-review-v1/DO_NOT_SEND_PRIVATE.zip
+          sha256sum work/ClaimPromoteBench_external_review_v1_friendly.html
+
+      - name: Upload human-readable reviewer page
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: claimpromotebench-external-review-v1-FRIENDLY-HTML
+          path: work/ClaimPromoteBench_external_review_v1_friendly.html
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Upload reviewer-safe package
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
