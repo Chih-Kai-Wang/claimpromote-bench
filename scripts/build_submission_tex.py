@@ -81,7 +81,9 @@ def anonymize_for_iclr(body: str) -> str:
         r"the inference source is workflow run \texttt{32255636879}.": (
             "scored inference began only after the hidden set and exact prompts were fixed."
         ),
-        r"Recovery run \texttt{32274814703} then validated": "The recovery procedure then validated",
+        r"Recovery run \texttt{32274814703} then validated": (
+            "The recovery procedure then validated"
+        ),
         r"\texttt{32255636879}": r"\texttt{[anonymized-source-run]}",
         r"\texttt{32274814703}": r"\texttt{[anonymized-recovery-run]}",
         r"\texttt{aa5268dc...de7e5}": r"\texttt{[anonymized]}",
