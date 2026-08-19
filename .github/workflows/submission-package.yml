@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - "technical-report/**"
+      - "release/v1-paper-results.json"
       - "scripts/build_submission_tex.py"
       - "scripts/lint_paper_submission.py"
+      - "scripts/validate_v1_release_results.py"
       - ".github/workflows/submission-package.yml"
   workflow_dispatch:
 
@@ -27,6 +29,9 @@ jobs:
 
       - name: Fail-closed manuscript lint
         run: python scripts/lint_paper_submission.py
+
+      - name: Validate public result release
+        run: python scripts/validate_v1_release_results.py
 
       - name: Install submission dependencies
         shell: bash
