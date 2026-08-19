@@ -6,12 +6,18 @@ It is deliberately fail-closed.
 
 ## Current verdict
 
-**SCIENTIFIC RESULTS COMPLETE — FINAL REVISED BUILD, VISUAL, ETHICS, AND ARCHIVAL GATES OPEN**
+**TECHNICAL SUBMISSION PACKAGE READY — HUMAN ETHICS, ACCOUNT-SIDE, AND ARCHIVAL GATES OPEN**
 
 The frozen v1 hidden study and the post-v1 public formatting-control pilot are complete. The revised
-manuscript contains both result sets and binds their paper-facing values to machine-readable
-aggregates. PR #20 must remain Draft and unmerged until every final-build and visual item below is
-checked on one unchanged head.
+manuscript binds both result sets to machine-readable aggregates. On head
+`1708554ff984c2c36068d0f60cc17b8350a91514`, repository CI, pinned Lean replay, v1 hidden/scored/
+recovery guards, v1/v2 result validators, official ICLR/arXiv builds, page-limit checks, anonymity
+checks, and page-by-page visual review all passed. PR #20 remains Draft and unmerged because the
+human ethics/account and archival-release gates below cannot be completed by repository automation.
+
+The inspected submission artifact comes from workflow run `32301565990`. Both PDFs contain 10
+physical pages: 9 pages of main text followed by references. All fonts are embedded. The source
+archives contain only required TeX/BibTeX/style files and no auxiliary build files.
 
 ## Gate A — frozen v1 study remains intact
 
@@ -79,49 +85,61 @@ checked on one unchanged head.
 The unchecked item is **not required to report the completed public pilot**. It means the paper must
 not claim a completed naturalistic replication.
 
-## Gate E — code and evidence verification on the final head
+## Gate E — code and evidence verification on the final scientific head
 
-- [ ] Ruff lint passes.
-- [ ] Ruff formatting passes.
-- [ ] Mypy passes.
-- [ ] Full tests and branch coverage pass.
-- [ ] Python compatibility matrix passes.
-- [ ] Deterministic alpha rebuild produces no diff.
-- [ ] Dataset, shortcut, invariance, executable, review, and contribution checks pass.
-- [ ] Pinned Lean alpha replay passes.
-- [ ] Pinned Lean v1 public-dev replay passes.
-- [ ] v1 public release-result validator passes.
-- [ ] v2 public pilot validator passes.
-- [ ] Naturalistic case validator and guard tests pass.
-- [ ] v1 hidden freeze guard passes.
-- [ ] v1 scored-study guard passes.
-- [ ] v1 recovery guard passes.
+- [x] Ruff lint passes.
+- [x] Ruff formatting passes.
+- [x] Mypy passes.
+- [x] Full tests and branch coverage pass.
+- [x] Python compatibility matrix passes.
+- [x] Deterministic alpha rebuild produces no diff.
+- [x] Dataset, shortcut, invariance, executable, review, and contribution checks pass.
+- [x] Pinned Lean alpha replay passes.
+- [x] Pinned Lean v1 public-dev replay passes.
+- [x] v1 public release-result validator passes.
+- [x] v2 public pilot validator passes.
+- [x] Naturalistic case validator and guard tests pass.
+- [x] v1 hidden freeze guard passes.
+- [x] v1 scored-study guard passes.
+- [x] v1 recovery guard passes.
+
+Full repository CI run: `32301565960`.
 
 ## Gate F — final ICLR 2027 package
 
-- [ ] Official ICLR 2027 style files are fetched and recorded.
-- [ ] ICLR PDF compiles on the final unchanged head.
-- [ ] Main-text page probe is at or below 9 pages.
-- [ ] No unresolved citations or references.
-- [ ] No horizontal overflow.
-- [ ] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
+- [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
+- [x] ICLR PDF compiles from the final scientific head.
+- [x] Main-text page probe reports 9 pages, within the 9-page limit.
+- [x] No unresolved citations or references.
+- [x] No horizontal overflow.
+- [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
   repository URL, v1 workflow/hash provenance, or v2 workflow/hash provenance.
-- [ ] ICLR PDF metadata contains no author identity.
-- [ ] AI-use disclosure remains present in the ICLR submission.
-- [ ] Final ICLR PDF is inspected page by page for crowding, overlap, clipping, broken glyphs,
-  unreadable tables, and figure/caption collisions.
+- [x] ICLR PDF metadata contains no author identity.
+- [x] AI-use disclosure remains present in the ICLR submission.
+- [x] All PDF fonts are embedded.
+- [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
+  broken glyphs, unreadable tables, and figure/caption collisions.
+
+Observed result: no overlap, clipping, broken glyphs, table overflow, figure collision, or
+unacceptable crowding. The densest limitations/reproducibility page remains readable at normal
+conference-paper scale.
 
 ## Gate G — final arXiv package
 
-- [ ] Named arXiv PDF compiles on the final unchanged head.
-- [ ] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
-- [ ] arXiv PDF preserves v1 and v2 public workflow/hash provenance.
-- [ ] No unresolved citations/references or horizontal overflow.
-- [ ] Source ZIP contains the required TeX/BibTeX sources and no build junk.
-- [ ] Final arXiv PDF is inspected page by page for crowding, overlap, clipping, broken glyphs,
-  unreadable tables, and figure/caption collisions.
-- [ ] arXiv metadata, category, title, abstract, author, and affiliation are checked during the
-  account-side preview.
+- [x] Named arXiv PDF compiles from the final scientific head.
+- [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
+- [x] arXiv PDF preserves v1 and v2 public workflow/hash provenance.
+- [x] No unresolved citations/references or horizontal overflow.
+- [x] All PDF fonts are embedded.
+- [x] Source ZIP contains `arxiv.tex` and `references.bib` and no auxiliary build files.
+- [x] Final arXiv PDF was rendered and inspected page by page for crowding, overlap, clipping,
+  broken glyphs, unreadable tables, and figure/caption collisions.
+- [ ] arXiv metadata, category, title, abstract, author, affiliation, and server-compiled preview are
+  checked during the account-side submission.
+
+Observed result: the named PDF and public provenance are correct, and no visual defect was found.
+The final metadata/preview item necessarily remains account-side because arXiv must compile and
+show its own preview before submission.
 
 ## Gate H — human audit ethics and account-side submission
 
@@ -149,7 +167,8 @@ not claim a completed naturalistic replication.
 
 ## Readiness rule
 
-Do not mark PR #20 ready, merge it, claim “submitted,” or replace the downloadable submission kit
-until Gates E–G have all passed on one final unchanged head and the page-by-page visual review is
-complete. Gates H–I require human account or institutional actions and must remain explicit rather
-than being guessed by automation.
+The repository-generated ICLR and arXiv packages are technically ready. Do not mark PR #20 ready,
+merge it, claim “submitted,” or create final archival identifiers until Gate H is completed and the
+actual OpenReview/arXiv account-side previews are checked. Gate I should be completed from the exact
+accepted submission/release candidate, without inventing an arXiv ID, DOI, ethics approval, or
+archive identifier before it exists.
