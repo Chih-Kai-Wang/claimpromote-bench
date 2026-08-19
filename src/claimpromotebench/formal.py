@@ -1,4 +1,4 @@
-"""Build, bind, and execute the narrow Lean 4 formal alpha artifacts."""
+"""Build, bind, and execute narrow Lean 4 formal evidence artifacts."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import json
 import re
 import subprocess
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
 
@@ -57,36 +57,104 @@ FORMAL_CLAIMS: dict[str, tuple[str, str, str]] = {
     ),
 }
 
+_V1_PAIR = re.compile(r"^v1-(dev|test)-formal-([0-9]{3})$")
+_V1_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
+    (
+        "For every natural number n, n + 0 = n.",
+        "theorem {name} (n : Nat) : n + 0 = n := Nat.add_zero n",
+    ),
+    (
+        "For every natural number n, 0 + n = n.",
+        "theorem {name} (n : Nat) : 0 + n = n := Nat.zero_add n",
+    ),
+    (
+        "For all propositions p and q, p and q holds exactly when q and p holds.",
+        """theorem {name} (p q : Prop) : p ∧ q ↔ q ∧ p :=
+  ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩""",
+    ),
+    (
+        "For all propositions p and q, p or q holds exactly when q or p holds.",
+        """theorem {name} (p q : Prop) : p ∨ q ↔ q ∨ p :=
+  ⟨fun h => h.elim Or.inr Or.inl, fun h => h.elim Or.inr Or.inl⟩""",
+    ),
+    (
+        "For every proposition p, p and True holds exactly when p holds.",
+        """theorem {name} (p : Prop) : p ∧ True ↔ p :=
+  ⟨fun h => h.1, fun h => ⟨h, True.intro⟩⟩""",
+    ),
+    (
+        "For every proposition p, p or False holds exactly when p holds.",
+        """theorem {name} (p : Prop) : p ∨ False ↔ p :=
+  ⟨fun h => h.elim (fun hp => hp) False.elim, fun h => Or.inl h⟩""",
+    ),
+    (
+        "For every natural number n, n multiplied by one equals n.",
+        "theorem {name} (n : Nat) : n * 1 = n := Nat.mul_one n",
+    ),
+    (
+        "For every natural number n, one multiplied by n equals n.",
+        "theorem {name} (n : Nat) : 1 * n = n := Nat.one_mul n",
+    ),
+    (
+        "Every natural number is equal to itself.",
+        "theorem {name} (n : Nat) : n = n := rfl",
+    ),
+    (
+        "For natural numbers a and b, if a equals b then b equals a.",
+        "theorem {name} (a b : Nat) : a = b → b = a := fun h => h.symm",
+    ),
+)
+
 _MARKER = re.compile(r"^CPB_([A-Z0-9_]+)=(.+)$", re.MULTILINE)
 Runner = Callable[[Path, Path], dict[str, Any]]
+
+
+def _v1_spec(pair_id: str) -> tuple[str, str, str] | None:
+    match = _V1_PAIR.fullmatch(pair_id)
+    if match is None:
+        return None
+    split, number_text = match.groups()
+    number = int(number_text)
+    if number < 1:
+        raise DatasetIntegrityError(f"invalid v1 formal pair number: {pair_id}")
+    claim, declaration_template = _V1_FORMAL_TEMPLATES[(number - 1) % len(_V1_FORMAL_TEMPLATES)]
+    split_label = "Dev" if split == "dev" else "Test"
+    module = f"V1{split_label}Formal{number_text}"
+    theorem_name = f"v1{split}formal{number_text}"
+    return claim, module, declaration_template.format(name=theorem_name)
+
+
+def _formal_spec(pair_id: str) -> tuple[str, str, str]:
+    if pair_id in FORMAL_CLAIMS:
+        return FORMAL_CLAIMS[pair_id]
+    v1 = _v1_spec(pair_id)
+    if v1 is not None:
+        return v1
+    raise DatasetIntegrityError(f"unknown formal pair: {pair_id}")
 
 
 def formal_claim_text(pair_id: str) -> str:
     """Return the exact natural-language claim paired with one generated theorem."""
 
-    try:
-        return FORMAL_CLAIMS[pair_id][0]
-    except KeyError as exc:
-        raise DatasetIntegrityError(f"unknown formal alpha pair: {pair_id}") from exc
+    return _formal_spec(pair_id)[0]
+
+
+def formal_module_name(pair_id: str) -> str:
+    """Return the Lean module name registered for one pair."""
+
+    return _formal_spec(pair_id)[1]
 
 
 def formal_artifact_path(pair_id: str) -> str:
     """Return the stable dataset-relative Lean module path for one formal pair."""
 
-    try:
-        module = FORMAL_CLAIMS[pair_id][1]
-    except KeyError as exc:
-        raise DatasetIntegrityError(f"unknown formal alpha pair: {pair_id}") from exc
-    return f"artifacts/ClaimPromoteFormal/{module}.lean"
+    return f"artifacts/ClaimPromoteFormal/{formal_module_name(pair_id)}.lean"
 
 
 def build_formal_artifact(pair_id: str, claim_id: str, statement_sha256: str) -> str:
     """Generate one source file whose metadata and theorem are both deterministic."""
 
-    try:
-        _claim, _module, declaration = FORMAL_CLAIMS[pair_id]
-    except KeyError as exc:
-        raise DatasetIntegrityError(f"unknown formal alpha pair: {pair_id}") from exc
+    _claim, _module, declaration = _formal_spec(pair_id)
     return f"""/-
 CPB_PAIR_ID={pair_id}
 CPB_CLAIM_ID={claim_id}
@@ -105,8 +173,8 @@ end ClaimPromoteFormal
 """
 
 
-def write_formal_package(dataset_dir: Path) -> list[str]:
-    """Write the pinned Lake package files that are not item-specific artifacts."""
+def write_formal_package(dataset_dir: Path, pair_ids: Iterable[str] | None = None) -> list[str]:
+    """Write pinned Lake package files and a deterministic root import module."""
 
     toolchain = dataset_dir / "lean-toolchain"
     lakefile = dataset_dir / "lakefile.toml"
@@ -116,7 +184,12 @@ def write_formal_package(dataset_dir: Path) -> list[str]:
     toolchain.write_text(TOOLCHAIN_CONTENT, encoding="utf-8", newline="\n")
     lakefile.write_text(LAKEFILE_CONTENT, encoding="utf-8", newline="\n")
     lake_manifest.write_text(LAKE_MANIFEST_CONTENT, encoding="utf-8", newline="\n")
-    root_module.write_text(ROOT_MODULE_CONTENT, encoding="utf-8", newline="\n")
+    if pair_ids is None:
+        root_content = ROOT_MODULE_CONTENT
+    else:
+        modules = sorted({formal_module_name(pair_id) for pair_id in pair_ids})
+        root_content = "".join(f"import ClaimPromoteFormal.{module}\n" for module in modules)
+    root_module.write_text(root_content, encoding="utf-8", newline="\n")
     return [
         "lean-toolchain",
         "lakefile.toml",
@@ -171,12 +244,12 @@ def verify_formal_artifact_binding(
 
     toolchain_path = dataset_dir / "lean-toolchain"
     if not toolchain_path.is_file():
-        raise DatasetIntegrityError("formal alpha lean-toolchain file is missing")
+        raise DatasetIntegrityError("formal lean-toolchain file is missing")
     if toolchain_path.read_text(encoding="utf-8") != TOOLCHAIN_CONTENT:
-        raise DatasetIntegrityError("formal alpha lean-toolchain content is not registered")
+        raise DatasetIntegrityError("formal lean-toolchain content is not registered")
     actual_toolchain_hash = sha256_file(toolchain_path)
     if actual_toolchain_hash != TOOLCHAIN_SHA256:
-        raise DatasetIntegrityError("formal alpha lean-toolchain hash is inconsistent")
+        raise DatasetIntegrityError("formal lean-toolchain hash is inconsistent")
 
     source = path.read_text(encoding="utf-8")
     markers = _markers(source, relative)
@@ -224,9 +297,7 @@ def _run_lean(package_dir: Path, source: Path) -> dict[str, Any]:
             check=False,
         )
     except FileNotFoundError as exc:
-        raise DatasetIntegrityError(
-            "lake is unavailable; install the pinned Lean toolchain"
-        ) from exc
+        raise DatasetIntegrityError("lake is unavailable; install the pinned Lean toolchain") from exc
     except subprocess.TimeoutExpired as exc:
         raise DatasetIntegrityError(f"Lean verification timed out: {source}") from exc
     output = f"{completed.stdout}\0{completed.stderr}".encode("utf-8", errors="replace")
@@ -293,12 +364,12 @@ def verify_formal_fixture_suite(
     }
 
 
-def verify_alpha_formal_sources(
+def verify_dataset_formal_sources(
     dataset_dir: Path,
     *,
     runner: Runner = _run_lean,
 ) -> dict[str, Any]:
-    """Compile each unique formal alpha artifact after checking all six bindings."""
+    """Compile every unique formal artifact after checking all dataset bindings."""
 
     inputs = load_jsonl(dataset_dir / "inputs.jsonl")
     gold = {record["id"]: record for record in load_jsonl(dataset_dir / "gold.jsonl")}
@@ -311,7 +382,7 @@ def verify_alpha_formal_sources(
             evidence for evidence in item["evidence"] if evidence["type"] == "FORMAL_CERTIFICATE"
         ]
         if len(formal_evidence) != 1:
-            raise DatasetIntegrityError(f"formal alpha item needs one certificate: {item['id']}")
+            raise DatasetIntegrityError(f"formal item needs one certificate: {item['id']}")
         evidence = formal_evidence[0]
         verify_formal_artifact_binding(
             dataset_dir,
@@ -321,15 +392,13 @@ def verify_alpha_formal_sources(
         )
         paths.add(str(evidence["artifact_path"]))
         evidence_count += 1
-    if len(paths) != 3 or evidence_count != 6:
-        raise DatasetIntegrityError("formal alpha must bind six items to three Lean artifacts")
 
     executions: list[dict[str, Any]] = []
     for relative in sorted(paths):
         source = _artifact_file(dataset_dir, relative)
         execution = runner(dataset_dir, source)
         if execution["exit_code"] != 0:
-            raise DatasetIntegrityError(f"Lean rejected formal alpha artifact: {relative}")
+            raise DatasetIntegrityError(f"Lean rejected formal artifact: {relative}")
         executions.append({"artifact_path": relative, **execution})
     return {
         "status": "PASS",
@@ -338,6 +407,19 @@ def verify_alpha_formal_sources(
         "toolchain_sha256": TOOLCHAIN_SHA256,
         "executions": executions,
     }
+
+
+def verify_alpha_formal_sources(
+    dataset_dir: Path,
+    *,
+    runner: Runner = _run_lean,
+) -> dict[str, Any]:
+    """Preserve the alpha-specific six-record/three-artifact regression gate."""
+
+    report = verify_dataset_formal_sources(dataset_dir, runner=runner)
+    if report["artifacts"] != 3 or report["evidence_records"] != 6:
+        raise DatasetIntegrityError("formal alpha must bind six items to three Lean artifacts")
+    return report
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -360,14 +442,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
-        alpha = verify_alpha_formal_sources(args.dataset)
+        dataset = (
+            verify_alpha_formal_sources(args.dataset)
+            if args.dataset.name == "alpha"
+            else verify_dataset_formal_sources(args.dataset)
+        )
         fixtures = verify_formal_fixture_suite(
             args.fixtures,
             package_dir=args.dataset,
         )
         report = {
             "status": "PASS",
-            "alpha": alpha,
+            "dataset": dataset,
             "fixtures": fixtures,
         }
         if args.out:
@@ -375,7 +461,7 @@ def main(argv: list[str] | None = None) -> int:
             output: dict[str, Any] = {
                 "status": "PASS",
                 "out": str(args.out),
-                "alpha_artifacts": alpha["artifacts"],
+                "formal_artifacts": dataset["artifacts"],
                 "fixture_cases": fixtures["fixtures"],
             }
         else:
