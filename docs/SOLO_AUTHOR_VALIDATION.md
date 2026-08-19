@@ -1,5 +1,7 @@
 # Solo-author validation protocol
 
+**Current external-review status: 0 confirmed reviewers.** The core study therefore proceeds on the solo-author path unless a real volunteer later completes the optional blinded audit.
+
 ClaimPromoteBench is designed so that its core benchmark study can be completed by one author without inventing independent review.
 
 Independent external benchmark review is useful supplementary evidence, but it is not a prerequisite for the core preprint or archival-submission readiness labels. If no external audit is obtained, the manuscript must disclose that fact explicitly.
@@ -29,9 +31,11 @@ After the freeze, a defect that changes policy semantics, a gold action, a promp
 
 ## What external reviewers would do if volunteers become available
 
-The optional blinded-review workflow asks a reviewer to inspect benchmark packets without the gold label and choose the transition action required by the public policy (for example `ALLOW`, `HOLD`, `DEMOTE`, or `ESCALATE`) together with the relevant reasons. The repository can then compare reviewer decisions with the deterministic gold and report agreement/disagreements.
+The optional blinded-review workflow asks a reviewer to inspect benchmark packets without the gold label and choose the transition action required by the public policy (`ALLOW`, `HOLD`, `DEMOTE`, or `ESCALATE`) together with the relevant reasons. The repository can then compare reviewer decisions with the deterministic gold and report agreement/disagreements.
 
 A reviewer is validating whether the authored policy/items reflect understandable intended semantics; the reviewer is not being asked to prove the underlying mathematical claims. Domain expertise is helpful for some cases but the benchmark is deliberately policy-driven and machine-checkable.
+
+One completed independent reviewer is useful as a supplementary external audit. Two or more reviewers are needed only if the study wants to report inter-reviewer agreement statistics under the existing multi-reviewer workflow. External review remains optional for the core study either way.
 
 ## If no reviewer is available
 
