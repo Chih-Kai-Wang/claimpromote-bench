@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: E501
 """Integrate the frozen post-v1 public pilot into the canonical manuscript.
 
 This is intentionally a one-way, idempotent source edit. It labels the pilot as post-v1 and public,
