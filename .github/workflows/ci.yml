@@ -105,7 +105,7 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install runtime dependencies
         run: python -m pip install -e .
-      - name: Build pinned Lean environment
+      - name: Build pinned Lean alpha environment
         uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
         with:
           lake-package-directory: data/alpha
@@ -115,7 +115,7 @@ jobs:
           lint: false
           leanchecker: false
           use-mathlib-cache: false
-      - name: Replay built declarations with Lean checker
+      - name: Replay alpha declarations with Lean checker
         working-directory: data/alpha
         run: lake env leanchecker ClaimPromoteFormal
       - name: Execute formal alpha and negative fixtures
@@ -124,6 +124,30 @@ jobs:
           --dataset data/alpha
           --fixtures fixtures/formal/cases.json
           --out work/formal-fixtures.json
+      - name: Build and audit v1 public dev
+        run: |
+          rm -rf work/v1-dev
+          python scripts/build_v1_dataset.py --split dev --out work/v1-dev
+          python scripts/validate_v1_plan.py --dev-dir work/v1-dev
+      - name: Build pinned Lean v1 dev environment
+        uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
+        with:
+          lake-package-directory: work/v1-dev
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          leanchecker: false
+          use-mathlib-cache: false
+      - name: Replay v1 dev declarations with Lean checker
+        working-directory: work/v1-dev
+        run: lake env leanchecker ClaimPromoteFormal
+      - name: Execute formal v1 dev artifacts
+        run: >-
+          python -m claimpromotebench.formal
+          --dataset work/v1-dev
+          --fixtures fixtures/formal/cases.json
+          --out work/v1-dev-formal.json
 
   compatibility:
     name: compatibility (${{ matrix.os }}, Python ${{ matrix.python-version }})
