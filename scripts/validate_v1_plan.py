@@ -41,7 +41,8 @@ def validate_plan(plan: dict[str, Any]) -> dict[str, Any]:
         family_counts[str(row["family"])] += pair_count
         action_counts[str(row["invalid_action"])] += pair_count
         variants = [int(value) for value in row["dev_variants"]]
-        if len(variants) != len(set(variants)) or any(not 0 <= value < pair_count for value in variants):
+        variants_out_of_range = any(not 0 <= value < pair_count for value in variants)
+        if len(variants) != len(set(variants)) or variants_out_of_range:
             raise ValueError(f"invalid dev variants for factor {row['factor_id']}")
         dev_pairs += len(variants)
         dev_action_counts[str(row["invalid_action"])] += len(variants)
@@ -103,7 +104,8 @@ def audit_dataset(dataset_dir: Path, expected_split: str, plan: dict[str, Any]) 
         )
     if factor_counts != Counter(planned_by_factor):
         raise ValueError(
-            f"{expected_split} factor distribution differs from preregistration: {dict(factor_counts)}"
+            f"{expected_split} factor distribution differs from preregistration: "
+            f"{dict(factor_counts)}"
         )
 
     invalid_sides = Counter(
