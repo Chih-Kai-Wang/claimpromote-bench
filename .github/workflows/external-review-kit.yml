@@ -1,15 +1,8 @@
 name: external review kit
 
+# Optional supplementary validation only. Keep manual so ordinary benchmark/paper commits do
+# not rebuild reviewer materials while the external audit is not on the critical path.
 on:
-  pull_request:
-    paths:
-      - "configs/external-review-v1.json"
-      - "scripts/build_external_review_v1.py"
-      - "scripts/build_external_review_friendly_html.py"
-      - ".github/workflows/external-review-kit.yml"
-      - "data/alpha/**"
-      - "policies/**"
-      - "schemas/**"
   workflow_dispatch:
 
 permissions:
