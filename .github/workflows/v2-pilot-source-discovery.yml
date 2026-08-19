@@ -41,7 +41,7 @@ jobs:
             -f per_page=100 \
             > work/branch-runs.json
 
-      - name: Freeze canonical pilot source identity
+      - name: Build canonical pilot discovery record
         shell: bash
         run: |
           set -euo pipefail
@@ -49,66 +49,63 @@ jobs:
           jq --arg sha "$CANONICAL_TRIGGER_SHA" '
             [
               .workflow_runs[]
-              | select(.head_sha == $sha)
               | select(.path == ".github/workflows/v2-low-cost-pilot.yml")
-            ] as $matches
+              | {
+                  id,
+                  name,
+                  path,
+                  event,
+                  status,
+                  conclusion,
+                  run_attempt,
+                  head_branch,
+                  head_sha,
+                  created_at,
+                  updated_at,
+                  html_url,
+                  artifacts_url
+                }
+            ] as $candidates
+            | [$candidates[] | select(.head_sha == $sha)] as $matches
             | {
                 schema_version: "1.0.0",
-                status: (if ($matches | length) == 1 then "FOUND" else "NOT_UNIQUE" end),
+                status: (
+                  if ($matches | length) == 1 then "FOUND"
+                  elif ($matches | length) == 0 then "NOT_FOUND"
+                  else "MULTIPLE_MATCHES"
+                  end
+                ),
                 canonical_trigger_sha: $sha,
                 match_count: ($matches | length),
-                matches: [
-                  $matches[]
-                  | {
-                      id,
-                      name,
-                      path,
-                      event,
-                      status,
-                      conclusion,
-                      run_attempt,
-                      head_branch,
-                      head_sha,
-                      created_at,
-                      updated_at,
-                      html_url,
-                      artifacts_url
-                    }
-                ]
+                matches: $matches,
+                branch_workflow_candidates: $candidates,
+                artifact_count: 0,
+                artifacts: []
               }
           ' work/branch-runs.json > v2/pilot-results/source-run-discovery.json
 
-          test "$(jq -r '.status' v2/pilot-results/source-run-discovery.json)" = "FOUND"
-          run_id="$(jq -r '.matches[0].id' v2/pilot-results/source-run-discovery.json)"
-          gh api --method GET \
-            "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/artifacts" \
-            -f per_page=100 \
-            > work/source-artifacts.json
-          jq --slurpfile artifacts work/source-artifacts.json '
-            . + {
-              artifact_count: ($artifacts[0].artifacts | length),
-              artifacts: [
-                $artifacts[0].artifacts[]
-                | {id, name, size_in_bytes, expired, created_at, expires_at, archive_download_url}
-              ]
-            }
-          ' v2/pilot-results/source-run-discovery.json \
-            > work/source-run-discovery-with-artifacts.json
-          mv \
-            work/source-run-discovery-with-artifacts.json \
-            v2/pilot-results/source-run-discovery.json
+          if [ "$(jq -r '.status' v2/pilot-results/source-run-discovery.json)" = "FOUND" ]; then
+            run_id="$(jq -r '.matches[0].id' v2/pilot-results/source-run-discovery.json)"
+            gh api --method GET \
+              "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/artifacts" \
+              -f per_page=100 \
+              > work/source-artifacts.json
+            jq --slurpfile artifacts work/source-artifacts.json '
+              . + {
+                artifact_count: ($artifacts[0].artifacts | length),
+                artifacts: [
+                  $artifacts[0].artifacts[]
+                  | {id, name, size_in_bytes, expired, created_at, expires_at, archive_download_url}
+                ]
+              }
+            ' v2/pilot-results/source-run-discovery.json \
+              > work/source-run-discovery-with-artifacts.json
+            mv \
+              work/source-run-discovery-with-artifacts.json \
+              v2/pilot-results/source-run-discovery.json
+          fi
 
-      - name: Require the expected successful two-artifact pilot
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(jq -r '.matches[0].status' v2/pilot-results/source-run-discovery.json)" = "completed"
-          test "$(jq -r '.matches[0].conclusion' v2/pilot-results/source-run-discovery.json)" = "success"
-          test "$(jq -r '.artifact_count' v2/pilot-results/source-run-discovery.json)" -eq 2
-          test "$(jq '[.artifacts[] | select(.expired == false)] | length' v2/pilot-results/source-run-discovery.json)" -eq 2
-          test "$(jq '[.artifacts[] | select(.name | startswith("claimpromotebench-v2-pilot-"))] | length' v2/pilot-results/source-run-discovery.json)" -eq 2
-
-      - name: Commit discovery record when changed
+      - name: Commit discovery record even when the source run is missing or failed
         shell: bash
         run: |
           set -euo pipefail
@@ -119,12 +116,24 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add v2/pilot-results/source-run-discovery.json
-          git commit -m "v2: freeze canonical pilot source run"
+          git commit -m "v2: freeze canonical pilot source discovery"
           git fetch origin "$GITHUB_REF_NAME"
           git rebase "origin/$GITHUB_REF_NAME"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
+      - name: Require the expected successful two-artifact pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(jq -r '.status' v2/pilot-results/source-run-discovery.json)" = "FOUND"
+          test "$(jq -r '.matches[0].status' v2/pilot-results/source-run-discovery.json)" = "completed"
+          test "$(jq -r '.matches[0].conclusion' v2/pilot-results/source-run-discovery.json)" = "success"
+          test "$(jq -r '.artifact_count' v2/pilot-results/source-run-discovery.json)" -eq 2
+          test "$(jq '[.artifacts[] | select(.expired == false)] | length' v2/pilot-results/source-run-discovery.json)" -eq 2
+          test "$(jq '[.artifacts[] | select(.name | startswith("claimpromotebench-v2-pilot-"))] | length' v2/pilot-results/source-run-discovery.json)" -eq 2
+
       - name: Upload discovery evidence
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: claimpromotebench-v2-pilot-source-discovery
