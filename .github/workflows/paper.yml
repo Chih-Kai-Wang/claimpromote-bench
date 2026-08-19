@@ -4,6 +4,11 @@ on:
   pull_request:
     paths:
       - "technical-report/**"
+      - "release/v1-paper-results.json"
+      - "v2/pilot-results/v2-public-pilot-study.json"
+      - "scripts/lint_paper_submission.py"
+      - "scripts/validate_v1_release_results.py"
+      - "scripts/validate_v2_public_pilot_study.py"
       - ".github/workflows/paper.yml"
   workflow_dispatch:
 
@@ -22,6 +27,12 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Fail-closed manuscript lint
+        run: python scripts/lint_paper_submission.py
+      - name: Validate public v1 paper results
+        run: python scripts/validate_v1_release_results.py
+      - name: Validate post-v1 public pilot
+        run: python scripts/validate_v2_public_pilot_study.py
       - name: Install TeX dependencies
         run: |
           sudo apt-get update
@@ -37,12 +48,17 @@ jobs:
           bibtex main
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
-      - name: Fail on undefined citations or references
+      - name: Fail on undefined citations, references, or horizontal overflow
         working-directory: technical-report
         shell: bash
         run: |
+          set -euo pipefail
           if grep -E "LaTeX Warning: (Citation|Reference).*(undefined|multiply defined)|There were undefined references" main.log; then
             echo "Manuscript contains unresolved citations or references." >&2
+            exit 1
+          fi
+          if grep -F 'Overfull \\hbox' main.log; then
+            echo "Manuscript contains horizontal overflow." >&2
             exit 1
           fi
       - name: Confirm PDF exists
