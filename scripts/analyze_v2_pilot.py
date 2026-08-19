@@ -72,11 +72,7 @@ def main() -> int:
         rows = [row for row in summaries if row["model_id"] == model_id]
         seeds_for_model = sorted({int(row["seed"]) for row in rows})
         for seed in seeds_for_model:
-            by_mode = {
-                str(row["decoding_mode"]): row
-                for row in rows
-                if int(row["seed"]) == seed
-            }
+            by_mode = {str(row["decoding_mode"]): row for row in rows if int(row["seed"]) == seed}
             comparison: Json = {"model_id": model_id, "seed": seed, "runs": list(by_mode.values())}
             if "free" in by_mode and "json_schema" in by_mode:
                 free_records = records_by_identity[(model_id, "free", seed)]
