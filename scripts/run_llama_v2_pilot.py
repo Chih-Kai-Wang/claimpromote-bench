@@ -127,6 +127,7 @@ def main() -> int:
         raise RuntimeError("selected model config is not in the frozen-unexecuted state")
 
     decision_schema_path = ROOT / "schemas" / "agent-decision.schema.json"
+    run_schema_path = ROOT / "v2" / "schemas" / "run-record-v2.schema.json"
     decision_schema = load_json(decision_schema_path)
     response_format: Json | None = None
     response_format_sha256: str | None = None
@@ -196,11 +197,7 @@ def main() -> int:
             "verifier_calls": len(item["evidence"]),
             "hardware": hardware,
         }
-        validate_with_schema(
-            record,
-            ROOT / "schemas" / "run-record-v2.schema.json",
-            str(item["id"]),
-        )
+        validate_with_schema(record, run_schema_path, str(item["id"]))
         records.append(record)
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
