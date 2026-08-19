@@ -14,37 +14,32 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Evaluating Whether Evidence Licenses Claim-State Transitions in AI Research Agents"
+TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
-Generative AI tools were used for literature search and triage, research-gap exploration,
-methodology and experiment-design feedback, implementation and code drafting, CI debugging,
-artifact analysis, interpretation of quantitative outputs, manuscript drafting and editing,
-and reference formatting. AI tools also assisted in identifying possible failure modes and
-checking consistency between the manuscript and machine-generated study artifacts. All
-quantitative claims reported in this paper were derived from the validated recovered study
-artifact rather than invented or inferred from partial logs. The human author reviewed the
-AI-assisted work and is responsible for the research question, benchmark and policy semantics,
-experimental decisions, released artifacts, quantitative claims, citation accuracy, and final
-manuscript. AI systems are not treated as authors, independent human reviewers, or external
-reproducers.
+Generative AI tools were used as assistants during literature search, early code drafting and
+debugging, checks on the analysis, and manuscript editing. The author chose the research question,
+defined the benchmark policy and experimental protocol, made the study decisions, checked the
+reported results against the released artifacts, checked the references, and made the final
+manuscript decisions. The quantitative results reported in this paper come from the validated
+study artifacts. AI systems are not listed as authors and were not used as independent human
+reviewers.
 
 """
 
 ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
 
-The hidden set and exact model-facing prompts were frozen and committed before scored inference.
-An artifact-only recovery workflow later reconstructed that frozen identity, validated all 24
-source and 24 normalized runs, and produced the 7,200-record aggregate without querying either
-model again. For double-blind review, public repository identifiers and searchable provenance
-hashes are omitted from this submission. An anonymized review bundle can carry the frozen
-manifests, run outputs, and recovery provenance; the public preprint/release retains the exact
-identifiers.
+The hidden set and exact model prompts were fixed and committed before scored inference. A later
+recovery procedure reconstructed that same dataset and prompt identity, validated all 24 original
+and 24 normalized runs, and produced the 7,200-record aggregate without querying either model
+again. For double-blind review, public repository identifiers and searchable provenance hashes
+are omitted from this submission. An anonymized review bundle can include the fixed manifests,
+run outputs, and recovery record; the public preprint and release retain the exact identifiers.
 
-The raw hidden seed is not included in the public or review artifacts. Any future change to
-labels, policy rules, prompts, controlled factors, or hidden-test bytes requires a new benchmark
-revision rather than silently mutating v1.
+The raw hidden seed is not included in the public or review artifacts. Any future change to labels,
+policy rules, prompts, controlled factors, or hidden-test bytes is treated as a new benchmark
+version rather than a change to v1.
 
 """
 
@@ -82,10 +77,10 @@ def anonymize_for_iclr(body: str) -> str:
     body = body[:repro_start] + ICLR_REPRODUCIBILITY + body[ai_start:]
 
     replacements = {
-        r"the frozen inference source is workflow run \texttt{32255636879}.": (
-            "scored inference began only after the hidden set and exact prompts were frozen."
+        r"the inference source is workflow run \texttt{32255636879}.": (
+            "scored inference began only after the hidden set and exact prompts were fixed."
         ),
-        r"Recovery run \texttt{32274814703} validated": "The recovery workflow validated",
+        r"Recovery run \texttt{32274814703} then validated": "The recovery procedure then validated",
         r"\texttt{32255636879}": r"\texttt{[anonymized-source-run]}",
         r"\texttt{32274814703}": r"\texttt{[anonymized-recovery-run]}",
         r"\texttt{aa5268dc...de7e5}": r"\texttt{[anonymized]}",
