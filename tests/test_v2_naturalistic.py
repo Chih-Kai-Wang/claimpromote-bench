@@ -62,7 +62,9 @@ def test_core_bench_candidate_sampling_is_deterministic_and_unlabeled() -> None:
     source = _source()
 
     first = module.sample_core_bench(rows, salt="fixed-salt", count=12, source=source)
-    second = module.sample_core_bench(list(reversed(rows)), salt="fixed-salt", count=12, source=source)
+    second = module.sample_core_bench(
+        list(reversed(rows)), salt="fixed-salt", count=12, source=source
+    )
 
     assert first == second
     assert len(first) == 12
