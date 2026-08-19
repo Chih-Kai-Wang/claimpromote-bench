@@ -358,9 +358,7 @@ def validate_dataset(dataset_dir: Path, root: Path | None = None) -> dict[str, A
                 f"numerical item lacks executable computation evidence: {item['id']}"
             )
         if item["family"] == "FORMAL" and not item_has_formal:
-            raise DatasetIntegrityError(
-                f"formal item lacks a bound Lean certificate: {item['id']}"
-            )
+            raise DatasetIntegrityError(f"formal item lacks a bound Lean certificate: {item['id']}")
 
         actual = evaluate(item, policy, str(manifest["evaluation_time"]))
         expected = gold_record["decision"]
