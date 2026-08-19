@@ -108,9 +108,7 @@ def audit_dataset(dataset_dir: Path, expected_split: str, plan: dict[str, Any]) 
             f"{dict(factor_counts)}"
         )
 
-    invalid_sides = Counter(
-        str(pair["invalid_id"]).rsplit("-", 1)[-1].upper() for pair in pairs
-    )
+    invalid_sides = Counter(str(pair["invalid_id"]).rsplit("-", 1)[-1].upper() for pair in pairs)
     if invalid_sides != Counter(split_plan["invalid_side_counts"]):
         raise ValueError(f"{expected_split} invalid-side balance differs from preregistration")
 
