@@ -101,10 +101,14 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
 """
         + shared_commands()
         + "\n"
-        + rf"\title{{{TITLE}}}" + "\n"
-        + r"\author{Anonymous authors}" + "\n\n"
-        + r"\begin{document}" + "\n"
-        + r"\maketitle" + "\n\n"
+        + rf"\title{{{TITLE}}}"
+        + "\n"
+        + r"\author{Anonymous authors}"
+        + "\n\n"
+        + r"\begin{document}"
+        + "\n"
+        + r"\maketitle"
+        + "\n\n"
         + body_for_output
         + ("\n\\end{document}\n" if main_text_probe else bibliography_tail)
     )
@@ -128,11 +132,16 @@ def arxiv_tex(body: str) -> str:
 """
         + shared_commands()
         + "\n"
-        + rf"\title{{{TITLE}}}" + "\n"
-        + author + "\n"
-        + r"\date{}" + "\n\n"
-        + r"\begin{document}" + "\n"
-        + r"\maketitle" + "\n\n"
+        + rf"\title{{{TITLE}}}"
+        + "\n"
+        + author
+        + "\n"
+        + r"\date{}"
+        + "\n\n"
+        + r"\begin{document}"
+        + "\n"
+        + r"\maketitle"
+        + "\n\n"
         + body
         + "\n\\bibliographystyle{plain}\n\\bibliography{references}\n\n\\end{document}\n"
     )
