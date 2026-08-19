@@ -15,6 +15,17 @@ from .hashing import canonical_json, sha256_file, verify_artifact
 from .oracle import evaluate
 from .policy import load_policy
 
+# Backward-compatible public constant for the frozen alpha tests and downstream users.
+# Dataset validation itself is manifest-driven so future frozen splits need not reuse it.
+EXPECTED_FAMILY_COUNTS = {
+    "DEPENDENCY": 4,
+    "NUMERICAL": 4,
+    "RUNTIME": 3,
+    "STALE_CONTRADICTION": 3,
+    "PROVENANCE": 3,
+    "FORMAL": 3,
+}
+
 
 def repository_root() -> Path:
     """Return the source-checkout root for the installed editable package."""
@@ -101,7 +112,13 @@ def _manifest_counter(manifest: dict[str, Any], key: str) -> Counter[str]:
 
 def _schema_name(manifest: dict[str, Any], key: str, default: str) -> str:
     value = manifest.get(key, default)
-    if not isinstance(value, str) or not value or value.startswith("/") or ".." in Path(value).parts:
+    unsafe = (
+        not isinstance(value, str)
+        or not value
+        or value.startswith("/")
+        or ".." in Path(value).parts
+    )
+    if unsafe:
         raise DatasetIntegrityError(f"manifest.{key} must be a safe relative schema path")
     return value
 
@@ -199,7 +216,9 @@ def check_pairs(
     if sum(expected_invalid_sides.values()) != expected_pairs:
         raise DatasetIntegrityError("manifest invalid_side_counts do not sum to manifest.pairs")
     if expected_instances != expected_pairs * 2:
-        raise DatasetIntegrityError("controlled-pair datasets require exactly two instances per pair")
+        raise DatasetIntegrityError(
+            "controlled-pair datasets require exactly two instances per pair"
+        )
 
     items = {str(item["id"]): item for item in load_jsonl(dataset_dir / "author-items.jsonl")}
     pairs = load_json(dataset_dir / "pairs.json")
