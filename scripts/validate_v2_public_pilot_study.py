@@ -221,10 +221,12 @@ def main() -> int:
         model = str(comparison.get("model_id"))
         invariants = comparison.get("invariants")
         effect = comparison.get("constraint_effect")
-        comparison_is_valid = (
-            model in expected_deltas
-            and isinstance(invariants, dict)
-            and isinstance(effect, dict)
+        comparison_is_valid = all(
+            (
+                model in expected_deltas,
+                isinstance(invariants, dict),
+                isinstance(effect, dict),
+            )
         )
         if not comparison_is_valid:
             fail("unknown model comparison")
