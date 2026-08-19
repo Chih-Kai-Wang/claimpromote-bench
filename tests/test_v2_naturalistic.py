@@ -93,9 +93,7 @@ def _pool_fixture():
         "candidate_target_per_source": 12,
         "sources": [source, manual_source],
     }
-    candidates = builder.sample_core_bench(
-        _rows(), salt="fixed-salt", count=12, source=source
-    )
+    candidates = builder.sample_core_bench(_rows(), salt="fixed-salt", count=12, source=source)
     pool = {
         "schema_version": "1.0.0",
         "status": "CANDIDATE_POOL_ONLY",
