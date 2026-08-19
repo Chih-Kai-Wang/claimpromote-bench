@@ -34,6 +34,8 @@ jobs:
         run: ruff format --check .
       - name: Type-check
         run: mypy
+      - name: Validate public v1 paper results
+        run: python scripts/validate_v1_release_results.py
       - name: Rebuild deterministic alpha
         run: python scripts/build_alpha.py
       - name: Require generated files to remain stable
