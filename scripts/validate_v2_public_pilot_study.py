@@ -14,7 +14,12 @@ EXPECTED_STUDY_SHA = "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e492
 EXPECTED_RUN = 32291482079
 EXPECTED = {
     ("Qwen/Qwen3-0.6B", "free"): {
-        "status_counts": {"JSON_SYNTAX_ERROR": 0, "OK": 30, "SCHEMA_ERROR": 10, "SEMANTIC_ERROR": 0},
+        "status_counts": {
+            "JSON_SYNTAX_ERROR": 0,
+            "OK": 30,
+            "SCHEMA_ERROR": 10,
+            "SEMANTIC_ERROR": 0,
+        },
         "decision_coverage": 0.75,
         "pair_coverage": 0.70,
         "raw_action_accuracy": 0.50,
@@ -22,7 +27,12 @@ EXPECTED = {
         "raw_flip_rate": 0.0,
     },
     ("Qwen/Qwen3-0.6B", "json_schema"): {
-        "status_counts": {"JSON_SYNTAX_ERROR": 0, "OK": 40, "SCHEMA_ERROR": 0, "SEMANTIC_ERROR": 0},
+        "status_counts": {
+            "JSON_SYNTAX_ERROR": 0,
+            "OK": 40,
+            "SCHEMA_ERROR": 0,
+            "SEMANTIC_ERROR": 0,
+        },
         "decision_coverage": 1.0,
         "pair_coverage": 1.0,
         "raw_action_accuracy": 0.50,
@@ -30,7 +40,12 @@ EXPECTED = {
         "raw_flip_rate": 0.0,
     },
     ("Qwen/Qwen3-1.7B", "free"): {
-        "status_counts": {"JSON_SYNTAX_ERROR": 0, "OK": 0, "SCHEMA_ERROR": 40, "SEMANTIC_ERROR": 0},
+        "status_counts": {
+            "JSON_SYNTAX_ERROR": 0,
+            "OK": 0,
+            "SCHEMA_ERROR": 40,
+            "SEMANTIC_ERROR": 0,
+        },
         "decision_coverage": 0.0,
         "pair_coverage": 0.0,
         "raw_action_accuracy": None,
@@ -38,7 +53,12 @@ EXPECTED = {
         "raw_flip_rate": None,
     },
     ("Qwen/Qwen3-1.7B", "json_schema"): {
-        "status_counts": {"JSON_SYNTAX_ERROR": 0, "OK": 38, "SCHEMA_ERROR": 2, "SEMANTIC_ERROR": 0},
+        "status_counts": {
+            "JSON_SYNTAX_ERROR": 0,
+            "OK": 38,
+            "SCHEMA_ERROR": 2,
+            "SEMANTIC_ERROR": 0,
+        },
         "decision_coverage": 0.95,
         "pair_coverage": 0.90,
         "raw_action_accuracy": 0.50,
@@ -68,7 +88,7 @@ def close(observed: Any, expected: float, label: str) -> None:
         fail(f"{label} mismatch: expected {expected}, got {observed}")
 
 
-def reject_private_or_raw_fields(value: Any, path: str = "$" ) -> None:
+def reject_private_or_raw_fields(value: Any, path: str = "$") -> None:
     forbidden = {"raw_response_text", "raw_decision", "postgate_decision", "prompt"}
     if isinstance(value, dict):
         overlap = forbidden & set(value)
@@ -153,10 +173,24 @@ def main() -> int:
         if summary.get("decision_coverage", 0) > 0:
             close(summary.get("raw_fpr"), 1.0, f"{identity}.raw_fpr")
             close(summary.get("raw_vpr"), 1.0, f"{identity}.raw_vpr")
-            close(summary.get("postgate_action_accuracy"), 1.0, f"{identity}.postgate_action_accuracy")
-            close(summary.get("postgate_pair_accuracy"), 1.0, f"{identity}.postgate_pair_accuracy")
+            close(
+                summary.get("postgate_action_accuracy"),
+                1.0,
+                f"{identity}.postgate_action_accuracy",
+            )
+            close(
+                summary.get("postgate_pair_accuracy"),
+                1.0,
+                f"{identity}.postgate_pair_accuracy",
+            )
         else:
-            for key in ("raw_fpr", "raw_vpr", "postgate_action_accuracy", "postgate_pair_accuracy"):
+            undefined_keys = (
+                "raw_fpr",
+                "raw_vpr",
+                "postgate_action_accuracy",
+                "postgate_pair_accuracy",
+            )
+            for key in undefined_keys:
                 if summary.get(key) is not None:
                     fail(f"{identity}.{key} must be undefined with zero coverage")
         ok = int(summary["status_counts"]["OK"])
@@ -187,7 +221,12 @@ def main() -> int:
         model = str(comparison.get("model_id"))
         invariants = comparison.get("invariants")
         effect = comparison.get("constraint_effect")
-        if model not in expected_deltas or not isinstance(invariants, dict) or not isinstance(effect, dict):
+        comparison_is_valid = (
+            model in expected_deltas
+            and isinstance(invariants, dict)
+            and isinstance(effect, dict)
+        )
+        if not comparison_is_valid:
             fail("unknown model comparison")
         if invariants.get("status") != "PASS":
             fail(f"{model} prompt/runtime invariants do not pass")
