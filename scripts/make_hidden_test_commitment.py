@@ -84,7 +84,9 @@ def build_commitment(dataset_dir: Path, seed_file: Path, prompt_manifest: Path) 
     gold = load_jsonl(_safe_component(dataset_dir, "gold.jsonl"))
     invalid_ids = {str(pair["invalid_id"]) for pair in pairs}
     gold_by_id = {str(row["id"]): row for row in gold}
-    invalid_actions = Counter(str(gold_by_id[item_id]["decision"]["action"]) for item_id in invalid_ids)
+    invalid_actions = Counter(
+        str(gold_by_id[item_id]["decision"]["action"]) for item_id in invalid_ids
+    )
     expected_actions = Counter(plan["test_invalid_action_counts"])
     if invalid_actions != expected_actions:
         raise ValueError(
@@ -96,9 +98,15 @@ def build_commitment(dataset_dir: Path, seed_file: Path, prompt_manifest: Path) 
     if not prompt_manifest.is_file():
         raise ValueError("frozen prompt manifest is missing")
 
+    component_names = (
+        "manifest.json",
+        "author-items.jsonl",
+        "inputs.jsonl",
+        "gold.jsonl",
+        "pairs.json",
+    )
     components = {
-        name: sha256_file(_safe_component(dataset_dir, name))
-        for name in ("manifest.json", "author-items.jsonl", "inputs.jsonl", "gold.jsonl", "pairs.json")
+        name: sha256_file(_safe_component(dataset_dir, name)) for name in component_names
     }
     record: dict[str, Any] = {
         "commitment_version": "1.0.0",
@@ -130,7 +138,12 @@ def build_commitment(dataset_dir: Path, seed_file: Path, prompt_manifest: Path) 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=Path, required=True, help="private 150-pair test directory")
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        required=True,
+        help="private 150-pair test directory",
+    )
     parser.add_argument("--seed-file", type=Path, required=True, help="private 32-byte seed")
     parser.add_argument(
         "--prompt-manifest",
@@ -141,7 +154,11 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True, help="public commitment JSON path")
     args = parser.parse_args()
 
-    record = build_commitment(args.dataset.resolve(), args.seed_file.resolve(), args.prompt_manifest)
+    record = build_commitment(
+        args.dataset.resolve(),
+        args.seed_file.resolve(),
+        args.prompt_manifest,
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(record, sort_keys=True))
