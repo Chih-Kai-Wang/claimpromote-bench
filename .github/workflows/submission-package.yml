@@ -131,19 +131,30 @@ jobs:
             fi
           done
 
-      - name: Enforce ICLR anonymity and arXiv authorship
+      - name: Enforce ICLR anonymity and arXiv provenance
         working-directory: work/submission
         shell: bash
         run: |
           set -euo pipefail
           pdftotext iclr2027.pdf iclr2027.txt
-          if grep -E -i 'Chih-Kai Wang|National Taipei University of Education|f0909172434|gmail\.com' iclr2027.txt; then
-            echo 'ICLR submission leaks author identity.' >&2
+          pdftotext arxiv.pdf arxiv.txt
+
+          sensitive='Chih-Kai Wang|National Taipei University of Education|f0909172434|gmail\.com|32255636879|32274814703|aa5268dc|8d9b3f5c|e2b09f30|3eb5b534|github\.com/f0909172434'
+          for target in iclr2027.tex iclr2027.txt; do
+            if grep -E -i "$sensitive" "$target"; then
+              echo "ICLR submission leaks searchable author/provenance identity in $target." >&2
+              exit 1
+            fi
+          done
+          if pdfinfo iclr2027.pdf | grep -E -i 'Chih-Kai Wang|f0909172434|gmail\.com'; then
+            echo 'ICLR PDF metadata leaks author identity.' >&2
             exit 1
           fi
-          pdftotext arxiv.pdf arxiv.txt
+
           grep -F 'Chih-Kai Wang' arxiv.txt >/dev/null
           grep -F 'National Taipei University of Education' arxiv.txt >/dev/null
+          grep -F '32255636879' arxiv.txt >/dev/null
+          grep -F '32274814703' arxiv.txt >/dev/null
 
       - name: Assemble upload-ready bundles
         working-directory: work/submission
