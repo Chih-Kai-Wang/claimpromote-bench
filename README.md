@@ -2,8 +2,8 @@
 
 **A benchmark for deciding when evidence justifies a change in research-claim status.**
 
-> **v1 primary hidden study complete; paper in final submission preparation.**  
-> The primary study contains 24 runs and 7,200 hidden decisions. The numbers below come from the validated recovered study, not from partial logs.
+> **v1 primary hidden study and post-v1 public formatting-control pilot complete; paper revision in submission verification.**  
+> The hidden v1 numbers come from the validated recovered study, not partial logs. The public pilot is reported separately and does not replace or revise v1.
 
 ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
 
@@ -32,9 +32,9 @@ A deterministic gate can replace an invalid `ALLOW` after the model responds. We
 | Recovered matrix | 24 original runs + 24 normalized runs; 7,200 records each |
 | Study SHA-256 | `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664` |
 
-Primary scoring uses only the 300 hidden instances. The public development data are for implementation and descriptive pilot work.
+Primary scoring uses only the 300 hidden instances. The public development data are for implementation and separately labeled descriptive work.
 
-## Main result
+## Main hidden-study result
 
 The result is mostly negative:
 
@@ -57,7 +57,32 @@ Each cell contains 900 decisions across three seeds.
 
 All three seeds are kept in the study.
 
-## Recovery of evaluator failures
+## Post-v1 public formatting-control pilot
+
+The hidden v1 study did not preserve the original free-form text for older parse failures, so it could not determine how much of the failure rate came from the output contract. We therefore ran a separately labeled **post-v1 public diagnostic**. It uses the 20 public alpha pairs, the same two frozen model artifacts and llama.cpp runtime, seed 104729, and the `ledger_verifier` prompt. The free and constrained runs have identical prompt hashes, model artifact, runtime, seed, and hardware record; the only registered difference is JSON-schema-constrained decoding.
+
+This pilot is not part of the preregistered hidden primary study. It contains 160 decisions and uses no paid API or paid GPU runner.
+
+| Model | Decoding | Decision coverage | Complete-pair coverage | Raw action accuracy | Raw pair accuracy |
+|---|---|---:|---:|---:|---:|
+| Qwen3-0.6B | Free | 0.75 | 0.70 | 0.50 | 0.00 |
+| Qwen3-0.6B | JSON schema | 1.00 | 1.00 | 0.50 | 0.00 |
+| Qwen3-1.7B | Free | 0.00 | 0.00 | undefined | undefined |
+| Qwen3-1.7B | JSON schema | 0.95 | 0.90 | 0.50 | 0.00 |
+
+Schema constraints remove 10 schema errors for Qwen3-0.6B and 38 for Qwen3-1.7B. Across the constrained runs, **78 / 80 decisions are parseable and 38 / 40 controlled pairs are complete, but every parseable decision is still `ALLOW`; raw pair accuracy and raw flip rate remain 0.** The two remaining constrained errors are duplicate `reason_codes` entries and are not manually repaired.
+
+This result controls the simplest format-only explanation for these two small models on the public pairs: making the output contract usable does not recover sensitivity to the policy-relevant evidence change. It does not establish the same failure for larger models, private cases, or natural research records.
+
+Pilot provenance:
+
+- source workflow: `32291482079`;
+- source trigger: `f998a05fec36b84e59230fe241f1e9961647ad2e`;
+- artifact-only recovery: `32297818154`;
+- public aggregate: `v2/pilot-results/v2-public-pilot-study.json`;
+- aggregate SHA-256: `sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`.
+
+## Recovery of v1 evaluator failures
 
 The original model calls finished, but some jobs later failed during evaluation because an output could pass the JSON schema while violating a cross-field rule, such as returning `ALLOW` without proposing the requested target state.
 
@@ -103,6 +128,10 @@ Two independent reviewers completed a 20-item blinded audit using the public alp
 
 The preregistered audit criterion requires every reviewer to reach 0.80 action agreement, so the result is **mixed / not PASS**. The `reviwer-02` identifier typo is part of the immutable submission and is kept as-is.
 
+## Naturalistic evaluation preparation
+
+A deterministic, unlabeled, pointer-only pool of 12 public CORE-Bench candidates is frozen in `v2/naturalistic-candidates.json`. Selection occurred without looking at ClaimPromoteBench model outputs. Every candidate remains `PENDING_SOURCE_LEVEL_REVIEW`; none is currently presented as a scored ClaimPromoteBench item. Source-level licensing, a defensible transition question, evaluation time, and evidence snapshot must all be verified before inclusion.
+
 ## What the executable evidence means
 
 Numerical cases use exact-rational finite-grid artifacts whose registered values, extrema, predicates, repetitions, and scope are recomputed. Formal cases use generated Lean sources under a pinned toolchain. Provenance, freshness, dependencies, contradictions, review independence, statement identity, and runtime success remain separate policy requirements.
@@ -120,6 +149,8 @@ python -m claimpromotebench validate data/alpha
 python -m claimpromotebench.shortcuts --dataset data/alpha --out work/shortcut-audit.json
 python -m claimpromotebench.invariance --dataset data/alpha --out work/invariance-audit.json
 python -m claimpromotebench.executable --fixtures fixtures/executable --out work/executable-fixtures.json
+python scripts/validate_v1_release_results.py
+python scripts/validate_v2_public_pilot_study.py
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
 
@@ -154,9 +185,9 @@ python -m claimpromotebench compare-runs \
 
 ## Scope
 
-ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, or verifier-governed research agents. Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations.
+ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, counterfactual pairs, evidence reversal, or verifier-governed research agents. Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, SteerBench-Work, policy-aware web-agent evaluation, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations.
 
-The contribution is narrower: a preregistered controlled-pair benchmark for deciding whether registered evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, and separate reporting of raw model decisions and deterministic gate actions.
+The contribution is narrower: a controlled-pair benchmark for deciding whether typed scientific evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, separate reporting of raw model decisions and deterministic gate actions, and a public formatting control that isolates output-contract failure from evidence-insensitive decisions for the tested models.
 
 The paper does not make an unqualified “first benchmark” or “first system” claim.
 
@@ -164,9 +195,12 @@ The paper does not make an unqualified “first benchmark” or “first system�
 
 - Technical report: `technical-report/main.tex`
 - Submission checklist: `technical-report/SUBMISSION_GATE.md`
+- v2 pilot aggregate: `v2/pilot-results/v2-public-pilot-study.json`
+- v2 pilot protocol: `docs/ICLR_V2_LOW_COST_PROTOCOL.md`
+- Naturalistic source registry: `docs/V2_NATURALISTIC_SOURCE_REGISTRY.md`
 - Experiment protocol/history: `docs/EXPERIMENTS.md`
 - Roadmap: `docs/ROADMAP.md`
 - Related work: `docs/RELATED_WORK.md`
 - AI assistance disclosure: `AI_ASSISTANCE.md`
 
-The v1 hidden model outputs are fixed and should not be rerun or rewritten to make the result cleaner. Remaining work is release preparation and the account-side steps needed to submit the preprint and conference paper.
+The v1 hidden model outputs are fixed and must not be rerun or rewritten to make the result cleaner. PR #20 remains a draft until the revised paper passes full CI, ICLR/arXiv compilation, anonymity checks, page-limit checks, and final visual review.
