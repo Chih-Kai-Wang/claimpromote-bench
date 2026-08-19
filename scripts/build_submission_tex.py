@@ -32,6 +32,22 @@ reproducers.
 
 """
 
+ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
+
+The hidden set and exact model-facing prompts were frozen and committed before scored inference.
+An artifact-only recovery workflow later reconstructed that frozen identity, validated all 24
+source and 24 normalized runs, and produced the 7,200-record aggregate without querying either
+model again. For double-blind review, public repository identifiers and searchable provenance
+hashes are omitted from this submission. An anonymized review bundle can carry the frozen
+manifests, run outputs, and recovery provenance; the public preprint/release retains the exact
+identifiers.
+
+The raw hidden seed is not included in the public or review artifacts. Any future change to
+labels, policy rules, prompts, controlled factors, or hidden-test bytes requires a new benchmark
+revision rather than silently mutating v1.
+
+"""
+
 
 def canonical_body() -> str:
     source = (REPORT / "main.tex").read_text(encoding="utf-8")
@@ -58,6 +74,43 @@ def canonical_body() -> str:
     return body
 
 
+def anonymize_for_iclr(body: str) -> str:
+    """Remove searchable public provenance while preserving the scientific protocol."""
+
+    repro_start = body.index(r"\section{Reproducibility and Artifact Policy}")
+    ai_start = body.index(r"\section{AI Assistance Disclosure}", repro_start)
+    body = body[:repro_start] + ICLR_REPRODUCIBILITY + body[ai_start:]
+
+    replacements = {
+        r"the frozen inference source is workflow run \texttt{32255636879}.": (
+            "scored inference began only after the hidden set and exact prompts were frozen."
+        ),
+        r"Recovery run \texttt{32274814703} validated": "The recovery workflow validated",
+        r"\texttt{32255636879}": r"\texttt{[anonymized-source-run]}",
+        r"\texttt{32274814703}": r"\texttt{[anonymized-recovery-run]}",
+        r"\texttt{aa5268dc...de7e5}": r"\texttt{[anonymized]}",
+        r"\texttt{8d9b3f5c...bb3e1}": r"\texttt{[anonymized]}",
+        r"\texttt{e2b09f30...f2877}": r"\texttt{[anonymized]}",
+        r"\texttt{3eb5b534...e8bfe664}": r"\texttt{[anonymized]}",
+    }
+    for old, new in replacements.items():
+        body = body.replace(old, new)
+
+    sensitive_fragments = (
+        "32255636879",
+        "32274814703",
+        "aa5268dc",
+        "8d9b3f5c",
+        "e2b09f30",
+        "3eb5b534",
+        "f0909172434",
+    )
+    leaks = [fragment for fragment in sensitive_fragments if fragment.lower() in body.lower()]
+    if leaks:
+        raise ValueError(f"ICLR body still contains searchable provenance: {leaks}")
+    return body
+
+
 def shared_commands() -> str:
     return r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
 \newcommand{\allow}{\texttt{ALLOW}}
@@ -77,7 +130,10 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
     # ICLR excludes the mandatory AI-use statement from the main-text page limit. The diagnostic
     # probe removes only that section; it retains the complete scientific narrative and omits
     # the bibliography below.
-    body_for_output = without_ai_disclosure(body) if main_text_probe else body
+    anonymous_body = anonymize_for_iclr(body)
+    body_for_output = (
+        without_ai_disclosure(anonymous_body) if main_text_probe else anonymous_body
+    )
 
     bibliography_tail = (
         "\n\\bibliographystyle{iclr2027_conference}\n"
