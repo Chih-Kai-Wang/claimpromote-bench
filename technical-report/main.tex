@@ -41,13 +41,14 @@ Our question is therefore:
 
 \begin{figure}[t]
 \centering
-\fbox{\parbox{0.94\linewidth}{\small
-\textbf{Claim + evidence + current state + requested transition}
-$\longrightarrow$ \textbf{model decision}
-$\longrightarrow$ \textbf{deterministic gate}
-$\longrightarrow$ \textbf{final action}.\\[-1mm]
-The model first produces a raw decision. Only the gate arm may replace an invalid \allow{} with the action required by the fixed policy. We report the model decision and the post-gate action separately.}}
-\caption{Evaluation setup. The model's raw decision is kept separate from the action taken after the deterministic gate.}
+\small
+\begin{tabular}{@{}c@{\;\(\longrightarrow\)\;}c@{\;\(\longrightarrow\)\;}c@{\;\(\longrightarrow\)\;}c@{}}
+\fbox{\parbox[c][10mm][c]{0.19\linewidth}{\centering Claim + evidence\\current state + request}} &
+\fbox{\parbox[c][10mm][c]{0.15\linewidth}{\centering Raw model\\decision}} &
+\fbox{\parbox[c][10mm][c]{0.15\linewidth}{\centering Fixed-policy\\gate}} &
+\fbox{\parbox[c][10mm][c]{0.15\linewidth}{\centering Final\\action}}
+\end{tabular}
+\caption{Evaluation setup. The raw model decision is reported separately from the action after deterministic enforcement. The gate can veto an invalid \allow{} but cannot supply a missing model decision.}
 \label{fig:overview}
 \end{figure}
 
@@ -55,7 +56,7 @@ The hidden study produced a clear negative result. Of 7,200 decisions, 73.99\% f
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item We define a four-action benchmark for deciding whether evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
+  \item We define a four-action benchmark for deciding whether typed scientific evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
   \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, and we commit the hidden set and exact prompts before scored inference.
   \item We evaluate model decisions separately from deterministic gate actions, so an engineering safeguard is not mistaken for better model reasoning.
   \item We report the complete hidden study, including the high format-error rate, the all-\allow{} raw behavior, the low coverage of the gate arm, and a small human audit that did not meet the preregistered pass criterion.
@@ -64,10 +65,16 @@ Our contributions are:
 \section{Related Work}
 
 \paragraph{Scientific claim verification.}
-CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports \cite{huang2026deepfact}, while ClaimDB evaluates fact verification over large structured databases \cite{theologitis2026claimdb}. These tasks ask whether evidence supports a factual claim. \cpb instead starts from an explicit evidence record and asks whether it is enough for a particular change in claim status.
+CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports \cite{huang2026deepfact}, while ClaimDB evaluates fact verification over large structured databases \cite{theologitis2026claimdb}. RECV decomposes evidence-based claim verification into deductive and abductive reasoning requirements and tests them on synthetic and real-world claims \cite{dougrezlewis2025recv}. These tasks ask whether evidence supports a factual claim. \cpb instead starts from an explicit evidence record and asks whether it licenses a particular change in research status.
 
 \paragraph{Research-agent evaluation and reproducibility.}
 ScienceAgentBench evaluates executable data-driven research tasks \cite{chen2025scienceagentbench}; CORE-Bench evaluates computational reproduction of published work \cite{siegel2025corebench}; and POPPER studies agentic hypothesis falsification with sequential statistical control \cite{huang2025popper}. \cpb does not attempt end-to-end scientific discovery or truth determination. It studies the narrower decision between producing evidence and assigning a stronger status to a claim.
+
+\paragraph{Policy-aware agent decisions.}
+ST-WebAgentBench measures whether web agents complete enterprise tasks while respecting explicit safety and trustworthiness policies \cite{levy2026stwebagentbench}. The concurrent SteerBench-Work is especially close methodologically: it evaluates proceed-versus-hold decisions at workplace action boundaries and includes evidence-reversed incident mirrors \cite{serdar2026steerbenchwork}. These benchmarks show that action-level policy compliance and evidence changes can expose failures hidden by task success alone. Our target is different: the action under evaluation is a change to a \emph{scientific claim's epistemic state}, with separate computation, formal-certification, review, and research-status axes; the policy also reasons about evidence dependencies, provenance, scope, staleness, and contradictions. We therefore do not claim novelty for counterfactual pairs or evidence reversal by themselves.
+
+\paragraph{Counterfactual and evidence-sensitive evaluation.}
+CofCA uses step-wise counterfactual multi-hop questions to separate context-based reasoning from memorized factual answers \cite{wu2025cofca}. MEDSYN introduces an evidence-sensitivity analysis for multimodal clinical diagnosis and shows that models can fail to use heterogeneous evidence effectively \cite{chen2026medsyn}. These works motivate controlled changes to evidence as an evaluation tool. In \cpb the controlled change is tied to a named policy prerequisite and the outcome is a four-way claim-state transition, so the main object of study is transition admissibility rather than the counterfactual construction technique itself.
 
 \paragraph{Evidence-state maintenance and verifier-governed workflows.}
 SeekBench evaluates grounding, recovery, and answer calibration as evidence quality changes \cite{shao2025seekbench}. Omni-Decision maintains a structured evidence state for multimodal question answering \cite{ma2026omnidecision}; EviGraph tracks claim--support consistency in autonomous research \cite{ren2026evigraph}; and the contemporaneous ClaimLedger report proposes verifier-governed claim maintenance \cite{elliman2026claimledger}. These systems are close in motivation. Our benchmark is narrower: the policy is fixed, each pair changes a specific prerequisite, the answer space has four actions, and the model decision is evaluated separately from any deterministic gate. We do not claim that claim ledgers or verifier-governed maintenance are new.
@@ -141,7 +148,7 @@ The gate never promotes a claim on the model's behalf. It can only block or repl
 
 The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.6B Q8\_0 and Qwen3-1.7B Q8\_0, four arms, and three fixed seeds (104729, 130363, 169087):
 \[
-300\times 2\times 4\times 3 = 7{,}200
+300\times 2\times4\times3 = 7{,}200
 \]
 scored decisions. Public development instances are not included in primary scoring. The hidden set was committed to Git before the scored runs; the inference source is workflow run \texttt{32255636879}. Both models use llama.cpp commit \texttt{de699957b92f490efebad149665b0dccf127eaff}.
 
