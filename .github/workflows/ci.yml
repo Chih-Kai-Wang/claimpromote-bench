@@ -129,6 +129,7 @@ jobs:
           rm -rf work/v1-dev
           python scripts/build_v1_dataset.py --split dev --out work/v1-dev
           python scripts/validate_v1_plan.py --dev-dir work/v1-dev
+          python scripts/validate_v1_public_dev_freeze.py --dataset work/v1-dev
       - name: Build pinned Lean v1 dev environment
         uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
         with:
