@@ -76,7 +76,7 @@ The author:
 5. computes reviewer-versus-gold agreement and exports disagreements;
 6. reports the external audit as supplementary evidence, including failures or disagreements rather than hiding them.
 
-One independent reviewer is enough to provide a useful supplementary external audit. Two or more reviewers are required only if the paper wants to report inter-reviewer agreement statistics such as reviewer-pair agreement or Cohen's kappa.
+One independent reviewer is enough to provide a useful supplementary external audit, but it does not satisfy the repository's existing multi-reviewer `PASS` gate. Two or more reviewers are required to satisfy that gate and to report inter-reviewer agreement statistics such as reviewer-pair agreement or Cohen's kappa. External review remains optional for the core paper either way.
 
 ## Suggested public description
 
