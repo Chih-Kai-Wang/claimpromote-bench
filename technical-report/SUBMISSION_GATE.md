@@ -4,7 +4,7 @@ This file is deliberately fail-closed. A polished manuscript is not evidence tha
 
 ## Current verdict
 
-**NOT SUBMISSION READY — EMPIRICAL AND REVIEW GATES OPEN**
+**NOT SUBMISSION READY — DATASET, EXECUTION, AND REVIEW GATES OPEN**
 
 The manuscript may be edited, compiled, and circulated as a work in progress. It must not be described as a completed benchmark study, and its blank result tables must not be filled from hand-copied aggregate scores.
 
@@ -29,16 +29,17 @@ The manuscript may be edited, compiled, and circulated as a work in progress. It
 
 For both preregistered Qwen3 model sizes:
 
-- [ ] exact upstream model revision recorded;
-- [ ] exact weights/GGUF file recorded;
-- [ ] SHA-256 of model artifact recorded;
-- [ ] exact quantization recorded;
-- [ ] exact llama.cpp/runtime commit recorded;
-- [ ] deterministic invocation and decoding settings recorded;
-- [ ] hardware summary recorded;
+- [x] exact upstream model revision recorded;
+- [x] exact weights/GGUF file recorded;
+- [x] SHA-256 of model artifact recorded;
+- [x] exact quantization recorded;
+- [x] exact llama.cpp/runtime commit recorded;
+- [x] deterministic invocation and decoding settings recorded;
+- [ ] hardware summary recorded from the machine that actually executes the scored study;
+- [ ] downloaded model bytes and runtime identity pass the preflight/smoke check;
 - [ ] smoke run passes the complete run-record validator.
 
-A model name alone is not a reproducible model identity.
+The frozen identities are recorded in `configs/models/*.json`, `configs/models/PROVENANCE.md`, and `configs/decoding-v1.json`. A model name alone is not a reproducible model identity. `FROZEN_UNEXECUTED` means exactly that: identity frozen, experiment not performed.
 
 ## Gate D — frozen quantitative study
 
