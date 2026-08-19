@@ -1,0 +1,61 @@
+{
+  "format_error_count": 5327,
+  "format_error_rate": 0.7398611111111111,
+  "instances_per_run": 300,
+  "models": {
+    "Qwen/Qwen3-0.6B": {
+      "defined_effective_fpr_values": [
+        0.0
+      ],
+      "defined_raw_fpr_values": [
+        1.0
+      ],
+      "false_block_values": [
+        0.0
+      ],
+      "gate_catch_values": [
+        1.0
+      ],
+      "gate_complete_pair_coverage_range": [
+        0.07333333333333333,
+        0.35333333333333333
+      ],
+      "gate_decision_coverage_range": [
+        0.14,
+        0.49
+      ]
+    },
+    "Qwen/Qwen3-1.7B": {
+      "defined_effective_fpr_values": [
+        0.0
+      ],
+      "defined_raw_fpr_values": [
+        1.0
+      ],
+      "false_block_values": [
+        0.0
+      ],
+      "gate_catch_values": [
+        1.0
+      ],
+      "gate_complete_pair_coverage_range": [
+        0.1,
+        0.38
+      ],
+      "gate_decision_coverage_range": [
+        0.21666666666666667,
+        0.48333333333333334
+      ]
+    }
+  },
+  "parseable_raw_decisions": 1873,
+  "raw_actions_parseable": "ALLOW_ONLY",
+  "runs": 24,
+  "semantic_format_reclassified": 27,
+  "source_artifact": "claimpromotebench-v1-scored-study-recovered",
+  "source_recovery_workflow_run_id": 32274814703,
+  "source_scored_workflow_run_id": 32255636879,
+  "source_study_file": "v1-hidden-study.json",
+  "source_study_sha256": "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664",
+  "total_decisions": 7200
+}
