@@ -185,7 +185,8 @@ def main() -> int:
         "normalization_rule": (
             "A schema-valid raw model decision that violates the frozen cross-field decision "
             "semantics is a malformed model output and is reclassified as FORMAT_ERROR. "
-            "No valid model decision is altered; a semantically invalid system final decision fails closed."
+            "No valid model decision is altered; a semantically invalid system final "
+            "decision fails closed."
         ),
         "runs": 24,
         "instances_per_run": 300,
