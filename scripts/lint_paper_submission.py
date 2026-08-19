@@ -87,7 +87,8 @@ def main() -> int:
     abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract_match.group(1))
     abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
     if len(abstract_words) > 250:
-        fail(f"abstract is too long for a concise conference submission: {len(abstract_words)} words")
+        word_count = len(abstract_words)
+        fail(f"abstract is too long for a concise conference submission: {word_count} words")
 
     contrib_match = re.search(
         r"Our contributions are fourfold:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
