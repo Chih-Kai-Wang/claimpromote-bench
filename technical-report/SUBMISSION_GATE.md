@@ -6,7 +6,7 @@ This file is deliberately fail-closed. A polished manuscript is not evidence tha
 
 **PRIMARY STUDY COMPLETE — PREPRINT FINALIZATION GATES STILL OPEN**
 
-The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, and primary manuscript Results now exist and are hash-bound. The empirical tables no longer depend on partial workflow state. Remaining work is final citation/release/clean-environment verification and explicit handling of the v1 infrastructure-identity limitation described below.
+The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, and primary manuscript Results now exist and are hash-bound. The empirical tables no longer depend on partial workflow state. The bibliography and ICLR 2027 AI-disclosure policy have been checked against current authoritative sources; remaining work is final compile/PDF/value verification plus release/clean-environment verification and explicit preservation of the v1 infrastructure-identity limitation described below.
 
 ## Gate A — research boundary and novelty
 
@@ -14,7 +14,7 @@ The private hidden freeze, frozen inference source, 24-run / 7,200-decision arti
 - [x] Distinguish claim/evidence verification, abstention, computational reproducibility, hypothesis validation, evidence-state maintenance, verifier-governed claim workflows, and formal-specification generation from the transition benchmark.
 - [x] Use cautious priority language; do not claim “first” without qualification.
 - [x] Fresh related-work search recorded on 2026-08-19 in `docs/RELATED_WORK.md`; positioning was narrowed after finding SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report.
-- [ ] Recheck every bibliography entry against its authoritative publication/preprint record immediately before archival submission.
+- [x] Bibliography entries rechecked on 2026-08-20 against authoritative records (ACL Anthology, OpenReview, PMLR, AAAI, arXiv, and the cited official ClaimLedger report page as applicable).
 
 ## Gate B — v1 benchmark freeze
 
@@ -100,7 +100,7 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [ ] Final LaTeX compile and unresolved-reference/citation check succeeds on the post-results manuscript.
 - [ ] Inspect the compiled PDF for table overflow, broken references, anonymity leaks, and stale blocker text.
 - [ ] Recheck quantitative manuscript values against the recovered artifact after the final text edit.
-- [ ] Update/check final AI-assistance disclosure against the target venue policy.
+- [x] AI-assistance disclosure checked on 2026-08-20 against the official ICLR 2027 AI Policy for Authors and Author Guidelines; the venue wrapper includes a mandatory detailed AI-use section and human-responsibility statement.
 
 ## Gate G — reproducibility release
 
@@ -112,6 +112,6 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 
 ## Readiness rule
 
-The empirical study is complete, but the repository is not yet labeled archival-submission-ready. **PREPRINT READY** requires Gate F's remaining compile/PDF/value checks plus the bibliography authority check in Gate A. **ARCHIVAL SUBMISSION READY** additionally requires Gate G and venue-specific disclosure/artifact requirements.
+The empirical study is complete, but the repository is not yet labeled archival-submission-ready. **PREPRINT READY** requires Gate F's remaining compile/PDF/final-value checks; the current bibliography-authority and ICLR 2027 AI-policy checks are complete. **ARCHIVAL SUBMISSION READY** additionally requires Gate G and any venue-specific artifact/release requirements still applicable at submission time.
 
 Do not rerun or rewrite the frozen v1 primary inference to make the negative result cleaner. A future replication that pins the exact Python patch version or retains raw malformed model text must be labeled as a new or supplementary study, not a replacement for v1.
