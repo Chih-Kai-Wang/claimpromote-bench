@@ -38,6 +38,11 @@ again. For double-blind review, public repository identifiers and searchable pro
 are omitted from this submission. An anonymized review bundle can include the fixed manifests,
 run outputs, and recovery record; the public preprint and release retain the exact identifiers.
 
+The separately labeled post-v1 public pilot retains raw responses in its source artifacts and
+publishes a public-safe aggregate produced twice from the same immutable four-run matrix. Its
+free and constrained conditions have identical prompts and differ only in the registered response
+format. The exact source-run and aggregate identifiers are omitted here for double-blind review.
+
 The raw hidden seed is not included in the public or review artifacts. Any future change to labels,
 policy rules, prompts, controlled factors, or hidden-test bytes is treated as a new benchmark
 version rather than a change to v1.
@@ -64,6 +69,9 @@ def canonical_body() -> str:
         r"\texttt{3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664}": (
             r"\texttt{3eb5b534...e8bfe664}"
         ),
+        r"\texttt{83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e}": (
+            r"\texttt{83dbee49...25c0b264e}"
+        ),
     }
     for old, new in replacements.items():
         body = body.replace(old, new)
@@ -86,10 +94,12 @@ def anonymize_for_iclr(body: str) -> str:
         ),
         r"\texttt{32255636879}": r"\texttt{[anonymized-source-run]}",
         r"\texttt{32274814703}": r"\texttt{[anonymized-recovery-run]}",
+        r"\texttt{32291482079}": r"\texttt{[anonymized-public-pilot-run]}",
         r"\texttt{aa5268dc...de7e5}": r"\texttt{[anonymized]}",
         r"\texttt{8d9b3f5c...bb3e1}": r"\texttt{[anonymized]}",
         r"\texttt{e2b09f30...f2877}": r"\texttt{[anonymized]}",
         r"\texttt{3eb5b534...e8bfe664}": r"\texttt{[anonymized]}",
+        r"\texttt{83dbee49...25c0b264e}": r"\texttt{[anonymized]}",
     }
     for old, new in replacements.items():
         body = body.replace(old, new)
@@ -97,10 +107,12 @@ def anonymize_for_iclr(body: str) -> str:
     sensitive_fragments = (
         "32255636879",
         "32274814703",
+        "32291482079",
         "aa5268dc",
         "8d9b3f5c",
         "e2b09f30",
         "3eb5b534",
+        "83dbee49",
         "f0909172434",
     )
     leaks = [fragment for fragment in sensitive_fragments if fragment.lower() in body.lower()]
