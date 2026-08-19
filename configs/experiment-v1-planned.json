@@ -12,6 +12,5 @@
     "configs/models/qwen3-1.7b.json"
   ],
   "seeds": [104729, 130363, 169087],
-  "status": "PENDING_ARTIFACT_AND_TEST_FREEZE"
+  "status": "MODEL_RUNTIME_FROZEN_DATASET_AND_EXECUTION_PENDING"
 }
-
