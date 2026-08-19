@@ -61,6 +61,12 @@ jobs:
       - name: Check out benchmark
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Check out frozen scoring source for hidden reconstruction
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: aa5268dcde2aa44f8eabf0246631efbca27de7e5
+          path: work/frozen-scoring-source
+
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -87,25 +93,26 @@ jobs:
           umask 077
           printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
 
-      - name: Reconstruct hidden set and reverify commitment
+      - name: Reconstruct hidden set and reverify commitment from frozen scoring source
         run: |
           set -euo pipefail
           rm -rf work/v1-hidden
-          python scripts/build_v1_dataset.py \
+          python work/frozen-scoring-source/scripts/build_v1_dataset.py \
             --split test \
             --out work/v1-hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
-          python scripts/validate_v1_plan.py --test-dir work/v1-hidden >/dev/null
-          python scripts/freeze_prompt_manifest.py \
+          python work/frozen-scoring-source/scripts/validate_v1_plan.py \
+            --test-dir work/v1-hidden >/dev/null
+          python work/frozen-scoring-source/scripts/freeze_prompt_manifest.py \
             --dataset work/v1-hidden \
             --out work/v1-hidden-prompt-manifest.json >/dev/null
-          python scripts/make_hidden_test_commitment.py \
+          python work/frozen-scoring-source/scripts/make_hidden_test_commitment.py \
             --dataset work/v1-hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
             --prompt-manifest work/v1-hidden-prompt-manifest.json \
             --out work/recomputed-hidden-commitment.json >/dev/null
           diff -u configs/v1-hidden-test-commitment.json work/recomputed-hidden-commitment.json >/dev/null
-          echo 'Committed hidden dataset and prompt freeze reproduced exactly for recovery.'
+          echo 'Committed hidden dataset and prompt freeze reproduced exactly from frozen scoring source.'
 
       - name: Freeze source workflow artifact metadata
         env:
@@ -290,5 +297,5 @@ jobs:
         if: always()
         run: |
           rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
-          rm -rf work/v1-hidden
+          rm -rf work/v1-hidden work/frozen-scoring-source
           rm -f work/v1-hidden-prompt-manifest.json work/recomputed-hidden-commitment.json
