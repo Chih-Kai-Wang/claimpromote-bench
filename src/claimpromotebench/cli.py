@@ -154,9 +154,7 @@ def _run_identity(record: dict[str, Any]) -> dict[str, Any]:
 
 
 def _exact_model_prompt(rendered: str, root: Path) -> str:
-    decoding = json.loads(
-        (root / "configs" / "decoding-v1.json").read_text(encoding="utf-8")
-    )
+    decoding = json.loads((root / "configs" / "decoding-v1.json").read_text(encoding="utf-8"))
     control_instruction = str(decoding["control_instruction"])
     return f"{rendered.rstrip()}\n\n{control_instruction}\n"
 
