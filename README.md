@@ -1,21 +1,21 @@
 # ClaimPromoteBench
 
-**Policy-Governed Evidence-State Transitions for Mathematical Research Agents**
+**A benchmark for deciding when evidence justifies a change in research-claim status.**
 
-> **v1 primary hidden study complete; manuscript finalization in progress.**  
-> The frozen primary study contains 24 runs / 7,200 scored hidden decisions. Results below are bound to the validated recovered aggregate artifact, not partial logs.
+> **v1 primary hidden study complete; paper in final submission preparation.**  
+> The primary study contains 24 runs and 7,200 hidden decisions. The numbers below come from the validated recovered study, not from partial logs.
 
-ClaimPromoteBench asks a narrow question: **given a mathematical research claim, typed evidence, a current evidence state, and a requested transition, is that transition admissible under a frozen versioned policy?**
+ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
 
-It is **not** a theorem-truth classifier, general scientific fact checker, or a claim that Lean acceptance implies an unrestricted natural-language conclusion. It separates four orthogonal state axes—research, computation, formal certification, and independent review—and evaluates one of four actions:
+The benchmark is not a theorem-truth classifier or a general scientific fact checker. It keeps research status, computation, formal certification, and independent review separate and uses four possible actions:
 
 `ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
 
-A deterministic gate may veto an invalid `ALLOW`, but gate catches are reported as **system-level enforcement effects**, not improved model reasoning or calibration.
+A deterministic gate can replace an invalid `ALLOW` after the model responds. We report that gate behavior separately from the model's own decision.
 
 ## v1 benchmark
 
-| Component | Frozen v1 status |
+| Component | v1 |
 |---|---|
 | Total benchmark | 200 controlled pairs / 400 instances |
 | Public development | 50 pairs / 100 instances |
@@ -27,69 +27,69 @@ A deterministic gate may veto an invalid `ALLOW`, but gate catches are reported 
 | Primary matrix | 300 × 2 × 4 × 3 = **7,200 decisions** |
 | llama.cpp | `de699957b92f490efebad149665b0dccf127eaff` |
 | Hidden commitment commit | `8d9b3f5c831f432cf6b321e6402724c4f52bb3e1` |
-| Frozen inference source | workflow `32255636879`, head `aa5268dcde2aa44f8eabf0246631efbca27de7e5` |
-| Artifact-only recovery | workflow `32274814703`, head `e2b09f30b0573cf7bcb244eef1917691755f2877` |
-| Recovered matrix | 24 source runs + 24 normalized runs; 7,200 records each side |
-| Study file SHA-256 | `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664` |
+| Scored inference | workflow `32255636879`, head `aa5268dcde2aa44f8eabf0246631efbca27de7e5` |
+| Recovery | workflow `32274814703`, head `e2b09f30b0573cf7bcb244eef1917691755f2877` |
+| Recovered matrix | 24 original runs + 24 normalized runs; 7,200 records each |
+| Study SHA-256 | `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664` |
 
-Public development is for implementation debugging and descriptive pilot work only. **Primary scoring uses only the 300 hidden instances.**
+Primary scoring uses only the 300 hidden instances. The public development data are for implementation and descriptive pilot work.
 
-## Primary hidden result
+## Main result
 
-The main result is a structured-output failure, not a small difference between intervention means:
+The result is mostly negative:
 
 - **5,327 / 7,200 decisions (73.99%) are `FORMAT_ERROR`.**
-- Across all **1,873 parseable raw model decisions, the raw action is always `ALLOW`.**
-- Therefore, whenever raw primary rates are defined, raw false-promotion rate is 1.00, valid-promotion recall is 1.00, and paired transition accuracy is 0.
-- In the enforced-gate arm, among parseable decisions, effective false-promotion rate is 0, valid-promotion recall is 1, gate catch rate is 1, and false-block rate is 0 across every seed.
-- Those gate rates are **conditional on low coverage**: Qwen3-0.6B gate-arm decision coverage ranges from 14.0% to 49.0%; Qwen3-1.7B ranges from 21.7% to 48.3%.
+- All **1,873 parseable raw model decisions are `ALLOW`.**
+- Wherever the raw rates are defined, raw false-promotion rate is 1.00, valid-promotion recall is 1.00, and paired transition accuracy is 0.
+- In the gate arm, the final false-promotion rate is 0 on parseable decisions, with catch rate 1 and false-block rate 0.
+- Gate-arm decision coverage is low: 14.0%–49.0% for Qwen3-0.6B and 21.7%–48.3% for Qwen3-1.7B.
 
-The correct interpretation is therefore: **deterministic enforcement can prevent policy-invalid promotion when a structured intent exists, but it does not make the model selective and it does not solve structured-output reliability.**
+The gate uses the same fixed policy that defines the benchmark labels. Its perfect conditional gate scores therefore show that the implementation follows that policy on parseable cases; they do **not** show that the model learned the policy or reasoned better.
 
-### Per-model/arm format-error counts
+### Format errors by model and arm
 
-Each model/arm cell contains 900 decisions across three seeds.
+Each cell contains 900 decisions across three seeds.
 
 | Model | Narrative | Ledger | Ledger + verifier | Ledger + verifier + gate |
 |---|---:|---:|---:|---:|
 | Qwen3-0.6B | 900 | 261 | 335 | 585 |
 | Qwen3-1.7B | 900 | 900 | 900 | 546 |
 
-All three seeds are retained. No result was removed because it was inconvenient.
+All three seeds are kept in the study.
 
-## Transparent artifact-only recovery
+## Recovery of evaluator failures
 
-The original source inference finished, but some jobs failed at evaluation because a model output could be JSON-schema-valid while violating a frozen cross-field decision invariant—for example, `ALLOW` without proposing the requested target state.
+The original model calls finished, but some jobs later failed during evaluation because an output could pass the JSON schema while violating a cross-field rule, such as returning `ALLOW` without proposing the requested target state.
 
-The recovery path did **not** rerun either model and did **not** rewrite any legal model decision. It:
+The recovery procedure did not rerun the models and did not rewrite otherwise valid decisions. It:
 
-1. bound exactly 24 immutable source artifacts from workflow `32255636879`;
-2. required exactly 24 source `run.jsonl` and 7,200 inference records;
-3. reconstructed the committed hidden set and prompt identity from the frozen scoring source;
-4. reclassified only frozen cross-field semantic violations as `FORMAT_ERROR`;
-5. validated all 24 normalized runs and exact prompt hashes;
-6. generated the 10,000-pair-bootstrap aggregate and recovery provenance.
+1. used exactly the 24 original source artifacts from workflow `32255636879`;
+2. required 24 `run.jsonl` files and 7,200 source records;
+3. rebuilt the committed hidden set and prompt identity from the original scoring source;
+4. reclassified only the affected invalid structured outputs as `FORMAT_ERROR`;
+5. validated all 24 normalized runs and prompt hashes;
+6. produced the 10,000-pair-bootstrap aggregate and recovery record.
 
-Exactly **27 records** were reclassified by `semantic-format-error-v1`. The one-shot recovery trigger was removed immediately after successful recovery.
+Exactly **27 records** were reclassified by `semantic-format-error-v1`. The one-time recovery trigger was removed after the recovery succeeded.
 
-Frozen public-safe identities:
+Study identifiers:
 
 - commitment SHA-256: `sha256:55a3d2bffb6f23b7253715a9f091d951daaf589e205033d3f46dfd9e6ff6590e`
 - dataset-manifest SHA-256: `sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba`
 - prompt-manifest SHA-256: `sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957`
 - hidden-seed SHA-256: `sha256:b91b5b36268bf2af3acc4c2d0890613b92c02a125db3fe5a1e12c099800fe285`
 
-The raw hidden seed remains a GitHub Actions secret and is never printed or committed.
+The raw hidden seed remains a GitHub Actions secret and is not printed or committed.
 
 ## Matched-comparison limitation
 
-The preregistered comparison pipeline groups runs by exact model artifact, runtime, seed, and hardware-summary identity. Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Because the Python patch version is part of that exact identity string, the official aggregate contains nine identity groups rather than the intended six model×seed groups; only three contain all four arms.
+The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Because the Python patch version is part of that identity, the final aggregate has nine groups instead of the intended six model×seed groups; only three contain all four arms.
 
-We **do not regroup them post hoc** after seeing the results. Exact McNemar/Holm comparisons remain available only for arm pairs that coexist in an exact recorded identity group. A future replication should pin the exact Python patch release, but it must not replace frozen v1.
+We keep the original grouping rather than combining runs after seeing the results. Exact McNemar/Holm comparisons are therefore available only when both arms occur in the same recorded group. A later replication should pin the exact Python patch release.
 
-## Supplementary real-human audit
+## Human policy audit
 
-Two real independent reviewers completed the frozen 20-item procedural-blind alpha audit.
+Two independent reviewers completed a 20-item blinded audit using the public alpha data.
 
 | Evidence | Result |
 |---|---:|
@@ -101,17 +101,13 @@ Two real independent reviewers completed the frozen 20-item procedural-blind alp
 | pairwise exact reason agreement | 16/20 = 0.80 |
 | diagnostic Cohen κ | ≈ 0.716 |
 
-The repository's supplementary gate requires every reviewer to reach 0.80 action agreement, so this is a **mixed result / not PASS**. The immutable `reviwer-02` identifier typo is intentionally preserved.
+The preregistered audit criterion requires every reviewer to reach 0.80 action agreement, so the result is **mixed / not PASS**. The `reviwer-02` identifier typo is part of the immutable submission and is kept as-is.
 
-## Evidence and executable bindings
+## What the executable evidence means
 
-ClaimPromoteBench deliberately prevents one kind of successful evidence from being treated as universal research proof:
+Numerical cases use exact-rational finite-grid artifacts whose registered values, extrema, predicates, repetitions, and scope are recomputed. Formal cases use generated Lean sources under a pinned toolchain. Provenance, freshness, dependencies, contradictions, review independence, statement identity, and runtime success remain separate policy requirements.
 
-- numerical cases use exact-rational finite-grid artifacts whose registered values, extrema, predicates, repetitions, and scope are recomputed;
-- formal cases bind generated Lean sources and a pinned trust base;
-- provenance, freshness, dependencies, contradiction state, review independence, statement identity, and runtime success remain separate policy prerequisites.
-
-Kernel acceptance proves the exact formal declaration in the pinned environment. A successful finite computation proves only its registered computational scope. Neither automatically promotes research status.
+A Lean check supports the exact formal statement that was checked. A finite computation supports only its registered computational scope. Neither automatically settles a broader research claim.
 
 ## Reproduce public checks
 
@@ -127,7 +123,7 @@ python -m claimpromotebench.executable --fixtures fixtures/executable --out work
 python -m pytest --cov --cov-branch --cov-fail-under=80
 ```
 
-Formal gate with the pinned Lean environment:
+Formal checks with the pinned Lean environment:
 
 ```bash
 cd data/alpha
@@ -140,7 +136,7 @@ python -m claimpromotebench.formal \
   --out work/formal-fixtures.json
 ```
 
-Evaluate a complete run or compare matched runs:
+Evaluate a run or compare matched runs:
 
 ```bash
 python -m claimpromotebench evaluate-runs \
@@ -154,23 +150,23 @@ python -m claimpromotebench compare-runs \
   --out work/study.json
 ```
 
-`FORMAT_ERROR` is never silently counted as `HOLD`. Decision coverage and worst-case format-error sensitivity remain explicit.
+`FORMAT_ERROR` is never silently counted as `HOLD`.
 
-## Research boundary and novelty claim
+## Scope
 
 ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, or verifier-governed research agents. Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations.
 
-The defensible contribution is narrower: **a preregistered, controlled-pair, four-action, artifact-bound, prompt-frozen, hidden-test-committed benchmark for policy-governed research-claim evidence-state transition admissibility, with raw model intent separated from deterministic enforcement.**
+The contribution is narrower: a preregistered controlled-pair benchmark for deciding whether registered evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, and separate reporting of raw model decisions and deterministic gate actions.
 
-The manuscript uses cautious language such as: *we did not find a public benchmark directly evaluating policy-governed research-claim evidence-state transitions under matched, machine-checkable prerequisites.* It does not make an unqualified “first benchmark” or “first system” claim.
+The paper does not make an unqualified “first benchmark” or “first system” claim.
 
 ## Paper and project status
 
 - Technical report: `technical-report/main.tex`
-- Fail-closed readiness checklist: `technical-report/SUBMISSION_GATE.md`
+- Submission checklist: `technical-report/SUBMISSION_GATE.md`
 - Experiment protocol/history: `docs/EXPERIMENTS.md`
 - Roadmap: `docs/ROADMAP.md`
 - Related work: `docs/RELATED_WORK.md`
 - AI assistance disclosure: `AI_ASSISTANCE.md`
 
-The frozen v1 primary inference should **not** be rerun or rewritten to make the result cleaner. Remaining work is final manuscript/CI/PDF verification, bibliography authority checks, and release-quality clean-environment reproduction. See `technical-report/SUBMISSION_GATE.md` for the exact distinction between primary-study completion, preprint readiness, and archival-submission readiness.
+The v1 hidden model outputs are fixed and should not be rerun or rewritten to make the result cleaner. Remaining work is release preparation and the account-side steps needed to submit the preprint and conference paper.
