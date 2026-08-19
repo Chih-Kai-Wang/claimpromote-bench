@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-title: "ClaimPromoteBench: Policy-Governed Evidence-State Transitions for Mathematical Research Agents"
-message: "This repository is an alpha research scaffold. Cite a future archived release when one exists."
+title: "ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
+message: "The v1 hidden study and post-v1 public formatting-control pilot are complete. Cite the immutable archived release or public preprint after an identifier exists."
 type: software
 authors:
   - family-names: Wang
