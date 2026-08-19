@@ -73,7 +73,10 @@ fail_under = 80
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["scripts/build_external_review_v1.py"]
+extend-exclude = [
+  "scripts/build_external_review_v1.py",
+  "scripts/build_external_review_friendly_html.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
