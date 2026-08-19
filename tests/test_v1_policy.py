@@ -7,7 +7,6 @@ from pathlib import Path
 
 from claimpromotebench.policy import load_policy
 
-
 ROOT = Path(__file__).resolve().parents[1]
 ALPHA = ROOT / "policies" / "math-evidence-transition-1.0.2-alpha.json"
 V1 = ROOT / "policies" / "math-evidence-transition-1.0.0.json"
