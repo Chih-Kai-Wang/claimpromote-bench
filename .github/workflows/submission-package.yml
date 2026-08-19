@@ -5,6 +5,7 @@ on:
     paths:
       - "technical-report/**"
       - "scripts/build_submission_tex.py"
+      - "scripts/lint_paper_submission.py"
       - ".github/workflows/submission-package.yml"
   workflow_dispatch:
 
@@ -23,6 +24,9 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fail-closed manuscript lint
+        run: python scripts/lint_paper_submission.py
 
       - name: Install submission dependencies
         shell: bash
