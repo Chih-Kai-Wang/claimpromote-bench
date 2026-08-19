@@ -8,15 +8,9 @@
       "HOLD": 8
     },
     "audit_id": "external-policy-audit-v1",
-    "dataset_manifest_sha256": "sha256:9ae9898ecd2c27e3dfddd0ae2e2b9965c56bd535a338ecc349d32b1b93eb72e5",
     "gold_reason_count_distribution": {
       "1": 20
     },
-    "item_count": 20,
-    "packet_id": "sha256:e43fbc3a9c6279b3dfd5aa5511ba55bfce2bd2f49a290358431822de9f44231a",
-    "packet_sha256": "sha256:56fa9e86a3132e9101c3c3e1ae16b5163224c863af6c671063e4db772efbc336",
-    "policy_sha256": "sha256:46b8b310cd1380167e0b94f1577a68c5e0378f9e32c6efe851ded91c0c4dc899",
-    "reviewer_count_at_freeze": 0,
     "selected_item_ids": [
       "alpha-dep-01-a",
       "alpha-dep-02-a",
