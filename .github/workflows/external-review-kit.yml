@@ -34,6 +34,7 @@ jobs:
 
       - name: Build frozen 20-item external audit kit
         run: |
+          mkdir -p work
           python scripts/build_external_review_v1.py build --out work/external-review-v1 | tee work/external-review-v1-build.json
 
       - name: Show immutable identities
