@@ -3,21 +3,28 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "technical-report" / "main.tex"
 BIB = ROOT / "technical-report" / "references.bib"
+RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"paper-lint: {message}")
 
 
+def pct(value: float, digits: int = 1) -> str:
+    return f"{100 * value:.{digits}f}"
+
+
 def main() -> int:
     tex = TEX.read_text(encoding="utf-8")
     bib = BIB.read_text(encoding="utf-8")
+    frozen = json.loads(RESULTS_FREEZE.read_text(encoding="utf-8"))
     lower = tex.lower()
 
     stale = [
@@ -36,27 +43,56 @@ def main() -> int:
         r"\bfirst system\b",
         r"\bfirst framework\b",
         r"\bstate[- ]of[- ]the[- ]art\b",
+        r"\bguarantees? safety\b",
     ]
     for pattern in overclaims:
         if re.search(pattern, tex, flags=re.IGNORECASE):
             fail(f"unqualified novelty/performance claim found: {pattern}")
 
+    if frozen["source_study_sha256"] != (
+        "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664"
+    ):
+        fail("results-freeze.json is not bound to the validated recovered study SHA")
+    if frozen["runs"] * frozen["instances_per_run"] != frozen["total_decisions"]:
+        fail("frozen run matrix is internally inconsistent")
+    expected_rate = frozen["format_error_count"] / frozen["total_decisions"]
+    if abs(expected_rate - frozen["format_error_rate"]) > 1e-15:
+        fail("frozen format-error rate is inconsistent with count/denominator")
+    if frozen["total_decisions"] - frozen["format_error_count"] != frozen["parseable_raw_decisions"]:
+        fail("frozen parseable count is inconsistent")
+
+    m06 = frozen["models"]["Qwen/Qwen3-0.6B"]
+    m17 = frozen["models"]["Qwen/Qwen3-1.7B"]
     required = [
-        "5,327/7,200",
-        "73.99\\%",
-        "1,873",
-        "Exactly 27 of 7,200",
-        "32255636879",
-        "32274814703",
+        f"{frozen['format_error_count']:,}/{frozen['total_decisions']:,}",
+        f"{100 * frozen['format_error_rate']:.2f}\\%",
+        f"{frozen['parseable_raw_decisions']:,}",
+        f"Exactly {frozen['semantic_format_reclassified']} of {frozen['total_decisions']:,}",
+        str(frozen["source_scored_workflow_run_id"]),
+        str(frozen["source_recovery_workflow_run_id"]),
         "3eb5b534...e8bfe664",
         "Raw pre-enforcement behavior only",
         "Effective FPR",
         "decision coverage",
         "not evidence that the model learned the policy",
+        "same frozen policy",
+        "deterministic enforcement-consistency property",
+        f"{pct(m06['gate_complete_pair_coverage_range'][0])}--{pct(m06['gate_complete_pair_coverage_range'][1])}\\%",
+        f"{pct(m17['gate_complete_pair_coverage_range'][0])}--{pct(m17['gate_complete_pair_coverage_range'][1])}\\%",
     ]
     for phrase in required:
         if phrase.lower() not in lower:
             fail(f"required frozen result/boundary missing: {phrase!r}")
+
+    for model in (m06, m17):
+        if model["defined_raw_fpr_values"] != [1.0]:
+            fail("frozen gate-arm raw FPR values changed")
+        if model["defined_effective_fpr_values"] != [0.0]:
+            fail("frozen gate-arm effective FPR values changed")
+        if model["gate_catch_values"] != [1.0]:
+            fail("frozen gate catch values changed")
+        if model["false_block_values"] != [0.0]:
+            fail("frozen false-block values changed")
 
     if r"\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}" not in tex:
         fail("ClaimPromoteBench macro must use xspace to prevent concatenated prose")
@@ -119,7 +155,7 @@ def main() -> int:
     print(
         "paper-lint: PASS "
         f"({len(cite_keys)} citation keys, {len(label_set)} labels, "
-        f"{len(abstract_words)} abstract words)"
+        f"{len(abstract_words)} abstract words; frozen study {frozen['source_study_sha256']})"
     )
     return 0
 
