@@ -1,0 +1,377 @@
+name: v1 scored hidden study
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  LLAMA_COMMIT: de699957b92f490efebad149665b0dccf127eaff
+
+jobs:
+  gate:
+    name: require explicit scored-study trigger
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.gate.outputs.enabled }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate trigger against committed hidden freeze
+        id: gate
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          trigger_path = Path('configs/v1-scored-study-trigger.json')
+          if not trigger_path.is_file():
+              with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
+                  out.write('enabled=false\n')
+              print('Scored study trigger is absent; inference remains disabled.')
+              raise SystemExit(0)
+
+          commitment = json.loads(Path('configs/v1-hidden-test-commitment.json').read_text(encoding='utf-8'))
+          trigger = json.loads(trigger_path.read_text(encoding='utf-8'))
+          assert trigger['enabled'] is True
+          assert trigger['commitment_sha256'] == commitment['commitment_sha256']
+          assert trigger['dataset_manifest_sha256'] == commitment['dataset_manifest_sha256']
+          assert trigger['prompt_manifest_sha256'] == commitment['prompt_manifest_sha256']
+          assert trigger['instances_per_run'] == 300
+          assert trigger['runs'] == 24
+          assert trigger['expected_decisions'] == 7200
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
+              out.write('enabled=true\n')
+          print('Committed hidden freeze is present and the explicit 7,200-decision trigger is valid.')
+          PY
+
+  scored:
+    name: ${{ matrix.model }} / ${{ matrix.arm }} / seed ${{ matrix.seed }}
+    needs: gate
+    if: needs.gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 24
+      matrix:
+        model: [qwen3-0.6b, qwen3-1.7b]
+        arm: [narrative, ledger, ledger_verifier, ledger_verifier_gate]
+        seed: [104729, 130363, 169087]
+    steps:
+      - name: Check out benchmark
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark and download client
+        run: python -m pip install -e . "huggingface_hub>=0.34,<2"
+
+      - name: Resolve frozen model identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ matrix.model }}" in
+            qwen3-0.6b)
+              echo 'HF_REPO=Qwen/Qwen3-0.6B-GGUF' >> "$GITHUB_ENV"
+              echo 'HF_REVISION=ef4088322893040952513f532f736ddeab518403' >> "$GITHUB_ENV"
+              echo 'HF_FILE=Qwen3-0.6B-Q8_0.gguf' >> "$GITHUB_ENV"
+              echo 'MODEL_CONFIG=configs/models/qwen3-0.6b.json' >> "$GITHUB_ENV"
+              ;;
+            qwen3-1.7b)
+              echo 'HF_REPO=Qwen/Qwen3-1.7B-GGUF' >> "$GITHUB_ENV"
+              echo 'HF_REVISION=90862c4b9d2787eaed51d12237eafdfe7c5f6077' >> "$GITHUB_ENV"
+              echo 'HF_FILE=Qwen3-1.7B-Q8_0.gguf' >> "$GITHUB_ENV"
+              echo 'MODEL_CONFIG=configs/models/qwen3-1.7b.json' >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo '::error::unknown frozen model matrix entry'
+              exit 1
+              ;;
+          esac
+          echo 'RUN_KEY=${{ matrix.model }}-${{ matrix.arm }}-${{ matrix.seed }}' >> "$GITHUB_ENV"
+
+      - name: Materialize private hidden seed without logging it
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CPB_V1_HIDDEN_SEED:-}" ]; then
+            echo '::error::CPB_V1_HIDDEN_SEED is not configured'
+            exit 1
+          fi
+          if ! printf '%s' "$CPB_V1_HIDDEN_SEED" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo '::error::CPB_V1_HIDDEN_SEED must be exactly 64 hexadecimal characters'
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+
+      - name: Reconstruct hidden set and verify pre-inference commitment
+        run: |
+          set -euo pipefail
+          rm -rf work/v1-hidden
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --out work/v1-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
+          python scripts/validate_v1_plan.py --test-dir work/v1-hidden >/dev/null
+          python scripts/freeze_prompt_manifest.py \
+            --dataset work/v1-hidden \
+            --out work/v1-hidden-prompt-manifest.json >/dev/null
+          python scripts/make_hidden_test_commitment.py \
+            --dataset work/v1-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
+            --prompt-manifest work/v1-hidden-prompt-manifest.json \
+            --out work/recomputed-hidden-commitment.json >/dev/null
+          diff -u configs/v1-hidden-test-commitment.json work/recomputed-hidden-commitment.json >/dev/null
+          echo 'Committed hidden dataset and prompt freeze reproduced exactly before inference.'
+
+      - name: Check out frozen llama.cpp runtime
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ggml-org/llama.cpp
+          ref: ${{ env.LLAMA_COMMIT }}
+          path: llama.cpp
+          fetch-depth: 1
+
+      - name: Build frozen llama-server
+        run: |
+          cmake -S llama.cpp -B llama.cpp/build \
+            -DGGML_NATIVE=OFF \
+            -DLLAMA_CURL=OFF \
+            -DLLAMA_BUILD_TESTS=OFF \
+            -DLLAMA_BUILD_EXAMPLES=OFF
+          cmake --build llama.cpp/build --config Release -j 4 --target llama-server
+
+      - name: Download frozen model artifact
+        run: |
+          mkdir -p models
+          python - <<'PY'
+          import os
+          from huggingface_hub import hf_hub_download
+
+          hf_hub_download(
+              repo_id=os.environ['HF_REPO'],
+              revision=os.environ['HF_REVISION'],
+              filename=os.environ['HF_FILE'],
+              local_dir='models',
+          )
+          PY
+
+      - name: Verify model bytes, runtime, and hardware
+        run: |
+          mkdir -p "work/evidence/$RUN_KEY"
+          python scripts/preflight_v1_models.py \
+            --model-dir models \
+            --llama-dir llama.cpp \
+            --model-config "$MODEL_CONFIG" \
+            --out "work/evidence/$RUN_KEY/preflight.json" >/dev/null
+
+      - name: Start frozen llama-server
+        run: |
+          nohup ./llama.cpp/build/bin/llama-server \
+            -m "models/$HF_FILE" \
+            --host 127.0.0.1 \
+            --port 8080 \
+            -c 8192 \
+            -np 1 \
+            > "work/server-$RUN_KEY.log" 2>&1 &
+          echo $! > work/server.pid
+          ready=0
+          for _ in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:8080/health >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ready" != '1' ]; then
+            echo '::error::frozen llama-server did not become healthy'
+            exit 1
+          fi
+
+      - name: Execute one frozen hidden run
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/run_llama_study.py \
+            --dataset work/v1-hidden \
+            --model-config "$MODEL_CONFIG" \
+            --preflight "work/evidence/$RUN_KEY/preflight.json" \
+            --arm "${{ matrix.arm }}" \
+            --seed "${{ matrix.seed }}" \
+            --out "work/evidence/$RUN_KEY/run.jsonl" >/dev/null
+          echo 'Inference completed; aggregate metrics remain suppressed.'
+
+      - name: Validate complete run and exact prompt hashes
+        run: |
+          set -euo pipefail
+          python -m claimpromotebench evaluate-runs \
+            --gold work/v1-hidden/gold.jsonl \
+            --runs "work/evidence/$RUN_KEY/run.jsonl" \
+            --bootstrap-samples 0 \
+            --out "work/evidence/$RUN_KEY/eval.json" >/dev/null
+          test "$(wc -l < "work/evidence/$RUN_KEY/run.jsonl")" -eq 300
+          echo 'RUN_VALIDATED: 300/300 records; metrics withheld from log.'
+
+      - name: Upload validated run evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cpb-v1-scored-${{ matrix.model }}-${{ matrix.arm }}-${{ matrix.seed }}
+          path: work/evidence
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Destroy private hidden material
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          rm -rf work/v1-hidden
+          rm -f work/v1-hidden-prompt-manifest.json work/recomputed-hidden-commitment.json
+          rm -rf models
+
+  aggregate:
+    name: aggregate complete frozen hidden study
+    needs: [gate, scored]
+    if: needs.gate.outputs.enabled == 'true' && needs.scored.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out benchmark
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Materialize private hidden seed without logging it
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CPB_V1_HIDDEN_SEED:-}" ]; then
+            echo '::error::CPB_V1_HIDDEN_SEED is not configured'
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+
+      - name: Reconstruct hidden set and reverify commitment
+        run: |
+          set -euo pipefail
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --out work/v1-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
+          python scripts/freeze_prompt_manifest.py \
+            --dataset work/v1-hidden \
+            --out work/v1-hidden-prompt-manifest.json >/dev/null
+          python scripts/make_hidden_test_commitment.py \
+            --dataset work/v1-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
+            --prompt-manifest work/v1-hidden-prompt-manifest.json \
+            --out work/recomputed-hidden-commitment.json >/dev/null
+          diff -u configs/v1-hidden-test-commitment.json work/recomputed-hidden-commitment.json >/dev/null
+
+      - name: Download all 24 validated run artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: cpb-v1-scored-*
+          path: work/all-evidence
+          merge-multiple: true
+
+      - name: Require complete 24-run matrix
+        run: |
+          set -euo pipefail
+          run_count="$(find work/all-evidence -type f -name run.jsonl | wc -l)"
+          eval_count="$(find work/all-evidence -type f -name eval.json | wc -l)"
+          preflight_count="$(find work/all-evidence -type f -name preflight.json | wc -l)"
+          test "$run_count" -eq 24
+          test "$eval_count" -eq 24
+          test "$preflight_count" -eq 24
+          decision_count="$(cat $(find work/all-evidence -type f -name run.jsonl | sort) | wc -l)"
+          test "$decision_count" -eq 7200
+          echo 'COMPLETE_MATRIX: 24 runs / 7,200 decisions.'
+
+      - name: Build hash-bound aggregate study
+        run: |
+          set -euo pipefail
+          mapfile -t runs < <(find work/all-evidence -type f -name run.jsonl | sort)
+          python -m claimpromotebench compare-runs \
+            --gold work/v1-hidden/gold.jsonl \
+            --runs "${runs[@]}" \
+            --bootstrap-samples 10000 \
+            --out work/v1-hidden-study.json >/dev/null
+          echo 'Aggregate study generated; metrics remain in artifact, not public log.'
+
+      - name: Freeze scored-study provenance
+        env:
+          SCORING_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          commitment = json.loads(Path('configs/v1-hidden-test-commitment.json').read_text(encoding='utf-8'))
+          study = Path('work/v1-hidden-study.json')
+          provenance = {
+              'status': 'COMPLETE_VALIDATED',
+              'scoring_head_sha': os.environ['SCORING_HEAD_SHA'],
+              'workflow_run_id': int(os.environ['WORKFLOW_RUN_ID']),
+              'commitment_sha256': commitment['commitment_sha256'],
+              'dataset_manifest_sha256': commitment['dataset_manifest_sha256'],
+              'prompt_manifest_sha256': commitment['prompt_manifest_sha256'],
+              'models': 2,
+              'arms': 4,
+              'seeds': 3,
+              'runs': 24,
+              'instances_per_run': 300,
+              'decisions': 7200,
+              'study_file_sha256': 'sha256:' + hashlib.sha256(study.read_bytes()).hexdigest(),
+          }
+          Path('work/v1-hidden-study-provenance.json').write_text(
+              json.dumps(provenance, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          print(json.dumps({
+              'status': provenance['status'],
+              'runs': provenance['runs'],
+              'decisions': provenance['decisions'],
+              'study_file_sha256': provenance['study_file_sha256'],
+          }, sort_keys=True))
+          PY
+
+      - name: Upload complete scored-study evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v1-scored-study
+          path: |
+            work/v1-hidden-study.json
+            work/v1-hidden-study-provenance.json
+            work/all-evidence
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Destroy private hidden material
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          rm -rf work/v1-hidden
+          rm -f work/v1-hidden-prompt-manifest.json work/recomputed-hidden-commitment.json
