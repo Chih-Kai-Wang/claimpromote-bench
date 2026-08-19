@@ -53,7 +53,7 @@ def sample_core_bench(rows: list[Json], *, salt: str, count: int, source: Json) 
         capsule_id = str(row.get("capsule_id", ""))
         if not capsule_id:
             continue
-        rank = hashlib.sha256(f"{salt}:{capsule_id}".encode("utf-8")).hexdigest()
+        rank = hashlib.sha256(f"{salt}:{capsule_id}".encode()).hexdigest()
         ranked.append((rank, row))
     ranked.sort(key=lambda value: (value[0], str(value[1].get("capsule_id", ""))))
 
@@ -78,7 +78,8 @@ def sample_core_bench(rows: list[Json], *, salt: str, count: int, source: Json) 
                 "include_status": "PENDING_SOURCE_LEVEL_REVIEW",
                 "note": (
                     "Candidate sampling does not imply that the capsule contents may be copied, "
-                    "that a ClaimPromoteBench transition can be defined, or that the case will be scored."
+                    "that a ClaimPromoteBench transition can be defined, or that the case will "
+                    "be scored."
                 ),
             }
         )
@@ -112,8 +113,9 @@ def build(registry: Json, *, timeout: float) -> Json:
             raise RuntimeError(f"no deterministic sampler registered for {source['source_id']}")
         selected = sample_core_bench(payload, salt=salt, count=target, source=source)
         if len(selected) != target:
+            source_id = source["source_id"]
             raise RuntimeError(
-                f"source {source['source_id']} produced {len(selected)} candidates; expected {target}"
+                f"source {source_id} produced {len(selected)} candidates; expected {target}"
             )
         candidates.extend(selected)
         source_snapshots.append(
