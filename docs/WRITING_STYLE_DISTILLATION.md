@@ -1,138 +1,87 @@
-# Writing Style Distillation for ClaimPromoteBench
+# Writing Style Notes for ClaimPromoteBench
 
-This document records the writing and presentation rules used for the submission-facing manuscript. It is a **style/methodology distillation**, not a source of scientific claims. The paper must continue to derive quantitative claims from the frozen ClaimPromoteBench artifacts and must not copy phrasing from any reference paper.
+This document records presentation choices for the submission-facing manuscript. The reference papers are used to learn **structure and information order**, not vocabulary or sentence templates. Scientific claims still come from the ClaimPromoteBench study artifacts, and wording should not be copied from any paper in the reference set.
 
-## Corpus
+## Reference set
 
-The distillation pass sampled recent, high-quality computer-science papers from official proceedings and publication pages, with emphasis on benchmark/evaluation, agent, software-engineering, scientific-agent, and negative-result work. Representative examples include:
+The review included recent computer-science work on benchmarks, evaluation, agents, software engineering, scientific agents, and negative results from venues such as ACL, NeurIPS, ICML, and ICLR. Representative examples included DeepFact, AgencyBench, AgentGym2, SWE-bench Goes Live, SWE-rebench, SWE-smith, AlgoTune, tinyBenchmarks, SWE-agent, ScienceAgentBench, CORE-Bench, and related evaluation papers.
 
-- DeepFact (ACL 2026)
-- DREAM (ACL 2026)
-- AgencyBench (ACL 2026)
-- AgentGym2 (ACL 2026)
-- HSCodeComp (ACL 2026)
-- BrowseComp-Plus (ACL 2026)
-- PaperMind (Findings ACL 2026)
-- When Benchmarks Age (EACL 2026)
-- Mr Dre / multi-turn report revision evaluation (ACL 2026)
-- AnalystBench (Findings ACL 2026)
-- Survey on Evaluation of LLM-based Agents (Findings ACL 2026)
-- SWE-bench Goes Live (NeurIPS 2025 Datasets and Benchmarks)
-- SWE-rebench (NeurIPS 2025 Datasets and Benchmarks)
-- SWE-smith (NeurIPS 2025 Datasets and Benchmarks)
-- AlgoTune (NeurIPS 2025 Datasets and Benchmarks)
-- Reliable and Efficient Amortized Model-based Evaluation (ICML 2025)
-- tinyBenchmarks (ICML 2024)
-- SWE-agent (NeurIPS 2024)
-- SWT-Bench (NeurIPS 2024)
-- BLADE (Findings EMNLP 2024)
-- DSEval / Benchmarking Data Science Agents (ACL 2024)
-- MultiAgentBench (ACL 2025)
-- CSR-Bench (NAACL 2025)
-- LMR-BENCH (EMNLP 2025)
-- Benchmarking Agentic Workflow Generation (ICLR 2025)
-- IterGen (ICLR 2025)
+The point of reading these papers is to learn what information readers expect to see early, how results are separated from interpretation, and how limitations are reported. It is **not** to imitate their diction.
 
-The corpus intentionally spans venues and subfields so the resulting rules reflect durable CS-paper conventions rather than one paper's voice.
+## Writing rules
 
-## Distilled rules
+### 1. Prefer ordinary technical English
 
-### 1. Open with the failure mode, not the project
+Use the simplest wording that preserves the scientific meaning. Prefer phrases such as `fixed policy`, `model decision`, `final action`, `output coverage`, and `the gate follows the policy` over internally useful but unusual phrases such as `artifact-bound`, `fail-closed`, `enforcement-consistency property`, or `conditional enforcement boundary`.
 
-Strong papers make the reader understand the problem before naming the method. The first paragraph should make the failure concrete and consequential in domain language. Project architecture and implementation details come later.
+Technical terms that are part of the task itself---for example `claim-state transition`, `false promotion rate`, `controlled pair`, and `FORMAT_ERROR`---should remain when they are needed for precision.
 
-**Applied rule:** ClaimPromoteBench begins with the distinction between valid evidence and an invalid requested claim-state promotion.
+### 2. Use reference papers for organization, not voice
 
-### 2. State the neighboring literature gap in one bounded paragraph
+Useful structural patterns include:
 
-Do not spend the first page surveying the field. Name the closest task families, state what they evaluate, then isolate the missing decision variable.
+- explain the failure before introducing the benchmark;
+- state the research question clearly;
+- show the main empirical result early;
+- keep raw model behavior separate from deterministic gate behavior;
+- put coverage next to conditional performance numbers;
+- state limitations next to the claims they constrain.
 
-**Applied rule:** distinguish truth/factuality, reproducibility, scientific-task execution, hypothesis testing, abstention, and evidence-state transition admissibility.
+Do not reproduce a paper's characteristic phrasing, rhythm, metaphors, or stock expressions.
 
-### 3. Introduce one crisp research question
+### 3. Vary sentence length naturally
 
-A benchmark paper is easier to remember when the task is expressible in one sentence. Avoid stacking several research questions unless the benchmark genuinely has multiple independent axes.
+Avoid paragraphs in which every sentence has the same shape. Short sentences are useful for key findings. Longer sentences are appropriate when a qualification belongs with the claim it limits. Do not force every paragraph into a claim--evidence--implication template.
 
-### 4. Put the empirical answer on page 1
+### 4. Keep signposting light
 
-Strong benchmark/evaluation papers increasingly reveal the dominant result in the Introduction rather than hiding it in Results. This is especially important for negative findings.
+Headings should help navigation, but the prose should not read like a generated outline. Use lists only when the items really need to be scanned independently. Results should normally be explained in paragraphs around the tables rather than repeated as a numbered list.
 
-**Applied rule:** report the 73.99% format-error rate, the all-ALLOW raw-intent collapse, and the conditional nature of gate enforcement in the Introduction.
+### 5. State negative results plainly
 
-### 5. Make contributions orthogonal
+Say what failed and give the number. Do not apologize for the result, but do not turn an engineering safeguard into a model-capability claim. For ClaimPromoteBench, the important distinction is simple: the models often fail to return usable structured decisions, their parseable raw decisions are all `ALLOW`, and the deterministic gate changes final actions only on cases that reach it.
 
-Contribution bullets should not repeat the same idea at different levels. A strong set typically separates: task/benchmark definition, construction or artifact contribution, evaluation methodology, and empirical finding.
+### 6. Keep the gate claim narrow
 
-### 6. Separate capability, coverage, and enforcement
+The gate applies the same fixed policy used to define benchmark labels. Its perfect conditional scores mainly show that the implementation follows that rule on parseable cases. They do not show that the model learned the policy or reasoned better.
 
-Evaluation papers often become misleading when one aggregate metric conflates whether a model produced an evaluable output, whether its decision was correct, and whether a downstream system corrected it.
+### 7. Keep limitations concrete
 
-**Applied rule:** ClaimPromoteBench treats these as separate layers:
+Prefer direct statements such as:
 
-1. structured-output coverage;
-2. raw model transition intent;
-3. effective post-gate action.
+- only two small Qwen3 models were tested;
+- the benchmark uses synthetic controlled pairs;
+- free-form text for earlier parse failures was not retained;
+- three runs recorded a different Python patch version;
+- the human audit contains only 20 items and two reviewers.
 
-No conditional safety metric should be reported without coverage.
+Avoid abstract labels when the concrete limitation can be stated directly.
 
-### 7. Lead Results with 2--4 headline findings
+### 8. Keep reproducibility details readable
 
-Readers should know the hierarchy of findings before reading tables. Each headline should be a claim that a table or figure directly supports. Avoid chronological "we first ran... then..." narration.
+The paper should identify the scored run, recovery run, and study hash, but long identifiers belong in the repository when a shortened form is enough in prose. Reproducibility text should explain what was fixed before inference and what was changed later, in ordinary language.
 
-### 8. Give every table one semantic job
+### 9. Use cautious, common verbs
 
-Do not mix raw and effective actions in the same column without an explicit visual distinction. Prefer one table for raw model behavior and one for enforcement behavior. Captions should state conditioning and denominator assumptions.
+Prefer `shows`, `finds`, `reports`, `measures`, `supports`, and `is consistent with`.
 
-### 9. Treat negative results as findings, not apologies
+Avoid `solves`, `guarantees`, `first`, `unprecedented`, `state of the art`, or `safe` unless the exact claim is established. Also avoid unusual substitute phrases merely to sound academic.
 
-High-quality negative-result writing states exactly what failed, quantifies the failure, and explains what remains learnable. Avoid defensive language and avoid converting a system-level mitigation into a model-capability claim.
+### 10. Keep AI assistance transparent but proportionate
 
-### 10. Use short interpretation paragraphs after quantitative blocks
+The disclosure should say what AI tools assisted with and what decisions remained the author's responsibility. It should not hide material AI use, but it also should not describe the project as if AI systems were the researchers. The manuscript itself should read as a coherent paper written and revised under human authorship, not as a collection of generated templates.
 
-After a table, state the single interpretation the reader should retain. Do not restate every number. The interpretation must remain no stronger than the table supports.
+## ClaimPromoteBench-specific constraints
 
-### 11. Distinguish "establishes" from "does not establish"
+- Do not describe gate catches as improved model reasoning or calibration.
+- Do not treat `FORMAT_ERROR` as an implicit `HOLD`.
+- Do not report effective FPR without nearby coverage.
+- Do not claim that the benchmark determines theorem truth or scientific truth.
+- Do not imply that the two-reviewer audit validates a universal human gold standard.
+- Do not hide the Python patch-version mismatch or regroup the affected runs after seeing results.
+- Do not generalize the v1 result to larger or API-hosted systems without new evidence.
+- Do not rerun or rewrite the frozen v1 model outputs to improve the result after unblinding.
 
-For governance/safety/evaluation papers, this is a high-value reviewer aid. It prevents downstream overclaiming and makes limitations part of the argument rather than a compliance appendix.
+## Preferred manuscript flow
 
-### 12. Group limitations by threat type
-
-Use categories such as external validity, measurement, causal interpretation/infrastructure, and benchmark construction/external audit. This is clearer than an unstructured list of caveats.
-
-### 13. Keep reproducibility prose compact; put hashes in artifacts
-
-The paper should identify the frozen source and provenance mechanism, but full machine identifiers belong in the repository/provenance bundle unless a full value is necessary to establish identity. Long hashes reduce readability and create layout risk.
-
-### 14. Use calibrated verbs
-
-Preferred: `shows`, `finds`, `measures`, `supports`, `establishes under the frozen protocol`, `is consistent with`, `demonstrates a conditional enforcement property`.
-
-Avoid unless literally justified: `solves`, `proves` (for empirical claims), `guarantees` (outside deterministic formal scope), `first`, `unprecedented`, `state of the art`, `human-level`, `safe`.
-
-### 15. Make the conclusion narrower than the abstract
-
-The conclusion should recover the design lesson, not introduce new evidence or repeat the full paper. It should explicitly preserve the boundary between model behavior and system enforcement.
-
-## ClaimPromoteBench-specific style constraints
-
-- Never describe gate catches as improved model reasoning or calibration.
-- Never treat `FORMAT_ERROR` as an implicit HOLD.
-- Never report effective FPR without nearby decision coverage.
-- Never claim theorem truth or scientific truth is evaluated.
-- Never imply the two-reviewer audit validates the oracle as a human gold standard.
-- Never conceal Python patch-version drift or silently regroup frozen matched identities.
-- Never claim the v1 study generalizes to larger/API-hosted systems.
-- Never rewrite or rerun frozen v1 inference to improve presentation after unblinding.
-- Any post-v1 replication must be labeled supplementary/new study.
-
-## Submission-facing structure target
-
-1. Abstract: problem -> benchmark -> freeze/artifacts -> dominant raw result -> gate result + coverage -> implication.
-2. Introduction: concrete failure -> neighboring gap -> one research question -> benchmark mechanism -> page-1 result -> four orthogonal contributions.
-3. Related Work: only closest task families; end each paragraph with the distinction.
-4. Task/Construction/Protocol: define what is frozen, what changes, and what is measured.
-5. Results: headline findings -> raw behavior -> enforcement -> identity limitation -> human audit.
-6. Discussion: what v1 establishes -> what it does not -> design implication.
-7. Limitations: grouped threats, no boilerplate.
-8. Reproducibility/AI disclosure: concise and auditable.
-9. Conclusion: one bounded design lesson.
+The paper should move in a natural order: problem and research question, benchmark definition, construction and protocol, raw model results, gate behavior, human audit, interpretation, limitations, reproducibility, and conclusion. The exact paragraph structure can vary; it should not be forced into a fixed template if a simpler presentation reads better.
