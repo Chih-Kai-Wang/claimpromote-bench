@@ -1,0 +1,112 @@
+name: anonymous review bundle
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "data/alpha/**"
+      - "policies/**"
+      - "schemas/**"
+      - "fixtures/**"
+      - "release/v1-paper-results.json"
+      - "v2/pilot-results/v2-public-pilot-study.json"
+      - "v2/naturalistic-candidates.json"
+      - "v2/naturalistic-sources.json"
+      - "v2/schemas/**"
+      - "scripts/build_anonymous_review_bundle.py"
+      - "scripts/validate_v2_naturalistic_candidates.py"
+      - "scripts/validate_v2_naturalistic_cases.py"
+      - "tests/test_v2*.py"
+      - ".github/workflows/anonymous-review-bundle.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: anonymous-review-bundle-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build and validate double-blind public artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Build anonymous reviewer directory
+        run: python scripts/build_anonymous_review_bundle.py --out work/anonymous-review
+
+      - name: Install staged bundle
+        run: python -m pip install -e "work/anonymous-review[test]"
+
+      - name: Run staged public-data and result checks
+        working-directory: work/anonymous-review
+        run: python scripts/run_review_checks.py
+
+      - name: Build public Lean package in staged bundle
+        uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
+        with:
+          lake-package-directory: work/anonymous-review/data/alpha
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          leanchecker: false
+          use-mathlib-cache: false
+
+      - name: Replay staged public Lean declarations
+        working-directory: work/anonymous-review/data/alpha
+        run: lake env leanchecker ClaimPromoteFormal
+
+      - name: Execute staged formal fixtures
+        working-directory: work/anonymous-review
+        run: >-
+          python -m claimpromotebench.formal
+          --dataset data/alpha
+          --fixtures fixtures/formal/cases.json
+          --out work/formal-fixtures.json
+
+      - name: Remove generated caches and verify identity scan again
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf \
+            work/anonymous-review/.pytest_cache \
+            work/anonymous-review/data/alpha/.lake \
+            work/anonymous-review/src/*.egg-info \
+            work/anonymous-review/src/*/*.egg-info \
+            work/anonymous-review/**/__pycache__
+          python scripts/build_anonymous_review_bundle.py --out work/anonymous-review-final
+          cmp \
+            work/anonymous-review/MANIFEST.json \
+            work/anonymous-review-final/MANIFEST.json
+          rm -rf work/anonymous-review-final
+
+      - name: Assemble anonymous ZIP and checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd work
+          zip -qr claimpromotebench-anonymous-review-bundle.zip anonymous-review
+          sha256sum claimpromotebench-anonymous-review-bundle.zip \
+            > claimpromotebench-anonymous-review-bundle.sha256
+
+      - name: Upload reviewer bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-anonymous-review-bundle
+          path: |
+            work/claimpromotebench-anonymous-review-bundle.zip
+            work/claimpromotebench-anonymous-review-bundle.sha256
+          if-no-files-found: error
+          retention-days: 30
