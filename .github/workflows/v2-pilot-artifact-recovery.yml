@@ -6,6 +6,8 @@ on:
       - agent/iclr2027-v2-low-cost-study
     paths:
       - "v2/pilot-recovery-run-id.txt"
+      - ".github/workflows/v2-pilot-artifact-recovery.yml"
+      - "scripts/aggregate_v2_pilot_artifacts.py"
   workflow_dispatch:
     inputs:
       source_run_id:
@@ -108,7 +110,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- v2/pilot-results/v2-public-pilot-study.json; then
+          if [ -z "$(git status --porcelain -- v2/pilot-results/v2-public-pilot-study.json)" ]; then
             echo "Pilot aggregate is already current."
             exit 0
           fi
