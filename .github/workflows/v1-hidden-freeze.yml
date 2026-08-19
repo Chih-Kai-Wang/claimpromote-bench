@@ -54,12 +54,35 @@ jobs:
             --out work/v1-hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
           python scripts/validate_v1_plan.py --test-dir work/v1-hidden
-          python -m claimpromotebench.shortcuts \
+
+      - name: Audit hidden non-semantic shortcuts
+        run: |
+          set -euo pipefail
+          if ! python -m claimpromotebench.shortcuts \
             --dataset work/v1-hidden \
-            --out work/v1-hidden-shortcut-audit.json >/dev/null
-          python -m claimpromotebench.invariance \
+            --out work/v1-hidden-shortcut-audit.json >/dev/null 2>&1; then
+            echo "::error::private hidden shortcut audit failed; detailed output suppressed"
+            exit 1
+          fi
+
+      - name: Audit hidden metamorphic invariance
+        run: |
+          set -euo pipefail
+          # invariance.py currently hard-codes the alpha input-schema filename.
+          # For the private v1 audit, use the v1 schema declared by the hidden manifest
+          # in this disposable checkout, then restore the alpha schema before leaving.
+          cp schemas/benchmark-input.schema.json "$RUNNER_TEMP/benchmark-input-alpha.schema.json"
+          restore_schema() {
+            cp "$RUNNER_TEMP/benchmark-input-alpha.schema.json" schemas/benchmark-input.schema.json
+          }
+          trap restore_schema EXIT
+          cp schemas/benchmark-input-v1.schema.json schemas/benchmark-input.schema.json
+          if ! python -m claimpromotebench.invariance \
             --dataset work/v1-hidden \
-            --out work/v1-hidden-invariance-audit.json >/dev/null
+            --out work/v1-hidden-invariance-audit.json >/dev/null 2>&1; then
+            echo "::error::private hidden metamorphic audit failed; detailed output suppressed"
+            exit 1
+          fi
 
       - name: Freeze exact hidden prompt hashes privately
         run: |
@@ -145,6 +168,7 @@ jobs:
         if: always()
         run: |
           rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          rm -f "$RUNNER_TEMP/benchmark-input-alpha.schema.json"
           rm -rf work/v1-hidden
           rm -f work/v1-hidden-prompt-manifest.json
           rm -f work/v1-hidden-shortcut-audit.json
