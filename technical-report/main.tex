@@ -1,0 +1,205 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\newcommand{\cpb}{\textsc{ClaimPromoteBench}}
+\newcommand{\allow}{\texttt{ALLOW}}
+\newcommand{\hold}{\texttt{HOLD}}
+\newcommand{\blocker}[1]{\par\noindent\fcolorbox{red}{white}{\parbox{0.94\linewidth}{\textbf{SUBMISSION BLOCKER:} #1}}\par}
+
+\title{\cpb: Evaluating Policy-Governed Evidence-State Transitions in AI Research Agents}
+\author{Anonymous Author(s)}
+\date{}
+
+\begin{document}
+\maketitle
+
+\blocker{The frozen model study, hidden-test commitment, and independent human review are not yet complete. Numerical result fields in this draft must be populated only from validated, hash-bound study artifacts. Do not submit this draft while any blocker remains.}
+
+\begin{abstract}
+AI research agents increasingly produce claims, analyses, proofs, and computational results, but existing evaluations primarily ask whether an answer is correct, whether a claim is supported, whether an agent can reproduce a result, or whether a model should abstain. We study a different failure mode: \emph{premature promotion of a research claim's evidentiary state}. We introduce \cpb, a benchmark and evaluation protocol for deciding whether a requested evidence-state transition is admissible under a versioned, machine-checkable policy. Each controlled pair holds the claim and requested transition fixed while changing one policy prerequisite, allowing direct measurement of over-promotion rather than generic answer accuracy. The benchmark separates orthogonal research, computation, formal-certification, and independent-review state; includes executable exact-rational numerical artifacts and pinned Lean artifacts; and distinguishes raw model intent from the effect of an enforced deterministic gate. We define false-promotion rate, valid-promotion recall, paired transition accuracy, ranking and calibration diagnostics, and metamorphic consistency under semantics-preserving transformations. A frozen study is preregistered over two open-weight models, four intervention arms, and three seeds. This manuscript reports no model result until the corresponding artifact hashes, complete run records, hidden-test commitment, and independent review are released.
+\end{abstract}
+
+\section{Introduction}
+
+AI systems are increasingly used inside scientific workflows: they retrieve literature, write analysis code, propose hypotheses, reproduce computational results, and assist with formal reasoning. Benchmarks accordingly test scientific claim verification, computational reproducibility, data-driven research tasks, hypothesis falsification, and abstention \cite{javaji2025claimbench,huang2026deepfact,siegel2025corebench,chen2025scienceagentbench,huang2025popper,kirichenko2025abstentionbench}. These evaluations are necessary, but they do not isolate a common governance error: an agent may possess some valid evidence while requesting a stronger research status than that evidence licenses.
+
+For example, a successful finite computation does not by itself establish a theorem over an infinite domain; a Lean certificate applies to the exact formal statement and trust base that were checked, not automatically to a broader natural-language claim; and an internally reproduced result is not an independent external review. In each case, the underlying evidence may be genuine while the requested \emph{state transition} is invalid.
+
+We therefore study the following question:
+
+\begin{quote}
+\emph{Given a claim, its typed evidence ledger, and a requested evidentiary state transition, can an AI system decide whether that transition is currently admissible without either over-promoting invalid transitions or unnecessarily blocking valid ones?}
+\end{quote}
+
+This formulation differs from truth classification. The benchmark oracle does not decide whether an unrestricted natural-language mathematical statement is true. Instead, it evaluates whether explicitly registered prerequisites for a transition are satisfied at a fixed evaluation time. This makes the target narrow enough to be machine-checkable while preserving failure modes that arise in research-agent workflows.
+
+Our contributions are:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Evidence-state transition formulation.} We represent research, computational, formal-certification, and independent-review state as orthogonal axes rather than a single confidence ladder, and define versioned admissibility policies over requested transitions.
+  \item \textbf{Controlled-pair benchmark design.} We construct matched valid/invalid pairs in which the claim and requested transition remain fixed while one policy prerequisite changes. This separates transition reasoning from shortcuts based on claim topic, requested status, or surface form.
+  \item \textbf{Executable evidence bindings.} Numerical cases bind exact-rational finite-grid artifacts that are recomputed during validation, while formal cases bind pinned Lean sources and toolchains. Artifact success is deliberately narrower than research correctness.
+  \item \textbf{Intent-versus-enforcement evaluation.} Four intervention arms range from narrative evidence to a typed ledger, passive verifier information, and an enforced deterministic gate, allowing us to distinguish model calibration from system-level veto effects.
+  \item \textbf{Fail-closed reproducible evaluation.} We provide complete-run validation, artifact and prompt hashing, paired statistics, false-promotion and false-hold metrics, shortcut diagnostics, and semantics-preserving metamorphic tests.
+\end{enumerate}
+
+\section{Related Work}
+
+\paragraph{Scientific claim verification.}
+CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports and introduces an audit-then-score process in which benchmark labels can be revised through evidence-backed adjudication \cite{huang2026deepfact}. ClaimDB evaluates fact verification over large structured databases and highlights persistent abstention failures \cite{theologitis2026claimdb}. These tasks ask whether evidence supports a claim or factual statement. \cpb instead assumes an explicit evidence ledger and asks whether the available evidence licenses a requested \emph{change in evidentiary status}.
+
+\paragraph{Research-agent evaluation and reproducibility.}
+ScienceAgentBench evaluates agents on executable data-driven scientific tasks \cite{chen2025scienceagentbench}, while CORE-Bench evaluates computational reproduction of published research \cite{siegel2025corebench}. POPPER evaluates agentic hypothesis falsification with sequential statistical control \cite{huang2025popper}. Our benchmark does not attempt end-to-end scientific discovery or truth determination. It isolates a governance decision that can sit between evidence production and a stronger claim status.
+
+\paragraph{Abstention and selective action.}
+AbstentionBench shows that modern reasoning models remain unreliable on unanswerable and underspecified questions \cite{kirichenko2025abstentionbench}. Holding a transition in \cpb is related to abstention but is not equivalent: a gold \hold{} decision is determined by missing or invalid transition prerequisites, while a gold \allow{} decision requires that the requested state change be licensed. The benchmark therefore penalizes both unsafe promotion and unnecessary holding.
+
+\paragraph{Specification and formal-verification evaluation.}
+OSVBench demonstrates that generating complete formal specifications for real operating-system verification remains challenging \cite{li2026osvbench}. Our formal cases use proof artifacts only as one typed evidence family. A passing proof certificate does not collapse semantic alignment, provenance, review, or broader research status into a single ``verified'' label.
+
+\section{Task Definition}
+
+Each instance contains a claim record, typed evidence records, dependency and provenance metadata, a current evidence-state vector, and a requested state transition. The model emits an action in $\{\allow,\hold\}$ together with a probability-like admissibility score and structured reason/evidence identifiers. Malformed output is a distinct \texttt{FORMAT\_ERROR}; it is never silently converted into a safe hold.
+
+\subsection{Orthogonal evidence state}
+
+The benchmark uses four state axes:
+\begin{align*}
+\texttt{research\_status} &\in \{\texttt{PROPOSED},\texttt{OPEN},\texttt{RESOLVED}\},\\
+\texttt{computation\_status} &\in \{\texttt{NONE},\texttt{COMPUTATIONAL}\},\\
+\texttt{formal\_status} &\in \{\texttt{NONE},\texttt{FORMALLY\_CERTIFIED}\},\\
+\texttt{review\_status} &\in \{\texttt{UNREVIEWED},\texttt{INDEPENDENTLY\_VERIFIED}\}.
+\end{align*}
+These axes are intentionally non-substitutable. For example, formal certification does not imply independent review, and a computational result does not imply formal certification.
+
+\subsection{Versioned transition oracle}
+
+A public policy specifies the prerequisites for each admissible transition at a fixed evaluation time. The oracle checks dependency closure, evidence status, scope, staleness, provenance, runtime success, and artifact integrity. Numerical and formal \allow{} cases additionally require executable artifact-to-scope agreement. The oracle is a transition-policy oracle, not a theorem prover or scientific truth oracle.
+
+\section{Benchmark Construction}
+
+\subsection{Controlled pairs}
+
+The benchmark is organized into matched pairs. Within a pair, the natural-language claim and requested state transition are held fixed. The valid and invalid members differ only in registered policy-relevant fields. Pair construction therefore targets the counterfactual question: does the model change its decision when the decisive prerequisite changes?
+
+The alpha scaffold contains six evidence families: dependency closure, numerical scope, runtime failure, stale or contradictory evidence, independent provenance, and formal certificate identity. The full study expands these families while preserving the same pair contract.
+
+\subsection{Executable numerical evidence}
+
+Numerical cases use manifest-bound exact-rational finite-grid artifacts. Dataset validation recomputes every registered grid value, extremum, predicate, repetition digest, and scope field. These artifacts support only the declared finite computational claim. They do not justify continuous-domain generalization.
+
+\subsection{Executable formal evidence}
+
+Formal cases use generated Lean sources under a pinned Lean toolchain. Validation compiles and checks the exact declarations and includes positive and intentionally invalid fixtures. Kernel acceptance establishes only the exact formal declaration in the pinned environment; it does not establish novelty, natural-language equivalence, independent review, or truth outside the encoded target.
+
+\subsection{Shortcut and metamorphic audits}
+
+We audit metadata-only and shallow-structure shortcuts and apply registered semantics-preserving transformations, including identifier renaming, evidence-order changes, and insertion of irrelevant evidence. The deterministic oracle and prompt renderers must remain invariant after normalization. Model consistency under the same transformations is reported separately from ordinary decision accuracy.
+
+\section{Intervention Arms}
+
+The frozen study compares four matched arms:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Narrative:} evidence is presented as prose without a typed ledger.
+  \item \textbf{Ledger:} the same decision is supported by explicit typed evidence-state records.
+  \item \textbf{Ledger + passive verifier:} deterministic verifier information is visible to the model, but the model's requested action is not automatically changed.
+  \item \textbf{Ledger + verifier + gate:} an invalid requested promotion can be vetoed by the deterministic transition gate.
+\end{enumerate}
+The final arm is evaluated twice: once on raw model intent and once after gate enforcement. A successful veto is a system effect, not evidence that the model itself became better calibrated.
+
+\section{Experimental Protocol}
+
+The preregistered full study contains 200 controlled pairs (400 instances), two open-weight Qwen3 model sizes, four intervention arms, and three fixed seeds, for 9,600 short decisions. Before any test labels are opened, each model run must bind the exact weight artifact hash, model revision, quantization, runtime commit, prompt hash, seed, and hardware summary.
+
+The primary metrics are:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{False Promotion Rate (FPR):} the fraction of gold-invalid transitions for which the system requests \allow{}.
+  \item \textbf{Valid Promotion Recall (VPR):} the fraction of gold-valid transitions for which the system requests \allow{}.
+  \item \textbf{Paired Transition Accuracy (PTA):} the fraction of controlled pairs for which both members receive the exact gold action.
+\end{enumerate}
+Secondary metrics include promotion false discovery rate, false-hold rate, Brier score, negative log-likelihood, tie-aware stepwise AUPRC, risk--coverage area, within-pair score ranking, structured reason/evidence scores, decision coverage, and metamorphic consistency.
+
+Confidence intervals resample whole controlled pairs rather than individual rows. Arm comparisons use exact two-sided McNemar tests on matched item correctness within a fixed model-artifact/runtime/seed/hardware group, with Holm correction applied separately to raw-intent and post-gate comparisons.
+
+\section{Results}
+
+\blocker{Populate this section only from the frozen output of the repository's validated run-record and study-comparison pipeline. Do not manually type aggregate scores that are not derivable from released run artifacts.}
+
+\begin{table}[t]
+\centering
+\caption{Primary test-set results. Values are intentionally blank until the frozen study is complete. FPR is lower-is-better; VPR and PTA are higher-is-better.}
+\label{tab:main-results}
+\begin{tabular}{llccc}
+\toprule
+Model & Arm & FPR $\downarrow$ & VPR $\uparrow$ & PTA $\uparrow$ \\
+\midrule
+Qwen3-0.6B & Narrative & -- & -- & -- \\
+Qwen3-0.6B & Ledger & -- & -- & -- \\
+Qwen3-0.6B & Ledger + verifier & -- & -- & -- \\
+Qwen3-0.6B & Ledger + verifier + gate & -- & -- & -- \\
+Qwen3-1.7B & Narrative & -- & -- & -- \\
+Qwen3-1.7B & Ledger & -- & -- & -- \\
+Qwen3-1.7B & Ledger + verifier & -- & -- & -- \\
+Qwen3-1.7B & Ledger + verifier + gate & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Raw-intent versus effective post-gate behavior. Gate catches must not be described as improved model calibration.}
+\label{tab:gate-results}
+\begin{tabular}{lcccc}
+\toprule
+Model & Intent FPR & Effective FPR & Catch rate & False-block rate \\
+\midrule
+Qwen3-0.6B & -- & -- & -- & -- \\
+Qwen3-1.7B & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Preregistered analyses.}
+The final report will include family-stratified diagnostics, paired score ranking, calibration and coverage, format-error sensitivity, semantics-preserving consistency, matched arm tests, and a qualitative error taxonomy. Negative or null intervention results will be reported without changing the benchmark policy or primary metrics after test-label opening.
+
+\section{Discussion}
+
+The central distinction in \cpb is between \emph{evidence validity} and \emph{promotion validity}. A model can correctly recognize that an artifact exists while still granting a status that the artifact does not license. Conversely, a highly conservative system can avoid unsafe promotion by holding every transition, which is why valid-promotion recall and paired transition accuracy are primary alongside false-promotion rate.
+
+The intervention design also separates model behavior from deterministic enforcement. If an enforced gate reduces effective false promotion without changing raw model intent, the result demonstrates a system-level safety property rather than improved reasoning. This distinction matters when research-agent interfaces summarize their own workflow state: downstream users may care about the effective action, while model developers may care about the underlying calibration failure.
+
+\section{Limitations and Threats to Validity}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Narrow domain.} Version 1 focuses on mathematical-research evidence states and should not be treated as a complete model of scientific governance across disciplines.
+  \item \textbf{Transition admissibility is not truth.} The deterministic oracle evaluates a public policy over registered evidence. It cannot establish the truth, novelty, importance, or semantic correctness of arbitrary research claims.
+  \item \textbf{Synthetic control.} Controlled pairs improve causal interpretability but may be less natural than unconstrained real research records. We therefore separate benchmark conclusions from claims about end-to-end research behavior.
+  \item \textbf{Model coverage.} The preregistered core study uses two small open-weight models to make complete reproduction feasible. External validated runs may broaden model coverage but are reported separately from the frozen core study.
+  \item \textbf{Formal scope.} A passing Lean artifact proves only the exact encoded statement in its pinned trust base. Natural-language alignment and independent review remain separate evidence axes.
+  \item \textbf{Human gold validation.} Machine-checkability does not eliminate the need to audit whether the policy and item authoring reflect the intended research semantics. The release therefore requires blinded independent review and adjudication rather than treating infrastructure as review evidence.
+\end{itemize}
+
+\section{Reproducibility and Artifact Policy}
+
+Every reported run must include complete item coverage, immutable model/runtime identity, prompt hashes, raw and final decisions, parse status, latency, token counts, verifier calls, and hardware summary. Dataset, policy, prompt, model, runtime, and run-record hashes are bound into path-independent run and study identifiers. External contributions pass the same fail-closed validation before entering cumulative comparisons.
+
+The public release will include the benchmark schemas, policy, authoring records, public inputs, scorer labels for released splits, executable artifacts, evaluator, negative fixtures, metamorphic transformations, blinded-review workflow, validated run records, and commands used to regenerate every reported table.
+
+\section{AI Assistance Disclosure}
+
+AI tools assisted with literature triage, adversarial review, code and documentation drafting, and manuscript editing. The human author is responsible for the research question, policy semantics, released artifacts, quantitative claims, citation accuracy, and final manuscript. AI assistance is not treated as authorship, independent review, or external reproduction.
+
+\section{Conclusion}
+
+\cpb isolates a failure mode that is easy to blur in end-to-end research-agent evaluation: a system can possess genuine evidence yet promote a claim to a state that the evidence does not license. By making requested state transitions, prerequisites, and enforcement explicit, the benchmark supports separate measurement of unsafe promotion, unnecessary holding, model intent, and gate effects. The frozen study will determine whether typed evidence and deterministic transition checks materially improve these behaviors; until those results and the independent review are released, this manuscript deliberately makes no empirical performance claim.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
