@@ -11,10 +11,10 @@ The public v1 development path, formal replay, and supplementary external audit 
 ## Gate A — research boundary and novelty
 
 - [x] Narrow target: policy-governed evidence-state transition admissibility, not general truth classification.
-- [x] Distinguish claim/evidence verification, abstention, computational reproducibility, hypothesis validation, and formal-specification generation from the transition task.
+- [x] Distinguish claim/evidence verification, abstention, computational reproducibility, hypothesis validation, evidence-state maintenance, verifier-governed claim workflows, and formal-specification generation from the transition benchmark.
 - [x] Use cautious priority language; do not claim “first” without a fresh systematic search immediately before submission.
-- [ ] Refresh the related-work search immediately before submission and record search date/queries.
-- [ ] Check every bibliography entry against its authoritative publication record.
+- [x] Fresh related-work search recorded on 2026-08-19 with queries and newly adjacent work in `docs/RELATED_WORK.md`; positioning was narrowed after finding SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report.
+- [ ] Check every bibliography entry against its authoritative publication record immediately before archival submission; keep technical reports/preprints explicitly labeled as such.
 
 ## Gate B — v1 benchmark freeze
 
