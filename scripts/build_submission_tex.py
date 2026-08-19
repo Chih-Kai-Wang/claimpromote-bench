@@ -42,6 +42,23 @@ def canonical_body() -> str:
     ai_start = body.index(r"\section{AI Assistance Disclosure}")
     conclusion_start = body.index(r"\section{Conclusion}", ai_start)
     body = body[:ai_start] + AI_DISCLOSURE + body[conclusion_start:]
+
+    # Submission copies keep exact identities in the public repository/artifact manifest while
+    # abbreviating long monospace hashes in prose so neither the one-column arXiv PDF nor the
+    # narrower ICLR format can overflow. These substitutions do not alter study semantics.
+    replacements = {
+        "Coverage triplets are ordered as seeds 104729/130363/169087.": (
+            "Coverage triplets are ordered as seeds 104729, 130363, and 169087."
+        ),
+        r"\texttt{aa5268dcde2aa44f8eabf0246631efbca27de7e5}": r"\texttt{aa5268dc...de7e5}",
+        r"\texttt{8d9b3f5c831f432cf6b321e6402724c4f52bb3e1}": r"\texttt{8d9b3f5c...bb3e1}",
+        r"\texttt{e2b09f30b0573cf7bcb244eef1917691755f2877}": r"\texttt{e2b09f30...f2877}",
+        r"\texttt{3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664}": (
+            r"\texttt{3eb5b534...e8bfe664}"
+        ),
+    }
+    for old, new in replacements.items():
+        body = body.replace(old, new)
     return body
 
 
