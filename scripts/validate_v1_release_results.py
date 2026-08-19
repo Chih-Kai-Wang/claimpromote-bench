@@ -103,9 +103,7 @@ def main() -> int:
     if not isinstance(runs, list) or len(runs) != 24:
         fail("release must contain exactly 24 run summaries")
 
-    expected_identities = {
-        (model, arm, seed) for model in MODELS for arm in ARMS for seed in SEEDS
-    }
+    expected_identities = {(model, arm, seed) for model in MODELS for arm in ARMS for seed in SEEDS}
     seen: set[tuple[str, str, int]] = set()
     errors_by_cell: Counter[tuple[str, str]] = Counter()
     python_versions: Counter[str] = Counter()
