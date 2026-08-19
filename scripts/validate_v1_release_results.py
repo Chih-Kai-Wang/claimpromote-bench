@@ -54,7 +54,12 @@ def close(left: Any, right: float, *, label: str) -> None:
         fail(f"{label} mismatch: expected {right}, got {left}")
 
 
-def require_value(row: Json, key: str, expected: float | None, identity: tuple[str, str, int]) -> None:
+def require_value(
+    row: Json,
+    key: str,
+    expected: float | None,
+    identity: tuple[str, str, int],
+) -> None:
     value = row.get(key)
     label = f"{identity}.{key}"
     if expected is None:
