@@ -27,6 +27,7 @@ from claimpromotebench.hashing import sha256_bytes  # noqa: E402
 from claimpromotebench.oracle import evaluate  # noqa: E402
 from claimpromotebench.policy import load_policy  # noqa: E402
 from claimpromotebench.prompts import ARMS, render_prompt  # noqa: E402
+from claimpromotebench.state import validate_decision_semantics  # noqa: E402
 
 Json = dict[str, Any]
 
@@ -74,7 +75,9 @@ def extract_content(response: Json) -> tuple[str, int]:
     return content, tokens
 
 
-def parse_decision(content: str) -> Json | None:
+def parse_decision(content: str, item: Json) -> Json | None:
+    """Parse one model decision, treating schema or semantic violations as format errors."""
+
     try:
         value = json.loads(content)
     except json.JSONDecodeError:
@@ -87,6 +90,7 @@ def parse_decision(content: str) -> Json | None:
             ROOT / "schemas" / "agent-decision.schema.json",
             "model decision",
         )
+        validate_decision_semantics(item, value)
     except Exception:
         return None
     return value
@@ -175,7 +179,7 @@ def main() -> int:
         response = request_completion(args.base_url, payload, args.timeout)
         latency_ms = (time.perf_counter() - start) * 1000.0
         content, output_tokens = extract_content(response)
-        raw = parse_decision(content)
+        raw = parse_decision(content, item)
         if raw is None:
             record: Json = {
                 "item_id": item["id"],
