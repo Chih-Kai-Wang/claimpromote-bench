@@ -1,10 +1,11 @@
-# ICLR 2027 reviewer-level risk audit after the public formatting control
+# ICLR 2027 reviewer-level risk audit after the public controls
 
 Date: 2026-08-20
 
 This audit applies to the revised manuscript on PR #20. It is an adversarial checklist, not a
 prediction of acceptance. The frozen v1 hidden study remains the primary experiment. The post-v1
-public pilot is a separately labeled diagnostic that addresses one specific measurement threat.
+public formatting pilot and post-protocol GPT-5.4 public-development follow-up are separately
+labeled diagnostics that address output-contract and model-breadth threats.
 
 ## Executive assessment
 
@@ -17,7 +18,11 @@ zero over 38 complete pairs.
 
 This supports a narrow conclusion: **for the two tested small models on the public controlled pairs,
 fixing the output contract does not recover sensitivity to the decisive evidence change.** It does
-not support a broad claim about frontier models or natural research records.
+not support a broad claim about frontier models or natural research records. A separately frozen
+GPT-5.4 pass returns 99 parseable decisions from 100, matches the policy oracle on all 99, and
+changes correctly on all 49 covered pairs. This establishes that the benchmark can distinguish a
+stronger model's evidence-sensitive behavior from the small models' uniform `ALLOW` strategy, but
+only on public development data in one post-protocol pass.
 
 ## Reviewer attack 1: “The v1 result is mostly an invalid-JSON benchmark”
 
@@ -84,21 +89,25 @@ The manuscript must continue to state:
 ## Reviewer attack 4: “Only two tiny open-weight models are tested”
 
 **Severity:** HIGH  
-**Current status:** OPEN
+**Current status:** PARTIALLY MITIGATED, STILL NARROW
 
-The paper still cannot support claims about frontier or API-hosted systems. The public pilot makes
-the small-model diagnosis cleaner; it does not make the model sample broad.
+The GPT-5.4 follow-up adds one API-hosted stronger model under the same public prompt packet and
+fixed policy. Its 99/100 decision coverage, 99/99 covered action accuracy, and 49/49 covered pair
+accuracy show that the task is not intrinsically an always-`ALLOW` or unusable-output benchmark.
+This materially improves external-validity evidence but does not make the model sample broad.
 
-A stronger-model extension would improve external validity, but it is not automatically worth the
-cost. It should be added only if:
+Protections on this extension include:
 
-- the model artifact and runtime can be pinned;
-- the exact same constrained-decoding protocol is used;
-- the experiment answers a breadth question rather than repeating interface debugging;
-- cost is explicitly authorized;
-- the extension is labeled post-v1 and is not selected after seeing favorable outputs.
+- a frozen 12-instance continuation gate before the successful pilot;
+- direct OpenAI upstream routing, strict schema, zero retries, and request/response hash binding;
+- preservation of the initial transport-only `STOP` and the one-field interface revision;
+- one fresh pass over all 100 public-development instances after the revised pilot passed;
+- explicit reporting of the 99/100 coverage and the output-ceiling failure;
+- a computed OpenRouter cost of $2.1883195 under the authorized $8 cap.
 
-No paid model expansion is authorized on the current branch.
+Residual risk remains substantial: the extension is public, post-protocol, one-pass, and limited to
+one API model. Independent frontier-model replication and a held-out stronger-model evaluation are
+still absent.
 
 ## Reviewer attack 5: “The benchmark is synthetic and author-constructed”
 
@@ -143,7 +152,7 @@ The submission no longer uses the small two-person audit. ClaimPromoteBench does
 
 Residual risk remains: the policy and synthetic factors were designed by the author. The machine checks show that the implementation follows the disclosed contract; they do not show that the contract is a universal scientific norm. The manuscript must state this directly rather than replacing one weak human study with an overclaim about automation.
 
-## Reviewer attack 8: “Novelty overlaps evidence-state and policy benchmarks”## Reviewer attack 9: “Novelty overlaps evidence-state and policy benchmarks”
+## Reviewer attack 8: “Novelty overlaps evidence-state and policy benchmarks”
 
 **Severity:** HIGH  
 **Current status:** MITIGATED BY NARROW POSITIONING
@@ -162,9 +171,11 @@ The defensible contribution is the combination of:
 - pre-inference hidden/prompt commitment;
 - explicit separation of output coverage, raw decision sensitivity, and deterministic enforcement;
 - a public formatting control showing that restored coverage does not restore pair sensitivity for
-  the tested models.
+  the tested small models;
+- a separately frozen GPT-5.4 public-development follow-up showing near-complete coverage and
+  evidence-sensitive actions under the same benchmark policy.
 
-## Reviewer attack 9: “The evidence recovery may have changed answers”
+## Reviewer attack 9: “The evidence recovery or follow-up may have changed answers”
 
 **Severity:** MEDIUM  
 **Current status:** MITIGATED BY ARTIFACT-ONLY REPLAY
@@ -173,6 +184,11 @@ For v1, recovery used the 24 original source artifacts, did not query the models
 only 27 cross-field-invalid structured outputs as format errors. For the public pilot, recovery
 downloaded both immutable model artifacts, required the complete four-run / 160-decision matrix,
 validated every record, and reproduced the public aggregate twice with identical bytes.
+
+For GPT-5.4, the initial transport-only failure, revised frozen plan, successful pilot, and full pass
+remain distinct artifacts. Validation checks prompt-packet identity, registered provider, every
+request and final-response hash, exact item coverage, metrics, and token-derived costs. The sole
+nonparseable full response is retained as an output-ceiling failure.
 
 The manuscript must continue to distinguish evaluator correction from model-answer rewriting.
 
@@ -186,6 +202,7 @@ The final revised head must pass all of the following together:
 - v1 hidden/scored/recovery guards;
 - v1 public release-result validation;
 - v2 public pilot validation;
+- GPT-5.4 pilot/full protocol, provider, hash, metric, and cost validation;
 - naturalistic schema/validator tests;
 - official ICLR 2027 style compilation;
 - main-text page count at or below 9 pages;
@@ -197,10 +214,10 @@ The final revised head must pass all of the following together:
 
 ## Current acceptance bottleneck
 
-After the public formatting control, the largest remaining scientific risks are no longer the JSON
-interface alone. They are:
+After the public controls, the largest remaining scientific risks are no longer the JSON interface
+alone or whether a stronger model can express evidence sensitivity. They are:
 
-1. model breadth;
+1. model breadth beyond one post-protocol API model;
 2. synthetic/public external validity;
 3. author-defined policy scope without independent normative validation;
 4. narrow task significance relative to adjacent policy/evidence benchmarks.

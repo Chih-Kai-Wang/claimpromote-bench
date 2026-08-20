@@ -2,8 +2,8 @@
 
 **A benchmark for deciding when evidence justifies a change in research-claim status.**
 
-> **SCIENTIFIC_RC_READY: v1 primary hidden study and post-v1 public formatting-control pilot complete; account-side submission pending.**
-> Hidden v1 numbers come from the validated recovered study. The public pilot appears as a separate post-v1 diagnostic with its own aggregate and provenance.
+> **SCIENTIFIC_RC_READY: v1 hidden study, post-v1 formatting control, and post-protocol GPT-5.4 public-development follow-up complete; account-side submission pending.**
+> Hidden v1 numbers come from the validated recovered study. Both public extensions remain separately labeled with their own frozen plans, aggregates, and interpretation boundaries.
 
 ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
 
@@ -79,6 +79,26 @@ Pilot provenance:
 - artifact-only recovery: `32297818154`;
 - public aggregate: `v2/pilot-results/v2-public-pilot-study.json`;
 - aggregate SHA-256: `sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`.
+
+## Post-protocol GPT-5.4 public-development follow-up
+
+A separately frozen OpenRouter-mediated extension evaluates GPT-5.4 on the 50-pair / 100-instance public development split. The initial direct-OpenAI pilot is retained as a transport-only `STOP`: all 12 requests reported that no endpoint supported the registered token-limit parameter, no model response was returned, and OpenRouter charged $0. A new frozen revision changed only that interface field from `max_completion_tokens` to `max_tokens`, retained direct OpenAI routing and zero retries, and used the same 12-instance family-balanced pilot gate.
+
+| Phase | Records | Decision coverage | Complete-pair coverage | Raw action accuracy | Raw pair accuracy | Raw flip rate |
+|---|---:|---:|---:|---:|---:|---:|
+| Revised pilot | 12 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Full public development | 100 | 0.99 | 0.98 | 1.00 | 1.00 | 1.00 |
+
+The full pass contains 99 parseable decisions: 50 `ALLOW`, 45 `HOLD`, 2 `DEMOTE`, and 2 `ESCALATE`. All 99 match the policy oracle; all 49 complete pairs are correct and change with the decisive evidence. The remaining response exhausts the 3,072-token ceiling with reasoning tokens and returns no final response text. Raw false promotions are 0 / 49, and valid promotions are 50 / 50.
+
+Follow-up provenance:
+
+- frozen revision commit: `3634ce85785e9b516abc519711fff12388307331`;
+- revised plan SHA-256: `sha256:8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a`;
+- pilot run SHA-256: `sha256:ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355`;
+- full run SHA-256: `sha256:0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7`;
+- compact result: `v2/stronger-model-results/openrouter-openai-gpt-5.4-v2-study.json`;
+- computed OpenRouter cost: **$2.1883195** across pilot and full phases.
 
 ## Recovery of v1 evaluator failures
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -50,3 +51,18 @@ def test_iclr_bundle_description_does_not_claim_hidden_recovery_checks() -> None
     statement = submission_builder.ICLR_REPRODUCIBILITY
     assert "recovery checks" not in statement
     assert "Hidden inference and recovery provenance remain outside that bundle" in statement
+
+
+def test_stronger_followup_anonymization_keeps_metrics_and_removes_provenance() -> None:
+    builder = load_builder()
+    source = builder.load_object(
+        ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
+    )
+    cleaned = builder.anonymize_stronger_results(source)
+    rendered = json.dumps(cleaned, sort_keys=True)
+
+    assert cleaned["full"]["parseable_decisions"] == 99
+    assert cleaned["full"]["raw_correct_pairs"] == 49
+    assert cleaned["full"]["routed_provider_values"] == ["OpenAI"]
+    assert "3634ce85785e9b516abc519711fff12388307331" not in rendered
+    assert "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7" not in rendered

@@ -23,6 +23,9 @@ The staged bundle contains:
 - an anonymized v2 public-pilot aggregate sufficient to validate the four-run / 160-decision
   matrix, coverage changes, constrained parseable count, complete-pair count, and zero raw pair
   sensitivity;
+- an anonymized GPT-5.4 public-development aggregate sufficient to validate the 100-decision
+  matrix, 99 parseable decisions, 49 complete pairs, action distribution, and perfect conditional
+  pair sensitivity;
 - a generated manifest binding every staged file to a SHA-256 digest;
 - a double-blind MIT license copy naming the copyright holder as `Anonymous Authors`;
 - a one-command public review check runner.
@@ -33,7 +36,7 @@ The builder excludes:
 
 - Git history and GitHub workflow files;
 - author name, institution, username, email, and public repository URL;
-- v1/v2 public workflow IDs, trigger commits, and searchable public aggregate hashes;
+- v1/v2 public workflow IDs, trigger commits, and searchable public aggregate and run hashes;
 - the private hidden v1 dataset, hidden seed, hidden prompts, and hidden raw source artifacts;
 - any human-subject or annotation-study records;
 - unused human-review workflow modules;
@@ -68,7 +71,7 @@ repository:
 1. installs the staged Python package in editable mode;
 2. validates the public alpha dataset and oracle labels;
 3. reruns the public pair-contract, shortcut, metamorphic-invariance, and executable-fixture checks;
-4. validates the anonymized v1 and v2 result summaries;
+4. validates the anonymized v1, public-pilot, and GPT-5.4 result summaries;
 5. validates the naturalistic candidate and case-boundary rules;
 6. runs the selected v2 test suite;
 7. builds the staged public Lean package;

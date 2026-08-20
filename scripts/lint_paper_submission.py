@@ -14,6 +14,9 @@ BIB = ROOT / "technical-report" / "references.bib"
 RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
 V2_PILOT_SHA = "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
+STRONGER_FOLLOWUP = (
+    ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
+)
 README = ROOT / "README.md"
 CITATION = ROOT / "CITATION.cff"
 SUBMISSION_METADATA = ROOT / "docs" / "SUBMISSION_METADATA.md"
@@ -182,11 +185,69 @@ def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
             fail(f"post-v1 public pilot table row changed: {pattern}")
 
 
+def validate_stronger_followup_binding(tex: str, study: dict[str, Any]) -> None:
+    plan = study.get("plan")
+    pilot = study.get("pilot")
+    full = study.get("full")
+    if not all(isinstance(value, dict) for value in (plan, pilot, full)):
+        fail("GPT-5.4 follow-up summary is malformed")
+    if plan.get("sha256") != (
+        "sha256:8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a"
+    ):
+        fail("GPT-5.4 follow-up plan digest changed")
+    if pilot.get("run_sha256") != (
+        "sha256:ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355"
+    ):
+        fail("GPT-5.4 pilot run digest changed")
+    if full.get("run_sha256") != (
+        "sha256:0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7"
+    ):
+        fail("GPT-5.4 full run digest changed")
+    expected_full = {
+        "records": 100,
+        "parseable_decisions": 99,
+        "complete_pairs": 49,
+        "raw_correct_decisions": 99,
+        "raw_correct_pairs": 49,
+        "false_promotions": 0,
+        "invalid_promotion_trials": 49,
+        "valid_promotions": 50,
+        "valid_promotion_trials": 50,
+    }
+    for key, expected in expected_full.items():
+        if full.get(key) != expected:
+            fail(f"GPT-5.4 full result changed: {key}")
+    if full.get("status_counts") != {"OK": 99, "SCHEMA_ERROR": 1}:
+        fail("GPT-5.4 full status counts changed")
+    if full.get("raw_action_distribution") != {
+        "ALLOW": 50,
+        "HOLD": 45,
+        "DEMOTE": 2,
+        "ESCALATE": 2,
+    }:
+        fail("GPT-5.4 action distribution changed")
+    for key in ("raw_action_accuracy", "raw_pair_accuracy", "raw_flip_rate"):
+        if full.get(key) != 1.0:
+            fail(f"GPT-5.4 full metric changed: {key}")
+    required_patterns = [
+        (r"post-protocol GPT-5\.4", "post-protocol GPT-5.4 scope label"),
+        (r"99\s+parseable decisions from 100", "GPT-5.4 decision coverage count"),
+        (r"all\s+99\s+match the policy oracle", "GPT-5.4 correct decisions"),
+        (r"49\s+of\s+50\s+pairs are complete", "GPT-5.4 complete pairs"),
+        (r"raw pair accuracy and decision-flip rate are 1\.0", "GPT-5.4 pair metrics"),
+        (r"0/49", "GPT-5.4 false-promotion count"),
+        (r"50/50", "GPT-5.4 valid-promotion count"),
+    ]
+    for pattern, description in required_patterns:
+        require_regex(tex, pattern, description)
+
+
 def main() -> int:
     tex = TEX.read_text(encoding="utf-8")
     bib = BIB.read_text(encoding="utf-8")
     frozen = load_object(RESULTS_FREEZE, "results-freeze.json")
     pilot = load_object(V2_PILOT, "v2 public pilot study")
+    stronger_followup = load_object(STRONGER_FOLLOWUP, "GPT-5.4 follow-up study")
     lower = tex.lower()
     validate_submission_metadata(tex)
 
@@ -324,6 +385,7 @@ def main() -> int:
             fail("frozen false-block values changed")
 
     validate_v2_pilot_binding(tex, pilot)
+    validate_stronger_followup_binding(tex, stronger_followup)
 
     if r"\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}" not in tex:
         fail("ClaimPromoteBench macro must use xspace to prevent concatenated prose")

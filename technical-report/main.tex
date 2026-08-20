@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-AI research agents may have valid evidence and still assign a claim status beyond the registered support. We study whether a requested status change satisfies a fixed policy given a claim, its evidence, and its current status. We introduce \cpb, a controlled benchmark with 200 pairs over 20 policy factors, including a preregistered 150-pair hidden test. Numerical and formal cases connect to executable artifacts, and the hidden set and exact prompts were committed before scored inference. The primary study contains 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three seeds. Among these outputs, 5,327 (73.99\%) receive \texttt{FORMAT\_ERROR}, while all 1,873 parseable raw decisions select \allow{}. A post-v1 public pilot compares free and JSON-schema-constrained decoding under identical prompts. Constraints raise coverage from 75\% to 100\% for Qwen3-0.6B and from 0\% to 95\% for Qwen3-1.7B; all 78 constrained parseable decisions select \allow{}, and raw pair accuracy and flip rate remain zero over 38 complete pairs. A deterministic gate applies the benchmark policy to covered cases and blocks false promotion. We report structured-output coverage, raw evidence sensitivity, and deterministic policy execution as separate quantities.
+AI research agents may have valid evidence yet assign a claim status beyond its registered support. We study whether a requested status change satisfies a fixed policy given a claim, evidence, and current state. We introduce \cpb, a controlled benchmark with 200 pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. The primary study evaluates 7,200 decisions from two Qwen3 models, four intervention arms, and three seeds: 5,327 (73.99\%) receive \texttt{FORMAT\_ERROR}, and all 1,873 parseable raw decisions select \allow{}. A post-v1 public formatting control raises constrained coverage from 75\% to 100\% for Qwen3-0.6B and from 0\% to 95\% for Qwen3-1.7B; all 78 constrained parseable decisions select \allow{}, and raw pair accuracy and flip rate remain zero over 38 complete pairs. A separately frozen post-protocol GPT-5.4 public-development follow-up yields 99 parseable decisions from 100; all 99 match the policy oracle, and all 49 covered pairs change correctly with the decisive evidence. A deterministic gate also enforces the policy on covered cases. We report output coverage, evidence sensitivity, and deterministic execution separately.
 \end{abstract}
 
 \section{Introduction}
@@ -52,14 +52,14 @@ The model first produces a raw decision. Only the gate arm may replace an invali
 \label{fig:overview}
 \end{figure}
 
-The hidden study records 5,327 \texttt{FORMAT\_ERROR} outputs among 7,200 decisions. Every one of the 1,873 parseable raw decisions selects \allow{} across both allowed and disallowed transitions. A separate post-v1 public pilot constrains the output schema while keeping the model-facing prompt fixed. Coverage rises sharply; every constrained parseable decision still selects \allow{}, producing zero raw pair accuracy and zero decision flips across complete pairs. The gate changes final system actions on covered invalid promotions, while raw decisions remain unchanged. The paper therefore reports three layers: usable output, evidence-sensitive decision behavior, and deterministic policy execution.
+The hidden study records 5,327 \texttt{FORMAT\_ERROR} outputs among 7,200 decisions. Every one of the 1,873 parseable raw decisions selects \allow{} across both allowed and disallowed transitions. A separate post-v1 public pilot constrains the output schema while keeping the model-facing prompt fixed. Coverage rises sharply; every constrained parseable decision still selects \allow{}, producing zero raw pair accuracy and zero decision flips across complete pairs. A separately frozen GPT-5.4 public-development follow-up reaches 99\% decision coverage and perfect conditional decision and pair accuracy. The gate changes final system actions on covered invalid promotions in the small-model study, while GPT-5.4 already matches the policy on its covered cases. The paper therefore reports three layers: usable output, evidence-sensitive decision behavior, and deterministic policy execution.
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item We define a four-action benchmark for deciding whether evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
   \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, and we commit the hidden set and exact prompts before scored inference.
   \item We report raw model decisions and deterministic gate actions as separate quantities.
-  \item We report the complete hidden study and a separately labeled post-v1 public formatting-control pilot: schema constraints recover output coverage but leave raw controlled-pair accuracy and decision flips at zero.
+  \item We report the complete hidden study, a post-v1 formatting control, and a separately frozen GPT-5.4 public-development follow-up that distinguishes interface recovery from evidence-sensitive success.
 \end{enumerate}
 
 \section{Related Work}
@@ -118,7 +118,7 @@ We also check for metadata-only and shallow structural shortcuts. Registered mea
 
 \subsection{Machine-checkable validation strategy}
 
-Gold labels come from the public versioned policy. The public pair-contract audit verifies each registered pair difference and reproduces all 40 public labels with the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; and metamorphic checks cover identifier, ordering, and irrelevant-evidence invariance. The hidden data and exact prompts were committed before scored inference, and both reported studies are recomputed from immutable source artifacts containing the original model responses. These checks constrain post-result changes and make the reported behavior independently inspectable. The policy remains an author-defined benchmark rule.
+Gold labels come from the public versioned policy. The public pair-contract audit verifies each registered pair difference and reproduces all 40 public labels with the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; and metamorphic checks cover identifier, ordering, and irrelevant-evidence invariance. The hidden data and exact prompts were committed before scored inference. The hidden study and public formatting pilot are recomputed from immutable source artifacts containing the original model responses. The GPT-5.4 follow-up binds every request to the frozen public prompt packet and validates returned model and provider identities, costs, and final-response hashes. These checks constrain post-result changes and make the reported behavior independently inspectable. The policy remains an author-defined benchmark rule.
 
 \section{Intervention Arms}
 
@@ -169,6 +169,12 @@ The gate runs after generation. Both decoding conditions receive identical model
 40\times 2\ \text{models}\times 2\ \text{decoding modes}=160
 \]
 decisions. Its scope is a post-v1 public one-seed formatting control and diagnostic replication.
+
+\subsection{Post-protocol GPT-5.4 public-development follow-up}
+
+After the base outcomes were known, a separately frozen GPT-5.4 extension used the ledger-plus-verifier prompt, strict JSON Schema, medium reasoning, direct OpenAI routing through OpenRouter, a 3,072-token output ceiling, and zero retries. Its first transport-only pilot retained a \texttt{STOP} outcome because the registered \texttt{max\_completion\_tokens} field had no compatible direct OpenAI endpoint; it returned zero model responses. A new frozen revision changed only that interface field to \texttt{max\_tokens} and preserved the failed pilot as a separate result.
+
+The revised family-balanced pilot used 12 public-development instances and required zero transport errors plus at least 10 parseable decisions for \texttt{GO}. All 12 passed, triggering a fresh pass over the full 100 public-development instances. This extension is descriptive post-protocol evidence, distinct from the preregistered hidden study.
 
 \section{Results}
 
@@ -231,6 +237,12 @@ Across all four runs, 108 of 160 decisions are parseable and every one selects \
 
 Post-gate action and pair accuracy are 1.0 wherever the response is parseable. These conditional scores quantify deterministic application of the benchmark policy after generation.
 
+\subsection{Post-protocol GPT-5.4 follow-up}
+
+The revised pilot returns 12/12 parseable decisions and satisfies its prespecified continuation gate. On the full public-development split, GPT-5.4 returns 99 parseable decisions from 100, for decision coverage .99; 49 of 50 pairs are complete, for pair coverage .98. All 99 match the policy oracle, with 50 \allow{}, 45 \hold{}, 2 \demote{}, and 2 \escalate{} decisions. Raw pair accuracy and decision-flip rate are 1.0 over all 49 covered pairs. Raw FPR is 0/49 and raw VPR is 50/50, and every covered raw action equals its post-gate action.
+
+The remaining response reaches the 3,072-token ceiling with reasoning tokens and returns no final response text. All pilot and full requests route to the registered OpenAI upstream. These results provide descriptive public-development evidence from one post-protocol GPT-5.4 pass.
+
 \subsection{What the gate changes}
 
 In every gate-arm run with nonzero coverage, every parseable raw decision selects \allow{}. The gate catches every false promotion among those decisions, and the false-block rate is 0. Effective FPR is 0 and effective VPR is 1 on covered decisions. Table~\ref{tab:gate-results} reports coverage next to these numbers.
@@ -252,11 +264,6 @@ Qwen3-1.7B & .217--.483 & 1.00 & 0.00 & 1.00 & 0.00 \\
 
 Complete-pair coverage in the gate arm ranges from 7.3--35.3\% for Qwen3-0.6B and 10.0--38.0\% for Qwen3-1.7B. The gate applies the same fixed policy used to define the benchmark labels. Its conditional numbers confirm implementation--policy agreement on covered cases. End-to-end behavior also includes decision coverage and raw selectivity, both reported above.
 
-\subsection{Matched comparisons}
-
-The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Most hosted jobs recorded Python 3.11.15, while three recorded Python 3.11.16. Patch-version identity yields nine groups from the intended six model--seed groups, and three groups contain all four arms. The analysis retains the preregistered identity grouping. Exact McNemar/Holm comparisons are available in groups containing the required arms. Missing comparisons reflect runtime-identity fragmentation.
-
-
 \section{Discussion}
 
 \subsection{Main interpretation}
@@ -267,6 +274,8 @@ The deterministic gate provides an engineering safeguard. On parseable cases it 
 
 The public formatting-control pilot adds a direct interface comparison. Schema-constrained decoding makes nearly all responses usable, while the raw action remains \allow{} and the controlled-pair decision-change rate remains zero. The measured scope covers two frozen small models, public controlled pairs, and one seed.
 
+The GPT-5.4 follow-up changes the interpretation. Under the same public-development prompt and fixed policy, a stronger API-hosted model reaches near-complete coverage and perfect conditional action and pair accuracy. The benchmark therefore separates evidence-sensitive behavior from the uniform \allow{} strategy observed in the two small Qwen3 models. Its public, post-protocol scope limits the result to descriptive external-validity evidence.
+
 \subsection{Implications for system design}
 
 Reliable claim-state decisions require structured output and evidence-sensitive action selection. Systems may also add explicit deterministic enforcement for invalid promotions. The present experiments measure structured-output coverage, raw selectivity, and gate behavior. Reporting coverage alongside gate performance supports evaluation of the whole system.
@@ -274,10 +283,10 @@ Reliable claim-state decisions require structured output and evidence-sensitive 
 \section{Limitations and Threats to Validity}
 
 \paragraph{Model and dataset scope.}
-Version~1 focuses on mathematical-research evidence states, synthetic controlled pairs, and Qwen3-0.6B and Qwen3-1.7B Q8\_0. Naturalistic generalization and results from larger or API-hosted models remain open empirical extensions.
+Version~1 focuses on mathematical-research evidence states, synthetic controlled pairs, and Qwen3-0.6B and Qwen3-1.7B Q8\_0. The GPT-5.4 extension covers public development data, one API-hosted model, one pass, and a protocol revised after transport availability was observed. Naturalistic generalization, independent frontier-model replications, and held-out larger-model results remain open empirical extensions.
 
 \paragraph{Output-format failures.}
-The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. The post-v1 public pilot retains raw text but covers the same two models, public data, and one seed. Gate metrics are conditional on covered decisions or complete covered pairs; end-to-end reliability also depends on coverage.
+The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. The post-v1 public pilot retains raw text but covers the same two models, public data, and one seed. The GPT-5.4 follow-up reaches 99\% coverage; its sole missing final decision exhausts the registered output ceiling. Gate metrics are conditional on covered decisions or complete covered pairs; end-to-end reliability also depends on coverage.
 
 \paragraph{Gate interpretation and runtime variation.}
 The gate-arm prompt discloses enforcement, so raw between-arm differences include that prompt change. The within-arm raw-to-final comparison isolates the deterministic transformation. Three runs recorded Python 3.11.16 alongside the predominant Python 3.11.15 environment, splitting three intended matched groups; the analysis retains the preregistered identity grouping.
@@ -291,6 +300,8 @@ The primary hidden inference comes from workflow run \texttt{32255636879}; the h
 
 The post-v1 public interface pilot comes from workflow run \texttt{32291482079}. An artifact-only recovery downloaded both model artifacts, required the complete 160-decision matrix, recomputed the aggregate twice, and obtained identical bytes. Its public aggregate has SHA-256 \texttt{83dbee49...25c0b264e}; it contains metrics and run hashes, while raw response text stays in the source artifacts.
 
+The GPT-5.4 follow-up preserves the first transport-only \texttt{STOP}, the interface-revision plan, and the one-pass pilot and full records as separate artifacts. Validation binds both runs to the frozen prompt packet, requires the registered OpenAI upstream, checks all request and final-response hashes, and recomputes the reported metrics and token-derived cost. The committed compact summary omits raw response text.
+
 The raw hidden seed remains in GitHub Actions secret storage. Future changes to labels, policy rules, prompts, controlled factors, or hidden-test bytes create a new benchmark version.
 
 \section{AI Assistance Disclosure}
@@ -299,7 +310,7 @@ Generative AI tools were used as assistants during literature search, research p
 
 \section{Conclusion}
 
-\cpb measures claim-state transition behavior beyond answer accuracy: valid evidence can still support an assigned status that exceeds its registered scope. In the hidden v1 study, the tested Qwen3 models often fail to return a valid structured decision, and every parseable raw decision selects \allow{}. In the post-v1 public pilot, constraining the output schema recovers nearly complete coverage while all constrained parseable decisions remain \allow{}, with zero raw pair accuracy and zero decision flips. A deterministic gate applies the fixed policy and prevents invalid promotion on covered cases; raw model decisions remain unchanged. Research-agent evaluations should report structured-output coverage, evidence-sensitive model behavior, and deterministic safeguards as separate quantities.
+\cpb measures claim-state transition behavior beyond answer accuracy: valid evidence can still support an assigned status that exceeds its registered scope. In the hidden v1 study, the tested Qwen3 models often fail to return a valid structured decision, and every parseable raw decision selects \allow{}. In the post-v1 public pilot, constraining the output schema recovers nearly complete coverage while all constrained parseable decisions remain \allow{}, with zero raw pair accuracy and zero decision flips. In a separately frozen public-development follow-up, GPT-5.4 produces 99/99 correct covered decisions and 49/49 correct covered pairs. A deterministic gate applies the fixed policy and prevents invalid promotion on covered small-model cases. Research-agent evaluations should report structured-output coverage, evidence-sensitive model behavior, and deterministic safeguards as separate quantities.
 
 \bibliographystyle{plain}
 \bibliography{references}

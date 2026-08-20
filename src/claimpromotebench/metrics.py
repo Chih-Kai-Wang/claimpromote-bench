@@ -98,7 +98,7 @@ def _precision_recall(records: list[dict[str, Any]], total: int) -> dict[str, An
     average_precision = area if positives else None
     lift = (
         average_precision / prevalence
-        if average_precision is not None and prevalence not in {None, 0.0}
+        if average_precision is not None and prevalence is not None and prevalence != 0.0
         else None
     )
     return {

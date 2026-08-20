@@ -64,6 +64,12 @@ FORBIDDEN_TEXT = {
     "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
     "aa5268dcde2aa44f8eabf0246631efbca27de7e5",
     "e2b09f30b0573cf7bcb244eef1917691755f2877",
+    "3634ce85785e9b516abc519711fff12388307331",
+    "8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a",
+    "ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355",
+    "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7",
+    "41480fba50bccfb955007a487dd0370f23daa876e82cd55a8d6601d0df64a9c8",
+    "f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4",
 }
 
 Json = dict[str, Any]
@@ -206,6 +212,57 @@ def anonymize_v2_results(source: Json) -> Json:
     return cleaned
 
 
+def anonymize_stronger_results(source: Json) -> Json:
+    pilot = source.get("pilot")
+    full = source.get("full")
+    if not isinstance(pilot, dict) or not isinstance(full, dict):
+        fail("unexpected GPT-5.4 result structure")
+    pilot_keys = (
+        "records",
+        "parseable_decisions",
+        "transport_errors",
+        "gate",
+        "raw_action_accuracy",
+        "raw_pair_accuracy",
+        "raw_flip_rate",
+        "routed_provider_values",
+        "model_returned_values",
+    )
+    full_keys = (
+        "records",
+        "parseable_decisions",
+        "decision_coverage",
+        "complete_pairs",
+        "pair_coverage",
+        "raw_correct_decisions",
+        "raw_action_accuracy",
+        "raw_correct_pairs",
+        "raw_pair_accuracy",
+        "raw_flip_rate",
+        "false_promotions",
+        "invalid_promotion_trials",
+        "raw_false_promotion_rate",
+        "valid_promotions",
+        "valid_promotion_trials",
+        "raw_valid_promotion_rate",
+        "status_counts",
+        "raw_action_distribution",
+        "postgate_action_distribution",
+        "single_nonparseable_case",
+        "routed_provider_values",
+        "model_returned_values",
+    )
+    return {
+        "schema_version": "1.0.0-review",
+        "study_kind": "POST_PROTOCOL_GPT54_PUBLIC_DEVELOPMENT_FOLLOWUP",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "interpretation_boundary": source.get("interpretation_boundary"),
+        "pilot": {key: pilot[key] for key in pilot_keys},
+        "full": {key: full[key] for key in full_keys},
+        "raw_prompts_or_responses_in_summary": False,
+    }
+
+
 def minimal_pyproject() -> str:
     return """[build-system]
 requires = ["setuptools>=75", "wheel"]
@@ -285,6 +342,9 @@ The private hidden dataset and its raw source artifacts are not included in this
 bundle. `results/v1-paper-results.json` is a compact per-run summary suitable for checking the
 reported matrix totals, conditional rates, and coverage ranges. The post-v1 public pilot aggregate
 contains public pair/factor metrics but omits public provenance identifiers and raw response text.
+The GPT-5.4 public-development follow-up appears as a separate compact aggregate with decision and
+pair counts, action distribution, coverage, and the single length-limited response; public
+provenance identifiers and raw response text remain excluded.
 
 Post-gate correctness applies the same fixed policy as the benchmark oracle. It must not be
 interpreted as model learning or independent prediction accuracy.
@@ -306,6 +366,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 V1 = ROOT / "results" / "v1-paper-results.json"
 V2 = ROOT / "results" / "v2-public-pilot-study.json"
+V3 = ROOT / "results" / "v2-gpt54-public-dev-followup.json"
 MODELS = ("0.6B", "1.7B")
 ARMS = ("narrative", "ledger", "ledger_verifier", "ledger_verifier_gate")
 SEEDS = (104729, 130363, 169087)
@@ -433,10 +494,53 @@ def validate_v2(value: dict[str, Any]) -> None:
         fail("v2 constrained headline counts changed")
 
 
+def validate_v3(value: dict[str, Any]) -> None:
+    pilot = value.get("pilot")
+    full = value.get("full")
+    if not isinstance(pilot, dict) or not isinstance(full, dict):
+        fail("GPT-5.4 follow-up summary is malformed")
+    if (pilot.get("records"), pilot.get("parseable_decisions"), pilot.get("gate")) != (
+        12,
+        12,
+        "GO",
+    ):
+        fail("GPT-5.4 pilot headline counts changed")
+    expected_full = {
+        "records": 100,
+        "parseable_decisions": 99,
+        "complete_pairs": 49,
+        "raw_correct_decisions": 99,
+        "raw_correct_pairs": 49,
+        "false_promotions": 0,
+        "invalid_promotion_trials": 49,
+        "valid_promotions": 50,
+        "valid_promotion_trials": 50,
+    }
+    for key, expected in expected_full.items():
+        if full.get(key) != expected:
+            fail(f"GPT-5.4 full result changed: {key}")
+    close(full.get("decision_coverage"), 0.99, "GPT-5.4 decision coverage")
+    close(full.get("pair_coverage"), 0.98, "GPT-5.4 pair coverage")
+    for key in ("raw_action_accuracy", "raw_pair_accuracy", "raw_flip_rate"):
+        close(full.get(key), 1.0, f"GPT-5.4 {key}")
+    if full.get("status_counts") != {"OK": 99, "SCHEMA_ERROR": 1}:
+        fail("GPT-5.4 status counts changed")
+    if full.get("raw_action_distribution") != {
+        "ALLOW": 50,
+        "HOLD": 45,
+        "DEMOTE": 2,
+        "ESCALATE": 2,
+    }:
+        fail("GPT-5.4 action distribution changed")
+    if full.get("routed_provider_values") != ["OpenAI"]:
+        fail("GPT-5.4 routed provider changed")
+
+
 def main() -> int:
     validate_v1(load(V1))
     validate_v2(load(V2))
-    print("review-results: PASS (v1 7,200 decisions; v2 160 decisions)")
+    validate_v3(load(V3))
+    print("review-results: PASS (v1 7,200; v2 160; GPT-5.4 100 decisions)")
     return 0
 
 
@@ -602,6 +706,7 @@ def write_manifest(bundle: Path) -> None:
             "public_repository_identity_included": False,
             "v1_compact_result_summary_included": True,
             "v2_public_pilot_summary_included": True,
+            "gpt54_public_development_summary_included": True,
         },
     }
     (bundle / "MANIFEST.json").write_text(
@@ -646,12 +751,21 @@ def build(destination: Path) -> None:
     v2 = anonymize_v2_results(
         load_object(ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json")
     )
+    v3 = anonymize_stronger_results(
+        load_object(
+            ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
+        )
+    )
     (destination / "results" / "v1-paper-results.json").write_text(
         json.dumps(v1, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     (destination / "results" / "v2-public-pilot-study.json").write_text(
         json.dumps(v2, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (destination / "results" / "v2-gpt54-public-dev-followup.json").write_text(
+        json.dumps(v3, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
 

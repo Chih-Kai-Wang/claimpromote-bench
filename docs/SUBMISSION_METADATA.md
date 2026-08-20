@@ -16,7 +16,7 @@ ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions
 ## ICLR 2027 abstract
 
 ```text
-AI research agents may have valid evidence and still assign a claim status beyond the registered support. We study whether a requested status change satisfies a fixed policy given a claim, its evidence, and its current status. We introduce ClaimPromoteBench, a controlled benchmark with 200 pairs over 20 policy factors, including a preregistered 150-pair hidden test. Numerical and formal cases connect to executable artifacts, and the hidden set and exact prompts were committed before scored inference. The primary study contains 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three seeds. Among these outputs, 5,327 (73.99%) receive FORMAT_ERROR, while all 1,873 parseable raw decisions select ALLOW. A post-v1 public pilot compares free and JSON-schema-constrained decoding under identical prompts. Constraints raise coverage from 75% to 100% for Qwen3-0.6B and from 0% to 95% for Qwen3-1.7B; all 78 constrained parseable decisions select ALLOW, and raw pair accuracy and flip rate remain zero over 38 complete pairs. A deterministic gate applies the benchmark policy to covered cases and blocks false promotion. We report structured-output coverage, raw evidence sensitivity, and deterministic policy execution as separate quantities.
+AI research agents may have valid evidence yet assign a claim status beyond its registered support. We study whether a requested status change satisfies a fixed policy given a claim, evidence, and current state. We introduce ClaimPromoteBench, a controlled benchmark with 200 pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. The primary study evaluates 7,200 decisions from two Qwen3 models, four intervention arms, and three seeds: 5,327 (73.99%) receive FORMAT_ERROR, and all 1,873 parseable raw decisions select ALLOW. A post-v1 public formatting control raises constrained coverage from 75% to 100% for Qwen3-0.6B and from 0% to 95% for Qwen3-1.7B; all 78 constrained parseable decisions select ALLOW, and raw pair accuracy and flip rate remain zero over 38 complete pairs. A separately frozen post-protocol GPT-5.4 public-development follow-up yields 99 parseable decisions from 100; all 99 match the policy oracle, and all 49 covered pairs change correctly with the decisive evidence. A deterministic gate also enforces the policy on covered cases. We report output coverage, evidence sensitivity, and deterministic execution separately.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-Schema constraints restore usable outputs for two small Qwen3 models but not evidence-sensitive decisions: every parseable action remains ALLOW, while a separate deterministic gate enforces the fixed benchmark policy on covered cases.
+Schema constraints restore usable outputs for two small Qwen3 models while their actions remain uniformly ALLOW; a separately frozen GPT-5.4 public-development follow-up reaches 99% coverage and perfect conditional pair accuracy, with deterministic gate behavior reported separately.
 ```
 
 ## Main empirical findings
@@ -84,6 +84,10 @@ Schema constraints restore usable outputs for two small Qwen3 models but not evi
 - constrained complete pairs: 38 / 40;
 - constrained raw pair accuracy: 0;
 - constrained raw flip rate: 0;
+- post-protocol GPT-5.4 full pass: 99 / 100 parseable decisions and 49 / 50 complete pairs;
+- GPT-5.4 covered decision accuracy: 99 / 99;
+- GPT-5.4 covered pair accuracy and raw flip rate: 49 / 49 and 1.0;
+- GPT-5.4 raw false promotions: 0 / 49;
 - deterministic post-gate correctness measures execution of the fixed benchmark policy.
 
 ## Data and code availability
@@ -103,7 +107,7 @@ Code, public benchmark data, compact v1 and v2 result summaries, validation work
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The post-v1 public pilot retained raw responses, verified identical prompts across decoding conditions, and was recomputed twice from four immutable source runs with byte-identical aggregate output. Paper-facing values are checked against machine-readable v1 and v2 summaries in CI.
+The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The post-v1 public pilot retained raw responses, verified identical prompts across decoding conditions, and was recomputed twice from four immutable source runs with byte-identical aggregate output. The separately frozen GPT-5.4 follow-up binds its pilot and full pass to the public prompt packet, registered OpenAI route, request and response hashes, and token-derived costs. Paper-facing values are checked against machine-readable summaries in CI.
 ```
 
 ## AI-use disclosure summary

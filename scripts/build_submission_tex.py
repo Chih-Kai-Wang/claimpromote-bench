@@ -50,6 +50,12 @@ publishes a public-safe aggregate produced twice from the same immutable four-ru
 free and constrained conditions have identical prompts and differ only in the registered response
 format. The anonymous submission uses role descriptions for the source run and aggregate.
 
+The separately frozen GPT-5.4 public-development follow-up preserves its initial transport-only
+STOP and the revised interface plan as distinct records. Its validated revised pilot and full pass
+are bound to the frozen public prompt packet, direct OpenAI routing, request and response hashes,
+and token-derived costs. The anonymous review bundle contains a compact aggregate with the exact
+paper-facing metrics while omitting raw response text and public provenance identifiers.
+
 The raw hidden seed remains in secret storage. Future changes to labels, policy rules, prompts,
 controlled factors, or hidden-test bytes create a new benchmark version.
 
@@ -64,6 +70,12 @@ ICLR_PUBLIC_IDENTIFIERS = (
     "e2b09f30",
     "3eb5b534",
     "83dbee49",
+    "3634ce85",
+    "8dd8d488",
+    "ba6ba305",
+    "0054a4d7",
+    "41480fba",
+    "f2bb2e97",
 )
 
 
