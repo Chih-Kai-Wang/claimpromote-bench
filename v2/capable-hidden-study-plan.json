@@ -55,6 +55,70 @@
     "unchanged": "Dataset, hidden labels, item selection, prompt text, decision schema, model list, no-request-retry rule, scoring, statistical tests, and interpretation boundaries are unchanged. The already qualified matched Flash lane is not rerun.",
     "failed_pilot_release_rule": "Release the failed transport-pilot records with the final reviewer evidence."
   },
+  "collection_amendment": {
+    "status": "FROZEN_AFTER_ACCURACY_BLIND_GATES_BEFORE_RESULT_UNBLINDING",
+    "created_utc": "2026-08-20T19:04:00Z",
+    "inspection_boundary": "Workflow state, parse-status counts, continuation-gate fields, and transport or parser error classes only. No pilot action, pilot accuracy, full-run action, full-run accuracy, gold comparison, or raw response text was inspected.",
+    "operational_rule": "Retain one canonical 12-item pilot for every registered lane. Require and retain a fresh 300-item full pass exactly for lanes whose canonical pilot gate is GO. A STOP lane has no full-run obligation and is not converted into a 300-item zero score.",
+    "legacy_field_note": "routing.required_full_lanes names the seven registered candidate lanes; the already frozen pilot.go_rule and design.full_phase_rule determine which candidates acquire a full-run obligation.",
+    "accepted_frozen_plan_commits": [
+      "119e475953e50218fc62abd2163eef04cbad4e23",
+      "b86ee1e1d28db8a390344d28582af88e26970560"
+    ],
+    "canonical_pilot_sources": {
+      "opencode-go-deepseek-v4-flash-matched": {
+        "github_run_id": 32403718086,
+        "attempt": 2,
+        "gate": "GO"
+      },
+      "opencode-go-qwen3.7-max": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "GO"
+      },
+      "opencode-go-glm-5.2": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "opencode-go-deepseek-v4-pro": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "bai-deepseek-v4-flash-primary": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "opencode-go-hy3": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "opencode-go-muse-spark-1.2-contributor": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      }
+    },
+    "canonical_full_sources_if_completed": {
+      "opencode-go-deepseek-v4-flash-matched": 32403718086,
+      "opencode-go-qwen3.7-max": 32405565039
+    },
+    "inference_status_at_freeze": {
+      "opencode-go-deepseek-v4-flash-matched": "FULL_COMPLETED_RESULTS_NOT_INSPECTED",
+      "opencode-go-qwen3.7-max": "FULL_IN_PROGRESS_RESULTS_NOT_INSPECTED",
+      "other_five_lanes": "STOP_NO_FULL_RUN"
+    },
+    "no_model_or_scoring_change": true
+  },
+  "account_execution_settings": {
+    "opencode_go_allow_training_eligible_models": true,
+    "opencode_go_enable_china_deployed_models": true,
+    "opencode_go_use_balance_after_subscription_limit": false,
+    "interpretation": "These are account-level access permissions at execution time, not a claim that every listed model trains on every request. Only synthetic benchmark material intended for reviewer release was sent."
+  },
   "design": {
     "analysis_split": "EXISTING_COMMITTED_V1_HIDDEN",
     "held_out_with_respect_to_new_models": true,

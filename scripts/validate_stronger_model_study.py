@@ -11,7 +11,7 @@ import sys
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -29,7 +29,7 @@ DEFAULT_PLAN = ROOT / "v2" / "stronger-model-study-plan.json"
 RUN_SCHEMA = ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json"
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     raise SystemExit(f"stronger-model-validation: {message}")
 
 
@@ -313,7 +313,7 @@ def validate_run(
     }
 
 
-def validate_frozen_commit(plan_path: Path, commit: str) -> None:
+def load_frozen_plan(plan_path: Path, commit: str) -> tuple[Json, bytes]:
     if len(commit) != 40 or any(character not in "0123456789abcdef" for character in commit):
         fail(f"run has an invalid frozen-plan commit: {commit}")
     try:
@@ -326,8 +326,15 @@ def validate_frozen_commit(plan_path: Path, commit: str) -> None:
         check=False,
         capture_output=True,
     )
-    if shown.returncode != 0 or shown.stdout != plan_path.read_bytes():
-        fail(f"run commit does not freeze the current plan bytes: {commit}")
+    if shown.returncode != 0:
+        fail(f"run commit does not contain the registered plan: {commit}")
+    try:
+        value = json.loads(shown.stdout)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        fail(f"run commit contains a malformed plan: {commit}: {exc}")
+    if not isinstance(value, dict):
+        fail(f"run commit plan is not an object: {commit}")
+    return value, shown.stdout
 
 
 def validate_full_run_gates(run_reports: list[Json]) -> None:
@@ -394,12 +401,48 @@ def main() -> int:
     for lane_id, bound in conservative_bounds.items():
         if bound > float(lanes[lane_id]["spend_cap_usd"]):
             fail(f"conservative pilot-plus-full bound exceeds lane cap: {lane_id}")
-    reports = [
-        validate_run(path.resolve(), plan, packet, packet_by_id, lanes, formal_ids)
-        for path in args.run
-    ]
-    for commit in {str(report["frozen_plan_commit"]) for report in reports}:
-        validate_frozen_commit(plan_path, commit)
+
+    run_commits: list[tuple[Path, str]] = []
+    for path in args.run:
+        resolved = path.resolve()
+        rows = load_jsonl(resolved)
+        commits = {str(row.get("frozen_plan_commit")) for row in rows}
+        if len(commits) != 1:
+            fail(f"run mixes frozen-plan commits: {path}")
+        run_commits.append((resolved, next(iter(commits))))
+
+    accepted_amendment_commits = {
+        str(value)
+        for value in plan.get("collection_amendment", {}).get("accepted_frozen_plan_commits", [])
+    }
+    frozen_contexts: dict[str, tuple[Json, dict[str, Json], set[str], dict[str, Json]]] = {}
+    for commit in {commit for _, commit in run_commits}:
+        frozen_plan, frozen_bytes = load_frozen_plan(plan_path, commit)
+        if frozen_bytes != plan_path.read_bytes() and commit not in accepted_amendment_commits:
+            fail(f"historical frozen plan is not registered by the collection amendment: {commit}")
+        frozen_lanes, frozen_formal_ids = validate_plan(frozen_plan)
+        frozen_packet_by_id = validate_packet(packet, frozen_plan, dataset_dir)
+        frozen_contexts[commit] = (
+            frozen_plan,
+            frozen_lanes,
+            frozen_formal_ids,
+            frozen_packet_by_id,
+        )
+
+    reports: list[Json] = []
+    for path, commit in run_commits:
+        frozen_plan, frozen_lanes, frozen_formal_ids, frozen_packet_by_id = frozen_contexts[commit]
+        report = validate_run(
+            path,
+            frozen_plan,
+            packet,
+            frozen_packet_by_id,
+            frozen_lanes,
+            frozen_formal_ids,
+        )
+        if str(report["lane_id"]) not in formal_ids:
+            fail(f"historical run lane is absent from the current collection plan: {path}")
+        reports.append(report)
     validate_full_run_gates(reports)
     validate_cumulative_costs(reports, lanes, formal_ids)
     print(
@@ -414,6 +457,7 @@ def main() -> int:
                     float(lanes[lane_id]["spend_cap_usd"]) for lane_id in formal_ids
                 ),
                 "conservative_pilot_plus_full_bounds_usd": conservative_bounds,
+                "validated_frozen_plan_commits": sorted(frozen_contexts),
                 "validated_runs": [
                     {
                         "lane_id": report["lane_id"],
