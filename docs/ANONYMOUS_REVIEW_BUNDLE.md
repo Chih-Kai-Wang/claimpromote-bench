@@ -4,7 +4,7 @@
 
 The `anonymous review bundle` workflow builds a double-blind supplementary artifact from public
 ClaimPromoteBench material. It is meant to let reviewers inspect and rerun the public benchmark,
-selected validators, compact paper-result summaries, and public Lean evidence without revealing the
+selected validators, the public pair-contract audit, compact paper-result summaries, and public Lean evidence without revealing the
 author or the public repository during review.
 
 The bundle is supplementary validation evidence. It is not the private hidden v1 dataset, does not
@@ -34,7 +34,7 @@ The builder excludes:
 - author name, institution, username, email, and public repository URL;
 - v1/v2 public workflow IDs, trigger commits, and searchable public aggregate hashes;
 - the private hidden v1 dataset, hidden seed, hidden prompts, and hidden raw source artifacts;
-- raw human-review submissions and reviewer-identifying material;
+- any human-subject or annotation-study records;
 - manuscript source and public project-status documents that could reveal identity;
 - generated caches and build artifacts.
 
@@ -64,7 +64,7 @@ repository:
 
 1. installs the staged Python package in editable mode;
 2. validates the public alpha dataset and oracle labels;
-3. reruns shortcut, metamorphic-invariance, and executable-fixture checks;
+3. reruns the public pair-contract, shortcut, metamorphic-invariance, and executable-fixture checks;
 4. validates the anonymized v1 and v2 result summaries;
 5. validates the naturalistic candidate and case-boundary rules;
 6. runs the selected v2 test suite;
@@ -106,7 +106,7 @@ show that:
 - the hidden model inference was rerun;
 - the private hidden dataset is publicly available;
 - deterministic gate correctness is model reasoning;
-- the human audit passed;
+- the author-defined policy has been independently validated as universal scientific judgment;
 - naturalistic external validation is complete;
 - the author identity may be revealed during double-blind review.
 

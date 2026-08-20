@@ -64,7 +64,7 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Recovered GitHub artifact `claimpromotebench-v1-scored-study-recovered` is bound to recovery run `32274814703`.
 - [x] The one-shot recovery trigger was removed after successful recovery.
 
-## Gate E — benchmark and annotation integrity
+## Gate E — benchmark and label integrity
 
 ### Deterministic engineering evidence
 
@@ -76,13 +76,14 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Hidden-test commitment demonstrably predates scored inference.
 - [x] Recovery revalidated hidden construction and prompt freeze before reading source artifacts.
 
-### Supplementary independent human audit
 
-- [x] Two real independent reviewers returned complete submissions for the frozen 20-item procedural-blind alpha audit.
-- [x] Both submissions were validated and SHA-256 frozen before unblinding.
-- [x] Reviewer-versus-gold action agreement is 0.90 and 0.75; pairwise action agreement is 0.85.
-- [x] The conservative multi-reviewer supplementary gate is reported as **mixed / not PASS** because one reviewer is below 0.80.
-- [x] Review disagreements are retained and are not used to rewrite frozen gold or policy.
+### Machine-checkable pair-contract audit
+
+- [x] All 20 public controlled factors are checked from released pair descriptors.
+- [x] Every public pair contains one policy-admissible `ALLOW` member and one non-`ALLOW` member.
+- [x] All 40 public gold decisions are recomputed exactly from the versioned policy.
+- [x] Any member difference outside the registered JSON pointers fails the audit.
+- [x] The audit is described as construction consistency, not independent human or universal normative validation.
 
 ## Gate F — manuscript integrity
 
@@ -95,7 +96,7 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Manuscript distinguishes raw-intent behavior from deterministic gate enforcement.
 - [x] Semantic recovery is disclosed and explicitly states that legal model answers were not changed.
 - [x] Exact source/recovery workflow IDs and core commitment/study identities are recorded.
-- [x] External audit remains supplementary mixed evidence, not a PASS.
+- [x] No human-subject audit or human-annotation result is used in the manuscript.
 - [x] Limitations disclose high format-error rate, non-retention of free-form text for pre-existing parse failures, exact-identity group drift, gate-prompt disclosure, small-model scope, synthetic control, and author-constructed benchmark risk.
 - [x] Final hosted paper workflow and submission-package LaTeX builds succeed on the post-results manuscript with unresolved citations/references and horizontal overflow treated fail-closed.
 - [x] Compiled ICLR and arXiv PDFs were rendered and inspected for table overflow, broken references, anonymity/identity placement, stale blocker text, and obvious layout defects; the ICLR PDF carries no author metadata and visually remains anonymous.

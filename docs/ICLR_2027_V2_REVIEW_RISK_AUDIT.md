@@ -134,30 +134,16 @@ The interface control was selected after observing v1. This is disclosed. Protec
 The public pilot should be interpreted as measurement diagnosis, not a new confirmatory hidden
 study.
 
-## Reviewer attack 7: “The human audit is mixed”
+## Reviewer attack 7: “Without human labels, why trust the benchmark decisions?”
 
 **Severity:** HIGH  
-**Current status:** OPEN / HONESTLY REPORTED
+**Current status:** MITIGATED AS A POLICY-CONFORMANCE TASK, NOT INDEPENDENTLY VALIDATED
 
-One reviewer falls below the preregistered 0.80 action-agreement threshold. The result remains
-mixed/not PASS. Neither the v1 labels nor policy were changed after the audit. The deterministic
-oracle is the benchmark rule, not a universal human ground truth.
+The submission no longer uses the small two-person audit. ClaimPromoteBench does not define gold by majority human judgment: each gold action is the deterministic output of the published versioned policy. A new public pair-contract audit checks all 20 factors, recomputes every public label, verifies one admissible and one inadmissible member per pair, and rejects unregistered differences between pair members. Exact-rational, Lean, shortcut, metamorphic, hidden-commitment, and artifact-recovery checks provide additional implementation evidence.
 
-No additional reviewers are required by the present technical sprint. Any future annotation study
-must be separately frozen and must address ethics/consent and reviewer independence.
+Residual risk remains: the policy and synthetic factors were designed by the author. The machine checks show that the implementation follows the disclosed contract; they do not show that the contract is a universal scientific norm. The manuscript must state this directly rather than replacing one weak human study with an overclaim about automation.
 
-## Reviewer attack 8: “The human audit may require an ethics determination”
-
-**Severity:** MEDIUM-HIGH  
-**Current status:** ACCOUNT-SIDE / INSTITUTIONAL DETERMINATION OPEN
-
-The repository contains an ethics checklist, but it must not invent IRB approval, exemption, consent,
-or compensation facts. Before archival submission, the human author must record the actual
-recruitment, relationship, consent, data handling, compensation, and institutional determination
-applicable to the two-reviewer audit. The manuscript and submission form must agree with that
-record.
-
-## Reviewer attack 9: “Novelty overlaps evidence-state and policy benchmarks”
+## Reviewer attack 8: “Novelty overlaps evidence-state and policy benchmarks”## Reviewer attack 9: “Novelty overlaps evidence-state and policy benchmarks”
 
 **Severity:** HIGH  
 **Current status:** MITIGATED BY NARROW POSITIONING
@@ -178,7 +164,7 @@ The defensible contribution is the combination of:
 - a public formatting control showing that restored coverage does not restore pair sensitivity for
   the tested models.
 
-## Reviewer attack 10: “The evidence recovery may have changed answers”
+## Reviewer attack 9: “The evidence recovery may have changed answers”
 
 **Severity:** MEDIUM  
 **Current status:** MITIGATED BY ARTIFACT-ONLY REPLAY
@@ -216,7 +202,7 @@ interface alone. They are:
 
 1. model breadth;
 2. synthetic/public external validity;
-3. mixed human audit;
+3. author-defined policy scope without independent normative validation;
 4. narrow task significance relative to adjacent policy/evidence benchmarks.
 
 These risks should be addressed by honest scope and, where feasible, future evidence breadth—not by

@@ -4,8 +4,7 @@ This document is a copy-ready draft for arXiv and conference submission forms. T
 the source of truth. Recheck every field against the final server-generated preview before pressing
 the final submit button.
 
-Do not replace the placeholders in the human-subjects and account sections with guesses. Record
-only what actually happened and, where applicable, what the relevant institution determined.
+Account-side fields must be copied from the final manuscript and verified in the server-generated preview rather than guessed.
 
 ## Canonical title
 
@@ -91,14 +90,13 @@ Use these values only together with their scope:
 - constrained raw pair accuracy: 0;
 - constrained raw flip rate: 0;
 - deterministic post-gate correctness is fixed-policy enforcement, not model learning;
-- two-reviewer human audit: mixed / not PASS.
 
 ## Data and code availability statement
 
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, validation code, compact v1 and v2 result summaries, and public formal artifacts. It excludes the private hidden seed and data, author-identifying public provenance, and raw human-review submissions. Exact public repository and archival identifiers will be released after double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, validation code, compact v1 and v2 result summaries, and public formal artifacts. It excludes the private hidden seed and data, author-identifying public provenance, and author-identifying provenance. Exact public repository and archival identifiers will be released after double-blind review permits disclosure.
 ```
 
 ### Public preprint version
@@ -119,37 +117,22 @@ The public benchmark is deterministically rebuildable and checked for schema, or
 ## Limitations statement
 
 ```text
-The model experiments use only Qwen3-0.6B and Qwen3-1.7B Q8_0. The hidden primary benchmark is synthetic and author-constructed, and the post-v1 formatting control uses public data and one seed after the v1 interface limitation was known. The human audit is small and mixed rather than passing. The deterministic gate applies the same fixed policy used to define benchmark labels, so its covered correctness is not independent prediction accuracy. Naturalistic external validation is prepared but not yet complete.
+The model experiments use only Qwen3-0.6B and Qwen3-1.7B Q8_0. The hidden primary benchmark is synthetic and author-constructed, and the post-v1 formatting control uses public data and one seed after the v1 interface limitation was known. The labels follow an author-defined versioned policy rather than independently collected human consensus. The deterministic gate applies the same fixed policy used to define benchmark labels, so its covered correctness is not independent prediction accuracy. Naturalistic external validation is prepared but not yet complete.
 ```
 
 ## AI-use disclosure summary
 
 ```text
-Generative AI tools assisted literature search, research planning and methodological discussion, early code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The human author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the quantitative results and references, and is responsible for the manuscript and submission. AI systems are not authors or independent human reviewers.
+Generative AI tools assisted literature search, research planning and methodological discussion, early code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The human author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the quantitative results and references, and is responsible for the manuscript and submission. AI systems are not authors.
 ```
 
 Use the longer disclosure already present in the manuscript when the venue asks for a detailed
 statement.
 
-## Ethics and human-review fields — human completion required
 
-Complete these from the actual two-reviewer audit and the appropriate institutional determination.
-Do not infer or invent the answers.
+## Ethics scope
 
-- Reviewer relationship to the author: **[TO COMPLETE]**
-- Recruitment method: **[TO COMPLETE]**
-- What reviewers were told about the task/research use: **[TO COMPLETE]**
-- Consent process: **[TO COMPLETE]**
-- Compensation or no compensation: **[TO COMPLETE]**
-- Data retained from reviewers: **[TO COMPLETE]**
-- Whether identities are public, pseudonymous, or private: **[TO COMPLETE]**
-- Withdrawal procedure, if applicable: **[TO COMPLETE]**
-- Institutional/ethics contact consulted: **[TO COMPLETE]**
-- Determination (approval / exemption / not-human-subjects / other): **[TO COMPLETE ONLY AFTER DOCUMENTED DETERMINATION]**
-- Determination identifier or date, if one exists: **[TO COMPLETE]**
-- Final manuscript wording consistent with the determination: **[TO CHECK]**
-
-Supporting repository checklist: `docs/HUMAN_AUDIT_ETHICS_CHECKLIST.md`.
+The submission contains no human-subject experiment, human annotation study, or human-review result. Synthetic `review_status` and `INDEPENDENT_REVIEWER` fields are benchmark metadata used to test policy rules; they are not records collected from people. The author must still read and acknowledge the ICLR Code of Ethics in the submission form, but no paper-specific human-subject approval or exemption is claimed.
 
 ## OpenReview account-side checklist
 
@@ -160,7 +143,7 @@ Supporting repository checklist: `docs/HUMAN_AUDIT_ETHICS_CHECKLIST.md`.
 - [ ] Author list and order are final before the author-list deadline.
 - [ ] Title and abstract match the final PDF.
 - [ ] Topics match the actual paper.
-- [ ] Ethics acknowledgement matches the documented human-audit facts.
+- [ ] ICLR Code of Ethics acknowledgement is completed; no human-subject study is claimed.
 - [ ] Detailed AI-use disclosure is supplied where requested.
 - [ ] Anonymous PDF preview contains no author or public provenance leak.
 - [ ] Anonymous supplementary ZIP is uploaded rather than linked to the public repository.

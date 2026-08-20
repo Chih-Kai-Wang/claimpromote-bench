@@ -24,7 +24,7 @@ def write(path: str, content: str) -> None:
 
 
 def sub_once(text: str, pattern: str, replacement: str, *, label: str) -> str:
-    updated, count = re.subn(pattern, replacement, text, count=1, flags=re.DOTALL)
+    updated, count = re.subn(pattern, lambda _match: replacement, text, count=1, flags=re.DOTALL)
     if count != 1:
         raise RuntimeError(f"expected one {label} replacement, found {count}")
     return updated
@@ -231,7 +231,10 @@ Residual risk remains: the policy and synthetic factors were designed by the aut
 def migrate_submission_gates() -> None:
     path = "technical-report/SUBMISSION_GATE.md"
     text = read(path)
-    text = text.replace("## Gate E — benchmark and annotation integrity", "## Gate E — benchmark and label integrity")
+    text = text.replace(
+        "## Gate E — benchmark and annotation integrity",
+        "## Gate E — benchmark and label integrity",
+    )
     text = sub_once(
         text,
         r"\n### Supplementary independent human audit\n.*?(?=\n## Gate F — manuscript integrity)",
@@ -310,7 +313,9 @@ def delete_human_study_material() -> None:
     ]
     for path in paths:
         remove_if_present(path)
-    remove_empty_parents("external-audit/v1/submissions/reviewer-01-submission.json", "external-audit")
+    remove_empty_parents(
+        "external-audit/v1/submissions/reviewer-01-submission.json", "external-audit"
+    )
     remove_empty_parents("reviews/README.md", ".")
 
 

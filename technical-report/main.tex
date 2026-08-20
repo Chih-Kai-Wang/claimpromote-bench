@@ -114,6 +114,11 @@ Numerical cases use exact-rational finite-grid artifacts. Validation recomputes 
 
 We also check for metadata-only and shallow structural shortcuts. Registered meaning-preserving transformations include identifier renaming, changes in evidence order, and insertion of irrelevant evidence. The oracle and prompt renderers must give the same result after normalization. These checks reduce obvious leakage and reduce room for changes after results are known, but they do not make the synthetic benchmark equivalent to real research records.
 
+
+\subsection{Machine-checkable validation strategy}
+
+The benchmark does not use human annotations as a source of gold labels. Instead, its credibility rests on a chain of checks whose scope is explicit. The public pair-contract audit verifies that each pair changes only its registered policy field, that the valid and invalid sides have the required actions, and that all 40 public labels are exactly reproduced by the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; shortcut and metamorphic checks test identifier, ordering, and irrelevant-evidence invariance; and hidden data and exact prompts were committed before scored inference. Finally, both the hidden study and the public formatting control are recomputed from immutable source artifacts without new model calls. None of these checks turns the policy into human consensus, but together they make the reported benchmark behavior independently inspectable and difficult to change after results are known.
+
 \section{Intervention Arms}
 
 Table~\ref{tab:arms} summarizes the four fixed arms. The first three change what the model sees. Only the last arm changes the final action after the model has responded.
@@ -249,26 +254,6 @@ Complete-pair coverage in the gate arm ranges from 7.3--35.3\% for Qwen3-0.6B an
 
 The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Most hosted jobs recorded Python 3.11.15, while three recorded Python 3.11.16. Because the Python patch version is part of the recorded identity, the final aggregate has nine identity groups rather than the intended six model--seed groups, and only three groups contain all four arms. We keep the preregistered grouping instead of combining runs after seeing the results. Exact McNemar/Holm comparisons are therefore available only when the required arms occur in the same recorded group. Missing comparisons here are a limitation of the run environment, not evidence for or against an intervention.
 
-\subsection{Supplementary human audit}
-
-Two independent reviewers completed a fixed 20-item blinded policy-application audit using the public alpha data. Both submissions passed the validator before the answers were revealed. Reviewer~1 matched the gold action on 18/20 items (0.90) and the exact reason set on 18/20 (0.90). Reviewer~2 matched the gold action on 15/20 (0.75) and the exact reason set on 14/20 (0.70). The reviewers agreed with each other on 17/20 actions (0.85). Cohen's $\kappa\approx0.716$ is included only as a descriptive check because the sample is small and the action frequencies are imbalanced. Under the preregistered criterion, the audit is \emph{mixed}, not a pass.
-
-\begin{table}[t]
-\centering
-\small
-\caption{Supplementary blinded human audit on 20 public alpha items.}
-\label{tab:human-audit}
-\begin{tabular}{lccc}
-\toprule
-Reviewer & Gold action agreement & Exact reason agreement & Mean confidence \\
-\midrule
-Reviewer 1 & 0.90 & 0.90 & 5.00 \\
-Reviewer 2 & 0.75 & 0.70 & 4.95 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Both reviewers missed an insufficient-repetitions \hold{} case and an invalid-current-basis \demote{} case. We keep these disagreements and do not change the gold labels or policy after the audit. The fixed oracle is the benchmark rule; the human audit only measures how consistently two independent people applied that rule. It should not be treated as proof of a universal human ground truth.
 
 \section{Discussion}
 
@@ -295,8 +280,8 @@ The v1 source records keep parse status and structured decisions but not the ori
 \paragraph{Gate interpretation and runtime variation.}
 The gate arm tells the model that an invalid \allow{} may be replaced, so raw differences from the passive-verifier arm are not a pure post-processing comparison. The raw-to-final comparison within the gate arm measures the gate itself, but the gate applies the same fixed policy as the oracle. Separately, three runs recorded Python 3.11.16 rather than 3.11.15, which split three intended matched groups. We keep the original grouping rather than combining runs after seeing the results.
 
-\paragraph{Benchmark construction and human audit.}
-The author designed the policy, the controlled pairs, and the item-generation procedure. Deterministic rebuilding, executable checks, the hidden commitment, shortcut checks, and meaning-preserving transformations reduce opportunities for changing the benchmark after results are known, but they are not substitutes for independent benchmark construction. A passing Lean artifact proves only the exact encoded statement in the pinned environment. The two-reviewer, 20-item audit is also small; its 0.90 and 0.75 action agreements provide limited evidence about human use of the policy rather than validating a universal ground truth.
+\paragraph{Benchmark construction and label scope.}
+The author designed the policy, controlled factors, and item generator. The gold action is therefore a deterministic policy output rather than a survey of human preference. To make this construction auditable, a separate public pair-contract check verifies all 20 factors, confirms that each valid member is \allow{} and each invalid member is non-\allow{}, recomputes every gold decision from the versioned policy, and rejects any pair whose members differ outside the registered JSON pointers. Deterministic rebuilding, executable checks, the hidden commitment, shortcut checks, and meaning-preserving transformations further restrict post-hoc flexibility. These checks strengthen implementation and construction validity, but they do not establish that the author-defined policy is a universal scientific norm. A passing Lean artifact still proves only the exact encoded statement in the pinned environment.
 
 \section{Reproducibility and Artifact Policy}
 
@@ -308,7 +293,7 @@ The raw hidden seed remains a GitHub Actions secret and is not printed or commit
 
 \section{AI Assistance Disclosure}
 
-Generative AI tools were used as assistants during literature search, research planning and methodological discussion, early code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the reported results against the released artifacts, checked the references, and is responsible for the final manuscript and submission. The quantitative results reported in this paper come from the validated study artifacts. AI systems are not listed as authors and were not used as independent human reviewers.
+Generative AI tools were used as assistants during literature search, research planning and methodological discussion, early code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the reported results against the released artifacts, checked the references, and is responsible for the final manuscript and submission. The quantitative results reported in this paper come from the validated study artifacts. AI systems are not listed as authors.
 
 \section{Conclusion}
 

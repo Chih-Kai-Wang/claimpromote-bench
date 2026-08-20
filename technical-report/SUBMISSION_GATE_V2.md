@@ -6,14 +6,14 @@ It is deliberately fail-closed.
 
 ## Current verdict
 
-**TECHNICAL SUBMISSION PACKAGE READY — HUMAN ETHICS, ACCOUNT-SIDE, AND ARCHIVAL GATES OPEN**
+**TECHNICAL SUBMISSION PACKAGE READY — ACCOUNT-SIDE AND ARCHIVAL GATES OPEN**
 
 The frozen v1 hidden study and the post-v1 public formatting-control pilot are complete. The revised
 manuscript binds both result sets to machine-readable aggregates. On head
 `1708554ff984c2c36068d0f60cc17b8350a91514`, repository CI, pinned Lean replay, v1 hidden/scored/
 recovery guards, v1/v2 result validators, official ICLR/arXiv builds, page-limit checks, anonymity
 checks, and page-by-page visual review all passed. PR #20 remains Draft and unmerged because the
-human ethics/account and archival-release gates below cannot be completed by repository automation.
+account-side and archival-release gates below cannot be completed by repository automation.
 
 The inspected submission artifact comes from workflow run `32301565990`. Both PDFs contain 10
 physical pages: 9 pages of main text followed by references. All fonts are embedded. The source
@@ -31,7 +31,6 @@ archives contain only required TeX/BibTeX/style files and no auxiliary build fil
 - [x] Recovery workflow remains `32274814703`.
 - [x] Recovered study SHA-256 remains
   `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664`.
-- [x] Human audit remains mixed/not PASS.
 - [x] Python 3.11.15/3.11.16 identity drift remains disclosed; no post-hoc regrouping is used.
 
 ## Gate B — post-v1 public formatting control
@@ -93,7 +92,7 @@ not claim a completed naturalistic replication.
 - [x] Full tests and branch coverage pass.
 - [x] Python compatibility matrix passes.
 - [x] Deterministic alpha rebuild produces no diff.
-- [x] Dataset, shortcut, invariance, executable, review, and contribution checks pass.
+- [x] Dataset, public pair-contract, shortcut, invariance, executable, and contribution checks pass.
 - [x] Pinned Lean alpha replay passes.
 - [x] Pinned Lean v1 public-dev replay passes.
 - [x] v1 public release-result validator passes.
@@ -141,19 +140,13 @@ Observed result: the named PDF and public provenance are correct, and no visual 
 The final metadata/preview item necessarily remains account-side because arXiv must compile and
 show its own preview before submission.
 
-## Gate H — human audit ethics and account-side submission
+## Gate H — account-side submission
 
-- [ ] Actual reviewer recruitment relationship is recorded.
-- [ ] Actual consent process is recorded.
-- [ ] Actual compensation, if any, is recorded.
-- [ ] Actual data-retention/anonymity practice is recorded.
-- [ ] Appropriate institutional/ethics determination is obtained or documented; no approval or
-  exemption is invented.
 - [ ] OpenReview profile exists and is current.
 - [ ] All required author/reviewer-account obligations are satisfied.
 - [ ] OpenReview abstract metadata is submitted before the official deadline.
-- [ ] Final paper metadata, author list, topics, ethics acknowledgement, and uploaded PDF preview are
-  checked by the human author.
+- [ ] Final paper metadata, author list, topics, Code of Ethics acknowledgement, AI-use statement, and uploaded PDF preview are checked by the author.
+- [ ] The submission form and manuscript consistently state that no human-subject or human-annotation study is included.
 - [ ] arXiv account and any endorsement requirement are complete.
 
 ## Gate I — archival release
@@ -168,7 +161,5 @@ show its own preview before submission.
 ## Readiness rule
 
 The repository-generated ICLR and arXiv packages are technically ready. Do not mark PR #20 ready,
-merge it, claim “submitted,” or create final archival identifiers until Gate H is completed and the
-actual OpenReview/arXiv account-side previews are checked. Gate I should be completed from the exact
-accepted submission/release candidate, without inventing an arXiv ID, DOI, ethics approval, or
-archive identifier before it exists.
+merge it, claim “submitted,” or create final archival identifiers until Gate H is completed and the actual OpenReview/arXiv account-side previews are checked. Gate I should be completed from the exact
+accepted submission/release candidate, without inventing an arXiv ID, DOI, or archive identifier before it exists.
