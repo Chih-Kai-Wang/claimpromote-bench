@@ -3,6 +3,10 @@ name: submission package
 on:
   pull_request:
     paths:
+      - "README.md"
+      - "CITATION.cff"
+      - "docs/SUBMISSION_METADATA.md"
+      - "docs/FREE_SUBMISSION_AND_PAGE_RULES.md"
       - "technical-report/**"
       - "release/v1-paper-results.json"
       - "v2/pilot-results/v2-public-pilot-study.json"

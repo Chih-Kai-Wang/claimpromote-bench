@@ -56,7 +56,9 @@ def patch_readme(bundle: Path) -> None:
     text = path.read_text(encoding="utf-8")
     text = text.replace(
         "hidden seed, raw human-review submission, or public workflow/provenance identifier.",
-        "hidden seed, human-subject study record, or public workflow/provenance identifier.",
+        "hidden seed, human-subject study record, or public workflow/provenance identifier.\n\n"
+        "Generated caches and unused human-review workflow modules are excluded; the included "
+        "source is distributed with its license.",
     )
     old = (
         "The checks rebuild and validate the public alpha benchmark, run "

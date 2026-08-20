@@ -24,6 +24,7 @@ The staged bundle contains:
   matrix, coverage changes, constrained parseable count, complete-pair count, and zero raw pair
   sensitivity;
 - a generated manifest binding every staged file to a SHA-256 digest;
+- the MIT license covering the included source;
 - a one-command public review check runner.
 
 ## Deliberately excluded material
@@ -35,6 +36,7 @@ The builder excludes:
 - v1/v2 public workflow IDs, trigger commits, and searchable public aggregate hashes;
 - the private hidden v1 dataset, hidden seed, hidden prompts, and hidden raw source artifacts;
 - any human-subject or annotation-study records;
+- unused human-review workflow modules;
 - manuscript source and public project-status documents that could reveal identity;
 - generated caches and build artifacts.
 
@@ -71,8 +73,10 @@ repository:
 7. builds the staged public Lean package;
 8. replays its declarations with `leanchecker`;
 9. executes the public formal fixtures;
-10. removes caches, rebuilds the bundle, and requires the manifest to be deterministic;
-11. creates a ZIP and SHA-256 sidecar.
+10. rebuilds a fresh bundle after validation and requires its manifest to be byte-identical;
+11. verifies that the fresh staging tree contains exactly the files and hashes in the manifest and
+    no cache, bytecode, or excluded workflow file;
+12. packages that fresh tree as a ZIP with a SHA-256 sidecar.
 
 ## Reviewer command
 

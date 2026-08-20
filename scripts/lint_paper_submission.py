@@ -14,6 +14,14 @@ BIB = ROOT / "technical-report" / "references.bib"
 RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
 V2_PILOT_SHA = "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
+README = ROOT / "README.md"
+CITATION = ROOT / "CITATION.cff"
+SUBMISSION_METADATA = ROOT / "docs" / "SUBMISSION_METADATA.md"
+PAGE_RULES = ROOT / "docs" / "FREE_SUBMISSION_AND_PAGE_RULES.md"
+CANONICAL_TITLE = (
+    "ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI "
+    "Research Agents"
+)
 
 
 def fail(message: str) -> None:
@@ -34,6 +42,90 @@ def load_object(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         fail(f"{label} must contain a JSON object")
     return value
+
+
+def normalize_space(value: str) -> str:
+    return " ".join(value.split())
+
+
+def manuscript_abstract_plain(tex: str) -> str:
+    match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL)
+    if not match:
+        fail("abstract not found")
+    value = match.group(1)
+    replacements = {
+        r"\cpb": "ClaimPromoteBench",
+        r"\allow{}": "ALLOW",
+        r"\hold{}": "HOLD",
+        r"\demote{}": "DEMOTE",
+        r"\escalate{}": "ESCALATE",
+        r"\%": "%",
+        r"\_": "_",
+    }
+    for old, new in replacements.items():
+        value = value.replace(old, new)
+    value = re.sub(r"\\texttt\{([^{}]*)\}", r"\1", value)
+    return normalize_space(value)
+
+
+def validate_submission_metadata(tex: str) -> None:
+    readme = README.read_text(encoding="utf-8")
+    citation = CITATION.read_text(encoding="utf-8")
+    metadata = SUBMISSION_METADATA.read_text(encoding="utf-8")
+    page_rules = PAGE_RULES.read_text(encoding="utf-8")
+
+    if (ROOT / "docs" / "SUBMISSION_METADATA_DRAFT.md").exists():
+        fail("stale draft submission metadata file remains")
+    if readme.splitlines()[0] != f"# {CANONICAL_TITLE}":
+        fail("README title differs from the canonical paper title")
+    if f'title: "{CANONICAL_TITLE}"' not in citation:
+        fail("CITATION.cff title differs from the canonical paper title")
+    if metadata.count(CANONICAL_TITLE) < 2:
+        fail("ICLR and arXiv metadata titles must both match the canonical paper title")
+    expected_tex_title = (
+        r"\title{\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI "
+        r"Research Agents}"
+    )
+    if expected_tex_title not in tex:
+        fail("manuscript title differs from the canonical paper title")
+
+    abstract_match = re.search(
+        r"## ICLR 2027 abstract\s+```text\s+(.*?)\s+```", metadata, flags=re.DOTALL
+    )
+    if not abstract_match:
+        fail("copy-ready ICLR abstract is missing from submission metadata")
+    if normalize_space(abstract_match.group(1)) != manuscript_abstract_plain(tex):
+        fail("copy-ready ICLR abstract differs from the manuscript abstract")
+    if "## arXiv abstract" not in metadata or "same canonical abstract" not in metadata:
+        fail("arXiv abstract binding is missing from submission metadata")
+
+    required_metadata = (
+        "Chih-Kai Wang",
+        "Department of Mathematics and Information Education",
+        "National Taipei University of Education",
+        "Suggested primary category: `cs.AI`",
+        "Possible cross-list: `cs.LG`",
+        "AI agents",
+        "AI evaluation",
+        "scientific reasoning",
+        "research agents",
+        "evidence-aware reasoning",
+        "structured decision making",
+        "trustworthy AI",
+        "formal verification / verification-aware systems",
+    )
+    for phrase in required_metadata:
+        if phrase not in metadata:
+            fail(f"required submission metadata is missing: {phrase!r}")
+
+    current_dates = ("2026-09-18", "2026-09-25")
+    stale_dates = ("2026-09-11", "2026-09-16")
+    for date in current_dates:
+        if date not in metadata or date not in page_rules:
+            fail(f"current official ICLR date is missing from metadata/page rules: {date}")
+    for date in stale_dates:
+        if date in metadata or date in page_rules:
+            fail(f"stale ICLR deadline remains in metadata/page rules: {date}")
 
 
 def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
@@ -96,6 +188,7 @@ def main() -> int:
     frozen = load_object(RESULTS_FREEZE, "results-freeze.json")
     pilot = load_object(V2_PILOT, "v2 public pilot study")
     lower = tex.lower()
+    validate_submission_metadata(tex)
 
     stale = [
         "23 of 24",

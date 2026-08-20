@@ -105,11 +105,12 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 
 ## Gate G — reproducibility release
 
-- [ ] Clean-environment reproduction of final benchmark validation succeeds from the release candidate.
-- [ ] Clean-environment reproduction of all paper tables/statistics succeeds from released artifact inputs.
+- [x] Clean-environment reproduction of final public benchmark validation succeeds from the release candidate.
+- [x] Clean-environment reproduction of all paper tables/statistics succeeds from committed v1/v2 aggregate inputs without model inference.
 - [ ] Release/tag is immutable and all cited artifact hashes match it.
 - [ ] Archive code/data artifacts in a citable long-term repository if required by the target venue.
-- [ ] `CITATION.cff`, README, manuscript, and release notes agree on title/version/status.
+- [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and current pre-submission status.
+- [ ] Release notes and final package version agree with the future immutable tag.
 
 ## Readiness rule
 

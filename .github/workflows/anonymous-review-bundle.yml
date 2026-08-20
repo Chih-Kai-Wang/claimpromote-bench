@@ -8,6 +8,7 @@ on:
       - "policies/**"
       - "schemas/**"
       - "fixtures/**"
+      - "LICENSE"
       - "release/v1-paper-results.json"
       - "v2/pilot-results/v2-public-pilot-study.json"
       - "v2/naturalistic-candidates.json"
@@ -82,28 +83,29 @@ jobs:
           --fixtures fixtures/formal/cases.json
           --out work/formal-fixtures.json
 
-      - name: Remove generated caches and verify deterministic bundle
+      - name: Rebuild a clean deterministic bundle for packaging
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf \
-            work/anonymous-review/.pytest_cache \
-            work/anonymous-review/data/alpha/.lake \
-            work/anonymous-review/src/*.egg-info \
-            work/anonymous-review/src/*/*.egg-info \
-            work/anonymous-review/**/__pycache__
           python scripts/build_anonymous_review_bundle.py --out work/anonymous-review-final
           python scripts/finalize_anonymous_review_bundle.py \
             --bundle work/anonymous-review-final
           cmp \
             work/anonymous-review/MANIFEST.json \
             work/anonymous-review-final/MANIFEST.json
-          rm -rf work/anonymous-review-final
+          python scripts/build_anonymous_review_bundle.py \
+            --verify work/anonymous-review-final
+          rm -rf work/anonymous-review
+          mv work/anonymous-review-final work/anonymous-review
+          python scripts/build_anonymous_review_bundle.py \
+            --verify work/anonymous-review
 
       - name: Assemble anonymous ZIP and checksum
         shell: bash
         run: |
           set -euo pipefail
+          python scripts/build_anonymous_review_bundle.py \
+            --verify work/anonymous-review
           cd work
           zip -qr claimpromotebench-anonymous-review-bundle.zip anonymous-review
           sha256sum claimpromotebench-anonymous-review-bundle.zip \

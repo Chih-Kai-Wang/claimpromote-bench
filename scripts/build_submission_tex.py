@@ -115,6 +115,12 @@ def anonymous_iclr_body(body: str) -> str:
     for old, new in replacements.items():
         anonymous = anonymous.replace(old, new)
 
+    # Every manuscript citation is parenthetical. The official ICLR style gives bare \cite a
+    # textual author-year rendering, which produces constructions such as "papers Author et al."
+    # in otherwise parenthetical prose. Keep arXiv's numeric citations unchanged and use natbib's
+    # explicit parenthetical command only in the ICLR wrapper.
+    anonymous = anonymous.replace(r"\cite{", r"\citep{")
+
     leaked = [identifier for identifier in ICLR_PUBLIC_IDENTIFIERS if identifier in anonymous]
     if leaked:
         raise ValueError(f"ICLR body retains public provenance identifiers: {leaked}")

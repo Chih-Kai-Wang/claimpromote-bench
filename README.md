@@ -1,8 +1,8 @@
-# ClaimPromoteBench
+# ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents
 
 **A benchmark for deciding when evidence justifies a change in research-claim status.**
 
-> **v1 primary hidden study and post-v1 public formatting-control pilot complete; paper revision in submission verification.**  
+> **SCIENTIFIC_RC_READY: v1 primary hidden study and post-v1 public formatting-control pilot complete; account-side submission pending.**
 > Hidden v1 numbers come from the validated recovered study. The public pilot appears as a separate post-v1 diagnostic with its own aggregate and provenance.
 
 ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
@@ -144,6 +144,7 @@ Python 3.11+:
 python -m pip install -e ".[dev]"
 python scripts/build_alpha.py
 python -m claimpromotebench validate data/alpha
+python scripts/audit_public_pair_contracts.py --dataset data/alpha --out work/public-pair-contract-audit.json
 python -m claimpromotebench.shortcuts --dataset data/alpha --out work/shortcut-audit.json
 python -m claimpromotebench.invariance --dataset data/alpha --out work/invariance-audit.json
 python -m claimpromotebench.executable --fixtures fixtures/executable --out work/executable-fixtures.json
@@ -183,12 +184,19 @@ python -m claimpromotebench compare-runs \
 
 ## Scope
 
-Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, SteerBench-Work, policy-aware web-agent evaluation, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations. ClaimPromoteBench contributes a controlled-pair benchmark for deciding whether typed scientific evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, separate reporting of raw model decisions and deterministic gate actions, and a public formatting control for the tested models.
+Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, scientific
+claim-verification benchmarks, reproducibility benchmarks, hypothesis-falsification systems,
+abstention evaluation, and formal-specification benchmarks. ClaimPromoteBench contributes a
+controlled-pair benchmark for deciding whether typed scientific evidence justifies a requested
+research-claim status change, with executable evidence checks, a committed hidden test, separate
+reporting of raw model decisions and deterministic gate actions, and a public formatting control
+for the tested models.
 
 ## Paper and project status
 
 - Technical report: `technical-report/main.tex`
-- Submission checklist: `technical-report/SUBMISSION_GATE.md`
+- Submission checklist: `technical-report/SUBMISSION_GATE_V2.md`
+- Copy-ready submission metadata: `docs/SUBMISSION_METADATA.md`
 - v2 pilot aggregate: `v2/pilot-results/v2-public-pilot-study.json`
 - v2 pilot protocol: `docs/ICLR_V2_LOW_COST_PROTOCOL.md`
 - Naturalistic source registry: `docs/V2_NATURALISTIC_SOURCE_REGISTRY.md`
@@ -197,4 +205,6 @@ Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, SteerBenc
 - Related work: `docs/RELATED_WORK.md`
 - AI assistance disclosure: `AI_ASSISTANCE.md`
 
-The v1 hidden model outputs remain frozen, and all analyses use the existing artifacts. PR #20 remains a draft through full CI, ICLR/arXiv compilation, anonymity checks, page-limit checks, and final visual review.
+The v1 hidden model outputs remain frozen, and all analyses use the existing artifacts. PR #20
+remains Draft and unmerged until the author completes account-side preview checks and explicitly
+authorizes any readiness or merge transition.

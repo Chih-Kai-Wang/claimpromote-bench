@@ -4,8 +4,8 @@ Verified against the live official pages on 2026-08-20. When any cached page or 
 
 ## ICLR 2027 deadlines
 
-- Abstract deadline: **2026-09-11 AOE**.
-- Full paper and supplementary-material deadline: **2026-09-16 at 11:59 pm AOE**.
+- Abstract deadline: **2026-09-18 AOE**.
+- Full paper and supplementary-material deadline: **2026-09-25 AOE**.
 - The abstract must be genuine rather than a placeholder.
 - No new author may be added after the abstract deadline; author order may still be changed until the full-paper deadline.
 - All authors must have current OpenReview profiles by the full-paper deadline. Profiles created without an institutional email may require moderation, so the account should be created immediately.
@@ -24,7 +24,9 @@ Official source: `https://iclr.cc/Conferences/2027/AuthorGuidelines`
 
 There is **no paid overlength option** in the author rules. The guide states that excess main-text pages are desk-rejected. This is a hard compliance rule, not a page charge that can be paid.
 
-The repository therefore keeps an automated ICLR main-text probe at `<= 9` pages. The verified submission has an **8-page main-text probe**. Its physical PDF is longer because references continue after the main text; this does not consume the main-text allowance.
+The repository therefore keeps an automated ICLR main-text probe at `<= 9` pages. The verified
+release candidate has an **8-page main-text probe** and a **9-page physical PDF**, with references
+continuing after the main text. Reference pages do not consume the main-text allowance.
 
 ## Human-subject scope
 

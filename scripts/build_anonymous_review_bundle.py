@@ -39,6 +39,11 @@ SKIP_NAMES = {
     "__pycache__",
     "work",
 }
+SKIP_FILES = {
+    "review.py",
+    "review_analysis.py",
+}
+SKIP_SUFFIXES = {".pyc", ".pyo"}
 FORBIDDEN_TEXT = {
     "Chih-Kai Wang",
     "Wang, Chih-Kai",
@@ -91,7 +96,11 @@ def strip_schema_ids(value: Any) -> Any:
 
 
 def should_skip(path: Path) -> bool:
-    return any(part in SKIP_NAMES for part in path.parts)
+    return (
+        any(part in SKIP_NAMES for part in path.parts)
+        or path.name in SKIP_FILES
+        or path.suffix.lower() in SKIP_SUFFIXES
+    )
 
 
 def copy_tree(source: Path, destination: Path) -> None:
@@ -206,6 +215,7 @@ name = "claimpromote-bench-anonymous-review"
 version = "0.1.0"
 description = "Anonymous public-data validation bundle"
 requires-python = ">=3.11"
+license = { file = "LICENSE" }
 dependencies = ["jsonschema>=4.23,<5"]
 
 [project.optional-dependencies]
@@ -519,6 +529,46 @@ def scan_identity(bundle: Path) -> None:
         fail("identity/provenance leak detected:\n" + "\n".join(findings))
 
 
+def verify_bundle(bundle: Path) -> None:
+    manifest_path = bundle / "MANIFEST.json"
+    if not manifest_path.is_file():
+        fail("MANIFEST.json is missing")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        fail("MANIFEST.json does not contain a file map")
+
+    declared = manifest["files"]
+    actual_paths = {
+        str(path.relative_to(bundle)).replace("\\", "/"): path
+        for path in sorted(bundle.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    if set(declared) != set(actual_paths):
+        missing = sorted(set(declared) - set(actual_paths))
+        extra = sorted(set(actual_paths) - set(declared))
+        fail(f"manifest coverage mismatch; missing={missing}, extra={extra}")
+
+    for relative, path in actual_paths.items():
+        if should_skip(Path(relative)):
+            fail(f"generated or excluded file survived staging: {relative}")
+        if declared[relative] != sha256_file(path):
+            fail(f"manifest digest mismatch: {relative}")
+
+    required = {"LICENSE", "README.md", "pyproject.toml"}
+    absent = sorted(required - set(actual_paths))
+    if absent:
+        fail(f"required reviewer-bundle files are missing: {absent}")
+
+    excluded = {
+        "src/claimpromotebench/review.py",
+        "src/claimpromotebench/review_analysis.py",
+    }
+    survived = sorted(excluded & set(actual_paths))
+    if survived:
+        fail(f"unused human-review workflow files survived staging: {survived}")
+    scan_identity(bundle)
+
+
 def write_manifest(bundle: Path) -> None:
     files = {
         str(path.relative_to(bundle)).replace("\\", "/"): sha256_file(path)
@@ -554,6 +604,7 @@ def build(destination: Path) -> None:
         copy_tree(ROOT / directory, destination / directory)
 
     selected_files = (
+        "LICENSE",
         "scripts/build_alpha.py",
         "scripts/build_v1_dataset.py",
         "scripts/validate_v1_plan.py",
@@ -597,12 +648,25 @@ def build(destination: Path) -> None:
     scan_identity(destination)
     write_manifest(destination)
     scan_identity(destination)
+    verify_bundle(destination)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", type=Path, required=True)
+    destination_group = parser.add_mutually_exclusive_group(required=True)
+    destination_group.add_argument("--out", type=Path)
+    destination_group.add_argument("--verify", type=Path)
     args = parser.parse_args()
+    if args.verify is not None:
+        destination = args.verify.resolve()
+        if not destination.is_dir():
+            fail(f"bundle directory does not exist: {destination}")
+        verify_bundle(destination)
+        print(json.dumps({"status": "PASS", "verified": str(destination)}, sort_keys=True))
+        return 0
+
+    if args.out is None:
+        fail("--out is required when not verifying")
     destination = args.out.resolve()
     build(destination)
     print(

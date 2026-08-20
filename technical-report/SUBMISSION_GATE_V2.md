@@ -6,18 +6,19 @@ It is deliberately fail-closed.
 
 ## Current verdict
 
-**TECHNICAL SUBMISSION PACKAGE READY — ACCOUNT-SIDE AND ARCHIVAL GATES OPEN**
+**SCIENTIFIC_RC_READY — ACCOUNT-SIDE SUBMISSION AND ARCHIVAL RELEASE PENDING**
 
 The frozen v1 hidden study and the post-v1 public formatting-control pilot are complete. The revised
-manuscript binds both result sets to machine-readable aggregates. On head
-`1708554ff984c2c36068d0f60cc17b8350a91514`, repository CI, pinned Lean replay, v1 hidden/scored/
-recovery guards, v1/v2 result validators, official ICLR/arXiv builds, page-limit checks, anonymity
-checks, and page-by-page visual review all passed. PR #20 remains Draft and unmerged because the
-account-side and archival-release gates below cannot be completed by repository automation.
+manuscript binds both result sets to machine-readable aggregates. On the final scientific head,
+repository CI, pinned Lean replay, v1 hidden/scored/recovery guards, v1/v2 result validators,
+official ICLR/arXiv builds, page-limit checks, anonymity checks, clean-environment public
+reproduction, anonymous-bundle validation, and page-by-page visual review all passed. The exact
+head and workflow runs are recorded in the final handoff and remain queryable from PR #20. The PR
+stays Draft and unmerged because account-side and archival-release actions require the author.
 
-The inspected submission artifact comes from workflow run `32301565990`. Both PDFs contain 10
-physical pages: 9 pages of main text followed by references. All fonts are embedded. The source
-archives contain only required TeX/BibTeX/style files and no auxiliary build files.
+The final inspected ICLR and arXiv PDFs each contain 9 physical pages. The ICLR main-text probe is
+8 pages; references begin after the counted main text. All fonts are embedded. The source archives
+contain only required TeX/BibTeX/style files and no auxiliary build files.
 
 ## Gate A — frozen v1 study remains intact
 
@@ -101,14 +102,15 @@ not claim a completed naturalistic replication.
 - [x] v1 hidden freeze guard passes.
 - [x] v1 scored-study guard passes.
 - [x] v1 recovery guard passes.
-
-Full repository CI run: `32301565960`.
+- [x] A fresh Python 3.12 environment reproduces the public build, validators, audits, and full
+  branch-coverage test suite.
+- [x] README, manuscript, `CITATION.cff`, and submission metadata use the same canonical title.
 
 ## Gate F — final ICLR 2027 package
 
 - [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] Main-text page probe reports 9 pages, within the 9-page limit.
+- [x] Main-text page probe reports 8 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
@@ -116,6 +118,8 @@ Full repository CI run: `32301565960`.
 - [x] ICLR PDF metadata contains no author identity.
 - [x] AI-use disclosure remains present in the ICLR submission.
 - [x] All PDF fonts are embedded.
+- [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
+  workflow module, author identity, or public workflow/provenance identifier.
 - [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
   broken glyphs, unreadable tables, and figure/caption collisions.
 
@@ -126,6 +130,7 @@ conference-paper scale.
 ## Gate G — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
+- [x] The arXiv PDF contains 9 physical pages.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
 - [x] arXiv PDF preserves v1 and v2 public workflow/hash provenance.
 - [x] No unresolved citations/references or horizontal overflow.
@@ -144,7 +149,9 @@ show its own preview before submission.
 
 - [ ] OpenReview profile exists and is current.
 - [ ] All required author/reviewer-account obligations are satisfied.
-- [ ] OpenReview abstract metadata is submitted before the official deadline.
+- [ ] OpenReview title, genuine abstract, and final author list are entered before **2026-09-18
+  AOE**.
+- [ ] Full paper and supplementary files are submitted before **2026-09-25 AOE**.
 - [ ] Final paper metadata, author list, topics, Code of Ethics acknowledgement, AI-use statement, and uploaded PDF preview are checked by the author.
 - [ ] The submission form and manuscript consistently state that no human-subject or human-annotation study is included.
 - [ ] arXiv account and any endorsement requirement are complete.
@@ -152,14 +159,20 @@ show its own preview before submission.
 ## Gate I — archival release
 
 - [ ] One immutable release/tag is created from the final submission head.
-- [ ] `CITATION.cff`, README, manuscript, release notes, and package version agree.
-- [ ] Clean-environment public validation succeeds from the release candidate.
-- [ ] Released v1 and v2 aggregates reproduce every paper-facing result without model inference.
+- [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and
+  current pre-submission status.
+- [x] Clean-environment public validation succeeds from the release candidate.
+- [x] The committed v1 and v2 aggregates reproduce every paper-facing result without model
+  inference.
+- [ ] Release notes and the final package version agree with the future immutable tag.
 - [ ] Long-term citable archive is created if required by the venue or desired for the paper.
 - [ ] Archive identifiers are added only after they exist.
 
 ## Readiness rule
 
-The repository-generated ICLR and arXiv packages are technically ready. Do not mark PR #20 ready,
-merge it, claim “submitted,” or create final archival identifiers until Gate H is completed and the actual OpenReview/arXiv account-side previews are checked. Gate I should be completed from the exact
-accepted submission/release candidate, without inventing an arXiv ID, DOI, or archive identifier before it exists.
+`SCIENTIFIC_RC_READY` means that the repository-generated paper, source packages, anonymous
+supplement, machine-readable result bindings, and clean public reproduction have passed. It does
+not mean that an OpenReview or arXiv record exists. Do not mark PR #20 ready, merge it, claim
+“submitted,” or create archival identifiers until the author completes Gate H and explicitly
+authorizes the corresponding repository transition. The unchecked Gate I items must use the exact
+submitted release candidate, without inventing an arXiv ID, DOI, or archive identifier.
