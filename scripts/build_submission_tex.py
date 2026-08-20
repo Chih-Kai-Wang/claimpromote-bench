@@ -14,9 +14,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = (
-    r"\cpb: Evaluating Whether \mbox{Evidence} Justifies "
-    r"Claim-State Transitions in AI Research Agents"
+TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
+ICLR_TITLE = (
+    r"\cpb: Evaluating Whether Evidence\protect\\"
+    r"Justifies Claim-State Transitions in AI Research Agents"
 )
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
@@ -53,6 +54,17 @@ version rather than a change to v1.
 
 """
 
+ICLR_PUBLIC_IDENTIFIERS = (
+    "32255636879",
+    "32274814703",
+    "32291482079",
+    "aa5268dc",
+    "8d9b3f5c",
+    "e2b09f30",
+    "3eb5b534",
+    "83dbee49",
+)
+
 
 def canonical_body() -> str:
     source = (REPORT / "main.tex").read_text(encoding="utf-8")
@@ -82,6 +94,33 @@ def canonical_body() -> str:
     return body
 
 
+def anonymous_iclr_body(body: str) -> str:
+    """Remove public repository provenance that could reveal the author during review."""
+
+    replacements = {
+        r"workflow run \texttt{32255636879}": "the frozen scored workflow",
+        r"Recovery run \texttt{32274814703}": "The artifact-only recovery workflow",
+        r"recovery run \texttt{32274814703}": "the artifact-only recovery workflow",
+        r"workflow run \texttt{32291482079}": "the public pilot workflow",
+        r"\texttt{32255636879}": "the frozen scored workflow",
+        r"\texttt{32274814703}": "the artifact-only recovery workflow",
+        r"\texttt{32291482079}": "the public pilot workflow",
+        r"\texttt{aa5268dc...de7e5}": "the frozen scoring source",
+        r"\texttt{8d9b3f5c...bb3e1}": "the hidden commitment source",
+        r"\texttt{e2b09f30...f2877}": "the artifact-only recovery source",
+        r"\texttt{3eb5b534...e8bfe664}": "a frozen recovered-study digest",
+        r"\texttt{83dbee49...25c0b264e}": "a frozen public-pilot digest",
+    }
+    anonymous = body
+    for old, new in replacements.items():
+        anonymous = anonymous.replace(old, new)
+
+    leaked = [identifier for identifier in ICLR_PUBLIC_IDENTIFIERS if identifier in anonymous]
+    if leaked:
+        raise ValueError(f"ICLR body retains public provenance identifiers: {leaked}")
+    return anonymous
+
+
 def without_ai_disclosure(body: str) -> str:
     ai_start = body.index(r"\section{AI Assistance Disclosure}")
     conclusion_start = body.index(r"\section{Conclusion}", ai_start)
@@ -104,7 +143,7 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
     # bibliography; it otherwise keeps the full scientific text, including limitations and the
     # conclusion. The anonymous submission replaces repository-identifying provenance with a
     # double-blind reproducibility statement while the arXiv version retains exact identifiers.
-    body_for_output = without_reproducibility(body)
+    body_for_output = without_reproducibility(anonymous_iclr_body(body))
     reproducibility_start = body_for_output.index(r"\section{AI Assistance Disclosure}")
     body_for_output = (
         body_for_output[:reproducibility_start]
@@ -133,7 +172,7 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
 \newcommand{\escalate}{\texttt{ESCALATE}}
 """
         + "\n"
-        + rf"\title{{{TITLE}}}"
+        + rf"\title{{{ICLR_TITLE}}}"
         + "\n"
         + r"\author{Anonymous authors}"
         + "\n\n"
