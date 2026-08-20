@@ -35,7 +35,7 @@ def patch_runner(bundle: Path) -> None:
     path = bundle / "scripts" / "run_review_checks.py"
     text = path.read_text(encoding="utf-8")
     marker = '    [sys.executable, "-m", "claimpromotebench", "validate", "data/alpha"],\n'
-    command = '''    [
+    command = """    [
         sys.executable,
         "scripts/audit_public_pair_contracts.py",
         "--dataset",
@@ -43,7 +43,7 @@ def patch_runner(bundle: Path) -> None:
         "--out",
         "work/public-pair-contract-audit.json",
     ],
-'''
+"""
     if command in text:
         return
     if marker not in text:

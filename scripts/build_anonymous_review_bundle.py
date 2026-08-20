@@ -84,11 +84,7 @@ def load_object(path: Path) -> Json:
 
 def strip_schema_ids(value: Any) -> Any:
     if isinstance(value, dict):
-        return {
-            key: strip_schema_ids(child)
-            for key, child in value.items()
-            if key != "$id"
-        }
+        return {key: strip_schema_ids(child) for key, child in value.items() if key != "$id"}
     if isinstance(value, list):
         return [strip_schema_ids(child) for child in value]
     return value
@@ -596,9 +592,7 @@ def build(destination: Path) -> None:
     (destination / "scripts" / "validate_review_results.py").write_text(
         review_validator(), encoding="utf-8"
     )
-    (destination / "scripts" / "run_review_checks.py").write_text(
-        review_runner(), encoding="utf-8"
-    )
+    (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")
 
     scan_identity(destination)
     write_manifest(destination)
