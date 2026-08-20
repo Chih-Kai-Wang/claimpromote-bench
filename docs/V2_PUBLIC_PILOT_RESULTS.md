@@ -47,7 +47,7 @@ artifact, runtime commit, seed, and hardware record. The only registered differe
 - Artifact-only recovery workflow: `32297818154`
 - Public aggregate: `v2/pilot-results/v2-public-pilot-study.json`
 - Aggregate SHA-256:
-  `sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`
+  `sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5`
 
 The recovery downloaded the two immutable source artifacts, required four complete 40-record runs,
 validated every run record, recomputed the aggregate twice, and required byte-identical results. It
@@ -55,12 +55,12 @@ did not call either model and did not edit raw responses.
 
 ## Results
 
-| Model | Decoding | OK | Schema errors | Decision coverage | Pair coverage | Raw action accuracy | Raw pair accuracy | Raw flip rate |
+| Model | Decoding | OK | Schema errors | Decision coverage | Pair coverage | E2E action accuracy | E2E pair accuracy | Raw flip rate |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3-0.6B | Free | 30 | 10 | 0.75 | 0.70 | 0.50 | 0.00 | 0.00 |
-| Qwen3-0.6B | JSON schema | 40 | 0 | 1.00 | 1.00 | 0.50 | 0.00 | 0.00 |
-| Qwen3-1.7B | Free | 0 | 40 | 0.00 | 0.00 | undefined | undefined | undefined |
-| Qwen3-1.7B | JSON schema | 38 | 2 | 0.95 | 0.90 | 0.50 | 0.00 | 0.00 |
+| Qwen3-0.6B | Free | 30 | 10 | 0.75 | 0.70 | 0.375 | 0.00 | 0.00 |
+| Qwen3-0.6B | JSON schema | 40 | 0 | 1.00 | 1.00 | 0.500 | 0.00 | 0.00 |
+| Qwen3-1.7B | Free | 0 | 40 | 0.00 | 0.00 | 0.000 | 0.00 | undefined |
+| Qwen3-1.7B | JSON schema | 38 | 2 | 0.95 | 0.90 | 0.475 | 0.00 | 0.00 |
 
 Across all four runs:
 
@@ -78,8 +78,8 @@ Across the two constrained runs:
 
 Schema constraints therefore raise decision coverage by 0.25 for Qwen3-0.6B and 0.95 for
 Qwen3-1.7B. Complete-pair coverage rises by 0.30 and 0.90, respectively. The constraint removes 10
-and 38 schema errors, but it does not change conditional raw action accuracy or controlled-pair
-accuracy.
+and 38 schema errors. Conditional raw action accuracy remains 0.50 wherever output is parseable,
+and end-to-end controlled-pair accuracy remains zero.
 
 ## Failure taxonomy
 
@@ -121,9 +121,8 @@ It uses one public dataset, one seed, and two small models. The paper must retai
 
 ## Gate interpretation
 
-Post-gate action and pair accuracy are 1.0 wherever a response is parseable. The gate applies the
-same fixed policy that defines the benchmark action, so this confirms implementation-level rule
-enforcement on covered cases. It is not model accuracy and adds no evidence of model learning.
+The one-way gate replaces a parseable invalid `ALLOW` with the action from the same policy oracle
+used for evaluation. This is a mechanical implementation check, not an independent model result.
 
 ## Decision for the paper
 

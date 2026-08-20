@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-AI research agents may have valid evidence yet assign a claim status beyond its registered support. We study whether a requested status change satisfies a fixed policy given a claim, evidence, and current state. We introduce \cpb, a controlled benchmark with 200 pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. The primary study evaluates 7,200 decisions from two Qwen3 models, four intervention arms, and three seeds: 5,327 (73.99\%) receive \texttt{FORMAT\_ERROR}, and all 1,873 parseable raw decisions select \allow{}. A post-v1 public formatting control raises constrained coverage from 75\% to 100\% for Qwen3-0.6B and from 0\% to 95\% for Qwen3-1.7B; all 78 constrained parseable decisions select \allow{}, and raw pair accuracy and flip rate remain zero over 38 complete pairs. A separately frozen post-protocol GPT-5.4 public-development follow-up yields 99 parseable decisions from 100; all 99 match the policy oracle, and all 49 covered pairs change correctly with the decisive evidence. A deterministic gate also enforces the policy on covered cases. We report output coverage, evidence sensitivity, and deterministic execution separately.
+AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce \cpb, a benchmark with 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. In the original 7,200-decision study of two small Qwen3 models, 73.99\% of responses failed format validation and all 1,873 parseable decisions chose \allow{}, yielding 13.33\% end-to-end item accuracy and zero pair accuracy. We then froze a separate stronger-model protocol on the unchanged hidden split. An accuracy-blind 12-item pilot advanced two of seven service lanes to fresh no-retry full passes. Qwen3.7-Max reached .99 decision coverage, .94 end-to-end action accuracy, and .88 pair accuracy; DeepSeek-V4-Flash reached .913, .627, and .253. Both exceeded the always-\allow{} .50 action baseline in paired exact tests; five other lanes failed formatting qualification. These results distinguish interface reliability from evidence-sensitive policy reasoning. The reviewer artifact contains prompts, item-level outputs, labels, and deterministic recomputation checks; the same-oracle gate is reported only as an implementation check.
 \end{abstract}
 
 \section{Introduction}
@@ -40,26 +40,13 @@ Our question is therefore:
 
 \cpb turns this question into a controlled evaluation. It keeps research status, computational evidence, formal certification, and independent review as separate parts of the evidence state. Each controlled pair keeps the claim and requested transition fixed while changing one policy-relevant prerequisite. The oracle evaluates conformance between the requested transition and the registered evidence state under the fixed policy. Numerical and formal cases use executable artifacts, and the hidden data and exact prompts were fixed before the scored runs.
 
-\begin{figure}[t]
-\centering
-\fbox{\parbox{0.94\linewidth}{\small
-\textbf{Claim + evidence + current state + requested transition}
-$\longrightarrow$ \textbf{model decision}
-$\longrightarrow$ \textbf{deterministic gate}
-$\longrightarrow$ \textbf{final action}.\\[-1mm]
-The model first produces a raw decision. Only the gate arm may replace an invalid \allow{} with the action required by the fixed policy. We report the model decision and the post-gate action separately.}}
-\caption{Evaluation setup. The model's raw decision is kept separate from the action taken after the deterministic gate.}
-\label{fig:overview}
-\end{figure}
-
-The hidden study records 5,327 \texttt{FORMAT\_ERROR} outputs among 7,200 decisions. Every one of the 1,873 parseable raw decisions selects \allow{} across both allowed and disallowed transitions. A separate post-v1 public pilot constrains the output schema while keeping the model-facing prompt fixed. Coverage rises sharply; every constrained parseable decision still selects \allow{}, producing zero raw pair accuracy and zero decision flips across complete pairs. A separately frozen GPT-5.4 public-development follow-up reaches 99\% decision coverage and perfect conditional decision and pair accuracy. The gate changes final system actions on covered invalid promotions in the small-model study, while GPT-5.4 already matches the policy on its covered cases. The paper therefore reports three layers: usable output, evidence-sensitive decision behavior, and deterministic policy execution.
+The experiments separate three questions: whether a model returns a usable decision, whether that decision changes with the decisive evidence, and what a deterministic one-way veto changes after generation. This separation prevents interface failure and oracle execution from being mistaken for evidence-sensitive model behavior.
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item We define a four-action benchmark for deciding whether evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
   \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, and we commit the hidden set and exact prompts before scored inference.
-  \item We report raw model decisions and deterministic gate actions as separate quantities.
-  \item We report the complete hidden study, a post-v1 formatting control, and a separately frozen GPT-5.4 public-development follow-up that distinguishes interface recovery from evidence-sensitive success.
+  \item We evaluate small and capable model lanes with end-to-end decisions and controlled-pair sensitivity, separately from a deterministic veto that is treated only as a one-way implementation check.
 \end{enumerate}
 
 \section{Related Work}
@@ -97,7 +84,32 @@ Each axis is evaluated independently, allowing computation, formal certification
 
 \subsection{Fixed policy oracle}
 
-A public policy lists the requirements for each transition at a fixed evaluation time. The oracle checks dependencies, evidence status, scope, staleness, provenance, runtime success, contradictions, and artifact integrity. Numerical and formal \allow{} cases also require the executable artifact to match the registered scope. The oracle returns a policy-conformance label for the registered evidence state and requested transition.
+A public policy lists the requirements for each transition at a fixed evaluation time. The oracle checks dependencies, evidence status, scope, staleness, provenance, runtime success, contradictions, and artifact integrity. Numerical and formal \allow{} cases also require the executable artifact to match the registered scope. We use ``oracle action'' to denote conformance to this benchmark policy; it differs from an independently adjudicated claim of scientific validity.
+
+Let \(x=(c,E,s,\tau)\) denote a claim, its registered evidence, the current state, and a requested transition. For fixed policy \(P\), the oracle action is \(y_P=\pi_P(x)\). If a model response has parser status \(z\) and parsed action \(\hat y\), end-to-end action correctness is
+\[
+C_{\mathrm{item}}(x)=\mathbb{1}[z=\texttt{OK}]\,\mathbb{1}[\hat y=y_P].
+\]
+For a controlled pair \((x_i^a,x_i^b)\), pair correctness is
+\[
+C_{\mathrm{pair}}(i)=C_{\mathrm{item}}(x_i^a)C_{\mathrm{item}}(x_i^b).
+\]
+Thus malformed or missing output remains in the denominator as incorrect, and a pair is correct only when the model handles both sides of the evidence change.
+
+\begin{table}[t]
+\centering
+\small
+\caption{One controlled pair. The claim, certificate, current state, and requested transition are identical; only the registered dependency record changes.}
+\label{tab:pair-example}
+\begin{tabular}{p{0.12\linewidth}p{0.61\linewidth}p{0.16\linewidth}}
+\toprule
+Case & Registered evidence & Oracle action \\
+\midrule
+A & A formal certificate cites a dependency, but that dependency record is absent. & \hold{} \\
+B & The same certificate plus the missing dependency record. & \allow{} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Benchmark Construction}
 
@@ -107,18 +119,18 @@ Within each pair, the natural-language claim and requested transition are fixed.
 
 Version~1 contains 200 pairs (400 instances) over 20 factors covering dependency closure, numerical sufficiency and scope, runtime completion, freshness and contradictions, provenance and independent review, statement identity, and formal trust-base binding. Fifty pairs (100 instances) are public development data. Primary scoring uses only the preregistered 150-pair private hidden split (300 instances).
 
-The public development split is rebuilt and checked end to end in hosted CI. Its inputs, fixed gold labels, pair descriptors, exact-rational artifacts, and generated Lean package pass the dataset, executable, and formal checks. The private hidden split was constructed and validated separately, and both the hidden data and exact model prompts were cryptographically committed before scored inference.
+The public development split is rebuilt and checked end to end in hosted CI. Its inputs, fixed oracle labels, pair descriptors, exact-rational artifacts, and generated Lean package pass the dataset, executable, and formal checks. The private hidden split was constructed and validated separately.
 
 \subsection{Executable evidence and shortcut checks}
 
 Numerical cases use exact-rational finite-grid artifacts. Validation recomputes their registered values, extrema, predicates, repetition digests, and scope fields. These artifacts support only the finite computational claim that was registered. Formal cases use generated Lean sources under a pinned toolchain; kernel acceptance supports only the exact encoded declaration in that environment.
 
-We also check for metadata-only and shallow structural shortcuts. Registered meaning-preserving transformations include identifier renaming, changes in evidence order, and insertion of irrelevant evidence. The oracle and prompt renderers must give the same result after normalization. These checks reduce obvious leakage and post-result flexibility. The controlled synthetic design provides factor isolation; natural research records remain a separate evaluation setting.
+We also check for metadata-only and shallow structural shortcuts. Registered meaning-preserving transformations include identifier renaming, changes in evidence order, and insertion of irrelevant evidence. The oracle and prompt renderers must give the same result after normalization. These checks detect selected metadata and representation shortcuts; naturalistic validity remains unevaluated. The controlled synthetic design provides factor isolation.
 
 
 \subsection{Machine-checkable validation strategy}
 
-Gold labels come from the public versioned policy. The public pair-contract audit verifies each registered pair difference and reproduces all 40 public labels with the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; and metamorphic checks cover identifier, ordering, and irrelevant-evidence invariance. The hidden data and exact prompts were committed before scored inference. The hidden study and public formatting pilot are recomputed from immutable source artifacts containing the original model responses. The GPT-5.4 follow-up binds every request to the frozen public prompt packet and validates returned model and provider identities, costs, and final-response hashes. These checks constrain post-result changes and make the reported behavior independently inspectable. The policy remains an author-defined benchmark rule.
+Oracle actions come from the public versioned policy. The public pair-contract audit verifies each registered pair difference and reproduces all 40 public labels with the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; and metamorphic checks cover identifier, ordering, and irrelevant-evidence invariance. The hidden study and public formatting pilot are recomputed from archived source artifacts containing the original model responses. Later model studies bind each request to a frozen prompt packet and retain item-level response text, parser status, model identity, and response hashes. The policy remains an author-defined benchmark rule.
 
 \section{Intervention Arms}
 
@@ -141,7 +153,7 @@ Ledger + verifier + gate & Same information + disclosed enforcement & Yes \\
 \end{tabular}
 \end{table}
 
-The gate runs after model generation. For an invalid \allow{}, it substitutes the action required by the fixed policy; valid \allow{} decisions remain unchanged. The gate-arm prompt discloses this enforcement, so raw comparisons with the passive-verifier arm include a prompt difference. The raw-to-final change within the gate arm measures deterministic policy execution.
+The gate runs after model generation. If a parseable raw action is \allow{} while the policy oracle requires another action, the gate substitutes that oracle action. Malformed output and incorrect \hold{}, \demote{}, or \escalate{} actions remain unchanged. The gate-arm prompt discloses this enforcement, so raw comparisons with the passive-verifier arm include a prompt difference. Because the same oracle defines the benchmark labels, post-gate agreement is reported solely as an implementation check; it supplies no evidence of learned model performance or independent safety.
 
 \section{Experimental Protocol}
 
@@ -151,158 +163,129 @@ The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.
 \]
 scored decisions. Primary scoring uses the 300 hidden instances. The hidden set was committed to Git before the scored runs. Both models use the same pinned llama.cpp build recorded in the released manifests.
 
-The primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Decision coverage is the fraction of hidden instances for which the model returns a parseable decision under the fixed output contract. Complete-pair coverage requires both members of a controlled pair to be parseable. Secondary metrics include promotion false discovery rate, counterfactual flip accuracy, calibration metrics, structured reason and evidence scores, and format-error rate. Missing and malformed outputs receive \texttt{FORMAT\_ERROR}. All conditional rates are reported with decision and complete-pair coverage.
+The v1 plan prespecified false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). These rates are conditional on parseable output. We therefore use end-to-end item and controlled-pair accuracy as the principal reliability summaries across studies, retaining every malformed or missing response as incorrect. Decision coverage and complete-pair coverage diagnose interface reliability. The prespecified rates, calibration, and structured reason and evidence scores remain conditional diagnostics and are interpreted only with their coverage denominators.
 
-Confidence intervals resample whole controlled pairs. Arm comparisons use exact two-sided McNemar tests within exact model-artifact/runtime/seed/hardware identity groups, with Holm correction applied separately to comparisons of raw decisions and final system actions.
+The v1 results are shown as fixed-seed triplets; its pair-bootstrap intervals and registered paired comparisons remain in the supplementary results. The capable-model extension uses the Wilson intervals and exact tests described below.
 
-\subsection{Recovery after evaluator failures}
+\subsection{Capable-model hidden extension}
 
-Some source jobs completed all 300 model calls and then failed evaluation because schema-valid output violated a cross-field rule, such as an \allow{} action paired with a mismatched target state. Recovery reused the archived model outputs and issued no new model queries. Exactly 27 of 7,200 records were reclassified as \texttt{FORMAT\_ERROR}. Recovery run \texttt{32274814703} reconstructed the committed hidden set and prompt identity, then validated all 24 normalized runs and the complete matrix before aggregation.
+After the v1 and public-development outcomes were known, we registered a separate extension on the unchanged 300-instance hidden split. It covers six model labels---Qwen3.7-Max, GLM-5.2, DeepSeek-V4-Pro, DeepSeek-V4-Flash, HY-3, and Muse-Spark---plus one same-label service-path replication. A fixed 12-instance pilot selects the first pair in each benchmark family independently of model outputs. A lane proceeds to a fresh 300-instance, no-retry pass only if the pilot has no transport failure and at least 10 schema- and semantic-valid decisions; continuation ignores accuracy and action distribution. Pilot actions, raw responses, and all accuracy statistics remained sealed until every lane had reached its registered terminal state.
 
+The extension counts every non-OK response as incorrect in end-to-end action and pair accuracy. It also reports conditional accuracy with coverage, two-sided 95\% Wilson intervals, reason-code set F1, evidence-identifier precision and recall, missing-evidence exact match, Brier score, and negative log likelihood. Each completed model is paired against the always-\allow{} baseline with an exact McNemar test; missing tests from qualification failures are reported explicitly. Per-lane results support descriptive replication only; causal effects of provider, model tier, or serving stack remain unidentified.
 
 \subsection{Post-v1 public interface pilot}
 
 After the hidden v1 results were known, we ran a separately labeled post-v1 public diagnostic of output coverage and transition decisions. It uses the 20 public alpha pairs (40 instances), the same two frozen model artifacts and llama.cpp runtime, the ledger-plus-verifier prompt, and seed 104729. For each model, the free and constrained runs have identical prompt hashes, model artifact, runtime, seed, and hardware record; the llama.cpp JSON-schema response constraint is the sole registered difference. Full raw response text is retained.
 
-The gate runs after generation. Both decoding conditions receive identical model-facing inputs. The matrix contains
-\[
-40\times 2\ \text{models}\times 2\ \text{decoding modes}=160
-\]
-decisions. Its scope is a post-v1 public one-seed formatting control and diagnostic replication.
+Both decoding conditions receive identical model-facing inputs; the 160-decision matrix is a post-v1, one-seed formatting control.
 
 \subsection{Post-protocol GPT-5.4 public-development follow-up}
 
-After the base outcomes were known, a separately frozen GPT-5.4 extension used the ledger-plus-verifier prompt, strict JSON Schema, medium reasoning, direct OpenAI routing through OpenRouter, a 3,072-token output ceiling, and zero retries. Its first transport-only pilot retained a \texttt{STOP} outcome because the registered \texttt{max\_completion\_tokens} field had no compatible direct OpenAI endpoint; it returned zero model responses. A new frozen revision changed only that interface field to \texttt{max\_tokens} and preserved the failed pilot as a separate result.
-
-The revised family-balanced pilot used 12 public-development instances and required zero transport errors plus at least 10 parseable decisions for \texttt{GO}. All 12 passed, triggering a fresh pass over the full 100 public-development instances. This extension is descriptive post-protocol evidence, distinct from the preregistered hidden study.
+After the base outcomes were known, a separately frozen GPT-5.4 extension used the ledger-plus-verifier prompt, strict JSON Schema, and zero retries. Its family-balanced 12-instance public-development pilot required zero transport errors and at least 10 parseable decisions for \texttt{GO}; a fresh 100-instance pass followed. This is descriptive post-protocol evidence, distinct from the preregistered hidden study.
 
 \section{Results}
 
-Across the full study, 5,327 of 7,200 outputs (73.99\%) receive \texttt{FORMAT\_ERROR}. The remaining 1,873 raw decisions all select \allow{}. The gate changes the final action on covered invalid promotions, and its reach follows parseable-output coverage.
+\subsection{Capable-model hidden extension}
 
-\subsection{Raw model behavior}
-
-Table~\ref{tab:main-results} reports raw behavior before enforcement for every arm. Coverage triplets are ordered by seeds 104729, 130363, and 169087. FPR, VPR, and PTA are conditional on parseable decisions; ``undef.'' means that no decision in that run was parseable.
+All seven registered pilots are retained. Qwen3.7-Max and one DeepSeek-V4-Flash lane return 12/12 valid decisions and advance to full passes. Each of the other five pilots returns 0/12 valid decisions---four because of JSON syntax and one because of schema violations---and therefore stops before full scoring, leaving accuracy undefined. The failed same-label Flash replication is one of these five; it demonstrates service-path sensitivity, while causal attribution remains unsupported.
 
 \begin{table}[H]
 \centering
 \small
-\caption{Primary hidden-test raw model behavior across all three seeds. Gate-arm rows are shown before enforcement.}
-\label{tab:main-results}
-\setlength{\tabcolsep}{5.5pt}
-\begin{tabular}{llcccc}
+\caption{Fresh no-retry passes on the 300-instance hidden split. Every non-OK response is incorrect. The always-\allow{} baseline is deterministic.}
+\label{tab:capable-hidden}
+\setlength{\tabcolsep}{4.2pt}
+\begin{tabular}{lccccc}
 \toprule
-Model & Arm & Coverage (3 seeds) & Raw FPR $\downarrow$ & Raw VPR $\uparrow$ & Raw PTA $\uparrow$ \\
+Lane & Decision cov. & Pair cov. & E2E item acc. & E2E pair acc. & Raw FPR \\
 \midrule
-Qwen3-0.6B & Narrative & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-0.6B & Ledger & .667/.893/.570 & 1.00 & 1.00 & 0.00 \\
-Qwen3-0.6B & Ledger + verifier & .703/.787/.393 & 1.00 & 1.00 & 0.00 \\
-Qwen3-0.6B & Ledger + verifier + gate & .490/.420/.140 & 1.00 & 1.00 & 0.00 \\
-\midrule
-Qwen3-1.7B & Narrative & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-1.7B & Ledger & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-1.7B & Ledger + verifier & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-1.7B & Ledger + verifier + gate & .483/.217/.480 & 1.00 & 1.00 & 0.00 \\
+Qwen3.7-Max & .990 & .980 & .940 & .880 & .068 \\
+DeepSeek-V4-Flash & .913 & .827 & .627 & .253 & .694 \\
+Always \allow{} & 1.00 & 1.00 & .500 & .000 & 1.00 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Each model--arm cell contains 900 decisions. For Qwen3-0.6B, the format-error counts are 900, 261, 335, and 585 for narrative, ledger, passive verifier, and gate. For Qwen3-1.7B they are 900, 900, 900, and 546. The ledger raises output coverage over narrative for Qwen3-0.6B; all parseable decisions in the ledger and passive-verifier arms still select \allow{}. Qwen3-1.7B records zero decision coverage in the first three arms. In every run with defined raw FPR, the preregistered 10,000-pair bootstrap 95\% interval is $[1.0,1.0]$, reflecting uniform \allow{} behavior among parseable decisions. Coverage values quantify the portion of the full system represented by these conditional rates.
+Qwen3.7-Max gives 282/300 correct end-to-end actions and 132/150 correct pairs; the corresponding 95\% Wilson intervals are [.907, .962] and [.818, .923]. DeepSeek-V4-Flash gives 188/300 actions and 38/150 pairs, with intervals [.571, .679] and [.190, .328]. Their conditional action accuracies are .949 and .686, respectively, at the coverage shown in Table~\ref{tab:capable-hidden}. Both improve on the always-\allow{} action baseline in paired exact tests (Holm-adjusted $p=7.35\times10^{-40}$ and $7.28\times10^{-12}$). Both recover all 150 valid promotions when parseable, but their false-promotion rates differ sharply. The Qwen lane also reaches .954 reason-code set F1; the Flash lane reaches .603. Their scope is one pass per lane; family-level rankings require replication.
+
+\subsection{Primary v1 small-model study}
+
+Across the v1 study, 5,327 of 7,200 outputs (73.99\%) receive \texttt{FORMAT\_ERROR}. The remaining 1,873 raw decisions all select \allow{}. The gate changes the final action on covered invalid promotions, and its reach follows parseable-output coverage.
+
+Table~\ref{tab:main-results} reports raw behavior before enforcement for every arm. Triplets are ordered by seeds 104729, 130363, and 169087. End-to-end scores retain all 300 hidden instances or 150 controlled pairs per run, assigning every format error a score of zero.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Primary hidden-test raw model behavior. Each entry is a three-seed triplet; gate-arm rows precede enforcement.}
+\label{tab:main-results}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{llccc}
+\toprule
+Model & Arm & Decision coverage & E2E item acc. & E2E pair acc. \\
+\midrule
+Qwen3-0.6B & Narrative & 0/0/0 & 0/0/0 & 0/0/0 \\
+Qwen3-0.6B & Ledger & .667/.893/.570 & .353/.453/.293 & 0/0/0 \\
+Qwen3-0.6B & Ledger + verifier & .703/.787/.393 & .357/.403/.193 & 0/0/0 \\
+Qwen3-0.6B & Ledger + verifier + gate & .490/.420/.140 & .277/.210/.087 & 0/0/0 \\
+\midrule
+Qwen3-1.7B & Narrative & 0/0/0 & 0/0/0 & 0/0/0 \\
+Qwen3-1.7B & Ledger & 0/0/0 & 0/0/0 & 0/0/0 \\
+Qwen3-1.7B & Ledger + verifier & 0/0/0 & 0/0/0 & 0/0/0 \\
+Qwen3-1.7B & Ledger + verifier + gate & .483/.217/.480 & .230/.113/.230 & 0/0/0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each model--arm cell contains 900 decisions. For Qwen3-0.6B, the format-error counts are 900, 261, 335, and 585 for narrative, ledger, passive verifier, and gate. For Qwen3-1.7B they are 900, 900, 900, and 546. The ledger raises output coverage over narrative for Qwen3-0.6B; all parseable decisions in the ledger and passive-verifier arms still select \allow{}. Qwen3-1.7B records zero decision coverage in the first three arms. Every end-to-end pair score is zero because each controlled pair changes the oracle action while all parseable model actions remain \allow{}. Conditional FPR and VPR are both 1.0 whenever defined, a direct consequence of that uniform action distribution.
 
 The source records contain parse status and structured decisions. Original free-form text for outputs classified as parse failures is absent, so v1 \texttt{FORMAT\_ERROR} aggregates syntax, schema, interface, and decision causes. All analyses use the frozen outputs from the scored runs.
 
 
 \subsection{Public formatting-control pilot}
 
-Table~\ref{tab:v2-pilot} reports the post-v1 public diagnostic. Schema constraints remove 10 schema errors for Qwen3-0.6B and 38 for Qwen3-1.7B. Decision coverage rises from 0.75 to 1.00 for Qwen3-0.6B and from 0 to 0.95 for Qwen3-1.7B; complete-pair coverage rises from 0.70 to 1.00 and from 0 to 0.90, respectively.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Post-v1 public pilot. ``Schema'' uses JSON-schema-constrained decoding with the same prompt as the free condition. Accuracy is conditional on parseable output.}
-\label{tab:v2-pilot}
-\begin{tabular}{llcccc}
-\toprule
-Model & Decoding & Decision cov. & Pair cov. & Raw acc. & Raw pair acc. \\
-\midrule
-Qwen3-0.6B & Free & .75 & .70 & .50 & .00 \\
-Qwen3-0.6B & Schema & 1.00 & 1.00 & .50 & .00 \\
-Qwen3-1.7B & Free & .00 & .00 & undef. & undef. \\
-Qwen3-1.7B & Schema & .95 & .90 & .50 & .00 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Across all four runs, 108 of 160 decisions are parseable and every one selects \allow{}. Among constrained runs, 78 of 80 decisions are parseable, covering 38 of 40 controlled pairs, while raw pair accuracy and raw flip rate are both zero. The two remaining constrained responses contain duplicate entries in the structured reason-code list and remain schema errors in scoring. For these models and public pairs, schema-constrained decoding yields high coverage together with zero pair sensitivity.
-
-Post-gate action and pair accuracy are 1.0 wherever the response is parseable. These conditional scores quantify deterministic application of the benchmark policy after generation.
+On the 40-instance public split, schema constraints raise decision coverage from .75 to 1.00 for Qwen3-0.6B and from 0 to .95 for Qwen3-1.7B; complete-pair coverage rises from .70 to 1.00 and from 0 to .90. Across all four free/constrained runs, 108 of 160 decisions are parseable and every one selects \allow{}. The constrained runs therefore reach .500 and .475 end-to-end item accuracy but zero pair accuracy. Formatting control repairs the interface while evidence sensitivity remains zero in these small models.
 
 \subsection{Post-protocol GPT-5.4 follow-up}
 
-The revised pilot returns 12/12 parseable decisions and satisfies its prespecified continuation gate. On the full public-development split, GPT-5.4 returns 99 parseable decisions from 100, for decision coverage .99; 49 of 50 pairs are complete, for pair coverage .98. All 99 match the policy oracle, with 50 \allow{}, 45 \hold{}, 2 \demote{}, and 2 \escalate{} decisions. Raw pair accuracy and decision-flip rate are 1.0 over all 49 covered pairs. Raw FPR is 0/49 and raw VPR is 50/50, and every covered raw action equals its post-gate action.
+The revised pilot returns 12/12 parseable decisions and satisfies its prespecified continuation gate. On the full public-development split, GPT-5.4 returns 99 parseable decisions from 100, for decision coverage .99; 49 of 50 pairs are complete, for pair coverage .98. All 99 parseable decisions match the policy oracle, with 50 \allow{}, 45 \hold{}, 2 \demote{}, and 2 \escalate{} decisions. End-to-end action and pair accuracy are therefore .99 and .98; conditional pair accuracy and decision-flip rate are 1.0 over 49 complete pairs. Raw FPR is 0/49 and raw VPR is 50/50.
 
-The remaining response reaches the 3,072-token ceiling with reasoning tokens and returns no final response text. All pilot and full requests route to the registered OpenAI upstream. These results provide descriptive public-development evidence from one post-protocol GPT-5.4 pass.
-
-\subsection{What the gate changes}
-
-In every gate-arm run with nonzero coverage, every parseable raw decision selects \allow{}. The gate catches every false promotion among those decisions, and the false-block rate is 0. Effective FPR is 0 and effective VPR is 1 on covered decisions. Table~\ref{tab:gate-results} reports coverage next to these numbers.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Raw and final behavior in the gate arm. Rates are conditional on parseable decisions.}
-\label{tab:gate-results}
-\begin{tabular}{lccccc}
-\toprule
-Model & Coverage range & Raw FPR & Effective FPR & Catch rate & False-block \\
-\midrule
-Qwen3-0.6B & .140--.490 & 1.00 & 0.00 & 1.00 & 0.00 \\
-Qwen3-1.7B & .217--.483 & 1.00 & 0.00 & 1.00 & 0.00 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Complete-pair coverage in the gate arm ranges from 7.3--35.3\% for Qwen3-0.6B and 10.0--38.0\% for Qwen3-1.7B. The gate applies the same fixed policy used to define the benchmark labels. Its conditional numbers confirm implementation--policy agreement on covered cases. End-to-end behavior also includes decision coverage and raw selectivity, both reported above.
+The remaining response reaches the 3,072-token ceiling with reasoning tokens and returns no final response text. These results provide descriptive public-development evidence from one post-protocol GPT-5.4 pass.
 
 \section{Discussion}
 
 \subsection{Main interpretation}
 
-Raw model behavior dominates the empirical result. The tested models often fail before the gate receives a usable decision. Every parseable raw decision selects \allow{} across the controlled evidence changes. For Qwen3-0.6B, the ledger raises structured-output coverage over the narrative arm, while decision selectivity remains zero.
+The capable hidden extension changes the central interpretation from universal failure to measurable separation. Qwen3.7-Max follows both members of 88\% of unseen controlled pairs, whereas the completed DeepSeek-V4-Flash lane reaches 25.3\% and retains a high false-promotion rate. Five other lanes fail before accuracy can be assessed. Thus service-level interface reliability and policy reasoning are both part of end-to-end performance, but they remain separately diagnosed.
 
-The deterministic gate provides an engineering safeguard. On parseable cases it changes invalid promotions to the action required by the fixed policy. Its conditional scores quantify rule execution under the benchmark policy. Model behavior and deterministic enforcement therefore appear as separate metrics.
+The one-way gate mechanically replaces a parseable invalid \allow{} with the action from the same policy oracle used for evaluation. It remains an implementation check, separate from model behavior.
 
-The public formatting-control pilot adds a direct interface comparison. Schema-constrained decoding makes nearly all responses usable, while the raw action remains \allow{} and the controlled-pair decision-change rate remains zero. The measured scope covers two frozen small models, public controlled pairs, and one seed.
+The original small-model study and public formatting control explain two failure modes. Most v1 outputs are unusable; after constrained decoding repairs coverage, those models still collapse to \allow{}. The stronger hidden results establish that \cpb involves more than output formatting, while the public GPT-5.4 follow-up independently establishes near-complete solvability on the development split.
 
-The GPT-5.4 follow-up changes the interpretation. Under the same public-development prompt and fixed policy, a stronger API-hosted model reaches near-complete coverage and perfect conditional action and pair accuracy. The benchmark therefore separates evidence-sensitive behavior from the uniform \allow{} strategy observed in the two small Qwen3 models. Its public, post-protocol scope limits the result to descriptive external-validity evidence.
-
-\subsection{Implications for system design}
-
-Reliable claim-state decisions require structured output and evidence-sensitive action selection. Systems may also add explicit deterministic enforcement for invalid promotions. The present experiments measure structured-output coverage, raw selectivity, and gate behavior. Reporting coverage alongside gate performance supports evaluation of the whole system.
+Service paths sharing a model label can expose different effective systems. Exact backend revisions, routing, decoding support, and serving wrappers remain outside independent audit, so cross-lane differences are descriptive and causal attribution remains unsupported.
 
 \section{Limitations and Threats to Validity}
 
 \paragraph{Model and dataset scope.}
-Version~1 focuses on mathematical-research evidence states, synthetic controlled pairs, and Qwen3-0.6B and Qwen3-1.7B Q8\_0. The GPT-5.4 extension covers public development data, one API-hosted model, one pass, and a protocol revised after transport availability was observed. Naturalistic generalization, independent frontier-model replications, and held-out larger-model results remain open empirical extensions.
+The benchmark focuses on mathematical-research evidence states and synthetic controlled pairs. Only two of seven capable-model service lanes qualify for full hidden passes, each with one no-retry sample per item; within-model variance remains unestimated. The GPT-5.4 extension covers public development data and one pass. Naturalistic generalization, additional held-out model replications, and human-policy agreement remain open empirical extensions.
 
 \paragraph{Output-format failures.}
-The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. The post-v1 public pilot retains raw text but covers the same two models, public data, and one seed. The GPT-5.4 follow-up reaches 99\% coverage; its sole missing final decision exhausts the registered output ceiling. Gate metrics are conditional on covered decisions or complete covered pairs; end-to-end reliability also depends on coverage.
+The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. Later studies retain raw text and distinguish transport, JSON, schema, and semantic errors, but five capable lanes still fail the 12-item formatting gate. The GPT-5.4 follow-up reaches 99\% coverage; its sole missing final decision exhausts the registered output ceiling. Gate metrics are conditional on covered decisions or complete covered pairs; end-to-end reliability also depends on coverage.
 
-\paragraph{Gate interpretation and runtime variation.}
-The gate-arm prompt discloses enforcement, so raw between-arm differences include that prompt change. The within-arm raw-to-final comparison isolates the deterministic transformation. Three runs recorded Python 3.11.16 alongside the predominant Python 3.11.15 environment, splitting three intended matched groups; the analysis retains the preregistered identity grouping.
+\paragraph{Gate interpretation.}
+The gate-arm prompt discloses enforcement, so raw between-arm differences include that prompt change. The within-arm raw-to-final comparison measures only the deterministic one-way transformation.
 
 \paragraph{Benchmark construction and label scope.}
-The author designed the policy, controlled factors, and item generator. Gold actions measure conformance to that author-defined benchmark; external consensus remains unevaluated. Pair-contract, executable, and Lean checks establish internal consistency, while formal acceptance covers only the exact encoded statement in the pinned environment.
+The author designed the policy, controlled factors, and item generator. Oracle actions measure conformance to that author-defined benchmark; external consensus remains unevaluated. Pair-contract, executable, and Lean checks establish internal consistency, while formal acceptance covers only the exact encoded statement in the pinned environment.
+
+\paragraph{Service identity and future contamination.}
+API model names are service-exposed labels; exact weights and upstream revisions remain outside independent audit. Some services were permitted to retain the synthetic benchmark requests for model improvement. The released hidden split is therefore a one-shot evaluation asset whose contamination risk can grow after these runs; future held-out evaluations should use a newly generated private split.
 
 \section{Reproducibility and Artifact Policy}
 
-The primary hidden inference comes from workflow run \texttt{32255636879}; the hidden set was committed before that run. Recovery run \texttt{32274814703} reconstructed the fixed dataset and prompt identity, validated 24 original and 24 normalized runs, and produced the 7,200-record aggregate from archived model outputs. The recovered study file has SHA-256 \texttt{3eb5b534...e8bfe664}. Full commit and manifest hashes are kept in the repository and recovery record.
+The hidden split and exact prompts were committed before the original scored inference. Artifact-only recovery reused the 24 archived source runs, issued no model queries, and reclassified exactly 27 of 7,200 cross-field-invalid decisions as format errors under the registered semantic contract. The review bundle releases the available source and normalized item records, the normalization map, and recomputation inputs.
 
-The post-v1 public interface pilot comes from workflow run \texttt{32291482079}. An artifact-only recovery downloaded both model artifacts, required the complete 160-decision matrix, recomputed the aggregate twice, and obtained identical bytes. Its public aggregate has SHA-256 \texttt{83dbee49...25c0b264e}; it contains metrics and run hashes, while raw response text stays in the source artifacts.
-
-The GPT-5.4 follow-up preserves the first transport-only \texttt{STOP}, the interface-revision plan, and the one-pass pilot and full records as separate artifacts. Validation binds both runs to the frozen prompt packet, requires the registered OpenAI upstream, checks all request and final-response hashes, and recomputes the reported metrics and token-derived cost. The committed compact summary omits raw response text.
-
-The raw hidden seed remains in GitHub Actions secret storage. Future changes to labels, policy rules, prompts, controlled factors, or hidden-test bytes create a new benchmark version.
+The public formatting control and GPT-5.4 follow-up retain their prompt packets and item-level records. The anonymous bundle includes all seven capable-model pilots, both completed full passes, the frozen prompt packet, item-level raw responses, parser status, released oracle labels, and recomputation inputs. Searchable repository provenance is replaced by anonymous role labels. The private construction seed is excluded; any change to labels, policy, prompts, controlled factors, or hidden-test bytes creates a new benchmark version.
 
 \section{AI Assistance Disclosure}
 
@@ -310,7 +293,7 @@ Generative AI tools were used as assistants during literature search, research p
 
 \section{Conclusion}
 
-\cpb measures claim-state transition behavior beyond answer accuracy: valid evidence can still support an assigned status that exceeds its registered scope. In the hidden v1 study, the tested Qwen3 models often fail to return a valid structured decision, and every parseable raw decision selects \allow{}. In the post-v1 public pilot, constraining the output schema recovers nearly complete coverage while all constrained parseable decisions remain \allow{}, with zero raw pair accuracy and zero decision flips. In a separately frozen public-development follow-up, GPT-5.4 produces 99/99 correct covered decisions and 49/49 correct covered pairs. A deterministic gate applies the fixed policy and prevents invalid promotion on covered small-model cases. Research-agent evaluations should report structured-output coverage, evidence-sensitive model behavior, and deterministic safeguards as separate quantities.
+\cpb evaluates evidence-justified claim-state transitions beyond factual answer accuracy. On the hidden split, Qwen3.7-Max reaches .94 end-to-end action and .88 controlled-pair accuracy, while a completed DeepSeek-V4-Flash lane reaches .627 and .253; five other service lanes fail formatting qualification. The original small models instead combine low coverage with an all-\allow{} collapse, even when constrained decoding repairs the interface. A same-oracle deterministic veto measures registered-policy execution alone, independently of model competence. Research-agent evaluations should therefore report coverage, evidence-sensitive pair behavior, and deterministic safeguards as distinct quantities.
 
 \bibliographystyle{plain}
 \bibliography{references}

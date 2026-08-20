@@ -10,16 +10,15 @@ policy-sensitive decisions persist after the output format is constrained.
 The v1 hidden study, its labels, prompts, model outputs, normalization, and reported results remain
 unchanged. Nothing in this protocol retroactively becomes part of v1.
 
-## Cost boundary
+## Initial-pilot cost boundary
 
 The first pilot uses only the two model artifacts already used in v1 and the public 20-pair alpha
 dataset. It runs on standard GitHub-hosted CPU runners in this public repository. No paid model API,
 paid GPU runner, or new external reviewer is required by this pilot.
 
-Do not add a paid API model or paid runner to this protocol without a separate explicit decision.
-Larger open-weight models may be considered only after the pilot shows that the interface has been
-stabilized enough for a broader comparison to answer a scientific question rather than reproduce
-format failures.
+The later capable-model study was authorized, frozen, and recorded under its own plan after this
+pilot established an evaluable interface. Its calls and limits do not retroactively change the
+zero-paid-call public pilot.
 
 ## Pilot freeze
 
@@ -67,7 +66,7 @@ The canonical source workflow is `32291482079`, triggered by commit
 downloaded both immutable model artifacts, required the four-run / 160-record matrix, recomputed
 the aggregate twice, and required byte-identical output. The public aggregate is
 `v2/pilot-results/v2-public-pilot-study.json`, with SHA-256
-`sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`.
+`sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5`.
 
 | Model | Decoding | OK | Schema errors | Decision coverage | Pair coverage | Raw action accuracy | Raw pair accuracy | Raw flip rate |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -104,25 +103,48 @@ The pilot is an interface-selection study, not the new ICLR primary result.
 
 The observed result follows the first branch: coverage rises sharply, but raw controlled-pair
 accuracy remains zero. This supports reporting the pilot as a post-v1 public formatting control.
-It does not by itself justify an expensive model matrix. Any stronger-model extension should first
-show that it answers a new external-validity question and fits the explicit cost boundary.
+It motivated a bounded stronger-model study whose continuation rule remained independent of
+accuracy and action distribution.
 
 No threshold is allowed to convert an inconvenient pilot result into a hidden rerun. Any change to
 the prompt, decision schema, runtime, decoding settings, or pilot dataset after observing outputs is
 a new pilot revision and must be labeled as such.
 
-## Promotion to an ICLR-facing v2 study
+## Completed capable-model hidden extension
 
-A full v2 study should be launched only after the pilot supports an evaluable interface. The full
-study should then add evidence breadth rather than merely multiplying calls:
+The separately frozen extension reuses the committed 150-pair / 300-instance hidden split and the
+`ledger_verifier` prompt. It registers six model labels plus one same-label service-path
+replication. Each lane receives the same deterministic 12-item pilot and advances to one fresh
+300-item, no-retry pass exactly when it has zero transport failures and at least 10 valid
+decisions. Accuracy, action distribution, raw responses, and gold comparisons remain sealed until
+all lanes reach a registered terminal state.
+
+Two of seven pilots qualify; the other five each return 0/12 valid decisions and stop before full
+scoring. The complete results are:
+
+| Full-pass lane | Decision coverage | Pair coverage | E2E action accuracy | E2E pair accuracy | Raw FPR |
+|---|---:|---:|---:|---:|---:|
+| Qwen3.7-Max | 0.990 | 0.980 | 0.940 | 0.880 | 0.068 |
+| DeepSeek-V4-Flash | 0.913 | 0.827 | 0.627 | 0.253 | 0.694 |
+
+The always-`ALLOW` baseline has 0.500 action accuracy and zero pair accuracy. Both completed lanes
+exceed its action accuracy in paired exact tests. The aggregate is
+`v2/capable-hidden-results/capable-hidden-study.json`, SHA-256
+`sha256:20904dd181b27ddcbe0997692f101f50c1815abdb91482f4c4f09836f3508dcb`.
+
+All seven pilots, both full passes, prompts, hidden inputs and labels, raw responses, parser outcomes,
+and recomputation inputs are included in the anonymous reviewer evidence. The construction seed
+remains excluded. Lane differences are descriptive; the study does not identify causal provider,
+model-tier, or serving-stack effects.
+
+## Remaining external-validity work
 
 ### A. New primary split
 
-Construct a new v2 development/hidden split after the pilot interface is frozen. Preserve controlled
-pairs and factor identities. Commit the hidden dataset and exact prompts before scored inference.
-Raw response text must be retained in the v2 source artifacts.
-
-This remains future work. The public pilot is not renamed as a new hidden primary split.
+A later benchmark version may construct a fresh development/hidden split after its interface is
+frozen. It should preserve controlled pairs and factor identities, commit exact prompts before
+scored inference, and retain raw response text. The completed public pilot and capable extension
+keep their current labels and are never renamed as a new primary split.
 
 ### B. Naturalistic research records
 
@@ -135,17 +157,7 @@ A deterministic, unlabeled, pointer-only pool of 12 CORE-Bench candidates is now
 `v2/naturalistic-candidates.json`. Every record remains pending source-level review; none is yet a
 scored ClaimPromoteBench item.
 
-### C. Model breadth under a cost cap
-
-The minimum no-new-spend matrix is the two existing Qwen3 models. If the pilot is informative and
-standard public GitHub runners can execute them within resource limits, prefer one or two stronger
-open-weight models before considering any paid API. Candidate additions must have a pinned public
-artifact, a recorded hash, and the same prompt/decoding protocol.
-
-The current branch does not authorize paid inference. A stronger open-weight extension is optional,
-not a condition for preserving or reporting the completed pilot.
-
-### D. Analysis
+### C. Analysis
 
 The ICLR-facing result should emphasize controlled-pair evidence sensitivity, complete-pair
 coverage, failure taxonomy, factor-level failure patterns, and the difference between raw model
@@ -154,11 +166,11 @@ behavior and deterministic post-processing. Instance accuracy alone is insuffici
 The completed pilot demonstrates this point directly: always returning `ALLOW` yields 0.50 instance
 accuracy on the balanced public set while yielding zero controlled-pair accuracy and zero flips.
 
-## Human-review constraint
+## Human-review boundary
 
-No new human-review requirement is introduced here. The existing two-reviewer v1 audit remains
-reported exactly as observed. If additional reviewers become available later, their work should be
-a separately frozen supplementary audit rather than a condition for running the technical v2 pilot.
+No human-subject, human-annotation, or human-policy-agreement study is part of these experiments.
+Any future human audit requires a separately frozen protocol and cannot be inferred from automated
+manuscript reviews.
 
 ## Integrity boundary
 
@@ -169,6 +181,6 @@ The following are prohibited:
 - manually fixing raw v2 model responses before scoring;
 - selecting only favorable factors or seeds after seeing the pilot;
 - treating post-gate correctness as model correctness;
-- paying for API/GPU inference without a separate cost decision;
+- spending outside a separately frozen and explicitly authorized cost boundary;
 - changing the completed pilot's prompt, schema, seed, or decoding settings and calling it the same
   run.

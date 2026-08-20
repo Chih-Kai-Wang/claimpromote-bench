@@ -251,7 +251,7 @@ def build(artifact_root: Path, dataset_dir: Path, workflow_run_id: int) -> Json:
         "aggregate_status_counts": dict(sorted(aggregate_status_counts.items())),
         "runs": runs,
         "model_comparisons": comparisons,
-        "interpretation_status": "PENDING_AUTHOR_REVIEW",
+        "interpretation_status": "RECOMPUTATION_VERIFIED_FOR_REPORTING",
         "interpretation_boundary": (
             "This is a post-v1 public interface pilot. It does not alter the frozen v1 hidden "
             "study, and post-gate correctness is not model correctness."

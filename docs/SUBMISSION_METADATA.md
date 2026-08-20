@@ -16,7 +16,7 @@ ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions
 ## ICLR 2027 abstract
 
 ```text
-AI research agents may have valid evidence yet assign a claim status beyond its registered support. We study whether a requested status change satisfies a fixed policy given a claim, evidence, and current state. We introduce ClaimPromoteBench, a controlled benchmark with 200 pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. The primary study evaluates 7,200 decisions from two Qwen3 models, four intervention arms, and three seeds: 5,327 (73.99%) receive FORMAT_ERROR, and all 1,873 parseable raw decisions select ALLOW. A post-v1 public formatting control raises constrained coverage from 75% to 100% for Qwen3-0.6B and from 0% to 95% for Qwen3-1.7B; all 78 constrained parseable decisions select ALLOW, and raw pair accuracy and flip rate remain zero over 38 complete pairs. A separately frozen post-protocol GPT-5.4 public-development follow-up yields 99 parseable decisions from 100; all 99 match the policy oracle, and all 49 covered pairs change correctly with the decisive evidence. A deterministic gate also enforces the policy on covered cases. We report output coverage, evidence sensitivity, and deterministic execution separately.
+AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce ClaimPromoteBench, a benchmark with 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. In the original 7,200-decision study of two small Qwen3 models, 73.99% of responses failed format validation and all 1,873 parseable decisions chose ALLOW, yielding 13.33% end-to-end item accuracy and zero pair accuracy. We then froze a separate stronger-model protocol on the unchanged hidden split. An accuracy-blind 12-item pilot advanced two of seven service lanes to fresh no-retry full passes. Qwen3.7-Max reached .99 decision coverage, .94 end-to-end action accuracy, and .88 pair accuracy; DeepSeek-V4-Flash reached .913, .627, and .253. Both exceeded the always-ALLOW .50 action baseline in paired exact tests; five other lanes failed formatting qualification. These results distinguish interface reliability from evidence-sensitive policy reasoning. The reviewer artifact contains prompts, item-level outputs, labels, and deterministic recomputation checks; the same-oracle gate is reported only as an implementation check.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-Schema constraints restore usable outputs for two small Qwen3 models while their actions remain uniformly ALLOW; a separately frozen GPT-5.4 public-development follow-up reaches 99% coverage and perfect conditional pair accuracy, with deterministic gate behavior reported separately.
+On the frozen hidden split, Qwen3.7-Max reaches .94 end-to-end action and .88 pair accuracy while DeepSeek-V4-Flash reaches .627 and .253; five of seven service lanes fail formatting qualification, and same-oracle gate behavior is reported separately.
 ```
 
 ## Main empirical findings
@@ -79,6 +79,11 @@ Schema constraints restore usable outputs for two small Qwen3 models while their
 - frozen v1 hidden study: 24 runs and 7,200 decisions;
 - v1 format errors: 5,327 / 7,200 (73.99%);
 - v1 parseable raw decisions: 1,873, all `ALLOW`;
+- capable-model extension: seven accuracy-blind pilots and two fresh 300-instance full passes;
+- Qwen3.7-Max hidden E2E action / pair accuracy: 282 / 300 and 132 / 150;
+- DeepSeek-V4-Flash hidden E2E action / pair accuracy: 188 / 300 and 38 / 150;
+- five capable-model lanes stopped after 0 / 12 valid pilot decisions and have no full score;
+- both completed lanes exceed the always-`ALLOW` 150 / 300 action baseline in paired exact tests;
 - post-v1 public pilot: 160 decisions, two models, one seed;
 - constrained parseable decisions: 78 / 80;
 - constrained complete pairs: 38 / 40;
@@ -95,19 +100,19 @@ Schema constraints restore usable outputs for two small Qwen3 models while their
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, validation code, compact v1 and v2 result summaries, and public formal artifacts. It excludes the private hidden seed and data, author-identifying provenance, generated caches, and unused human-review workflow files. Public repository and archival identifiers will be released when double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, the reviewer-release hidden dataset and oracle labels, exact prompt packets, item-level empirical records, recomputation code, and executable and formal replay inputs. It excludes the private construction seed, author-identifying provenance, generated caches, and unused human-review workflow files. Public repository and archival identifiers will be released when double-blind review permits disclosure.
 ```
 
 ### Public preprint version
 
 ```text
-Code, public benchmark data, compact v1 and v2 result summaries, validation workflows, and public formal artifacts are available in the project repository. The private hidden seed is not released. Exact workflow and artifact identities are recorded in the manuscript and repository. A long-term archival identifier will be added only after it exists.
+Code, public benchmark data, the reviewer-release hidden dataset, item-level empirical records, validation workflows, and executable and formal replay inputs are available in the project repository. The private construction seed is not released. Exact workflow and artifact identities are recorded in the manuscript and repository. A long-term archival identifier will be added only after it exists.
 ```
 
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The post-v1 public pilot retained raw responses, verified identical prompts across decoding conditions, and was recomputed twice from four immutable source runs with byte-identical aggregate output. The separately frozen GPT-5.4 follow-up binds its pilot and full pass to the public prompt packet, registered OpenAI route, request and response hashes, and token-derived costs. Paper-facing values are checked against machine-readable summaries in CI.
+The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The later studies retain frozen prompt packets, item-level raw responses, parser outcomes, oracle labels, and response hashes. Paper-facing values are recomputed from the released records and checked against machine-readable summaries in CI.
 ```
 
 ## AI-use disclosure summary
@@ -126,7 +131,7 @@ records collected from people. The author must read and acknowledge the ICLR Cod
 OpenReview. The paper claims no IRB approval, exemption, institutional review, or informed
 consent.
 
-## Official ICLR 2027 dates verified on 2026-08-20
+## Official ICLR 2027 dates verified on 2026-08-21
 
 - Genuine abstract and final author list deadline: **2026-09-18 AOE**.
 - Full paper and supplementary-material deadline: **2026-09-25 AOE**.
@@ -136,6 +141,7 @@ consent.
 
 - [ ] OpenReview profile exists, is current, and has a verified email.
 - [ ] Conflicts and institutional domains are accurate.
+- [ ] Any reciprocal-reviewer registration notice sent after the abstract deadline is completed.
 - [ ] The final author list is entered before 2026-09-18 AOE.
 - [ ] The genuine title and abstract are entered before 2026-09-18 AOE.
 - [ ] Title and abstract still match the final PDF before 2026-09-25 AOE.

@@ -1,0 +1,596 @@
+{
+  "baselines": {
+    "always_allow": {
+      "accuracy": 0.5,
+      "correct": 150,
+      "trials": 300
+    }
+  },
+  "collection_rule": "All registered pilots are retained. A full run is required exactly when the accuracy-blind continuation gate is GO; STOP is not converted to a 300-item score.",
+  "dataset": {
+    "gold_sha256": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
+    "inputs_sha256": "sha256:14eaa74f6d5ef045fbaf89ce6b805f25effa6dd9b11122048db98aaa5c6f2b92",
+    "instances": 300,
+    "manifest_sha256": "sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba",
+    "pairs": 150,
+    "pairs_sha256": "sha256:34fb2a69bcb43e829ac9ad3c82f1a540a3beb850b5cd5bc52583402d9b6f342d"
+  },
+  "gate_role": "The deterministic gate uses the same policy oracle as the labels and is reported only as an implementation conformance check.",
+  "interpretation_boundary": "A separately precommitted revision study on the existing hidden split. It does not replace or retroactively alter the original preregistered v1 study.",
+  "models_with_complete_hidden_pass": [
+    {
+      "brier": {
+        "defined": true,
+        "value": 0.31386861313868614
+      },
+      "conditional_raw_action_accuracy": 0.6861313868613139,
+      "conditional_raw_pair_accuracy": 0.3064516129032258,
+      "decision_coverage": 0.9133333333333333,
+      "end_to_end": {
+        "action_accuracy": 0.6266666666666667,
+        "actions": 300,
+        "correct_actions": 188,
+        "correct_pairs": 38,
+        "failure_handling": "Every non-OK response counts as incorrect.",
+        "pair_accuracy": 0.25333333333333335,
+        "pairs": 150
+      },
+      "evidence_id_macro_precision": 0.8483333333333334,
+      "evidence_id_macro_recall": 0.8111111111111111,
+      "frozen_plan_commit": "119e475953e50218fc62abd2163eef04cbad4e23",
+      "lane_id": "opencode-go-deepseek-v4-flash-matched",
+      "missing_evidence_exact_match": 0.9066666666666666,
+      "model_requested": "deepseek-v4-flash",
+      "model_returned_values": [
+        "deepseek-v4-flash"
+      ],
+      "nll": {
+        "defined": true,
+        "value": 10.84088881511429
+      },
+      "pair_coverage": 0.8266666666666667,
+      "provider": "OpenCode Go",
+      "quota_or_reference_value": {
+        "actual_cost_usd": 0.15612731200000007,
+        "records": 300,
+        "records_with_computed_cost": 300,
+        "status": "COMPLETE"
+      },
+      "raw_action_distribution": {
+        "ALLOW": 236,
+        "ESCALATE": 3,
+        "HOLD": 35
+      },
+      "raw_false_promotion_rate": 0.6935483870967742,
+      "raw_valid_promotion_rate": 1.0,
+      "reason_code_instance_set_f1": 0.6034444444444444,
+      "records": 300,
+      "run_sha256": "sha256:b044984d4699603949e16d1d886cbe4eef1defa462872b87bf0efd2c641d0a20",
+      "status_counts": {
+        "JSON_SYNTAX_ERROR": 0,
+        "OK": 274,
+        "SCHEMA_ERROR": 0,
+        "SEMANTIC_ERROR": 26,
+        "TRANSPORT_ERROR": 0
+      },
+      "uncertainty": {
+        "decision_coverage": {
+          "estimate": 0.9133333333333333,
+          "high": 0.9401711024819569,
+          "low": 0.8760440413057516,
+          "successes": 274,
+          "trials": 300
+        },
+        "end_to_end_action_accuracy": {
+          "estimate": 0.6266666666666667,
+          "high": 0.6794753144044509,
+          "low": 0.5706551328853308,
+          "successes": 188,
+          "trials": 300
+        },
+        "end_to_end_pair_accuracy": {
+          "estimate": 0.25333333333333335,
+          "high": 0.32849409326407264,
+          "low": 0.19049122729084522,
+          "successes": 38,
+          "trials": 150
+        },
+        "method": "two-sided 95% Wilson intervals; descriptive only",
+        "pair_coverage": {
+          "estimate": 0.8266666666666667,
+          "high": 0.8788793677361272,
+          "low": 0.7581400726100628,
+          "successes": 124,
+          "trials": 150
+        },
+        "postgate_action_accuracy": {
+          "estimate": 1.0,
+          "high": 1.0,
+          "low": 0.9861739178990808,
+          "successes": 274,
+          "trials": 274
+        },
+        "postgate_pair_accuracy": {
+          "estimate": 1.0,
+          "high": 0.9999999999999999,
+          "low": 0.9699513846593223,
+          "successes": 124,
+          "trials": 124
+        },
+        "raw_action_accuracy": {
+          "estimate": 0.6861313868613139,
+          "high": 0.7381852027257443,
+          "low": 0.6289306353242785,
+          "successes": 188,
+          "trials": 274
+        },
+        "raw_false_promotion_rate": {
+          "estimate": 0.6935483870967742,
+          "high": 0.7678594725423212,
+          "low": 0.6076055795838681,
+          "successes": 86,
+          "trials": 124
+        },
+        "raw_pair_accuracy": {
+          "estimate": 0.3064516129032258,
+          "high": 0.39239442041613193,
+          "low": 0.23214052745767877,
+          "successes": 38,
+          "trials": 124
+        },
+        "raw_valid_promotion_rate": {
+          "estimate": 1.0,
+          "high": 1.0,
+          "low": 0.9750297556319235,
+          "successes": 150,
+          "trials": 150
+        }
+      },
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 300,
+          "total_tokens": 0
+        },
+        "totals": {
+          "cached_input_tokens": 515328,
+          "input_tokens": 749420,
+          "output_tokens": 34782,
+          "reasoning_tokens": null,
+          "total_tokens": 784202
+        }
+      }
+    },
+    {
+      "brier": {
+        "defined": true,
+        "value": 0.03367003367003367
+      },
+      "conditional_raw_action_accuracy": 0.9494949494949495,
+      "conditional_raw_pair_accuracy": 0.8979591836734694,
+      "decision_coverage": 0.99,
+      "end_to_end": {
+        "action_accuracy": 0.94,
+        "actions": 300,
+        "correct_actions": 282,
+        "correct_pairs": 132,
+        "failure_handling": "Every non-OK response counts as incorrect.",
+        "pair_accuracy": 0.88,
+        "pairs": 150
+      },
+      "evidence_id_macro_precision": 0.8483333333333334,
+      "evidence_id_macro_recall": 0.8766666666666667,
+      "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "lane_id": "opencode-go-qwen3.7-max",
+      "missing_evidence_exact_match": 0.99,
+      "model_requested": "qwen3.7-max",
+      "model_returned_values": [
+        "qwen3.7-max"
+      ],
+      "nll": {
+        "defined": true,
+        "value": 1.162948686610805
+      },
+      "pair_coverage": 0.98,
+      "provider": "OpenCode Go",
+      "quota_or_reference_value": {
+        "actual_cost_usd": 7.032197499999998,
+        "records": 300,
+        "records_with_computed_cost": 299,
+        "status": "PARTIAL"
+      },
+      "raw_action_distribution": {
+        "ALLOW": 160,
+        "ESCALATE": 12,
+        "HOLD": 125
+      },
+      "raw_false_promotion_rate": 0.06802721088435375,
+      "raw_valid_promotion_rate": 1.0,
+      "reason_code_instance_set_f1": 0.9544444444444444,
+      "records": 300,
+      "run_sha256": "sha256:fb6ce0adfabcadeddd221aff7fbc56eae99ef246d77331e51aed1e3b4f18f793",
+      "status_counts": {
+        "JSON_SYNTAX_ERROR": 0,
+        "OK": 297,
+        "SCHEMA_ERROR": 0,
+        "SEMANTIC_ERROR": 2,
+        "TRANSPORT_ERROR": 1
+      },
+      "uncertainty": {
+        "decision_coverage": {
+          "estimate": 0.99,
+          "high": 0.9965933815622847,
+          "low": 0.9710165066376601,
+          "successes": 297,
+          "trials": 300
+        },
+        "end_to_end_action_accuracy": {
+          "estimate": 0.94,
+          "high": 0.9617136304753079,
+          "low": 0.9071605548470915,
+          "successes": 282,
+          "trials": 300
+        },
+        "end_to_end_pair_accuracy": {
+          "estimate": 0.88,
+          "high": 0.9227309691215898,
+          "low": 0.818291645158672,
+          "successes": 132,
+          "trials": 150
+        },
+        "method": "two-sided 95% Wilson intervals; descriptive only",
+        "pair_coverage": {
+          "estimate": 0.98,
+          "high": 0.9931752486770326,
+          "low": 0.9428533167296139,
+          "successes": 147,
+          "trials": 150
+        },
+        "postgate_action_accuracy": {
+          "estimate": 0.9831649831649831,
+          "high": 0.9927881964695575,
+          "low": 0.9612026568026177,
+          "successes": 292,
+          "trials": 297
+        },
+        "postgate_pair_accuracy": {
+          "estimate": 0.9659863945578231,
+          "high": 0.9853855752050843,
+          "low": 0.9228527902356297,
+          "successes": 142,
+          "trials": 147
+        },
+        "raw_action_accuracy": {
+          "estimate": 0.9494949494949495,
+          "high": 0.9691575685858859,
+          "low": 0.9183530858519916,
+          "successes": 282,
+          "trials": 297
+        },
+        "raw_false_promotion_rate": {
+          "estimate": 0.06802721088435375,
+          "high": 0.12068883740957284,
+          "low": 0.037367568349765325,
+          "successes": 10,
+          "trials": 147
+        },
+        "raw_pair_accuracy": {
+          "estimate": 0.8979591836734694,
+          "high": 0.937182326727646,
+          "low": 0.8384664963129638,
+          "successes": 132,
+          "trials": 147
+        },
+        "raw_valid_promotion_rate": {
+          "estimate": 1.0,
+          "high": 1.0,
+          "low": 0.9750297556319235,
+          "successes": 150,
+          "trials": 150
+        }
+      },
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 1,
+          "input_tokens": 1,
+          "output_tokens": 1,
+          "reasoning_tokens": 300,
+          "total_tokens": 1
+        },
+        "totals": {
+          "cached_input_tokens": 0,
+          "input_tokens": 722398,
+          "output_tokens": 696827,
+          "reasoning_tokens": null,
+          "total_tokens": 1419225
+        }
+      }
+    }
+  ],
+  "packet_sha256": "sha256:eadd52f72ccc8f5eabf803d4cd667ce15799b688d6d97077a95f42efd2094d28",
+  "prespecified_tests": {
+    "deepseek_flash_service_replication": {
+      "missing_full_lanes": [
+        "bai-deepseek-v4-flash-primary"
+      ],
+      "reason": "One or more prespecified lanes did not pass the accuracy-blind continuation gate.",
+      "status": "NOT_AVAILABLE"
+    },
+    "deepseek_same_gateway_descriptive_contrast": {
+      "missing_full_lanes": [
+        "opencode-go-deepseek-v4-pro"
+      ],
+      "reason": "One or more prespecified lanes did not pass the accuracy-blind continuation gate.",
+      "status": "NOT_AVAILABLE"
+    },
+    "models_vs_always_allow": {
+      "completed_lanes": [
+        "opencode-go-qwen3.7-max",
+        "opencode-go-deepseek-v4-flash-matched"
+      ],
+      "holm_scope": "completed lanes only; not the originally planned six-test family",
+      "missing_due_to_qualification": [
+        "opencode-go-glm-5.2",
+        "opencode-go-deepseek-v4-pro",
+        "opencode-go-hy3",
+        "opencode-go-muse-spark-1.2-contributor"
+      ],
+      "registered_lanes": [
+        "opencode-go-qwen3.7-max",
+        "opencode-go-glm-5.2",
+        "opencode-go-deepseek-v4-pro",
+        "opencode-go-deepseek-v4-flash-matched",
+        "opencode-go-hy3",
+        "opencode-go-muse-spark-1.2-contributor"
+      ],
+      "status": "PARTIAL_FAMILY",
+      "tests": [
+        {
+          "a_only_correct": 0,
+          "b_only_correct": 132,
+          "discordant": 132,
+          "lane_id": "opencode-go-qwen3.7-max",
+          "p": 3.6734198463196485e-40,
+          "p_holm_within_completed_family": 7.346839692639297e-40
+        },
+        {
+          "a_only_correct": 0,
+          "b_only_correct": 38,
+          "discordant": 38,
+          "lane_id": "opencode-go-deepseek-v4-flash-matched",
+          "p": 7.275957614183426e-12,
+          "p_holm_within_completed_family": 7.275957614183426e-12
+        }
+      ]
+    }
+  },
+  "provenance": {
+    "frozen_plan_commits": {
+      "bai-deepseek-v4-flash-primary": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "opencode-go-deepseek-v4-flash-matched": "119e475953e50218fc62abd2163eef04cbad4e23",
+      "opencode-go-deepseek-v4-pro": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "opencode-go-glm-5.2": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "opencode-go-hy3": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "opencode-go-muse-spark-1.2-contributor": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "opencode-go-qwen3.7-max": "b86ee1e1d28db8a390344d28582af88e26970560"
+    },
+    "full_analysis_sha256": {
+      "opencode-go-deepseek-v4-flash-matched": "sha256:e7b6275a30b6b54400b36230e6ae6a10456db0e7519ad78bc1f4c8fa5bcb33d6",
+      "opencode-go-qwen3.7-max": "sha256:0b48f563499583bf759b856f503b4f66c4c1006f1d22e99938683b6c855da331"
+    },
+    "full_run_sha256": {
+      "opencode-go-deepseek-v4-flash-matched": "sha256:b044984d4699603949e16d1d886cbe4eef1defa462872b87bf0efd2c641d0a20",
+      "opencode-go-qwen3.7-max": "sha256:fb6ce0adfabcadeddd221aff7fbc56eae99ef246d77331e51aed1e3b4f18f793"
+    },
+    "pilot_analysis_sha256": {
+      "bai-deepseek-v4-flash-primary": "sha256:bbdeb981783c9505adbfe6aaa60afd8e45c24f509af1a150851deead94c7d32d",
+      "opencode-go-deepseek-v4-flash-matched": "sha256:72637b359ca4cac2cde27e9388a35fd66ba075061aacf4296185b9e499f93b93",
+      "opencode-go-deepseek-v4-pro": "sha256:2b9362b69396a3ae8747954ba71bdc47726ac1816e40a5c56d434c9642b6122f",
+      "opencode-go-glm-5.2": "sha256:10aff72cba6089c0280b8e6e34d7887ac454b6d56762921ee0f6267459a43f2e",
+      "opencode-go-hy3": "sha256:2c3225b0f17a1ab19e7af4ceff13c70f8621d07fb9ce678f4ed4300c460fe1ec",
+      "opencode-go-muse-spark-1.2-contributor": "sha256:a827d0dcfd2a4c7b82d9bec49f7fe3d2e5e0a276fe47f614637069f033ddf92f",
+      "opencode-go-qwen3.7-max": "sha256:a325061d93626a61f5680e3a67217c2cb2ce2e391d7104931697a7ab01e57617"
+    },
+    "pilot_run_sha256": {
+      "bai-deepseek-v4-flash-primary": "sha256:e4e672c35565ca0bc2eddf4646f57fe845f2bd7a1b308fca56dd4b37bbda1c58",
+      "opencode-go-deepseek-v4-flash-matched": "sha256:bd4a9e8a2b19b53b5f5d394ee0a242f2e0833bb99c5bbbe28a50bcdbe3852e62",
+      "opencode-go-deepseek-v4-pro": "sha256:dc5981d8e4ff207226e33d9cb2b3ef92639e371e91b2ee3283b12032f7f7c23f",
+      "opencode-go-glm-5.2": "sha256:25fb3eafd53e35d13da5902ab6a08a1c7faf4b60ae77c007afacc1715419fd8a",
+      "opencode-go-hy3": "sha256:54e227a00b0abdcf56d5593b9e4dcd2064535ffec2c70a4eee9eccd8643b0966",
+      "opencode-go-muse-spark-1.2-contributor": "sha256:3b1d2e6aaeb27d03b2f19ee2abe0dd834d87c38ddeb52c8144ea246bd232d8ff",
+      "opencode-go-qwen3.7-max": "sha256:0a7b3a446af337a125c1adaf120c7422587c6af6a26411352226799593fc24d6"
+    }
+  },
+  "qualification": {
+    "attempted_lanes": [
+      "bai-deepseek-v4-flash-primary",
+      "opencode-go-deepseek-v4-flash-matched",
+      "opencode-go-deepseek-v4-pro",
+      "opencode-go-glm-5.2",
+      "opencode-go-hy3",
+      "opencode-go-muse-spark-1.2-contributor",
+      "opencode-go-qwen3.7-max"
+    ],
+    "go_lanes": [
+      "opencode-go-deepseek-v4-flash-matched",
+      "opencode-go-qwen3.7-max"
+    ],
+    "pilots": [
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "STOP",
+          "parseable_decisions": 0,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "lane_id": "bai-deepseek-v4-flash-primary",
+        "model_requested": "deepseek-v4-flash",
+        "provider": "B.AI",
+        "records": 12,
+        "run_sha256": "sha256:e4e672c35565ca0bc2eddf4646f57fe845f2bd7a1b308fca56dd4b37bbda1c58",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 12,
+          "OK": 0,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      },
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "GO",
+          "parseable_decisions": 12,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "119e475953e50218fc62abd2163eef04cbad4e23",
+        "lane_id": "opencode-go-deepseek-v4-flash-matched",
+        "model_requested": "deepseek-v4-flash",
+        "provider": "OpenCode Go",
+        "records": 12,
+        "run_sha256": "sha256:bd4a9e8a2b19b53b5f5d394ee0a242f2e0833bb99c5bbbe28a50bcdbe3852e62",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 12,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      },
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "STOP",
+          "parseable_decisions": 0,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "lane_id": "opencode-go-deepseek-v4-pro",
+        "model_requested": "deepseek-v4-pro",
+        "provider": "OpenCode Go",
+        "records": 12,
+        "run_sha256": "sha256:dc5981d8e4ff207226e33d9cb2b3ef92639e371e91b2ee3283b12032f7f7c23f",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 12,
+          "OK": 0,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      },
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "STOP",
+          "parseable_decisions": 0,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "lane_id": "opencode-go-glm-5.2",
+        "model_requested": "glm-5.2",
+        "provider": "OpenCode Go",
+        "records": 12,
+        "run_sha256": "sha256:25fb3eafd53e35d13da5902ab6a08a1c7faf4b60ae77c007afacc1715419fd8a",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 12,
+          "OK": 0,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      },
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "STOP",
+          "parseable_decisions": 0,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "lane_id": "opencode-go-hy3",
+        "model_requested": "hy3",
+        "provider": "OpenCode Go",
+        "records": 12,
+        "run_sha256": "sha256:54e227a00b0abdcf56d5593b9e4dcd2064535ffec2c70a4eee9eccd8643b0966",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 12,
+          "OK": 0,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      },
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "STOP",
+          "parseable_decisions": 0,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "lane_id": "opencode-go-muse-spark-1.2-contributor",
+        "model_requested": "muse-spark-1.2-contributor",
+        "provider": "OpenCode Go",
+        "records": 12,
+        "run_sha256": "sha256:3b1d2e6aaeb27d03b2f19ee2abe0dd834d87c38ddeb52c8144ea246bd232d8ff",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 0,
+          "SCHEMA_ERROR": 12,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      },
+      {
+        "continuation_gate": {
+          "accuracy_used_by_gate": false,
+          "action_distribution_used_by_gate": false,
+          "decision": "GO",
+          "parseable_decisions": 12,
+          "required_parseable_decisions": 10,
+          "transport_errors": 0
+        },
+        "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "lane_id": "opencode-go-qwen3.7-max",
+        "model_requested": "qwen3.7-max",
+        "provider": "OpenCode Go",
+        "records": 12,
+        "run_sha256": "sha256:0a7b3a446af337a125c1adaf120c7422587c6af6a26411352226799593fc24d6",
+        "status_counts": {
+          "JSON_SYNTAX_ERROR": 0,
+          "OK": 12,
+          "SCHEMA_ERROR": 0,
+          "SEMANTIC_ERROR": 0,
+          "TRANSPORT_ERROR": 0
+        }
+      }
+    ],
+    "stop_lanes": [
+      "bai-deepseek-v4-flash-primary",
+      "opencode-go-deepseek-v4-pro",
+      "opencode-go-glm-5.2",
+      "opencode-go-hy3",
+      "opencode-go-muse-spark-1.2-contributor"
+    ]
+  },
+  "raw_item_records_released_separately": true,
+  "schema_version": "1.1.0",
+  "status": "COMPLETE_WITH_QUALIFICATION_FAILURES",
+  "study_id": "claimpromotebench-capable-hidden-extension-v1",
+  "truth_status": "COMPUTATIONAL"
+}

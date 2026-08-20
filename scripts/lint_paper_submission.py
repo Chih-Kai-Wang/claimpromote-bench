@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -13,7 +14,9 @@ TEX = ROOT / "technical-report" / "main.tex"
 BIB = ROOT / "technical-report" / "references.bib"
 RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
-V2_PILOT_SHA = "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
+V2_PILOT_SHA = "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
+CAPABLE_HIDDEN = ROOT / "v2" / "capable-hidden-results" / "capable-hidden-study.json"
+CAPABLE_HIDDEN_SHA = "sha256:20904dd181b27ddcbe0997692f101f50c1815abdb91482f4c4f09836f3508dcb"
 STRONGER_FOLLOWUP = (
     ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
 )
@@ -33,6 +36,10 @@ def fail(message: str) -> None:
 
 def pct(value: float, digits: int = 1) -> str:
     return f"{100 * value:.{digits}f}"
+
+
+def sha256_file(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def require_regex(tex: str, pattern: str, description: str) -> None:
@@ -155,34 +162,117 @@ def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
 
     required_patterns = [
         (r"post-v1 public", "post-v1 public scope label"),
-        (r"all\s+78\s+constrained parseable decisions select", "78 constrained decisions"),
-        (r"38\s+complete pairs", "38 constrained complete pairs"),
-        (r"coverage from 75\\% to 100\\%", "Qwen3-0.6B constrained coverage change"),
-        (r"from 0\\% to 95\\%", "Qwen3-1.7B constrained coverage change"),
-        (r"raw pair accuracy and flip rate remain zero", "zero pair accuracy and flip rate"),
-        (r"workflow run \\texttt\{32291482079\}", "public pilot source workflow"),
-        (r"\\texttt\{83dbee49\.\.\.25c0b264e\}", "public pilot aggregate SHA"),
+        (r"108\s+of\s+160\s+decisions are parseable", "108 parseable decisions"),
+        (r"every one selects", "uniform ALLOW behavior"),
+        (r"from \.75 to 1\.00", "Qwen3-0.6B constrained coverage change"),
+        (r"from 0 to \.95", "Qwen3-1.7B constrained coverage change"),
+        (r"zero pair accuracy", "zero pair accuracy"),
     ]
     for pattern, description in required_patterns:
         require_regex(tex, pattern, description)
 
-    pilot_table = re.search(
-        r"\\label\{tab:v2-pilot\}(.*?)\\end\{table\}",
-        tex,
-        flags=re.DOTALL,
-    )
-    if not pilot_table:
-        fail("post-v1 public pilot table not found")
-    table = pilot_table.group(1)
-    expected_rows = [
-        r"Qwen3-0\.6B\s*&\s*Free\s*&\s*\.75\s*&\s*\.70\s*&\s*\.50\s*&\s*\.00",
-        r"Qwen3-0\.6B\s*&\s*Schema\s*&\s*1\.00\s*&\s*1\.00\s*&\s*\.50\s*&\s*\.00",
-        r"Qwen3-1\.7B\s*&\s*Free\s*&\s*\.00\s*&\s*\.00\s*&\s*undef\.\s*&\s*undef\.",
-        r"Qwen3-1\.7B\s*&\s*Schema\s*&\s*\.95\s*&\s*\.90\s*&\s*\.50\s*&\s*\.00",
+
+def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
+    if sha256_file(CAPABLE_HIDDEN) != CAPABLE_HIDDEN_SHA:
+        fail("capable hidden aggregate SHA changed")
+    if study.get("status") != "COMPLETE_WITH_QUALIFICATION_FAILURES":
+        fail("capable hidden study status changed")
+    dataset = study.get("dataset")
+    qualification = study.get("qualification")
+    complete = study.get("models_with_complete_hidden_pass")
+    if (
+        not isinstance(dataset, dict)
+        or not isinstance(qualification, dict)
+        or not isinstance(complete, list)
+    ):
+        fail("capable hidden study is malformed")
+    if dataset.get("instances") != 300 or dataset.get("pairs") != 150:
+        fail("capable hidden dataset size changed")
+    expected_go = [
+        "opencode-go-deepseek-v4-flash-matched",
+        "opencode-go-qwen3.7-max",
     ]
-    for pattern in expected_rows:
+    if qualification.get("go_lanes") != expected_go:
+        fail("capable hidden GO lanes changed")
+    if len(qualification.get("pilots", [])) != 7 or len(qualification.get("stop_lanes", [])) != 5:
+        fail("capable hidden pilot qualification matrix changed")
+    by_lane = {str(row.get("lane_id")): row for row in complete if isinstance(row, dict)}
+    expected = {
+        "opencode-go-qwen3.7-max": {
+            "decision_coverage": 0.99,
+            "pair_coverage": 0.98,
+            "action_accuracy": 0.94,
+            "pair_accuracy": 0.88,
+            "correct_actions": 282,
+            "correct_pairs": 132,
+            "raw_false_promotion_rate": 0.06802721088435375,
+            "reason_code_instance_set_f1": 0.9544444444444444,
+        },
+        "opencode-go-deepseek-v4-flash-matched": {
+            "decision_coverage": 0.9133333333333333,
+            "pair_coverage": 0.8266666666666667,
+            "action_accuracy": 0.6266666666666667,
+            "pair_accuracy": 0.25333333333333335,
+            "correct_actions": 188,
+            "correct_pairs": 38,
+            "raw_false_promotion_rate": 0.6935483870967742,
+            "reason_code_instance_set_f1": 0.6034444444444444,
+        },
+    }
+    if set(by_lane) != set(expected):
+        fail("capable hidden completed lane set changed")
+    for lane_id, values in expected.items():
+        row = by_lane[lane_id]
+        end_to_end = row.get("end_to_end")
+        if not isinstance(end_to_end, dict):
+            fail(f"capable hidden end-to-end metrics missing: {lane_id}")
+        observed = {
+            "decision_coverage": row.get("decision_coverage"),
+            "pair_coverage": row.get("pair_coverage"),
+            "action_accuracy": end_to_end.get("action_accuracy"),
+            "pair_accuracy": end_to_end.get("pair_accuracy"),
+            "correct_actions": end_to_end.get("correct_actions"),
+            "correct_pairs": end_to_end.get("correct_pairs"),
+            "raw_false_promotion_rate": row.get("raw_false_promotion_rate"),
+            "reason_code_instance_set_f1": row.get("reason_code_instance_set_f1"),
+        }
+        if observed != values:
+            fail(f"capable hidden paper-facing metrics changed: {lane_id}")
+    if study.get("baselines", {}).get("always_allow") != {
+        "accuracy": 0.5,
+        "correct": 150,
+        "trials": 300,
+    }:
+        fail("capable hidden always-ALLOW baseline changed")
+    tests = study.get("prespecified_tests", {}).get("models_vs_always_allow", {}).get("tests")
+    if not isinstance(tests, list) or len(tests) != 2:
+        fail("capable hidden baseline tests changed")
+    required_patterns = [
+        (r"two of seven service lanes", "two of seven qualified lanes"),
+        (r"five other lanes failed formatting qualification", "five qualification failures"),
+        (r"282/300", "Qwen correct actions"),
+        (r"132/150", "Qwen correct pairs"),
+        (r"188/300", "Flash correct actions"),
+        (r"38/150", "Flash correct pairs"),
+        (r"7\.35\\times10\^\{-40\}", "Qwen Holm-adjusted p-value"),
+        (r"7\.28\\times10\^\{-12\}", "Flash Holm-adjusted p-value"),
+    ]
+    for pattern, description in required_patterns:
+        require_regex(tex, pattern, description)
+    capable_table = re.search(
+        r"\\label\{tab:capable-hidden\}(.*?)\\end\{table\}", tex, flags=re.DOTALL
+    )
+    if not capable_table:
+        fail("capable hidden result table not found")
+    table = capable_table.group(1)
+    rows = (
+        r"Qwen3\.7-Max\s*&\s*\.990\s*&\s*\.980\s*&\s*\.940\s*&\s*\.880\s*&\s*\.068",
+        r"DeepSeek-V4-Flash\s*&\s*\.913\s*&\s*\.827\s*&\s*\.627\s*&\s*\.253\s*&\s*\.694",
+        r"Always \\allow\{\}\s*&\s*1\.00\s*&\s*1\.00\s*&\s*\.500\s*&\s*\.000\s*&\s*1\.00",
+    )
+    for pattern in rows:
         if not re.search(pattern, table):
-            fail(f"post-v1 public pilot table row changed: {pattern}")
+            fail(f"capable hidden table row changed: {pattern}")
 
 
 def validate_stronger_followup_binding(tex: str, study: dict[str, Any]) -> None:
@@ -232,9 +322,9 @@ def validate_stronger_followup_binding(tex: str, study: dict[str, Any]) -> None:
     required_patterns = [
         (r"post-protocol GPT-5\.4", "post-protocol GPT-5.4 scope label"),
         (r"99\s+parseable decisions from 100", "GPT-5.4 decision coverage count"),
-        (r"all\s+99\s+match the policy oracle", "GPT-5.4 correct decisions"),
+        (r"all\s+99\s+parseable decisions match the policy oracle", "GPT-5.4 correct decisions"),
         (r"49\s+of\s+50\s+pairs are complete", "GPT-5.4 complete pairs"),
-        (r"raw pair accuracy and decision-flip rate are 1\.0", "GPT-5.4 pair metrics"),
+        (r"conditional pair accuracy and decision-flip rate are 1\.0", "GPT-5.4 pair metrics"),
         (r"0/49", "GPT-5.4 false-promotion count"),
         (r"50/50", "GPT-5.4 valid-promotion count"),
     ]
@@ -247,6 +337,7 @@ def main() -> int:
     bib = BIB.read_text(encoding="utf-8")
     frozen = load_object(RESULTS_FREEZE, "results-freeze.json")
     pilot = load_object(V2_PILOT, "v2 public pilot study")
+    capable_hidden = load_object(CAPABLE_HIDDEN, "capable hidden study")
     stronger_followup = load_object(STRONGER_FOLLOWUP, "GPT-5.4 follow-up study")
     lower = tex.lower()
     validate_submission_metadata(tex)
@@ -301,6 +392,9 @@ def main() -> int:
     for phrase in style_smells:
         if phrase in lower:
             fail(f"internal/jargon-heavy wording remains in manuscript: {phrase!r}")
+    for provider_name in ("OpenCode", "OpenRouter", "B.AI"):
+        if provider_name.lower() in lower:
+            fail(f"provider-specific operational detail remains in manuscript: {provider_name}")
     direct_statement_guards = [
         (r"\bnot\b", "not-construction"),
         (r"\bwithout\b", "without-construction"),
@@ -351,24 +445,15 @@ def main() -> int:
     )
 
     required_plain = [
-        str(frozen["source_scored_workflow_run_id"]),
-        str(frozen["source_recovery_workflow_run_id"]),
-        "3eb5b534...e8bfe664",
-        "Effective FPR",
         "decision coverage",
-        "same fixed policy used to define the benchmark labels",
-        "conditional scores quantify rule execution under the benchmark policy",
         "Machine-checkable validation strategy",
         "public pair-contract audit",
         "policy remains an author-defined benchmark rule",
-        (
-            f"{pct(m06['gate_complete_pair_coverage_range'][0])}--"
-            f"{pct(m06['gate_complete_pair_coverage_range'][1])}\\%"
-        ),
-        (
-            f"{pct(m17['gate_complete_pair_coverage_range'][0])}--"
-            f"{pct(m17['gate_complete_pair_coverage_range'][1])}\\%"
-        ),
+        "one-way implementation check",
+        "Every non-OK response",
+        "Qwen3.7-Max",
+        "DeepSeek-V4-Flash",
+        "private construction seed is excluded",
     ]
     for phrase in required_plain:
         if phrase.lower() not in lower:
@@ -385,6 +470,7 @@ def main() -> int:
             fail("frozen false-block values changed")
 
     validate_v2_pilot_binding(tex, pilot)
+    validate_capable_hidden_binding(tex, capable_hidden)
     validate_stronger_followup_binding(tex, stronger_followup)
 
     if r"\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}" not in tex:
@@ -426,24 +512,27 @@ def main() -> int:
     )
     if not contrib_match:
         fail("contributions block not found")
-    if len(re.findall(r"\\item\b", contrib_match.group(1))) != 4:
-        fail("contributions block must contain exactly four items")
+    if len(re.findall(r"\\item\b", contrib_match.group(1))) != 3:
+        fail("contributions block must contain exactly three items")
 
     raw_table = re.search(r"\\label\{tab:main-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
     if not raw_table:
         fail("raw main-results table not found")
     raw_text = raw_table.group(1)
-    for model in ("Qwen3-0.6B", "Qwen3-1.7B"):
+    expected_gate_rows = {
+        "Qwen3-0.6B": (".490/.420/.140", ".277/.210/.087"),
+        "Qwen3-1.7B": (".483/.217/.480", ".230/.113/.230"),
+    }
+    for model, (coverage, accuracy) in expected_gate_rows.items():
         pattern = (
-            rf"{re.escape(model)}\s*&\s*Ledger \+ verifier \+ gate\s*&.*?"
-            rf"&\s*1\.00\s*&\s*1\.00\s*&\s*0\.00"
+            rf"{re.escape(model)}\s*&\s*Ledger \+ verifier \+ gate\s*&\s*"
+            rf"{re.escape(coverage)}\s*&\s*{re.escape(accuracy)}\s*&\s*0/0/0"
         )
         if not re.search(pattern, raw_text):
-            fail(f"gate row for {model} must report raw pre-enforcement FPR/VPR/PTA = 1/1/0")
+            fail(f"gate row for {model} must report frozen end-to-end raw scores")
 
-    gate_table = re.search(r"\\label\{tab:gate-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
-    if not gate_table or "Effective FPR" not in gate_table.group(1):
-        fail("separate gate table with Effective FPR is required")
+    if r"\label{tab:gate-results}" in tex:
+        fail("tautological gate metrics must remain outside the main-result tables")
 
     if "The author" not in tex or "author retains authorship and final responsibility" not in lower:
         fail("AI assistance disclosure must state author responsibility")

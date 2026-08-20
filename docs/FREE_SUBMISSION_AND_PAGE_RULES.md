@@ -1,6 +1,6 @@
 # ICLR 2027 and arXiv: page and cost rules
 
-Verified against the live official pages on 2026-08-20. When any cached page or earlier note disagrees, use the live ICLR 2027 Author Guidelines as the source of truth.
+Verified against the live official pages on 2026-08-21. When any cached page or earlier note disagrees, use the live ICLR 2027 Author Guidelines as the source of truth.
 
 ## ICLR 2027 deadlines
 

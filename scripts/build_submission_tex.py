@@ -36,28 +36,14 @@ and final responsibility.
 
 ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
 
-The hidden set and exact model prompts were fixed and committed before scored inference. A later
-recovery procedure reconstructed that same dataset and prompt identity, validated all 24 original
-and 24 normalized runs, and produced the 7,200-record aggregate from archived model outputs. The
-anonymous submission replaces public repository identifiers and searchable provenance hashes with
-role descriptions. An anonymized review bundle contains public manifests, compact v1/v2 result
-summaries, pair-contract and executable validators, Lean replay inputs, and a file-hash manifest.
-Hidden inference and recovery provenance remain outside that bundle; the public preprint and
-release retain the exact identifiers.
-
-The separately labeled post-v1 public pilot retains raw responses in its source artifacts and
-publishes a public-safe aggregate produced twice from the same immutable four-run matrix. Its
-free and constrained conditions have identical prompts and differ only in the registered response
-format. The anonymous submission uses role descriptions for the source run and aggregate.
-
-The separately frozen GPT-5.4 public-development follow-up preserves its initial transport-only
-STOP and the revised interface plan as distinct records. Its validated revised pilot and full pass
-are bound to the frozen public prompt packet, direct OpenAI routing, request and response hashes,
-and token-derived costs. The anonymous review bundle contains a compact aggregate with the exact
-paper-facing metrics while omitting raw response text and public provenance identifiers.
-
-The raw hidden seed remains in secret storage. Future changes to labels, policy rules, prompts,
-controlled factors, or hidden-test bytes create a new benchmark version.
+The hidden set and exact prompts were fixed before scored inference. Artifact-only recovery
+reconstructed the same dataset and prompt identity and recomputed the 7,200-record v1 aggregate
+from all 24 archived runs. The later studies retain their frozen prompt packets, item-level raw
+responses, parser outcomes, oracle labels, and recomputation inputs.
+The anonymous review bundle replaces searchable repository provenance with role descriptions and
+includes the released hidden bytes, executable and Lean replay inputs, canonical analyses, and a
+file-hash manifest. The private construction seed is excluded. Any change to labels, policy,
+prompts, controlled factors, or hidden-test bytes creates a new benchmark version.
 
 """
 
@@ -98,8 +84,8 @@ def canonical_body() -> str:
         r"\texttt{3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664}": (
             r"\texttt{3eb5b534...e8bfe664}"
         ),
-        r"\texttt{83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e}": (
-            r"\texttt{83dbee49...25c0b264e}"
+        r"\texttt{eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5}": (
+            r"\texttt{eb2af5fc...04199e5}"
         ),
     }
     for old, new in replacements.items():

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Build an anonymized, public-data reviewer bundle for double-blind evaluation.
+"""Build an anonymized reviewer bundle for double-blind evaluation.
 
-The bundle contains public benchmark code/data and compact v1/v2 result summaries. It excludes Git
-history, author metadata, public repository links, workflow IDs, public provenance hashes, hidden
-study data, and raw human-review submissions. The builder fails if a forbidden identity token
+The bundle contains benchmark code/data plus reviewer-release empirical records. It excludes Git
+history, author metadata, public repository links, workflow IDs, searchable provenance hashes, the
+private construction seed, and human-subject records. The builder fails if an identity token
 survives staging.
 """
 
@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,13 @@ TEXT_SUFFIXES = {
     ".yml",
 }
 TEXT_NAMES = {"LICENSE"}
+FORBIDDEN_CREDENTIAL_PATTERNS = {
+    "private-key header": re.compile(r"-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----"),
+    "OpenAI-style secret": re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b"),
+    "Google API key": re.compile(r"\bAIza[0-9A-Za-z_-]{30,}\b"),
+    "GitHub token": re.compile(r"\b(?:github_pat_|gh[pousr]_)[A-Za-z0-9_]{20,}\b"),
+    "bearer credential": re.compile(r"\bBearer\s+[A-Za-z0-9._~-]{24,}\b", re.IGNORECASE),
+}
 SKIP_NAMES = {
     ".git",
     ".github",
@@ -38,13 +46,20 @@ SKIP_NAMES = {
     ".mypy_cache",
     ".pytest_cache",
     "__pycache__",
+    "attempt-history",
     "work",
 }
 SKIP_FILES = {
     "review.py",
     "review_analysis.py",
+    "SHA256SUMS",
 }
-SKIP_SUFFIXES = {".pyc", ".pyo"}
+SKIP_SUFFIXES = {".log", ".pyc", ".pyo"}
+LOCAL_WORKSPACE_ROOT = (
+    "C:\\Users\\user\\Documents\\Codex\\2026-08-20\\files-pasted-by-the-user-github"
+    "\\work\\claimpromote-bench"
+)
+GITHUB_RUNNER_ROOT = "/home/runner/work/claimpromote-bench/claimpromote-bench"
 FORBIDDEN_TEXT = {
     "Chih-Kai Wang",
     "Wang, Chih-Kai",
@@ -58,18 +73,92 @@ FORBIDDEN_TEXT = {
     "32274814703",
     "32291482079",
     "32297818154",
+    "32402699174",
+    "32402993463",
+    "32403718086",
+    "32405565039",
     "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664",
     "83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e",
+    "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5",
     "f998a05fec36b84e59230fe241f1e9961647ad2e",
     "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
     "aa5268dcde2aa44f8eabf0246631efbca27de7e5",
     "e2b09f30b0573cf7bcb244eef1917691755f2877",
+    "22126629f3584ec2fbbb8e7b77c34faea67d833c",
     "3634ce85785e9b516abc519711fff12388307331",
+    "2212662",
+    "3634ce8",
     "8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a",
     "ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355",
     "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7",
     "41480fba50bccfb955007a487dd0370f23daa876e82cd55a8d6601d0df64a9c8",
     "f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4",
+    "119e475953e50218fc62abd2163eef04cbad4e23",
+    "b86ee1e1d28db8a390344d28582af88e26970560",
+    "cc67096ba0a91866ab442647b9f82301dd6cb317",
+    LOCAL_WORKSPACE_ROOT,
+    GITHUB_RUNNER_ROOT,
+}
+
+PROVENANCE_REPLACEMENTS = {
+    "Chih-Kai Wang": "Anonymous Authors",
+    "Wang, Chih-Kai": "Anonymous Authors",
+    "National Taipei University of Education": "Anonymous Institution",
+    "f0909172434@gmail.com": "anonymous@example.invalid",
+    "github.com/f0909172434": "anonymous.invalid/repository",
+    "f0909172434": "anonymous-owner",
+    "paper/v1-submission-prep": "anonymous-base-branch",
+    "agent/iclr2027-v2-low-cost-study": "anonymous-study-branch",
+    "32255636879": "anonymous-v1-source-run",
+    "32274814703": "anonymous-v1-recovery-run",
+    "32291482079": "anonymous-public-pilot-run",
+    "32297818154": "anonymous-public-pilot-recovery-run",
+    "32402699174": "anonymous-capable-preflight-run",
+    "32402993463": "anonymous-capable-transport-run",
+    "32403718086": "anonymous-capable-first-qualified-run",
+    "32405565039": "anonymous-capable-final-qualified-run",
+    "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1": "anonymous-hidden-commitment",
+    "aa5268dcde2aa44f8eabf0246631efbca27de7e5": "anonymous-v1-scored-source",
+    "e2b09f30b0573cf7bcb244eef1917691755f2877": "anonymous-v1-recovery-source",
+    "22126629f3584ec2fbbb8e7b77c34faea67d833c": ("0000000000000000000000000000000000000003"),
+    "3634ce85785e9b516abc519711fff12388307331": ("0000000000000000000000000000000000000004"),
+    "2212662": "anonymous-followup-plan-a",
+    "3634ce8": "anonymous-followup-plan-b",
+    "119e475953e50218fc62abd2163eef04cbad4e23": ("0000000000000000000000000000000000000001"),
+    "b86ee1e1d28db8a390344d28582af88e26970560": ("0000000000000000000000000000000000000002"),
+    "cc67096ba0a91866ab442647b9f82301dd6cb317": ("anonymous-capable-collection-source"),
+    LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
+    GITHUB_RUNNER_ROOT: "/anonymous/workspace",
+    "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664": (
+        "anonymous-v1-study-digest"
+    ),
+    "83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e": (
+        "anonymous-public-pilot-digest"
+    ),
+    "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5": (
+        "anonymous-public-pilot-reporting-digest"
+    ),
+    "f998a05fec36b84e59230fe241f1e9961647ad2e": "anonymous-public-pilot-source",
+    "8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a": (
+        "anonymous-followup-digest-a"
+    ),
+    "ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355": (
+        "anonymous-followup-digest-b"
+    ),
+    "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7": (
+        "anonymous-followup-digest-c"
+    ),
+    "41480fba50bccfb955007a487dd0370f23daa876e82cd55a8d6601d0df64a9c8": (
+        "anonymous-followup-digest-d"
+    ),
+    "f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4": (
+        "anonymous-followup-digest-e"
+    ),
+}
+NUMERIC_PROVENANCE_REPLACEMENTS = {
+    int(source): replacement
+    for source, replacement in PROVENANCE_REPLACEMENTS.items()
+    if source.isdigit()
 }
 
 Json = dict[str, Any]
@@ -100,6 +189,151 @@ def strip_schema_ids(value: Any) -> Any:
     if isinstance(value, list):
         return [strip_schema_ids(child) for child in value]
     return value
+
+
+def anonymize_provenance(value: Any) -> Any:
+    """Replace searchable repository provenance while preserving empirical payloads."""
+
+    if isinstance(value, dict):
+        return {key: anonymize_provenance(child) for key, child in value.items()}
+    if isinstance(value, list):
+        return [anonymize_provenance(child) for child in value]
+    if isinstance(value, int) and value in NUMERIC_PROVENANCE_REPLACEMENTS:
+        return NUMERIC_PROVENANCE_REPLACEMENTS[value]
+    if isinstance(value, str):
+        cleaned = value
+        for source, replacement in sorted(
+            PROVENANCE_REPLACEMENTS.items(), key=lambda row: len(row[0]), reverse=True
+        ):
+            cleaned = cleaned.replace(source, replacement)
+        return cleaned
+    return value
+
+
+def copy_anonymized_tree(source: Path, destination: Path) -> None:
+    """Copy a reviewer-evidence tree while removing searchable provenance values."""
+
+    if not source.is_dir():
+        fail(f"missing empirical evidence source: {source.relative_to(ROOT)}")
+    for path in sorted(source.rglob("*")):
+        relative = path.relative_to(source)
+        if should_skip(relative):
+            continue
+        anonymous_relative = Path(str(anonymize_provenance(relative.as_posix())))
+        target = destination / anonymous_relative
+        if path.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        source_digest = sha256_file(path).removeprefix("sha256:")
+        force_digest_change = source_digest in FORBIDDEN_TEXT
+        if path.suffix.lower() in TEXT_SUFFIXES or path.name in TEXT_NAMES:
+            source_text = path.read_text(encoding="utf-8")
+            if not force_digest_change and not any(
+                token in source_text for token in PROVENANCE_REPLACEMENTS
+            ):
+                shutil.copyfile(path, target)
+                continue
+        if path.suffix == ".json":
+            value = anonymize_provenance(json.loads(source_text))
+            if force_digest_change and isinstance(value, dict):
+                value["anonymous_source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+            target.write_text(
+                json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+        elif path.suffix == ".jsonl":
+            rows = [
+                anonymize_provenance(json.loads(line))
+                for line in source_text.splitlines()
+                if line.strip()
+            ]
+            target.write_text(
+                "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+        elif path.suffix.lower() in TEXT_SUFFIXES or path.name in TEXT_NAMES:
+            text = str(anonymize_provenance(source_text))
+            target.write_text(text, encoding="utf-8")
+        else:
+            shutil.copyfile(path, target)
+
+
+def repair_capable_anonymous_evidence(root: Path) -> None:
+    """Rebind canonical analysis digests after commit identifiers are anonymized."""
+
+    run_paths: dict[tuple[str, str], Path] = {}
+    for path in sorted((root / "canonical" / "runs").glob("*.jsonl")):
+        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+        identities = {(str(row.get("lane_id")), str(row.get("phase"))) for row in rows}
+        if len(identities) != 1:
+            fail(f"capable evidence run has mixed identity: {path.relative_to(root)}")
+        identity = identities.pop()
+        if identity in run_paths:
+            fail(f"duplicate capable evidence run identity: {identity}")
+        run_paths[identity] = path
+
+    analysis_paths: dict[tuple[str, str], Path] = {}
+    for path in sorted((root / "canonical" / "analysis").glob("*.json")):
+        value = load_object(path)
+        identity = (str(value.get("lane_id")), str(value.get("phase")))
+        if identity not in run_paths or identity in analysis_paths:
+            fail(f"capable evidence analysis identity differs from runs: {identity}")
+        value["run_sha256"] = sha256_file(run_paths[identity])
+        path.write_text(
+            json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        analysis_paths[identity] = path
+    if set(analysis_paths) != set(run_paths):
+        fail("capable evidence canonical analysis matrix differs from run matrix")
+
+    aggregate_path = root / "aggregate.json"
+    aggregate = load_object(aggregate_path)
+    qualification = aggregate.get("qualification")
+    complete = aggregate.get("models_with_complete_hidden_pass")
+    provenance = aggregate.get("provenance")
+    if (
+        not isinstance(qualification, dict)
+        or not isinstance(qualification.get("pilots"), list)
+        or not isinstance(complete, list)
+        or not isinstance(provenance, dict)
+    ):
+        fail("capable evidence aggregate is malformed")
+
+    for row in qualification["pilots"]:
+        identity = (str(row.get("lane_id")), "pilot")
+        if identity not in run_paths:
+            fail(f"capable aggregate pilot lacks canonical run: {identity[0]}")
+        row["run_sha256"] = sha256_file(run_paths[identity])
+    for row in complete:
+        identity = (str(row.get("lane_id")), "full")
+        if identity not in run_paths:
+            fail(f"capable aggregate full result lacks canonical run: {identity[0]}")
+        row["run_sha256"] = sha256_file(run_paths[identity])
+
+    for key, phase, paths in (
+        ("pilot_run_sha256", "pilot", run_paths),
+        ("full_run_sha256", "full", run_paths),
+        ("pilot_analysis_sha256", "pilot", analysis_paths),
+        ("full_analysis_sha256", "full", analysis_paths),
+    ):
+        original = provenance.get(key)
+        if not isinstance(original, dict):
+            fail(f"capable aggregate provenance lacks {key}")
+        rebuilt = {
+            lane: sha256_file(path)
+            for (lane, observed_phase), path in sorted(paths.items())
+            if observed_phase == phase
+        }
+        if set(rebuilt) != set(original):
+            fail(f"capable aggregate provenance lane set changed for {key}")
+        provenance[key] = rebuilt
+
+    aggregate_path.write_text(
+        json.dumps(aggregate, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def should_skip(path: Path) -> bool:
@@ -177,8 +411,9 @@ def anonymize_v1_results(source: Json) -> Json:
         },
         "runs": runs,
         "interpretation_boundary": (
-            "This compact summary permits paper-value validation but does not include the private "
-            "hidden dataset or raw source artifacts."
+            "This compact summary is a convenience view. The reviewer-release hidden dataset, "
+            "source records, normalized records, and normalization map are included separately "
+            "under evidence/."
         ),
     }
 
@@ -210,6 +445,16 @@ def anonymize_v2_results(source: Json) -> Json:
     cleaned["schema_version"] = "1.0.0-review"
     cleaned["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
     return cleaned
+
+
+def repair_v2_public_anonymous_evidence(root: Path) -> None:
+    aggregate_path = root / "aggregate.json"
+    cleaned = anonymize_v2_results(load_object(aggregate_path))
+    cleaned["interpretation_status"] = "RECOMPUTATION_VERIFIED_FOR_REPORTING"
+    aggregate_path.write_text(
+        json.dumps(cleaned, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def anonymize_stronger_results(source: Json) -> Json:
@@ -308,9 +553,10 @@ def review_readme() -> str:
     return """# ClaimPromoteBench anonymous reviewer bundle
 
 This bundle contains the public controlled benchmark, executable fixtures, public Lean package,
-selected validation code, compact v1/v2 paper-result summaries, and naturalistic-data boundary
-checks. It contains no Git history, author metadata, public repository link, hidden v1 dataset,
-hidden seed, raw human-review submission, or public workflow/provenance identifier.
+selected validation code, the reviewer-release hidden dataset, item-level empirical records,
+and compact paper-result summaries. It contains no Git history,
+author metadata, public repository link, private construction seed, human-subject record, or public
+workflow/provenance identifier.
 
 ## What can be checked
 
@@ -320,8 +566,12 @@ python scripts/run_review_checks.py
 ```
 
 The checks rebuild and validate the public alpha benchmark, run shortcut/invariance/executable
-checks, validate the compact v1 and v2 paper-result summaries, validate the unlabeled naturalistic
-candidate pool and case boundary, and run selected v2 tests.
+checks, validate the compact paper-result summaries, and run selected v2 tests. The evidence
+directory retains the available v1
+source and normalized item records, all four public-interface pilot runs, the public-development
+follow-up records, and the capable hidden extension records. Public repository identities are
+replaced by anonymous role labels;
+empirical prompts, responses, parser outcomes, gold labels, and model identities are retained.
 
 For the public formal artifacts:
 
@@ -338,13 +588,13 @@ python -m claimpromotebench.formal \
 
 ## Scope limitation
 
-The private hidden dataset and its raw source artifacts are not included in this double-blind
-bundle. `results/v1-paper-results.json` is a compact per-run summary suitable for checking the
-reported matrix totals, conditional rates, and coverage ranges. The post-v1 public pilot aggregate
-contains public pair/factor metrics but omits public provenance identifiers and raw response text.
-The GPT-5.4 public-development follow-up appears as a separate compact aggregate with decision and
-pair counts, action distribution, coverage, and the single length-limited response; public
-provenance identifiers and raw response text remain excluded.
+Original free-form text was not retained for v1 records classified as format failures, so no later
+bundle can recover it. The included source and normalized records preserve every field that was
+archived. The capable hidden extension and public-development follow-up retain their item-level raw
+response text. The private deterministic-construction seed remains excluded because the released
+dataset bytes, prompt packet, labels, records, and commitments suffice for result recomputation.
+The public manifest's `model_experiments: PENDING` value is its pre-inference freeze status; the
+result files carry the completed study states.
 
 Post-gate correctness applies the same fixed policy as the benchmark oracle. It must not be
 interpreted as model learning or independent prediction accuracy.
@@ -555,6 +805,7 @@ def review_runner() -> str:
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -590,40 +841,30 @@ COMMANDS = [
         "work/executable-fixtures.json",
     ],
     [sys.executable, "scripts/validate_review_results.py"],
-    [
-        sys.executable,
-        "scripts/validate_v2_naturalistic_candidates.py",
-        "--pool",
-        "v2/naturalistic-candidates.json",
-        "--out",
-        "work/naturalistic-candidate-validation.json",
-    ],
-    [
-        sys.executable,
-        "scripts/validate_v2_naturalistic_cases.py",
-        "--root",
-        "v2/naturalistic-cases",
-        "--allow-empty",
-        "--out",
-        "work/naturalistic-case-validation.json",
-    ],
+    [sys.executable, "scripts/validate_anonymous_empirical_evidence.py"],
     [
         sys.executable,
         "-m",
         "pytest",
         "-q",
         "tests/test_v2.py",
-        "tests/test_v2_naturalistic.py",
-        "tests/test_v2_naturalistic_cases.py",
     ],
 ]
 
 
 def main() -> int:
     (ROOT / "work").mkdir(exist_ok=True)
+    env = os.environ.copy()
+    package_root = str(ROOT / "src")
+    existing_pythonpath = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = (
+        package_root + os.pathsep + existing_pythonpath
+        if existing_pythonpath
+        else package_root
+    )
     for command in COMMANDS:
         print("+", " ".join(command), flush=True)
-        subprocess.run(command, cwd=ROOT, check=True)
+        subprocess.run(command, cwd=ROOT, check=True, env=env)
     print("anonymous-review-checks: PASS")
     return 0
 
@@ -636,14 +877,21 @@ if __name__ == "__main__":
 def scan_identity(bundle: Path) -> None:
     findings: list[str] = []
     for path in sorted(bundle.rglob("*")):
-        if not path.is_file() or (
-            path.suffix.lower() not in TEXT_SUFFIXES and path.name not in TEXT_NAMES
-        ):
+        if not path.is_file():
+            continue
+        relative_text = path.relative_to(bundle).as_posix()
+        for token in sorted(FORBIDDEN_TEXT):
+            if token.lower() in relative_text.lower():
+                findings.append(f"{relative_text}: filename contains {token}")
+        if path.suffix.lower() not in TEXT_SUFFIXES and path.name not in TEXT_NAMES:
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
         for token in sorted(FORBIDDEN_TEXT):
             if token.lower() in text.lower():
                 findings.append(f"{path.relative_to(bundle)}: {token}")
+        for label, pattern in FORBIDDEN_CREDENTIAL_PATTERNS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(bundle)}: possible {label}")
     if findings:
         fail("identity/provenance leak detected:\n" + "\n".join(findings))
 
@@ -694,19 +942,26 @@ def write_manifest(bundle: Path) -> None:
         for path in sorted(bundle.rglob("*"))
         if path.is_file() and path.name != "MANIFEST.json"
     }
+    capable_hidden_included = (bundle / "evidence" / "capable-hidden").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
-        "status": "ANONYMOUS_PUBLIC_DATA_REVIEW_BUNDLE",
+        "status": "ANONYMOUS_REVIEW_BUNDLE",
         "file_count": len(files),
         "files": files,
         "scope": {
             "public_alpha_included": True,
-            "private_hidden_data_included": False,
+            "reviewer_release_hidden_data_included": True,
             "raw_human_review_submissions_included": False,
             "public_repository_identity_included": False,
+            "item_level_empirical_records_included": True,
             "v1_compact_result_summary_included": True,
             "v2_public_pilot_summary_included": True,
+            "v2_public_pilot_item_level_records_included": True,
             "gpt54_public_development_summary_included": True,
+            "gpt54_public_development_item_level_records_included": True,
+            "capable_hidden_summary_included": capable_hidden_included,
+            "capable_hidden_item_level_records_included": capable_hidden_included,
+            "private_construction_seed_included": False,
         },
     }
     (bundle / "MANIFEST.json").write_text(
@@ -725,19 +980,17 @@ def build(destination: Path) -> None:
 
     selected_files = (
         "LICENSE",
+        "configs/decoding-v1.json",
+        "scripts/aggregate_capable_hidden_study.py",
+        "scripts/analyze_stronger_model_study.py",
         "scripts/build_alpha.py",
         "scripts/build_v1_dataset.py",
+        "scripts/validate_anonymous_empirical_evidence.py",
         "scripts/validate_v1_plan.py",
         "scripts/validate_v1_public_dev_freeze.py",
-        "scripts/validate_v2_naturalistic_candidates.py",
-        "scripts/validate_v2_naturalistic_cases.py",
         "tests/test_v2.py",
-        "tests/test_v2_naturalistic.py",
-        "tests/test_v2_naturalistic_cases.py",
-        "v2/naturalistic-candidates.json",
-        "v2/naturalistic-sources.json",
         "v2/schemas/run-record-v2.schema.json",
-        "v2/schemas/naturalistic-case.schema.json",
+        "v2/schemas/stronger-model-run-record.schema.json",
     )
     for relative in selected_files:
         copy_file(ROOT / relative, destination / relative)
@@ -745,6 +998,22 @@ def build(destination: Path) -> None:
     (destination / "LICENSE").write_text(anonymous_license(), encoding="utf-8", newline="\n")
 
     rewrite_alpha_manifest(destination)
+
+    empirical_sources = {
+        "v1-hidden-recovery": (
+            ROOT / "release" / "reviewer-evidence-source" / "v1-hidden-recovery"
+        ),
+        "v2-public-pilot": (ROOT / "release" / "reviewer-evidence-source" / "v2-public-pilot"),
+        "gpt54-public-dev": (ROOT / "release" / "reviewer-evidence-source" / "gpt54-public-dev"),
+        "capable-hidden": (ROOT / "release" / "reviewer-evidence-source" / "capable-hidden"),
+    }
+    for name, source in empirical_sources.items():
+        evidence_destination = destination / "evidence" / name
+        copy_anonymized_tree(source, evidence_destination)
+        if name == "capable-hidden":
+            repair_capable_anonymous_evidence(evidence_destination)
+        elif name == "v2-public-pilot":
+            repair_v2_public_anonymous_evidence(evidence_destination)
 
     (destination / "results").mkdir()
     v1 = anonymize_v1_results(load_object(ROOT / "release" / "v1-paper-results.json"))

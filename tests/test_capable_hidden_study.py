@@ -31,6 +31,20 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
     assert plan["amendment"]["new_model_outputs_seen_before_initial_freeze"] is False
     assert plan["transport_amendment"]["status"] == ("FROZEN_BEFORE_FINAL_ADAPTER_REQUALIFICATION")
     assert plan["transport_amendment"]["no_further_adapter_amendment"] is True
+    collection = plan["collection_amendment"]
+    assert collection["status"] == ("FROZEN_AFTER_ACCURACY_BLIND_GATES_BEFORE_RESULT_UNBLINDING")
+    assert collection["no_model_or_scoring_change"] is True
+    assert set(collection["accepted_frozen_plan_commits"]) == {
+        "119e475953e50218fc62abd2163eef04cbad4e23",
+        "b86ee1e1d28db8a390344d28582af88e26970560",
+    }
+    pilot_sources = collection["canonical_pilot_sources"]
+    assert set(pilot_sources) == formal_ids
+    assert {lane for lane, source in pilot_sources.items() if source["gate"] == "GO"} == {
+        "opencode-go-qwen3.7-max",
+        "opencode-go-deepseek-v4-flash-matched",
+    }
+    assert "accuracy" not in collection["inspection_boundary"].lower().split("no ", 1)[0]
     assert plan["amendment"]["new_hidden_items_or_labels_created"] is False
     assert plan["dataset"]["instances"] == 300
     assert plan["dataset"]["pairs"] == 150
@@ -40,6 +54,8 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
     assert len(formal_ids) == 7
     assert plan["budget"]["incremental_cash_cap_usd"] == 0.0
     assert plan["budget"]["use_zen_balance_after_go_limit"] is False
+    assert plan["account_execution_settings"]["opencode_go_allow_training_eligible_models"]
+    assert plan["account_execution_settings"]["opencode_go_enable_china_deployed_models"]
 
     assert lanes["bai-deepseek-v4-flash-primary"]["spend_cap_usd"] == 0.0
     assert lanes["bai-deepseek-v4-flash-primary"]["response_format"] == "json_object"

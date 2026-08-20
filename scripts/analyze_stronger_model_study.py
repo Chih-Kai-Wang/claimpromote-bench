@@ -9,7 +9,7 @@ import math
 import sys
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -28,7 +28,7 @@ DEFAULT_PLAN = ROOT / "v2" / "stronger-model-study-plan.json"
 RUN_SCHEMA = ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json"
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     raise SystemExit(f"stronger-model-analysis: {message}")
 
 

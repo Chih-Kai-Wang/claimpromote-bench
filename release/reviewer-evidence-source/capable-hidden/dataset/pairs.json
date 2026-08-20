@@ -1,0 +1,2110 @@
+[
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-001-b",
+    "member_ids": [
+      "v1-test-dep-001-a",
+      "v1-test-dep-001-b"
+    ],
+    "pair_id": "v1-test-dep-001",
+    "valid_id": "v1-test-dep-001-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-002-a",
+    "member_ids": [
+      "v1-test-dep-002-a",
+      "v1-test-dep-002-b"
+    ],
+    "pair_id": "v1-test-dep-002",
+    "valid_id": "v1-test-dep-002-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-003-b",
+    "member_ids": [
+      "v1-test-dep-003-a",
+      "v1-test-dep-003-b"
+    ],
+    "pair_id": "v1-test-dep-003",
+    "valid_id": "v1-test-dep-003-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-004-a",
+    "member_ids": [
+      "v1-test-dep-004-a",
+      "v1-test-dep-004-b"
+    ],
+    "pair_id": "v1-test-dep-004",
+    "valid_id": "v1-test-dep-004-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-005-b",
+    "member_ids": [
+      "v1-test-dep-005-a",
+      "v1-test-dep-005-b"
+    ],
+    "pair_id": "v1-test-dep-005",
+    "valid_id": "v1-test-dep-005-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-006-a",
+    "member_ids": [
+      "v1-test-dep-006-a",
+      "v1-test-dep-006-b"
+    ],
+    "pair_id": "v1-test-dep-006",
+    "valid_id": "v1-test-dep-006-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-007-b",
+    "member_ids": [
+      "v1-test-dep-007-a",
+      "v1-test-dep-007-b"
+    ],
+    "pair_id": "v1-test-dep-007",
+    "valid_id": "v1-test-dep-007-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-008-a",
+    "member_ids": [
+      "v1-test-dep-008-a",
+      "v1-test-dep-008-b"
+    ],
+    "pair_id": "v1-test-dep-008",
+    "valid_id": "v1-test-dep-008-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-009-b",
+    "member_ids": [
+      "v1-test-dep-009-a",
+      "v1-test-dep-009-b"
+    ],
+    "pair_id": "v1-test-dep-009",
+    "valid_id": "v1-test-dep-009-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-010-a",
+    "member_ids": [
+      "v1-test-dep-010-a",
+      "v1-test-dep-010-b"
+    ],
+    "pair_id": "v1-test-dep-010",
+    "valid_id": "v1-test-dep-010-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-011-b",
+    "member_ids": [
+      "v1-test-dep-011-a",
+      "v1-test-dep-011-b"
+    ],
+    "pair_id": "v1-test-dep-011",
+    "valid_id": "v1-test-dep-011-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-012-a",
+    "member_ids": [
+      "v1-test-dep-012-a",
+      "v1-test-dep-012-b"
+    ],
+    "pair_id": "v1-test-dep-012",
+    "valid_id": "v1-test-dep-012-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-013-b",
+    "member_ids": [
+      "v1-test-dep-013-a",
+      "v1-test-dep-013-b"
+    ],
+    "pair_id": "v1-test-dep-013",
+    "valid_id": "v1-test-dep-013-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-014-a",
+    "member_ids": [
+      "v1-test-dep-014-a",
+      "v1-test-dep-014-b"
+    ],
+    "pair_id": "v1-test-dep-014",
+    "valid_id": "v1-test-dep-014-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-015-b",
+    "member_ids": [
+      "v1-test-dep-015-a",
+      "v1-test-dep-015-b"
+    ],
+    "pair_id": "v1-test-dep-015",
+    "valid_id": "v1-test-dep-015-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-016-a",
+    "member_ids": [
+      "v1-test-dep-016-a",
+      "v1-test-dep-016-b"
+    ],
+    "pair_id": "v1-test-dep-016",
+    "valid_id": "v1-test-dep-016-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-017-b",
+    "member_ids": [
+      "v1-test-dep-017-a",
+      "v1-test-dep-017-b"
+    ],
+    "pair_id": "v1-test-dep-017",
+    "valid_id": "v1-test-dep-017-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-018-a",
+    "member_ids": [
+      "v1-test-dep-018-a",
+      "v1-test-dep-018-b"
+    ],
+    "pair_id": "v1-test-dep-018",
+    "valid_id": "v1-test-dep-018-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-019-b",
+    "member_ids": [
+      "v1-test-dep-019-a",
+      "v1-test-dep-019-b"
+    ],
+    "pair_id": "v1-test-dep-019",
+    "valid_id": "v1-test-dep-019-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-020-a",
+    "member_ids": [
+      "v1-test-dep-020-a",
+      "v1-test-dep-020-b"
+    ],
+    "pair_id": "v1-test-dep-020",
+    "valid_id": "v1-test-dep-020-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-021-b",
+    "member_ids": [
+      "v1-test-dep-021-a",
+      "v1-test-dep-021-b"
+    ],
+    "pair_id": "v1-test-dep-021",
+    "valid_id": "v1-test-dep-021-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-022-a",
+    "member_ids": [
+      "v1-test-dep-022-a",
+      "v1-test-dep-022-b"
+    ],
+    "pair_id": "v1-test-dep-022",
+    "valid_id": "v1-test-dep-022-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-023-b",
+    "member_ids": [
+      "v1-test-dep-023-a",
+      "v1-test-dep-023-b"
+    ],
+    "pair_id": "v1-test-dep-023",
+    "valid_id": "v1-test-dep-023-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-024-a",
+    "member_ids": [
+      "v1-test-dep-024-a",
+      "v1-test-dep-024-b"
+    ],
+    "pair_id": "v1-test-dep-024",
+    "valid_id": "v1-test-dep-024-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-025-b",
+    "member_ids": [
+      "v1-test-dep-025-a",
+      "v1-test-dep-025-b"
+    ],
+    "pair_id": "v1-test-dep-025",
+    "valid_id": "v1-test-dep-025-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-026-a",
+    "member_ids": [
+      "v1-test-dep-026-a",
+      "v1-test-dep-026-b"
+    ],
+    "pair_id": "v1-test-dep-026",
+    "valid_id": "v1-test-dep-026-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-027-b",
+    "member_ids": [
+      "v1-test-dep-027-a",
+      "v1-test-dep-027-b"
+    ],
+    "pair_id": "v1-test-dep-027",
+    "valid_id": "v1-test-dep-027-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-dep-028-a",
+    "member_ids": [
+      "v1-test-dep-028-a",
+      "v1-test-dep-028-b"
+    ],
+    "pair_id": "v1-test-dep-028",
+    "valid_id": "v1-test-dep-028-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-001-b",
+    "member_ids": [
+      "v1-test-num-001-a",
+      "v1-test-num-001-b"
+    ],
+    "pair_id": "v1-test-num-001",
+    "valid_id": "v1-test-num-001-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-002-a",
+    "member_ids": [
+      "v1-test-num-002-a",
+      "v1-test-num-002-b"
+    ],
+    "pair_id": "v1-test-num-002",
+    "valid_id": "v1-test-num-002-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-003-b",
+    "member_ids": [
+      "v1-test-num-003-a",
+      "v1-test-num-003-b"
+    ],
+    "pair_id": "v1-test-num-003",
+    "valid_id": "v1-test-num-003-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-004-a",
+    "member_ids": [
+      "v1-test-num-004-a",
+      "v1-test-num-004-b"
+    ],
+    "pair_id": "v1-test-num-004",
+    "valid_id": "v1-test-num-004-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-005-b",
+    "member_ids": [
+      "v1-test-num-005-a",
+      "v1-test-num-005-b"
+    ],
+    "pair_id": "v1-test-num-005",
+    "valid_id": "v1-test-num-005-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-006-a",
+    "member_ids": [
+      "v1-test-num-006-a",
+      "v1-test-num-006-b"
+    ],
+    "pair_id": "v1-test-num-006",
+    "valid_id": "v1-test-num-006-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-007-b",
+    "member_ids": [
+      "v1-test-num-007-a",
+      "v1-test-num-007-b"
+    ],
+    "pair_id": "v1-test-num-007",
+    "valid_id": "v1-test-num-007-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-008-a",
+    "member_ids": [
+      "v1-test-num-008-a",
+      "v1-test-num-008-b"
+    ],
+    "pair_id": "v1-test-num-008",
+    "valid_id": "v1-test-num-008-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-009-b",
+    "member_ids": [
+      "v1-test-num-009-a",
+      "v1-test-num-009-b"
+    ],
+    "pair_id": "v1-test-num-009",
+    "valid_id": "v1-test-num-009-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-010-a",
+    "member_ids": [
+      "v1-test-num-010-a",
+      "v1-test-num-010-b"
+    ],
+    "pair_id": "v1-test-num-010",
+    "valid_id": "v1-test-num-010-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-011-b",
+    "member_ids": [
+      "v1-test-num-011-a",
+      "v1-test-num-011-b"
+    ],
+    "pair_id": "v1-test-num-011",
+    "valid_id": "v1-test-num-011-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-012-a",
+    "member_ids": [
+      "v1-test-num-012-a",
+      "v1-test-num-012-b"
+    ],
+    "pair_id": "v1-test-num-012",
+    "valid_id": "v1-test-num-012-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-013-b",
+    "member_ids": [
+      "v1-test-num-013-a",
+      "v1-test-num-013-b"
+    ],
+    "pair_id": "v1-test-num-013",
+    "valid_id": "v1-test-num-013-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-014-a",
+    "member_ids": [
+      "v1-test-num-014-a",
+      "v1-test-num-014-b"
+    ],
+    "pair_id": "v1-test-num-014",
+    "valid_id": "v1-test-num-014-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-015-b",
+    "member_ids": [
+      "v1-test-num-015-a",
+      "v1-test-num-015-b"
+    ],
+    "pair_id": "v1-test-num-015",
+    "valid_id": "v1-test-num-015-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-016-a",
+    "member_ids": [
+      "v1-test-num-016-a",
+      "v1-test-num-016-b"
+    ],
+    "pair_id": "v1-test-num-016",
+    "valid_id": "v1-test-num-016-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-017-b",
+    "member_ids": [
+      "v1-test-num-017-a",
+      "v1-test-num-017-b"
+    ],
+    "pair_id": "v1-test-num-017",
+    "valid_id": "v1-test-num-017-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-018-a",
+    "member_ids": [
+      "v1-test-num-018-a",
+      "v1-test-num-018-b"
+    ],
+    "pair_id": "v1-test-num-018",
+    "valid_id": "v1-test-num-018-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-019-b",
+    "member_ids": [
+      "v1-test-num-019-a",
+      "v1-test-num-019-b"
+    ],
+    "pair_id": "v1-test-num-019",
+    "valid_id": "v1-test-num-019-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-020-a",
+    "member_ids": [
+      "v1-test-num-020-a",
+      "v1-test-num-020-b"
+    ],
+    "pair_id": "v1-test-num-020",
+    "valid_id": "v1-test-num-020-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-021-b",
+    "member_ids": [
+      "v1-test-num-021-a",
+      "v1-test-num-021-b"
+    ],
+    "pair_id": "v1-test-num-021",
+    "valid_id": "v1-test-num-021-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-022-a",
+    "member_ids": [
+      "v1-test-num-022-a",
+      "v1-test-num-022-b"
+    ],
+    "pair_id": "v1-test-num-022",
+    "valid_id": "v1-test-num-022-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-023-b",
+    "member_ids": [
+      "v1-test-num-023-a",
+      "v1-test-num-023-b"
+    ],
+    "pair_id": "v1-test-num-023",
+    "valid_id": "v1-test-num-023-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-024-a",
+    "member_ids": [
+      "v1-test-num-024-a",
+      "v1-test-num-024-b"
+    ],
+    "pair_id": "v1-test-num-024",
+    "valid_id": "v1-test-num-024-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-025-b",
+    "member_ids": [
+      "v1-test-num-025-a",
+      "v1-test-num-025-b"
+    ],
+    "pair_id": "v1-test-num-025",
+    "valid_id": "v1-test-num-025-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-026-a",
+    "member_ids": [
+      "v1-test-num-026-a",
+      "v1-test-num-026-b"
+    ],
+    "pair_id": "v1-test-num-026",
+    "valid_id": "v1-test-num-026-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-027-b",
+    "member_ids": [
+      "v1-test-num-027-a",
+      "v1-test-num-027-b"
+    ],
+    "pair_id": "v1-test-num-027",
+    "valid_id": "v1-test-num-027-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-num-028-a",
+    "member_ids": [
+      "v1-test-num-028-a",
+      "v1-test-num-028-b"
+    ],
+    "pair_id": "v1-test-num-028",
+    "valid_id": "v1-test-num-028-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-001-b",
+    "member_ids": [
+      "v1-test-run-001-a",
+      "v1-test-run-001-b"
+    ],
+    "pair_id": "v1-test-run-001",
+    "valid_id": "v1-test-run-001-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-002-a",
+    "member_ids": [
+      "v1-test-run-002-a",
+      "v1-test-run-002-b"
+    ],
+    "pair_id": "v1-test-run-002",
+    "valid_id": "v1-test-run-002-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-003-b",
+    "member_ids": [
+      "v1-test-run-003-a",
+      "v1-test-run-003-b"
+    ],
+    "pair_id": "v1-test-run-003",
+    "valid_id": "v1-test-run-003-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-004-a",
+    "member_ids": [
+      "v1-test-run-004-a",
+      "v1-test-run-004-b"
+    ],
+    "pair_id": "v1-test-run-004",
+    "valid_id": "v1-test-run-004-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-005-b",
+    "member_ids": [
+      "v1-test-run-005-a",
+      "v1-test-run-005-b"
+    ],
+    "pair_id": "v1-test-run-005",
+    "valid_id": "v1-test-run-005-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-006-a",
+    "member_ids": [
+      "v1-test-run-006-a",
+      "v1-test-run-006-b"
+    ],
+    "pair_id": "v1-test-run-006",
+    "valid_id": "v1-test-run-006-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-007-b",
+    "member_ids": [
+      "v1-test-run-007-a",
+      "v1-test-run-007-b"
+    ],
+    "pair_id": "v1-test-run-007",
+    "valid_id": "v1-test-run-007-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-008-a",
+    "member_ids": [
+      "v1-test-run-008-a",
+      "v1-test-run-008-b"
+    ],
+    "pair_id": "v1-test-run-008",
+    "valid_id": "v1-test-run-008-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-009-b",
+    "member_ids": [
+      "v1-test-run-009-a",
+      "v1-test-run-009-b"
+    ],
+    "pair_id": "v1-test-run-009",
+    "valid_id": "v1-test-run-009-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-010-a",
+    "member_ids": [
+      "v1-test-run-010-a",
+      "v1-test-run-010-b"
+    ],
+    "pair_id": "v1-test-run-010",
+    "valid_id": "v1-test-run-010-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-011-b",
+    "member_ids": [
+      "v1-test-run-011-a",
+      "v1-test-run-011-b"
+    ],
+    "pair_id": "v1-test-run-011",
+    "valid_id": "v1-test-run-011-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-012-a",
+    "member_ids": [
+      "v1-test-run-012-a",
+      "v1-test-run-012-b"
+    ],
+    "pair_id": "v1-test-run-012",
+    "valid_id": "v1-test-run-012-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-013-b",
+    "member_ids": [
+      "v1-test-run-013-a",
+      "v1-test-run-013-b"
+    ],
+    "pair_id": "v1-test-run-013",
+    "valid_id": "v1-test-run-013-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-014-a",
+    "member_ids": [
+      "v1-test-run-014-a",
+      "v1-test-run-014-b"
+    ],
+    "pair_id": "v1-test-run-014",
+    "valid_id": "v1-test-run-014-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-015-a",
+    "member_ids": [
+      "v1-test-run-015-a",
+      "v1-test-run-015-b"
+    ],
+    "pair_id": "v1-test-run-015",
+    "valid_id": "v1-test-run-015-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-016-b",
+    "member_ids": [
+      "v1-test-run-016-a",
+      "v1-test-run-016-b"
+    ],
+    "pair_id": "v1-test-run-016",
+    "valid_id": "v1-test-run-016-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-017-a",
+    "member_ids": [
+      "v1-test-run-017-a",
+      "v1-test-run-017-b"
+    ],
+    "pair_id": "v1-test-run-017",
+    "valid_id": "v1-test-run-017-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-018-b",
+    "member_ids": [
+      "v1-test-run-018-a",
+      "v1-test-run-018-b"
+    ],
+    "pair_id": "v1-test-run-018",
+    "valid_id": "v1-test-run-018-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-019-a",
+    "member_ids": [
+      "v1-test-run-019-a",
+      "v1-test-run-019-b"
+    ],
+    "pair_id": "v1-test-run-019",
+    "valid_id": "v1-test-run-019-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-020-b",
+    "member_ids": [
+      "v1-test-run-020-a",
+      "v1-test-run-020-b"
+    ],
+    "pair_id": "v1-test-run-020",
+    "valid_id": "v1-test-run-020-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-021-a",
+    "member_ids": [
+      "v1-test-run-021-a",
+      "v1-test-run-021-b"
+    ],
+    "pair_id": "v1-test-run-021",
+    "valid_id": "v1-test-run-021-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-run-022-b",
+    "member_ids": [
+      "v1-test-run-022-a",
+      "v1-test-run-022-b"
+    ],
+    "pair_id": "v1-test-run-022",
+    "valid_id": "v1-test-run-022-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-001-b",
+    "member_ids": [
+      "v1-test-stale-001-a",
+      "v1-test-stale-001-b"
+    ],
+    "pair_id": "v1-test-stale-001",
+    "valid_id": "v1-test-stale-001-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-002-a",
+    "member_ids": [
+      "v1-test-stale-002-a",
+      "v1-test-stale-002-b"
+    ],
+    "pair_id": "v1-test-stale-002",
+    "valid_id": "v1-test-stale-002-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-003-b",
+    "member_ids": [
+      "v1-test-stale-003-a",
+      "v1-test-stale-003-b"
+    ],
+    "pair_id": "v1-test-stale-003",
+    "valid_id": "v1-test-stale-003-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-004-a",
+    "member_ids": [
+      "v1-test-stale-004-a",
+      "v1-test-stale-004-b"
+    ],
+    "pair_id": "v1-test-stale-004",
+    "valid_id": "v1-test-stale-004-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-005-b",
+    "member_ids": [
+      "v1-test-stale-005-a",
+      "v1-test-stale-005-b"
+    ],
+    "pair_id": "v1-test-stale-005",
+    "valid_id": "v1-test-stale-005-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-006-a",
+    "member_ids": [
+      "v1-test-stale-006-a",
+      "v1-test-stale-006-b"
+    ],
+    "pair_id": "v1-test-stale-006",
+    "valid_id": "v1-test-stale-006-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-007-b",
+    "member_ids": [
+      "v1-test-stale-007-a",
+      "v1-test-stale-007-b"
+    ],
+    "pair_id": "v1-test-stale-007",
+    "valid_id": "v1-test-stale-007-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-008-a",
+    "member_ids": [
+      "v1-test-stale-008-a",
+      "v1-test-stale-008-b"
+    ],
+    "pair_id": "v1-test-stale-008",
+    "valid_id": "v1-test-stale-008-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-009-a",
+    "member_ids": [
+      "v1-test-stale-009-a",
+      "v1-test-stale-009-b"
+    ],
+    "pair_id": "v1-test-stale-009",
+    "valid_id": "v1-test-stale-009-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-010-b",
+    "member_ids": [
+      "v1-test-stale-010-a",
+      "v1-test-stale-010-b"
+    ],
+    "pair_id": "v1-test-stale-010",
+    "valid_id": "v1-test-stale-010-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-011-a",
+    "member_ids": [
+      "v1-test-stale-011-a",
+      "v1-test-stale-011-b"
+    ],
+    "pair_id": "v1-test-stale-011",
+    "valid_id": "v1-test-stale-011-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-012-b",
+    "member_ids": [
+      "v1-test-stale-012-a",
+      "v1-test-stale-012-b"
+    ],
+    "pair_id": "v1-test-stale-012",
+    "valid_id": "v1-test-stale-012-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-013-a",
+    "member_ids": [
+      "v1-test-stale-013-a",
+      "v1-test-stale-013-b"
+    ],
+    "pair_id": "v1-test-stale-013",
+    "valid_id": "v1-test-stale-013-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-014-b",
+    "member_ids": [
+      "v1-test-stale-014-a",
+      "v1-test-stale-014-b"
+    ],
+    "pair_id": "v1-test-stale-014",
+    "valid_id": "v1-test-stale-014-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-015-a",
+    "member_ids": [
+      "v1-test-stale-015-a",
+      "v1-test-stale-015-b"
+    ],
+    "pair_id": "v1-test-stale-015",
+    "valid_id": "v1-test-stale-015-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-016-b",
+    "member_ids": [
+      "v1-test-stale-016-a",
+      "v1-test-stale-016-b"
+    ],
+    "pair_id": "v1-test-stale-016",
+    "valid_id": "v1-test-stale-016-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-017-b",
+    "member_ids": [
+      "v1-test-stale-017-a",
+      "v1-test-stale-017-b"
+    ],
+    "pair_id": "v1-test-stale-017",
+    "valid_id": "v1-test-stale-017-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-018-a",
+    "member_ids": [
+      "v1-test-stale-018-a",
+      "v1-test-stale-018-b"
+    ],
+    "pair_id": "v1-test-stale-018",
+    "valid_id": "v1-test-stale-018-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-019-b",
+    "member_ids": [
+      "v1-test-stale-019-a",
+      "v1-test-stale-019-b"
+    ],
+    "pair_id": "v1-test-stale-019",
+    "valid_id": "v1-test-stale-019-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-020-a",
+    "member_ids": [
+      "v1-test-stale-020-a",
+      "v1-test-stale-020-b"
+    ],
+    "pair_id": "v1-test-stale-020",
+    "valid_id": "v1-test-stale-020-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-021-b",
+    "member_ids": [
+      "v1-test-stale-021-a",
+      "v1-test-stale-021-b"
+    ],
+    "pair_id": "v1-test-stale-021",
+    "valid_id": "v1-test-stale-021-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-022-a",
+    "member_ids": [
+      "v1-test-stale-022-a",
+      "v1-test-stale-022-b"
+    ],
+    "pair_id": "v1-test-stale-022",
+    "valid_id": "v1-test-stale-022-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-023-b",
+    "member_ids": [
+      "v1-test-stale-023-a",
+      "v1-test-stale-023-b"
+    ],
+    "pair_id": "v1-test-stale-023",
+    "valid_id": "v1-test-stale-023-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-stale-024-a",
+    "member_ids": [
+      "v1-test-stale-024-a",
+      "v1-test-stale-024-b"
+    ],
+    "pair_id": "v1-test-stale-024",
+    "valid_id": "v1-test-stale-024-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-001-a",
+    "member_ids": [
+      "v1-test-prov-001-a",
+      "v1-test-prov-001-b"
+    ],
+    "pair_id": "v1-test-prov-001",
+    "valid_id": "v1-test-prov-001-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-002-b",
+    "member_ids": [
+      "v1-test-prov-002-a",
+      "v1-test-prov-002-b"
+    ],
+    "pair_id": "v1-test-prov-002",
+    "valid_id": "v1-test-prov-002-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-003-a",
+    "member_ids": [
+      "v1-test-prov-003-a",
+      "v1-test-prov-003-b"
+    ],
+    "pair_id": "v1-test-prov-003",
+    "valid_id": "v1-test-prov-003-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-004-b",
+    "member_ids": [
+      "v1-test-prov-004-a",
+      "v1-test-prov-004-b"
+    ],
+    "pair_id": "v1-test-prov-004",
+    "valid_id": "v1-test-prov-004-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-005-a",
+    "member_ids": [
+      "v1-test-prov-005-a",
+      "v1-test-prov-005-b"
+    ],
+    "pair_id": "v1-test-prov-005",
+    "valid_id": "v1-test-prov-005-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-006-b",
+    "member_ids": [
+      "v1-test-prov-006-a",
+      "v1-test-prov-006-b"
+    ],
+    "pair_id": "v1-test-prov-006",
+    "valid_id": "v1-test-prov-006-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-007-a",
+    "member_ids": [
+      "v1-test-prov-007-a",
+      "v1-test-prov-007-b"
+    ],
+    "pair_id": "v1-test-prov-007",
+    "valid_id": "v1-test-prov-007-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-008-b",
+    "member_ids": [
+      "v1-test-prov-008-a",
+      "v1-test-prov-008-b"
+    ],
+    "pair_id": "v1-test-prov-008",
+    "valid_id": "v1-test-prov-008-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-009-b",
+    "member_ids": [
+      "v1-test-prov-009-a",
+      "v1-test-prov-009-b"
+    ],
+    "pair_id": "v1-test-prov-009",
+    "valid_id": "v1-test-prov-009-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-010-a",
+    "member_ids": [
+      "v1-test-prov-010-a",
+      "v1-test-prov-010-b"
+    ],
+    "pair_id": "v1-test-prov-010",
+    "valid_id": "v1-test-prov-010-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-011-b",
+    "member_ids": [
+      "v1-test-prov-011-a",
+      "v1-test-prov-011-b"
+    ],
+    "pair_id": "v1-test-prov-011",
+    "valid_id": "v1-test-prov-011-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-012-a",
+    "member_ids": [
+      "v1-test-prov-012-a",
+      "v1-test-prov-012-b"
+    ],
+    "pair_id": "v1-test-prov-012",
+    "valid_id": "v1-test-prov-012-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-013-b",
+    "member_ids": [
+      "v1-test-prov-013-a",
+      "v1-test-prov-013-b"
+    ],
+    "pair_id": "v1-test-prov-013",
+    "valid_id": "v1-test-prov-013-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-014-a",
+    "member_ids": [
+      "v1-test-prov-014-a",
+      "v1-test-prov-014-b"
+    ],
+    "pair_id": "v1-test-prov-014",
+    "valid_id": "v1-test-prov-014-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-015-b",
+    "member_ids": [
+      "v1-test-prov-015-a",
+      "v1-test-prov-015-b"
+    ],
+    "pair_id": "v1-test-prov-015",
+    "valid_id": "v1-test-prov-015-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-016-a",
+    "member_ids": [
+      "v1-test-prov-016-a",
+      "v1-test-prov-016-b"
+    ],
+    "pair_id": "v1-test-prov-016",
+    "valid_id": "v1-test-prov-016-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-017-a",
+    "member_ids": [
+      "v1-test-prov-017-a",
+      "v1-test-prov-017-b"
+    ],
+    "pair_id": "v1-test-prov-017",
+    "valid_id": "v1-test-prov-017-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-018-b",
+    "member_ids": [
+      "v1-test-prov-018-a",
+      "v1-test-prov-018-b"
+    ],
+    "pair_id": "v1-test-prov-018",
+    "valid_id": "v1-test-prov-018-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-019-a",
+    "member_ids": [
+      "v1-test-prov-019-a",
+      "v1-test-prov-019-b"
+    ],
+    "pair_id": "v1-test-prov-019",
+    "valid_id": "v1-test-prov-019-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-020-b",
+    "member_ids": [
+      "v1-test-prov-020-a",
+      "v1-test-prov-020-b"
+    ],
+    "pair_id": "v1-test-prov-020",
+    "valid_id": "v1-test-prov-020-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-021-a",
+    "member_ids": [
+      "v1-test-prov-021-a",
+      "v1-test-prov-021-b"
+    ],
+    "pair_id": "v1-test-prov-021",
+    "valid_id": "v1-test-prov-021-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-022-b",
+    "member_ids": [
+      "v1-test-prov-022-a",
+      "v1-test-prov-022-b"
+    ],
+    "pair_id": "v1-test-prov-022",
+    "valid_id": "v1-test-prov-022-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-023-a",
+    "member_ids": [
+      "v1-test-prov-023-a",
+      "v1-test-prov-023-b"
+    ],
+    "pair_id": "v1-test-prov-023",
+    "valid_id": "v1-test-prov-023-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-prov-024-b",
+    "member_ids": [
+      "v1-test-prov-024-a",
+      "v1-test-prov-024-b"
+    ],
+    "pair_id": "v1-test-prov-024",
+    "valid_id": "v1-test-prov-024-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-001-b",
+    "member_ids": [
+      "v1-test-formal-001-a",
+      "v1-test-formal-001-b"
+    ],
+    "pair_id": "v1-test-formal-001",
+    "valid_id": "v1-test-formal-001-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-002-a",
+    "member_ids": [
+      "v1-test-formal-002-a",
+      "v1-test-formal-002-b"
+    ],
+    "pair_id": "v1-test-formal-002",
+    "valid_id": "v1-test-formal-002-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-003-b",
+    "member_ids": [
+      "v1-test-formal-003-a",
+      "v1-test-formal-003-b"
+    ],
+    "pair_id": "v1-test-formal-003",
+    "valid_id": "v1-test-formal-003-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-004-a",
+    "member_ids": [
+      "v1-test-formal-004-a",
+      "v1-test-formal-004-b"
+    ],
+    "pair_id": "v1-test-formal-004",
+    "valid_id": "v1-test-formal-004-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-005-b",
+    "member_ids": [
+      "v1-test-formal-005-a",
+      "v1-test-formal-005-b"
+    ],
+    "pair_id": "v1-test-formal-005",
+    "valid_id": "v1-test-formal-005-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-006-a",
+    "member_ids": [
+      "v1-test-formal-006-a",
+      "v1-test-formal-006-b"
+    ],
+    "pair_id": "v1-test-formal-006",
+    "valid_id": "v1-test-formal-006-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-007-b",
+    "member_ids": [
+      "v1-test-formal-007-a",
+      "v1-test-formal-007-b"
+    ],
+    "pair_id": "v1-test-formal-007",
+    "valid_id": "v1-test-formal-007-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-008-a",
+    "member_ids": [
+      "v1-test-formal-008-a",
+      "v1-test-formal-008-b"
+    ],
+    "pair_id": "v1-test-formal-008",
+    "valid_id": "v1-test-formal-008-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-009-a",
+    "member_ids": [
+      "v1-test-formal-009-a",
+      "v1-test-formal-009-b"
+    ],
+    "pair_id": "v1-test-formal-009",
+    "valid_id": "v1-test-formal-009-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-010-b",
+    "member_ids": [
+      "v1-test-formal-010-a",
+      "v1-test-formal-010-b"
+    ],
+    "pair_id": "v1-test-formal-010",
+    "valid_id": "v1-test-formal-010-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-011-a",
+    "member_ids": [
+      "v1-test-formal-011-a",
+      "v1-test-formal-011-b"
+    ],
+    "pair_id": "v1-test-formal-011",
+    "valid_id": "v1-test-formal-011-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-012-b",
+    "member_ids": [
+      "v1-test-formal-012-a",
+      "v1-test-formal-012-b"
+    ],
+    "pair_id": "v1-test-formal-012",
+    "valid_id": "v1-test-formal-012-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-013-a",
+    "member_ids": [
+      "v1-test-formal-013-a",
+      "v1-test-formal-013-b"
+    ],
+    "pair_id": "v1-test-formal-013",
+    "valid_id": "v1-test-formal-013-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-014-b",
+    "member_ids": [
+      "v1-test-formal-014-a",
+      "v1-test-formal-014-b"
+    ],
+    "pair_id": "v1-test-formal-014",
+    "valid_id": "v1-test-formal-014-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-015-a",
+    "member_ids": [
+      "v1-test-formal-015-a",
+      "v1-test-formal-015-b"
+    ],
+    "pair_id": "v1-test-formal-015",
+    "valid_id": "v1-test-formal-015-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-016-b",
+    "member_ids": [
+      "v1-test-formal-016-a",
+      "v1-test-formal-016-b"
+    ],
+    "pair_id": "v1-test-formal-016",
+    "valid_id": "v1-test-formal-016-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-017-b",
+    "member_ids": [
+      "v1-test-formal-017-a",
+      "v1-test-formal-017-b"
+    ],
+    "pair_id": "v1-test-formal-017",
+    "valid_id": "v1-test-formal-017-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-018-a",
+    "member_ids": [
+      "v1-test-formal-018-a",
+      "v1-test-formal-018-b"
+    ],
+    "pair_id": "v1-test-formal-018",
+    "valid_id": "v1-test-formal-018-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-019-b",
+    "member_ids": [
+      "v1-test-formal-019-a",
+      "v1-test-formal-019-b"
+    ],
+    "pair_id": "v1-test-formal-019",
+    "valid_id": "v1-test-formal-019-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-020-a",
+    "member_ids": [
+      "v1-test-formal-020-a",
+      "v1-test-formal-020-b"
+    ],
+    "pair_id": "v1-test-formal-020",
+    "valid_id": "v1-test-formal-020-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-021-b",
+    "member_ids": [
+      "v1-test-formal-021-a",
+      "v1-test-formal-021-b"
+    ],
+    "pair_id": "v1-test-formal-021",
+    "valid_id": "v1-test-formal-021-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-022-a",
+    "member_ids": [
+      "v1-test-formal-022-a",
+      "v1-test-formal-022-b"
+    ],
+    "pair_id": "v1-test-formal-022",
+    "valid_id": "v1-test-formal-022-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-023-b",
+    "member_ids": [
+      "v1-test-formal-023-a",
+      "v1-test-formal-023-b"
+    ],
+    "pair_id": "v1-test-formal-023",
+    "valid_id": "v1-test-formal-023-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-formal-024-a",
+    "member_ids": [
+      "v1-test-formal-024-a",
+      "v1-test-formal-024-b"
+    ],
+    "pair_id": "v1-test-formal-024",
+    "valid_id": "v1-test-formal-024-b"
+  }
+]

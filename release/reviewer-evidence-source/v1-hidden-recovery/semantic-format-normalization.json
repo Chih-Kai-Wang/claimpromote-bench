@@ -1,0 +1,420 @@
+{
+  "decisions": 7200,
+  "instances_per_run": 300,
+  "normalization_rule": "A schema-valid raw model decision that violates the frozen cross-field decision semantics is a malformed model output and is reclassified as FORMAT_ERROR. No valid model decision is altered; a semantically invalid system final decision fails closed.",
+  "run_files": [
+    {
+      "identity": {
+        "arm": "ledger",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger-104729/run.jsonl",
+      "normalized_sha256": "sha256:a837a0ef3b8e615227031a8b3c0dafd1bb7cf076e484d73ed32335614c4d292f",
+      "records": 300,
+      "semantic_format_errors_reclassified": 4,
+      "source": "work/source-evidence/qwen3-0.6b-ledger-104729/run.jsonl",
+      "source_sha256": "sha256:61c05e68dae88df038ab9f482e1ef9b4b3d67d9a8b8ba4a1f6968440f70e6971"
+    },
+    {
+      "identity": {
+        "arm": "ledger",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger-130363/run.jsonl",
+      "normalized_sha256": "sha256:e39dbf0414356d4ae61a6dcc06cdc5f0bd85fcc9d3b3f3e2cfeb79e8132b6f28",
+      "records": 300,
+      "semantic_format_errors_reclassified": 2,
+      "source": "work/source-evidence/qwen3-0.6b-ledger-130363/run.jsonl",
+      "source_sha256": "sha256:5d171a09b805b050d7fab481b4dc6a1b58ceb3408176d1bd011db235e92922c8"
+    },
+    {
+      "identity": {
+        "arm": "ledger",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.16\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger-169087/run.jsonl",
+      "normalized_sha256": "sha256:c9d9ff8d5c48e215346d656390355cbaa8533db08966a5e9e172b88d2c75c7b8",
+      "records": 300,
+      "semantic_format_errors_reclassified": 1,
+      "source": "work/source-evidence/qwen3-0.6b-ledger-169087/run.jsonl",
+      "source_sha256": "sha256:04cda27ecbe95730f28cd6edbb4ec4773b317cede62c7639b4b00bd6437c6ae8"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.16\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger_verifier-104729/run.jsonl",
+      "normalized_sha256": "sha256:fe3835729c8e91ce21e0a4bef9dd35b608a65ab95eb043ec228bb693e882fb06",
+      "records": 300,
+      "semantic_format_errors_reclassified": 2,
+      "source": "work/source-evidence/qwen3-0.6b-ledger_verifier-104729/run.jsonl",
+      "source_sha256": "sha256:32eec39200a119d8bb8fbcc3f041b3964d4029b4055cb9b09fdc13011c0d39f9"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger_verifier-130363/run.jsonl",
+      "normalized_sha256": "sha256:82ce81307bf7ac3c1848d14d8a24aedcec69db6d1b0f44d9492adbd72471927f",
+      "records": 300,
+      "semantic_format_errors_reclassified": 8,
+      "source": "work/source-evidence/qwen3-0.6b-ledger_verifier-130363/run.jsonl",
+      "source_sha256": "sha256:69634a7af09925467e7a6e2b1a61eb9d3974428aebcaa4e27080faf952a61197"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger_verifier-169087/run.jsonl",
+      "normalized_sha256": "sha256:d9a6dc8a4d446ed6191e0f038462b6d014214ec2d0cc9a6e5a88f73f6192378e",
+      "records": 300,
+      "semantic_format_errors_reclassified": 5,
+      "source": "work/source-evidence/qwen3-0.6b-ledger_verifier-169087/run.jsonl",
+      "source_sha256": "sha256:80e8e3f61b09729d2cd3d779291b87551d30ab98e31f81b445e05b5fd2e88aca"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier_gate",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger_verifier_gate-104729/run.jsonl",
+      "normalized_sha256": "sha256:3a0ec4d181a3209a663c5ba1b09ca2c66e995f1c3aeed289c97483e996b80b89",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-0.6b-ledger_verifier_gate-104729/run.jsonl",
+      "source_sha256": "sha256:3a0ec4d181a3209a663c5ba1b09ca2c66e995f1c3aeed289c97483e996b80b89"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier_gate",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger_verifier_gate-130363/run.jsonl",
+      "normalized_sha256": "sha256:46ee5dc3f649dafb5601b5978b495750fada99f811b908d9cecbd06c21680ccc",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-0.6b-ledger_verifier_gate-130363/run.jsonl",
+      "source_sha256": "sha256:46ee5dc3f649dafb5601b5978b495750fada99f811b908d9cecbd06c21680ccc"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier_gate",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-ledger_verifier_gate-169087/run.jsonl",
+      "normalized_sha256": "sha256:9e0c3a581b2467d86098e6c4b4d853429907252f9b63905ac260fe6b32eabed2",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-0.6b-ledger_verifier_gate-169087/run.jsonl",
+      "source_sha256": "sha256:9e0c3a581b2467d86098e6c4b4d853429907252f9b63905ac260fe6b32eabed2"
+    },
+    {
+      "identity": {
+        "arm": "narrative",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-narrative-104729/run.jsonl",
+      "normalized_sha256": "sha256:6a869dd6707dc0199eb823d91c985b08a1b975f261e785c8ddff87af3cb6650e",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-0.6b-narrative-104729/run.jsonl",
+      "source_sha256": "sha256:6a869dd6707dc0199eb823d91c985b08a1b975f261e785c8ddff87af3cb6650e"
+    },
+    {
+      "identity": {
+        "arm": "narrative",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-narrative-130363/run.jsonl",
+      "normalized_sha256": "sha256:21dd0bb72babbf28c6280f3885e2cccafe12efbbcef63cfc33c6c495278634b3",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-0.6b-narrative-130363/run.jsonl",
+      "source_sha256": "sha256:21dd0bb72babbf28c6280f3885e2cccafe12efbbcef63cfc33c6c495278634b3"
+    },
+    {
+      "identity": {
+        "arm": "narrative",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:12fae8b8f78f0360b498d04c8db7d33aff29ab7d8080231f93a17c18119e6735",
+        "model_id": "Qwen/Qwen3-0.6B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-0.6b-narrative-169087/run.jsonl",
+      "normalized_sha256": "sha256:ac1d90d794eeecb6707e17236dce39912a7a49110bc2979d66244decfbb285a4",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-0.6b-narrative-169087/run.jsonl",
+      "source_sha256": "sha256:ac1d90d794eeecb6707e17236dce39912a7a49110bc2979d66244decfbb285a4"
+    },
+    {
+      "identity": {
+        "arm": "ledger",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger-104729/run.jsonl",
+      "normalized_sha256": "sha256:a92d5b104c3dd73c42a4f0c5d94f8735ea70f4b4197ff5b3e142239ee3b3ca48",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-ledger-104729/run.jsonl",
+      "source_sha256": "sha256:a92d5b104c3dd73c42a4f0c5d94f8735ea70f4b4197ff5b3e142239ee3b3ca48"
+    },
+    {
+      "identity": {
+        "arm": "ledger",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger-130363/run.jsonl",
+      "normalized_sha256": "sha256:6810686b47eb77a9eeb12707039aeac0e1bb57dbd93291d7f96276b879565ebe",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-ledger-130363/run.jsonl",
+      "source_sha256": "sha256:6810686b47eb77a9eeb12707039aeac0e1bb57dbd93291d7f96276b879565ebe"
+    },
+    {
+      "identity": {
+        "arm": "ledger",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger-169087/run.jsonl",
+      "normalized_sha256": "sha256:ceb54fc692de512e179e3bfd5c1c286c1f22beea96f7fa92513b33144751447f",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-ledger-169087/run.jsonl",
+      "source_sha256": "sha256:ceb54fc692de512e179e3bfd5c1c286c1f22beea96f7fa92513b33144751447f"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger_verifier-104729/run.jsonl",
+      "normalized_sha256": "sha256:0aafcea6d6c1b3c9a85c1c4754249cc917b7a53ba1f3bc17155460d85190a804",
+      "records": 300,
+      "semantic_format_errors_reclassified": 2,
+      "source": "work/source-evidence/qwen3-1.7b-ledger_verifier-104729/run.jsonl",
+      "source_sha256": "sha256:b2750e3e79a04acdc9f82913717168333b7d188352ad114278b892c2c8f12d59"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger_verifier-130363/run.jsonl",
+      "normalized_sha256": "sha256:007b9a5c2b933f063e1b87fd778e940fa98af1db0f03b7d120b17ba775321733",
+      "records": 300,
+      "semantic_format_errors_reclassified": 1,
+      "source": "work/source-evidence/qwen3-1.7b-ledger_verifier-130363/run.jsonl",
+      "source_sha256": "sha256:518078851ba0178a8a775340946f1186ae6301d33f1d9acc8190946d450d9ec4"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger_verifier-169087/run.jsonl",
+      "normalized_sha256": "sha256:30660879835218d017a9c5fc81442ab1e8b6bf5f723a67aa64559889475d4e5e",
+      "records": 300,
+      "semantic_format_errors_reclassified": 2,
+      "source": "work/source-evidence/qwen3-1.7b-ledger_verifier-169087/run.jsonl",
+      "source_sha256": "sha256:f8f76c777016e18bcf4232e6de6cd5a638fa9687bd293e7109356f4f2916dd1e"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier_gate",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger_verifier_gate-104729/run.jsonl",
+      "normalized_sha256": "sha256:3a09ee23348e4db2dc736eef042904f208327bbf613af091c313b95928c99108",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-ledger_verifier_gate-104729/run.jsonl",
+      "source_sha256": "sha256:3a09ee23348e4db2dc736eef042904f208327bbf613af091c313b95928c99108"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier_gate",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger_verifier_gate-130363/run.jsonl",
+      "normalized_sha256": "sha256:e7f9daa41f2265a6df9c577c38b0a8cd2fe29c1f43e3ccb21e78cb2952215510",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-ledger_verifier_gate-130363/run.jsonl",
+      "source_sha256": "sha256:e7f9daa41f2265a6df9c577c38b0a8cd2fe29c1f43e3ccb21e78cb2952215510"
+    },
+    {
+      "identity": {
+        "arm": "ledger_verifier_gate",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-ledger_verifier_gate-169087/run.jsonl",
+      "normalized_sha256": "sha256:c17287d4891defe7d075d0dd15354a474ff5146f9ac3a4ff3f17da8b86e709f5",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-ledger_verifier_gate-169087/run.jsonl",
+      "source_sha256": "sha256:c17287d4891defe7d075d0dd15354a474ff5146f9ac3a4ff3f17da8b86e709f5"
+    },
+    {
+      "identity": {
+        "arm": "narrative",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 104729
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-narrative-104729/run.jsonl",
+      "normalized_sha256": "sha256:0a89903a125b01eb27645fb85e8c08d4db958a519518f21145e029afdf54d609",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-narrative-104729/run.jsonl",
+      "source_sha256": "sha256:0a89903a125b01eb27645fb85e8c08d4db958a519518f21145e029afdf54d609"
+    },
+    {
+      "identity": {
+        "arm": "narrative",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.16\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 130363
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-narrative-130363/run.jsonl",
+      "normalized_sha256": "sha256:7654dd6e54687a49a15d56f8c7920d83db56561050e2284d788c377823406e85",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-narrative-130363/run.jsonl",
+      "source_sha256": "sha256:7654dd6e54687a49a15d56f8c7920d83db56561050e2284d788c377823406e85"
+    },
+    {
+      "identity": {
+        "arm": "narrative",
+        "hardware": "{\"accelerator_probe\":{},\"logical_cpu_count\":4,\"machine\":\"x86_64\",\"platform\":\"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\",\"processor\":\"x86_64\",\"python\":\"3.11.15\"}",
+        "model_artifact_sha256": "sha256:061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+        "model_id": "Qwen/Qwen3-1.7B",
+        "quantization": "Q8_0",
+        "runtime_commit": "de699957b92f490efebad149665b0dccf127eaff",
+        "seed": 169087
+      },
+      "normalized": "work/normalized-evidence/qwen3-1.7b-narrative-169087/run.jsonl",
+      "normalized_sha256": "sha256:0cc051bdf38cef71874e1202908885059eebb1aeda15d0d1ef7d22a333a28118",
+      "records": 300,
+      "semantic_format_errors_reclassified": 0,
+      "source": "work/source-evidence/qwen3-1.7b-narrative-169087/run.jsonl",
+      "source_sha256": "sha256:0cc051bdf38cef71874e1202908885059eebb1aeda15d0d1ef7d22a333a28118"
+    }
+  ],
+  "runs": 24,
+  "schema_version": "1.0.0",
+  "source_scoring_head_sha": "aa5268dcde2aa44f8eabf0246631efbca27de7e5",
+  "source_workflow_run_id": 32255636879,
+  "status": "SEMANTIC_FORMAT_ERROR_NORMALIZATION_COMPLETE"
+}

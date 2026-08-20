@@ -2,8 +2,8 @@
 
 **A benchmark for deciding when evidence justifies a change in research-claim status.**
 
-> **SCIENTIFIC_RC_READY: v1 hidden study, post-v1 formatting control, and post-protocol GPT-5.4 public-development follow-up complete; account-side submission pending.**
-> Hidden v1 numbers come from the validated recovered study. Both public extensions remain separately labeled with their own frozen plans, aggregates, and interpretation boundaries.
+> **SCIENTIFIC_RC_READY: v1 hidden study, accuracy-blind capable-model hidden extension, public formatting control, and GPT-5.4 public-development follow-up complete; account-side submission pending.**
+> Hidden v1 numbers come from the validated recovered study. Every later study remains separately labeled with its own frozen plan, aggregate, and interpretation boundary.
 
 ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
 
@@ -11,7 +11,7 @@ The benchmark evaluates requested claim-status transitions under a fixed policy.
 
 `ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
 
-A deterministic gate can replace an invalid `ALLOW` after the model responds. We report that gate behavior separately from the model's own decision.
+A deterministic one-way gate can replace a parseable invalid `ALLOW` with the policy-oracle action. This is reported only as an implementation check, separately from model behavior.
 
 ## v1 benchmark
 
@@ -34,17 +34,17 @@ A deterministic gate can replace an invalid `ALLOW` after the model responds. We
 
 Primary scoring uses only the 300 hidden instances. The public development data are for implementation and separately labeled descriptive work.
 
-## Main hidden-study result
+## Original v1 hidden-study result
 
 The hidden study records:
 
 - **5,327 / 7,200 decisions (73.99%) are `FORMAT_ERROR`.**
 - All **1,873 parseable raw model decisions are `ALLOW`.**
-- Wherever the raw rates are defined, raw false-promotion rate is 1.00, valid-promotion recall is 1.00, and paired transition accuracy is 0.
-- In the gate arm, the final false-promotion rate is 0 on parseable decisions, with catch rate 1 and false-block rate 0.
-- Gate-arm decision coverage is low: 14.0%–49.0% for Qwen3-0.6B and 21.7%–48.3% for Qwen3-1.7B.
+- End-to-end raw action accuracy is **960 / 7,200 (13.33%)** when every format error remains incorrect.
+- End-to-end raw controlled-pair accuracy is **0 / 3,600**.
+- Conditional FPR and VPR are both 1.00 wherever defined, a direct consequence of the uniform `ALLOW` action distribution.
 
-The gate uses the same fixed policy that defines the benchmark labels. Its conditional gate scores quantify implementation--policy agreement on parseable cases. Raw model behavior appears separately in the coverage, pair-accuracy, and flip-rate results.
+The gate uses the same policy oracle that defines the evaluation labels, so its agreement is mechanically self-referential and provides no independent model-performance evidence.
 
 ### Format errors by model and arm
 
@@ -57,18 +57,47 @@ Each cell contains 900 decisions across three seeds.
 
 All three seeds are kept in the study.
 
+## Accuracy-blind capable-model hidden extension
+
+After the v1 and public-development outcomes were known, a separate protocol was frozen on the
+unchanged 150-pair / 300-instance hidden split. It registered six model labels plus one same-label
+service-path replication. A fixed 12-item pilot advanced a lane only when it had zero transport
+failures and at least 10 valid decisions; accuracy, action distribution, and raw responses remained
+sealed until every lane reached its terminal state. A qualifying lane received one fresh 300-item,
+no-retry pass.
+
+Two of seven pilots qualified. The other five each produced 0/12 valid decisions and stopped before
+full scoring, so no 300-item accuracy is reported for them.
+
+| Full-pass lane | Decision coverage | Complete-pair coverage | E2E action accuracy | E2E pair accuracy | Raw FPR |
+|---|---:|---:|---:|---:|---:|
+| Qwen3.7-Max | 0.990 | 0.980 | 0.940 | 0.880 | 0.068 |
+| DeepSeek-V4-Flash | 0.913 | 0.827 | 0.627 | 0.253 | 0.694 |
+| Always `ALLOW` | 1.000 | 1.000 | 0.500 | 0.000 | 1.000 |
+
+Qwen3.7-Max gives 282/300 correct actions and 132/150 correct controlled pairs.
+DeepSeek-V4-Flash gives 188/300 and 38/150. Both exceed the always-`ALLOW` action baseline in
+paired exact tests (Holm-adjusted p-values `7.35e-40` and `7.28e-12`). These are descriptive
+one-pass service-lane results; they do not identify causal provider, tier, or serving-stack effects.
+
+- Compact aggregate: `v2/capable-hidden-results/capable-hidden-study.json`
+- Aggregate SHA-256: `sha256:20904dd181b27ddcbe0997692f101f50c1815abdb91482f4c4f09836f3508dcb`
+- Reviewer evidence: seven pilots, two full runs, exact prompt packet, released hidden inputs and
+  labels, item-level raw responses, parser replay, analyses, and recomputation checks
+- Excluded: private construction seed
+
 ## Post-v1 public formatting-control pilot
 
 The hidden v1 records contain parse status and structured decisions; original free-form text for older parse failures is absent. A separately labeled **post-v1 public diagnostic** tests the output contract directly. It uses the 20 public alpha pairs, the same two frozen model artifacts and llama.cpp runtime, seed 104729, and the `ledger_verifier` prompt. The free and constrained runs have identical prompt hashes, model artifact, runtime, seed, and hardware record; JSON-schema-constrained decoding is the sole registered difference.
 
 The pilot is a post-v1 public one-seed formatting control with 160 decisions, executed on the existing free runner and frozen model artifacts.
 
-| Model | Decoding | Decision coverage | Complete-pair coverage | Raw action accuracy | Raw pair accuracy |
+| Model | Decoding | Decision coverage | Complete-pair coverage | E2E action accuracy | E2E pair accuracy |
 |---|---|---:|---:|---:|---:|
-| Qwen3-0.6B | Free | 0.75 | 0.70 | 0.50 | 0.00 |
-| Qwen3-0.6B | JSON schema | 1.00 | 1.00 | 0.50 | 0.00 |
-| Qwen3-1.7B | Free | 0.00 | 0.00 | undefined | undefined |
-| Qwen3-1.7B | JSON schema | 0.95 | 0.90 | 0.50 | 0.00 |
+| Qwen3-0.6B | Free | 0.75 | 0.70 | 0.375 | 0.00 |
+| Qwen3-0.6B | JSON schema | 1.00 | 1.00 | 0.500 | 0.00 |
+| Qwen3-1.7B | Free | 0.00 | 0.00 | 0.000 | 0.00 |
+| Qwen3-1.7B | JSON schema | 0.95 | 0.90 | 0.475 | 0.00 |
 
 Schema constraints remove 10 schema errors for Qwen3-0.6B and 38 for Qwen3-1.7B. Across the constrained runs, **78 / 80 decisions are parseable and 38 / 40 controlled pairs are complete; every parseable decision selects `ALLOW`, and raw pair accuracy and raw flip rate remain 0.** The two remaining constrained responses contain duplicate `reason_codes` entries and remain schema errors in scoring. The measured scope covers two frozen small models, public controlled pairs, and one seed.
 
@@ -78,18 +107,18 @@ Pilot provenance:
 - source trigger: `f998a05fec36b84e59230fe241f1e9961647ad2e`;
 - artifact-only recovery: `32297818154`;
 - public aggregate: `v2/pilot-results/v2-public-pilot-study.json`;
-- aggregate SHA-256: `sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`.
+- aggregate SHA-256: `sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5`.
 
 ## Post-protocol GPT-5.4 public-development follow-up
 
-A separately frozen OpenRouter-mediated extension evaluates GPT-5.4 on the 50-pair / 100-instance public development split. The initial direct-OpenAI pilot is retained as a transport-only `STOP`: all 12 requests reported that no endpoint supported the registered token-limit parameter, no model response was returned, and OpenRouter charged $0. A new frozen revision changed only that interface field from `max_completion_tokens` to `max_tokens`, retained direct OpenAI routing and zero retries, and used the same 12-instance family-balanced pilot gate.
+A separately frozen API-model extension evaluates GPT-5.4 on the 50-pair / 100-instance public development split with strict JSON Schema and zero retries. A 12-instance family-balanced pilot passes the accuracy-blind interface gate and triggers one fresh full pass.
 
-| Phase | Records | Decision coverage | Complete-pair coverage | Raw action accuracy | Raw pair accuracy | Raw flip rate |
+| Phase | Records | Decision coverage | Complete-pair coverage | E2E action accuracy | E2E pair accuracy | Pair flip rate |
 |---|---:|---:|---:|---:|---:|---:|
 | Revised pilot | 12 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| Full public development | 100 | 0.99 | 0.98 | 1.00 | 1.00 | 1.00 |
+| Full public development | 100 | 0.99 | 0.98 | 0.99 | 0.98 | 1.00 |
 
-The full pass contains 99 parseable decisions: 50 `ALLOW`, 45 `HOLD`, 2 `DEMOTE`, and 2 `ESCALATE`. All 99 match the policy oracle; all 49 complete pairs are correct and change with the decisive evidence. The remaining response exhausts the 3,072-token ceiling with reasoning tokens and returns no final response text. Raw false promotions are 0 / 49, and valid promotions are 50 / 50.
+The full pass contains 99 parseable decisions: 50 `ALLOW`, 45 `HOLD`, 2 `DEMOTE`, and 2 `ESCALATE`. All 99 match the policy oracle; all 49 complete pairs are correct and change with the decisive evidence. End-to-end action and pair accuracy are therefore 0.99 and 0.98. This result establishes solvability on the public split; the separately frozen capable-model study supplies hidden-split evidence for its two qualified lanes.
 
 Follow-up provenance:
 
@@ -133,7 +162,7 @@ The analysis retains the original identity grouping. Exact McNemar/Holm comparis
 
 ## Machine-checkable credibility
 
-Gold actions are generated by the public versioned policy and function as policy-conformance labels. Credibility is supported by machine-checkable evidence:
+Oracle actions are generated by the public versioned policy and function as policy-conformance labels. Credibility is supported by machine-checkable evidence:
 
 - the hidden dataset and exact prompts were committed before scored inference;
 - the complete 24-run / 7,200-decision matrix is preserved and bound to immutable artifacts;

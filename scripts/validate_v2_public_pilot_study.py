@@ -10,7 +10,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDY = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
-EXPECTED_STUDY_SHA = "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
+EXPECTED_STUDY_SHA = "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
 EXPECTED_RUN = 32291482079
 EXPECTED = {
     ("Qwen/Qwen3-0.6B", "free"): {
@@ -109,6 +109,8 @@ def main() -> int:
         fail("study status is not COMPLETE")
     if study.get("study_kind") != "POST_V1_PUBLIC_INTERFACE_PILOT":
         fail("study kind changed")
+    if study.get("interpretation_status") != "RECOMPUTATION_VERIFIED_FOR_REPORTING":
+        fail("study interpretation has not been finalized for reporting")
     if study.get("source_workflow_run_id") != EXPECTED_RUN:
         fail("source workflow run changed")
     if study.get("study_sha256") != EXPECTED_STUDY_SHA:

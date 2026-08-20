@@ -54,25 +54,16 @@ def patch_runner(bundle: Path) -> None:
 def patch_readme(bundle: Path) -> None:
     path = bundle / "README.md"
     text = path.read_text(encoding="utf-8")
-    text = text.replace(
-        "hidden seed, raw human-review submission, or public workflow/provenance identifier.",
-        "hidden seed, human-subject study record, or public workflow/provenance identifier.\n\n"
-        "Generated caches and unused human-review workflow modules are excluded; the included "
-        "source is distributed with its license.",
-    )
-    old = (
-        "The checks rebuild and validate the public alpha benchmark, run "
-        "shortcut/invariance/executable\nchecks, validate the compact v1 and v2 paper-result "
-        "summaries, validate the unlabeled naturalistic\n"
-    )
+    old = "The checks rebuild and validate the public alpha benchmark, run"
     new = (
         "The checks rebuild and validate the public alpha benchmark, verify all 20 "
-        "controlled-pair\ncontracts, run shortcut/invariance/executable checks, validate the "
-        "compact v1 and v2 paper-result\nsummaries, and validate the unlabeled naturalistic\n"
+        "controlled-pair contracts, run"
     )
-    if old not in text:
-        raise RuntimeError("anonymous review README patch target not found")
-    path.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
+    if new not in text:
+        if old not in text:
+            raise RuntimeError("anonymous review README patch target not found")
+        text = text.replace(old, new, 1)
+    path.write_text(text, encoding="utf-8", newline="\n")
 
 
 def patch_manifest_scope(bundle: Path) -> None:
@@ -86,10 +77,7 @@ def patch_manifest_scope(bundle: Path) -> None:
 
 
 def finalize(bundle: Path) -> None:
-    for relative in (
-        "scripts/audit_public_pair_contracts.py",
-        "scripts/build_v2_naturalistic_candidates.py",
-    ):
+    for relative in ("scripts/audit_public_pair_contracts.py",):
         copy_public_check(relative, bundle)
     patch_runner(bundle)
     patch_readme(bundle)

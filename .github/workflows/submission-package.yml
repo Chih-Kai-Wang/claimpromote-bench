@@ -10,6 +10,7 @@ on:
       - "technical-report/**"
       - "release/v1-paper-results.json"
       - "v2/pilot-results/v2-public-pilot-study.json"
+      - "v2/capable-hidden-results/**"
       - "scripts/build_submission_tex.py"
       - "scripts/lint_paper_submission.py"
       - "scripts/validate_v1_release_results.py"

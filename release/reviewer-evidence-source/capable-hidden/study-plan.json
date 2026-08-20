@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-capable-hidden-extension-v1",
+  "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+  "truth_status": "OPEN",
+  "purpose": "Test whether capable model families follow the frozen claim-transition policy on the already committed v1 hidden split, while retaining reviewer-visible item-level evidence.",
+  "amendment": {
+    "kind": "POST_REVIEW_CAPABLE_MODEL_HIDDEN_EXTENSION",
+    "base_hidden_commitment": "configs/v1-hidden-test-commitment.json",
+    "base_hidden_commitment_sha256": "sha256:72702d13ba4dd1a750c7c524a65320612728feeb25d2b5faccc8611517008002",
+    "base_hidden_commitment_commit": "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
+    "created_after_v1_outcomes_known": true,
+    "created_after_public_gpt54_outcome_known": true,
+    "new_hidden_items_or_labels_created": false,
+    "new_model_outputs_seen_before_initial_freeze": false,
+    "model_selection_uses_new_hidden_outputs": false,
+    "interpretation": "A separately precommitted revision study on the existing hidden split. It does not replace or retroactively alter the original preregistered v1 study."
+  },
+  "transport_amendment": {
+    "status": "FROZEN_BEFORE_FINAL_ADAPTER_REQUALIFICATION",
+    "failed_runs": [
+      {
+        "run_id": 32402699174,
+        "boundary": "Stopped before every model request because the existing commitment was reconstructed with post-commitment source bytes."
+      },
+      {
+        "run_id": 32402993463,
+        "boundary": "OpenCode lanes stopped before accepted requests because GitHub secrets contained a trailing newline. The B.AI lane executed the 12-item transport pilot, produced zero parseable decisions, and stopped before the full phase."
+      },
+      {
+        "run_id": 32403718086,
+        "attempt": 2,
+        "boundary": "All seven accuracy-blind pilots used valid credentials. The matched OpenCode Flash lane passed and entered its full phase. The other six lanes STOP-gated on transport, syntax, or semantic coverage before any full pass."
+      }
+    ],
+    "inspection_boundary": "Only workflow state, parse-status counts, continuation-gate fields, and transport or parser error classes were inspected. No model action, accuracy, gold comparison, or raw response text was inspected.",
+    "registered_changes": [
+      "Reconstruct the old hidden commitment with its original committed source tree.",
+      "Reject credentials containing whitespace or control bytes before any request.",
+      "Use JSON-object mode for the B.AI Flash lane because its accuracy-blind pilot returned response_format-unavailable errors for JSON Schema.",
+      "Pace B.AI requests at no more than one start per 12 seconds after one pilot request received HTTP 429.",
+      "Stagger OpenCode lane starts and require at least one second between request starts to reduce shared-account bursts.",
+      "For one final accuracy-blind adapter requalification, use prompt-only JSON on Qwen Messages, JSON-object mode on GLM, DeepSeek Pro, and Hy3, and deterministic extraction only when a response contains exactly one balanced JSON object.",
+      "Treat a top-level null error field as no provider error for the Responses adapter."
+    ],
+    "final_requalification_lanes": [
+      "opencode-go-qwen3.7-max",
+      "opencode-go-glm-5.2",
+      "opencode-go-deepseek-v4-pro",
+      "bai-deepseek-v4-flash-primary",
+      "opencode-go-hy3",
+      "opencode-go-muse-spark-1.2-contributor"
+    ],
+    "no_further_adapter_amendment": true,
+    "unchanged": "Dataset, hidden labels, item selection, prompt text, decision schema, model list, no-request-retry rule, scoring, statistical tests, and interpretation boundaries are unchanged. The already qualified matched Flash lane is not rerun.",
+    "failed_pilot_release_rule": "Release the failed transport-pilot records with the final reviewer evidence."
+  },
+  "collection_amendment": {
+    "status": "FROZEN_AFTER_ACCURACY_BLIND_GATES_BEFORE_RESULT_UNBLINDING",
+    "created_utc": "2026-08-20T19:04:00Z",
+    "inspection_boundary": "Workflow state, parse-status counts, continuation-gate fields, and transport or parser error classes only. No pilot action, pilot accuracy, full-run action, full-run accuracy, gold comparison, or raw response text was inspected.",
+    "operational_rule": "Retain one canonical 12-item pilot for every registered lane. Require and retain a fresh 300-item full pass exactly for lanes whose canonical pilot gate is GO. A STOP lane has no full-run obligation and is not converted into a 300-item zero score.",
+    "legacy_field_note": "routing.required_full_lanes names the seven registered candidate lanes; the already frozen pilot.go_rule and design.full_phase_rule determine which candidates acquire a full-run obligation.",
+    "accepted_frozen_plan_commits": [
+      "119e475953e50218fc62abd2163eef04cbad4e23",
+      "b86ee1e1d28db8a390344d28582af88e26970560"
+    ],
+    "canonical_pilot_sources": {
+      "opencode-go-deepseek-v4-flash-matched": {
+        "github_run_id": 32403718086,
+        "attempt": 2,
+        "gate": "GO"
+      },
+      "opencode-go-qwen3.7-max": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "GO"
+      },
+      "opencode-go-glm-5.2": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "opencode-go-deepseek-v4-pro": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "bai-deepseek-v4-flash-primary": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "opencode-go-hy3": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      },
+      "opencode-go-muse-spark-1.2-contributor": {
+        "github_run_id": 32405565039,
+        "attempt": 1,
+        "gate": "STOP"
+      }
+    },
+    "canonical_full_sources_if_completed": {
+      "opencode-go-deepseek-v4-flash-matched": 32403718086,
+      "opencode-go-qwen3.7-max": 32405565039
+    },
+    "inference_status_at_freeze": {
+      "opencode-go-deepseek-v4-flash-matched": "FULL_COMPLETED_RESULTS_NOT_INSPECTED",
+      "opencode-go-qwen3.7-max": "FULL_IN_PROGRESS_RESULTS_NOT_INSPECTED",
+      "other_five_lanes": "STOP_NO_FULL_RUN"
+    },
+    "no_model_or_scoring_change": true
+  },
+  "account_execution_settings": {
+    "opencode_go_allow_training_eligible_models": true,
+    "opencode_go_enable_china_deployed_models": true,
+    "opencode_go_use_balance_after_subscription_limit": false,
+    "interpretation": "These are account-level access permissions at execution time, not a claim that every listed model trains on every request. Only synthetic benchmark material intended for reviewer release was sent."
+  },
+  "design": {
+    "analysis_split": "EXISTING_COMMITTED_V1_HIDDEN",
+    "held_out_with_respect_to_new_models": true,
+    "prompt_arm": "ledger_verifier",
+    "provider_neutral_control_suffix": "",
+    "attempts_per_item_per_phase": 1,
+    "sampling_parameters": "No temperature, top_p, or seed parameter is sent. Provider-native structured output is required and all returned final decisions receive deterministic local schema and semantic validation.",
+    "pilot_visibility": "The workflow applies the continuation gate automatically and starts the full phase without exposing pilot accuracy or action distributions to model selection.",
+    "full_phase_rule": "After GO, re-execute all 300 hidden instances as a fresh full phase. Pilot outputs are never substituted into the full result.",
+    "model_comparison_boundary": "Results are descriptive per-model replications. Differences are not interpreted as causal provider or model-tier effects. Even lanes sharing one gateway may differ in backend model, routing, or serving configuration.",
+    "repeatability_limit": "One no-retry pass per model does not estimate within-model stochastic variance."
+  },
+  "dataset": {
+    "source": "deterministically rebuilt existing v1 hidden split",
+    "build_command": "python scripts/build_v1_dataset.py --split test --out work/capable-hidden-study/hidden --seed-file $RUNNER_TEMP/cpb-v1-hidden-seed.hex",
+    "pairs": 150,
+    "instances": 300,
+    "factors": 20,
+    "benchmark_plan_sha256": "sha256:60a87c61ed23e9a834182f51956380bb9dd53bff778e4fae4b8e619de1ae83fc",
+    "dataset_manifest_sha256": "sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba",
+    "inputs_sha256": "sha256:14eaa74f6d5ef045fbaf89ce6b805f25effa6dd9b11122048db98aaa5c6f2b92",
+    "gold_sha256": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
+    "pairs_sha256": "sha256:34fb2a69bcb43e829ac9ad3c82f1a540a3beb850b5cd5bc52583402d9b6f342d",
+    "private_before_this_extension": true,
+    "release_after_inference": "Reviewer-visible in the anonymous supplementary evidence bundle; the private seed remains excluded."
+  },
+  "prompt": {
+    "arm": "ledger_verifier",
+    "provider_neutral_control_suffix": "",
+    "renderer_sha256": "sha256:9764f2d9b294a2050df5f9e811f6c8892d732618183ef4a50713ecf01f04d121",
+    "policy_sha256": "sha256:97f865336b34a62038b6556037d986e67441c7196ac64817bfc721ba3aeae018",
+    "decision_schema_sha256": "sha256:f741bc11665efe5757bb9b7babc96bd3d54d7f133be2ea000bdd5e1b1d4ee2b0",
+    "packet_binding": "FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER",
+    "expected_packet_sha256": null
+  },
+  "pilot": {
+    "selection_rule": "lexicographically first pair_id in each of the six benchmark families",
+    "pairs": [
+      "v1-test-dep-001",
+      "v1-test-formal-001",
+      "v1-test-num-001",
+      "v1-test-prov-001",
+      "v1-test-run-001",
+      "v1-test-stale-001"
+    ],
+    "instances": 12,
+    "go_rule": "Execute the full 300-item run iff the pilot has zero transport failures and at least 10 of 12 decisions pass JSON-schema and semantic validation. Accuracy and action distribution do not affect GO or fallback selection.",
+    "retry_count": 0
+  },
+  "formal_lanes": [
+    {
+      "lane_id": "opencode-go-qwen3.7-max",
+      "provider": "OpenCode Go",
+      "api_kind": "anthropic_messages",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "qwen3.7-max",
+      "model_family": "Qwen",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "prompt_only_json",
+      "constraint_strength": "PROMPT_ONLY_JSON_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
+      "initial_request_delay_seconds": 0.0,
+      "minimum_request_interval_seconds": 1.0,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 2.5,
+      "cached_input_usd_per_million": 0.5,
+      "output_usd_per_million": 7.5,
+      "spend_cap_usd": 8.0,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE",
+      "data_training": false,
+      "data_retention_days": 0
+    },
+    {
+      "lane_id": "opencode-go-glm-5.2",
+      "provider": "OpenCode Go",
+      "api_kind": "openai_compatible",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "glm-5.2",
+      "model_family": "GLM",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
+      "initial_request_delay_seconds": 2.0,
+      "minimum_request_interval_seconds": 1.0,
+      "send_reasoning_effort": false,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 1.4,
+      "cached_input_usd_per_million": 0.26,
+      "output_usd_per_million": 4.4,
+      "spend_cap_usd": 5.0,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE",
+      "data_training": false,
+      "data_retention_days": 0
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-pro",
+      "provider": "OpenCode Go",
+      "api_kind": "openai_compatible",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "deepseek-v4-pro",
+      "model_family": "DeepSeek",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
+      "initial_request_delay_seconds": 4.0,
+      "minimum_request_interval_seconds": 1.0,
+      "send_reasoning_effort": false,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 1.32,
+      "cached_input_usd_per_million": 0.044,
+      "output_usd_per_million": 3.96,
+      "spend_cap_usd": 4.5,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE_PEAK_RATE_BOUND",
+      "data_training": false,
+      "data_retention_days": 0,
+      "comparison_group": "OPENCODE_GO_DEEPSEEK_PRO_FLASH_SAME_INTERFACE"
+    },
+    {
+      "lane_id": "bai-deepseek-v4-flash-primary",
+      "provider": "B.AI",
+      "api_kind": "openai_compatible",
+      "base_url": "https://api.b.ai/v1",
+      "model": "deepseek-v4-flash",
+      "model_family": "DeepSeek",
+      "auth_env": "BAI_API_KEY",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
+      "send_reasoning_effort": false,
+      "initial_request_delay_seconds": 0.0,
+      "minimum_request_interval_seconds": 12.0,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 0.0,
+      "cached_input_usd_per_million": 0.0,
+      "output_usd_per_million": 0.0,
+      "spend_cap_usd": 0.0,
+      "billing_mode": "PROMOTIONAL_FREE_PRIMARY",
+      "data_training": "PLATFORM_TERMS_APPLY",
+      "comparison_group": "CROSS_SERVICE_REPLICATION_ONLY",
+      "price_snapshot": "Authenticated B.AI account page showed zero input and output cost on 2026-08-21."
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-flash-matched",
+      "provider": "OpenCode Go",
+      "api_kind": "openai_compatible",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "deepseek-v4-flash",
+      "model_family": "DeepSeek",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "json_schema",
+      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "initial_request_delay_seconds": 6.0,
+      "minimum_request_interval_seconds": 1.0,
+      "send_reasoning_effort": false,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 0.44,
+      "cached_input_usd_per_million": 0.014,
+      "output_usd_per_million": 1.32,
+      "spend_cap_usd": 1.6,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE_PEAK_RATE_BOUND",
+      "data_training": false,
+      "data_retention_days": 0,
+      "comparison_group": "OPENCODE_GO_DEEPSEEK_PRO_FLASH_SAME_INTERFACE"
+    },
+    {
+      "lane_id": "opencode-go-hy3",
+      "provider": "OpenCode Go",
+      "api_kind": "openai_compatible",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "hy3",
+      "model_family": "Tencent Hunyuan",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
+      "initial_request_delay_seconds": 8.0,
+      "minimum_request_interval_seconds": 1.0,
+      "send_reasoning_effort": false,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 0.14,
+      "cached_input_usd_per_million": 0.035,
+      "output_usd_per_million": 0.58,
+      "spend_cap_usd": 0.7,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE",
+      "data_training": false,
+      "data_retention_days": 0
+    },
+    {
+      "lane_id": "opencode-go-muse-spark-1.2-contributor",
+      "provider": "OpenCode Go",
+      "api_kind": "openai_responses",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "muse-spark-1.2-contributor",
+      "model_family": "Meta Muse",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "json_schema",
+      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
+      "initial_request_delay_seconds": 10.0,
+      "minimum_request_interval_seconds": 1.0,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 0.1,
+      "cached_input_usd_per_million": 0.002,
+      "output_usd_per_million": 0.2,
+      "spend_cap_usd": 0.4,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_TRAINING_OPT_IN",
+      "data_training": true,
+      "data_retention_days": null,
+      "data_scope": "Synthetic benchmark inputs and outputs intended for reviewer release; no author identity, credential, hidden seed, or private user data is sent."
+    }
+  ],
+  "exploratory_lanes": [],
+  "routing": {
+    "required_full_models": [
+      "qwen3.7-max",
+      "glm-5.2",
+      "deepseek-v4-pro",
+      "deepseek-v4-flash",
+      "hy3",
+      "muse-spark-1.2-contributor"
+    ],
+    "cost_priority_lane": "bai-deepseek-v4-flash-primary",
+    "required_full_lanes": [
+      "opencode-go-qwen3.7-max",
+      "opencode-go-glm-5.2",
+      "opencode-go-deepseek-v4-pro",
+      "bai-deepseek-v4-flash-primary",
+      "opencode-go-deepseek-v4-flash-matched",
+      "opencode-go-hy3",
+      "opencode-go-muse-spark-1.2-contributor"
+    ],
+    "deepseek_pro_flash_tier_comparison_rule": "Use only the two OpenCode Go lanes for a same-gateway paired descriptive contrast. This is not a strict causal ablation because backend serving stacks may differ. The free B.AI Flash lane is a cross-service replication and is excluded from that contrast.",
+    "routing_uses_accuracy": false,
+    "routing_uses_action_distribution": false
+  },
+  "budget": {
+    "incremental_cash_cap_usd": 0.0,
+    "opencode_go_five_hour_quota_value_cap_usd": 12.0,
+    "opencode_go_weekly_quota_value_cap_usd": 30.0,
+    "opencode_go_monthly_quota_value_cap_usd": 60.0,
+    "use_zen_balance_after_go_limit": false,
+    "no_auto_recharge": true,
+    "stop_before_request_if_lane_bound_exceeds_lane_cap": true,
+    "cost_reporting_rule": "Token-derived USD values measure subscription quota consumption or B.AI reference value, not incremental cash charged for this study."
+  },
+  "reporting": {
+    "retain_final_raw_response_text": true,
+    "retain_provider_response_id": true,
+    "retain_hidden_reasoning_content": false,
+    "retain_host_reported_usage": true,
+    "report_every_executed_item_without_retry": true,
+    "release_hidden_inputs_gold_pairs_and_prompts_after_inference": true,
+    "separate_model_decisions_from_postgate_actions": true,
+    "primary_scores": [
+      "end_to_end_action_accuracy",
+      "end_to_end_pair_accuracy",
+      "decision_coverage",
+      "pair_coverage"
+    ],
+    "secondary_scores": [
+      "conditional_action_accuracy",
+      "conditional_pair_accuracy",
+      "raw_false_promotion_rate",
+      "raw_valid_promotion_rate",
+      "reason_code_set_f1",
+      "evidence_id_precision_recall",
+      "missing_evidence_exact_match",
+      "brier",
+      "nll"
+    ],
+    "uncertainty": "Two-sided 95% Wilson intervals for end-to-end and conditional binomial rates.",
+    "prespecified_tests": {
+      "primary": "For each of the six unique model lanes, compare end-to-end item correctness with the always-ALLOW baseline using an exact two-sided McNemar test; apply Holm correction across the six tests.",
+      "deepseek_tier": "As a supplementary descriptive analysis, compare the same-gateway DeepSeek V4 Pro and Flash lanes with an exact two-sided McNemar test and report the paired accuracy difference. Do not interpret it as a causal ablation.",
+      "flash_service_replication": "Compare the B.AI and OpenCode Go DeepSeek V4 Flash lanes with exact McNemar and raw action agreement. Interpret this only as a service-path replication.",
+      "missing_outputs": "A non-OK model response is incorrect in every end-to-end correctness vector."
+    },
+    "gate_interpretation": "The deterministic gate uses the same policy oracle as the labels and is reported only as an implementation conformance check."
+  }
+}

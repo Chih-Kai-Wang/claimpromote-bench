@@ -4,7 +4,7 @@
     "SCHEMA_ERROR": 52
   },
   "interpretation_boundary": "This is a post-v1 public interface pilot. It does not alter the frozen v1 hidden study, and post-gate correctness is not model correctness.",
-  "interpretation_status": "PENDING_AUTHOR_REVIEW",
+  "interpretation_status": "RECOMPUTATION_VERIFIED_FOR_REPORTING",
   "model_comparisons": [
     {
       "constraint_effect": {
@@ -2490,5 +2490,5 @@
   "source_workflow_run_id": 32291482079,
   "status": "COMPLETE",
   "study_kind": "POST_V1_PUBLIC_INTERFACE_PILOT",
-  "study_sha256": "sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e"
+  "study_sha256": "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
 }

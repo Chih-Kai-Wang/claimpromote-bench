@@ -51,7 +51,7 @@ files.
 - [x] Recovery required four complete 40-record runs and recomputed the aggregate twice with
   identical bytes.
 - [x] Public aggregate SHA-256 is
-  `sha256:83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e`.
+  `sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5`.
 - [x] Across constrained decoding, 78/80 decisions are parseable and 38/40 pairs are complete.
 - [x] All constrained parseable actions remain `ALLOW`.
 - [x] Raw pair accuracy and raw flip rate remain zero.
