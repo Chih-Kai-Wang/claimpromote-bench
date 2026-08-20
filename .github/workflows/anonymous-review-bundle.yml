@@ -13,7 +13,10 @@ on:
       - "v2/naturalistic-candidates.json"
       - "v2/naturalistic-sources.json"
       - "v2/schemas/**"
+      - "scripts/audit_public_pair_contracts.py"
       - "scripts/build_anonymous_review_bundle.py"
+      - "scripts/build_v2_naturalistic_candidates.py"
+      - "scripts/finalize_anonymous_review_bundle.py"
       - "scripts/validate_v2_naturalistic_candidates.py"
       - "scripts/validate_v2_naturalistic_cases.py"
       - "tests/test_v2*.py"
@@ -44,7 +47,10 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Build anonymous reviewer directory
-        run: python scripts/build_anonymous_review_bundle.py --out work/anonymous-review
+        run: |
+          python scripts/build_anonymous_review_bundle.py --out work/anonymous-review
+          python scripts/finalize_anonymous_review_bundle.py \
+            --bundle work/anonymous-review
 
       - name: Install staged bundle
         run: python -m pip install -e "work/anonymous-review[test]"
@@ -76,7 +82,7 @@ jobs:
           --fixtures fixtures/formal/cases.json
           --out work/formal-fixtures.json
 
-      - name: Remove generated caches and verify identity scan again
+      - name: Remove generated caches and verify deterministic bundle
         shell: bash
         run: |
           set -euo pipefail
@@ -87,6 +93,8 @@ jobs:
             work/anonymous-review/src/*/*.egg-info \
             work/anonymous-review/**/__pycache__
           python scripts/build_anonymous_review_bundle.py --out work/anonymous-review-final
+          python scripts/finalize_anonymous_review_bundle.py \
+            --bundle work/anonymous-review-final
           cmp \
             work/anonymous-review/MANIFEST.json \
             work/anonymous-review-final/MANIFEST.json
