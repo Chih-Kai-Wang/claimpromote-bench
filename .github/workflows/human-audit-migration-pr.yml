@@ -50,6 +50,24 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: python -m pip install -e ".[dev]"
 
+      - name: Make regular-expression replacements literal
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/remove_human_audit_from_submission.py")
+          text = path.read_text(encoding="utf-8")
+          old = "updated, count = re.subn(pattern, replacement, text, count=1, flags=re.DOTALL)"
+          new = (
+              "updated, count = re.subn("
+              "pattern, lambda _match: replacement, text, count=1, flags=re.DOTALL)"
+          )
+          if old not in text:
+              raise SystemExit("literal replacement patch target not found")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
+          PY
+
       - name: Format migration code
         if: steps.gate.outputs.run == 'true'
         run: |
