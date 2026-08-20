@@ -63,10 +63,11 @@ def validate_plan(plan: Json) -> tuple[dict[str, Json], set[str]]:
         fail("new study must remain OPEN before validated results")
     lanes, formal_ids = lanes_by_id(plan)
     budget = plan.get("budget")
-    if not isinstance(budget, dict) or not isinstance(
-        budget.get("total_paid_cap_usd"), (int, float)
-    ):
+    if not isinstance(budget, dict):
         fail("plan budget is malformed")
+    subscription_or_promo = isinstance(budget.get("incremental_cash_cap_usd"), (int, float))
+    if not subscription_or_promo and not isinstance(budget.get("total_paid_cap_usd"), (int, float)):
+        fail("plan budget lacks a cash ceiling")
     total_cap = 0.0
     for lane_id in formal_ids:
         lane = lanes[lane_id]
@@ -81,10 +82,14 @@ def validate_plan(plan: Json) -> tuple[dict[str, Json], set[str]]:
         if not isinstance(lane.get("auth_env"), str):
             fail(f"formal lane lacks an auth environment name: {lane_id}")
         total_cap += float(lane["spend_cap_usd"])
-    declared_cap = float(budget["total_paid_cap_usd"])
-    if total_cap > declared_cap + 1e-12:
+    declared_cap = float(
+        budget["incremental_cash_cap_usd"]
+        if subscription_or_promo
+        else budget["total_paid_cap_usd"]
+    )
+    if not subscription_or_promo and total_cap > declared_cap + 1e-12:
         fail(f"lane caps ${total_cap:.6f} exceed total cap ${declared_cap:.6f}")
-    if declared_cap > 10.0:
+    if declared_cap > 10.0 or declared_cap < 0.0:
         fail("declared paid cap exceeds the user-authorized USD 10 ceiling")
     for lane_id, lane in lanes.items():
         if lane_id not in formal_ids:
@@ -109,12 +114,20 @@ def validate_packet(packet: Json, plan: Json, dataset_dir: Path) -> dict[str, Js
     expected = plan.get("prompt", {}).get("expected_packet_sha256")
     if expected is not None and observed != expected:
         fail("packet_sha256 differs from the study plan")
-    if plan.get("status") == "FROZEN_BEFORE_SCORED_INFERENCE" and expected is None:
-        fail("frozen plan lacks expected_packet_sha256")
+    if (
+        plan.get("status") == "FROZEN_BEFORE_SCORED_INFERENCE"
+        and expected is None
+        and plan.get("prompt", {}).get("packet_binding")
+        != "FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER"
+    ):
+        fail("frozen plan lacks a packet digest or deterministic binding rule")
     if packet.get("selection_uses_model_outputs") is not False:
         fail("pilot selection must not use model outputs")
     if packet.get("dataset_manifest_sha256") != plan["dataset"]["dataset_manifest_sha256"]:
         fail("packet dataset digest differs from plan")
+    for key in ("policy_sha256", "renderer_sha256", "decision_schema_sha256"):
+        if packet.get(key) != plan.get("prompt", {}).get(key):
+            fail(f"packet {key} differs from plan")
     records = packet.get("records")
     if not isinstance(records, list):
         fail("packet.records must be a list")

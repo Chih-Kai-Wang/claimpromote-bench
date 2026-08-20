@@ -20,6 +20,7 @@ from claimpromotebench.dataset import (  # noqa: E402
     validate_with_schema,
 )
 from claimpromotebench.hashing import sha256_file  # noqa: E402
+from claimpromotebench.metrics import evaluate_records  # noqa: E402
 from claimpromotebench.v2 import summarize_pilot  # noqa: E402
 
 Json = dict[str, Any]
@@ -256,6 +257,46 @@ def analyze(
             len(valid_records),
         ),
     }
+    end_to_end_correct = sum(
+        row["parse_status"] == "OK"
+        and row["raw_decision"]["action"] == gold_by_id[str(row["item_id"])]["decision"]["action"]
+        for row in records
+    )
+    end_to_end_pair_correct = sum(
+        bool(row.get("covered")) and bool(row.get("raw_pair_correct"))
+        for row in metric_summary["pair_metrics"]
+    )
+    uncertainty["end_to_end_action_accuracy"] = wilson_interval(end_to_end_correct, len(records))
+    uncertainty["end_to_end_pair_accuracy"] = wilson_interval(
+        end_to_end_pair_correct, len(selected_pairs)
+    )
+
+    joined_records: list[Json] = []
+    pair_by_member = {
+        str(item_id): pair for pair in selected_pairs for item_id in pair["member_ids"]
+    }
+    for row in records:
+        item_id = str(row["item_id"])
+        joined_records.append(
+            {
+                "id": item_id,
+                "pair_id": str(row["pair_id"]),
+                "family": pair_by_member[item_id].get("family"),
+                "gold": gold_by_id[item_id]["decision"],
+                "prediction": row["raw_decision"],
+                "parse_status": ("OK" if row["parse_status"] == "OK" else "FORMAT_ERROR"),
+            }
+        )
+    complete_metrics = evaluate_records(joined_records, bootstrap_samples=0)
+    complete_metrics["end_to_end"] = {
+        "action_accuracy": end_to_end_correct / len(records),
+        "correct_actions": end_to_end_correct,
+        "actions": len(records),
+        "pair_accuracy": end_to_end_pair_correct / len(selected_pairs),
+        "correct_pairs": end_to_end_pair_correct,
+        "pairs": len(selected_pairs),
+        "failure_handling": "Every non-OK response counts as incorrect.",
+    }
 
     if phase == "pilot" and formal:
         continuation_gate: Json = pilot_gate(records)
@@ -304,6 +345,7 @@ def analyze(
         "raw_action_distribution": dict(sorted(raw_actions.items())),
         "postgate_action_distribution": dict(sorted(postgate_actions.items())),
         "metrics": metric_summary,
+        "complete_metrics": complete_metrics,
         "uncertainty": uncertainty,
         "raw_prompts_or_responses_in_aggregate": False,
     }

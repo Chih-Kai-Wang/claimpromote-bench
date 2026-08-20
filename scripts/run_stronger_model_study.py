@@ -109,6 +109,28 @@ def verify_frozen_plan(plan_path: Path, commit: str, plan: Json) -> None:
 
 
 def response_format(lane: Json, schema: Json) -> Json:
+    if lane["api_kind"] == "anthropic_messages":
+        if lane["response_format"] != "forced_tool_schema":
+            fail("Anthropic Messages lane must use forced_tool_schema")
+        return {
+            "tool_choice": {"type": "tool", "name": "submit_decision"},
+            "tools": [
+                {
+                    "name": "submit_decision",
+                    "description": "Return the final ClaimPromoteBench decision.",
+                    "input_schema": schema,
+                }
+            ],
+        }
+    if lane["api_kind"] == "openai_responses":
+        if lane["response_format"] != "json_schema":
+            fail("OpenAI Responses lane must use json_schema")
+        return {
+            "type": "json_schema",
+            "name": "agent_decision",
+            "strict": True,
+            "schema": schema,
+        }
     if lane["api_kind"] == "gemini_generate_content":
         if lane["response_format"] != "json_schema":
             fail("Gemini lane must use json_schema")
@@ -183,9 +205,10 @@ def openai_request_body(lane: Json, prompt: str, schema: Json) -> Json:
         "model": lane["model"],
         "messages": [{"role": "user", "content": prompt}],
         "response_format": response_format(lane, schema),
-        "reasoning_effort": lane["reasoning_effort"],
         "stream": False,
     }
+    if lane.get("send_reasoning_effort", True) and isinstance(lane.get("reasoning_effort"), str):
+        body["reasoning_effort"] = lane["reasoning_effort"]
     max_output_parameter = lane.get("max_output_parameter")
     if max_output_parameter is None:
         max_output_parameter = (
@@ -248,6 +271,151 @@ def call_openai_compatible(
         "routed_provider": _optional_text(response.get("provider")),
         "system_fingerprint": _optional_text(response.get("system_fingerprint")),
         "finish_reason": _optional_text(choice.get("finish_reason")),
+    }
+    return metadata, content, usage
+
+
+def anthropic_request_body(lane: Json, prompt: str, schema: Json) -> Json:
+    constraint = response_format(lane, schema)
+    return {
+        "model": lane["model"],
+        "max_tokens": int(lane["max_output_tokens"]),
+        "messages": [{"role": "user", "content": prompt}],
+        "stream": False,
+        **constraint,
+    }
+
+
+def call_anthropic_messages(
+    lane: Json, body: Json, api_key: str, timeout: float
+) -> tuple[Json, str | None, Json]:
+    response = _http_json(
+        str(lane["base_url"]).rstrip("/") + "/messages",
+        body,
+        {
+            "Authorization": f"Bearer {api_key}",
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01",
+        },
+        timeout,
+    )
+    blocks = response.get("content")
+    if not isinstance(blocks, list):
+        raise RuntimeError("provider response lacks Anthropic content blocks")
+    tool_inputs = [
+        block.get("input")
+        for block in blocks
+        if isinstance(block, dict)
+        and block.get("type") == "tool_use"
+        and block.get("name") == "submit_decision"
+        and isinstance(block.get("input"), dict)
+    ]
+    if len(tool_inputs) > 1:
+        raise RuntimeError("provider returned multiple submit_decision tool calls")
+    if tool_inputs:
+        content = json.dumps(tool_inputs[0], ensure_ascii=False, sort_keys=True)
+    else:
+        text_blocks = [
+            str(block["text"])
+            for block in blocks
+            if isinstance(block, dict)
+            and block.get("type") == "text"
+            and isinstance(block.get("text"), str)
+        ]
+        content = "".join(text_blocks) or None
+    usage_raw = response.get("usage") if isinstance(response.get("usage"), dict) else {}
+    input_tokens = _integer(usage_raw.get("input_tokens"))
+    cache_read = _integer(usage_raw.get("cache_read_input_tokens"))
+    output_tokens = _integer(usage_raw.get("output_tokens"))
+    usage = {
+        "input_tokens": input_tokens,
+        "cached_input_tokens": cache_read,
+        "output_tokens": output_tokens,
+        "reasoning_tokens": None,
+        "total_tokens": (
+            input_tokens + output_tokens
+            if isinstance(input_tokens, int) and isinstance(output_tokens, int)
+            else None
+        ),
+    }
+    metadata = {
+        "provider_response_id": _optional_text(response.get("id")),
+        "model_returned": _optional_text(response.get("model")),
+        "routed_provider": None,
+        "system_fingerprint": None,
+        "finish_reason": _optional_text(response.get("stop_reason")),
+    }
+    return metadata, content, usage
+
+
+def responses_request_body(lane: Json, prompt: str, schema: Json) -> Json:
+    return {
+        "model": lane["model"],
+        "input": [
+            {
+                "role": "user",
+                "content": [{"type": "input_text", "text": prompt}],
+            }
+        ],
+        "text": {"format": response_format(lane, schema)},
+        "max_output_tokens": int(lane["max_output_tokens"]),
+        "stream": False,
+    }
+
+
+def call_openai_responses(
+    lane: Json, body: Json, api_key: str, timeout: float
+) -> tuple[Json, str | None, Json]:
+    response = _http_json(
+        str(lane["base_url"]).rstrip("/") + "/responses",
+        body,
+        {"Authorization": f"Bearer {api_key}"},
+        timeout,
+    )
+    output = response.get("output")
+    if not isinstance(output, list):
+        raise RuntimeError("provider response lacks Responses API output")
+    final_text: list[str] = []
+    for item in output:
+        if not isinstance(item, dict) or item.get("type") != "message":
+            continue
+        blocks = item.get("content")
+        if not isinstance(blocks, list):
+            continue
+        final_text.extend(
+            str(block["text"])
+            for block in blocks
+            if isinstance(block, dict)
+            and block.get("type") == "output_text"
+            and isinstance(block.get("text"), str)
+        )
+    content = "".join(final_text) or None
+    usage_raw = response.get("usage") if isinstance(response.get("usage"), dict) else {}
+    input_details = usage_raw.get("input_tokens_details")
+    output_details = usage_raw.get("output_tokens_details")
+    usage = {
+        "input_tokens": _integer(usage_raw.get("input_tokens")),
+        "cached_input_tokens": _integer(
+            input_details.get("cached_tokens") if isinstance(input_details, dict) else None
+        ),
+        "output_tokens": _integer(usage_raw.get("output_tokens")),
+        "reasoning_tokens": _integer(
+            output_details.get("reasoning_tokens") if isinstance(output_details, dict) else None
+        ),
+        "total_tokens": _integer(usage_raw.get("total_tokens")),
+    }
+    incomplete = response.get("incomplete_details")
+    finish_reason = (
+        _optional_text(incomplete.get("reason")) if isinstance(incomplete, dict) else None
+    )
+    if finish_reason is None:
+        finish_reason = _optional_text(response.get("status"))
+    metadata = {
+        "provider_response_id": _optional_text(response.get("id")),
+        "model_returned": _optional_text(response.get("model")),
+        "routed_provider": None,
+        "system_fingerprint": None,
+        "finish_reason": finish_reason,
     }
     return metadata, content, usage
 
@@ -327,8 +495,11 @@ def actual_cost_usd(usage: Json, lane: Json) -> float | None:
 def verify_packet(packet: Json, plan: Json, dataset_dir: Path) -> list[Json]:
     expected = plan["prompt"]["expected_packet_sha256"]
     observed = packet.get("packet_sha256")
-    if observed != expected:
-        fail("packet digest is not bound by the frozen plan")
+    if expected is not None:
+        if observed != expected:
+            fail("packet digest is not bound by the frozen plan")
+    elif plan["prompt"].get("packet_binding") != ("FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER"):
+        fail("packet lacks a registered deterministic binding rule")
     digest_payload = deepcopy(packet)
     digest_payload.pop("packet_sha256", None)
     recomputed = sha256_bytes(canonical_json(digest_payload).encode("utf-8"))
@@ -338,6 +509,9 @@ def verify_packet(packet: Json, plan: Json, dataset_dir: Path) -> list[Json]:
         fail("packet selection boundary changed")
     if packet.get("dataset_manifest_sha256") != plan["dataset"]["dataset_manifest_sha256"]:
         fail("packet dataset digest differs from the frozen plan")
+    for key in ("policy_sha256", "renderer_sha256", "decision_schema_sha256"):
+        if packet.get(key) != plan["prompt"].get(key):
+            fail(f"packet {key} differs from the frozen plan")
     records = packet.get("records")
     if not isinstance(records, list):
         fail("packet records must be a list")
@@ -501,6 +675,10 @@ def main() -> int:
         }
         if lane["api_kind"] == "openai_compatible":
             body = openai_request_body(lane, str(packet_record["prompt"]), decision_schema)
+        elif lane["api_kind"] == "anthropic_messages":
+            body = anthropic_request_body(lane, str(packet_record["prompt"]), decision_schema)
+        elif lane["api_kind"] == "openai_responses":
+            body = responses_request_body(lane, str(packet_record["prompt"]), decision_schema)
         elif lane["api_kind"] == "gemini_generate_content":
             body = gemini_request_body(lane, str(packet_record["prompt"]), decision_schema)
         else:
@@ -508,6 +686,16 @@ def main() -> int:
         try:
             if lane["api_kind"] == "openai_compatible":
                 metadata, content, usage = call_openai_compatible(lane, body, api_key, args.timeout)
+            elif lane["api_kind"] == "anthropic_messages":
+                if api_key is None:
+                    fail("Anthropic Messages lane requires an API key")
+                metadata, content, usage = call_anthropic_messages(
+                    lane, body, api_key, args.timeout
+                )
+            elif lane["api_kind"] == "openai_responses":
+                if api_key is None:
+                    fail("OpenAI Responses lane requires an API key")
+                metadata, content, usage = call_openai_responses(lane, body, api_key, args.timeout)
             elif lane["api_kind"] == "gemini_generate_content":
                 if api_key is None:
                     fail("Gemini formal lane requires an API key")
