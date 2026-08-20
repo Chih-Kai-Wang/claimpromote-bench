@@ -58,11 +58,19 @@ def patch_readme(bundle: Path) -> None:
         "hidden seed, raw human-review submission, or public workflow/provenance identifier.",
         "hidden seed, human-subject study record, or public workflow/provenance identifier.",
     )
-    text = text.replace(
-        "The checks rebuild and validate the public alpha benchmark, run shortcut/invariance/executable\nchecks, validate the compact v1 and v2 paper-result summaries, validate the unlabeled naturalistic\n",
-        "The checks rebuild and validate the public alpha benchmark, verify all 20 controlled-pair\ncontracts, run shortcut/invariance/executable checks, validate the compact v1 and v2 paper-result\nsummaries, and validate the unlabeled naturalistic\n",
+    old = (
+        "The checks rebuild and validate the public alpha benchmark, run "
+        "shortcut/invariance/executable\nchecks, validate the compact v1 and v2 paper-result "
+        "summaries, validate the unlabeled naturalistic\n"
     )
-    path.write_text(text, encoding="utf-8", newline="\n")
+    new = (
+        "The checks rebuild and validate the public alpha benchmark, verify all 20 "
+        "controlled-pair\ncontracts, run shortcut/invariance/executable checks, validate the "
+        "compact v1 and v2 paper-result\nsummaries, and validate the unlabeled naturalistic\n"
+    )
+    if old not in text:
+        raise RuntimeError("anonymous review README patch target not found")
+    path.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
 
 
 def patch_manifest_scope(bundle: Path) -> None:
