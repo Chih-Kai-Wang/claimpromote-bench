@@ -3,11 +3,11 @@
 **A benchmark for deciding when evidence justifies a change in research-claim status.**
 
 > **v1 primary hidden study and post-v1 public formatting-control pilot complete; paper revision in submission verification.**  
-> The hidden v1 numbers come from the validated recovered study, not partial logs. The public pilot is reported separately and does not replace or revise v1.
+> Hidden v1 numbers come from the validated recovered study. The public pilot appears as a separate post-v1 diagnostic with its own aggregate and provenance.
 
 ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
 
-The benchmark is not a theorem-truth classifier or a general scientific fact checker. It keeps research status, computation, formal certification, and independent review separate and uses four possible actions:
+The benchmark evaluates requested claim-status transitions under a fixed policy. It keeps research status, computation, formal certification, and independent review separate and uses four possible actions:
 
 `ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
 
@@ -36,7 +36,7 @@ Primary scoring uses only the 300 hidden instances. The public development data 
 
 ## Main hidden-study result
 
-The result is mostly negative:
+The hidden study records:
 
 - **5,327 / 7,200 decisions (73.99%) are `FORMAT_ERROR`.**
 - All **1,873 parseable raw model decisions are `ALLOW`.**
@@ -44,7 +44,7 @@ The result is mostly negative:
 - In the gate arm, the final false-promotion rate is 0 on parseable decisions, with catch rate 1 and false-block rate 0.
 - Gate-arm decision coverage is low: 14.0%–49.0% for Qwen3-0.6B and 21.7%–48.3% for Qwen3-1.7B.
 
-The gate uses the same fixed policy that defines the benchmark labels. Its perfect conditional gate scores therefore show that the implementation follows that policy on parseable cases; they do **not** show that the model learned the policy or reasoned better.
+The gate uses the same fixed policy that defines the benchmark labels. Its conditional gate scores quantify implementation--policy agreement on parseable cases. Raw model behavior appears separately in the coverage, pair-accuracy, and flip-rate results.
 
 ### Format errors by model and arm
 
@@ -59,9 +59,9 @@ All three seeds are kept in the study.
 
 ## Post-v1 public formatting-control pilot
 
-The hidden v1 study did not preserve the original free-form text for older parse failures, so it could not determine how much of the failure rate came from the output contract. We therefore ran a separately labeled **post-v1 public diagnostic**. It uses the 20 public alpha pairs, the same two frozen model artifacts and llama.cpp runtime, seed 104729, and the `ledger_verifier` prompt. The free and constrained runs have identical prompt hashes, model artifact, runtime, seed, and hardware record; the only registered difference is JSON-schema-constrained decoding.
+The hidden v1 records contain parse status and structured decisions; original free-form text for older parse failures is absent. A separately labeled **post-v1 public diagnostic** tests the output contract directly. It uses the 20 public alpha pairs, the same two frozen model artifacts and llama.cpp runtime, seed 104729, and the `ledger_verifier` prompt. The free and constrained runs have identical prompt hashes, model artifact, runtime, seed, and hardware record; JSON-schema-constrained decoding is the sole registered difference.
 
-This pilot is not part of the preregistered hidden primary study. It contains 160 decisions and uses no paid API or paid GPU runner.
+The pilot is a post-v1 public one-seed formatting control with 160 decisions, executed on the existing free runner and frozen model artifacts.
 
 | Model | Decoding | Decision coverage | Complete-pair coverage | Raw action accuracy | Raw pair accuracy |
 |---|---|---:|---:|---:|---:|
@@ -70,9 +70,7 @@ This pilot is not part of the preregistered hidden primary study. It contains 16
 | Qwen3-1.7B | Free | 0.00 | 0.00 | undefined | undefined |
 | Qwen3-1.7B | JSON schema | 0.95 | 0.90 | 0.50 | 0.00 |
 
-Schema constraints remove 10 schema errors for Qwen3-0.6B and 38 for Qwen3-1.7B. Across the constrained runs, **78 / 80 decisions are parseable and 38 / 40 controlled pairs are complete, but every parseable decision is still `ALLOW`; raw pair accuracy and raw flip rate remain 0.** The two remaining constrained errors are duplicate `reason_codes` entries and are not manually repaired.
-
-This result controls the simplest format-only explanation for these two small models on the public pairs: making the output contract usable does not recover sensitivity to the policy-relevant evidence change. It does not establish the same failure for larger models, private cases, or natural research records.
+Schema constraints remove 10 schema errors for Qwen3-0.6B and 38 for Qwen3-1.7B. Across the constrained runs, **78 / 80 decisions are parseable and 38 / 40 controlled pairs are complete; every parseable decision selects `ALLOW`, and raw pair accuracy and raw flip rate remain 0.** The two remaining constrained responses contain duplicate `reason_codes` entries and remain schema errors in scoring. The measured scope covers two frozen small models, public controlled pairs, and one seed.
 
 Pilot provenance:
 
@@ -86,7 +84,7 @@ Pilot provenance:
 
 The original model calls finished, but some jobs later failed during evaluation because an output could pass the JSON schema while violating a cross-field rule, such as returning `ALLOW` without proposing the requested target state.
 
-The recovery procedure did not rerun the models and did not rewrite otherwise valid decisions. It:
+The recovery procedure preserved the original model outputs. It:
 
 1. used exactly the 24 original source artifacts from workflow `32255636879`;
 2. required 24 `run.jsonl` files and 7,200 source records;
@@ -104,41 +102,39 @@ Study identifiers:
 - prompt-manifest SHA-256: `sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957`
 - hidden-seed SHA-256: `sha256:b91b5b36268bf2af3acc4c2d0890613b92c02a125db3fe5a1e12c099800fe285`
 
-The raw hidden seed remains a GitHub Actions secret and is not printed or committed.
+The raw hidden seed remains in GitHub Actions secret storage.
 
 ## Matched-comparison limitation
 
 The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Because the Python patch version is part of that identity, the final aggregate has nine groups instead of the intended six model×seed groups; only three contain all four arms.
 
-We keep the original grouping rather than combining runs after seeing the results. Exact McNemar/Holm comparisons are therefore available only when both arms occur in the same recorded group. A later replication should pin the exact Python patch release.
+The analysis retains the original identity grouping. Exact McNemar/Holm comparisons are available when both arms occur in the same recorded group. A later replication should pin the exact Python patch release.
 
 
-## Credibility without a human-subject study
+## Machine-checkable credibility
 
-The submission does not use a human annotation or reviewer study as evidence. Gold actions are generated by the public versioned policy, so they are policy-conformance labels rather than claims about universal human judgment.
-
-Credibility is instead supported by machine-checkable evidence:
+Gold actions are generated by the public versioned policy and function as policy-conformance labels. Credibility is supported by machine-checkable evidence:
 
 - the hidden dataset and exact prompts were committed before scored inference;
 - the complete 24-run / 7,200-decision matrix is preserved and bound to immutable artifacts;
-- artifact-only recovery made no new model calls and changed no legal model decision;
+- artifact-only recovery reused the original model responses and preserved every legal model decision;
 - a public pair-contract audit checks all 20 policy factors, recomputes every public label, and rejects unregistered pair differences;
 - exact-rational numerical artifacts and pinned Lean artifacts are replayed in CI;
 - shortcut and metamorphic audits test identifier, ordering, and irrelevant-evidence invariance;
 - the post-v1 formatting control holds prompt, model, runtime, seed, and hardware fixed while changing only the response-format constraint;
 - an anonymous supplementary bundle reruns the public checks without revealing author identity.
 
-These checks make the implementation and evidence chain inspectable. They do not claim that the author-defined policy is a universal scientific norm, and the paper keeps that limitation explicit.
+These checks make the implementation and evidence chain inspectable. The policy remains an author-defined benchmark rule, and the paper states that scope explicitly.
 
 ## Naturalistic evaluation preparation
 
-A deterministic, unlabeled, pointer-only pool of 12 public CORE-Bench candidates is frozen in `v2/naturalistic-candidates.json`. Selection occurred without looking at ClaimPromoteBench model outputs. Every candidate remains `PENDING_SOURCE_LEVEL_REVIEW`; none is currently presented as a scored ClaimPromoteBench item. Source-level licensing, a defensible transition question, evaluation time, and evidence snapshot must all be verified before inclusion.
+A deterministic, unlabeled, pointer-only pool of 12 public CORE-Bench candidates is frozen in `v2/naturalistic-candidates.json`. Selection occurred without looking at ClaimPromoteBench model outputs. Every candidate remains `PENDING_SOURCE_LEVEL_REVIEW` and outside the scored ClaimPromoteBench set. Source-level licensing, a defensible transition question, evaluation time, and evidence snapshot must all be verified before inclusion.
 
 ## What the executable evidence means
 
 Numerical cases use exact-rational finite-grid artifacts whose registered values, extrema, predicates, repetitions, and scope are recomputed. Formal cases use generated Lean sources under a pinned toolchain. Provenance, freshness, dependencies, contradictions, review independence, statement identity, and runtime success remain separate policy requirements.
 
-A Lean check supports the exact formal statement that was checked. A finite computation supports only its registered computational scope. Neither automatically settles a broader research claim.
+A Lean check supports the exact formal statement that was checked. A finite computation supports its registered computational scope. Broader research status follows the remaining policy fields and evidence dependencies.
 
 ## Reproduce public checks
 
@@ -183,15 +179,11 @@ python -m claimpromotebench compare-runs \
   --out work/study.json
 ```
 
-`FORMAT_ERROR` is never silently counted as `HOLD`.
+`FORMAT_ERROR` remains a separate outcome from `HOLD`.
 
 ## Scope
 
-ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, counterfactual pairs, evidence reversal, or verifier-governed research agents. Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, SteerBench-Work, policy-aware web-agent evaluation, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations.
-
-The contribution is narrower: a controlled-pair benchmark for deciding whether typed scientific evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, separate reporting of raw model decisions and deterministic gate actions, and a public formatting control that isolates output-contract failure from evidence-insensitive decisions for the tested models.
-
-The paper does not make an unqualified “first benchmark” or “first system” claim.
+Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, SteerBench-Work, policy-aware web-agent evaluation, scientific claim-verification benchmarks, reproducibility benchmarks, and abstention/selective-action evaluations. ClaimPromoteBench contributes a controlled-pair benchmark for deciding whether typed scientific evidence justifies a requested research-claim status change, with executable evidence checks, a committed hidden test, separate reporting of raw model decisions and deterministic gate actions, and a public formatting control for the tested models.
 
 ## Paper and project status
 
@@ -205,4 +197,4 @@ The paper does not make an unqualified “first benchmark” or “first system�
 - Related work: `docs/RELATED_WORK.md`
 - AI assistance disclosure: `AI_ASSISTANCE.md`
 
-The v1 hidden model outputs are fixed and must not be rerun or rewritten to make the result cleaner. PR #20 remains a draft until the revised paper passes full CI, ICLR/arXiv compilation, anonymity checks, page-limit checks, and final visual review.
+The v1 hidden model outputs remain frozen, and all analyses use the existing artifacts. PR #20 remains a draft through full CI, ICLR/arXiv compilation, anonymity checks, page-limit checks, and final visual review.

@@ -60,7 +60,7 @@ def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
 
     required_patterns = [
         (r"post-v1 public", "post-v1 public scope label"),
-        (r"all\s+78\s+constrained parseable decisions remain", "78 constrained decisions"),
+        (r"all\s+78\s+constrained parseable decisions select", "78 constrained decisions"),
         (r"38\s+complete pairs", "38 constrained complete pairs"),
         (r"coverage from 75\\% to 100\\%", "Qwen3-0.6B constrained coverage change"),
         (r"from 0\\% to 95\\%", "Qwen3-1.7B constrained coverage change"),
@@ -147,6 +147,16 @@ def main() -> int:
     for phrase in style_smells:
         if phrase in lower:
             fail(f"internal/jargon-heavy wording remains in manuscript: {phrase!r}")
+    direct_statement_guards = [
+        (r"\bnot\b", "not-construction"),
+        (r"\bwithout\b", "without-construction"),
+        (r"\brather than\b", "rather-than construction"),
+        (r"\binstead of\b", "instead-of construction"),
+        (r"\bnever\b", "never-construction"),
+    ]
+    for pattern, description in direct_statement_guards:
+        if re.search(pattern, tex, flags=re.IGNORECASE):
+            fail(f"defensive contrast remains in manuscript: {description}")
 
     if frozen["source_study_sha256"] != (
         "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664"
@@ -193,10 +203,10 @@ def main() -> int:
         "Effective FPR",
         "decision coverage",
         "same fixed policy used to define the benchmark labels",
-        "not evidence that the model learned the policy",
+        "conditional scores quantify rule execution under the benchmark policy",
         "Machine-checkable validation strategy",
         "public pair-contract audit",
-        "author-defined policy is a universal scientific norm",
+        "policy remains an author-defined benchmark rule",
         (
             f"{pct(m06['gate_complete_pair_coverage_range'][0])}--"
             f"{pct(m06['gate_complete_pair_coverage_range'][1])}\\%"
@@ -280,8 +290,8 @@ def main() -> int:
     if not gate_table or "Effective FPR" not in gate_table.group(1):
         fail("separate gate table with Effective FPR is required")
 
-    if "The author" not in tex or "AI systems are not listed as authors" not in tex:
-        fail("AI assistance disclosure must state author responsibility and non-authorship of AI")
+    if "The author" not in tex or "author retains authorship and final responsibility" not in lower:
+        fail("AI assistance disclosure must state author responsibility")
 
     print(
         "paper-lint: PASS "

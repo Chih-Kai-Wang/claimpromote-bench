@@ -3,8 +3,8 @@
 
 The canonical technical-report/main.tex remains the source of scientific content. This script
 extracts the body and places it under venue-specific wrappers so the ICLR submission can remain
-anonymous while the arXiv preprint carries author identity. No quantitative result is recomputed
-or edited here.
+anonymous while the arXiv preprint carries author identity. Quantitative results pass through
+unchanged.
 """
 
 from __future__ import annotations
@@ -29,8 +29,8 @@ interpretation, and parts of manuscript drafting and editing. The author chose t
 question, defined the benchmark policy and experimental protocol, made the final study and
 analysis decisions, checked the reported results against the released artifacts, checked the
 references, and is responsible for the final manuscript and submission. The quantitative results
-reported in this paper come from the validated study artifacts. AI systems are not listed as
-authors.
+reported in this paper come from the validated study artifacts. The author retains authorship
+and final responsibility.
 
 """
 
@@ -38,20 +38,19 @@ ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
 
 The hidden set and exact model prompts were fixed and committed before scored inference. A later
 recovery procedure reconstructed that same dataset and prompt identity, validated all 24 original
-and 24 normalized runs, and produced the 7,200-record aggregate without querying either model
-again. For double-blind review, public repository identifiers and searchable provenance hashes
-are omitted from this submission. An anonymized review bundle can include the fixed manifests,
-public result summaries, pair-contract audit, and recovery checks; the public preprint and release
-retain the exact identifiers.
+and 24 normalized runs, and produced the 7,200-record aggregate from archived model outputs. The
+anonymous submission replaces public repository identifiers and searchable provenance hashes with
+role descriptions. An anonymized review bundle contains the fixed manifests, public result
+summaries, pair-contract audit, and recovery checks; the public preprint and release retain the
+exact identifiers.
 
 The separately labeled post-v1 public pilot retains raw responses in its source artifacts and
 publishes a public-safe aggregate produced twice from the same immutable four-run matrix. Its
 free and constrained conditions have identical prompts and differ only in the registered response
-format. The exact source-run and aggregate identifiers are omitted here for double-blind review.
+format. The anonymous submission uses role descriptions for the source run and aggregate.
 
-The raw hidden seed is not included in the public or review artifacts. Any future change to labels,
-policy rules, prompts, controlled factors, or hidden-test bytes is treated as a new benchmark
-version rather than a change to v1.
+The raw hidden seed remains in secret storage. Future changes to labels, policy rules, prompts,
+controlled factors, or hidden-test bytes create a new benchmark version.
 
 """
 
@@ -78,7 +77,7 @@ def canonical_body() -> str:
     body = body[:ai_start] + AI_DISCLOSURE + body[conclusion_start:]
 
     # Keep exact identities in public repository/provenance records while avoiding long
-    # monospace strings in venue-formatted prose. These substitutions never alter study data.
+    # monospace strings in venue-formatted prose. These substitutions preserve study data.
     replacements = {
         r"\texttt{aa5268dcde2aa44f8eabf0246631efbca27de7e5}": r"\texttt{aa5268dc...de7e5}",
         r"\texttt{8d9b3f5c831f432cf6b321e6402724c4f52bb3e1}": r"\texttt{8d9b3f5c...bb3e1}",
