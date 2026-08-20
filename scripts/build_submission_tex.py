@@ -40,9 +40,10 @@ The hidden set and exact model prompts were fixed and committed before scored in
 recovery procedure reconstructed that same dataset and prompt identity, validated all 24 original
 and 24 normalized runs, and produced the 7,200-record aggregate from archived model outputs. The
 anonymous submission replaces public repository identifiers and searchable provenance hashes with
-role descriptions. An anonymized review bundle contains the fixed manifests, public result
-summaries, pair-contract audit, and recovery checks; the public preprint and release retain the
-exact identifiers.
+role descriptions. An anonymized review bundle contains public manifests, compact v1/v2 result
+summaries, pair-contract and executable validators, Lean replay inputs, and a file-hash manifest.
+Hidden inference and recovery provenance remain outside that bundle; the public preprint and
+release retain the exact identifiers.
 
 The separately labeled post-v1 public pilot retains raw responses in its source artifacts and
 publishes a public-safe aggregate produced twice from the same immutable four-run matrix. Its

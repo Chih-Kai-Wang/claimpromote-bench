@@ -30,6 +30,7 @@ TEXT_SUFFIXES = {
     ".yaml",
     ".yml",
 }
+TEXT_NAMES = {"LICENSE"}
 SKIP_NAMES = {
     ".git",
     ".github",
@@ -232,6 +233,18 @@ addopts = "-ra"
 branch = true
 source = ["claimpromotebench"]
 """
+
+
+def anonymous_license() -> str:
+    source = (ROOT / "LICENSE").read_text(encoding="utf-8")
+    lines = source.splitlines()
+    copyright_indexes = [
+        index for index, line in enumerate(lines) if line.startswith("Copyright (c) ")
+    ]
+    if len(copyright_indexes) != 1:
+        fail("source LICENSE must contain exactly one copyright notice")
+    lines[copyright_indexes[0]] = "Copyright (c) 2026 Anonymous Authors"
+    return "\n".join(lines) + "\n"
 
 
 def review_readme() -> str:
@@ -519,7 +532,9 @@ if __name__ == "__main__":
 def scan_identity(bundle: Path) -> None:
     findings: list[str] = []
     for path in sorted(bundle.rglob("*")):
-        if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
+        if not path.is_file() or (
+            path.suffix.lower() not in TEXT_SUFFIXES and path.name not in TEXT_NAMES
+        ):
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
         for token in sorted(FORBIDDEN_TEXT):
@@ -621,6 +636,8 @@ def build(destination: Path) -> None:
     )
     for relative in selected_files:
         copy_file(ROOT / relative, destination / relative)
+
+    (destination / "LICENSE").write_text(anonymous_license(), encoding="utf-8", newline="\n")
 
     rewrite_alpha_manifest(destination)
 

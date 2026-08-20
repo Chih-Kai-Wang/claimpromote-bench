@@ -24,7 +24,7 @@ The staged bundle contains:
   matrix, coverage changes, constrained parseable count, complete-pair count, and zero raw pair
   sensitivity;
 - a generated manifest binding every staged file to a SHA-256 digest;
-- the MIT license covering the included source;
+- a double-blind MIT license copy naming the copyright holder as `Anonymous Authors`;
 - a one-command public review check runner.
 
 ## Deliberately excluded material
@@ -57,7 +57,8 @@ provenance tokens, including:
 
 Any match stops the build. JSON Schema `$id` values are removed from staged schemas because their
 public repository URLs would reveal identity. The alpha manifest is then rewritten to bind the
-anonymized schema bytes.
+anonymized schema bytes. Extensionless text files such as `LICENSE` are scanned explicitly; the
+public repository's named copyright notice is replaced only in the double-blind bundle.
 
 ## Automated validation
 
