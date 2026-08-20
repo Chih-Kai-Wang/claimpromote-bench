@@ -110,32 +110,33 @@ No threshold is allowed to convert an inconvenient pilot result into a hidden re
 the prompt, decision schema, runtime, decoding settings, or pilot dataset after observing outputs is
 a new pilot revision and must be labeled as such.
 
-## Completed capable-model hidden extension
+## Completed exploratory capable-model hidden extension
 
 The separately frozen extension reuses the committed 150-pair / 300-instance hidden split and the
 `ledger_verifier` prompt. It registers six model labels plus one same-label service-path
-replication. Each lane receives the same deterministic 12-item pilot and advances to one fresh
-300-item, no-retry pass exactly when it has zero transport failures and at least 10 valid
-decisions. Accuracy, action distribution, raw responses, and gold comparisons remain sealed until
-all lanes reach a registered terminal state.
+replication. Transport and parser error classes led to registered adapter amendments and
+requalification on the same deterministic 12 pilot inputs. The recorded inspection procedure did
+not use actions, raw responses, gold comparisons, or accuracy, but the analyses were not
+independently escrowed. The extension is therefore adaptive and exploratory, not confirmatory.
 
-Two of seven pilots qualify; the other five each return 0/12 valid decisions and stop before full
-scoring. The complete results are:
+Fourteen pilot attempts were executed and are all released. Two lanes reach terminal qualification
+and receive one fresh 300-item no-retry pass; the other five stop before full scoring. The table is
+a post-hoc sensitivity that excludes the 12 reused pilot instances and their six pairs:
 
 | Full-pass lane | Decision coverage | Pair coverage | E2E action accuracy | E2E pair accuracy | Raw FPR |
 |---|---:|---:|---:|---:|---:|
-| Qwen3.7-Max | 0.990 | 0.980 | 0.940 | 0.880 | 0.068 |
-| DeepSeek-V4-Flash | 0.913 | 0.827 | 0.627 | 0.253 | 0.694 |
+| Qwen3.7-Max | 0.990 | 0.979 | 0.938 | 0.875 | 0.071 |
+| DeepSeek-V4-Flash | 0.913 | 0.826 | 0.628 | 0.257 | 0.689 |
 
-The always-`ALLOW` baseline has 0.500 action accuracy and zero pair accuracy. Both completed lanes
-exceed its action accuracy in paired exact tests. The aggregate is
+The always-`ALLOW` baseline has 0.500 action accuracy and zero pair accuracy. The aggregate is
 `v2/capable-hidden-results/capable-hidden-study.json`, SHA-256
-`sha256:20904dd181b27ddcbe0997692f101f50c1815abdb91482f4c4f09836f3508dcb`.
+`sha256:abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91`.
 
-All seven pilots, both full passes, prompts, hidden inputs and labels, raw responses, parser outcomes,
-and recomputation inputs are included in the anonymous reviewer evidence. The construction seed
-remains excluded. Lane differences are descriptive; the study does not identify causal provider,
-model-tier, or serving-stack effects.
+All 14 pilots, both full passes, three historical request/parser snapshots, prompts, hidden inputs
+and labels, raw responses, parser outcomes, canonical-selection map, and recomputation inputs are
+included in the anonymous reviewer evidence. The construction seed remains excluded. Lane
+differences are descriptive; the study does not identify causal provider, model-tier, or
+serving-stack effects.
 
 ## Remaining external-validity work
 

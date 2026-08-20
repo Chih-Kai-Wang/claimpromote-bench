@@ -57,33 +57,38 @@ Each cell contains 900 decisions across three seeds.
 
 All three seeds are kept in the study.
 
-## Accuracy-blind capable-model hidden extension
+## Exploratory capable-model hidden extension
 
 After the v1 and public-development outcomes were known, a separate protocol was frozen on the
 unchanged 150-pair / 300-instance hidden split. It registered six model labels plus one same-label
-service-path replication. A fixed 12-item pilot advanced a lane only when it had zero transport
-failures and at least 10 valid decisions; accuracy, action distribution, and raw responses remained
-sealed until every lane reached its terminal state. A qualifying lane received one fresh 300-item,
-no-retry pass.
+service-path replication. Transport and parser error classes led to registered adapter amendments
+and requalification on the same fixed 12 pilot inputs. The recorded inspection procedure excluded
+actions, raw responses, gold comparisons, and accuracy, but analyses were not independently
+escrowed; the study is therefore adaptive and exploratory.
 
-Two of seven pilots qualified. The other five each produced 0/12 valid decisions and stopped before
-full scoring, so no 300-item accuracy is reported for them.
+Fourteen pilot attempts were executed and are all released. Two lanes reached terminal
+qualification and received one fresh 300-item no-retry pass. The other five stopped before full
+scoring, so no 300-item accuracy is reported for them. The table excludes the 12 reused pilot
+instances and six pairs as a post-hoc sensitivity.
 
 | Full-pass lane | Decision coverage | Complete-pair coverage | E2E action accuracy | E2E pair accuracy | Raw FPR |
 |---|---:|---:|---:|---:|---:|
-| Qwen3.7-Max | 0.990 | 0.980 | 0.940 | 0.880 | 0.068 |
-| DeepSeek-V4-Flash | 0.913 | 0.827 | 0.627 | 0.253 | 0.694 |
+| Qwen3.7-Max | 0.990 | 0.979 | 0.938 | 0.875 | 0.071 |
+| DeepSeek-V4-Flash | 0.913 | 0.826 | 0.628 | 0.257 | 0.689 |
 | Always `ALLOW` | 1.000 | 1.000 | 0.500 | 0.000 | 1.000 |
 
-Qwen3.7-Max gives 282/300 correct actions and 132/150 correct controlled pairs.
-DeepSeek-V4-Flash gives 188/300 and 38/150. Both exceed the always-`ALLOW` action baseline in
-paired exact tests (Holm-adjusted p-values `7.35e-40` and `7.28e-12`). These are descriptive
+On the nonpilot subset, Qwen3.7-Max gives 270/288 correct actions and 126/144 correct controlled
+pairs; DeepSeek-V4-Flash gives 181/288 and 37/144. Including freshly regenerated pilot inputs gives
+the archived full-pass counts 282/300 and 132/150, and 188/300 and 38/150. These are descriptive
 one-pass service-lane results; they do not identify causal provider, tier, or serving-stack effects.
+Both completed lanes score 0/8 on the nonpilot `DEMOTE` cases; four-action recall and confusion are
+reported in the aggregate rather than hidden behind overall item accuracy.
 
 - Compact aggregate: `v2/capable-hidden-results/capable-hidden-study.json`
-- Aggregate SHA-256: `sha256:20904dd181b27ddcbe0997692f101f50c1815abdb91482f4c4f09836f3508dcb`
-- Reviewer evidence: seven pilots, two full runs, exact prompt packet, released hidden inputs and
-  labels, item-level raw responses, parser replay, analyses, and recomputation checks
+- Aggregate SHA-256: `sha256:abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91`
+- Reviewer evidence: all 14 pilot attempts, two full runs, three historical request/parser
+  snapshots, exact prompt packet, released hidden inputs and labels, item-level raw responses,
+  parser replay, analyses, canonical-selection map, and recomputation checks
 - Excluded: private construction seed
 
 ## Post-v1 public formatting-control pilot

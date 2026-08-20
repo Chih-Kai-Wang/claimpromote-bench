@@ -6,18 +6,18 @@ paper. It is deliberately fail-closed.
 
 ## Current verdict
 
-**SCIENTIFIC_RC_READY — ACCOUNT-SIDE SUBMISSION AND ARCHIVAL RELEASE PENDING**
+**SCIENTIFIC_RC_READY = NO — FRESH CONFIRMATORY SPLIT OR EXPLORATORY REPOSITIONING REQUIRED**
 
-The frozen v1 hidden study, post-v1 public formatting-control pilot, and separately frozen
-post-protocol GPT-5.4 public-development follow-up are complete. The revised manuscript binds all
-three result sets to machine-readable aggregates. On the final scientific head,
-repository CI, pinned Lean replay, v1 hidden/scored/recovery guards, v1/v2 result validators,
-official ICLR/arXiv builds, page-limit checks, anonymity checks, clean-environment public
-reproduction, anonymous-bundle validation, and page-by-page visual review all passed. The exact
-head and workflow runs are recorded in the final handoff and remain queryable from PR #20. The PR
-stays Draft and unmerged because account-side and archival-release actions require the author.
+The frozen v1 hidden study, post-v1 public formatting-control pilot, and post-protocol GPT-5.4
+public-development follow-up are complete. The capable-model extension is also computationally
+complete, but independent review found that it used 14 adaptive pilot executions on the same 12
+hidden inputs before selecting seven terminal canonical pilots. Its completed-lane full passes are
+therefore exploratory rather than confirmatory. The manuscript and reviewer evidence are being
+corrected to disclose every attempt, historical adapter snapshot, pilot-excluded sensitivity, and
+per-action confusion. PR #20 stays Draft and unmerged. A main-conference readiness verdict requires
+either a new zero-adjustment private split or an explicit workshop/resource-paper repositioning.
 
-The final inspected anonymous ICLR PDF contains 10 physical pages, and the named arXiv PDF contains
+The final inspected anonymous ICLR PDF contains 9 physical pages, and the named arXiv PDF contains
 9. The ICLR main-text probe is 8 pages; references begin after the counted main text. All fonts are
 embedded. The source archives contain only required TeX/BibTeX/style files and no auxiliary build
 files.
@@ -58,7 +58,38 @@ files.
 - [x] Two duplicate-`reason_codes` responses remain schema errors and were not manually repaired.
 - [x] No paid API or paid GPU runner was used.
 
-## Gate C — post-protocol GPT-5.4 public-development follow-up
+## Gate C — adaptive capable-model extension and replacement requirement
+
+- [x] The original protocol and every later transport/adapter amendment remain separately recorded.
+- [x] All 14 executed pilot attempts (168 records), not only seven terminal canonical pilots, are
+  included in reviewer evidence with their analyses and hashes.
+- [x] Three historical request/parser source snapshots and a canonical-selection map are included.
+- [x] The recorded amendment procedure used transport/parser classes rather than actions or gold
+  accuracy, but no independent escrow enforced this boundary.
+- [x] Exactly two terminal pilots led to fresh 300-instance full passes; five `STOP` lanes are not
+  assigned model-accuracy scores.
+- [x] The extension is labeled `EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION`, not confirmatory.
+- [x] A post-hoc sensitivity excludes the 12 reused pilot inputs and six pairs.
+- [x] On the 288 nonpilot instances, Qwen3.7-Max reaches 270/288 action and 126/144 pair accuracy;
+  DeepSeek-V4-Flash reaches 181/288 and 37/144.
+- [x] Four-action confusion and recall are reported; both completed lanes score 0/8 on `DEMOTE`.
+- [x] The six registered unique-model hypotheses remain the declared family; completed-lane exact
+  tests are descriptive and no confirmatory familywise claim is made.
+- [x] The same-model alternate service path is treated as descriptive service-path sensitivity, not
+  a causal model, tier, or provider ablation.
+- [x] The capable-study aggregate SHA-256 is
+  `sha256:abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91`.
+- [x] The same-oracle post-check is labeled an implementation-conformance check rather than learned
+  model evidence.
+- [x] Only synthetic, release-intended benchmark material was sent; no secret, personal, or
+  unreleased user data was included.
+- [ ] A new private split is committed after all adapters, baselines, prompts, and analyses freeze.
+- [ ] Every registered model lane runs the new split once with zero pilot-based adjustment,
+  selection, or retry.
+- [ ] New-split reporting includes always-`ALLOW`, always-`HOLD`, a public-trained shallow baseline,
+  per-action confusion/recall, and pair/factor/template-aware sensitivity.
+
+## Gate D — post-protocol GPT-5.4 public-development follow-up
 
 - [x] The extension is labeled post-protocol, public-development, one-model, and one-pass evidence.
 - [x] It is not described as preregistered hidden primary evidence.
@@ -79,12 +110,14 @@ files.
 - [x] Computed pilot-plus-full cost is $2.1883195, below the authorized cap.
 - [x] Temporary OpenRouter keys were deleted after usage readback; Gemini has no temporary API key.
 
-## Gate D — manuscript claim integrity
+## Gate E — manuscript claim integrity
 
-- [x] Abstract identifies the hidden v1 study as primary and the public pilot as post-v1.
-- [x] Abstract reports the v1 and v2 headline counts correctly.
-- [x] Main text contains a dedicated public-pilot protocol subsection.
-- [x] Main text contains a separate pilot result table with coverage and pair accuracy.
+- [x] Abstract foregrounds the capable hidden extension and keeps the original v1 failure result as
+  an audit finding rather than the paper's sole capability claim.
+- [x] Abstract reports the capable-study headline counts and paired sensitivity correctly.
+- [x] Main text contains a dedicated capable hidden protocol subsection and a compact result table.
+- [x] The post-v1 public formatting pilot is compressed to reader-relevant prose rather than a
+  secondary result table.
 - [x] Instance accuracy is not used as a substitute for controlled-pair sensitivity.
 - [x] Raw model behavior and post-gate behavior remain separate.
 - [x] Gate correctness is described as fixed-policy enforcement, not model learning.
@@ -93,9 +126,11 @@ files.
 - [x] Manuscript truth lint is bound to both the v1 recovered-study SHA and the v2 pilot SHA.
 - [x] Manuscript truth lint is bound to the GPT-5.4 plan, pilot, and full-run SHA values and exact
   paper-facing metrics.
+- [x] Manuscript truth lint is bound to the capable-study aggregate, item-level results, baseline
+  tests, and exact paper-facing metrics.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
 
-## Gate E — naturalistic evaluation boundary
+## Gate F — naturalistic evaluation boundary
 
 - [x] Source registry is pinned before any naturalistic scoring.
 - [x] Candidate selection is deterministic and independent of ClaimPromoteBench model outputs.
@@ -110,7 +145,7 @@ files.
 The unchecked item is **not required to report the completed public pilot**. It means the paper must
 not claim a completed naturalistic replication.
 
-## Gate F — code and evidence verification on the final scientific head
+## Gate G — code and evidence verification on the final scientific head
 
 - [x] Ruff lint passes.
 - [x] Ruff formatting passes.
@@ -124,6 +159,10 @@ not claim a completed naturalistic replication.
 - [x] v1 public release-result validator passes.
 - [x] v2 public pilot validator passes.
 - [x] GPT-5.4 stronger-model protocol, pilot, full-run, provider, metric, and cost validator passes.
+- [x] Capable hidden-study prompt, dataset, pilot/full-run, analysis, aggregate, and baseline
+  validators pass.
+- [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, and capable-study item-level
+  records from inside the finalized reviewer bundle.
 - [x] Naturalistic case validator and guard tests pass.
 - [x] v1 hidden freeze guard passes.
 - [x] v1 scored-study guard passes.
@@ -132,21 +171,23 @@ not claim a completed naturalistic replication.
   branch-coverage test suite.
 - [x] README, manuscript, `CITATION.cff`, and submission metadata use the same canonical title.
 
-## Gate G — final ICLR 2027 package
+## Gate H — final ICLR 2027 package
 
 - [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 10 physical pages including references and required disclosures.
+- [x] ICLR PDF contains 9 physical pages including references and required disclosures.
 - [x] Main-text page probe reports 8 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
-  repository URL, v1 workflow/hash provenance, or v2 workflow/hash provenance.
+  repository URL, workflow/run identifiers, commit identifiers, or released aggregate hashes.
 - [x] ICLR PDF metadata contains no author identity.
 - [x] AI-use disclosure remains present in the ICLR submission.
 - [x] All PDF fonts are embedded.
 - [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
   workflow module, author identity, or public workflow/provenance identifier.
+- [x] Anonymous reviewer ZIP contains the released item-level empirical evidence needed to replay
+  the paper-facing v1, v2, GPT-5.4, and capable-study aggregates.
 - [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
   broken glyphs, unreadable tables, and figure/caption collisions.
 
@@ -154,14 +195,15 @@ Observed result: no overlap, clipping, broken glyphs, table overflow, figure col
 unacceptable crowding. The densest limitations/reproducibility page remains readable at normal
 conference-paper scale.
 
-## Gate H — final arXiv package
+## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
 - [x] The arXiv PDF contains 9 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
-- [x] arXiv PDF preserves v1 and v2 public workflow/hash provenance.
+- [x] Exact operational workflow, commit, and aggregate identities remain in repository evidence
+  manifests instead of interrupting the manuscript narrative.
 - [x] No unresolved citations/references or horizontal overflow.
 - [x] All PDF fonts are embedded.
 - [x] Source ZIP contains `arxiv.tex` and `references.bib` and no auxiliary build files.
@@ -170,11 +212,12 @@ conference-paper scale.
 - [ ] arXiv metadata, category, title, abstract, author, affiliation, and server-compiled preview are
   checked during the account-side submission.
 
-Observed result: the named PDF and public provenance are correct, and no visual defect was found.
+Observed result: the named PDF and repository-bound provenance statement are correct, and no visual
+defect was found.
 The final metadata/preview item necessarily remains account-side because arXiv must compile and
 show its own preview before submission.
 
-## Gate I — account-side submission
+## Gate J — account-side submission
 
 - [ ] OpenReview profile exists and is current.
 - [ ] All required author/reviewer-account obligations are satisfied.
@@ -185,23 +228,23 @@ show its own preview before submission.
 - [ ] The submission form and manuscript consistently state that no human-subject or human-annotation study is included.
 - [ ] arXiv account and any endorsement requirement are complete.
 
-## Gate J — archival release
+## Gate K — archival release
 
 - [ ] One immutable release/tag is created from the final submission head.
 - [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and
   current pre-submission status.
 - [x] Clean-environment public validation succeeds from the release candidate.
-- [x] The committed v1, public-pilot, and GPT-5.4 compact aggregates reproduce every paper-facing
-  result without model inference.
+- [x] The committed v1, public-pilot, GPT-5.4, and capable-study evidence reproduces every
+  paper-facing empirical result without model inference.
 - [ ] Release notes and the final package version agree with the future immutable tag.
 - [ ] Long-term citable archive is created if required by the venue or desired for the paper.
 - [ ] Archive identifiers are added only after they exist.
 
 ## Readiness rule
 
-`SCIENTIFIC_RC_READY` means that the repository-generated paper, source packages, anonymous
-supplement, machine-readable result bindings, and clean public reproduction have passed. It does
-not mean that an OpenReview or arXiv record exists. Do not mark PR #20 ready, merge it, claim
-“submitted,” or create archival identifiers until the author completes Gate I and explicitly
-authorizes the corresponding repository transition. The unchecked Gate J items must use the exact
-submitted release candidate, without inventing an arXiv ID, DOI, or archive identifier.
+`SCIENTIFIC_RC_READY` remains false while any fresh-confirmatory item in Gate C is unchecked. The
+completed packaging, anonymity, and replay checks establish artifact quality but cannot promote an
+adaptive exploratory study into confirmatory hidden evidence. Do not mark PR #20 ready, merge it,
+claim “submitted,” or create archival identifiers until the scientific blocker is resolved and the
+author completes Gate J. Any later Gate K release must use the exact submitted release candidate,
+without inventing an arXiv ID, DOI, or archive identifier.

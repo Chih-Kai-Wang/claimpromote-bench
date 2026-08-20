@@ -46,7 +46,6 @@ SKIP_NAMES = {
     ".mypy_cache",
     ".pytest_cache",
     "__pycache__",
-    "attempt-history",
     "work",
 }
 SKIP_FILES = {
@@ -80,6 +79,7 @@ FORBIDDEN_TEXT = {
     "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664",
     "83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e",
     "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5",
+    "abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91",
     "f998a05fec36b84e59230fe241f1e9961647ad2e",
     "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
     "aa5268dcde2aa44f8eabf0246631efbca27de7e5",
@@ -96,6 +96,7 @@ FORBIDDEN_TEXT = {
     "119e475953e50218fc62abd2163eef04cbad4e23",
     "b86ee1e1d28db8a390344d28582af88e26970560",
     "cc67096ba0a91866ab442647b9f82301dd6cb317",
+    "300dc094852e74c8139344248b25a4d637a94c7c",
     LOCAL_WORKSPACE_ROOT,
     GITHUB_RUNNER_ROOT,
 }
@@ -127,6 +128,7 @@ PROVENANCE_REPLACEMENTS = {
     "119e475953e50218fc62abd2163eef04cbad4e23": ("0000000000000000000000000000000000000001"),
     "b86ee1e1d28db8a390344d28582af88e26970560": ("0000000000000000000000000000000000000002"),
     "cc67096ba0a91866ab442647b9f82301dd6cb317": ("anonymous-capable-collection-source"),
+    "300dc094852e74c8139344248b25a4d637a94c7c": ("0000000000000000000000000000000000000000"),
     LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
     GITHUB_RUNNER_ROOT: "/anonymous/workspace",
     "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664": (
@@ -137,6 +139,9 @@ PROVENANCE_REPLACEMENTS = {
     ),
     "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5": (
         "anonymous-public-pilot-reporting-digest"
+    ),
+    "abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91": (
+        "anonymous-capable-exploratory-reporting-digest"
     ),
     "f998a05fec36b84e59230fe241f1e9961647ad2e": "anonymous-public-pilot-source",
     "8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a": (
@@ -260,7 +265,7 @@ def copy_anonymized_tree(source: Path, destination: Path) -> None:
 
 
 def repair_capable_anonymous_evidence(root: Path) -> None:
-    """Rebind canonical analysis digests after commit identifiers are anonymized."""
+    """Rebind canonical and attempt-history digests after provenance anonymization."""
 
     run_paths: dict[tuple[str, str], Path] = {}
     for path in sorted((root / "canonical" / "runs").glob("*.jsonl")):
@@ -287,6 +292,35 @@ def repair_capable_anonymous_evidence(root: Path) -> None:
         analysis_paths[identity] = path
     if set(analysis_paths) != set(run_paths):
         fail("capable evidence canonical analysis matrix differs from run matrix")
+
+    attempt_run_paths = sorted((root / "attempt-history").glob("**/runs/*.jsonl"))
+    if len(attempt_run_paths) != 16:
+        fail("capable evidence must retain 14 pilot attempts and two full-pass copies")
+    attempt_phase_counts = {"pilot": 0, "full": 0}
+    attempt_digests: set[str] = set()
+    for run_path in attempt_run_paths:
+        analysis_path = run_path.parent.parent / "analysis" / f"{run_path.stem}.json"
+        if not analysis_path.is_file():
+            fail(f"capable attempt lacks analysis: {run_path.relative_to(root)}")
+        rows = [
+            json.loads(line) for line in run_path.read_text(encoding="utf-8").splitlines() if line
+        ]
+        phases = {str(row.get("phase")) for row in rows}
+        if len(phases) != 1 or next(iter(phases)) not in attempt_phase_counts:
+            fail(f"capable attempt has invalid phase: {run_path.relative_to(root)}")
+        attempt_phase_counts[next(iter(phases))] += 1
+        run_digest = sha256_file(run_path)
+        attempt_digests.add(run_digest)
+        value = load_object(analysis_path)
+        value["run_sha256"] = run_digest
+        analysis_path.write_text(
+            json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    if attempt_phase_counts != {"pilot": 14, "full": 2}:
+        fail(f"capable attempt-history phase counts changed: {attempt_phase_counts}")
+    if not {sha256_file(path) for path in run_paths.values()} <= attempt_digests:
+        fail("capable canonical runs are not bound to the released attempt history")
 
     aggregate_path = root / "aggregate.json"
     aggregate = load_object(aggregate_path)
@@ -569,7 +603,8 @@ The checks rebuild and validate the public alpha benchmark, run shortcut/invaria
 checks, validate the compact paper-result summaries, and run selected v2 tests. The evidence
 directory retains the available v1
 source and normalized item records, all four public-interface pilot runs, the public-development
-follow-up records, and the capable hidden extension records. Public repository identities are
+follow-up records, and all 14 executed capable-extension pilot attempts plus both fresh full
+passes. Public repository identities are
 replaced by anonymous role labels;
 empirical prompts, responses, parser outcomes, gold labels, and model identities are retained.
 
@@ -921,7 +956,15 @@ def verify_bundle(bundle: Path) -> None:
         if declared[relative] != sha256_file(path):
             fail(f"manifest digest mismatch: {relative}")
 
-    required = {"LICENSE", "README.md", "pyproject.toml"}
+    required = {
+        "LICENSE",
+        "README.md",
+        "pyproject.toml",
+        "evidence/capable-hidden/attempt-protocol-snapshots/manifest.json",
+        "evidence/capable-hidden/attempt-protocol-snapshots/stage-1-initial/scripts/run_stronger_model_study.py",
+        "evidence/capable-hidden/attempt-protocol-snapshots/stage-2-transport-amended/scripts/run_stronger_model_study.py",
+        "evidence/capable-hidden/attempt-protocol-snapshots/stage-3-final-adapter/scripts/run_stronger_model_study.py",
+    }
     absent = sorted(required - set(actual_paths))
     if absent:
         fail(f"required reviewer-bundle files are missing: {absent}")
@@ -961,6 +1004,7 @@ def write_manifest(bundle: Path) -> None:
             "gpt54_public_development_item_level_records_included": True,
             "capable_hidden_summary_included": capable_hidden_included,
             "capable_hidden_item_level_records_included": capable_hidden_included,
+            "capable_hidden_all_executed_attempts_included": capable_hidden_included,
             "private_construction_seed_included": False,
         },
     }

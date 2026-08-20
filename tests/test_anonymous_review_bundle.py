@@ -114,6 +114,24 @@ def test_capable_anonymous_evidence_rebinds_changed_file_digests(tmp_path: Path)
         json.dumps({"lane_id": "lane-a", "phase": "pilot", "run_sha256": "stale"}),
         encoding="utf-8",
     )
+    for index in range(16):
+        phase = "pilot" if index < 14 else "full"
+        attempt = tmp_path / "attempt-history" / f"attempt-{index:02d}"
+        attempt_runs = attempt / "runs"
+        attempt_analyses = attempt / "analysis"
+        attempt_runs.mkdir(parents=True)
+        attempt_analyses.mkdir(parents=True)
+        attempt_run = attempt_runs / f"lane-{index}-{phase}.jsonl"
+        row = (
+            {"lane_id": "lane-a", "phase": "pilot", "item_id": "item-a"}
+            if index == 0
+            else {"lane_id": f"lane-{index}", "phase": phase, "item_id": "item-a"}
+        )
+        attempt_run.write_text(json.dumps(row) + "\n", encoding="utf-8")
+        (attempt_analyses / f"lane-{index}-{phase}.json").write_text(
+            json.dumps({"lane_id": row["lane_id"], "phase": phase, "run_sha256": "stale"}),
+            encoding="utf-8",
+        )
     (tmp_path / "aggregate.json").write_text(
         json.dumps(
             {
@@ -141,10 +159,10 @@ def test_capable_anonymous_evidence_rebinds_changed_file_digests(tmp_path: Path)
     )
 
 
-def test_noncanonical_attempt_history_is_excluded() -> None:
+def test_noncanonical_attempt_history_is_retained() -> None:
     builder = load_builder()
 
-    assert builder.should_skip(Path("attempt-history/old-run.jsonl"))
+    assert not builder.should_skip(Path("attempt-history/old-run.jsonl"))
 
 
 def test_review_runner_prefers_the_bundled_source_tree() -> None:
@@ -162,6 +180,8 @@ def test_iclr_bundle_description_matches_item_level_hidden_release() -> None:
     statement = submission_builder.ICLR_REPRODUCIBILITY
     assert "recovery checks" not in statement
     assert "item-level" in statement
+    assert "exactly 27 cross-field-invalid" in statement
+    assert "all 14 pilot attempts" in statement
     assert "The private construction seed is excluded" in statement
     assert "public preprint" not in statement
 

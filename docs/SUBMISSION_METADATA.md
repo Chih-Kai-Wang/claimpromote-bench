@@ -16,7 +16,7 @@ ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions
 ## ICLR 2027 abstract
 
 ```text
-AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce ClaimPromoteBench, a benchmark with 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. In the original 7,200-decision study of two small Qwen3 models, 73.99% of responses failed format validation and all 1,873 parseable decisions chose ALLOW, yielding 13.33% end-to-end item accuracy and zero pair accuracy. We then froze a separate stronger-model protocol on the unchanged hidden split. An accuracy-blind 12-item pilot advanced two of seven service lanes to fresh no-retry full passes. Qwen3.7-Max reached .99 decision coverage, .94 end-to-end action accuracy, and .88 pair accuracy; DeepSeek-V4-Flash reached .913, .627, and .253. Both exceeded the always-ALLOW .50 action baseline in paired exact tests; five other lanes failed formatting qualification. These results distinguish interface reliability from evidence-sensitive policy reasoning. The reviewer artifact contains prompts, item-level outputs, labels, and deterministic recomputation checks; the same-oracle gate is reported only as an implementation check.
+AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce ClaimPromoteBench, a benchmark with 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. In the original 7,200-decision study of two small Qwen3 models, 73.99% of responses failed format validation and all 1,873 parseable decisions chose ALLOW, yielding 13.33% end-to-end item accuracy and zero pair accuracy. We then ran an exploratory stronger-model extension on the unchanged split. Registered adapter amendments on a fixed 12-instance pilot used transport and parser error classes alone; the procedure excluded actions, gold labels, and accuracy. All 14 pilot attempts are released. Two of seven service lanes reached terminal qualification and fresh no-retry full passes. On the 288 nonpilot instances, Qwen3.7-Max reached .990 decision coverage, .938 end-to-end action accuracy, and .875 pair accuracy; DeepSeek-V4-Flash reached .913, .628, and .257. Five other lanes lack full scores. These findings separate interface reliability from evidence-sensitive reasoning, while adaptive qualification leaves the extension exploratory; confirmatory force is unavailable. The reviewer artifact releases every attempt and deterministic recomputation checks; the same-oracle gate is only an implementation check.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-On the frozen hidden split, Qwen3.7-Max reaches .94 end-to-end action and .88 pair accuracy while DeepSeek-V4-Flash reaches .627 and .253; five of seven service lanes fail formatting qualification, and same-oracle gate behavior is reported separately.
+On the 288 nonpilot hidden instances, an exploratory extension gives Qwen3.7-Max .938 end-to-end action and .875 pair accuracy and DeepSeek-V4-Flash .628 and .257; all 14 adaptive qualification attempts are released.
 ```
 
 ## Main empirical findings
@@ -79,9 +79,11 @@ On the frozen hidden split, Qwen3.7-Max reaches .94 end-to-end action and .88 pa
 - frozen v1 hidden study: 24 runs and 7,200 decisions;
 - v1 format errors: 5,327 / 7,200 (73.99%);
 - v1 parseable raw decisions: 1,873, all `ALLOW`;
-- capable-model extension: seven accuracy-blind pilots and two fresh 300-instance full passes;
-- Qwen3.7-Max hidden E2E action / pair accuracy: 282 / 300 and 132 / 150;
-- DeepSeek-V4-Flash hidden E2E action / pair accuracy: 188 / 300 and 38 / 150;
+- capable-model extension: 14 adaptive pilot attempts, two fresh 300-instance full passes, and a
+  post-hoc 288-instance / 144-pair pilot-excluded sensitivity;
+- Qwen3.7-Max pilot-excluded E2E action / pair accuracy: 270 / 288 and 126 / 144;
+- DeepSeek-V4-Flash pilot-excluded E2E action / pair accuracy: 181 / 288 and 37 / 144;
+- both completed lanes: 0 / 8 on pilot-excluded `DEMOTE` cases;
 - five capable-model lanes stopped after 0 / 12 valid pilot decisions and have no full score;
 - both completed lanes exceed the always-`ALLOW` 150 / 300 action baseline in paired exact tests;
 - post-v1 public pilot: 160 decisions, two models, one seed;
@@ -106,7 +108,7 @@ An anonymized supplementary bundle contains the public controlled benchmark, the
 ### Public preprint version
 
 ```text
-Code, public benchmark data, the reviewer-release hidden dataset, item-level empirical records, validation workflows, and executable and formal replay inputs are available in the project repository. The private construction seed is not released. Exact workflow and artifact identities are recorded in the manuscript and repository. A long-term archival identifier will be added only after it exists.
+Code, public benchmark data, the reviewer-release hidden dataset, item-level empirical records, validation workflows, and executable and formal replay inputs are available in the project repository. The private construction seed is not released. Exact workflow and artifact identities are recorded in repository evidence manifests. A long-term archival identifier will be added only after it exists.
 ```
 
 ## Reproducibility statement
@@ -118,7 +120,7 @@ The public benchmark is deterministically rebuildable and checked for schema, or
 ## AI-use disclosure summary
 
 ```text
-Generative AI tools assisted literature search, research planning and methodological discussion, early code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the quantitative results and references, and is responsible for the manuscript and submission. AI systems are not authors.
+Generative AI tools assisted literature search, research planning and methodological discussion, synthetic benchmark-template and code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the generated benchmark through deterministic validators, checked the quantitative results and references, and is responsible for the manuscript and submission. AI systems are not authors.
 ```
 
 Use the detailed disclosure in the manuscript when the venue requests the full statement.

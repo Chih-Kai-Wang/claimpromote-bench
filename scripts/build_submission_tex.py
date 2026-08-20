@@ -24,11 +24,12 @@ ICLR_TITLE = (
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
 Generative AI tools were used as assistants during literature search, research planning and
-methodological discussion, early code drafting and debugging, analysis checks and result
-interpretation, and parts of manuscript drafting and editing. The author chose the research
-question, defined the benchmark policy and experimental protocol, made the final study and
-analysis decisions, checked the reported results against the released artifacts, checked the
-references, and is responsible for the final manuscript and submission. The quantitative results
+methodological discussion, synthetic benchmark-template and code drafting and debugging, analysis
+checks and result interpretation, and parts of manuscript drafting and editing. The author chose
+the research question, defined the benchmark policy and experimental protocol, made the final study
+and analysis decisions, checked the generated benchmark through deterministic validators, checked
+the reported results against the released artifacts, checked the references, and is responsible
+for the final manuscript and submission. The quantitative results
 reported in this paper come from the validated study artifacts. The author retains authorship
 and final responsibility.
 
@@ -38,8 +39,12 @@ ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
 
 The hidden set and exact prompts were fixed before scored inference. Artifact-only recovery
 reconstructed the same dataset and prompt identity and recomputed the 7,200-record v1 aggregate
-from all 24 archived runs. The later studies retain their frozen prompt packets, item-level raw
-responses, parser outcomes, oracle labels, and recomputation inputs.
+from all 24 archived runs. It issued no model query and reclassified exactly 27 cross-field-invalid
+records as format errors by invoking the registered semantic validator omitted by the original
+runner; no legal model decision was rewritten. The later studies retain their frozen prompt
+packets, item-level raw responses, parser outcomes, oracle labels, and recomputation inputs. The
+adaptive capable-model extension releases all 14 pilot attempts, both full passes, and the three
+historical request/parser snapshots.
 The anonymous review bundle replaces searchable repository provenance with role descriptions and
 includes the released hidden bytes, executable and Lean replay inputs, canonical analyses, and a
 file-hash manifest. The private construction seed is excluded. Any change to labels, policy,
@@ -56,12 +61,26 @@ ICLR_PUBLIC_IDENTIFIERS = (
     "e2b09f30",
     "3eb5b534",
     "83dbee49",
+    "eb2af5fc",
+    "20904dd1",
+    "abfc25e9",
     "3634ce85",
     "8dd8d488",
     "ba6ba305",
     "0054a4d7",
     "41480fba",
     "f2bb2e97",
+    "32402699174",
+    "32402993463",
+    "32403718086",
+    "32405565039",
+    "32421292779",
+    "119e4759",
+    "b86ee1e1",
+    "cc67096b",
+    "8775a8f9",
+    "05d9921c",
+    "300dc094",
 )
 
 
@@ -109,6 +128,7 @@ def anonymous_iclr_body(body: str) -> str:
         r"\texttt{e2b09f30...f2877}": "the artifact-only recovery source",
         r"\texttt{3eb5b534...e8bfe664}": "a frozen recovered-study digest",
         r"\texttt{83dbee49...25c0b264e}": "a frozen public-pilot digest",
+        r"\texttt{eb2af5fc...04199e5}": "a frozen public-pilot digest",
     }
     anonymous = body
     for old, new in replacements.items():

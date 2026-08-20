@@ -13,9 +13,11 @@ from typing import Any, NoReturn
 
 from aggregate_capable_hidden_study import (
     PRIMARY_LANES,
+    action_breakdown,
     compact_analysis,
     compact_pilot,
     correctness_vector,
+    pilot_excluded_summary,
 )
 from analyze_stronger_model_study import analyze as analyze_stronger_run
 
@@ -615,6 +617,19 @@ def validate_capable_hidden() -> Json:
     }
     if len(accepted_commits) != 2:
         fail("capable hidden anonymous frozen-plan aliases changed")
+    review_audit = plan.get("post_collection_review_audit")
+    if not isinstance(review_audit, dict):
+        fail("capable hidden post-collection review audit is missing")
+    executed_commits = {str(value) for value in review_audit.get("executed_plan_commits", [])}
+    expected_attempt_counts = review_audit.get("attempt_counts_by_lane")
+    if (
+        review_audit.get("analysis_status") != "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION"
+        or review_audit.get("executed_pilot_attempts") != 14
+        or review_audit.get("executed_full_passes") != 2
+        or len(executed_commits) != 3
+        or not isinstance(expected_attempt_counts, dict)
+    ):
+        fail("capable hidden adaptive-attempt audit changed")
 
     policy = load_json(ROOT / "policies" / str(manifest["policy_file"]))
     if not isinstance(policy, dict):
@@ -727,6 +742,162 @@ def validate_capable_hidden() -> Json:
         recomputed[identity] = rebuilt_analysis
         rows_by_identity[identity] = rows
 
+    snapshot_root = root / "attempt-protocol-snapshots"
+    snapshot_manifest = load_json(snapshot_root / "manifest.json")
+    if not isinstance(snapshot_manifest, dict) or not isinstance(
+        snapshot_manifest.get("stages"), list
+    ):
+        fail("capable hidden attempt-protocol snapshot manifest is malformed")
+    stages: list[tuple[Path, str, Json]] = []
+    for entry in snapshot_manifest["stages"]:
+        if not isinstance(entry, dict):
+            fail("capable hidden attempt-protocol stage is malformed")
+        plan_path = snapshot_root / str(entry.get("plan_path"))
+        runner_path = snapshot_root / str(entry.get("runner_path"))
+        attempt_root = (snapshot_root / str(entry.get("attempt_history_path"))).resolve()
+        frozen_commit = str(entry.get("frozen_plan_commit"))
+        historical_plan = load_json(plan_path)
+        if (
+            not isinstance(historical_plan, dict)
+            or not runner_path.is_file()
+            or not attempt_root.is_dir()
+            or frozen_commit not in executed_commits
+        ):
+            fail(f"capable hidden attempt-protocol stage is incomplete: {entry.get('stage')}")
+        stages.append((attempt_root, frozen_commit, historical_plan))
+    if len(stages) != 3 or {commit for _, commit, _ in stages} != executed_commits:
+        fail("capable hidden attempt-protocol stage coverage changed")
+
+    attempt_run_paths = sorted((root / "attempt-history").glob("**/runs/*.jsonl"))
+    if len(attempt_run_paths) != 16:
+        fail("capable hidden history must contain 14 pilots and two full-pass copies")
+    attempt_phase_counts: Counter[str] = Counter()
+    attempt_lane_counts: Counter[str] = Counter()
+    attempt_digests: set[str] = set()
+    for path in attempt_run_paths:
+        stage_candidates = [
+            (commit, historical_plan)
+            for attempt_root, commit, historical_plan in stages
+            if path.resolve().is_relative_to(attempt_root)
+        ]
+        if len(stage_candidates) != 1:
+            fail(f"capable hidden attempt lacks one protocol snapshot: {path.relative_to(root)}")
+        frozen_commit, historical_plan = stage_candidates[0]
+        historical_lanes = {
+            str(row["lane_id"]): row
+            for row in historical_plan.get("formal_lanes", [])
+            if isinstance(row, dict) and isinstance(row.get("lane_id"), str)
+        }
+        rows = load_jsonl(path)
+        identities = {(str(row.get("lane_id")), str(row.get("phase"))) for row in rows}
+        if len(identities) != 1:
+            fail(f"capable hidden attempt mixes identities: {path.relative_to(root)}")
+        lane_id, phase = identities.pop()
+        if lane_id not in historical_lanes or phase not in {"pilot", "full"}:
+            fail(f"capable hidden attempt has an unexpected identity: {(lane_id, phase)}")
+        expected_ids = pilot_ids if phase == "pilot" else set(input_by_id)
+        observed_ids = {str(row.get("item_id")) for row in rows}
+        if len(rows) != len(expected_ids) or observed_ids != expected_ids:
+            fail(f"capable hidden attempt coverage changed: {(lane_id, phase)}")
+        historical_lane = historical_lanes[lane_id]
+        for row in rows:
+            item_id = str(row["item_id"])
+            validate_with_schema(row, run_schema, item_id)
+            reject_hidden_reasoning(row, f"capable hidden attempt {(lane_id, phase)}")
+            if (
+                row.get("study_id") != plan.get("study_id")
+                or row.get("frozen_plan_commit") != frozen_commit
+                or row.get("packet_sha256") != observed_packet_sha
+                or row.get("dataset_manifest_sha256")
+                != expected_dataset_hashes["dataset_manifest_sha256"]
+                or row.get("model_requested") != historical_lane.get("model")
+                or row.get("prompt_sha256") != packet_by_id[item_id]["prompt_sha256"]
+            ):
+                fail(f"capable hidden attempt binding changed: {(lane_id, phase)} {item_id}")
+            raw = row.get("raw_response_text")
+            if raw is None:
+                if row.get("raw_response_sha256") is not None:
+                    fail(f"capable hidden attempt null response has a digest: {item_id}")
+            elif row.get("raw_response_sha256") != sha256_text(str(raw)):
+                fail(f"capable hidden attempt raw response digest mismatch: {item_id}")
+            if row.get("transport_status") == "ERROR":
+                expected_status, expected_decision, expected_detail = (
+                    "TRANSPORT_ERROR",
+                    None,
+                    row.get("transport_error"),
+                )
+            elif raw is None:
+                expected_status, expected_decision, expected_detail = (
+                    "SCHEMA_ERROR",
+                    None,
+                    "provider returned no final response text",
+                )
+            else:
+                expected_status, expected_decision, expected_detail = diagnose_capable_content(
+                    str(raw),
+                    input_by_id[item_id],
+                    decision_schema,
+                    bool(historical_lane.get("allow_single_json_object_extraction", False)),
+                )
+            if (
+                row.get("parse_status") != expected_status
+                or row.get("raw_decision") != expected_decision
+                or row.get("parse_error_detail") != expected_detail
+            ):
+                fail(f"capable hidden attempt parser replay differs: {(lane_id, phase)} {item_id}")
+            expected_postgate = (
+                postgate_decision(
+                    expected_decision,
+                    input_by_id[item_id],
+                    policy,
+                    str(manifest["evaluation_time"]),
+                )
+                if expected_decision is not None
+                else None
+            )
+            if row.get("postgate_decision") != expected_postgate:
+                fail(
+                    f"capable hidden attempt post-gate replay differs: {(lane_id, phase)} {item_id}"
+                )
+
+        analysis_path = path.parent.parent / "analysis" / f"{path.stem}.json"
+        archived_analysis = load_json(analysis_path)
+        if not isinstance(archived_analysis, dict):
+            fail(f"capable hidden attempt analysis is malformed: {analysis_path.name}")
+        rebuilt_analysis = analyze_stronger_run(dataset, packet, historical_plan, path)
+        for key in (
+            "records",
+            "continuation_gate",
+            "usage",
+            "cost",
+            "raw_action_distribution",
+            "postgate_action_distribution",
+            "metrics",
+            "complete_metrics",
+            "uncertainty",
+        ):
+            if not equivalent_json(archived_analysis.get(key), rebuilt_analysis.get(key)):
+                fail(
+                    "capable hidden attempt analysis differs from recomputation: "
+                    f"{path.relative_to(root)}: {key}"
+                )
+        run_digest = sha256_file(path)
+        if archived_analysis.get("run_sha256") != run_digest:
+            fail(f"capable hidden attempt analysis digest differs: {path.relative_to(root)}")
+        attempt_phase_counts[phase] += 1
+        if phase == "pilot":
+            attempt_lane_counts[lane_id] += 1
+        attempt_digests.add(run_digest)
+
+    if attempt_phase_counts != Counter({"pilot": 14, "full": 2}):
+        fail("capable hidden attempt-history phase counts changed")
+    if dict(sorted(attempt_lane_counts.items())) != {
+        str(key): int(value) for key, value in sorted(expected_attempt_counts.items())
+    }:
+        fail("capable hidden per-lane attempt counts changed")
+    if not {sha256_file(path) for path in run_paths} <= attempt_digests:
+        fail("capable hidden canonical view is not bound to attempt history")
+
     pilot_lanes = {lane_id for lane_id, phase in recomputed if phase == "pilot"}
     go_lanes = {
         lane_id
@@ -744,7 +915,9 @@ def validate_capable_hidden() -> Json:
     expected_pilots = [compact_pilot(recomputed[(lane, "pilot")]) for lane in sorted(lanes)]
     expected_full = [compact_analysis(recomputed[(lane, "full")]) for lane in sorted(full_lanes)]
     if (
-        qualification.get("attempted_lanes") != sorted(lanes)
+        qualification.get("executed_pilot_attempts") != 14
+        or qualification.get("attempt_history_released") is not True
+        or qualification.get("attempted_lanes") != sorted(lanes)
         or qualification.get("go_lanes") != sorted(go_lanes)
         or qualification.get("stop_lanes") != sorted(set(lanes) - go_lanes)
         or qualification.get("pilots") != expected_pilots
@@ -774,17 +947,34 @@ def validate_capable_hidden() -> Json:
     adjusted = holm_adjust([float(row["p"]) for row in tests])
     for row, p_holm in zip(tests, adjusted, strict=True):
         row["p_holm_within_completed_family"] = p_holm
+        row["p_bonferroni_registered_six"] = min(1.0, float(row["p"]) * len(PRIMARY_LANES))
     observed_tests = aggregate.get("prespecified_tests", {}).get("models_vs_always_allow", {})
     if (
         observed_tests.get("completed_lanes") != completed_primary
         or not equivalent_json(observed_tests.get("tests"), tests)
         or observed_tests.get("status") != "PARTIAL_FAMILY"
+        or observed_tests.get("inference_status")
+        != "EXPLORATORY_SELECTION_AFFECTED_NO_CONFIRMATORY_FAMILYWISE_CLAIM"
     ):
         fail("capable hidden baseline tests changed")
+
+    expected_full_breakdown = {
+        lane: action_breakdown(rows_by_identity[(lane, "full")], gold_by_id, sorted(gold_by_id))
+        for lane in sorted(full_lanes)
+    }
+    if not equivalent_json(aggregate.get("full_pass_action_breakdown"), expected_full_breakdown):
+        fail("capable hidden full-pass action breakdown changed")
+    expected_sensitivity = {
+        lane: pilot_excluded_summary(rows_by_identity[(lane, "full")], gold_by_id, pairs, pilot_ids)
+        for lane in sorted(full_lanes)
+    }
+    if not equivalent_json(aggregate.get("pilot_excluded_sensitivity"), expected_sensitivity):
+        fail("capable hidden pilot-excluded sensitivity changed")
 
     return {
         "v1_end_to_end_against_released_hidden_gold": v1_end_to_end,
         "pilots": len(pilot_lanes),
+        "executed_pilot_attempts": attempt_phase_counts["pilot"],
         "go_lanes": sorted(go_lanes),
         "stop_lanes": sorted(set(lanes) - go_lanes),
         "full_runs": {

@@ -1,0 +1,3734 @@
+{
+  "complete_metrics": {
+    "by_family": {
+      "DEPENDENCY": {
+        "decision_coverage": 0.9285714285714286,
+        "false_promotion_rate": {
+          "defined": true,
+          "value": 0.25
+        },
+        "instances": 56,
+        "paired_score_ranking": {
+          "compared_pairs": 24,
+          "losses": 0,
+          "pair_coverage": 0.8571428571428571,
+          "score_margin_mean": {
+            "defined": true,
+            "value": 0.75
+          },
+          "score_margin_median": {
+            "defined": true,
+            "value": 1.0
+          },
+          "strict_accuracy": {
+            "defined": true,
+            "value": 0.75
+          },
+          "tie_adjusted_accuracy": {
+            "defined": true,
+            "value": 0.875
+          },
+          "ties": 6,
+          "wins": 18
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": true,
+            "value": 0.8235294117647058
+          },
+          "lift_over_prevalence": {
+            "defined": true,
+            "value": 1.5294117647058822
+          },
+          "points": [
+            {
+              "false_positive": 6,
+              "precision": 0.8235294117647058,
+              "recall": 1.0,
+              "selected": 34,
+              "threshold": 1.0,
+              "true_positive": 28
+            },
+            {
+              "false_positive": 24,
+              "precision": 0.5384615384615384,
+              "recall": 1.0,
+              "selected": 52,
+              "threshold": 0.0,
+              "true_positive": 28
+            }
+          ],
+          "positive_prevalence": {
+            "defined": true,
+            "value": 0.5384615384615384
+          },
+          "score_coverage": 0.9285714285714286,
+          "unique_thresholds": 2
+        },
+        "valid_promotion_recall": {
+          "defined": true,
+          "value": 1.0
+        }
+      },
+      "FORMAL": {
+        "decision_coverage": 0.8541666666666666,
+        "false_promotion_rate": {
+          "defined": true,
+          "value": 0.9411764705882353
+        },
+        "instances": 48,
+        "paired_score_ranking": {
+          "compared_pairs": 17,
+          "losses": 0,
+          "pair_coverage": 0.7083333333333334,
+          "score_margin_mean": {
+            "defined": true,
+            "value": 0.058823529411764705
+          },
+          "score_margin_median": {
+            "defined": true,
+            "value": 0.0
+          },
+          "strict_accuracy": {
+            "defined": true,
+            "value": 0.058823529411764705
+          },
+          "tie_adjusted_accuracy": {
+            "defined": true,
+            "value": 0.5294117647058824
+          },
+          "ties": 16,
+          "wins": 1
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": true,
+            "value": 0.6
+          },
+          "lift_over_prevalence": {
+            "defined": true,
+            "value": 1.0250000000000001
+          },
+          "points": [
+            {
+              "false_positive": 16,
+              "precision": 0.6,
+              "recall": 1.0,
+              "selected": 40,
+              "threshold": 1.0,
+              "true_positive": 24
+            },
+            {
+              "false_positive": 17,
+              "precision": 0.5853658536585366,
+              "recall": 1.0,
+              "selected": 41,
+              "threshold": 0.0,
+              "true_positive": 24
+            }
+          ],
+          "positive_prevalence": {
+            "defined": true,
+            "value": 0.5853658536585366
+          },
+          "score_coverage": 0.8541666666666666,
+          "unique_thresholds": 2
+        },
+        "valid_promotion_recall": {
+          "defined": true,
+          "value": 1.0
+        }
+      },
+      "NUMERICAL": {
+        "decision_coverage": 0.9642857142857143,
+        "false_promotion_rate": {
+          "defined": true,
+          "value": 1.0
+        },
+        "instances": 56,
+        "paired_score_ranking": {
+          "compared_pairs": 26,
+          "losses": 0,
+          "pair_coverage": 0.9285714285714286,
+          "score_margin_mean": {
+            "defined": true,
+            "value": 0.0
+          },
+          "score_margin_median": {
+            "defined": true,
+            "value": 0.0
+          },
+          "strict_accuracy": {
+            "defined": true,
+            "value": 0.0
+          },
+          "tie_adjusted_accuracy": {
+            "defined": true,
+            "value": 0.5
+          },
+          "ties": 26,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": true,
+            "value": 0.5185185185185185
+          },
+          "lift_over_prevalence": {
+            "defined": true,
+            "value": 1.0
+          },
+          "points": [
+            {
+              "false_positive": 26,
+              "precision": 0.5185185185185185,
+              "recall": 1.0,
+              "selected": 54,
+              "threshold": 1.0,
+              "true_positive": 28
+            }
+          ],
+          "positive_prevalence": {
+            "defined": true,
+            "value": 0.5185185185185185
+          },
+          "score_coverage": 0.9642857142857143,
+          "unique_thresholds": 1
+        },
+        "valid_promotion_recall": {
+          "defined": true,
+          "value": 1.0
+        }
+      },
+      "PROVENANCE": {
+        "decision_coverage": 0.9583333333333334,
+        "false_promotion_rate": {
+          "defined": true,
+          "value": 0.7272727272727273
+        },
+        "instances": 48,
+        "paired_score_ranking": {
+          "compared_pairs": 22,
+          "losses": 0,
+          "pair_coverage": 0.9166666666666666,
+          "score_margin_mean": {
+            "defined": true,
+            "value": 0.2727272727272727
+          },
+          "score_margin_median": {
+            "defined": true,
+            "value": 0.0
+          },
+          "strict_accuracy": {
+            "defined": true,
+            "value": 0.2727272727272727
+          },
+          "tie_adjusted_accuracy": {
+            "defined": true,
+            "value": 0.6363636363636364
+          },
+          "ties": 16,
+          "wins": 6
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": true,
+            "value": 0.6
+          },
+          "lift_over_prevalence": {
+            "defined": true,
+            "value": 1.15
+          },
+          "points": [
+            {
+              "false_positive": 16,
+              "precision": 0.6,
+              "recall": 1.0,
+              "selected": 40,
+              "threshold": 1.0,
+              "true_positive": 24
+            },
+            {
+              "false_positive": 22,
+              "precision": 0.5217391304347826,
+              "recall": 1.0,
+              "selected": 46,
+              "threshold": 0.0,
+              "true_positive": 24
+            }
+          ],
+          "positive_prevalence": {
+            "defined": true,
+            "value": 0.5217391304347826
+          },
+          "score_coverage": 0.9583333333333334,
+          "unique_thresholds": 2
+        },
+        "valid_promotion_recall": {
+          "defined": true,
+          "value": 1.0
+        }
+      },
+      "RUNTIME": {
+        "decision_coverage": 0.8181818181818182,
+        "false_promotion_rate": {
+          "defined": true,
+          "value": 0.2857142857142857
+        },
+        "instances": 44,
+        "paired_score_ranking": {
+          "compared_pairs": 14,
+          "losses": 0,
+          "pair_coverage": 0.6363636363636364,
+          "score_margin_mean": {
+            "defined": true,
+            "value": 0.7142857142857143
+          },
+          "score_margin_median": {
+            "defined": true,
+            "value": 1.0
+          },
+          "strict_accuracy": {
+            "defined": true,
+            "value": 0.7142857142857143
+          },
+          "tie_adjusted_accuracy": {
+            "defined": true,
+            "value": 0.8571428571428571
+          },
+          "ties": 4,
+          "wins": 10
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": true,
+            "value": 0.8461538461538461
+          },
+          "lift_over_prevalence": {
+            "defined": true,
+            "value": 1.3846153846153846
+          },
+          "points": [
+            {
+              "false_positive": 4,
+              "precision": 0.8461538461538461,
+              "recall": 1.0,
+              "selected": 26,
+              "threshold": 1.0,
+              "true_positive": 22
+            },
+            {
+              "false_positive": 14,
+              "precision": 0.6111111111111112,
+              "recall": 1.0,
+              "selected": 36,
+              "threshold": 0.0,
+              "true_positive": 22
+            }
+          ],
+          "positive_prevalence": {
+            "defined": true,
+            "value": 0.6111111111111112
+          },
+          "score_coverage": 0.8181818181818182,
+          "unique_thresholds": 2
+        },
+        "valid_promotion_recall": {
+          "defined": true,
+          "value": 1.0
+        }
+      },
+      "STALE_CONTRADICTION": {
+        "decision_coverage": 0.9375,
+        "false_promotion_rate": {
+          "defined": true,
+          "value": 0.8571428571428571
+        },
+        "instances": 48,
+        "paired_score_ranking": {
+          "compared_pairs": 21,
+          "losses": 0,
+          "pair_coverage": 0.875,
+          "score_margin_mean": {
+            "defined": true,
+            "value": 0.14285714285714285
+          },
+          "score_margin_median": {
+            "defined": true,
+            "value": 0.0
+          },
+          "strict_accuracy": {
+            "defined": true,
+            "value": 0.14285714285714285
+          },
+          "tie_adjusted_accuracy": {
+            "defined": true,
+            "value": 0.5714285714285714
+          },
+          "ties": 18,
+          "wins": 3
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": true,
+            "value": 0.5714285714285714
+          },
+          "lift_over_prevalence": {
+            "defined": true,
+            "value": 1.0714285714285714
+          },
+          "points": [
+            {
+              "false_positive": 18,
+              "precision": 0.5714285714285714,
+              "recall": 1.0,
+              "selected": 42,
+              "threshold": 1.0,
+              "true_positive": 24
+            },
+            {
+              "false_positive": 21,
+              "precision": 0.5333333333333333,
+              "recall": 1.0,
+              "selected": 45,
+              "threshold": 0.0,
+              "true_positive": 24
+            }
+          ],
+          "positive_prevalence": {
+            "defined": true,
+            "value": 0.5333333333333333
+          },
+          "score_coverage": 0.9375,
+          "unique_thresholds": 2
+        },
+        "valid_promotion_recall": {
+          "defined": true,
+          "value": 1.0
+        }
+      }
+    },
+    "end_to_end": {
+      "action_accuracy": 0.6266666666666667,
+      "actions": 300,
+      "correct_actions": 188,
+      "correct_pairs": 38,
+      "failure_handling": "Every non-OK response counts as incorrect.",
+      "pair_accuracy": 0.25333333333333335,
+      "pairs": 150
+    },
+    "format_error_count": 26,
+    "instances": 300,
+    "pairs": 150,
+    "primary": {
+      "false_hold_rate": {
+        "defined": true,
+        "value": 0.0
+      },
+      "false_promotion_rate": {
+        "ci95_pair_bootstrap": {
+          "high": null,
+          "low": null,
+          "samples_defined": 0,
+          "seed": 20260813
+        },
+        "defined": true,
+        "value": 0.6935483870967742,
+        "worst_case_format_error_sensitivity": {
+          "defined": true,
+          "value": 0.7466666666666667
+        }
+      },
+      "literal_hold_rate_on_valid": {
+        "defined": true,
+        "value": 0.0
+      },
+      "paired_transition_accuracy": {
+        "defined": true,
+        "value": 0.3064516129032258
+      },
+      "valid_promotion_recall": {
+        "defined": true,
+        "value": 1.0
+      }
+    },
+    "secondary": {
+      "brier": {
+        "defined": true,
+        "value": 0.31386861313868614
+      },
+      "calibration_coverage": 0.9133333333333333,
+      "complete_pair_coverage": 0.8266666666666667,
+      "counterfactual_flip_accuracy": {
+        "defined": true,
+        "value": 0.3064516129032258
+      },
+      "decision_coverage": 0.9133333333333333,
+      "evidence_id_macro_precision": 0.8483333333333334,
+      "evidence_id_macro_recall": 0.8111111111111111,
+      "missing_evidence_exact_match": 0.9066666666666666,
+      "nll": {
+        "defined": true,
+        "value": 10.84088881511429
+      },
+      "paired_score_ranking": {
+        "compared_pairs": 124,
+        "losses": 0,
+        "pair_coverage": 0.8266666666666667,
+        "score_margin_mean": {
+          "defined": true,
+          "value": 0.3064516129032258
+        },
+        "score_margin_median": {
+          "defined": true,
+          "value": 0.0
+        },
+        "strict_accuracy": {
+          "defined": true,
+          "value": 0.3064516129032258
+        },
+        "tie_adjusted_accuracy": {
+          "defined": true,
+          "value": 0.6532258064516129
+        },
+        "ties": 86,
+        "wins": 38
+      },
+      "precision_recall": {
+        "auprc_stepwise": {
+          "ci95_pair_bootstrap": {
+            "high": null,
+            "low": null,
+            "samples_defined": 0,
+            "seed": 20260813
+          },
+          "defined": true,
+          "value": 0.635593220338983
+        },
+        "lift_over_prevalence": {
+          "defined": true,
+          "value": 1.1610169491525424
+        },
+        "points": [
+          {
+            "false_positive": 86,
+            "precision": 0.635593220338983,
+            "recall": 1.0,
+            "selected": 236,
+            "threshold": 1.0,
+            "true_positive": 150
+          },
+          {
+            "false_positive": 124,
+            "precision": 0.5474452554744526,
+            "recall": 1.0,
+            "selected": 274,
+            "threshold": 0.0,
+            "true_positive": 150
+          }
+        ],
+        "positive_prevalence": {
+          "defined": true,
+          "value": 0.5474452554744526
+        },
+        "score_coverage": 0.9133333333333333,
+        "unique_thresholds": 2
+      },
+      "promotion_coverage": 0.7866666666666666,
+      "promotion_fdr": {
+        "defined": true,
+        "value": 0.3644067796610169
+      },
+      "reason_code_instance_set_f1": 0.6034444444444444,
+      "risk_coverage": {
+        "aurc_trapezoid": 0.19507422986514908,
+        "decision_coverage": 0.9133333333333333,
+        "points": [
+          {
+            "coverage": 0.7866666666666666,
+            "risk": 0.3644067796610169,
+            "threshold": 1.0
+          },
+          {
+            "coverage": 0.9133333333333333,
+            "risk": 0.45255474452554745,
+            "threshold": 0.0
+          }
+        ]
+      }
+    }
+  },
+  "continuation_gate": {
+    "decision": "NOT_APPLICABLE_FULL"
+  },
+  "cost": {
+    "actual_cost_usd": 0.15612731200000007,
+    "records": 300,
+    "records_with_computed_cost": 300,
+    "status": "COMPLETE"
+  },
+  "formal_lane": true,
+  "frozen_plan_commit": "119e475953e50218fc62abd2163eef04cbad4e23",
+  "lane_id": "opencode-go-deepseek-v4-flash-matched",
+  "metrics": {
+    "covered_pairs": 124,
+    "decision_coverage": 0.9133333333333333,
+    "factor_metrics": [
+      {
+        "covered_pairs": 8,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 1.0,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 8,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 1,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_coverage": 0.125,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 1,
+        "raw_flip_pairs": 1,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 1
+      },
+      {
+        "covered_pairs": 6,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "pair_coverage": 0.75,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 6,
+        "raw_flip_pairs": 6,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 6
+      },
+      {
+        "covered_pairs": 5,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.625,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 5,
+        "raw_flip_pairs": 3,
+        "raw_flip_rate": 0.6,
+        "raw_pair_accuracy": 0.6,
+        "raw_pair_correct": 3
+      },
+      {
+        "covered_pairs": 8,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 1.0,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 8,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 7,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "pair_coverage": 1.0,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 7,
+        "raw_flip_pairs": 1,
+        "raw_flip_rate": 0.14285714285714285,
+        "raw_pair_accuracy": 0.14285714285714285,
+        "raw_pair_correct": 1
+      },
+      {
+        "covered_pairs": 6,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "pair_coverage": 0.8571428571428571,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 6,
+        "raw_flip_pairs": 6,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 6
+      },
+      {
+        "covered_pairs": 7,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "pair_coverage": 1.0,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 7,
+        "raw_flip_pairs": 7,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 7
+      },
+      {
+        "covered_pairs": 6,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.8571428571428571,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 6,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 7,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "pair_coverage": 1.0,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 7,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 7,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "pair_coverage": 1.0,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 7,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 6,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.8571428571428571,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 6,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 8,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "pair_coverage": 1.0,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 8,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 8,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "pair_coverage": 1.0,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 8,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 5,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "pair_coverage": 0.625,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 5,
+        "raw_flip_pairs": 5,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 5
+      },
+      {
+        "covered_pairs": 8,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "pair_coverage": 1.0,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 8,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 3,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_coverage": 0.42857142857142855,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 3,
+        "raw_flip_pairs": 3,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 3
+      },
+      {
+        "covered_pairs": 4,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "pair_coverage": 0.5714285714285714,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 4,
+        "raw_flip_pairs": 4,
+        "raw_flip_rate": 1.0,
+        "raw_pair_accuracy": 1.0,
+        "raw_pair_correct": 4
+      },
+      {
+        "covered_pairs": 8,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "pair_coverage": 1.0,
+        "pairs": 8,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 8,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": 0.0,
+        "raw_pair_accuracy": 0.0,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 6,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "pair_coverage": 0.8571428571428571,
+        "pairs": 7,
+        "postgate_pair_accuracy": 1.0,
+        "postgate_pair_correct": 6,
+        "raw_flip_pairs": 2,
+        "raw_flip_rate": 0.3333333333333333,
+        "raw_pair_accuracy": 0.3333333333333333,
+        "raw_pair_correct": 2
+      }
+    ],
+    "pair_coverage": 0.8266666666666667,
+    "pair_metrics": [
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-001",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-002",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-003",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-004",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-005",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-006",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-007",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-008",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "pair_id": "v1-test-dep-009"
+      },
+      {
+        "covered": false,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "pair_id": "v1-test-dep-010"
+      },
+      {
+        "covered": true,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-011",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "pair_id": "v1-test-dep-012"
+      },
+      {
+        "covered": true,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-013",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "transitive_dependency",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-014",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "pair_id": "v1-test-dep-015"
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-016",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-017",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-018",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-019",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-020",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-021",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-022",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-023",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-024",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-025",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-026",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-dep-027",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "dependency_statement",
+        "family": "DEPENDENCY",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-dep-028",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-001",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-002",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-003",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-004",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-005",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": false,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "pair_id": "v1-test-num-006"
+      },
+      {
+        "covered": true,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-007",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-008",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-009",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": false,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "pair_id": "v1-test-num-010"
+      },
+      {
+        "covered": true,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-011",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-012",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-013",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "domain",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-014",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-015",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-016",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-017",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-018",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-019",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-020",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "preregistration",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-021",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-022",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-023",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-024",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-025",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-026",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-num-027",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "precision",
+        "family": "NUMERICAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-num-028",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": false,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-001"
+      },
+      {
+        "covered": true,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-002",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-003"
+      },
+      {
+        "covered": true,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-004",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-005"
+      },
+      {
+        "covered": true,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-006",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-007"
+      },
+      {
+        "covered": true,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-008",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-run-009",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-010",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-run-011",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-012",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-run-013",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "verifier_execution",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-014"
+      },
+      {
+        "covered": true,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-015",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-run-016",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-017",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-018"
+      },
+      {
+        "covered": true,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-run-019",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-020"
+      },
+      {
+        "covered": false,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-021"
+      },
+      {
+        "covered": true,
+        "factor_id": "run_completion",
+        "family": "RUNTIME",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-run-022",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-stale-001",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-002",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-stale-003",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-004",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-stale-005",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-006",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-stale-007",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-008",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-009",
+        "postgate_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "pair_id": "v1-test-stale-010",
+        "postgate_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-011",
+        "postgate_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "pair_id": "v1-test-stale-012",
+        "postgate_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-013",
+        "postgate_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "pair_id": "v1-test-stale-014",
+        "postgate_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-015",
+        "postgate_actions": [
+          "DEMOTE",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "current_binding",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "pair_id": "v1-test-stale-016",
+        "postgate_actions": [
+          "ALLOW",
+          "DEMOTE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": false,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "pair_id": "v1-test-stale-017"
+      },
+      {
+        "covered": false,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "pair_id": "v1-test-stale-018"
+      },
+      {
+        "covered": true,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "pair_id": "v1-test-stale-019",
+        "postgate_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ESCALATE",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-020",
+        "postgate_actions": [
+          "ESCALATE",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ESCALATE",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "pair_id": "v1-test-stale-021",
+        "postgate_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": false,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "pair_id": "v1-test-stale-022"
+      },
+      {
+        "covered": true,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "pair_id": "v1-test-stale-023",
+        "postgate_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ESCALATE"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "contradiction",
+        "family": "STALE_CONTRADICTION",
+        "gold_actions": [
+          "ESCALATE",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-stale-024",
+        "postgate_actions": [
+          "ESCALATE",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-001",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-002",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-003",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-004",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-005",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-006",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-007",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-008",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-009",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-010",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-011",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-012",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-013",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-014",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-015",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "review_environment",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-016",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-017",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-018",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-019",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-prov-020",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-021",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "pair_id": "v1-test-prov-022"
+      },
+      {
+        "covered": true,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-prov-023",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": false,
+        "factor_id": "cold_start",
+        "family": "PROVENANCE",
+        "pair_id": "v1-test-prov-024"
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-001",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-002",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-003",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-004",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-005",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-006",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-007",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-008",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-009"
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-010"
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-011"
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-012"
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-013"
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-014"
+      },
+      {
+        "covered": false,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-015"
+      },
+      {
+        "covered": true,
+        "factor_id": "claim_identity",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-016",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "raw_flip": true,
+        "raw_pair_correct": true
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-017",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-018",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-019",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-020",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-021",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-022",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "pair_id": "v1-test-formal-023",
+        "postgate_actions": [
+          "ALLOW",
+          "HOLD"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      },
+      {
+        "covered": true,
+        "factor_id": "trust_base",
+        "family": "FORMAL",
+        "gold_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "pair_id": "v1-test-formal-024",
+        "postgate_actions": [
+          "HOLD",
+          "ALLOW"
+        ],
+        "postgate_pair_correct": true,
+        "raw_actions": [
+          "ALLOW",
+          "ALLOW"
+        ],
+        "raw_flip": false,
+        "raw_pair_correct": false
+      }
+    ],
+    "pairs": 150,
+    "postgate_action_accuracy": 1.0,
+    "postgate_pair_accuracy": 1.0,
+    "raw_action_accuracy": 0.6861313868613139,
+    "raw_flip_rate": 0.3064516129032258,
+    "raw_fpr": 0.6935483870967742,
+    "raw_pair_accuracy": 0.3064516129032258,
+    "raw_vpr": 1.0,
+    "records": 300,
+    "status_counts": {
+      "JSON_SYNTAX_ERROR": 0,
+      "OK": 274,
+      "SCHEMA_ERROR": 0,
+      "SEMANTIC_ERROR": 26,
+      "TRANSPORT_ERROR": 0
+    }
+  },
+  "model_requested": "deepseek-v4-flash",
+  "model_returned_values": [
+    "deepseek-v4-flash"
+  ],
+  "packet_sha256": "sha256:eadd52f72ccc8f5eabf803d4cd667ce15799b688d6d97077a95f42efd2094d28",
+  "phase": "full",
+  "postgate_action_distribution": {
+    "ALLOW": 150,
+    "DEMOTE": 8,
+    "ESCALATE": 5,
+    "HOLD": 111
+  },
+  "provider": "OpenCode Go",
+  "raw_action_distribution": {
+    "ALLOW": 236,
+    "ESCALATE": 3,
+    "HOLD": 35
+  },
+  "raw_prompts_or_responses_in_aggregate": false,
+  "records": 300,
+  "routed_provider_values": [],
+  "run_path": "/home/runner/work/claimpromote-bench/claimpromote-bench/work/capable-hidden-study/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl",
+  "run_sha256": "sha256:b044984d4699603949e16d1d886cbe4eef1defa462872b87bf0efd2c641d0a20",
+  "schema_version": "1.0.0",
+  "status": "COMPLETE",
+  "study_id": "claimpromotebench-capable-hidden-extension-v1",
+  "truth_status": "COMPUTATIONAL",
+  "uncertainty": {
+    "decision_coverage": {
+      "estimate": 0.9133333333333333,
+      "high": 0.9401711024819569,
+      "low": 0.8760440413057516,
+      "successes": 274,
+      "trials": 300
+    },
+    "end_to_end_action_accuracy": {
+      "estimate": 0.6266666666666667,
+      "high": 0.6794753144044509,
+      "low": 0.5706551328853308,
+      "successes": 188,
+      "trials": 300
+    },
+    "end_to_end_pair_accuracy": {
+      "estimate": 0.25333333333333335,
+      "high": 0.32849409326407264,
+      "low": 0.19049122729084522,
+      "successes": 38,
+      "trials": 150
+    },
+    "method": "two-sided 95% Wilson intervals; descriptive only",
+    "pair_coverage": {
+      "estimate": 0.8266666666666667,
+      "high": 0.8788793677361272,
+      "low": 0.7581400726100628,
+      "successes": 124,
+      "trials": 150
+    },
+    "postgate_action_accuracy": {
+      "estimate": 1.0,
+      "high": 1.0,
+      "low": 0.9861739178990808,
+      "successes": 274,
+      "trials": 274
+    },
+    "postgate_pair_accuracy": {
+      "estimate": 1.0,
+      "high": 0.9999999999999999,
+      "low": 0.9699513846593223,
+      "successes": 124,
+      "trials": 124
+    },
+    "raw_action_accuracy": {
+      "estimate": 0.6861313868613139,
+      "high": 0.7381852027257443,
+      "low": 0.6289306353242785,
+      "successes": 188,
+      "trials": 274
+    },
+    "raw_false_promotion_rate": {
+      "estimate": 0.6935483870967742,
+      "high": 0.7678594725423212,
+      "low": 0.6076055795838681,
+      "successes": 86,
+      "trials": 124
+    },
+    "raw_pair_accuracy": {
+      "estimate": 0.3064516129032258,
+      "high": 0.39239442041613193,
+      "low": 0.23214052745767877,
+      "successes": 38,
+      "trials": 124
+    },
+    "raw_valid_promotion_rate": {
+      "estimate": 1.0,
+      "high": 1.0,
+      "low": 0.9750297556319235,
+      "successes": 150,
+      "trials": 150
+    }
+  },
+  "usage": {
+    "records_missing_field": {
+      "cached_input_tokens": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 300,
+      "total_tokens": 0
+    },
+    "totals": {
+      "cached_input_tokens": 515328,
+      "input_tokens": 749420,
+      "output_tokens": 34782,
+      "reasoning_tokens": null,
+      "total_tokens": 784202
+    }
+  }
+}

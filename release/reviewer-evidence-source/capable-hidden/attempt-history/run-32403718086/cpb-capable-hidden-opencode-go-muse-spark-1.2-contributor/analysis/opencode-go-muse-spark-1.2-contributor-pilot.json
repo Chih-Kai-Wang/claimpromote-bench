@@ -1,0 +1,690 @@
+{
+  "complete_metrics": {
+    "by_family": {
+      "DEPENDENCY": {
+        "decision_coverage": 0.0,
+        "false_promotion_rate": {
+          "defined": false,
+          "value": null
+        },
+        "instances": 2,
+        "paired_score_ranking": {
+          "compared_pairs": 0,
+          "losses": 0,
+          "pair_coverage": 0.0,
+          "score_margin_mean": {
+            "defined": false,
+            "value": null
+          },
+          "score_margin_median": {
+            "defined": false,
+            "value": null
+          },
+          "strict_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "tie_adjusted_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "ties": 0,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": false,
+            "value": null
+          },
+          "lift_over_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "points": [],
+          "positive_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "score_coverage": 0.0,
+          "unique_thresholds": 0
+        },
+        "valid_promotion_recall": {
+          "defined": false,
+          "value": null
+        }
+      },
+      "FORMAL": {
+        "decision_coverage": 0.0,
+        "false_promotion_rate": {
+          "defined": false,
+          "value": null
+        },
+        "instances": 2,
+        "paired_score_ranking": {
+          "compared_pairs": 0,
+          "losses": 0,
+          "pair_coverage": 0.0,
+          "score_margin_mean": {
+            "defined": false,
+            "value": null
+          },
+          "score_margin_median": {
+            "defined": false,
+            "value": null
+          },
+          "strict_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "tie_adjusted_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "ties": 0,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": false,
+            "value": null
+          },
+          "lift_over_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "points": [],
+          "positive_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "score_coverage": 0.0,
+          "unique_thresholds": 0
+        },
+        "valid_promotion_recall": {
+          "defined": false,
+          "value": null
+        }
+      },
+      "NUMERICAL": {
+        "decision_coverage": 0.0,
+        "false_promotion_rate": {
+          "defined": false,
+          "value": null
+        },
+        "instances": 2,
+        "paired_score_ranking": {
+          "compared_pairs": 0,
+          "losses": 0,
+          "pair_coverage": 0.0,
+          "score_margin_mean": {
+            "defined": false,
+            "value": null
+          },
+          "score_margin_median": {
+            "defined": false,
+            "value": null
+          },
+          "strict_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "tie_adjusted_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "ties": 0,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": false,
+            "value": null
+          },
+          "lift_over_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "points": [],
+          "positive_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "score_coverage": 0.0,
+          "unique_thresholds": 0
+        },
+        "valid_promotion_recall": {
+          "defined": false,
+          "value": null
+        }
+      },
+      "PROVENANCE": {
+        "decision_coverage": 0.0,
+        "false_promotion_rate": {
+          "defined": false,
+          "value": null
+        },
+        "instances": 2,
+        "paired_score_ranking": {
+          "compared_pairs": 0,
+          "losses": 0,
+          "pair_coverage": 0.0,
+          "score_margin_mean": {
+            "defined": false,
+            "value": null
+          },
+          "score_margin_median": {
+            "defined": false,
+            "value": null
+          },
+          "strict_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "tie_adjusted_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "ties": 0,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": false,
+            "value": null
+          },
+          "lift_over_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "points": [],
+          "positive_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "score_coverage": 0.0,
+          "unique_thresholds": 0
+        },
+        "valid_promotion_recall": {
+          "defined": false,
+          "value": null
+        }
+      },
+      "RUNTIME": {
+        "decision_coverage": 0.0,
+        "false_promotion_rate": {
+          "defined": false,
+          "value": null
+        },
+        "instances": 2,
+        "paired_score_ranking": {
+          "compared_pairs": 0,
+          "losses": 0,
+          "pair_coverage": 0.0,
+          "score_margin_mean": {
+            "defined": false,
+            "value": null
+          },
+          "score_margin_median": {
+            "defined": false,
+            "value": null
+          },
+          "strict_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "tie_adjusted_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "ties": 0,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": false,
+            "value": null
+          },
+          "lift_over_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "points": [],
+          "positive_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "score_coverage": 0.0,
+          "unique_thresholds": 0
+        },
+        "valid_promotion_recall": {
+          "defined": false,
+          "value": null
+        }
+      },
+      "STALE_CONTRADICTION": {
+        "decision_coverage": 0.0,
+        "false_promotion_rate": {
+          "defined": false,
+          "value": null
+        },
+        "instances": 2,
+        "paired_score_ranking": {
+          "compared_pairs": 0,
+          "losses": 0,
+          "pair_coverage": 0.0,
+          "score_margin_mean": {
+            "defined": false,
+            "value": null
+          },
+          "score_margin_median": {
+            "defined": false,
+            "value": null
+          },
+          "strict_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "tie_adjusted_accuracy": {
+            "defined": false,
+            "value": null
+          },
+          "ties": 0,
+          "wins": 0
+        },
+        "precision_recall": {
+          "auprc_stepwise": {
+            "defined": false,
+            "value": null
+          },
+          "lift_over_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "points": [],
+          "positive_prevalence": {
+            "defined": false,
+            "value": null
+          },
+          "score_coverage": 0.0,
+          "unique_thresholds": 0
+        },
+        "valid_promotion_recall": {
+          "defined": false,
+          "value": null
+        }
+      }
+    },
+    "end_to_end": {
+      "action_accuracy": 0.0,
+      "actions": 12,
+      "correct_actions": 0,
+      "correct_pairs": 0,
+      "failure_handling": "Every non-OK response counts as incorrect.",
+      "pair_accuracy": 0.0,
+      "pairs": 6
+    },
+    "format_error_count": 12,
+    "instances": 12,
+    "pairs": 6,
+    "primary": {
+      "false_hold_rate": {
+        "defined": false,
+        "value": null
+      },
+      "false_promotion_rate": {
+        "ci95_pair_bootstrap": null,
+        "defined": false,
+        "value": null,
+        "worst_case_format_error_sensitivity": {
+          "defined": true,
+          "value": 1.0
+        }
+      },
+      "literal_hold_rate_on_valid": {
+        "defined": false,
+        "value": null
+      },
+      "paired_transition_accuracy": {
+        "defined": false,
+        "value": null
+      },
+      "valid_promotion_recall": {
+        "defined": false,
+        "value": null
+      }
+    },
+    "secondary": {
+      "brier": {
+        "defined": false,
+        "value": null
+      },
+      "calibration_coverage": 0.0,
+      "complete_pair_coverage": 0.0,
+      "counterfactual_flip_accuracy": {
+        "defined": false,
+        "value": null
+      },
+      "decision_coverage": 0.0,
+      "evidence_id_macro_precision": 0.0,
+      "evidence_id_macro_recall": 0.0,
+      "missing_evidence_exact_match": 0,
+      "nll": {
+        "defined": false,
+        "value": null
+      },
+      "paired_score_ranking": {
+        "compared_pairs": 0,
+        "losses": 0,
+        "pair_coverage": 0.0,
+        "score_margin_mean": {
+          "defined": false,
+          "value": null
+        },
+        "score_margin_median": {
+          "defined": false,
+          "value": null
+        },
+        "strict_accuracy": {
+          "defined": false,
+          "value": null
+        },
+        "tie_adjusted_accuracy": {
+          "defined": false,
+          "value": null
+        },
+        "ties": 0,
+        "wins": 0
+      },
+      "precision_recall": {
+        "auprc_stepwise": {
+          "ci95_pair_bootstrap": null,
+          "defined": false,
+          "value": null
+        },
+        "lift_over_prevalence": {
+          "defined": false,
+          "value": null
+        },
+        "points": [],
+        "positive_prevalence": {
+          "defined": false,
+          "value": null
+        },
+        "score_coverage": 0.0,
+        "unique_thresholds": 0
+      },
+      "promotion_coverage": 0.0,
+      "promotion_fdr": {
+        "defined": false,
+        "value": null
+      },
+      "reason_code_instance_set_f1": 0.0,
+      "risk_coverage": {
+        "aurc_trapezoid": null,
+        "decision_coverage": 0.0,
+        "points": []
+      }
+    }
+  },
+  "continuation_gate": {
+    "accuracy_used_by_gate": false,
+    "action_distribution_used_by_gate": false,
+    "decision": "STOP",
+    "parseable_decisions": 0,
+    "required_parseable_decisions": 10,
+    "transport_errors": 12
+  },
+  "cost": {
+    "actual_cost_usd": null,
+    "records": 12,
+    "records_with_computed_cost": 0,
+    "status": "UNKNOWN"
+  },
+  "formal_lane": true,
+  "frozen_plan_commit": "119e475953e50218fc62abd2163eef04cbad4e23",
+  "lane_id": "opencode-go-muse-spark-1.2-contributor",
+  "metrics": {
+    "covered_pairs": 0,
+    "decision_coverage": 0.0,
+    "factor_metrics": [
+      {
+        "covered_pairs": 0,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.0,
+        "pairs": 1,
+        "postgate_pair_accuracy": null,
+        "postgate_pair_correct": 0,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": null,
+        "raw_pair_accuracy": null,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 0,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "pair_coverage": 0.0,
+        "pairs": 1,
+        "postgate_pair_accuracy": null,
+        "postgate_pair_correct": 0,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": null,
+        "raw_pair_accuracy": null,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 0,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.0,
+        "pairs": 1,
+        "postgate_pair_accuracy": null,
+        "postgate_pair_correct": 0,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": null,
+        "raw_pair_accuracy": null,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 0,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "pair_coverage": 0.0,
+        "pairs": 1,
+        "postgate_pair_accuracy": null,
+        "postgate_pair_correct": 0,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": null,
+        "raw_pair_accuracy": null,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 0,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "pair_coverage": 0.0,
+        "pairs": 1,
+        "postgate_pair_accuracy": null,
+        "postgate_pair_correct": 0,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": null,
+        "raw_pair_accuracy": null,
+        "raw_pair_correct": 0
+      },
+      {
+        "covered_pairs": 0,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_coverage": 0.0,
+        "pairs": 1,
+        "postgate_pair_accuracy": null,
+        "postgate_pair_correct": 0,
+        "raw_flip_pairs": 0,
+        "raw_flip_rate": null,
+        "raw_pair_accuracy": null,
+        "raw_pair_correct": 0
+      }
+    ],
+    "pair_coverage": 0.0,
+    "pair_metrics": [
+      {
+        "covered": false,
+        "factor_id": "direct_dependency",
+        "family": "DEPENDENCY",
+        "pair_id": "v1-test-dep-001"
+      },
+      {
+        "covered": false,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "pair_id": "v1-test-num-001"
+      },
+      {
+        "covered": false,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_id": "v1-test-run-001"
+      },
+      {
+        "covered": false,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "pair_id": "v1-test-stale-001"
+      },
+      {
+        "covered": false,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "pair_id": "v1-test-prov-001"
+      },
+      {
+        "covered": false,
+        "factor_id": "statement_identity",
+        "family": "FORMAL",
+        "pair_id": "v1-test-formal-001"
+      }
+    ],
+    "pairs": 6,
+    "postgate_action_accuracy": null,
+    "postgate_pair_accuracy": null,
+    "raw_action_accuracy": null,
+    "raw_flip_rate": null,
+    "raw_fpr": null,
+    "raw_pair_accuracy": null,
+    "raw_vpr": null,
+    "records": 12,
+    "status_counts": {
+      "JSON_SYNTAX_ERROR": 0,
+      "OK": 0,
+      "SCHEMA_ERROR": 0,
+      "SEMANTIC_ERROR": 0,
+      "TRANSPORT_ERROR": 12
+    }
+  },
+  "model_requested": "muse-spark-1.2-contributor",
+  "model_returned_values": [],
+  "packet_sha256": "sha256:eadd52f72ccc8f5eabf803d4cd667ce15799b688d6d97077a95f42efd2094d28",
+  "phase": "pilot",
+  "postgate_action_distribution": {},
+  "provider": "OpenCode Go",
+  "raw_action_distribution": {},
+  "raw_prompts_or_responses_in_aggregate": false,
+  "records": 12,
+  "routed_provider_values": [],
+  "run_path": "/home/runner/work/claimpromote-bench/claimpromote-bench/work/capable-hidden-study/runs/opencode-go-muse-spark-1.2-contributor-pilot.jsonl",
+  "run_sha256": "sha256:941ecdda8b2b4048e011bed88ca3d140e4604bcc66f5bddbe966b89d7cd0d520",
+  "schema_version": "1.0.0",
+  "status": "COMPLETE",
+  "study_id": "claimpromotebench-capable-hidden-extension-v1",
+  "truth_status": "COMPUTATIONAL",
+  "uncertainty": {
+    "decision_coverage": {
+      "estimate": 0.0,
+      "high": 0.24249400665524085,
+      "low": 2.7755575615628914e-17,
+      "successes": 0,
+      "trials": 12
+    },
+    "end_to_end_action_accuracy": {
+      "estimate": 0.0,
+      "high": 0.24249400665524085,
+      "low": 2.7755575615628914e-17,
+      "successes": 0,
+      "trials": 12
+    },
+    "end_to_end_pair_accuracy": {
+      "estimate": 0.0,
+      "high": 0.3903342879021653,
+      "low": 2.7755575615628914e-17,
+      "successes": 0,
+      "trials": 6
+    },
+    "method": "two-sided 95% Wilson intervals; descriptive only",
+    "pair_coverage": {
+      "estimate": 0.0,
+      "high": 0.3903342879021653,
+      "low": 2.7755575615628914e-17,
+      "successes": 0,
+      "trials": 6
+    },
+    "postgate_action_accuracy": {
+      "estimate": null,
+      "high": null,
+      "low": null,
+      "successes": 0,
+      "trials": 0
+    },
+    "postgate_pair_accuracy": {
+      "estimate": null,
+      "high": null,
+      "low": null,
+      "successes": 0,
+      "trials": 0
+    },
+    "raw_action_accuracy": {
+      "estimate": null,
+      "high": null,
+      "low": null,
+      "successes": 0,
+      "trials": 0
+    },
+    "raw_false_promotion_rate": {
+      "estimate": null,
+      "high": null,
+      "low": null,
+      "successes": 0,
+      "trials": 0
+    },
+    "raw_pair_accuracy": {
+      "estimate": null,
+      "high": null,
+      "low": null,
+      "successes": 0,
+      "trials": 0
+    },
+    "raw_valid_promotion_rate": {
+      "estimate": null,
+      "high": null,
+      "low": null,
+      "successes": 0,
+      "trials": 0
+    }
+  },
+  "usage": {
+    "records_missing_field": {
+      "cached_input_tokens": 12,
+      "input_tokens": 12,
+      "output_tokens": 12,
+      "reasoning_tokens": 12,
+      "total_tokens": 12
+    },
+    "totals": {
+      "cached_input_tokens": null,
+      "input_tokens": null,
+      "output_tokens": null,
+      "reasoning_tokens": null,
+      "total_tokens": null
+    }
+  }
+}

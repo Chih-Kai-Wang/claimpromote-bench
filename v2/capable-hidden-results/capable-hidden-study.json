@@ -1,4 +1,5 @@
 {
+  "analysis_status": "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION",
   "baselines": {
     "always_allow": {
       "accuracy": 0.5,
@@ -6,7 +7,7 @@
       "trials": 300
     }
   },
-  "collection_rule": "All registered pilots are retained. A full run is required exactly when the accuracy-blind continuation gate is GO; STOP is not converted to a 300-item score.",
+  "collection_rule": "All 14 executed pilot attempts are released. One terminal canonical pilot per lane determines whether a fresh full pass is required; STOP is not converted to a 300-item score.",
   "dataset": {
     "gold_sha256": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
     "inputs_sha256": "sha256:14eaa74f6d5ef045fbaf89ce6b805f25effa6dd9b11122048db98aaa5c6f2b92",
@@ -15,8 +16,134 @@
     "pairs": 150,
     "pairs_sha256": "sha256:34fb2a69bcb43e829ac9ad3c82f1a540a3beb850b5cd5bc52583402d9b6f342d"
   },
+  "full_pass_action_breakdown": {
+    "opencode-go-deepseek-v4-flash-matched": {
+      "balanced_action_recall": 0.40904850746268656,
+      "confusion": {
+        "ALLOW": {
+          "ALLOW": 150,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "DEMOTE": {
+          "ALLOW": 8,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "ESCALATE": {
+          "ALLOW": 2,
+          "DEMOTE": 0,
+          "ESCALATE": 3,
+          "HOLD": 0,
+          "NON_OK": 3
+        },
+        "HOLD": {
+          "ALLOW": 76,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 35,
+          "NON_OK": 23
+        }
+      },
+      "macro_action_f1": 0.43421445035633954,
+      "per_action_f1": {
+        "ALLOW": 0.7772020725388601,
+        "DEMOTE": 0.0,
+        "ESCALATE": 0.5454545454545454,
+        "HOLD": 0.41420118343195267
+      },
+      "per_action_recall": {
+        "ALLOW": {
+          "correct": 150,
+          "recall": 1.0,
+          "trials": 150
+        },
+        "DEMOTE": {
+          "correct": 0,
+          "recall": 0.0,
+          "trials": 8
+        },
+        "ESCALATE": {
+          "correct": 3,
+          "recall": 0.375,
+          "trials": 8
+        },
+        "HOLD": {
+          "correct": 35,
+          "recall": 0.26119402985074625,
+          "trials": 134
+        }
+      }
+    },
+    "opencode-go-qwen3.7-max": {
+      "balanced_action_recall": 0.7313432835820896,
+      "confusion": {
+        "ALLOW": {
+          "ALLOW": 150,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "DEMOTE": {
+          "ALLOW": 7,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 1,
+          "NON_OK": 0
+        },
+        "ESCALATE": {
+          "ALLOW": 0,
+          "DEMOTE": 0,
+          "ESCALATE": 8,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "HOLD": {
+          "ALLOW": 3,
+          "DEMOTE": 0,
+          "ESCALATE": 4,
+          "HOLD": 124,
+          "NON_OK": 3
+        }
+      },
+      "macro_action_f1": 0.6813177232532072,
+      "per_action_f1": {
+        "ALLOW": 0.967741935483871,
+        "DEMOTE": 0.0,
+        "ESCALATE": 0.8,
+        "HOLD": 0.9575289575289575
+      },
+      "per_action_recall": {
+        "ALLOW": {
+          "correct": 150,
+          "recall": 1.0,
+          "trials": 150
+        },
+        "DEMOTE": {
+          "correct": 0,
+          "recall": 0.0,
+          "trials": 8
+        },
+        "ESCALATE": {
+          "correct": 8,
+          "recall": 1.0,
+          "trials": 8
+        },
+        "HOLD": {
+          "correct": 124,
+          "recall": 0.9253731343283582,
+          "trials": 134
+        }
+      }
+    }
+  },
   "gate_role": "The deterministic gate uses the same policy oracle as the labels and is reported only as an implementation conformance check.",
-  "interpretation_boundary": "A separately precommitted revision study on the existing hidden split. It does not replace or retroactively alter the original preregistered v1 study.",
+  "interpretation_boundary": "An exploratory post-review extension with adaptive interface qualification on a fixed 12-instance pilot. Error classes informed registered adapter amendments; actions, gold labels, and accuracy did not. It does not replace or retroactively alter the original preregistered v1 study.",
   "models_with_complete_hidden_pass": [
     {
       "brier": {
@@ -310,6 +437,184 @@
     }
   ],
   "packet_sha256": "sha256:eadd52f72ccc8f5eabf803d4cd667ce15799b688d6d97077a95f42efd2094d28",
+  "pilot_excluded_sensitivity": {
+    "opencode-go-deepseek-v4-flash-matched": {
+      "always_allow": {
+        "accuracy": 0.5,
+        "correct": 144,
+        "trials": 288
+      },
+      "balanced_action_recall": 0.41015625,
+      "confusion": {
+        "ALLOW": {
+          "ALLOW": 144,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "DEMOTE": {
+          "ALLOW": 8,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "ESCALATE": {
+          "ALLOW": 2,
+          "DEMOTE": 0,
+          "ESCALATE": 3,
+          "HOLD": 0,
+          "NON_OK": 3
+        },
+        "HOLD": {
+          "ALLOW": 72,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 34,
+          "NON_OK": 22
+        }
+      },
+      "correct_actions": 181,
+      "correct_pairs": 37,
+      "covered_decisions": 263,
+      "covered_invalid_trials": 119,
+      "covered_pairs": 119,
+      "decision_coverage": 0.9131944444444444,
+      "end_to_end_action_accuracy": 0.6284722222222222,
+      "end_to_end_pair_accuracy": 0.2569444444444444,
+      "exact_test_vs_always_allow": {
+        "a_only_correct": 0,
+        "b_only_correct": 37,
+        "discordant": 37,
+        "p": 1.4551915228366852e-11
+      },
+      "false_promotions": 82,
+      "interpretation": "The 12 adapter-development pilot instances and their six complete pairs are excluded. This protects the reported sensitivity set from direct pilot-input reuse but does not make the adaptively qualified lane family confirmatory.",
+      "macro_action_f1": 0.43589650256316925,
+      "pair_coverage": 0.8263888888888888,
+      "pairs": 144,
+      "per_action_f1": {
+        "ALLOW": 0.7783783783783784,
+        "DEMOTE": 0.0,
+        "ESCALATE": 0.5454545454545454,
+        "HOLD": 0.41975308641975306
+      },
+      "per_action_recall": {
+        "ALLOW": {
+          "correct": 144,
+          "recall": 1.0,
+          "trials": 144
+        },
+        "DEMOTE": {
+          "correct": 0,
+          "recall": 0.0,
+          "trials": 8
+        },
+        "ESCALATE": {
+          "correct": 3,
+          "recall": 0.375,
+          "trials": 8
+        },
+        "HOLD": {
+          "correct": 34,
+          "recall": 0.265625,
+          "trials": 128
+        }
+      },
+      "raw_false_promotion_rate": 0.6890756302521008,
+      "records": 288,
+      "status": "POST_HOC_PILOT_EXCLUDED_SENSITIVITY"
+    },
+    "opencode-go-qwen3.7-max": {
+      "always_allow": {
+        "accuracy": 0.5,
+        "correct": 144,
+        "trials": 288
+      },
+      "balanced_action_recall": 0.73046875,
+      "confusion": {
+        "ALLOW": {
+          "ALLOW": 144,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "DEMOTE": {
+          "ALLOW": 7,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 1,
+          "NON_OK": 0
+        },
+        "ESCALATE": {
+          "ALLOW": 0,
+          "DEMOTE": 0,
+          "ESCALATE": 8,
+          "HOLD": 0,
+          "NON_OK": 0
+        },
+        "HOLD": {
+          "ALLOW": 3,
+          "DEMOTE": 0,
+          "ESCALATE": 4,
+          "HOLD": 118,
+          "NON_OK": 3
+        }
+      },
+      "correct_actions": 270,
+      "correct_pairs": 126,
+      "covered_decisions": 285,
+      "covered_invalid_trials": 141,
+      "covered_pairs": 141,
+      "decision_coverage": 0.9895833333333334,
+      "end_to_end_action_accuracy": 0.9375,
+      "end_to_end_pair_accuracy": 0.875,
+      "exact_test_vs_always_allow": {
+        "a_only_correct": 0,
+        "b_only_correct": 126,
+        "discordant": 126,
+        "p": 2.350988701644575e-38
+      },
+      "false_promotions": 10,
+      "interpretation": "The 12 adapter-development pilot instances and their six complete pairs are excluded. This protects the reported sensitivity set from direct pilot-input reuse but does not make the adaptively qualified lane family confirmatory.",
+      "macro_action_f1": 0.6804771350161671,
+      "pair_coverage": 0.9791666666666666,
+      "pairs": 144,
+      "per_action_f1": {
+        "ALLOW": 0.9664429530201343,
+        "DEMOTE": 0.0,
+        "ESCALATE": 0.8,
+        "HOLD": 0.9554655870445344
+      },
+      "per_action_recall": {
+        "ALLOW": {
+          "correct": 144,
+          "recall": 1.0,
+          "trials": 144
+        },
+        "DEMOTE": {
+          "correct": 0,
+          "recall": 0.0,
+          "trials": 8
+        },
+        "ESCALATE": {
+          "correct": 8,
+          "recall": 1.0,
+          "trials": 8
+        },
+        "HOLD": {
+          "correct": 118,
+          "recall": 0.921875,
+          "trials": 128
+        }
+      },
+      "raw_false_promotion_rate": 0.07092198581560284,
+      "records": 288,
+      "status": "POST_HOC_PILOT_EXCLUDED_SENSITIVITY"
+    }
+  },
   "prespecified_tests": {
     "deepseek_flash_service_replication": {
       "missing_full_lanes": [
@@ -331,12 +636,14 @@
         "opencode-go-deepseek-v4-flash-matched"
       ],
       "holm_scope": "completed lanes only; not the originally planned six-test family",
+      "inference_status": "EXPLORATORY_SELECTION_AFFECTED_NO_CONFIRMATORY_FAMILYWISE_CLAIM",
       "missing_due_to_qualification": [
         "opencode-go-glm-5.2",
         "opencode-go-deepseek-v4-pro",
         "opencode-go-hy3",
         "opencode-go-muse-spark-1.2-contributor"
       ],
+      "registered_family_adjustment": "p_bonferroni_registered_six multiplies each observed exact p-value by all six registered unique-model hypotheses. The four unexecuted tests remain missing rather than imputed.",
       "registered_lanes": [
         "opencode-go-qwen3.7-max",
         "opencode-go-glm-5.2",
@@ -353,6 +660,7 @@
           "discordant": 132,
           "lane_id": "opencode-go-qwen3.7-max",
           "p": 3.6734198463196485e-40,
+          "p_bonferroni_registered_six": 2.204051907791789e-39,
           "p_holm_within_completed_family": 7.346839692639297e-40
         },
         {
@@ -361,6 +669,7 @@
           "discordant": 38,
           "lane_id": "opencode-go-deepseek-v4-flash-matched",
           "p": 7.275957614183426e-12,
+          "p_bonferroni_registered_six": 4.3655745685100555e-11,
           "p_holm_within_completed_family": 7.275957614183426e-12
         }
       ]
@@ -404,6 +713,7 @@
     }
   },
   "qualification": {
+    "attempt_history_released": true,
     "attempted_lanes": [
       "bai-deepseek-v4-flash-primary",
       "opencode-go-deepseek-v4-flash-matched",
@@ -413,6 +723,7 @@
       "opencode-go-muse-spark-1.2-contributor",
       "opencode-go-qwen3.7-max"
     ],
+    "executed_pilot_attempts": 14,
     "go_lanes": [
       "opencode-go-deepseek-v4-flash-matched",
       "opencode-go-qwen3.7-max"

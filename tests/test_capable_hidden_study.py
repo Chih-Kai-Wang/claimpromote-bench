@@ -21,7 +21,7 @@ def _load_script(name: str) -> ModuleType:
     return module
 
 
-def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
+def test_capable_hidden_plan_preserves_freeze_and_discloses_adaptation() -> None:
     validator = _load_script("validate_stronger_model_study")
     plan = load_json(PLAN)
     lanes, formal_ids = validator.validate_plan(plan)
@@ -56,6 +56,12 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
     assert plan["budget"]["use_zen_balance_after_go_limit"] is False
     assert plan["account_execution_settings"]["opencode_go_allow_training_eligible_models"]
     assert plan["account_execution_settings"]["opencode_go_enable_china_deployed_models"]
+    audit = plan["post_collection_review_audit"]
+    assert audit["analysis_status"] == "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION"
+    assert audit["executed_pilot_attempts"] == 14
+    assert audit["executed_full_passes"] == 2
+    assert sum(audit["attempt_counts_by_lane"].values()) == 14
+    assert len(audit["executed_plan_commits"]) == 3
 
     assert lanes["bai-deepseek-v4-flash-primary"]["spend_cap_usd"] == 0.0
     assert lanes["bai-deepseek-v4-flash-primary"]["response_format"] == "json_object"

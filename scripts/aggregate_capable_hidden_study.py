@@ -29,6 +29,7 @@ PRIMARY_LANES = (
 DEEPSEEK_PRO = "opencode-go-deepseek-v4-pro"
 DEEPSEEK_FLASH_MATCHED = "opencode-go-deepseek-v4-flash-matched"
 DEEPSEEK_FLASH_FREE = "bai-deepseek-v4-flash-primary"
+ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
 
 
 def fail(message: str) -> NoReturn:
@@ -45,6 +46,123 @@ def correctness_vector(rows: list[Json], gold_by_id: dict[str, Json]) -> list[bo
         )
         for item_id in sorted(gold_by_id)
     ]
+
+
+def action_breakdown(rows: list[Json], gold_by_id: dict[str, Json], item_ids: list[str]) -> Json:
+    """Return end-to-end confusion and per-action recall, counting non-OK as a miss."""
+
+    by_id = {str(row["item_id"]): row for row in rows}
+    columns = (*ACTIONS, "NON_OK")
+    confusion = {action: {predicted: 0 for predicted in columns} for action in ACTIONS}
+    for item_id in item_ids:
+        expected = str(gold_by_id[item_id]["decision"]["action"])
+        row = by_id[item_id]
+        predicted = str(row["raw_decision"]["action"]) if row["parse_status"] == "OK" else "NON_OK"
+        confusion[expected][predicted] += 1
+
+    per_action_recall: Json = {}
+    per_action_f1: dict[str, float] = {}
+    for action in ACTIONS:
+        true_positive = confusion[action][action]
+        trials = sum(confusion[action].values())
+        false_positive = sum(confusion[other][action] for other in ACTIONS if other != action)
+        false_negative = trials - true_positive
+        denominator = 2 * true_positive + false_positive + false_negative
+        per_action_recall[action] = {
+            "correct": true_positive,
+            "trials": trials,
+            "recall": true_positive / trials if trials else None,
+        }
+        per_action_f1[action] = 2 * true_positive / denominator if denominator else 0.0
+    return {
+        "confusion": confusion,
+        "per_action_recall": per_action_recall,
+        "balanced_action_recall": sum(
+            float(per_action_recall[action]["recall"]) for action in ACTIONS
+        )
+        / len(ACTIONS),
+        "macro_action_f1": sum(per_action_f1.values()) / len(ACTIONS),
+        "per_action_f1": per_action_f1,
+    }
+
+
+def pilot_excluded_summary(
+    rows: list[Json], gold_by_id: dict[str, Json], pairs: list[Json], pilot_ids: set[str]
+) -> Json:
+    """Summarize the fresh full pass after removing adapter-development pilot items."""
+
+    by_id = {str(row["item_id"]): row for row in rows}
+    item_ids = sorted(set(gold_by_id) - pilot_ids)
+    retained_pairs = [
+        pair for pair in pairs if not ({str(value) for value in pair["member_ids"]} & pilot_ids)
+    ]
+    ok_ids = [item_id for item_id in item_ids if by_id[item_id]["parse_status"] == "OK"]
+    correct_ids = [
+        item_id
+        for item_id in item_ids
+        if by_id[item_id]["parse_status"] == "OK"
+        and by_id[item_id]["raw_decision"]["action"] == gold_by_id[item_id]["decision"]["action"]
+    ]
+    covered_pairs = [
+        pair
+        for pair in retained_pairs
+        if all(by_id[str(item_id)]["parse_status"] == "OK" for item_id in pair["member_ids"])
+    ]
+    correct_pairs = [
+        pair
+        for pair in retained_pairs
+        if all(
+            by_id[str(item_id)]["parse_status"] == "OK"
+            and by_id[str(item_id)]["raw_decision"]["action"]
+            == gold_by_id[str(item_id)]["decision"]["action"]
+            for item_id in pair["member_ids"]
+        )
+    ]
+    covered_invalid_ids = [
+        str(pair["invalid_id"])
+        for pair in retained_pairs
+        if by_id[str(pair["invalid_id"])]["parse_status"] == "OK"
+    ]
+    false_promotions = sum(
+        by_id[item_id]["raw_decision"]["action"] == "ALLOW" for item_id in covered_invalid_ids
+    )
+    always_allow = [gold_by_id[item_id]["decision"]["action"] == "ALLOW" for item_id in item_ids]
+    model_correct = [
+        by_id[item_id]["parse_status"] == "OK"
+        and by_id[item_id]["raw_decision"]["action"] == gold_by_id[item_id]["decision"]["action"]
+        for item_id in item_ids
+    ]
+    result = {
+        "status": "POST_HOC_PILOT_EXCLUDED_SENSITIVITY",
+        "interpretation": (
+            "The 12 adapter-development pilot instances and their six complete pairs are "
+            "excluded. This protects the reported sensitivity set from direct pilot-input reuse "
+            "but does not make the adaptively qualified lane family confirmatory."
+        ),
+        "records": len(item_ids),
+        "pairs": len(retained_pairs),
+        "decision_coverage": len(ok_ids) / len(item_ids),
+        "covered_decisions": len(ok_ids),
+        "end_to_end_action_accuracy": len(correct_ids) / len(item_ids),
+        "correct_actions": len(correct_ids),
+        "pair_coverage": len(covered_pairs) / len(retained_pairs),
+        "covered_pairs": len(covered_pairs),
+        "end_to_end_pair_accuracy": len(correct_pairs) / len(retained_pairs),
+        "correct_pairs": len(correct_pairs),
+        "raw_false_promotion_rate": (
+            false_promotions / len(covered_invalid_ids) if covered_invalid_ids else None
+        ),
+        "false_promotions": false_promotions,
+        "covered_invalid_trials": len(covered_invalid_ids),
+        "always_allow": {
+            "correct": sum(always_allow),
+            "trials": len(always_allow),
+            "accuracy": sum(always_allow) / len(always_allow),
+        },
+        "exact_test_vs_always_allow": mcnemar_exact(always_allow, model_correct),
+    }
+    result.update(action_breakdown(rows, gold_by_id, item_ids))
+    return result
 
 
 def action_agreement(rows_a: list[Json], rows_b: list[Json]) -> Json:
@@ -200,6 +318,9 @@ def main() -> int:
     packet = load_json(args.packet.resolve())
     gold = load_jsonl(args.dataset.resolve() / "gold.jsonl")
     gold_by_id = {str(row["id"]): row for row in gold}
+    pairs = load_json(args.dataset.resolve() / "pairs.json")
+    if not isinstance(pairs, list):
+        fail("hidden pair file is not a list")
     if len(gold_by_id) != int(plan["dataset"]["instances"]):
         fail("hidden gold coverage differs from the frozen plan")
 
@@ -232,6 +353,7 @@ def main() -> int:
     )
 
     packet_sha = str(packet["packet_sha256"])
+    pilot_ids = {str(value) for value in packet["pilot_item_ids"]}
     for value in [*pilot_analyses.values(), *full_analyses.values()]:
         if str(value["packet_sha256"]) != packet_sha:
             fail(f"analysis packet digest differs for {value['lane_id']}")
@@ -247,6 +369,7 @@ def main() -> int:
     adjusted = holm_adjust([float(row["p"]) for row in primary_tests]) if primary_tests else []
     for row, p_holm in zip(primary_tests, adjusted, strict=True):
         row["p_holm_within_completed_family"] = p_holm
+        row["p_bonferroni_registered_six"] = min(1.0, float(row["p"]) * len(PRIMARY_LANES))
 
     completed = set(full_runs)
     tier_required = {DEEPSEEK_PRO, DEEPSEEK_FLASH_MATCHED}
@@ -286,10 +409,17 @@ def main() -> int:
         if completed != formal_lanes
         else "COMPLETE",
         "truth_status": "COMPUTATIONAL",
-        "interpretation_boundary": plan["amendment"]["interpretation"],
+        "interpretation_boundary": (
+            "An exploratory post-review extension with adaptive interface qualification on a "
+            "fixed 12-instance pilot. Error classes informed registered adapter amendments; "
+            "actions, gold labels, and accuracy did not. It does not replace or retroactively "
+            "alter the original preregistered v1 study."
+        ),
+        "analysis_status": "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION",
         "collection_rule": (
-            "All registered pilots are retained. A full run is required exactly when the "
-            "accuracy-blind continuation gate is GO; STOP is not converted to a 300-item score."
+            "All 14 executed pilot attempts are released. One terminal canonical pilot per lane "
+            "determines whether a fresh full pass is required; STOP is not converted to a "
+            "300-item score."
         ),
         "dataset": {
             "manifest_sha256": sha256_file(args.dataset.resolve() / "manifest.json"),
@@ -301,6 +431,8 @@ def main() -> int:
         },
         "packet_sha256": packet_sha,
         "qualification": {
+            "executed_pilot_attempts": 14,
+            "attempt_history_released": True,
             "attempted_lanes": sorted(formal_lanes),
             "go_lanes": sorted(gate_go),
             "stop_lanes": sorted(formal_lanes - gate_go),
@@ -309,6 +441,14 @@ def main() -> int:
         "models_with_complete_hidden_pass": [
             compact_analysis(full_analyses[lane_id]) for lane_id in sorted(full_analyses)
         ],
+        "full_pass_action_breakdown": {
+            lane_id: action_breakdown(full_runs[lane_id], gold_by_id, sorted(gold_by_id))
+            for lane_id in sorted(full_runs)
+        },
+        "pilot_excluded_sensitivity": {
+            lane_id: pilot_excluded_summary(full_runs[lane_id], gold_by_id, pairs, pilot_ids)
+            for lane_id in sorted(full_runs)
+        },
         "baselines": {
             "always_allow": {
                 "correct": sum(always_allow),
@@ -327,6 +467,14 @@ def main() -> int:
                     lane_id for lane_id in PRIMARY_LANES if lane_id not in full_runs
                 ],
                 "holm_scope": "completed lanes only; not the originally planned six-test family",
+                "inference_status": (
+                    "EXPLORATORY_SELECTION_AFFECTED_NO_CONFIRMATORY_FAMILYWISE_CLAIM"
+                ),
+                "registered_family_adjustment": (
+                    "p_bonferroni_registered_six multiplies each observed exact p-value by all "
+                    "six registered unique-model hypotheses. The four unexecuted tests remain "
+                    "missing rather than imputed."
+                ),
                 "tests": primary_tests,
             },
             "deepseek_same_gateway_descriptive_contrast": deepseek_tier,

@@ -19,7 +19,20 @@
       "github_run_id": 32405565039
     }
   ],
-  "canonical_rule": "One canonical pilot per registered lane; a canonical full pass exists exactly for a GO pilot. STOP is not scored as 300 incorrect items.",
+  "all_executed_attempt_records_included": true,
+  "analysis_status": "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION",
+  "attempt_counts_by_lane": {
+    "bai-deepseek-v4-flash-primary": 3,
+    "opencode-go-deepseek-v4-flash-matched": 1,
+    "opencode-go-deepseek-v4-pro": 2,
+    "opencode-go-glm-5.2": 2,
+    "opencode-go-hy3": 2,
+    "opencode-go-muse-spark-1.2-contributor": 2,
+    "opencode-go-qwen3.7-max": 2
+  },
+  "canonical_rule": "Canonical identifies the terminal pilot used by the continuation rule, not the number of executions. All 14 executed pilots are released; a canonical full pass exists exactly for a terminal GO pilot. STOP is not scored as 300 incorrect items.",
+  "executed_full_passes": 2,
+  "executed_pilot_attempts": 14,
   "hidden_commitment_source": "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
   "private_seed_included": false,
   "raw_prompts_responses_and_gold_included": true,

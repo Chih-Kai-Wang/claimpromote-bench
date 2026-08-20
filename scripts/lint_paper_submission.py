@@ -16,7 +16,7 @@ RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
 V2_PILOT_SHA = "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
 CAPABLE_HIDDEN = ROOT / "v2" / "capable-hidden-results" / "capable-hidden-study.json"
-CAPABLE_HIDDEN_SHA = "sha256:20904dd181b27ddcbe0997692f101f50c1815abdb91482f4c4f09836f3508dcb"
+CAPABLE_HIDDEN_SHA = "sha256:abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91"
 STRONGER_FOLLOWUP = (
     ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
 )
@@ -177,6 +177,8 @@ def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
         fail("capable hidden aggregate SHA changed")
     if study.get("status") != "COMPLETE_WITH_QUALIFICATION_FAILURES":
         fail("capable hidden study status changed")
+    if study.get("analysis_status") != "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION":
+        fail("capable hidden study is not labeled exploratory/adaptive")
     dataset = study.get("dataset")
     qualification = study.get("qualification")
     complete = study.get("models_with_complete_hidden_pass")
@@ -194,6 +196,11 @@ def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
     ]
     if qualification.get("go_lanes") != expected_go:
         fail("capable hidden GO lanes changed")
+    if (
+        qualification.get("executed_pilot_attempts") != 14
+        or qualification.get("attempt_history_released") is not True
+    ):
+        fail("capable hidden attempt-history disclosure changed")
     if len(qualification.get("pilots", [])) != 7 or len(qualification.get("stop_lanes", [])) != 5:
         fail("capable hidden pilot qualification matrix changed")
     by_lane = {str(row.get("lane_id")): row for row in complete if isinstance(row, dict)}
@@ -244,18 +251,84 @@ def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
         "trials": 300,
     }:
         fail("capable hidden always-ALLOW baseline changed")
+    sensitivity = study.get("pilot_excluded_sensitivity")
+    if not isinstance(sensitivity, dict) or set(sensitivity) != set(expected):
+        fail("capable hidden pilot-excluded sensitivity is malformed")
+    expected_sensitivity = {
+        "opencode-go-qwen3.7-max": {
+            "records": 288,
+            "pairs": 144,
+            "covered_decisions": 285,
+            "covered_pairs": 141,
+            "correct_actions": 270,
+            "correct_pairs": 126,
+            "raw_false_promotion_rate": 0.07092198581560284,
+            "balanced_action_recall": 0.73046875,
+            "per_action": {
+                "ALLOW": (144, 144),
+                "HOLD": (118, 128),
+                "DEMOTE": (0, 8),
+                "ESCALATE": (8, 8),
+            },
+        },
+        "opencode-go-deepseek-v4-flash-matched": {
+            "records": 288,
+            "pairs": 144,
+            "covered_decisions": 263,
+            "covered_pairs": 119,
+            "correct_actions": 181,
+            "correct_pairs": 37,
+            "raw_false_promotion_rate": 0.6890756302521008,
+            "balanced_action_recall": 0.41015625,
+            "per_action": {
+                "ALLOW": (144, 144),
+                "HOLD": (34, 128),
+                "DEMOTE": (0, 8),
+                "ESCALATE": (3, 8),
+            },
+        },
+    }
+    for lane_id, expected_row in expected_sensitivity.items():
+        row = sensitivity[lane_id]
+        for key in (
+            "records",
+            "pairs",
+            "covered_decisions",
+            "covered_pairs",
+            "correct_actions",
+            "correct_pairs",
+            "raw_false_promotion_rate",
+            "balanced_action_recall",
+        ):
+            if row.get(key) != expected_row[key]:
+                fail(f"capable hidden pilot-excluded metric changed: {lane_id}.{key}")
+        recalls = row.get("per_action_recall")
+        if not isinstance(recalls, dict):
+            fail(f"capable hidden per-action recall missing: {lane_id}")
+        for action, (correct, trials) in expected_row["per_action"].items():
+            if (
+                recalls.get(action, {}).get("correct") != correct
+                or recalls.get(action, {}).get("trials") != trials
+            ):
+                fail(f"capable hidden per-action recall changed: {lane_id}.{action}")
     tests = study.get("prespecified_tests", {}).get("models_vs_always_allow", {}).get("tests")
     if not isinstance(tests, list) or len(tests) != 2:
         fail("capable hidden baseline tests changed")
     required_patterns = [
-        (r"two of seven service lanes", "two of seven qualified lanes"),
-        (r"five other lanes failed formatting qualification", "five qualification failures"),
+        (r"all 14 pilot attempts", "all adaptive pilot attempts disclosed"),
+        (r"confirmatory force is unavailable", "exploratory interpretation boundary"),
+        (r"two of seven service lanes", "two of seven terminally qualified lanes"),
+        (r"five other lanes lack full scores", "five unscored lanes"),
+        (r"270/288", "Qwen pilot-excluded correct actions"),
+        (r"126/144", "Qwen pilot-excluded correct pairs"),
+        (r"181/288", "Flash pilot-excluded correct actions"),
+        (r"37/144", "Flash pilot-excluded correct pairs"),
         (r"282/300", "Qwen correct actions"),
         (r"132/150", "Qwen correct pairs"),
         (r"188/300", "Flash correct actions"),
         (r"38/150", "Flash correct pairs"),
-        (r"7\.35\\times10\^\{-40\}", "Qwen Holm-adjusted p-value"),
-        (r"7\.28\\times10\^\{-12\}", "Flash Holm-adjusted p-value"),
+        (r"both lanes score 0/8 on \\demote", "shared DEMOTE failure"),
+        (r"no confirmatory familywise claim", "selection-aware test boundary"),
     ]
     for pattern, description in required_patterns:
         require_regex(tex, pattern, description)
@@ -266,9 +339,11 @@ def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
         fail("capable hidden result table not found")
     table = capable_table.group(1)
     rows = (
-        r"Qwen3\.7-Max\s*&\s*\.990\s*&\s*\.980\s*&\s*\.940\s*&\s*\.880\s*&\s*\.068",
-        r"DeepSeek-V4-Flash\s*&\s*\.913\s*&\s*\.827\s*&\s*\.627\s*&\s*\.253\s*&\s*\.694",
-        r"Always \\allow\{\}\s*&\s*1\.00\s*&\s*1\.00\s*&\s*\.500\s*&\s*\.000\s*&\s*1\.00",
+        r"Qwen3\.7-Max\s*&\s*\.990\s*&\s*\.979\s*&\s*\.938\s*&\s*\.875",
+        r"DeepSeek-V4-Flash\s*&\s*\.913\s*&\s*\.826\s*&\s*\.628\s*&\s*\.257",
+        r"Always \\allow\{\}\s*&\s*1\.00\s*&\s*1\.00\s*&\s*\.500\s*&\s*\.000",
+        r"Qwen3\.7-Max\s*&\s*144/144\s*&\s*118/128\s*&\s*0/8\s*&\s*8/8",
+        r"DeepSeek-V4-Flash\s*&\s*144/144\s*&\s*34/128\s*&\s*0/8\s*&\s*3/8",
     )
     for pattern in rows:
         if not re.search(pattern, table):
