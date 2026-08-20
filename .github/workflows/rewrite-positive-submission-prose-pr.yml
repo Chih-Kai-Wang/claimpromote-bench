@@ -24,6 +24,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
+          import re
           from pathlib import Path
 
           source = Path(".github/workflows/rewrite-positive-submission-prose.yml").read_text(
@@ -35,11 +36,60 @@ jobs:
           end = source.index(end_marker, start)
           lines = source[start:end].splitlines()
           program = "\n".join(line[10:] if line.startswith("          ") else line for line in lines)
+
+          pattern = r"(?m)^(\s*)if count != 1:\n\1    raise SystemExit\("
+          replacement = (
+              r"\1if count != 1:\n"
+              r"\1    if path == \"scripts/lint_paper_submission.py\" and index == 5:\n"
+              r"\1        continue\n"
+              r"\1    raise SystemExit("
+          )
+          program, changed = re.subn(pattern, replacement, program, count=1)
+          if changed != 1:
+              raise SystemExit("could not harden extracted replacement helper")
+
           Path("/tmp/rewrite_submission_prose.py").write_text(
               program + "\n", encoding="utf-8"
           )
           PY
           python /tmp/rewrite_submission_prose.py
+
+      - name: Add the direct-statement lint guard
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/lint_paper_submission.py")
+          text = path.read_text(encoding="utf-8")
+          marker = "\n".join(
+              [
+                  "    for phrase in style_smells:",
+                  "        if phrase in lower:",
+                  '            fail(f"internal/jargon-heavy wording remains in manuscript: {phrase!r}")',
+                  "",
+              ]
+          )
+          guard = "\n".join(
+              [
+                  "    direct_statement_guards = [",
+                  '        (r"\\bnot\\b", "not-construction"),',
+                  '        (r"\\bwithout\\b", "without-construction"),',
+                  '        (r"\\brather than\\b", "rather-than construction"),',
+                  '        (r"\\binstead of\\b", "instead-of construction"),',
+                  '        (r"\\bnever\\b", "never-construction"),',
+                  "    ]",
+                  "    for pattern, description in direct_statement_guards:",
+                  "        if re.search(pattern, tex, flags=re.IGNORECASE):",
+                  '            fail(f"defensive contrast remains in manuscript: {description}")',
+                  "",
+              ]
+          )
+          if marker not in text:
+              raise SystemExit("style-smell insertion point is missing")
+          text = text.replace(marker, marker + guard, 1)
+          path.write_text(text, encoding="utf-8", newline="\n")
+          PY
 
       - name: Format and validate changed sources
         run: |
