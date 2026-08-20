@@ -16,8 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
 TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
 ICLR_TITLE = (
-    r"\cpb: Evaluating Whether Evidence\protect\\"
-    r"Justifies Claim-State Transitions in AI Research Agents"
+    r"\mbox{\textsc{ClaimPromoteBench}: Evaluating Whether}\protect\\"
+    r"\mbox{Evidence Justifies Claim-State Transitions}\protect\\"
+    r"\mbox{in AI Research Agents}"
 )
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
