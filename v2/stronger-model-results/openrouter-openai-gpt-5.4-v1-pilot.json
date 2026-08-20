@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-stronger-model-public-dev-openrouter-v1",
+  "truth_status": "COMPUTATIONAL",
+  "interpretation_boundary": "Transport-availability diagnostic only; no model response was returned, so this result is not evidence about GPT-5.4 decision quality.",
+  "plan": {
+    "path": "v2/stronger-model-openrouter-amendment.json",
+    "sha256": "sha256:57ba2c63ca53890b3c90844961149dc70dcd30cb2c00ddb6d7f87c266b225ef4",
+    "frozen_commit": "22126629f3584ec2fbbb8e7b77c34faea67d833c"
+  },
+  "run": {
+    "phase": "pilot",
+    "started_at_utc": "2026-08-20T14:45:35.099178Z",
+    "completed_at_utc": "2026-08-20T14:45:36.541623Z",
+    "records": 12,
+    "run_sha256": "sha256:a7154c939a040150dde4d23408ed70a131033ae05c674ec0a830974cba26abc5",
+    "analysis_sha256": "sha256:c675ba3114bfa03fa6492846e895de34f7f7249d54231db71d2b95275899d1cd"
+  },
+  "continuation_gate": {
+    "decision": "STOP",
+    "parseable_decisions": 0,
+    "required_parseable_decisions": 10,
+    "transport_errors": 12,
+    "full_phase_executed": false
+  },
+  "transport_outcome": {
+    "distinct_error_class_count": 1,
+    "sanitized_error": "HTTP 404: No endpoints found for openai/gpt-5.4.",
+    "routed_provider_values": [],
+    "model_returned_values": []
+  },
+  "cost": {
+    "host_usage_cost_status": "UNKNOWN_NO_HOST_USAGE_RETURNED",
+    "openrouter_key_usage_readback_usd": 0.0,
+    "openrouter_credit_balance_before_usd": 9.97,
+    "openrouter_credit_balance_after_usd": 9.97,
+    "temporary_key_deleted_and_absence_verified": true
+  },
+  "raw_prompts_or_responses_in_summary": false
+}

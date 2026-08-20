@@ -174,6 +174,22 @@ def _reject_hidden_reasoning_fields(value: Any, path: str = "$") -> None:
             _reject_hidden_reasoning_fields(child, f"{path}[{index}]")
 
 
+def validate_required_routed_provider(row: Json, lane: Json, item_id: str) -> None:
+    """Check the routed provider only after a provider returned a response.
+
+    Transport failures can occur before OpenRouter selects an upstream endpoint, so a
+    missing routed-provider field is expected on those rows. The transport error and
+    STOP gate remain part of the validated run.
+    """
+    required_routed_provider = lane.get("required_routed_provider")
+    if (
+        row.get("transport_status") == "OK"
+        and isinstance(required_routed_provider, str)
+        and row.get("routed_provider") != required_routed_provider
+    ):
+        fail(f"routed provider mismatch for {item_id}")
+
+
 def validate_run(
     path: Path,
     plan: Json,
@@ -221,12 +237,7 @@ def validate_run(
             fail(f"dataset digest mismatch for {item_id}")
         if row.get("model_requested") != lane["model"]:
             fail(f"model mismatch for {item_id}")
-        required_routed_provider = lane.get("required_routed_provider")
-        if (
-            isinstance(required_routed_provider, str)
-            and row.get("routed_provider") != required_routed_provider
-        ):
-            fail(f"routed provider mismatch for {item_id}")
+        validate_required_routed_provider(row, lane, item_id)
         if item_id not in packet_by_id:
             fail(f"run item is absent from packet: {item_id}")
         if row.get("prompt_sha256") != packet_by_id[item_id]["prompt_sha256"]:

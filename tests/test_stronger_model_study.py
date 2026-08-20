@@ -8,6 +8,8 @@ import math
 from pathlib import Path
 from types import ModuleType
 
+import pytest
+
 from claimpromotebench.dataset import load_json, load_jsonl, write_jsonl
 from claimpromotebench.hashing import canonical_json, sha256_bytes
 
@@ -15,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "work" / "stronger-model-study" / "dev"
 PLAN = ROOT / "v2" / "stronger-model-study-plan.json"
 OPENROUTER_AMENDMENT = ROOT / "v2" / "stronger-model-openrouter-amendment.json"
+OPENROUTER_AMENDMENT_V2 = ROOT / "v2" / "stronger-model-openrouter-amendment-v2.json"
 
 
 def _load_script(name: str) -> ModuleType:
@@ -95,6 +98,18 @@ def test_provider_request_bodies_freeze_interface_specific_controls() -> None:
         "order": ["openai"],
         "allow_fallbacks": False,
         "require_parameters": True,
+    }
+
+    amendment_v2 = load_json(OPENROUTER_AMENDMENT_V2)
+    revised_lane = amendment_v2["formal_lanes"][0]
+    revised = runner.openai_request_body(revised_lane, "prompt", schema)
+    assert revised["max_tokens"] == 3072
+    assert "max_completion_tokens" not in revised
+    assert revised["provider"] == {
+        "order": ["openai"],
+        "allow_fallbacks": False,
+        "require_parameters": True,
+        "max_price": {"prompt": 2.5, "completion": 15.0},
     }
 
 
@@ -321,3 +336,49 @@ def test_openrouter_amendment_is_separate_and_pins_one_upstream() -> None:
     assert lane["required_routed_provider"] == "OpenAI"
     assert amendment["exploratory_lanes"] == []
     assert float(lane["spend_cap_usd"]) == 8.0
+
+
+def test_openrouter_v2_amendment_preserves_failed_v1_and_fixes_only_interface() -> None:
+    validator = _load_script("validate_stronger_model_study")
+    amendment = load_json(OPENROUTER_AMENDMENT_V2)
+    lanes, formal_ids = validator.validate_plan(amendment)
+
+    lineage = amendment["amendment"]
+    assert lineage["openrouter_v1_plan_sha256"] == (
+        "sha256:57ba2c63ca53890b3c90844961149dc70dcd30cb2c00ddb6d7f87c266b225ef4"
+    )
+    assert lineage["openrouter_v1_run_sha256"] == (
+        "sha256:a7154c939a040150dde4d23408ed70a131033ae05c674ec0a830974cba26abc5"
+    )
+    assert lineage["openrouter_v1_gate"] == "STOP"
+    assert lineage["openrouter_v1_transport_errors"] == 12
+    assert lineage["v1_transport_failure_informed_interface_revision"] is True
+    assert lineage["v2_outputs_seen_before_freeze"] is False
+    assert formal_ids == {"openrouter-openai-gpt-5.4-max-tokens"}
+    lane = lanes["openrouter-openai-gpt-5.4-max-tokens"]
+    assert lane["max_output_parameter"] == "max_tokens"
+    assert lane["provider_routing"]["order"] == ["openai"]
+    assert lane["provider_routing"]["allow_fallbacks"] is False
+    assert lane["provider_routing"]["max_price"] == {
+        "prompt": 2.5,
+        "completion": 15.0,
+    }
+    assert lane["required_routed_provider"] == "OpenAI"
+
+
+def test_routed_provider_is_required_only_after_transport_success() -> None:
+    validator = _load_script("validate_stronger_model_study")
+    lane = {"required_routed_provider": "OpenAI"}
+
+    validator.validate_required_routed_provider(
+        {"transport_status": "ERROR", "routed_provider": None}, lane, "failed"
+    )
+    validator.validate_required_routed_provider(
+        {"transport_status": "OK", "routed_provider": "OpenAI"}, lane, "ok"
+    )
+    with pytest.raises(SystemExit, match="routed provider mismatch"):
+        validator.validate_required_routed_provider(
+            {"transport_status": "OK", "routed_provider": "Azure"},
+            lane,
+            "wrong",
+        )
