@@ -40,7 +40,7 @@ jobs:
           pattern = r"(?m)^(\s*)if count != 1:\n\1    raise SystemExit\("
           replacement = (
               r"\1if count != 1:\n"
-              r"\1    if path == \"scripts/lint_paper_submission.py\" and index == 5:\n"
+              r"\1    if path == 'scripts/lint_paper_submission.py' and index == 5:\n"
               r"\1        continue\n"
               r"\1    raise SystemExit("
           )
