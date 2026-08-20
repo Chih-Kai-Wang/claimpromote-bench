@@ -1,0 +1,3 @@
+Remove the supplementary human-audit study from the submission-facing branch.
+
+Keep synthetic review-status policy semantics, but remove actual reviewer records, human-study claims, and ethics-gate dependencies. Replace them with the machine-checkable public pair-contract audit and preserve all frozen v1/v2 quantitative evidence.
