@@ -14,7 +14,6 @@ from claimpromotebench.dataset import load_json, load_jsonl, write_jsonl
 from claimpromotebench.hashing import canonical_json, sha256_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
-DATASET = ROOT / "work" / "stronger-model-study" / "dev"
 PLAN = ROOT / "v2" / "stronger-model-study-plan.json"
 OPENROUTER_AMENDMENT = ROOT / "v2" / "stronger-model-openrouter-amendment.json"
 OPENROUTER_AMENDMENT_V2 = ROOT / "v2" / "stronger-model-openrouter-amendment-v2.json"
@@ -29,10 +28,23 @@ def _load_script(name: str) -> ModuleType:
     return module
 
 
-def test_packet_build_is_deterministic_and_model_output_independent() -> None:
+@pytest.fixture(scope="module")
+def stronger_dataset(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    dataset = tmp_path_factory.mktemp("stronger-model-study") / "dev"
+    builder = _load_script("build_v1_dataset")
+    report = builder.build("dev", dataset, None)
+    assert report["manifest_sha256"] == (
+        "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014"
+    )
+    return dataset
+
+
+def test_packet_build_is_deterministic_and_model_output_independent(
+    stronger_dataset: Path,
+) -> None:
     builder = _load_script("build_stronger_model_packet")
-    packet_a = builder.build_packet(DATASET, PLAN)
-    packet_b = builder.build_packet(DATASET, PLAN)
+    packet_a = builder.build_packet(stronger_dataset, PLAN)
+    packet_b = builder.build_packet(stronger_dataset, PLAN)
     assert packet_a == packet_b
     assert len(packet_a["records"]) == 100
     assert len(packet_a["pilot_item_ids"]) == 12
@@ -239,12 +251,13 @@ def test_pilot_gate_cannot_depend_on_accuracy_or_action_distribution() -> None:
 
 def test_analyzer_accepts_complete_bound_pilot_and_reports_uncertainty(
     tmp_path: Path,
+    stronger_dataset: Path,
 ) -> None:
     builder = _load_script("build_stronger_model_packet")
     analyzer = _load_script("analyze_stronger_model_study")
-    packet = builder.build_packet(DATASET, PLAN)
+    packet = builder.build_packet(stronger_dataset, PLAN)
     plan = load_json(PLAN)
-    gold_by_id = {str(row["id"]): row for row in load_jsonl(DATASET / "gold.jsonl")}
+    gold_by_id = {str(row["id"]): row for row in load_jsonl(stronger_dataset / "gold.jsonl")}
     packet_by_id = {str(row["item_id"]): row for row in packet["records"]}
     records = []
     for item_id in packet["pilot_item_ids"]:
@@ -297,7 +310,7 @@ def test_analyzer_accepts_complete_bound_pilot_and_reports_uncertainty(
         )
     run_path = tmp_path / "pilot.jsonl"
     write_jsonl(run_path, records)
-    result = analyzer.analyze(DATASET, packet, plan, run_path)
+    result = analyzer.analyze(stronger_dataset, packet, plan, run_path)
     assert result["continuation_gate"]["decision"] == "GO"
     assert result["metrics"]["raw_action_accuracy"] == 1.0
     assert result["uncertainty"]["raw_action_accuracy"]["successes"] == 12
