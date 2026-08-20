@@ -108,6 +108,20 @@ def main() -> int:
         if phrase in lower:
             fail(f"stale pre-results wording remains: {phrase!r}")
 
+    human_study_phrases = [
+        "supplementary human audit",
+        "human policy audit",
+        "reviewer 1 &",
+        "reviewer 2 &",
+        "cohen's $\\kappa",
+        "mixed / not pass",
+        "two-reviewer audit",
+        "independent human reviewers",
+    ]
+    for phrase in human_study_phrases:
+        if phrase in lower:
+            fail(f"removed human-study wording remains in manuscript: {phrase!r}")
+
     overclaims = [
         r"\bfirst benchmark\b",
         r"\bfirst system\b",
@@ -119,8 +133,6 @@ def main() -> int:
         if re.search(pattern, tex, flags=re.IGNORECASE):
             fail(f"unqualified novelty/performance claim found: {pattern}")
 
-    # Avoid jargon-heavy phrases that were useful during internal analysis but make the paper
-    # sound less natural. The scientific meaning should be stated in ordinary technical prose.
     style_smells = [
         "artifact-bound",
         "fail-closed",
@@ -182,6 +194,9 @@ def main() -> int:
         "decision coverage",
         "same fixed policy used to define the benchmark labels",
         "not evidence that the model learned the policy",
+        "Machine-checkable validation strategy",
+        "public pair-contract audit",
+        "author-defined policy is a universal scientific norm",
         (
             f"{pct(m06['gate_complete_pair_coverage_range'][0])}--"
             f"{pct(m06['gate_complete_pair_coverage_range'][1])}\\%"
