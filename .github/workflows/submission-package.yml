@@ -177,11 +177,26 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p arxiv-source iclr-source
-          cp arxiv.tex references.bib arxiv-source/
-          cp iclr2027.tex references.bib iclr2027_conference.sty iclr2027_conference.bst iclr-source/
-          zip -qr claimpromotebench-arxiv-source.zip arxiv-source
-          zip -qr claimpromotebench-iclr2027-source.zip iclr-source
+          zip -q claimpromotebench-arxiv-source.zip \
+            arxiv.tex \
+            references.bib
+          zip -q claimpromotebench-iclr2027-source.zip \
+            iclr2027.tex \
+            references.bib \
+            iclr2027_conference.sty \
+            iclr2027_conference.bst
+
+          printf '%s\n' arxiv.tex references.bib | sort > /tmp/arxiv-source-expected.txt
+          unzip -Z1 claimpromotebench-arxiv-source.zip | sort > /tmp/arxiv-source-actual.txt
+          diff -u /tmp/arxiv-source-expected.txt /tmp/arxiv-source-actual.txt
+
+          printf '%s\n' iclr2027.tex references.bib \
+            iclr2027_conference.sty iclr2027_conference.bst \
+            | sort > /tmp/iclr-source-expected.txt
+          unzip -Z1 claimpromotebench-iclr2027-source.zip \
+            | sort > /tmp/iclr-source-actual.txt
+          diff -u /tmp/iclr-source-expected.txt /tmp/iclr-source-actual.txt
+
           sha256sum \
             arxiv.pdf \
             iclr2027.pdf \

@@ -131,6 +131,8 @@ conference-paper scale.
 
 - [x] Named arXiv PDF compiles from the final scientific head.
 - [x] The arXiv PDF contains 9 physical pages.
+- [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
+  no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
 - [x] arXiv PDF preserves v1 and v2 public workflow/hash provenance.
 - [x] No unresolved citations/references or horizontal overflow.

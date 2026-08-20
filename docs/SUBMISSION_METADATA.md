@@ -146,7 +146,8 @@ consent.
 
 - [ ] Author name and affiliation match the public PDF.
 - [ ] Title and abstract match the public PDF exactly.
-- [ ] The prepared source ZIP is uploaded and the top-level TeX file is detected correctly.
+- [ ] The prepared source ZIP is uploaded; `arxiv.tex` and `references.bib` are present at the
+  archive root and the top-level TeX file is detected correctly.
 - [ ] Server compilation succeeds without missing files.
 - [ ] The server-generated PDF is compared page by page with the locally verified public PDF.
 - [ ] `cs.AI` and any `cs.LG` cross-list are confirmed against the final scope.
