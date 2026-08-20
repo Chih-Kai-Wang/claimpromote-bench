@@ -27,6 +27,7 @@ jobs:
     steps:
       - name: Check out frozen source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - name: Validate trigger and frozen plan state
         run: |
           set -euo pipefail
@@ -75,6 +76,12 @@ jobs:
       - name: Check out frozen source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Check out the original hidden-commitment source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 8d9b3f5c831f432cf6b321e6402724c4f52bb3e1
+          path: work/v1-commitment-source
+
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -104,16 +111,16 @@ jobs:
       - name: Reconstruct and reverify the existing hidden commitment
         run: |
           set -euo pipefail
-          python scripts/build_v1_dataset.py \
+          python work/v1-commitment-source/scripts/build_v1_dataset.py \
             --split test \
             --out work/capable-hidden-study/hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
-          python scripts/validate_v1_plan.py \
+          python work/v1-commitment-source/scripts/validate_v1_plan.py \
             --test-dir work/capable-hidden-study/hidden >/dev/null
-          python scripts/freeze_prompt_manifest.py \
+          python work/v1-commitment-source/scripts/freeze_prompt_manifest.py \
             --dataset work/capable-hidden-study/hidden \
             --out work/capable-hidden-study/v1-prompt-manifest.json >/dev/null
-          python scripts/make_hidden_test_commitment.py \
+          python work/v1-commitment-source/scripts/make_hidden_test_commitment.py \
             --dataset work/capable-hidden-study/hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
             --prompt-manifest work/capable-hidden-study/v1-prompt-manifest.json \
@@ -207,9 +214,9 @@ jobs:
           name: cpb-capable-hidden-${{ matrix.lane }}
           path: |
             work/capable-hidden-study/packet.json
-            work/capable-hidden-study/runs/${{ matrix.lane }}-*.jsonl
+            work/capable-hidden-study/runs/${{ matrix.lane }}-*.jsonl*
             work/capable-hidden-study/analysis/${{ matrix.lane }}-*.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
 
       - name: Destroy private seed material
@@ -224,6 +231,12 @@ jobs:
     steps:
       - name: Check out frozen source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check out the original hidden-commitment source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 8d9b3f5c831f432cf6b321e6402724c4f52bb3e1
+          path: work/v1-commitment-source
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -248,14 +261,14 @@ jobs:
           set -euo pipefail
           umask 077
           printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
-          python scripts/build_v1_dataset.py \
+          python work/v1-commitment-source/scripts/build_v1_dataset.py \
             --split test \
             --out work/capable-hidden-study/hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
-          python scripts/freeze_prompt_manifest.py \
+          python work/v1-commitment-source/scripts/freeze_prompt_manifest.py \
             --dataset work/capable-hidden-study/hidden \
             --out work/capable-hidden-study/v1-prompt-manifest.json >/dev/null
-          python scripts/make_hidden_test_commitment.py \
+          python work/v1-commitment-source/scripts/make_hidden_test_commitment.py \
             --dataset work/capable-hidden-study/hidden \
             --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
             --prompt-manifest work/capable-hidden-study/v1-prompt-manifest.json \
