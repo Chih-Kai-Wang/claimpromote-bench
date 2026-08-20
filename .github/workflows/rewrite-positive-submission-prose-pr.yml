@@ -1,0 +1,84 @@
+name: apply direct evidence-first submission prose
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/rewrite-positive-submission-prose-pr.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rewrite:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out pull-request head branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Extract and run the frozen rewrite program
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path(".github/workflows/rewrite-positive-submission-prose.yml").read_text(
+              encoding="utf-8"
+          )
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "          PY\n\n      - name: Format and validate changed sources"
+          start = source.index(start_marker) + len(start_marker)
+          end = source.index(end_marker, start)
+          lines = source[start:end].splitlines()
+          program = "\n".join(line[10:] if line.startswith("          ") else line for line in lines)
+          Path("/tmp/rewrite_submission_prose.py").write_text(
+              program + "\n", encoding="utf-8"
+          )
+          PY
+          python /tmp/rewrite_submission_prose.py
+
+      - name: Format and validate changed sources
+        run: |
+          python -m pip install "ruff>=0.16.3,<1"
+          ruff format scripts/build_submission_tex.py scripts/lint_paper_submission.py
+          ruff check scripts/build_submission_tex.py scripts/lint_paper_submission.py
+          python scripts/lint_paper_submission.py
+          rm -rf work/direct-prose-probe
+          python scripts/build_submission_tex.py --out work/direct-prose-probe
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          for name in ("iclr2027.tex", "arxiv.tex"):
+              text = (Path("work/direct-prose-probe") / name).read_text(encoding="utf-8")
+              for pattern in (
+                  r"\bnot\b",
+                  r"\bwithout\b",
+                  r"\brather than\b",
+                  r"\binstead of\b",
+                  r"\bnever\b",
+              ):
+                  if re.search(pattern, text, flags=re.IGNORECASE):
+                      raise SystemExit(f"{name} contains defensive contrast: {pattern}")
+          PY
+
+      - name: Commit rewrite
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            technical-report/main.tex \
+            README.md \
+            scripts/build_submission_tex.py \
+            scripts/lint_paper_submission.py
+          git diff --cached --check
+          git commit -m "paper: state methods and results directly"
+          git fetch origin "$GITHUB_HEAD_REF"
+          git rebase "origin/$GITHUB_HEAD_REF"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
