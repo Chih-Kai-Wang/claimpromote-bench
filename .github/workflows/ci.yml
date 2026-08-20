@@ -48,6 +48,11 @@ jobs:
           python scripts/audit_public_pair_contracts.py
           --dataset data/alpha
           --out work/public-pair-contract-audit.json
+      - name: Require published pair-contract report to reproduce exactly
+        run: >-
+          diff -u
+          release/public-pair-contract-audit.json
+          work/public-pair-contract-audit.json
       - name: Audit non-semantic shortcuts
         run: >-
           python -m claimpromotebench.shortcuts
