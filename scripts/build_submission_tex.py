@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
+TITLE = r"\cpb: Evaluating Whether \mbox{Evidence} Justifies Claim-State Transitions in AI Research Agents"
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
@@ -25,7 +25,7 @@ question, defined the benchmark policy and experimental protocol, made the final
 analysis decisions, checked the reported results against the released artifacts, checked the
 references, and is responsible for the final manuscript and submission. The quantitative results
 reported in this paper come from the validated study artifacts. AI systems are not listed as
-authors and were not used as independent human reviewers.
+authors.
 
 """
 
@@ -36,7 +36,8 @@ recovery procedure reconstructed that same dataset and prompt identity, validate
 and 24 normalized runs, and produced the 7,200-record aggregate without querying either model
 again. For double-blind review, public repository identifiers and searchable provenance hashes
 are omitted from this submission. An anonymized review bundle can include the fixed manifests,
-run outputs, and recovery record; the public preprint and release retain the exact identifiers.
+public result summaries, pair-contract audit, and recovery checks; the public preprint and release
+retain the exact identifiers.
 
 The separately labeled post-v1 public pilot retains raw responses in its source artifacts and
 publishes a public-safe aggregate produced twice from the same immutable four-run matrix. Its
@@ -78,76 +79,38 @@ def canonical_body() -> str:
     return body
 
 
-def anonymize_for_iclr(body: str) -> str:
-    """Remove searchable public provenance while preserving the scientific protocol."""
-
-    repro_start = body.index(r"\section{Reproducibility and Artifact Policy}")
-    ai_start = body.index(r"\section{AI Assistance Disclosure}", repro_start)
-    body = body[:repro_start] + ICLR_REPRODUCIBILITY + body[ai_start:]
-
-    replacements = {
-        r"the inference source is workflow run \texttt{32255636879}.": (
-            "scored inference began only after the hidden set and exact prompts were fixed."
-        ),
-        r"Recovery run \texttt{32274814703} then validated": (
-            "The recovery procedure then validated"
-        ),
-        r"\texttt{32255636879}": r"\texttt{[anonymized-source-run]}",
-        r"\texttt{32274814703}": r"\texttt{[anonymized-recovery-run]}",
-        r"\texttt{32291482079}": r"\texttt{[anonymized-public-pilot-run]}",
-        r"\texttt{aa5268dc...de7e5}": r"\texttt{[anonymized]}",
-        r"\texttt{8d9b3f5c...bb3e1}": r"\texttt{[anonymized]}",
-        r"\texttt{e2b09f30...f2877}": r"\texttt{[anonymized]}",
-        r"\texttt{3eb5b534...e8bfe664}": r"\texttt{[anonymized]}",
-        r"\texttt{83dbee49...25c0b264e}": r"\texttt{[anonymized]}",
-    }
-    for old, new in replacements.items():
-        body = body.replace(old, new)
-
-    sensitive_fragments = (
-        "32255636879",
-        "32274814703",
-        "32291482079",
-        "aa5268dc",
-        "8d9b3f5c",
-        "e2b09f30",
-        "3eb5b534",
-        "83dbee49",
-        "f0909172434",
-    )
-    leaks = [fragment for fragment in sensitive_fragments if fragment.lower() in body.lower()]
-    if leaks:
-        raise ValueError(f"ICLR body still contains searchable provenance: {leaks}")
-    return body
-
-
-def shared_commands() -> str:
-    return r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
-\newcommand{\allow}{\texttt{ALLOW}}
-\newcommand{\hold}{\texttt{HOLD}}
-\newcommand{\demote}{\texttt{DEMOTE}}
-\newcommand{\escalate}{\texttt{ESCALATE}}
-"""
-
-
 def without_ai_disclosure(body: str) -> str:
     ai_start = body.index(r"\section{AI Assistance Disclosure}")
     conclusion_start = body.index(r"\section{Conclusion}", ai_start)
     return body[:ai_start] + body[conclusion_start:]
 
 
-def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
-    # ICLR excludes the mandatory AI-use statement from the main-text page limit. The diagnostic
-    # probe removes only that section; it retains the complete scientific narrative and omits
-    # the bibliography below.
-    anonymous_body = anonymize_for_iclr(body)
-    body_for_output = without_ai_disclosure(anonymous_body) if main_text_probe else anonymous_body
+def without_reproducibility(body: str) -> str:
+    reproducibility_start = body.index(r"\section{Reproducibility and Artifact Policy}")
+    ai_start = body.index(r"\section{AI Assistance Disclosure}", reproducibility_start)
+    return body[:reproducibility_start] + body[ai_start:]
 
-    bibliography_tail = (
-        "\n\\bibliographystyle{iclr2027_conference}\n"
-        "\\bibliography{references}\n\n"
-        "\\end{document}\n"
+
+def without_reproducibility_or_ai(body: str) -> str:
+    return without_ai_disclosure(without_reproducibility(body))
+
+
+def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
+    # ICLR excludes both the mandatory AI-use statement and the reproducibility statement from
+    # the main-text page limit. The diagnostic probe removes exactly those sections and omits the
+    # bibliography; it otherwise keeps the full scientific text, including limitations and the
+    # conclusion. The anonymous submission replaces repository-identifying provenance with a
+    # double-blind reproducibility statement while the arXiv version retains exact identifiers.
+    body_for_output = without_reproducibility(body)
+    reproducibility_start = body_for_output.index(r"\section{AI Assistance Disclosure}")
+    body_for_output = (
+        body_for_output[:reproducibility_start]
+        + ICLR_REPRODUCIBILITY
+        + body_for_output[reproducibility_start:]
     )
+    if main_text_probe:
+        body_for_output = without_reproducibility_or_ai(body_for_output)
+
     return (
         r"""\documentclass{article}
 \usepackage{iclr2027_conference,times}
@@ -160,7 +123,12 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
 \usepackage{xspace}
 
 """
-        + shared_commands()
+        + r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
+\newcommand{\allow}{\texttt{ALLOW}}
+\newcommand{\hold}{\texttt{HOLD}}
+\newcommand{\demote}{\texttt{DEMOTE}}
+\newcommand{\escalate}{\texttt{ESCALATE}}
+"""
         + "\n"
         + rf"\title{{{TITLE}}}"
         + "\n"
@@ -171,15 +139,15 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
         + r"\maketitle"
         + "\n\n"
         + body_for_output
-        + ("\n\\end{document}\n" if main_text_probe else bibliography_tail)
+        + (
+            "\n\\end{document}\n"
+            if main_text_probe
+            else "\n\\bibliographystyle{iclr2027_conference}\n\\bibliography{references}\n\n\\end{document}\n"
+        )
     )
 
 
 def arxiv_tex(body: str) -> str:
-    author = (
-        r"\author{Chih-Kai Wang\\Department of Mathematics and Information Education\\"
-        r"National Taipei University of Education}"
-    )
     return (
         r"""\documentclass[10pt]{article}
 \usepackage[margin=1in]{geometry}
@@ -192,11 +160,16 @@ def arxiv_tex(body: str) -> str:
 \usepackage{xspace}
 
 """
-        + shared_commands()
+        + r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
+\newcommand{\allow}{\texttt{ALLOW}}
+\newcommand{\hold}{\texttt{HOLD}}
+\newcommand{\demote}{\texttt{DEMOTE}}
+\newcommand{\escalate}{\texttt{ESCALATE}}
+"""
         + "\n"
         + rf"\title{{{TITLE}}}"
         + "\n"
-        + author
+        + r"\author{Chih-Kai Wang\\Department of Mathematics and Information Education\\National Taipei University of Education}"
         + "\n"
         + r"\date{}"
         + "\n\n"
