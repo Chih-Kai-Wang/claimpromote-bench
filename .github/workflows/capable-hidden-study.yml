@@ -7,6 +7,11 @@ on:
         description: Type RUN_CAPABLE_HIDDEN_V1 to execute the frozen no-retry study
         required: true
         type: string
+  push:
+    branches:
+      - agent/iclr2027-v2-low-cost-study
+    paths:
+      - .github/workflows/capable-hidden-study.yml
 
 permissions:
   contents: read
@@ -25,7 +30,17 @@ jobs:
       - name: Validate trigger and frozen plan state
         run: |
           set -euo pipefail
-          test '${{ inputs.confirm }}' = 'RUN_CAPABLE_HIDDEN_V1'
+          case '${{ github.event_name }}' in
+            workflow_dispatch)
+              test '${{ inputs.confirm }}' = 'RUN_CAPABLE_HIDDEN_V1'
+              ;;
+            push)
+              test "$GITHUB_REF_NAME" = 'agent/iclr2027-v2-low-cost-study'
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
           python - <<'PY'
           import json
           from pathlib import Path
