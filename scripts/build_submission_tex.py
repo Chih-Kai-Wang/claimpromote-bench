@@ -14,7 +14,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Evaluating Whether \mbox{Evidence} Justifies Claim-State Transitions in AI Research Agents"
+TITLE = (
+    r"\cpb: Evaluating Whether \mbox{Evidence} Justifies "
+    r"Claim-State Transitions in AI Research Agents"
+)
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
@@ -142,7 +145,10 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
         + (
             "\n\\end{document}\n"
             if main_text_probe
-            else "\n\\bibliographystyle{iclr2027_conference}\n\\bibliography{references}\n\n\\end{document}\n"
+            else (
+                "\n\\bibliographystyle{iclr2027_conference}\n"
+                "\\bibliography{references}\n\n\\end{document}\n"
+            )
         )
     )
 
@@ -169,7 +175,11 @@ def arxiv_tex(body: str) -> str:
         + "\n"
         + rf"\title{{{TITLE}}}"
         + "\n"
-        + r"\author{Chih-Kai Wang\\Department of Mathematics and Information Education\\National Taipei University of Education}"
+        + (
+            r"\author{Chih-Kai Wang\\"
+            r"Department of Mathematics and Information Education\\"
+            r"National Taipei University of Education}"
+        )
         + "\n"
         + r"\date{}"
         + "\n\n"
