@@ -29,7 +29,8 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
     assert plan["status"] == "FROZEN_BEFORE_SCORED_INFERENCE"
     assert plan["truth_status"] == "OPEN"
     assert plan["amendment"]["new_model_outputs_seen_before_initial_freeze"] is False
-    assert plan["transport_amendment"]["status"] == "FROZEN_BEFORE_REEXECUTION"
+    assert plan["transport_amendment"]["status"] == ("FROZEN_BEFORE_FINAL_ADAPTER_REQUALIFICATION")
+    assert plan["transport_amendment"]["no_further_adapter_amendment"] is True
     assert plan["amendment"]["new_hidden_items_or_labels_created"] is False
     assert plan["dataset"]["instances"] == 300
     assert plan["dataset"]["pairs"] == 150
@@ -43,6 +44,9 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
     assert lanes["bai-deepseek-v4-flash-primary"]["spend_cap_usd"] == 0.0
     assert lanes["bai-deepseek-v4-flash-primary"]["response_format"] == "json_object"
     assert lanes["bai-deepseek-v4-flash-primary"]["minimum_request_interval_seconds"] == 12.0
+    assert (
+        "allow_single_json_object_extraction" not in lanes["opencode-go-deepseek-v4-flash-matched"]
+    )
     assert lanes["bai-deepseek-v4-flash-primary"]["comparison_group"] == (
         "CROSS_SERVICE_REPLICATION_ONLY"
     )
@@ -68,12 +72,12 @@ def test_capable_hidden_request_shapes_use_native_structured_output() -> None:
     )
 
     qwen = runner.anthropic_request_body(lanes["opencode-go-qwen3.7-max"], "prompt", schema)
-    assert qwen["tool_choice"] == {"type": "tool", "name": "submit_decision"}
-    assert qwen["tools"][0]["input_schema"] == schema
+    assert "tool_choice" not in qwen
+    assert "tools" not in qwen
     assert qwen["max_tokens"] == 1536
 
     glm = runner.openai_request_body(lanes["opencode-go-glm-5.2"], "prompt", schema)
-    assert glm["response_format"]["type"] == "json_schema"
+    assert glm["response_format"] == {"type": "json_object"}
     assert "reasoning_effort" not in glm
 
     muse = runner.responses_request_body(
@@ -116,6 +120,7 @@ def test_new_adapters_keep_final_output_and_drop_reasoning() -> None:
 
     def fake_responses(*_args: object, **_kwargs: object) -> dict:
         return {
+            "error": None,
             "id": "resp-1",
             "model": "muse-spark-1.2-contributor",
             "status": "completed",
@@ -155,6 +160,20 @@ def test_api_key_validation_rejects_whitespace_and_control_bytes() -> None:
             assert "credential" in str(exc)
         else:
             raise AssertionError(f"credential should have been rejected: {invalid!r}")
+
+
+def test_single_json_object_extraction_is_deterministic_and_conservative() -> None:
+    runner = _load_script("run_stronger_model_study")
+
+    wrapped = '<think>reasoning without braces</think>\n```json\n{"action":"ALLOW"}\n```'
+    assert runner.extract_single_json_object(wrapped) == '{"action":"ALLOW"}'
+    nested = 'prefix {"state":{"research_status":"OPEN"},"text":"a } brace"} suffix'
+    assert runner.extract_single_json_object(nested) == (
+        '{"state":{"research_status":"OPEN"},"text":"a } brace"}'
+    )
+    assert runner.extract_single_json_object("no object") is None
+    assert runner.extract_single_json_object('{"a":1} and {"b":2}') is None
+    assert runner.extract_single_json_object('prefix {"a":1') is None
 
 
 def test_aggregate_primary_tests_exclude_free_service_replication() -> None:

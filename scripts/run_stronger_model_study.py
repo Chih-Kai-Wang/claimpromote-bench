@@ -110,8 +110,10 @@ def verify_frozen_plan(plan_path: Path, commit: str, plan: Json) -> None:
 
 def response_format(lane: Json, schema: Json) -> Json:
     if lane["api_kind"] == "anthropic_messages":
+        if lane["response_format"] == "prompt_only_json":
+            return {}
         if lane["response_format"] != "forced_tool_schema":
-            fail("Anthropic Messages lane must use forced_tool_schema")
+            fail("Anthropic Messages lane must use forced_tool_schema or prompt_only_json")
         return {
             "tool_choice": {"type": "tool", "name": "submit_decision"},
             "tools": [
@@ -187,7 +189,7 @@ def _http_json(url: str, body: Json, headers: dict[str, str], timeout: float) ->
         raise RuntimeError("provider returned non-JSON HTTP content") from exc
     if not isinstance(value, dict):
         raise RuntimeError("provider response must be a JSON object")
-    if "error" in value:
+    if value.get("error") is not None:
         raise RuntimeError(f"provider returned an error: {value['error']}")
     return value
 
@@ -206,6 +208,60 @@ def validate_api_key(value: str | None, env_name: str) -> str:
     if value != value.strip() or any(ord(char) < 33 or ord(char) > 126 for char in value):
         fail(f"API credential contains whitespace or control bytes: {env_name}")
     return value
+
+
+def extract_single_json_object(content: str) -> str | None:
+    """Extract one balanced JSON object from an otherwise textual response."""
+
+    candidates: list[str] = []
+    start: int | None = None
+    depth = 0
+    in_string = False
+    escaped = False
+    for index, char in enumerate(content):
+        if start is None:
+            if char == "{":
+                start = index
+                depth = 1
+                in_string = False
+                escaped = False
+            continue
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                candidates.append(content[start : index + 1])
+                start = None
+    return candidates[0] if len(candidates) == 1 and start is None else None
+
+
+def diagnose_provider_content(
+    content: str,
+    item: Json,
+    *,
+    schema_path: Path,
+    allow_single_object_extraction: bool,
+) -> tuple[str, Json | None, str | None]:
+    status, decision, detail = diagnose_decision(content, item, schema_path=schema_path)
+    if status != "JSON_SYNTAX_ERROR" or not allow_single_object_extraction:
+        return status, decision, detail
+    extracted = extract_single_json_object(content)
+    if extracted is None:
+        return status, decision, detail
+    status, decision, detail = diagnose_decision(extracted, item, schema_path=schema_path)
+    marker = "DETERMINISTIC_SINGLE_JSON_OBJECT_EXTRACTION"
+    return status, decision, marker if detail is None else f"{marker}: {detail}"
 
 
 def openai_request_body(lane: Json, prompt: str, schema: Json) -> Json:
@@ -736,8 +792,13 @@ def main() -> int:
             postgate = None
             parse_detail = "provider returned no final response text"
         else:
-            parse_status, raw_decision, parse_detail = diagnose_decision(
-                content, item, schema_path=DECISION_SCHEMA
+            parse_status, raw_decision, parse_detail = diagnose_provider_content(
+                content,
+                item,
+                schema_path=DECISION_SCHEMA,
+                allow_single_object_extraction=bool(
+                    lane.get("allow_single_json_object_extraction", False)
+                ),
             )
             postgate = (
                 postgate_decision(raw_decision, item, policy, evaluation_time)

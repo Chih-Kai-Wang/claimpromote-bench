@@ -7,13 +7,6 @@ on:
         description: Type RUN_CAPABLE_HIDDEN_V1 to execute the frozen no-retry study
         required: true
         type: string
-  push:
-    branches:
-      - agent/iclr2027-v2-low-cost-study
-    paths:
-      - .github/workflows/capable-hidden-study.yml
-      - scripts/run_stronger_model_study.py
-      - v2/capable-hidden-study-plan.json
 
 permissions:
   contents: read

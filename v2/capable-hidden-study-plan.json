@@ -17,7 +17,7 @@
     "interpretation": "A separately precommitted revision study on the existing hidden split. It does not replace or retroactively alter the original preregistered v1 study."
   },
   "transport_amendment": {
-    "status": "FROZEN_BEFORE_REEXECUTION",
+    "status": "FROZEN_BEFORE_FINAL_ADAPTER_REQUALIFICATION",
     "failed_runs": [
       {
         "run_id": 32402699174,
@@ -26,6 +26,11 @@
       {
         "run_id": 32402993463,
         "boundary": "OpenCode lanes stopped before accepted requests because GitHub secrets contained a trailing newline. The B.AI lane executed the 12-item transport pilot, produced zero parseable decisions, and stopped before the full phase."
+      },
+      {
+        "run_id": 32403718086,
+        "attempt": 2,
+        "boundary": "All seven accuracy-blind pilots used valid credentials. The matched OpenCode Flash lane passed and entered its full phase. The other six lanes STOP-gated on transport, syntax, or semantic coverage before any full pass."
       }
     ],
     "inspection_boundary": "Only workflow state, parse-status counts, continuation-gate fields, and transport or parser error classes were inspected. No model action, accuracy, gold comparison, or raw response text was inspected.",
@@ -34,9 +39,20 @@
       "Reject credentials containing whitespace or control bytes before any request.",
       "Use JSON-object mode for the B.AI Flash lane because its accuracy-blind pilot returned response_format-unavailable errors for JSON Schema.",
       "Pace B.AI requests at no more than one start per 12 seconds after one pilot request received HTTP 429.",
-      "Stagger OpenCode lane starts and require at least one second between request starts to reduce shared-account bursts."
+      "Stagger OpenCode lane starts and require at least one second between request starts to reduce shared-account bursts.",
+      "For one final accuracy-blind adapter requalification, use prompt-only JSON on Qwen Messages, JSON-object mode on GLM, DeepSeek Pro, and Hy3, and deterministic extraction only when a response contains exactly one balanced JSON object.",
+      "Treat a top-level null error field as no provider error for the Responses adapter."
     ],
-    "unchanged": "Dataset, hidden labels, item selection, prompt text, decision schema, model list, no-retry rule, scoring, statistical tests, and interpretation boundaries are unchanged.",
+    "final_requalification_lanes": [
+      "opencode-go-qwen3.7-max",
+      "opencode-go-glm-5.2",
+      "opencode-go-deepseek-v4-pro",
+      "bai-deepseek-v4-flash-primary",
+      "opencode-go-hy3",
+      "opencode-go-muse-spark-1.2-contributor"
+    ],
+    "no_further_adapter_amendment": true,
+    "unchanged": "Dataset, hidden labels, item selection, prompt text, decision schema, model list, no-request-retry rule, scoring, statistical tests, and interpretation boundaries are unchanged. The already qualified matched Flash lane is not rerun.",
     "failed_pilot_release_rule": "Release the failed transport-pilot records with the final reviewer evidence."
   },
   "design": {
@@ -97,8 +113,9 @@
       "model": "qwen3.7-max",
       "model_family": "Qwen",
       "auth_env": "OPENCODE_GO_API_KEY",
-      "response_format": "forced_tool_schema",
-      "constraint_strength": "FORCED_TOOL_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "response_format": "prompt_only_json",
+      "constraint_strength": "PROMPT_ONLY_JSON_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
       "initial_request_delay_seconds": 0.0,
       "minimum_request_interval_seconds": 1.0,
       "max_output_tokens": 1536,
@@ -118,8 +135,9 @@
       "model": "glm-5.2",
       "model_family": "GLM",
       "auth_env": "OPENCODE_GO_API_KEY",
-      "response_format": "json_schema",
-      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
       "initial_request_delay_seconds": 2.0,
       "minimum_request_interval_seconds": 1.0,
       "send_reasoning_effort": false,
@@ -140,8 +158,9 @@
       "model": "deepseek-v4-pro",
       "model_family": "DeepSeek",
       "auth_env": "OPENCODE_GO_API_KEY",
-      "response_format": "json_schema",
-      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
       "initial_request_delay_seconds": 4.0,
       "minimum_request_interval_seconds": 1.0,
       "send_reasoning_effort": false,
@@ -164,7 +183,8 @@
       "model_family": "DeepSeek",
       "auth_env": "BAI_API_KEY",
       "response_format": "json_object",
-      "constraint_strength": "JSON_SYNTAX_CONSTRAINT_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
       "send_reasoning_effort": false,
       "initial_request_delay_seconds": 0.0,
       "minimum_request_interval_seconds": 12.0,
@@ -209,8 +229,9 @@
       "model": "hy3",
       "model_family": "Tencent Hunyuan",
       "auth_env": "OPENCODE_GO_API_KEY",
-      "response_format": "json_schema",
-      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "response_format": "json_object",
+      "constraint_strength": "JSON_OBJECT_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
       "initial_request_delay_seconds": 8.0,
       "minimum_request_interval_seconds": 1.0,
       "send_reasoning_effort": false,
@@ -232,7 +253,8 @@
       "model_family": "Meta Muse",
       "auth_env": "OPENCODE_GO_API_KEY",
       "response_format": "json_schema",
-      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "constraint_strength": "STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_SINGLE_OBJECT_EXTRACTION_AND_POSTVALIDATION",
+      "allow_single_json_object_extraction": true,
       "initial_request_delay_seconds": 10.0,
       "minimum_request_interval_seconds": 1.0,
       "max_output_tokens": 1536,
