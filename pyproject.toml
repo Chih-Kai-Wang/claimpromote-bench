@@ -81,6 +81,9 @@ extend-exclude = [
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 
+[tool.ruff.lint.per-file-ignores]
+"scripts/remove_human_audit_from_submission.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.11"
 strict = true
