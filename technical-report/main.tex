@@ -4,6 +4,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
@@ -117,13 +118,13 @@ We also check for metadata-only and shallow structural shortcuts. Registered mea
 
 \subsection{Machine-checkable validation strategy}
 
-Gold labels come from the public versioned policy. Credibility rests on a chain of checks with explicit scope. The public pair-contract audit verifies that each pair changes its registered policy field, that the valid and invalid sides have the required actions, and that all 40 public labels are exactly reproduced by the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; shortcut and metamorphic checks test identifier, ordering, and irrelevant-evidence invariance; and hidden data and exact prompts were committed before scored inference. Both the hidden study and the public formatting control are recomputed from immutable source artifacts using the original model responses. This chain makes the reported behavior independently inspectable and constrains post-result changes. The policy remains an author-defined benchmark rule.
+Gold labels come from the public versioned policy. The public pair-contract audit verifies each registered pair difference and reproduces all 40 public labels with the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; and metamorphic checks cover identifier, ordering, and irrelevant-evidence invariance. The hidden data and exact prompts were committed before scored inference, and both reported studies are recomputed from immutable source artifacts containing the original model responses. These checks constrain post-result changes and make the reported behavior independently inspectable. The policy remains an author-defined benchmark rule.
 
 \section{Intervention Arms}
 
 Table~\ref{tab:arms} summarizes the four fixed arms. The first three change what the model sees. Only the last arm changes the final action after the model has responded.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Intervention arms. ``Gate'' indicates whether an invalid raw \allow{} may be replaced after generation.}
@@ -148,7 +149,7 @@ The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.
 \[
 300\times 2\times 4\times 3 = 7{,}200
 \]
-scored decisions. Primary scoring uses the 300 hidden instances. The hidden set was committed to Git before the scored runs; the inference source is workflow run \texttt{32255636879}. Both models use llama.cpp commit \texttt{de699957b92f490efebad149665b0dccf127eaff}.
+scored decisions. Primary scoring uses the 300 hidden instances. The hidden set was committed to Git before the scored runs. Both models use the same pinned llama.cpp build recorded in the released manifests.
 
 The primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Decision coverage is the fraction of hidden instances for which the model returns a parseable decision under the fixed output contract. Complete-pair coverage requires both members of a controlled pair to be parseable. Secondary metrics include promotion false discovery rate, counterfactual flip accuracy, calibration metrics, structured reason and evidence scores, and format-error rate. Missing and malformed outputs receive \texttt{FORMAT\_ERROR}. All conditional rates are reported with decision and complete-pair coverage.
 
@@ -156,7 +157,7 @@ Confidence intervals resample whole controlled pairs. Arm comparisons use exact 
 
 \subsection{Recovery after evaluator failures}
 
-Some source jobs completed all 300 model calls and then failed evaluation when schema-valid output violated a cross-field rule, such as an \allow{} action paired with a mismatched target state. The recovery preserved the original model outputs. It downloaded the 24 source artifacts, reconstructed the committed hidden set and prompt identity, and reclassified the affected cross-field-invalid records as \texttt{FORMAT\_ERROR}. Exactly 27 of 7,200 records received this classification. Recovery run \texttt{32274814703} validated all 24 normalized runs, their prompt hashes, and the complete matrix before aggregate statistics were produced.
+Some source jobs completed all 300 model calls and then failed evaluation because schema-valid output violated a cross-field rule, such as an \allow{} action paired with a mismatched target state. Recovery reused the archived model outputs and issued no new model queries. Exactly 27 of 7,200 records were reclassified as \texttt{FORMAT\_ERROR}. Recovery run \texttt{32274814703} reconstructed the committed hidden set and prompt identity, then validated all 24 normalized runs and the complete matrix before aggregation.
 
 
 \subsection{Post-v1 public interface pilot}
@@ -177,7 +178,7 @@ Across the full study, 5,327 of 7,200 outputs (73.99\%) receive \texttt{FORMAT\_
 
 Table~\ref{tab:main-results} reports raw behavior before enforcement for every arm. Coverage triplets are ordered by seeds 104729, 130363, and 169087. FPR, VPR, and PTA are conditional on parseable decisions; ``undef.'' means that no decision in that run was parseable.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Primary hidden-test raw model behavior across all three seeds. Gate-arm rows are shown before enforcement.}
@@ -209,7 +210,7 @@ The source records contain parse status and structured decisions. Original free-
 
 Table~\ref{tab:v2-pilot} reports the post-v1 public diagnostic. Schema constraints remove 10 schema errors for Qwen3-0.6B and 38 for Qwen3-1.7B. Decision coverage rises from 0.75 to 1.00 for Qwen3-0.6B and from 0 to 0.95 for Qwen3-1.7B; complete-pair coverage rises from 0.70 to 1.00 and from 0 to 0.90, respectively.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Post-v1 public pilot. ``Schema'' uses JSON-schema-constrained decoding with the same prompt as the free condition. Accuracy is conditional on parseable output.}
@@ -234,7 +235,7 @@ Post-gate action and pair accuracy are 1.0 wherever the response is parseable. T
 
 In every gate-arm run with nonzero coverage, every parseable raw decision selects \allow{}. The gate catches every false promotion among those decisions, and the false-block rate is 0. Effective FPR is 0 and effective VPR is 1 on covered decisions. Table~\ref{tab:gate-results} reports coverage next to these numbers.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Raw and final behavior in the gate arm. Rates are conditional on parseable decisions.}
@@ -273,16 +274,16 @@ Reliable claim-state decisions require structured output and evidence-sensitive 
 \section{Limitations and Threats to Validity}
 
 \paragraph{Model and dataset scope.}
-Version~1 focuses on mathematical-research evidence states, uses synthetic controlled pairs, and evaluates Qwen3-0.6B and Qwen3-1.7B Q8\_0. The controlled pairs isolate policy differences. Naturalistic generalization and results from larger or API-hosted models remain open empirical extensions.
+Version~1 focuses on mathematical-research evidence states, synthetic controlled pairs, and Qwen3-0.6B and Qwen3-1.7B Q8\_0. Naturalistic generalization and results from larger or API-hosted models remain open empirical extensions.
 
 \paragraph{Output-format failures.}
-The v1 source records contain parse status and structured decisions; original free-form text for earlier parse failures is absent. The hidden study therefore aggregates syntax errors, schema failures, interface incompatibilities, and decision-task failures under \texttt{FORMAT\_ERROR}. The post-v1 public pilot retains raw text and tests schema-constrained decoding for the same two models using public data and one seed. Gate FPR, VPR, PTA, catch rate, and false-block rate are conditional on covered decisions or complete covered pairs. End-to-end reliability also depends on coverage.
+The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. The post-v1 public pilot retains raw text but covers the same two models, public data, and one seed. Gate metrics are conditional on covered decisions or complete covered pairs; end-to-end reliability also depends on coverage.
 
 \paragraph{Gate interpretation and runtime variation.}
-The gate-arm prompt tells the model that an invalid \allow{} may be replaced, so raw arm differences combine prompt disclosure and post-processing design. The raw-to-final comparison within the gate arm measures the deterministic transformation under the same fixed policy as the oracle. Separately, three runs recorded Python 3.11.16 alongside the predominant Python 3.11.15 environment, splitting three intended matched groups. The analysis retains the original identity grouping.
+The gate-arm prompt discloses enforcement, so raw between-arm differences include that prompt change. The within-arm raw-to-final comparison isolates the deterministic transformation. Three runs recorded Python 3.11.16 alongside the predominant Python 3.11.15 environment, splitting three intended matched groups; the analysis retains the preregistered identity grouping.
 
 \paragraph{Benchmark construction and label scope.}
-The author designed the policy, controlled factors, and item generator. The gold action is a deterministic policy output. A separate public pair-contract check verifies all 20 factors, confirms that each valid member is \allow{} and each invalid member is non-\allow{}, recomputes every gold decision from the versioned policy, and rejects pair differences outside the registered JSON pointers. Deterministic rebuilding, executable checks, the hidden commitment, shortcut checks, and meaning-preserving transformations further restrict post-hoc flexibility. These checks strengthen implementation and construction validity. The policy remains an author-defined benchmark rule, and a passing Lean artifact proves the exact encoded statement in the pinned environment.
+The author designed the policy, controlled factors, and item generator. Gold actions measure conformance to that author-defined benchmark; external consensus remains unevaluated. Pair-contract, executable, and Lean checks establish internal consistency, while formal acceptance covers only the exact encoded statement in the pinned environment.
 
 \section{Reproducibility and Artifact Policy}
 
@@ -290,7 +291,7 @@ The primary hidden inference comes from workflow run \texttt{32255636879}; the h
 
 The post-v1 public interface pilot comes from workflow run \texttt{32291482079}. An artifact-only recovery downloaded both model artifacts, required the complete 160-decision matrix, recomputed the aggregate twice, and obtained identical bytes. Its public aggregate has SHA-256 \texttt{83dbee49...25c0b264e}; it contains metrics and run hashes, while raw response text stays in the source artifacts.
 
-The raw hidden seed remains in GitHub Actions secret storage. The one-time recovery trigger was removed after recovery succeeded. Future changes to labels, policy rules, prompts, controlled factors, or hidden-test bytes create a new benchmark version.
+The raw hidden seed remains in GitHub Actions secret storage. Future changes to labels, policy rules, prompts, controlled factors, or hidden-test bytes create a new benchmark version.
 
 \section{AI Assistance Disclosure}
 
