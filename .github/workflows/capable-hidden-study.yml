@@ -12,6 +12,8 @@ on:
       - agent/iclr2027-v2-low-cost-study
     paths:
       - .github/workflows/capable-hidden-study.yml
+      - scripts/run_stronger_model_study.py
+      - v2/capable-hidden-study-plan.json
 
 permissions:
   contents: read
@@ -49,7 +51,8 @@ jobs:
           plan = json.loads(Path('v2/capable-hidden-study-plan.json').read_text())
           assert plan['status'] == 'FROZEN_BEFORE_SCORED_INFERENCE'
           assert plan['truth_status'] == 'OPEN'
-          assert plan['amendment']['new_model_outputs_seen_before_freeze'] is False
+          assert plan['amendment']['new_model_outputs_seen_before_initial_freeze'] is False
+          assert plan['transport_amendment']['status'] == 'FROZEN_BEFORE_REEXECUTION'
           assert plan['dataset']['instances'] == 300
           assert len(plan['routing']['required_full_lanes']) == 7
           print('CAPABLE_HIDDEN_TRIGGER_VALID')

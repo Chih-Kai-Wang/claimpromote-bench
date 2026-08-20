@@ -28,7 +28,8 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
 
     assert plan["status"] == "FROZEN_BEFORE_SCORED_INFERENCE"
     assert plan["truth_status"] == "OPEN"
-    assert plan["amendment"]["new_model_outputs_seen_before_freeze"] is False
+    assert plan["amendment"]["new_model_outputs_seen_before_initial_freeze"] is False
+    assert plan["transport_amendment"]["status"] == "FROZEN_BEFORE_REEXECUTION"
     assert plan["amendment"]["new_hidden_items_or_labels_created"] is False
     assert plan["dataset"]["instances"] == 300
     assert plan["dataset"]["pairs"] == 150
@@ -40,6 +41,8 @@ def test_capable_hidden_plan_is_frozen_before_new_outputs() -> None:
     assert plan["budget"]["use_zen_balance_after_go_limit"] is False
 
     assert lanes["bai-deepseek-v4-flash-primary"]["spend_cap_usd"] == 0.0
+    assert lanes["bai-deepseek-v4-flash-primary"]["response_format"] == "json_object"
+    assert lanes["bai-deepseek-v4-flash-primary"]["minimum_request_interval_seconds"] == 12.0
     assert lanes["bai-deepseek-v4-flash-primary"]["comparison_group"] == (
         "CROSS_SERVICE_REPLICATION_ONLY"
     )
@@ -139,6 +142,19 @@ def test_new_adapters_keep_final_output_and_drop_reasoning() -> None:
     assert content == '{"action":"ALLOW"}'
     assert usage["reasoning_tokens"] == 2
     assert "must not be retained" not in content
+
+
+def test_api_key_validation_rejects_whitespace_and_control_bytes() -> None:
+    runner = _load_script("run_stronger_model_study")
+
+    assert runner.validate_api_key("sk-valid_123", "TEST_KEY") == "sk-valid_123"
+    for invalid in (None, "", " sk-key", "sk-key\n", "sk-key\r", "sk-key\t"):
+        try:
+            runner.validate_api_key(invalid, "TEST_KEY")
+        except SystemExit as exc:
+            assert "credential" in str(exc)
+        else:
+            raise AssertionError(f"credential should have been rejected: {invalid!r}")
 
 
 def test_aggregate_primary_tests_exclude_free_service_replication() -> None:

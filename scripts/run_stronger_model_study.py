@@ -200,6 +200,14 @@ def _optional_text(value: Any) -> str | None:
     return value if isinstance(value, str) else None
 
 
+def validate_api_key(value: str | None, env_name: str) -> str:
+    if not value:
+        fail(f"required API credential is not set: {env_name}")
+    if value != value.strip() or any(ord(char) < 33 or ord(char) > 126 for char in value):
+        fail(f"API credential contains whitespace or control bytes: {env_name}")
+    return value
+
+
 def openai_request_body(lane: Json, prompt: str, schema: Json) -> Json:
     body: Json = {
         "model": lane["model"],
@@ -633,9 +641,7 @@ def main() -> int:
     auth_env = lane.get("auth_env")
     api_key = None
     if isinstance(auth_env, str):
-        api_key = os.environ.get(auth_env)
-        if not api_key:
-            fail(f"required API credential is not set: {auth_env}")
+        api_key = validate_api_key(os.environ.get(auth_env), auth_env)
 
     output_path = args.out.resolve()
     if output_path.exists():
@@ -651,11 +657,23 @@ def main() -> int:
     items = {str(item["id"]): item for item in load_jsonl(dataset_dir / "inputs.jsonl")}
     completed: list[Json] = []
     accrued = 0.0
+    initial_delay = float(lane.get("initial_request_delay_seconds", 0.0))
+    minimum_interval = float(lane.get("minimum_request_interval_seconds", 0.0))
+    if initial_delay < 0.0 or minimum_interval < 0.0:
+        fail("request pacing values must be non-negative")
+    if initial_delay:
+        time.sleep(initial_delay)
+    previous_request_start: float | None = None
     for packet_record in selected:
+        if previous_request_start is not None:
+            remaining = minimum_interval - (time.perf_counter() - previous_request_start)
+            if remaining > 0.0:
+                time.sleep(remaining)
         item_id = str(packet_record["item_id"])
         item = items[item_id]
         request_started = datetime.now(UTC).isoformat().replace("+00:00", "Z")
         start = time.perf_counter()
+        previous_request_start = start
         transport_status = "OK"
         transport_error = None
         content: str | None = None
