@@ -14,6 +14,7 @@ from claimpromotebench.hashing import canonical_json, sha256_bytes
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "work" / "stronger-model-study" / "dev"
 PLAN = ROOT / "v2" / "stronger-model-study-plan.json"
+OPENROUTER_AMENDMENT = ROOT / "v2" / "stronger-model-openrouter-amendment.json"
 
 
 def _load_script(name: str) -> ModuleType:
@@ -84,6 +85,18 @@ def test_provider_request_bodies_freeze_interface_specific_controls() -> None:
     assert config["responseMimeType"] == "application/json"
     assert config["responseJsonSchema"] == schema
 
+    amendment = load_json(OPENROUTER_AMENDMENT)
+    openrouter = amendment["formal_lanes"][0]
+    routed = runner.openai_request_body(openrouter, "prompt", schema)
+    assert routed["model"] == "openai/gpt-5.4"
+    assert routed["max_completion_tokens"] == 3072
+    assert "max_tokens" not in routed
+    assert routed["provider"] == {
+        "order": ["openai"],
+        "allow_fallbacks": False,
+        "require_parameters": True,
+    }
+
 
 def test_adapters_retain_final_text_and_usage_but_not_hidden_reasoning() -> None:
     runner = _load_script("run_stronger_model_study")
@@ -94,6 +107,7 @@ def test_adapters_retain_final_text_and_usage_but_not_hidden_reasoning() -> None
         return {
             "id": "response-1",
             "model": "deepseek-v4-pro",
+            "provider": "OpenAI",
             "choices": [
                 {
                     "finish_reason": "stop",
@@ -116,6 +130,7 @@ def test_adapters_retain_final_text_and_usage_but_not_hidden_reasoning() -> None
         lanes["deepseek-v4-pro-api"], {"request": "body"}, "secret", 1.0
     )
     assert metadata["provider_response_id"] == "response-1"
+    assert metadata["routed_provider"] == "OpenAI"
     assert content == '{"action":"HOLD"}'
     assert usage["reasoning_tokens"] == 17
     assert "reasoning_content" not in metadata
@@ -286,3 +301,23 @@ def test_registered_paid_lane_caps_do_not_exceed_ten_dollars() -> None:
         rel_tol=0.0,
         abs_tol=1e-12,
     )
+
+
+def test_openrouter_amendment_is_separate_and_pins_one_upstream() -> None:
+    validator = _load_script("validate_stronger_model_study")
+    amendment = load_json(OPENROUTER_AMENDMENT)
+    lanes, formal_ids = validator.validate_plan(amendment)
+
+    assert amendment["amendment"]["base_plan_sha256"] == (
+        "sha256:e83df93b598032627e4ce5a59189780d5ae57538d4fc8e98173b1343da07ff0d"
+    )
+    assert amendment["amendment"]["created_after_base_pilot_outcomes_known"] is True
+    assert amendment["amendment"]["openrouter_outputs_seen_before_freeze"] is False
+    assert amendment["amendment"]["official_openai_lane_replaced"] is False
+    assert formal_ids == {"openrouter-openai-gpt-5.4"}
+    lane = lanes["openrouter-openai-gpt-5.4"]
+    assert lane["provider_routing"]["order"] == ["openai"]
+    assert lane["provider_routing"]["allow_fallbacks"] is False
+    assert lane["required_routed_provider"] == "OpenAI"
+    assert amendment["exploratory_lanes"] == []
+    assert float(lane["spend_cap_usd"]) == 8.0

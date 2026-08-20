@@ -38,8 +38,9 @@ def lanes_by_id(plan: Json) -> tuple[dict[str, Json], set[str]]:
     formal_ids: set[str] = set()
     for key, formal in (("formal_lanes", True), ("exploratory_lanes", False)):
         rows = plan.get(key)
-        if not isinstance(rows, list) or not rows:
-            fail(f"plan.{key} must be a non-empty list")
+        if not isinstance(rows, list) or (formal and not rows):
+            qualifier = "a non-empty list" if formal else "a list"
+            fail(f"plan.{key} must be {qualifier}")
         for lane in rows:
             if not isinstance(lane, dict) or not isinstance(lane.get("lane_id"), str):
                 fail(f"plan.{key} contains a malformed lane")
@@ -220,6 +221,12 @@ def validate_run(
             fail(f"dataset digest mismatch for {item_id}")
         if row.get("model_requested") != lane["model"]:
             fail(f"model mismatch for {item_id}")
+        required_routed_provider = lane.get("required_routed_provider")
+        if (
+            isinstance(required_routed_provider, str)
+            and row.get("routed_provider") != required_routed_provider
+        ):
+            fail(f"routed provider mismatch for {item_id}")
         if item_id not in packet_by_id:
             fail(f"run item is absent from packet: {item_id}")
         if row.get("prompt_sha256") != packet_by_id[item_id]["prompt_sha256"]:

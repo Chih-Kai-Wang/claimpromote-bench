@@ -186,10 +186,21 @@ def openai_request_body(lane: Json, prompt: str, schema: Json) -> Json:
         "reasoning_effort": lane["reasoning_effort"],
         "stream": False,
     }
-    if str(lane["base_url"]).startswith("https://api.openai.com"):
-        body["max_completion_tokens"] = int(lane["max_output_tokens"])
-    else:
-        body["max_tokens"] = int(lane["max_output_tokens"])
+    max_output_parameter = lane.get("max_output_parameter")
+    if max_output_parameter is None:
+        max_output_parameter = (
+            "max_completion_tokens"
+            if str(lane["base_url"]).startswith("https://api.openai.com")
+            else "max_tokens"
+        )
+    if max_output_parameter not in {"max_completion_tokens", "max_tokens"}:
+        fail(f"unsupported max-output parameter: {max_output_parameter}")
+    body[str(max_output_parameter)] = int(lane["max_output_tokens"])
+    provider_routing = lane.get("provider_routing")
+    if provider_routing is not None:
+        if not isinstance(provider_routing, dict):
+            fail("provider_routing must be an object")
+        body["provider"] = deepcopy(provider_routing)
     if lane["provider"] == "DeepSeek" and str(lane["base_url"]).startswith(
         "https://api.deepseek.com"
     ):
@@ -234,6 +245,7 @@ def call_openai_compatible(
     metadata = {
         "provider_response_id": _optional_text(response.get("id")),
         "model_returned": _optional_text(response.get("model")),
+        "routed_provider": _optional_text(response.get("provider")),
         "system_fingerprint": _optional_text(response.get("system_fingerprint")),
         "finish_reason": _optional_text(choice.get("finish_reason")),
     }
@@ -282,6 +294,7 @@ def call_gemini(
     metadata = {
         "provider_response_id": _optional_text(response.get("responseId")),
         "model_returned": _optional_text(response.get("modelVersion")),
+        "routed_provider": None,
         "system_fingerprint": None,
         "finish_reason": _optional_text(candidate.get("finishReason")),
     }
@@ -475,6 +488,7 @@ def main() -> int:
         metadata: Json = {
             "provider_response_id": None,
             "model_returned": None,
+            "routed_provider": None,
             "system_fingerprint": None,
             "finish_reason": None,
         }
@@ -548,6 +562,7 @@ def main() -> int:
                 canonical_json(response_format(lane, decision_schema)).encode("utf-8")
             ),
             "provider_response_id": metadata["provider_response_id"],
+            "routed_provider": metadata["routed_provider"],
             "system_fingerprint": metadata["system_fingerprint"],
             "finish_reason": metadata["finish_reason"],
             "request_started_at_utc": request_started,

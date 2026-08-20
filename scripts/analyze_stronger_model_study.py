@@ -284,6 +284,13 @@ def analyze(
         "model_returned_values": sorted(
             {str(row["model_returned"]) for row in records if row["model_returned"] is not None}
         ),
+        "routed_provider_values": sorted(
+            {
+                str(row["routed_provider"])
+                for row in records
+                if row.get("routed_provider") is not None
+            }
+        ),
         "phase": phase,
         "formal_lane": formal,
         "run_path": str(run_path),

@@ -58,6 +58,7 @@
     "prompt_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "response_format_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "provider_response_id": {"type": ["string", "null"]},
+    "routed_provider": {"type": ["string", "null"]},
     "system_fingerprint": {"type": ["string", "null"]},
     "finish_reason": {"type": ["string", "null"]},
     "request_started_at_utc": {"type": "string", "format": "date-time"},
