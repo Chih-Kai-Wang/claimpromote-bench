@@ -62,6 +62,12 @@ jobs:
 
           path = Path("scripts/lint_paper_submission.py")
           text = path.read_text(encoding="utf-8")
+          old_boundary = '        "conditional scores quantify deterministic policy execution",'
+          new_boundary = '        "conditional scores quantify rule execution under the benchmark policy",'
+          if text.count(old_boundary) != 1:
+              raise SystemExit("direct policy-execution lint boundary is missing")
+          text = text.replace(old_boundary, new_boundary, 1)
+
           marker = "\n".join(
               [
                   "    for phrase in style_smells:",
