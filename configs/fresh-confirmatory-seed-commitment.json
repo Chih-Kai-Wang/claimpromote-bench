@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+  "status": "PUBLIC_SALT_HASH_AND_FUTURE_BEACON_BOUND_BEFORE_BEACON",
+  "source_c0_commit": "ed3e63cc26ed967ea42051d341b5e155fbbb1bb5",
+  "preregistration_path": "v2/fresh-confirmatory-study-plan.json",
+  "preregistration_sha256": "sha256:51b20c0647b08a74397fefa68dfb174736700c6ade5646284c8fe3d384059390",
+  "private_salt_sha256": "sha256:2bf72c705f55cf236800089c5df390025b49c66c83ac527e60a53803311ac509",
+  "contains_private_salt_bytes": false,
+  "drand": {
+    "network": "quicknet",
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "public_key": "83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bcb5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a",
+    "scheme_id": "bls-unchained-g1-rfc9380",
+    "period_seconds": 3,
+    "genesis_time_unix": 1692803367,
+    "round": 31490422,
+    "round_time_utc": "2026-08-21T01:10:30Z",
+    "relays": [
+      "https://api.drand.sh",
+      "https://api2.drand.sh",
+      "https://drand.cloudflare.com"
+    ]
+  },
+  "seed_derivation": "HMAC-SHA256(key=private_salt, msg=CPB-CONFIRMATORY-V1\\0 || preregistration_sha256_bytes || drand_round_u64_be || drand_randomness_bytes)",
+  "verification": "Pinned drand-client cryptographically verifies the committed quicknet chain and public key; all three preregistered relays must return the same beacon.",
+  "alternate_salt_seed_or_round_permitted": false,
+  "rejection_sampling_permitted": false
+}
