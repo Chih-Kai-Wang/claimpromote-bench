@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "status": "BYTE_IDENTICAL_DISPATCH_ALIASES_ONLY",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+  "reason": "GitHub workflow_dispatch requires the workflow path to have a registered ID on the default branch. The canonical confirmatory paths are new on the draft PR branch, so two retired registered paths carry byte-identical copies solely as dispatch aliases.",
+  "c0_plan_sha256": "sha256:03c69c4fefc15b1857eaec17c87372f45d41de139bfec97a50d355f11c56b156",
+  "aliases": [
+    {
+      "purpose": "C1_FREEZE_WITHOUT_MODEL_CALLS",
+      "canonical_path": ".github/workflows/confirmatory-hidden-freeze.yml",
+      "canonical_sha256": "sha256:bc058299c63c6ce010dd4762bd64d9d43ee1fca60ccd4e3d8692002c55b1ab9b",
+      "dispatch_alias_path": ".github/workflows/prepare-review-alpha.yml",
+      "dispatch_alias_sha256": "sha256:bc058299c63c6ce010dd4762bd64d9d43ee1fca60ccd4e3d8692002c55b1ab9b",
+      "registered_workflow_id": 335467504
+    },
+    {
+      "purpose": "SCORED_CONFIRMATORY_STUDY",
+      "canonical_path": ".github/workflows/confirmatory-hidden-study.yml",
+      "canonical_sha256": "sha256:43d524f9c4fc9981ee1ab6746ed22538c79e23ab1854f450d0ced4dedbb02b71",
+      "dispatch_alias_path": ".github/workflows/apply-solo-pilot.yml",
+      "dispatch_alias_sha256": "sha256:43d524f9c4fc9981ee1ab6746ed22538c79e23ab1854f450d0ced4dedbb02b71",
+      "registered_workflow_id": 335516192
+    }
+  ],
+  "canonical_workflow_bytes_changed": false,
+  "protocol_semantics_changed": false,
+  "model_calls_before_alias_commit": 0
+}
