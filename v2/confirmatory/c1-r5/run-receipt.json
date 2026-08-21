@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "status": "C1_PUBLIC_EVIDENCE_VERIFIED",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "github_run_id": 32442717831,
+  "github_job_id": 96656422788,
+  "github_artifact_id": 9433003270,
+  "source_c0_commit": "69b1e6aa0b5d21efcf05c1396b9cf18595eedadb",
+  "source_commit": "d58efb6a098645973918414ef5a3df7592cf19f6",
+  "started_at_utc": "2026-08-21T03:15:11Z",
+  "completed_at_utc": "2026-08-21T03:16:15Z",
+  "model_post_intents": 0,
+  "model_calls": 0,
+  "cost_usd": 0.0,
+  "planned_cells": 600,
+  "prior_prompt_hashes": 600,
+  "fresh_prompt_hashes": 300,
+  "exact_prior_prompt_overlap": 0,
+  "source_files_verified": 53,
+  "derived_seed_sha256": "sha256:987e880aee0d5d7a6d0d605240602e586b28a0f7c47ab2056274ffe3fbab06f7",
+  "dataset_manifest_sha256": "sha256:3528cf2c0c8595ea63cf4c8bf090c7f111c036d1b4829a4758e2f837bd45580c",
+  "packet_sha256": "sha256:ff7bb03af863f40cce0c83d21afbbe3dc21440f3ec40e35237477ace751e22ad",
+  "schedule_sha256": "sha256:1116339cf4f81cf44ecd8bf5af42df920780eac13c957dcbf1dcad07a757aca3",
+  "baseline_predictions_sha256": "sha256:ae92c0ec3cf4e37e5ce679e680ffb42272a7ffd79bcaad967e585a6d2a1f4656",
+  "request_body_hash_set_sha256": "sha256:a6a91e77e56f1130d58b1ed132e45e105b1501bf7bea63de529b48ff0bdeca7b",
+  "commitment_sha256": "sha256:c7fffa601e5b03aca1961301038c6766071c9e85ca7ed44850f2f3711029090a",
+  "artifact_files_sha256": {
+    "confirmatory-c1-receipt.json": "sha256:45be882a160f024b3920dc93ae32a6b861218cdb1ebce491dd6b1670617d138f",
+    "confirmatory-hidden-commitment.json": "sha256:6cf63485441bc684fa478931e9b18665e59a890bfae41c9f539b45617dbc70e0",
+    "confirmatory-prompt-novelty.json": "sha256:77413dd382ba0221ba1a48a4cb4d9579ce56fcefcef59ea6c4feb8228e9d74f6",
+    "confirmatory-seed-receipt.json": "sha256:13db0b5cd8a3452dbd744ecb7f46e3a796745dc25b96d5d90249c4a2f316ffb9",
+    "confirmatory-verified-beacon.json": "sha256:1dcfab9396afa257adba5242f7772203a427428e32aab66aa0079a833fdcd3e7",
+    "fresh-confirmatory-seed-commitment.json": "sha256:806df2af08857b1dcd09cf96beba04397edabb460ea00c92f65f00e9563cb900"
+  },
+  "self_digests": {
+    "c1_receipt_sha256": "sha256:f87c0075798bf73bdb6db66a0edd1942dd383ba94fe561c0ca116b42e22e9131",
+    "hidden_commitment_sha256": "sha256:c7fffa601e5b03aca1961301038c6766071c9e85ca7ed44850f2f3711029090a",
+    "prompt_novelty_sha256": "sha256:5d208bc014913f74080dd591a8a13469b256fddc95da4f5903f63c5d4b0bcadf",
+    "seed_derivation_receipt_sha256": "sha256:6b22519366182a67fc852aee75f2d1aff42adab6549e35ac359fef2d3ba54a90"
+  },
+  "offline_verification": {
+    "all_self_digests_recomputed": true,
+    "all_registered_source_file_hashes_match_current_and_source_commit": true,
+    "embedded_receipts_equal_standalone_files": true,
+    "three_drand_relays_agree_and_signature_is_verified": true,
+    "contains_request_bodies": false,
+    "contains_prompts": false,
+    "contains_hidden_rows": false,
+    "contains_gold_labels": false,
+    "contains_private_salt_bytes": false,
+    "contains_derived_seed_bytes": false
+  }
+}

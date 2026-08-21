@@ -1,0 +1,43 @@
+{
+  "contains_gold_labels": false,
+  "contains_prompt_text": false,
+  "exact_prompt_overlap_count": 0,
+  "fresh_dataset_manifest_sha256": "sha256:3528cf2c0c8595ea63cf4c8bf090c7f111c036d1b4829a4758e2f837bd45580c",
+  "fresh_prompt_count": 300,
+  "fresh_prompt_set_sha256": "sha256:0f8b4fccc3a26eddee11f4566db31249d1eccaa704a4d890960aefda815e4796",
+  "fresh_unique_prompt_count": 300,
+  "interpretation_boundary": "Zero byte-identical prompts prevents direct prompt reuse. The controlled factor ontology and most synthetic templates remain shared across realizations, so this is not evidence of naturalistic-domain generalization.",
+  "novelty_report_sha256": "sha256:5d208bc014913f74080dd591a8a13469b256fddc95da4f5903f63c5d4b0bcadf",
+  "prior_dataset_manifest_sha256": "sha256:7d4cf80442e240a2e213463052eaea7d7debecad0b6a64d8b0994bf3d730001b",
+  "prior_prompt_count": 600,
+  "prior_prompt_set_sha256": "sha256:0465bfb81ab921093c7f23eda901c600b8d0e42f0da783f34f9b1d5e430d9550",
+  "prior_prompt_source": {
+    "denylist_sha256": "sha256:fc3a0db15d9db2a45657351d72833fe740a3238604de5821f0194281a6b201b2",
+    "file_sha256": "sha256:90c559db5c486ea77514e359a4cedfbb45853d2403c77c0829d7a8d77df35101",
+    "kind": "FROZEN_RELEASED_PROMPT_HASH_DENYLIST",
+    "prompt_hash_set_sha256": "sha256:0465bfb81ab921093c7f23eda901c600b8d0e42f0da783f34f9b1d5e430d9550",
+    "source": {
+      "kind": "UNION_OF_RELEASED_PROMPT_HASH_SETS",
+      "members": [
+        {
+          "denylist_sha256": "sha256:c599ad9cb43dab0bcc26f21e92764867da3968e06837304b5d4f640a28a8aced",
+          "file_sha256": "sha256:132fa2bcfbc01ed27776ca65b2b94988bfa2bd347daf09750833ae4f40e11d6b",
+          "kind": "frozen_denylist",
+          "prompt_hash_set_sha256": "sha256:22b754606a2b2f4e39b60149d778b8e2884489475342987e01e45a5c56f4deaf"
+        },
+        {
+          "file_sha256": "sha256:ba3a2082285a814c0c5dfdfe8b6828d2a48f0ba78a9818fdaf3156f8abc17083",
+          "kind": "released_prompt_packet",
+          "packet_sha256": "sha256:841d2d01635bff7184ff1f8516ee16e5e16d876ea3895358473240a3826b963e",
+          "reviewer_evidence_run": 32438952742,
+          "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
+        }
+      ]
+    }
+  },
+  "prior_unique_prompt_count": 600,
+  "prompt_arm": "ledger_verifier",
+  "provider_neutral_control_suffix": "",
+  "schema_version": "1.0.0",
+  "status": "ZERO_EXACT_PROMPT_OVERLAP"
+}
