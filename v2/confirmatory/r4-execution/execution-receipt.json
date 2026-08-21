@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
+  "status": "CLOSED_ORCHESTRATION_FAILURE_ZERO_POST",
+  "terminal": true,
+  "relaunch_or_resume_permitted": false,
+  "github": {
+    "run_id": 32438952742,
+    "run_attempt": 1,
+    "head_sha": "0c93d789db3bc82be54d4114c98a8be78f5a090c",
+    "created_at": "2026-08-21T02:11:07Z",
+    "completed_at": "2026-08-21T02:13:07Z",
+    "conclusion": "failure",
+    "url": "https://github.com/f0909172434/claimpromote-bench/actions/runs/32438952742",
+    "jobs": {
+      "prepare": 96645636022,
+      "qwen_lane": 96645722864,
+      "flash_lane": 96645722861,
+      "c2": 96645768183,
+      "analyze": 96645815409
+    },
+    "reviewer_evidence_artifact": {
+      "artifact_id": 9431745222,
+      "name": "claimpromotebench-fresh-confirmatory-reviewer-evidence"
+    }
+  },
+  "failure": {
+    "stage": "LOCAL_FROZEN_SOURCE_CHECK_BEFORE_POST_INTENT",
+    "shared_log_message": "confirmatory-service-run: current plan bytes differ from the supplied frozen commit",
+    "cause": "The scored jobs used the default shallow actions/checkout history, so source commit 4815b7ffe559c36eed3c7f820ca1e67411a51546 was not present for the frozen-plan git-show comparison.",
+    "research_inputs_or_methods_changed_after_failure": false
+  },
+  "c2": {
+    "receipt_sha256": "sha256:0b2dd3d07cddad26a3a38fe608dce2ec20c008ab9c49bc092a5c9f038f0a459d",
+    "receipt_file_sha256": "sha256:5693fa804d0a7d1b5f3c952d6da5bca8665b09e9adc9f908213c2c70917cbdf8",
+    "planned_cells": 600,
+    "sealed_cells": 600,
+    "outcome_counts": {
+      "NOT_ATTEMPTED_ORCHESTRATION_FAILURE": 600
+    },
+    "journal_files": {},
+    "raw_run_files": {},
+    "contains_gold_labels": false,
+    "gold_loaded_before_receipt": false,
+    "analysis_executed_before_receipt": false,
+    "missing_cells_are_incorrect_and_cannot_be_retried": true,
+    "complete_lane_file_sha256": {
+      "opencode-go-deepseek-v4-flash-matched": "sha256:42ed8adc8894832870c0574c84a0cc189a4b90d3e8a83740fbda1228f27c3a5d",
+      "opencode-go-qwen3.7-max": "sha256:18699e707125fd60c5665229eb91452de3df64c153798ea6f337dbcba24b5c04"
+    }
+  },
+  "machine_verified_request_accounting": {
+    "opencode-go-deepseek-v4-flash-matched": {
+      "cells": 300,
+      "application_post_count_sum": 0,
+      "client_retry_count_sum": 0
+    },
+    "opencode-go-qwen3.7-max": {
+      "cells": 300,
+      "application_post_count_sum": 0,
+      "client_retry_count_sum": 0
+    },
+    "models_called": false,
+    "provider_quota_consumption": "NOT_ASSERTED; no application-level POST intent or request exists"
+  },
+  "evidence_sha256": {
+    "analysis_file": "sha256:c89c60333177dffb9723b43c028f12b25d9fc3d54fabad2f1a100e90293a3206",
+    "packet_file": "sha256:ba3a2082285a814c0c5dfdfe8b6828d2a48f0ba78a9818fdaf3156f8abc17083",
+    "schedule_file": "sha256:d84f08ae48f8a3c4f5160065ecebcfe5e1f549e6e9d48523596c4c38b694c0db",
+    "dataset_manifest_file": "sha256:c119ae93f138993bd153b18cf417784d24d154e6c0cc5d0241a1ee6f873dd1db",
+    "seed_commitment_file": "sha256:4fb3e3d612aafcb9813f825d6b19e6750e3d6d74750b824fb816f2a54bcda01a"
+  },
+  "interpretation": "This event is not a zero-performing model result. It is a fail-closed orchestration failure before any model request. r4 remains permanently closed; a corrected execution requires a new preregistered study version and a new hidden realization."
+}
