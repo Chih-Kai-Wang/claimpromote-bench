@@ -47,22 +47,17 @@ jobs:
           python -m pip install -e .
           npm ci --prefix tools/drand --ignore-scripts --no-audit --no-fund
 
-      - name: Materialize the precommitted salt and prior seed without logging them
+      - name: Materialize the precommitted salt without logging it
         env:
           CPB_CONFIRMATORY_PRIVATE_SALT: ${{ secrets.CPB_CONFIRMATORY_PRIVATE_SALT }}
-          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
         run: |
           set -euo pipefail
-          for name in CPB_CONFIRMATORY_PRIVATE_SALT CPB_V1_HIDDEN_SEED; do
-            value="${!name:-}"
-            if ! printf '%s' "$value" | grep -Eq '^[0-9a-fA-F]{64}$'; then
-              echo "::error::$name must be exactly 64 hexadecimal characters"
-              exit 1
-            fi
-          done
+          if ! printf '%s' "${CPB_CONFIRMATORY_PRIVATE_SALT:-}" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo '::error::CPB_CONFIRMATORY_PRIVATE_SALT must be exactly 64 hexadecimal characters'
+            exit 1
+          fi
           umask 077
           printf '%s' "$CPB_CONFIRMATORY_PRIVATE_SALT" > "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
-          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-prior-hidden-seed.hex"
 
       - name: Fetch and cryptographically verify the precommitted future beacon
         run: |
@@ -81,23 +76,11 @@ jobs:
             --seed-out "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
             --receipt-out work/confirmatory-seed-receipt.json
 
-      - name: Reconstruct and verify the exact prior hidden prompt set
+      - name: Verify the released prior prompt-hash denylist
         run: |
           set -euo pipefail
-          python scripts/build_v1_dataset.py \
-            --split test \
-            --out work/prior-hidden \
-            --seed-file "$RUNNER_TEMP/cpb-prior-hidden-seed.hex" >/dev/null
-          python scripts/validate_v1_plan.py --test-dir work/prior-hidden >/dev/null
-          python scripts/freeze_prompt_manifest.py \
-            --dataset work/prior-hidden \
-            --out work/prior-prompt-manifest.json >/dev/null
-          python scripts/make_hidden_test_commitment.py \
-            --dataset work/prior-hidden \
-            --seed-file "$RUNNER_TEMP/cpb-prior-hidden-seed.hex" \
-            --prompt-manifest work/prior-prompt-manifest.json \
-            --out work/recomputed-prior-commitment.json >/dev/null
-          diff -u configs/v1-hidden-test-commitment.json work/recomputed-prior-commitment.json >/dev/null
+          python scripts/build_prior_prompt_hash_denylist.py \
+            --verify configs/v1-capable-hidden-prompt-hash-denylist.json
 
       - name: Build the one seed-keyed fresh realization
         run: |
@@ -153,7 +136,7 @@ jobs:
             --dataset work/confirmatory-hidden \
             --out work/confirmatory-prompt-manifest.json >/dev/null
           python scripts/audit_hidden_prompt_novelty.py \
-            --prior-dataset work/prior-hidden \
+            --prior-prompt-manifest configs/v1-capable-hidden-prompt-hash-denylist.json \
             --fresh-dataset work/confirmatory-hidden \
             --arm ledger_verifier \
             --out work/confirmatory-prompt-novelty.json
@@ -244,11 +227,9 @@ jobs:
         if: always()
         run: |
           rm -f "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
-          rm -f "$RUNNER_TEMP/cpb-prior-hidden-seed.hex"
           rm -f "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex"
           rm -f "$RUNNER_TEMP/benchmark-input-alpha.schema.json"
-          rm -rf work/prior-hidden work/confirmatory-hidden
-          rm -f work/prior-prompt-manifest.json work/recomputed-prior-commitment.json
+          rm -rf work/confirmatory-hidden
           rm -f work/confirmatory-prompt-manifest.json
           rm -f work/confirmatory-shortcuts.json work/confirmatory-invariance.json
           rm -f work/confirmatory-formal.json

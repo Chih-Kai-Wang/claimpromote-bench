@@ -24,6 +24,7 @@ def _load_script(name: str) -> ModuleType:
 def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path: Path) -> None:
     builder = _load_script("build_v1_dataset")
     base_commitment = _load_script("make_hidden_test_commitment")
+    denylist_builder = _load_script("build_prior_prompt_hash_denylist")
     novelty_audit = _load_script("audit_hidden_prompt_novelty")
     commitment = _load_script("make_confirmatory_hidden_commitment")
     prior_seed = tmp_path / "prior-seed.bin"
@@ -44,7 +45,28 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
     builder.build("test", dataset, seed, confirmatory_rekey=True)
     prompt_manifest = tmp_path / "prompt-manifest.json"
     prompt_manifest.write_text('{"fresh":true}\n', encoding="utf-8")
-    novelty = novelty_audit.audit(prior_dataset, dataset, "ledger_verifier", "")
+    prior_packet = {
+        "dataset_manifest_sha256": sha256_file(prior_dataset / "manifest.json"),
+        "packet_sha256": "sha256:" + "a" * 64,
+        "prompt_arm": "ledger_verifier",
+        "records": [
+            {"prompt_sha256": digest}
+            for digest in novelty_audit._prompt_hashes(prior_dataset, "ledger_verifier", "")
+        ],
+    }
+    prior_packet_path = tmp_path / "prior-packet.json"
+    prior_packet_path.write_text(json.dumps(prior_packet), encoding="utf-8")
+    denylist = denylist_builder.build(prior_packet_path, sha256_file(prior_packet_path))
+    denylist_path = tmp_path / "prior-denylist.json"
+    denylist_path.write_text(json.dumps(denylist), encoding="utf-8")
+    novelty = novelty_audit.audit(
+        None,
+        dataset,
+        "ledger_verifier",
+        "",
+        prior_prompt_manifest=denylist_path,
+    )
+    assert novelty["prior_prompt_source"]["kind"] == "FROZEN_RELEASED_PROMPT_HASH_DENYLIST"
     novelty_path = tmp_path / "novelty.json"
     novelty_path.write_text(json.dumps(novelty, sort_keys=True) + "\n", encoding="utf-8")
     seed_receipt = {
@@ -57,7 +79,7 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
     seed_receipt_path = tmp_path / "seed-receipt.json"
     seed_receipt_path.write_text(json.dumps(seed_receipt), encoding="utf-8")
     c1_receipt = {
-        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
         "plan_file_sha256": sha256_file(ROOT / "v2" / "fresh-confirmatory-study-plan.json"),
         "dataset_manifest_sha256": sha256_file(dataset / "manifest.json"),
         "planned_cells": 600,
@@ -82,7 +104,7 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
         c1_receipt_path,
     )
     assert record["commitment_version"] == "2.0.0"
-    assert record["study_id"] == "claimpromotebench-v1-fresh-confirmatory-2026-08-r3"
+    assert record["study_id"] == "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
     assert record["source_commit"] == "a" * 40
     assert record["pairs"] == 150
     assert record["instances"] == 300

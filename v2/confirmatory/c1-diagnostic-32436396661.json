@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PRIOR_DATASET_VALID_PROMPT_SET_EXACT_FULL_MANIFEST_IDENTITY_STALE",
+  "github_run_id": 32436396661,
+  "github_job_id": 96638370080,
+  "head_commit": "fb9f9c4dd0856bc776abb59ea4a752198f49d9fb",
+  "model_calls": 0,
+  "remote_steps": {
+    "prior_dataset_rebuild": "PASS",
+    "prior_dataset_validation": "PASS",
+    "prior_prompt_manifest_rebuild": "PASS",
+    "prior_public_commitment_rebuild": "PASS"
+  },
+  "public_commitment_differences": {
+    "prompt_manifest_sha256": {
+      "registered": "sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957",
+      "current_rebuild": "sha256:a52ae00d8c3803ef0c249acbe18228bc9d112d87d8954a64b5e5583c70581adc"
+    },
+    "commitment_sha256": {
+      "registered": "sha256:55a3d2bffb6f23b7253715a9f091d951daaf589e205033d3f46dfd9e6ff6590e",
+      "current_rebuild": "sha256:3f29b00137b99b3cc9eac112911a407182bcb3bf40d1cb3bebef9f90ad605ac7"
+    }
+  },
+  "local_released_packet_crosscheck": {
+    "source_prompt_packet_sha256": "sha256:12242737ee5ec197123af8abfe4879cc676d2bb4e5195d3797aa8c725df0cde6",
+    "current_reconstructed_ledger_prompt_count": 300,
+    "released_model_facing_prompt_count": 300,
+    "unique_each": 300,
+    "set_overlap": 300,
+    "set_equal": true,
+    "position_equal": true
+  },
+  "disposition": "Use the released model-facing 300-prompt SHA-256 denylist directly. Do not equate an all-arm prompt-manifest metadata identity with the exact ledger prompts used by the later capable study."
+}

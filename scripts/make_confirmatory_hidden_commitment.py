@@ -24,6 +24,7 @@ _COMMIT = re.compile(r"^[0-9a-f]{40}$")
 _SOURCE_FILES = (
     ".github/workflows/confirmatory-hidden-freeze.yml",
     ".github/workflows/confirmatory-hidden-study.yml",
+    "configs/v1-capable-hidden-prompt-hash-denylist.json",
     "configs/v1-benchmark-plan.json",
     "policies/math-evidence-transition-1.0.0.json",
     "schemas/agent-decision.schema.json",
@@ -33,6 +34,7 @@ _SOURCE_FILES = (
     "scripts/audit_hidden_prompt_novelty.py",
     "scripts/analyze_confirmatory_hidden_study.py",
     "scripts/build_confirmatory_c1.py",
+    "scripts/build_prior_prompt_hash_denylist.py",
     "scripts/confirmatory_power_analysis.py",
     "scripts/freeze_prompt_manifest.py",
     "scripts/finalize_confirmatory_c2.py",
@@ -48,8 +50,8 @@ _SOURCE_FILES = (
     "src/claimpromotebench/prompts.py",
     "tools/drand/fetch_verified_beacon.mjs",
     "tools/drand/package-lock.json",
-    "v2/confirmatory/power-analysis-r3.json",
-    "v2/confirmatory/power-assumptions-r3.json",
+    "v2/confirmatory/power-analysis-r4.json",
+    "v2/confirmatory/power-assumptions-r4.json",
     "v2/confirmatory/public-dev-text-nb-v1.json",
     "v2/fresh-confirmatory-study-plan.json",
 )

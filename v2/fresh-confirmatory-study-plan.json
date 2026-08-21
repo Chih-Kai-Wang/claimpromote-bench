@@ -1,16 +1,17 @@
 {
   "schema_version": "1.0.0",
-  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
   "status": "FROZEN_BEFORE_SCORED_INFERENCE",
   "truth_status": "OPEN",
   "protocol_lineage": {
-    "supersedes": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+    "supersedes": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
     "prior_void_versions": [
       "claimpromotebench-v1-fresh-confirmatory-2026-08",
-      "claimpromotebench-v1-fresh-confirmatory-2026-08-r2"
+      "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+      "claimpromotebench-v1-fresh-confirmatory-2026-08-r3"
     ],
     "superseded_before_beacon_or_model_calls": true,
-    "reason": "r1 was void because its shallow-model file hash used stale CRLF bytes. r2 corrected that binding and powered the primary family, but a dry C1 audit then found that the C1 commitment builder hard-coded the r1 study ID and was not itself C0-bound. Both faults were detected before their designated beacon was used, before any fresh seed or dataset was derived, and before any scored request. r3 binds every Python script invoked by either confirmatory workflow and derives the commitment study ID from the C1 receipt."
+    "reason": "r1 used a stale CRLF artifact hash; r2 had an unbound C1 builder with a hard-coded study ID; r3 derived exactly one seed but failed before fresh-dataset construction because it compared a current all-arm prompt-manifest metadata identity with the historical v1 commitment. Diagnostics proved that the 300 current ledger prompts match the released model-facing prompt packet exactly, while only the broader manifest identity changed. r4 freezes those 300 released prompt SHA-256 values directly, removes the prior hidden seed from C1, and retains every void attempt. No version issued a model POST."
   },
   "c0": {
     "stage": "C0_BEFORE_PRIVATE_SALT_COMMITMENT_AND_FUTURE_BEACON",
@@ -61,7 +62,10 @@
     "decision_schema_sha256": "sha256:f741bc11665efe5757bb9b7babc96bd3d54d7f133be2ea000bdd5e1b1d4ee2b0",
     "packet_binding": "FROZEN_GENERATOR_PLUS_FUTURE_BEACON_SEED_PLUS_DETERMINISTIC_RENDERER_PLUS_C1_RECEIPT",
     "expected_packet_sha256": null,
-    "novelty_gate": "All 300 ledger_verifier prompt byte strings must be unique and have zero SHA-256 overlap with the exact prior hidden prompt set. Semantic factor and template reuse remains disclosed."
+    "prior_prompt_hash_denylist_path": "configs/v1-capable-hidden-prompt-hash-denylist.json",
+    "prior_prompt_hash_denylist_sha256": "sha256:c599ad9cb43dab0bcc26f21e92764867da3968e06837304b5d4f640a28a8aced",
+    "prior_prompt_hash_denylist_file_sha256": "sha256:132fa2bcfbc01ed27776ca65b2b94988bfa2bd347daf09750833ae4f40e11d6b",
+    "novelty_gate": "All 300 ledger_verifier prompt byte strings must be unique and have zero SHA-256 overlap with the 300 hashes frozen directly from the released model-facing capable-study prompt packet. Semantic factor and template reuse remains disclosed."
   },
   "pilot": {
     "execution": "DISABLED",
@@ -201,12 +205,12 @@
     "bootstrap_replicates": 10000,
     "bootstrap_seed_label": "CPB-FRESH-CONFIRMATORY-COMPOSITION-SENSITIVITY-V1",
     "uncertainty_interpretation": "Pair/factor/template resampling is benchmark-composition sensitivity only, not model stochastic reliability or natural-world generalization.",
-    "power_analysis_report_path": "v2/confirmatory/power-analysis-r3.json",
+    "power_analysis_report_path": "v2/confirmatory/power-analysis-r4.json",
     "power_analysis_method": "Exact pre-hidden pair-sign power using prior exploratory nonzero-pair rates, magnitude-one clipping, the registered 0.10 effect, and Bonferroni alpha 0.025 as a conservative sufficient condition for Holm rejection.",
     "power_analysis_minimum_power": 0.8132626158167235,
     "power_analysis_script_sha256": "sha256:4861c12d37f56aa18e086b1c03afed13dc925fc169a7a9efdc82e85881ea3069",
-    "power_assumptions_file_sha256": "sha256:0fae93aaee795b373ea957c8514f0df483b2a38ea7563c0cd3daa9b20f82c307",
-    "power_analysis_report_file_sha256": "sha256:711521d438b4c361cc98a644425fe862ad49f74151cc747497b17a9c687e7418",
+    "power_assumptions_file_sha256": "sha256:871ad9acccab8545fb0835b751eb9ac3033d2722f0321a0e5578a06e7349b43a",
+    "power_analysis_report_file_sha256": "sha256:95dcfb49cb011a20805cf5602012704224a7d5a944cc17002658eb77c6954c9d",
     "analysis_script_sha256": "sha256:d010f706841313577a3867f50a315462b8fa406998b90a1f84754b743834aba1",
     "c2_finalizer_sha256": "sha256:280de8663d0cfa3e6dfe1ee377b9e0b3a983bb610426ba1ee4ef6707db2015d9"
   },
@@ -243,17 +247,18 @@
   },
   "workflows": {
     "c1_freeze": ".github/workflows/confirmatory-hidden-freeze.yml",
-    "c1_freeze_sha256": "sha256:bc058299c63c6ce010dd4762bd64d9d43ee1fca60ccd4e3d8692002c55b1ab9b",
+    "c1_freeze_sha256": "sha256:0f3241983724dbfa6a1310fae055d04a4d51b15f95f7bbad936dee172cdb0f6d",
     "scored_study": ".github/workflows/confirmatory-hidden-study.yml",
     "scored_study_sha256": "sha256:43d524f9c4fc9981ee1ab6746ed22538c79e23ab1854f450d0ced4dedbb02b71"
   },
   "implementation_sha256": {
     "dataset_builder": "sha256:9f3c2284e498547caad85dd37f8095c5a4d18096ab3bf95aadf85fe2b60ee40c",
+    "prior_prompt_denylist_builder": "sha256:6b3d52738ff74f13f786faca576925de9394d4ceaf2f32fee737332092b7304b",
     "formal_templates": "sha256:8172ab1daab172d9c0d04a91047b5e6c8d4d14810a333188086e09807ad8d644",
-    "prompt_novelty_audit": "sha256:c4c91ae036be8aa36cbaf419d97f4945be05bcb3b9582e015f7266fe86a57f38",
+    "prompt_novelty_audit": "sha256:dd6caa05e7d78d08560071c6adf39ef0481ff877ad0723afe7dfd3641f33ba48",
     "packet_builder": "sha256:f76cf5011365acc390f82c7d440170f4c24c3cd199f7188e9324e5b14a0f996a",
     "c1_builder": "sha256:048d86d3017193cd8e71e38a3ffe35721307c9ec6c28ef2f84abc5e837512d06",
-    "c1_commitment_builder": "sha256:8efe6d0c72ed6614a17703292708f355fe63b281859ac100e5fcca790cf944ba",
+    "c1_commitment_builder": "sha256:0fb497e1205af33a270b382a6241ec4ef1549b6184be5f584ae703f71493211b",
     "prompt_manifest_builder": "sha256:28cca3476801178ee832b988d7e57b56e69fcdbabb5c6ae811acf9714dfac31e",
     "base_commitment_builder": "sha256:41884aefd458176d68a2b79b56169bbf84ee186303cf7703007fbbe17c971fc1",
     "dataset_validator": "sha256:8f6bd1eb6579b0f82ecd4d82104b8befc9744eb7155380244420141aee78343e",
@@ -266,7 +271,7 @@
     "invariance_audit": "sha256:a3ebe864da254b5ce194f7550ef49ddeac8ef3bafbd6face04ea3f6880eefffe",
     "formal_fixtures": "sha256:2fe834c363db752797ffe287b885a7a4bb3381ab79db5d36902834bc0bd05d86",
     "project_metadata": "sha256:73a0a2154699b23bee47ec1bc111b2f83ab62cfe32889e1f22cab589c373bafd",
-    "c0_validator": "sha256:717eb9338b3432ed3b3bbedea196017a78cea95867e66552b8ef513dd7bafe23"
+    "c0_validator": "sha256:323b6b42eafca0960ffddd5147962e230fedccb1f775b0ba7eaa6d2a040ad31e"
   },
   "go_gate": {
     "status": "NO_GO_UNTIL_C0_SALT_HASH_AND_FUTURE_BEACON_ROUND_ARE_PUBLIC_THEN_C1_RECEIPT_IS_COMMITTED",

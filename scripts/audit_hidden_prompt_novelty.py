@@ -11,6 +11,9 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from build_prior_prompt_hash_denylist import validate_denylist  # noqa: E402
 
 from claimpromotebench.dataset import load_json, load_jsonl, validate_dataset  # noqa: E402
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
@@ -38,8 +41,40 @@ def _prompt_hashes(dataset_dir: Path, arm: str, suffix: str) -> list[str]:
     return hashes
 
 
-def audit(prior_dataset: Path, fresh_dataset: Path, arm: str, suffix: str) -> Json:
-    prior = _prompt_hashes(prior_dataset, arm, suffix)
+def audit(
+    prior_dataset: Path | None,
+    fresh_dataset: Path,
+    arm: str,
+    suffix: str,
+    prior_prompt_manifest: Path | None = None,
+) -> Json:
+    if (prior_dataset is None) == (prior_prompt_manifest is None):
+        raise ValueError("provide exactly one prior prompt source")
+    prior_source: Json
+    if prior_prompt_manifest is not None:
+        frozen = load_json(prior_prompt_manifest)
+        validate_denylist(frozen)
+        if (
+            frozen.get("prompt_arm") != arm
+            or frozen.get("provider_neutral_control_suffix") != suffix
+        ):
+            raise ValueError("prior prompt denylist uses a different prompt configuration")
+        prior = [str(value) for value in frozen["prompt_sha256"]]
+        prior_dataset_manifest_sha256 = str(frozen["dataset_manifest_sha256"])
+        prior_source = {
+            "kind": "FROZEN_RELEASED_PROMPT_HASH_DENYLIST",
+            "file_sha256": sha256_file(prior_prompt_manifest),
+            "denylist_sha256": frozen["denylist_sha256"],
+            "source_prompt_packet_sha256": frozen["source"]["prompt_packet_sha256"],
+        }
+    else:
+        assert prior_dataset is not None
+        prior = _prompt_hashes(prior_dataset, arm, suffix)
+        prior_dataset_manifest_sha256 = sha256_file(prior_dataset / "manifest.json")
+        prior_source = {
+            "kind": "DETERMINISTIC_DATASET_RERENDER",
+            "dataset_manifest_sha256": prior_dataset_manifest_sha256,
+        }
     fresh = _prompt_hashes(fresh_dataset, arm, suffix)
     if len(prior) != 300 or len(fresh) != 300:
         raise ValueError("both hidden realizations must contain exactly 300 prompts")
@@ -53,8 +88,9 @@ def audit(prior_dataset: Path, fresh_dataset: Path, arm: str, suffix: str) -> Js
         "status": "ZERO_EXACT_PROMPT_OVERLAP",
         "prompt_arm": arm,
         "provider_neutral_control_suffix": suffix,
-        "prior_dataset_manifest_sha256": sha256_file(prior_dataset / "manifest.json"),
+        "prior_dataset_manifest_sha256": prior_dataset_manifest_sha256,
         "fresh_dataset_manifest_sha256": sha256_file(fresh_dataset / "manifest.json"),
+        "prior_prompt_source": prior_source,
         "prior_prompt_count": len(prior),
         "fresh_prompt_count": len(fresh),
         "prior_unique_prompt_count": len(set(prior)),
@@ -76,20 +112,27 @@ def audit(prior_dataset: Path, fresh_dataset: Path, arm: str, suffix: str) -> Js
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--prior-dataset", type=Path, required=True)
+    prior = parser.add_mutually_exclusive_group(required=True)
+    prior.add_argument("--prior-dataset", type=Path)
+    prior.add_argument("--prior-prompt-manifest", type=Path)
     parser.add_argument("--fresh-dataset", type=Path, required=True)
     parser.add_argument("--arm", default="ledger_verifier")
     parser.add_argument("--suffix", default="")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     report = audit(
-        args.prior_dataset.resolve(),
+        args.prior_dataset.resolve() if args.prior_dataset is not None else None,
         args.fresh_dataset.resolve(),
         args.arm,
         args.suffix,
+        (args.prior_prompt_manifest.resolve() if args.prior_prompt_manifest is not None else None),
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    args.out.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     print(
         json.dumps(
             {

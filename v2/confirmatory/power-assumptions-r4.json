@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
-  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
   "source": {
-    "boundary": "Only the prior adaptive/exploratory capable-study evidence is used; no fresh hidden salt, seed, dataset, or output exists at this stage.",
+    "boundary": "Only the prior adaptive/exploratory capable-study evidence is used; no r4 hidden salt, seed, dataset, or output exists at this stage.",
     "reviewer_evidence_run": 32421292779,
     "old_gold_jsonl_sha256": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
     "old_prompt_packet_sha256": "sha256:12242737ee5ec197123af8abfe4879cc676d2bb4e5195d3797aa8c725df0cde6",

@@ -18,7 +18,7 @@ from validate_stronger_model_study import validate_plan  # noqa: E402
 
 from claimpromotebench.confirmatory_baseline import validate_model  # noqa: E402
 from claimpromotebench.dataset import load_json  # noqa: E402
-from claimpromotebench.hashing import sha256_file  # noqa: E402
+from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
 Json = dict[str, Any]
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -40,6 +40,9 @@ _HASH_BINDINGS = {
     "prompt.renderer_sha256": "src/claimpromotebench/prompts.py",
     "prompt.policy_sha256": "policies/math-evidence-transition-1.0.0.json",
     "prompt.decision_schema_sha256": "schemas/agent-decision.schema.json",
+    "prompt.prior_prompt_hash_denylist_file_sha256": (
+        "configs/v1-capable-hidden-prompt-hash-denylist.json"
+    ),
     "baselines.shallow_model_file_sha256": "v2/confirmatory/public-dev-text-nb-v1.json",
     "baselines.training_script_sha256": "scripts/train_confirmatory_shallow_baseline.py",
     "baselines.predictor_sha256": "scripts/predict_confirmatory_baselines.py",
@@ -47,11 +50,14 @@ _HASH_BINDINGS = {
     "statistics.analysis_script_sha256": "scripts/analyze_confirmatory_hidden_study.py",
     "statistics.c2_finalizer_sha256": "scripts/finalize_confirmatory_c2.py",
     "statistics.power_analysis_script_sha256": "scripts/confirmatory_power_analysis.py",
-    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r3.json",
-    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r3.json",
+    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r4.json",
+    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r4.json",
     "workflows.c1_freeze_sha256": ".github/workflows/confirmatory-hidden-freeze.yml",
     "workflows.scored_study_sha256": ".github/workflows/confirmatory-hidden-study.yml",
     "implementation_sha256.dataset_builder": "scripts/build_v1_dataset.py",
+    "implementation_sha256.prior_prompt_denylist_builder": (
+        "scripts/build_prior_prompt_hash_denylist.py"
+    ),
     "implementation_sha256.formal_templates": "src/claimpromotebench/formal.py",
     "implementation_sha256.prompt_novelty_audit": "scripts/audit_hidden_prompt_novelty.py",
     "implementation_sha256.packet_builder": "scripts/build_stronger_model_packet.py",
@@ -120,6 +126,21 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
         or power.get("design", {}).get("minimum_action_accuracy_effect") != 0.1
     ):
         raise ValueError("C0 pre-hidden power gate is not satisfied")
+    denylist = load_json(ROOT / str(plan["prompt"]["prior_prompt_hash_denylist_path"]))
+    denylist_hashes = denylist.get("prompt_sha256")
+    denylist_payload = dict(denylist)
+    denylist_digest = denylist_payload.pop("denylist_sha256", None)
+    if (
+        denylist.get("status") != "FROZEN_PRIOR_PROMPT_HASH_DENYLIST"
+        or not isinstance(denylist_hashes, list)
+        or len(denylist_hashes) != 300
+        or len(set(denylist_hashes)) != 300
+        or denylist.get("contains_prompt_text") is not False
+        or denylist.get("contains_gold_labels") is not False
+        or denylist_digest != sha256_bytes(canonical_json(denylist_payload).encode("utf-8"))
+        or denylist_digest != plan["prompt"]["prior_prompt_hash_denylist_sha256"]
+    ):
+        raise ValueError("C0 prior prompt-hash denylist is malformed")
     runner_source = (ROOT / "scripts" / "run_confirmatory_service_study.py").read_text(
         encoding="utf-8"
     )
@@ -137,9 +158,17 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     ):
         if required not in workflow_source:
             raise ValueError(f"scored workflow lacks frozen safety boundary: {required}")
-    workflow_sources = workflow_source + (
-        ROOT / ".github/workflows/confirmatory-hidden-freeze.yml"
-    ).read_text(encoding="utf-8")
+    freeze_source = (ROOT / ".github/workflows/confirmatory-hidden-freeze.yml").read_text(
+        encoding="utf-8"
+    )
+    if (
+        "CPB_V1_HIDDEN_SEED" in freeze_source
+        or "--prior-dataset" in freeze_source
+        or "--prior-prompt-manifest configs/v1-capable-hidden-prompt-hash-denylist.json"
+        not in freeze_source
+    ):
+        raise ValueError("C1 freeze does not use the frozen released prior-prompt denylist")
+    workflow_sources = workflow_source + freeze_source
     invoked_scripts = set(re.findall(r"scripts/[A-Za-z0-9_.-]+\.py", workflow_sources))
     unbound_scripts = invoked_scripts - set(_HASH_BINDINGS.values())
     if unbound_scripts:
