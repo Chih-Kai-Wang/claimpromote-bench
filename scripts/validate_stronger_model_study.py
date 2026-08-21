@@ -97,8 +97,20 @@ def validate_plan(plan: Json) -> tuple[dict[str, Json], set[str]]:
                 fail(f"exploratory lane must not claim a paid cap: {lane_id}")
             if lane.get("evidence_ceiling") != "LLM_PATH_TESTED_NOT_PROMOTED":
                 fail(f"exploratory lane has an unsafe evidence ceiling: {lane_id}")
-    if plan.get("pilot", {}).get("retry_count") != 0:
+    pilot = plan.get("pilot")
+    if not isinstance(pilot, dict):
+        fail("plan pilot is malformed")
+    if pilot.get("retry_count") != 0:
         fail("pilot retries must remain disabled")
+    requires_pilot = plan.get("design", {}).get("full_requires_pilot", True)
+    if not isinstance(requires_pilot, bool):
+        fail("plan.design.full_requires_pilot must be Boolean")
+    pilot_pairs = pilot.get("pairs")
+    pilot_instances = pilot.get("instances")
+    if not isinstance(pilot_pairs, list) or not isinstance(pilot_instances, int):
+        fail("pilot pairs or instance count is malformed")
+    if not requires_pilot and (pilot_pairs or pilot_instances != 0):
+        fail("a no-pilot plan must freeze zero pilot pairs and zero pilot instances")
     if plan.get("reporting", {}).get("retain_hidden_reasoning_content") is not False:
         fail("hidden reasoning retention must remain disabled")
     return lanes, formal_ids
@@ -114,17 +126,27 @@ def validate_packet(packet: Json, plan: Json, dataset_dir: Path) -> dict[str, Js
     expected = plan.get("prompt", {}).get("expected_packet_sha256")
     if expected is not None and observed != expected:
         fail("packet_sha256 differs from the study plan")
+    allowed_packet_bindings = {
+        "FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER",
+        "FROZEN_GENERATOR_PLUS_FUTURE_BEACON_SEED_PLUS_DETERMINISTIC_RENDERER_PLUS_C1_RECEIPT",
+    }
     if (
         plan.get("status") == "FROZEN_BEFORE_SCORED_INFERENCE"
         and expected is None
-        and plan.get("prompt", {}).get("packet_binding")
-        != "FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER"
+        and plan.get("prompt", {}).get("packet_binding") not in allowed_packet_bindings
     ):
         fail("frozen plan lacks a packet digest or deterministic binding rule")
     if packet.get("selection_uses_model_outputs") is not False:
         fail("pilot selection must not use model outputs")
-    if packet.get("dataset_manifest_sha256") != plan["dataset"]["dataset_manifest_sha256"]:
-        fail("packet dataset digest differs from plan")
+    expected_dataset_manifest = plan["dataset"].get("dataset_manifest_sha256")
+    if isinstance(expected_dataset_manifest, str):
+        if packet.get("dataset_manifest_sha256") != expected_dataset_manifest:
+            fail("packet dataset digest differs from plan")
+    elif not (
+        expected_dataset_manifest is None
+        and plan.get("design", {}).get("dataset_manifest_bound_at_c1") is True
+    ):
+        fail("plan lacks a dataset digest or registered C1 binding")
     for key in ("policy_sha256", "renderer_sha256", "decision_schema_sha256"):
         if packet.get(key) != plan.get("prompt", {}).get(key):
             fail(f"packet {key} differs from plan")
@@ -132,6 +154,7 @@ def validate_packet(packet: Json, plan: Json, dataset_dir: Path) -> dict[str, Js
     if not isinstance(records, list):
         fail("packet.records must be a list")
     packet_by_id: dict[str, Json] = {}
+    confirmatory_packet = plan.get("design", {}).get("confirmatory_inference_packet", False)
     for row in records:
         if not isinstance(row, dict):
             fail("packet record must be an object")
@@ -146,6 +169,15 @@ def validate_packet(packet: Json, plan: Json, dataset_dir: Path) -> dict[str, Js
             fail(f"packet prompt hash mismatch: {item_id}")
         if row.get("utf8_bytes") != len(encoded):
             fail(f"packet prompt byte count mismatch: {item_id}")
+        if confirmatory_packet:
+            item = row.get("input_item")
+            if not isinstance(item, dict) or str(item.get("id")) != item_id or "gold" in item:
+                fail(f"confirmatory packet input boundary is malformed: {item_id}")
+            if row.get("input_sha256") != sha256_bytes(canonical_json(item).encode("utf-8")):
+                fail(f"confirmatory packet input digest mismatch: {item_id}")
+            template_id = row.get("template_id")
+            if not isinstance(template_id, str) or not template_id or template_id in prompt:
+                fail(f"confirmatory template boundary is malformed: {item_id}")
         packet_by_id[item_id] = row
     dataset_ids = {str(row["id"]) for row in load_jsonl(dataset_dir / "inputs.jsonl")}
     if set(packet_by_id) != dataset_ids:
@@ -310,6 +342,7 @@ def validate_run(
         "sha256": sha256_file(path),
         "computed_cost_usd": computed_cost if known_costs else None,
         "frozen_plan_commit": next(iter(frozen_commits)),
+        "full_requires_pilot": plan.get("design", {}).get("full_requires_pilot", True),
     }
 
 
@@ -353,6 +386,8 @@ def validate_full_run_gates(run_reports: list[Json]) -> None:
         if report["phase"] != "full":
             continue
         lane_id = str(report["lane_id"])
+        if report.get("full_requires_pilot") is False:
+            continue
         pilot = pilots.get(lane_id)
         if pilot is None:
             fail(f"full run lacks matching pilot evidence: {lane_id}")
@@ -389,8 +424,15 @@ def main() -> int:
     validate_dataset(dataset_dir, ROOT)
     plan_path = args.plan.resolve()
     plan = load_json(plan_path)
-    if sha256_file(dataset_dir / "manifest.json") != plan["dataset"]["dataset_manifest_sha256"]:
-        fail("dataset manifest differs from the plan")
+    expected_dataset_manifest = plan["dataset"].get("dataset_manifest_sha256")
+    if isinstance(expected_dataset_manifest, str):
+        if sha256_file(dataset_dir / "manifest.json") != expected_dataset_manifest:
+            fail("dataset manifest differs from the plan")
+    elif not (
+        expected_dataset_manifest is None
+        and plan.get("design", {}).get("dataset_manifest_bound_at_c1") is True
+    ):
+        fail("plan lacks a dataset digest or registered C1 binding")
     lanes, formal_ids = validate_plan(plan)
     packet = load_json(args.packet.resolve())
     packet_by_id = validate_packet(packet, plan, dataset_dir)

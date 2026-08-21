@@ -526,7 +526,9 @@ def selected_variants(plan: Json, split: str) -> list[tuple[int, Json, int]]:
     return selected
 
 
-def pair_specs(plan: Json, split: str, seed: bytes) -> list[Json]:
+def pair_specs(
+    plan: Json, split: str, seed: bytes, *, confirmatory_rekey: bool = False
+) -> list[Json]:
     counters: defaultdict[str, int] = defaultdict(int)
     profiles = [str(value) for value in plan["surface_profiles"]]
     specs: list[Json] = []
@@ -550,14 +552,35 @@ def pair_specs(plan: Json, split: str, seed: bytes) -> list[Json]:
                 "surface": surface,
             }
         )
+    if confirmatory_rekey:
+        if split != "test":
+            raise ValueError("confirmatory rekey is restricted to the private test split")
+        ordered = sorted(
+            specs,
+            key=lambda row: keyed_bytes(seed, f"confirmatory-pair-order:{row['pair_id']}"),
+        )
+        for number, row in enumerate(ordered, start=1):
+            row["pair_id"] = f"v1-test-cfm-{number:03d}"
+            row["template_id"] = (
+                f"formal-logic-template-{(number - 1) % 24 + 1:02d}"
+                if row["family"] == "FORMAL"
+                else f"surface-profile-{row['surface']}"
+            )
+        specs = ordered
     return specs
 
 
-def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
+def build(
+    split: str,
+    out_dir: Path,
+    seed_file: Path | None,
+    *,
+    confirmatory_rekey: bool = False,
+) -> Json:
     plan = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
     policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
     seed = load_seed(split, seed_file)
-    specs = pair_specs(plan, split, seed)
+    specs = pair_specs(plan, split, seed, confirmatory_rekey=confirmatory_rekey)
     expected_pairs = int(plan["splits"][split]["pairs"])
     if len(specs) != expected_pairs:
         raise ValueError(f"constructed {len(specs)} {split} specs, expected {expected_pairs}")
@@ -613,17 +636,18 @@ def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
             raise AssertionError(f"unexpected invalid action for {pair_id}")
         if pair_rows[valid_side]["gold"]["action"] != "ALLOW":
             raise AssertionError(f"valid member did not ALLOW for {pair_id}")
-        pairs.append(
-            {
-                "pair_id": pair_id,
-                "family": spec["family"],
-                "member_ids": [f"{pair_id}-a", f"{pair_id}-b"],
-                "invalid_id": invalid_id,
-                "valid_id": valid_id,
-                "factor_id": spec["factor"],
-                "controlled_json_pointers": spec["pointers"],
-            }
-        )
+        pair_record: Json = {
+            "pair_id": pair_id,
+            "family": spec["family"],
+            "member_ids": [f"{pair_id}-a", f"{pair_id}-b"],
+            "invalid_id": invalid_id,
+            "valid_id": valid_id,
+            "factor_id": spec["factor"],
+            "controlled_json_pointers": spec["pointers"],
+        }
+        if "template_id" in spec:
+            pair_record["template_id"] = spec["template_id"]
+        pairs.append(pair_record)
         family_counts[spec["family"]] += 1
         invalid_sides[spec["invalid"].upper()] += 1
         invalid_actions[spec["action"]] += 1
@@ -685,8 +709,16 @@ def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
 
     manifest = {
         "schema_version": "1.0.0",
-        "dataset_id": f"claimpromotebench-v1-{split}",
-        "release_status": "PUBLIC_DEV" if split == "dev" else "PRIVATE_TEST_UNCOMMITTED",
+        "dataset_id": (
+            "claimpromotebench-v1-confirmatory-test"
+            if confirmatory_rekey
+            else f"claimpromotebench-v1-{split}"
+        ),
+        "release_status": (
+            "PRIVATE_CONFIRMATORY_TEST_UNCOMMITTED"
+            if confirmatory_rekey
+            else ("PUBLIC_DEV" if split == "dev" else "PRIVATE_TEST_UNCOMMITTED")
+        ),
         "evaluation_time": policy["evaluation_time"],
         "policy_id": policy["policy_id"],
         "policy_version": policy["policy_version"],
@@ -709,6 +741,9 @@ def build(split: str, out_dir: Path, seed_file: Path | None) -> Json:
         "model_experiments": "PENDING",
         "files": {relative: sha256_file(out_dir / relative) for relative in generated},
     }
+    if confirmatory_rekey:
+        manifest["confirmatory_rekey_enabled"] = True
+        manifest["identifier_namespace"] = "PRIVATE_SEED_KEYED_OPAQUE_CFM_V1"
     write_json(out_dir / "manifest.json", manifest)
     summary = validate_dataset(out_dir, ROOT)
     return {
@@ -729,11 +764,13 @@ def main() -> int:
     parser.add_argument("--split", choices=("dev", "test"), required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--seed-file", type=Path)
+    parser.add_argument("--confirmatory-rekey", action="store_true")
     args = parser.parse_args()
     report = build(
         args.split,
         args.out.resolve(),
         args.seed_file.resolve() if args.seed_file is not None else None,
+        confirmatory_rekey=args.confirmatory_rekey,
     )
     print(json.dumps(report, sort_keys=True))
     return 0

@@ -82,6 +82,15 @@ def find_lane(plan: Json, lane_id: str) -> tuple[Json, bool]:
     fail(f"unknown lane_id: {lane_id}")
 
 
+def full_requires_pilot(plan: Json) -> bool:
+    """Return the registered pilot rule, preserving legacy plans by default."""
+
+    value = plan.get("design", {}).get("full_requires_pilot", True)
+    if not isinstance(value, bool):
+        fail("plan.design.full_requires_pilot must be Boolean")
+    return value
+
+
 def verify_frozen_plan(plan_path: Path, commit: str, plan: Json) -> None:
     if plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE":
         fail("study plan is not frozen")
@@ -562,7 +571,10 @@ def verify_packet(packet: Json, plan: Json, dataset_dir: Path) -> list[Json]:
     if expected is not None:
         if observed != expected:
             fail("packet digest is not bound by the frozen plan")
-    elif plan["prompt"].get("packet_binding") != ("FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER"):
+    elif plan["prompt"].get("packet_binding") not in {
+        "FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER",
+        "FROZEN_GENERATOR_PLUS_FUTURE_BEACON_SEED_PLUS_DETERMINISTIC_RENDERER_PLUS_C1_RECEIPT",
+    }:
         fail("packet lacks a registered deterministic binding rule")
     digest_payload = deepcopy(packet)
     digest_payload.pop("packet_sha256", None)
@@ -571,8 +583,15 @@ def verify_packet(packet: Json, plan: Json, dataset_dir: Path) -> list[Json]:
         fail("packet content does not match its packet_sha256")
     if packet.get("selection_uses_model_outputs") is not False:
         fail("packet selection boundary changed")
-    if packet.get("dataset_manifest_sha256") != plan["dataset"]["dataset_manifest_sha256"]:
-        fail("packet dataset digest differs from the frozen plan")
+    expected_dataset_manifest = plan["dataset"].get("dataset_manifest_sha256")
+    if isinstance(expected_dataset_manifest, str):
+        if packet.get("dataset_manifest_sha256") != expected_dataset_manifest:
+            fail("packet dataset digest differs from the frozen plan")
+    elif not (
+        expected_dataset_manifest is None
+        and plan.get("design", {}).get("dataset_manifest_bound_at_c1") is True
+    ):
+        fail("frozen plan lacks a dataset digest or registered C1 binding")
     for key in ("policy_sha256", "renderer_sha256", "decision_schema_sha256"):
         if packet.get(key) != plan["prompt"].get(key):
             fail(f"packet {key} differs from the frozen plan")
@@ -580,6 +599,7 @@ def verify_packet(packet: Json, plan: Json, dataset_dir: Path) -> list[Json]:
     if not isinstance(records, list):
         fail("packet records must be a list")
     item_ids: set[str] = set()
+    confirmatory_packet = plan.get("design", {}).get("confirmatory_inference_packet", False)
     for row in records:
         if not isinstance(row, dict):
             fail("packet record must be an object")
@@ -595,6 +615,12 @@ def verify_packet(packet: Json, plan: Json, dataset_dir: Path) -> list[Json]:
             fail(f"packet prompt hash mismatch: {item_id}")
         if row.get("utf8_bytes") != len(encoded):
             fail(f"packet prompt byte count mismatch: {item_id}")
+        if confirmatory_packet:
+            item = row.get("input_item")
+            if not isinstance(item, dict) or str(item.get("id")) != item_id or "gold" in item:
+                fail(f"confirmatory packet input boundary is malformed: {item_id}")
+            if row.get("input_sha256") != sha256_bytes(canonical_json(item).encode("utf-8")):
+                fail(f"confirmatory packet input digest mismatch: {item_id}")
     dataset_ids = {str(row["id"]) for row in load_jsonl(dataset_dir / "inputs.jsonl")}
     if item_ids != dataset_ids:
         fail("packet and dataset item IDs differ")
@@ -657,14 +683,27 @@ def main() -> int:
     if args.phase == "full" and not formal:
         fail("exploratory subscription lanes cannot execute a full scored run")
     validate_dataset(dataset_dir, ROOT)
-    if sha256_file(dataset_dir / "manifest.json") != plan["dataset"]["dataset_manifest_sha256"]:
-        fail("dataset manifest differs from the frozen plan")
+    expected_dataset_manifest = plan["dataset"].get("dataset_manifest_sha256")
+    if isinstance(expected_dataset_manifest, str):
+        if sha256_file(dataset_dir / "manifest.json") != expected_dataset_manifest:
+            fail("dataset manifest differs from the frozen plan")
+    elif not (
+        expected_dataset_manifest is None
+        and plan.get("design", {}).get("dataset_manifest_bound_at_c1") is True
+    ):
+        fail("frozen plan lacks a dataset digest or registered C1 binding")
     packet = load_json(args.packet.resolve())
     records = verify_packet(packet, plan, dataset_dir)
+    requires_pilot = full_requires_pilot(plan)
+    if args.phase == "pilot" and not requires_pilot:
+        fail("the frozen plan disables pilot execution")
     if args.phase == "full" and formal:
-        if args.pilot_run is None:
-            fail("formal full run requires --pilot-run as GO-gate evidence")
-        verify_pilot_go(args.pilot_run.resolve(), lane, packet, args.frozen_plan_commit.lower())
+        if requires_pilot:
+            if args.pilot_run is None:
+                fail("formal full run requires --pilot-run as GO-gate evidence")
+            verify_pilot_go(args.pilot_run.resolve(), lane, packet, args.frozen_plan_commit.lower())
+        elif args.pilot_run is not None:
+            fail("the frozen no-pilot plan rejects --pilot-run evidence")
     selected_ids = set(packet["pilot_item_ids"]) if args.phase == "pilot" else None
     selected = [row for row in records if selected_ids is None or row["item_id"] in selected_ids]
     expected_count = (
@@ -681,7 +720,7 @@ def main() -> int:
     if formal:
         if upper is None or not isinstance(cap, (int, float)):
             fail("formal lane requires known prices and a numeric spend cap")
-        if args.phase == "full":
+        if args.phase == "full" and requires_pilot:
             pilot_ids = {str(value) for value in packet["pilot_item_ids"]}
             pilot_packet = [row for row in records if str(row["item_id"]) in pilot_ids]
             pilot_upper = conservative_upper_bound_usd(pilot_packet, lane)

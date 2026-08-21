@@ -59,6 +59,45 @@ def test_packet_build_is_deterministic_and_model_output_independent(
     ]
 
 
+def test_fresh_confirmatory_plan_can_disable_pilot_execution(
+    tmp_path: Path,
+    stronger_dataset: Path,
+) -> None:
+    builder = _load_script("build_stronger_model_packet")
+    runner = _load_script("run_stronger_model_study")
+    validator = _load_script("validate_stronger_model_study")
+    plan = load_json(PLAN)
+    plan["design"] = {"full_requires_pilot": False}
+    plan["pilot"] = {
+        "pairs": [],
+        "instances": 0,
+        "retry_count": 0,
+        "execution": "DISABLED",
+    }
+    plan["prompt"]["expected_packet_sha256"] = None
+    plan["prompt"]["packet_binding"] = "FROZEN_DATASET_PLUS_DETERMINISTIC_RENDERER"
+    plan_path = tmp_path / "no-pilot-plan.json"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+
+    packet = builder.build_packet(stronger_dataset, plan_path)
+    assert packet["pilot_pair_ids"] == []
+    assert packet["pilot_item_ids"] == []
+    assert runner.full_requires_pilot(plan) is False
+    validator.validate_plan(plan)
+    validator.validate_packet(packet, plan, stronger_dataset)
+    validator.validate_full_run_gates(
+        [{"lane_id": "formal-lane", "phase": "full", "full_requires_pilot": False}]
+    )
+
+
+def test_legacy_full_run_still_requires_pilot_evidence() -> None:
+    validator = _load_script("validate_stronger_model_study")
+    with pytest.raises(SystemExit, match="lacks matching pilot evidence"):
+        validator.validate_full_run_gates(
+            [{"lane_id": "formal-lane", "phase": "full", "full_requires_pilot": True}]
+        )
+
+
 def test_provider_schema_is_flattened_for_strict_output_modes() -> None:
     runner = _load_script("run_stronger_model_study")
     schema = runner.provider_decision_schema(

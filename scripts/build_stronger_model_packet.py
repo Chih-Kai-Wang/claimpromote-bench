@@ -49,10 +49,14 @@ def build_packet(dataset_dir: Path, plan_path: Path) -> Json:
     if not isinstance(plan, dict):
         fail("study plan must be an object")
     validate_dataset(dataset_dir, ROOT)
-    if sha256_file(dataset_dir / "manifest.json") != _expected(
-        plan, "dataset", "dataset_manifest_sha256"
-    ):
-        fail("rebuilt public-dev manifest differs from the study plan")
+    observed_dataset_manifest = sha256_file(dataset_dir / "manifest.json")
+    expected_dataset_manifest = plan.get("dataset", {}).get("dataset_manifest_sha256")
+    c1_dataset_binding = plan.get("design", {}).get("dataset_manifest_bound_at_c1", False)
+    if isinstance(expected_dataset_manifest, str):
+        if observed_dataset_manifest != expected_dataset_manifest:
+            fail("rebuilt dataset manifest differs from the study plan")
+    elif expected_dataset_manifest is not None or c1_dataset_binding is not True:
+        fail("study plan lacks either a dataset digest or the registered C1 binding")
     if sha256_file(ROOT / "configs" / "v1-benchmark-plan.json") != _expected(
         plan, "dataset", "benchmark_plan_sha256"
     ):
@@ -74,11 +78,17 @@ def build_packet(dataset_dir: Path, plan_path: Path) -> Json:
     evaluation_time = str(manifest["evaluation_time"])
     prompt_arm = str(plan["prompt"]["arm"])
     suffix = str(plan["prompt"]["provider_neutral_control_suffix"])
+    confirmatory_packet = plan.get("design", {}).get("confirmatory_inference_packet", False)
+    if not isinstance(confirmatory_packet, bool):
+        fail("plan.design.confirmatory_inference_packet must be Boolean")
 
     pairs = load_json(dataset_dir / "pairs.json")
     if not isinstance(pairs, list):
         fail("pairs.json must contain a list")
-    selected = select_pilot_pairs(pairs)
+    full_requires_pilot = plan.get("design", {}).get("full_requires_pilot", True)
+    if not isinstance(full_requires_pilot, bool):
+        fail("plan.design.full_requires_pilot must be Boolean")
+    selected = select_pilot_pairs(pairs) if full_requires_pilot else []
     selected_pair_ids = [str(pair["pair_id"]) for pair in selected]
     expected_pair_ids = [str(value) for value in plan["pilot"]["pairs"]]
     if selected_pair_ids != expected_pair_ids:
@@ -105,17 +115,25 @@ def build_packet(dataset_dir: Path, plan_path: Path) -> Json:
             evaluation_time=evaluation_time,
         )
         prompt = f"{rendered.rstrip()}\n{suffix}" if suffix else f"{rendered.rstrip()}\n"
-        records.append(
-            {
-                "item_id": item_id,
-                "pair_id": str(pair["pair_id"]),
-                "family": str(pair["family"]),
-                "factor_id": str(pair["factor_id"]),
-                "prompt": prompt,
-                "prompt_sha256": sha256_bytes(prompt.encode("utf-8")),
-                "utf8_bytes": len(prompt.encode("utf-8")),
-            }
-        )
+        record: Json = {
+            "item_id": item_id,
+            "pair_id": str(pair["pair_id"]),
+            "family": str(pair["family"]),
+            "factor_id": str(pair["factor_id"]),
+            "prompt": prompt,
+            "prompt_sha256": sha256_bytes(prompt.encode("utf-8")),
+            "utf8_bytes": len(prompt.encode("utf-8")),
+        }
+        if confirmatory_packet:
+            template_id = pair.get("template_id")
+            if not isinstance(template_id, str) or not template_id:
+                fail(f"confirmatory pair lacks evaluator-only template_id: {pair['pair_id']}")
+            if template_id in prompt:
+                fail(f"evaluator-only template_id leaked into prompt: {item_id}")
+            record["template_id"] = template_id
+            record["input_item"] = item
+            record["input_sha256"] = sha256_bytes(canonical_json(item).encode("utf-8"))
+        records.append(record)
 
     pilot_item_ids = [str(member_id) for pair in selected for member_id in pair["member_ids"]]
     packet: Json = {
