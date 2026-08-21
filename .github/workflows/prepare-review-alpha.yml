@@ -1,10 +1,10 @@
-name: fresh confirmatory C1 freeze
+name: recover void r5 prompt hashes without model calls
 
 on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: Type FREEZE_FRESH_CONFIRMATORY_C1 to derive and commit, without model calls
+        description: Type RECOVER_VOID_R5_PROMPT_HASHES_NO_MODEL
         required: true
         type: string
 
@@ -12,20 +12,25 @@ permissions:
   contents: read
 
 concurrency:
-  group: fresh-confirmatory-c1-v1
+  group: void-r5-prompt-hash-recovery
   cancel-in-progress: false
 
 jobs:
-  freeze:
-    name: derive one dataset and emit public-safe C1 hashes only
+  recover:
+    name: reconstruct only the 300 r5 prompt hashes
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
-      - name: Require the explicit no-model trigger
-        run: test '${{ inputs.confirm }}' = 'FREEZE_FRESH_CONFIRMATORY_C1'
+      - name: Require the explicit one-time no-model trigger
+        run: |
+          set -euo pipefail
+          test '${{ inputs.confirm }}' = 'RECOVER_VOID_R5_PROMPT_HASHES_NO_MODEL'
+          test "$GITHUB_RUN_ATTEMPT" = '1'
 
-      - name: Check out C0 source
+      - name: Check out the complete r5 evidence history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -34,20 +39,38 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
-      - name: Set up Node for the pinned official drand verifier
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: "20.19.4"
-          cache: npm
-          cache-dependency-path: tools/drand/package-lock.json
+      - name: Install the frozen benchmark implementation
+        run: python -m pip install -e .
 
-      - name: Install frozen dependencies
+      - name: Verify every r5 C1-bound source file before reconstruction
         run: |
           set -euo pipefail
-          python -m pip install -e .
-          npm ci --prefix tools/drand --ignore-scripts --no-audit --no-fund
+          test -z "${OPENCODE_GO_API_KEY:-}"
+          python - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+          from claimpromotebench.hashing import sha256_file
 
-      - name: Materialize the precommitted salt without logging it
+          root = Path('.')
+          commitment = json.loads(
+              (root / 'v2/confirmatory/c1-r5/confirmatory-hidden-commitment.json').read_text()
+          )
+          assert commitment['source_commit'] == 'd58efb6a098645973918414ef5a3df7592cf19f6'
+          for relative, expected in commitment['source_files_sha256'].items():
+              observed = sha256_file(root / relative)
+              assert observed == expected, (relative, observed, expected)
+              payload = subprocess.run(
+                  ['git', 'show', f"{commitment['source_commit']}:{relative}"],
+                  check=True,
+                  stdout=subprocess.PIPE,
+              ).stdout
+              assert 'sha256:' + hashlib.sha256(payload).hexdigest() == expected
+          print('R5_C1_SOURCE_CLOSURE_EXACT')
+          PY
+
+      - name: Materialize the still-committed r5 salt without logging it
         env:
           CPB_CONFIRMATORY_PRIVATE_SALT: ${{ secrets.CPB_CONFIRMATORY_PRIVATE_SALT }}
         run: |
@@ -57,129 +80,47 @@ jobs:
             exit 1
           fi
           umask 077
-          printf '%s' "$CPB_CONFIRMATORY_PRIVATE_SALT" > "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
+          printf '%s' "$CPB_CONFIRMATORY_PRIVATE_SALT" > "$RUNNER_TEMP/cpb-r5-salt.hex"
 
-      - name: Fetch and cryptographically verify the precommitted future beacon
-        run: |
-          set -euo pipefail
-          node tools/drand/fetch_verified_beacon.mjs \
-            configs/fresh-confirmatory-seed-commitment.json \
-            work/confirmatory-verified-beacon.json
-
-      - name: Derive the single permitted hidden seed
+      - name: Reproduce the exact committed r5 seed without exposing it
         run: |
           set -euo pipefail
           python scripts/derive_confirmatory_seed.py \
-            --salt-file "$RUNNER_TEMP/cpb-confirmatory-salt.hex" \
-            --commitment configs/fresh-confirmatory-seed-commitment.json \
-            --verified-beacon work/confirmatory-verified-beacon.json \
-            --seed-out "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
-            --receipt-out work/confirmatory-seed-receipt.json
+            --salt-file "$RUNNER_TEMP/cpb-r5-salt.hex" \
+            --commitment v2/confirmatory/c1-r5/fresh-confirmatory-seed-commitment.json \
+            --verified-beacon v2/confirmatory/c1-r5/confirmatory-verified-beacon.json \
+            --seed-out "$RUNNER_TEMP/cpb-r5-derived-seed.hex" \
+            --receipt-out work/r5-recovered-seed-receipt.json
+          cmp work/r5-recovered-seed-receipt.json \
+            v2/confirmatory/c1-r5/confirmatory-seed-receipt.json
 
-      - name: Verify the union of every released prior prompt-hash denylist
-        run: |
-          set -euo pipefail
-          python scripts/build_prior_prompt_hash_denylist.py \
-            --verify configs/prior-hidden-prompt-hash-denylist-r5.json
-
-      - name: Build the one seed-keyed fresh realization
+      - name: Reconstruct the exact r5 packet in private workspace
         run: |
           set -euo pipefail
           python scripts/build_v1_dataset.py \
             --split test \
             --confirmatory-rekey \
-            --out work/confirmatory-hidden \
-            --seed-file "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" >/dev/null
-          python scripts/validate_v1_plan.py --test-dir work/confirmatory-hidden >/dev/null
-          python -m claimpromotebench.shortcuts \
-            --dataset work/confirmatory-hidden \
-            --out work/confirmatory-shortcuts.json >/dev/null
-
-      - name: Audit fresh metamorphic invariance
-        run: |
-          set -euo pipefail
-          cp schemas/benchmark-input.schema.json "$RUNNER_TEMP/benchmark-input-alpha.schema.json"
-          restore_schema() {
-            cp "$RUNNER_TEMP/benchmark-input-alpha.schema.json" schemas/benchmark-input.schema.json
-          }
-          trap restore_schema EXIT
-          cp schemas/benchmark-input-v1.schema.json schemas/benchmark-input.schema.json
-          python -m claimpromotebench.invariance \
-            --dataset work/confirmatory-hidden \
-            --out work/confirmatory-invariance.json >/dev/null
-
-      - name: Set up pinned Lean
-        uses: leanprover/lean-action@8dd5d0978ba1c4ec4ae0835a93f88d946799944f
-        with:
-          lake-package-directory: work/confirmatory-hidden
-          auto-config: false
-          build: false
-          test: false
-          lint: false
-          leanchecker: false
-          use-mathlib-cache: false
-
-      - name: Verify all fresh formal modules with private output suppressed
-        run: |
-          set -euo pipefail
-          (cd work/confirmatory-hidden && lake build >/dev/null 2>&1)
-          (cd work/confirmatory-hidden && lake env leanchecker ClaimPromoteFormal >/dev/null 2>&1)
-          python -m claimpromotebench.formal \
-            --dataset work/confirmatory-hidden \
-            --fixtures fixtures/formal/cases.json \
-            --out work/confirmatory-formal.json >/dev/null 2>&1
-
-      - name: Prove zero exact prompt reuse and freeze the inference-only packet
-        run: |
-          set -euo pipefail
-          python scripts/freeze_prompt_manifest.py \
-            --dataset work/confirmatory-hidden \
-            --out work/confirmatory-prompt-manifest.json >/dev/null
-          python scripts/audit_hidden_prompt_novelty.py \
-            --prior-prompt-manifest configs/prior-hidden-prompt-hash-denylist-r5.json \
-            --fresh-dataset work/confirmatory-hidden \
-            --arm ledger_verifier \
-            --out work/confirmatory-prompt-novelty.json
+            --out work/r5-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-r5-derived-seed.hex" >/dev/null
+          python scripts/validate_v1_plan.py --test-dir work/r5-hidden >/dev/null
           python scripts/build_stronger_model_packet.py \
-            --dataset work/confirmatory-hidden \
+            --dataset work/r5-hidden \
             --plan v2/fresh-confirmatory-study-plan.json \
-            --out work/confirmatory-packet.json >/dev/null
-          python scripts/validate_stronger_model_study.py \
-            --dataset work/confirmatory-hidden \
-            --packet work/confirmatory-packet.json \
-            --plan v2/fresh-confirmatory-study-plan.json >/dev/null
+            --out work/r5-packet.json >/dev/null
 
-      - name: Freeze hidden baseline vectors and every one of 600 request bodies
+      - name: Emit only the public-safe 900-hash union and recovery receipt
         run: |
           set -euo pipefail
-          python scripts/predict_confirmatory_baselines.py \
-            --model v2/confirmatory/public-dev-text-nb-v1.json \
-            --packet work/confirmatory-packet.json \
-            --plan v2/fresh-confirmatory-study-plan.json \
-            --out work/confirmatory-baselines.json >/dev/null
-          python scripts/build_confirmatory_c1.py \
-            --packet work/confirmatory-packet.json \
-            --baselines work/confirmatory-baselines.json \
-            --plan v2/fresh-confirmatory-study-plan.json \
-            --schedule-out work/confirmatory-request-schedule.json \
-            --receipt-out work/confirmatory-c1-receipt.json
+          python scripts/recover_void_confirmatory_prompt_hashes.py \
+            --base-denylist configs/prior-hidden-prompt-hash-denylist-r5.json \
+            --packet work/r5-packet.json \
+            --commitment v2/confirmatory/c1-r5/confirmatory-hidden-commitment.json \
+            --c1-run-receipt v2/confirmatory/c1-r5/run-receipt.json \
+            --recovery-run-id "$GITHUB_RUN_ID" \
+            --out work/prior-hidden-prompt-hash-denylist-r6.json \
+            --receipt-out work/r5-prompt-hash-recovery-receipt.json
 
-      - name: Emit the source-bound public commitment
-        run: |
-          set -euo pipefail
-          python scripts/make_confirmatory_hidden_commitment.py \
-            --dataset work/confirmatory-hidden \
-            --seed-file "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
-            --prompt-manifest work/confirmatory-prompt-manifest.json \
-            --source-commit "$GITHUB_SHA" \
-            --prior-commitment configs/v1-hidden-test-commitment.json \
-            --prior-commitment v2/confirmatory/c1-r4/confirmatory-hidden-commitment.json \
-            --novelty-report work/confirmatory-prompt-novelty.json \
-            --seed-receipt work/confirmatory-seed-receipt.json \
-            --c1-receipt work/confirmatory-c1-receipt.json \
-            --out work/confirmatory-hidden-commitment.json
-
-      - name: Assert that every uploaded file is public-safe
+      - name: Assert the uploaded evidence crosses no private-content boundary
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -187,55 +128,49 @@ jobs:
           from pathlib import Path
 
           root = Path('work')
-          commitment = json.loads((root / 'confirmatory-hidden-commitment.json').read_text())
-          assert commitment['pairs'] == 150
-          assert commitment['instances'] == 300
-          assert commitment['freshness_checks']['exact_registered_prompt_overlap_with_prior_hidden'] == 0
-          assert commitment['prompt_novelty_audit']['prior_prompt_count'] == 600
-          assert len(commitment['prior_hidden_commitments']) == 2
-          assert commitment['c1_receipt']['planned_cells'] == 600
-          assert commitment['contains_hidden_rows'] is False
-          assert commitment['contains_gold_labels'] is False
-          assert commitment['contains_seed_bytes'] is False
-          for name in (
-              'confirmatory-hidden-commitment.json',
-              'confirmatory-seed-receipt.json',
-              'confirmatory-c1-receipt.json',
-              'confirmatory-verified-beacon.json',
-              'confirmatory-prompt-novelty.json',
-          ):
-              text = (root / name).read_text()
-              for forbidden in ('claim_text', 'requested_transition', 'minimal_missing_evidence'):
-                  assert forbidden not in text, (name, forbidden)
-          print(json.dumps({
-              'status': 'PUBLIC_SAFE_C1_PASS',
-              'commitment_sha256': commitment['commitment_sha256'],
-              'c1_receipt_sha256': commitment['c1_receipt']['c1_receipt_sha256'],
-          }, sort_keys=True))
+          denylist = json.loads((root / 'prior-hidden-prompt-hash-denylist-r6.json').read_text())
+          receipt = json.loads((root / 'r5-prompt-hash-recovery-receipt.json').read_text())
+          assert denylist['prompt_count'] == 900
+          assert denylist['unique_prompt_count'] == 900
+          assert len(denylist['prompt_sha256']) == 900
+          assert receipt['recovered_prompt_count'] == 300
+          assert receipt['application_post_count'] == 0
+          assert receipt['model_inference_evidence'] == 'NONE'
+          for value in (denylist, receipt):
+              assert value['contains_prompt_text'] is False
+              assert value['contains_hidden_rows'] is False
+              assert value['contains_gold_labels'] is False
+          forbidden_keys = {
+              'prompt', 'item_id', 'pair_id', 'claim_text', 'requested_transition',
+              'minimal_missing_evidence', 'expected_action', 'validity',
+          }
+          def walk(value):
+              if isinstance(value, dict):
+                  assert forbidden_keys.isdisjoint(value)
+                  for child in value.values():
+                      walk(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      walk(child)
+          walk(denylist)
+          walk(receipt)
+          print('PUBLIC_SAFE_R5_HASH_RECOVERY_PASS')
           PY
 
-      - name: Upload public-safe C1 evidence only
+      - name: Upload only hashes and their provenance receipt
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: claimpromotebench-fresh-confirmatory-c1
+          name: cpb-void-r5-prompt-hash-recovery-${{ github.run_id }}
           path: |
-            work/confirmatory-hidden-commitment.json
-            work/confirmatory-seed-receipt.json
-            work/confirmatory-c1-receipt.json
-            work/confirmatory-verified-beacon.json
-            work/confirmatory-prompt-novelty.json
+            work/prior-hidden-prompt-hash-denylist-r6.json
+            work/r5-prompt-hash-recovery-receipt.json
           if-no-files-found: error
           retention-days: 30
 
-      - name: Destroy every private working file
+      - name: Destroy all reconstructed private material
         if: always()
         run: |
-          rm -f "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
-          rm -f "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex"
-          rm -f "$RUNNER_TEMP/benchmark-input-alpha.schema.json"
-          rm -rf work/confirmatory-hidden
-          rm -f work/confirmatory-prompt-manifest.json
-          rm -f work/confirmatory-shortcuts.json work/confirmatory-invariance.json
-          rm -f work/confirmatory-formal.json
-          rm -f work/confirmatory-packet.json work/confirmatory-baselines.json
-          rm -f work/confirmatory-request-schedule.json
+          rm -f "$RUNNER_TEMP/cpb-r5-salt.hex"
+          rm -f "$RUNNER_TEMP/cpb-r5-derived-seed.hex"
+          rm -rf work/r5-hidden
+          rm -f work/r5-packet.json work/r5-recovered-seed-receipt.json

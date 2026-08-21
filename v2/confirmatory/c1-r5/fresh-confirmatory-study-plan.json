@@ -1,0 +1,319 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+  "truth_status": "OPEN",
+  "protocol_lineage": {
+    "supersedes": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
+    "prior_void_versions": [
+      "claimpromotebench-v1-fresh-confirmatory-2026-08",
+      "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+      "claimpromotebench-v1-fresh-confirmatory-2026-08-r3"
+    ],
+    "prior_terminal_zero_post_versions": [
+      "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
+    ],
+    "r4_execution_receipt": "v2/confirmatory/r4-execution/execution-receipt.json",
+    "r4_execution_receipt_file_sha256": "sha256:f15f4f3fb22d7e7affa5023d8c245cc9e0f0e587347b3c2a2979b1dcc9a8f123",
+    "r4_to_r5_change_scope": "v2/confirmatory/r4-to-r5-change-scope.json",
+    "r4_to_r5_change_scope_file_sha256": "sha256:87553ee6a364505f43dc1557c5c1da53f950221b43280a447471612a3873df59",
+    "prior_confirmatory_model_post_count": 0,
+    "reason": "r1 used a stale CRLF artifact hash; r2 had an unbound C1 builder; r3 failed after one seed but before fresh-dataset construction; r4 completed C1, then both scored lanes failed closed before POST because the shallow checkout omitted the C1-bound source commit. r4 C2 sealed all 600 cells as NOT_ATTEMPTED_ORCHESTRATION_FAILURE, after which its rows, prompts, and gold were opened. r4 is permanently closed. r5 is a new C0 with a new salt, future beacon, seed, dataset, and C1. The scientific comparison remains unchanged; r5 adds full-history checkout, credential-free source/C1 preflight, and a 600-hash v1-plus-r4 prompt denylist."
+  },
+  "c0": {
+    "stage": "C0_BEFORE_PRIVATE_SALT_COMMITMENT_AND_FUTURE_BEACON",
+    "new_hidden_rows_seen_before_c0": false,
+    "new_hidden_gold_seen_before_c0": false,
+    "new_confirmatory_model_outputs_seen_before_c0": false,
+    "prior_r4_hidden_rows_prompts_and_gold_seen_before_c0": true,
+    "prior_r4_model_outputs_seen_before_c0": false,
+    "selection_disclosure": "Both service configurations were selected after the old adaptive exploratory study because they completed that interface. This confirmatory study estimates only those two selected configurations and does not represent capable models generally.",
+    "immutability_rule": "Any change to generator, formal templates, prompt, lane adapter, parser, baseline, hypothesis family, statistics, schedule, or workflow after this file is committed creates a new study version."
+  },
+  "design": {
+    "full_requires_pilot": false,
+    "dataset_manifest_bound_at_c1": true,
+    "confirmatory_inference_packet": true,
+    "planned_pairs": 150,
+    "planned_instances": 300,
+    "planned_lanes": 2,
+    "planned_model_item_cells": 600,
+    "freshness_class": "SAME_ONTOLOGY_AND_MOSTLY_SHARED_SYNTHETIC_TEMPLATE_FAMILY_WITH_PRIVATE_SEED_KEYED_IDENTIFIERS_NEW_FORMAL_TEMPLATE_BANK_AND_ZERO_EXACT_PROMPT_REUSE_AGAINST_V1_AND_R4",
+    "external_validity_boundary": "This is a fresh realization of the same controlled synthetic factor ontology, not a new naturalistic corpus, unseen ontology, fixed-weight model release, or cross-provider replication.",
+    "seed_failure_rule": "The single derived seed is never replaced. Any construction or validation failure makes this version VOID; it cannot trigger reseeding or rejection sampling."
+  },
+  "dataset": {
+    "benchmark_id": "claimpromotebench-v1-confirmatory-test",
+    "split": "test",
+    "pairs": 150,
+    "instances": 300,
+    "dataset_manifest_sha256": null,
+    "dataset_manifest_binding": "C1_PUBLIC_RECEIPT_BEFORE_ANY_MODEL_POST",
+    "benchmark_plan_sha256": "sha256:60a87c61ed23e9a834182f51956380bb9dd53bff778e4fae4b8e619de1ae83fc",
+    "input_schema_sha256": "sha256:cec8fb5ee65172aa5708859755230bf5be0aab57f78ea418e746af00f075ab1f",
+    "gold_schema_sha256": "sha256:14091af8d5e8df38bba11e684622cdc4f634cc797dcd4e3c7be2647159e9c491",
+    "prior_hidden_commitments": [
+      "configs/v1-hidden-test-commitment.json",
+      "v2/confirmatory/c1-r4/confirmatory-hidden-commitment.json"
+    ],
+    "fresh_commitment_after_c1": "configs/fresh-confirmatory-hidden-commitment.json",
+    "identifier_rule": "Private-seed-keyed permutation into the new opaque v1-test-cfn-NNN namespace; evidence, claim, run, and artifact identifiers are consequently regenerated from the new pair IDs. The namespace change is label-independent and guarantees byte-level separation from the opened r4 v1-test-cfm namespace without claiming semantic novelty.",
+    "template_id_rule": "Evaluator-only template_id groups non-formal surface profiles and formal logic templates; it is excluded from model prompts.",
+    "invalid_action_counts": {
+      "HOLD": 134,
+      "DEMOTE": 8,
+      "ESCALATE": 8
+    },
+    "rare_action_limitation": "DEMOTE and ESCALATE each have eight items and remain concentrated in one registered factor. Their recall and all four-class macro summaries are fixed-benchmark descriptions, not rare-action factor generalization."
+  },
+  "prompt": {
+    "arm": "ledger_verifier",
+    "provider_neutral_control_suffix": "",
+    "renderer_sha256": "sha256:9764f2d9b294a2050df5f9e811f6c8892d732618183ef4a50713ecf01f04d121",
+    "policy_sha256": "sha256:97f865336b34a62038b6556037d986e67441c7196ac64817bfc721ba3aeae018",
+    "decision_schema_sha256": "sha256:f741bc11665efe5757bb9b7babc96bd3d54d7f133be2ea000bdd5e1b1d4ee2b0",
+    "packet_binding": "FROZEN_GENERATOR_PLUS_FUTURE_BEACON_SEED_PLUS_DETERMINISTIC_RENDERER_PLUS_C1_RECEIPT",
+    "expected_packet_sha256": null,
+    "prior_prompt_hash_denylist_path": "configs/prior-hidden-prompt-hash-denylist-r5.json",
+    "prior_prompt_hash_denylist_count": 600,
+    "prior_prompt_hash_denylist_sha256": "sha256:fc3a0db15d9db2a45657351d72833fe740a3238604de5821f0194281a6b201b2",
+    "prior_prompt_hash_denylist_file_sha256": "sha256:90c559db5c486ea77514e359a4cedfbb45853d2403c77c0829d7a8d77df35101",
+    "novelty_gate": "All 300 r5 ledger_verifier prompt byte strings must be unique and have zero SHA-256 overlap with the union of 600 released hashes from the original v1 hidden study and r4. Semantic factor and template reuse remains disclosed."
+  },
+  "pilot": {
+    "execution": "DISABLED",
+    "pairs": [],
+    "instances": 0,
+    "retry_count": 0,
+    "qualification": "DISABLED",
+    "health_prompt": "DISABLED",
+    "continuation_gate": "DISABLED"
+  },
+  "formal_lanes": [
+    {
+      "lane_id": "opencode-go-qwen3.7-max",
+      "provider": "OpenCode Go service configuration",
+      "api_kind": "anthropic_messages",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "qwen3.7-max",
+      "model_family": "Qwen",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "prompt_only_json",
+      "constraint_strength": "PROMPT_ONLY_JSON_PLUS_EXACTLY_ONE_BALANCED_JSON_OBJECT_EXTRACTION_AND_LOCAL_SCHEMA_SEMANTIC_VALIDATION",
+      "allow_single_json_object_extraction": true,
+      "initial_request_delay_seconds": 0.0,
+      "minimum_request_interval_seconds": 1.0,
+      "timeout_seconds": 65.0,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 2.5,
+      "cached_input_usd_per_million": 0.5,
+      "output_usd_per_million": 7.5,
+      "spend_cap_usd": 12.0,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE",
+      "service_identity_rule": "The returned alias and any available routing metadata are reported. Missing fingerprint or upstream identity forbids a fixed-weight claim."
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-flash-matched",
+      "provider": "OpenCode Go service configuration",
+      "api_kind": "openai_compatible",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "model": "deepseek-v4-flash",
+      "model_family": "DeepSeek",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "response_format": "json_schema",
+      "constraint_strength": "STRICT_PORTABLE_JSON_SCHEMA_PLUS_LOCAL_SCHEMA_SEMANTIC_VALIDATION_WITHOUT_EXTRACTION_OR_REPAIR",
+      "allow_single_json_object_extraction": false,
+      "initial_request_delay_seconds": 10.0,
+      "minimum_request_interval_seconds": 1.0,
+      "timeout_seconds": 65.0,
+      "max_output_tokens": 1536,
+      "input_usd_per_million": 0.44,
+      "cached_input_usd_per_million": 0.014,
+      "output_usd_per_million": 1.32,
+      "spend_cap_usd": 2.0,
+      "billing_mode": "SUBSCRIPTION_INCLUDED_QUOTA_VALUE_PEAK_RATE_BOUND",
+      "service_identity_rule": "The returned alias and any available routing metadata are reported. Missing fingerprint or upstream identity forbids a fixed-weight claim."
+    }
+  ],
+  "exploratory_lanes": [],
+  "execution": {
+    "lane_order": [
+      "opencode-go-qwen3.7-max",
+      "opencode-go-deepseek-v4-flash-matched"
+    ],
+    "lane_parallelism": "TWO_INDEPENDENT_GITHUB_JOBS_FROM_ONE_C1_SCHEDULE",
+    "item_order": "LEXICOGRAPHIC_OPAQUE_ITEM_ID_WITHIN_EACH_LANE",
+    "application_posts_per_cell": 1,
+    "client_retry_count": 0,
+    "redirect_following": false,
+    "workflow_job_rerun": "FORBIDDEN_AFTER_C1_TERMINAL_EXECUTION_REGARDLESS_OF_POST_COUNT",
+    "partial_resume": "FORBIDDEN",
+    "adapter_amendment_after_c0": "FORBIDDEN",
+    "generation_before_first_registered_item": "FORBIDDEN",
+    "credential_free_preflight": "REQUIRED_IN_A_SEPARATE_JOB_BEFORE_MODEL_CREDENTIAL_INJECTION",
+    "frozen_source_history": "FULL_HISTORY_CHECKOUT_AND_GIT_CAT_FILE_PLUS_GIT_SHOW_VERIFICATION_REQUIRED",
+    "preflight_scope": "PUBLIC_C1_COMMITMENT_SELF_DIGEST_SOURCE_FILE_HASHES_PLAN_PACKET_BASELINES_SCHEDULE_AND_ALL_600_REQUEST_BODY_HASHES",
+    "per_request_timeout_seconds": 65.0,
+    "lane_job_timeout_minutes": 360,
+    "worst_case_bound": "300*65 seconds + 299*1 second pacing + 10 second stagger = 330.15 minutes, leaving 29.85 minutes of job safety margin.",
+    "durable_intent_rule": "A POST_INTENT record is flushed and fsynced before each and only application-level HTTP POST.",
+    "failure_semantics": {
+      "network_timeout_or_error": "CELL_INCORRECT_NO_RETRY",
+      "http_non_2xx": "CELL_INCORRECT_NO_RETRY",
+      "http_redirect": "CELL_INCORRECT_NO_FOLLOW_NO_RETRY",
+      "provider_error_or_non_json_envelope": "CELL_INCORRECT_NO_RETRY",
+      "empty_or_invalid_final": "CELL_INCORRECT_NO_RETRY",
+      "intent_without_response_after_crash": "AMBIGUOUS_REQUEST_LOSS_INCORRECT_NO_RETRY",
+      "no_intent_after_orchestration_failure": "NOT_ATTEMPTED_ORCHESTRATION_FAILURE_INCORRECT_NO_RETRY"
+    },
+    "service_layer_boundary": "Zero retry means zero client-initiated application retry. TCP retransmission and unobservable provider-internal routing or retry are not claimed."
+  },
+  "baselines": {
+    "public_dev_manifest_sha256": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
+    "shallow_model_path": "v2/confirmatory/public-dev-text-nb-v1.json",
+    "shallow_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
+    "shallow_model_file_sha256": "sha256:3377faf0015d13e034e4ed9812af6b84fefb52dfd83be44f507c5658d933b7bc",
+    "training_script_sha256": "sha256:9c1d86cd27cd27dd97d33ae31d21e591d3cb7def4cc9a5e70f4c7b145b1e85d5",
+    "predictor_sha256": "sha256:b7bc891fb3488c985392dd3e3f82d3de97d591c25fbdb5d4cd75663f7a6719a1",
+    "feature_module_sha256": "sha256:c9647e7e34b4e3bb93ce1646f99e7e507277f6178c1bda55440d7c2e2293dbf8",
+    "registered_predictors": [
+      "always_allow",
+      "always_hold",
+      "public_dev_majority",
+      "public_dev_stratified_prior",
+      "public_dev_text_nb"
+    ],
+    "descriptive_reference_comparators": [
+      "always_allow",
+      "always_hold"
+    ],
+    "confirmatory_comparators": [
+      "public_dev_text_nb"
+    ],
+    "majority_equivalence": "Public-dev majority is ALLOW (50/100) and is exactly the always-ALLOW sanity check; it is never duplicated in the hypothesis family.",
+    "class_prior_boundary": "The fixed public-dev shares (0.50, 0.46, 0.02, 0.02) are used only for a deterministic descriptive hash allocation, never as a confirmatory comparator.",
+    "public_only_training_boundary": "The serialized NB model was trained before the hidden salt commitment using only the immutable 100-item public dev split. Hidden prediction accepts only the frozen model and prompt packet, not a dataset or gold path."
+  },
+  "statistics": {
+    "primary_outcome": "raw end-to-end action correctness with every non-OK cell incorrect",
+    "confirmatory_family_size": 2,
+    "confirmatory_baseline_comparators": [
+      "public_dev_text_nb"
+    ],
+    "hypotheses": [
+      "H1: Qwen-service action accuracy <= public-only shallow NB; A1: Qwen-service action accuracy > public-only shallow NB.",
+      "H2: Flash-service action accuracy <= public-only shallow NB; A2: Flash-service action accuracy > public-only shallow NB."
+    ],
+    "test": "For each hypothesis, compute the two-member correctness difference per controlled pair and use the exact one-sided whole-vector within-pair swap/sign-permutation distribution.",
+    "multiplicity": "Holm step-down across both registered service-vs-public-only-NB hypotheses, including failed, incomplete, or all-transport-error lanes.",
+    "minimum_superiority_effect": 0.1,
+    "support_rule": "Superiority is supported only when the direction is positive, action-accuracy difference is at least 0.10, and Holm-adjusted p is below 0.05.",
+    "secondary_metrics": [
+      "four-by-five confusion matrix with NON_OK prediction column",
+      "per-action recall with NON_OK as false negative",
+      "fixed-four-class macro-F1 with zero division equal to zero",
+      "balanced recall across ALLOW HOLD DEMOTE ESCALATE",
+      "pair accuracy requiring both members correct",
+      "decision coverage descriptive only",
+      "end-to-end and conditional false promotion rates",
+      "end-to-end and conditional valid promotion rates"
+    ],
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed_label": "CPB-FRESH-CONFIRMATORY-COMPOSITION-SENSITIVITY-V1",
+    "uncertainty_interpretation": "Pair/factor/template resampling is benchmark-composition sensitivity only, not model stochastic reliability or natural-world generalization.",
+    "power_analysis_report_path": "v2/confirmatory/power-analysis-r5.json",
+    "power_analysis_method": "Exact pre-hidden pair-sign power using prior exploratory nonzero-pair rates, magnitude-one clipping, the registered 0.10 effect, and Bonferroni alpha 0.025 as a conservative sufficient condition for Holm rejection.",
+    "power_analysis_minimum_power": 0.8132626158167235,
+    "power_analysis_script_sha256": "sha256:4861c12d37f56aa18e086b1c03afed13dc925fc169a7a9efdc82e85881ea3069",
+    "power_assumptions_file_sha256": "sha256:ab165ce11c0b1de0d1555a15313c743c1df403259769e54386a5f89b55e1ff11",
+    "power_analysis_report_file_sha256": "sha256:84c2ee44c144864d59389a905e6aeab542213ded2399ee25c05e06f171612915",
+    "analysis_script_sha256": "sha256:d010f706841313577a3867f50a315462b8fa406998b90a1f84754b743834aba1",
+    "c2_finalizer_sha256": "sha256:280de8663d0cfa3e6dfe1ee377b9e0b3a983bb610426ba1ee4ef6707db2015d9"
+  },
+  "gate": {
+    "used_during_inference": false,
+    "worker_imports_gate": false,
+    "worker_reads_gold": false,
+    "posthoc_interpretation": "Any later same-oracle gate result is deterministic implementation conformance only and cannot enter the two hypotheses, abstract model claim, or causal interpretation."
+  },
+  "seed": {
+    "commitment_path": "configs/fresh-confirmatory-seed-commitment.json",
+    "method": "One precommitted 32-byte private salt combined by HMAC-SHA256 with this preregistration digest, a future drand quicknet round, and its cryptographically verified randomness.",
+    "alternate_salt_round_seed": "FORBIDDEN",
+    "rejection_sampling": "FORBIDDEN",
+    "future_beacon_verification": "Pinned official drand-client with hardcoded quicknet chain hash/public key and three agreeing official relays."
+  },
+  "reporting": {
+    "retain_final_raw_response_text": true,
+    "retain_sanitized_provider_envelope": true,
+    "retain_parse_independent_raw_http_body_sha256": true,
+    "retain_provider_response_id": true,
+    "retain_http_status_and_allowlisted_headers": true,
+    "retain_hidden_reasoning_content": false,
+    "retain_request_bodies_and_headers_without_credentials": true,
+    "release_hidden_inputs_gold_pairs_prompts_schedule_after_c2": true,
+    "model_claim_unit": "OpenCode Go service configuration at the recorded execution time, not a fixed upstream weight artifact.",
+    "replication_claim": "The two lanes share one gateway/account and are not independent replications."
+  },
+  "budget": {
+    "incremental_cash_cap_usd": 0.0,
+    "subscription_quota_value_cap_usd": 14.0,
+    "no_auto_recharge": true,
+    "stop_before_first_post_if_c1_bound_exceeds_lane_cap": true
+  },
+  "workflows": {
+    "c1_freeze": ".github/workflows/confirmatory-hidden-freeze.yml",
+    "c1_freeze_sha256": "sha256:97d42ee3b60eac40462185dc7205bcf4c5f46de1da7bfb72c1d9482477a5cbe5",
+    "scored_study": ".github/workflows/confirmatory-hidden-study.yml",
+    "scored_study_sha256": "sha256:2b9113b5e0defebf4919e923f6112ed46015376d70b58b0cfb1351ac333ede11"
+  },
+  "implementation_sha256": {
+    "dataset_builder": "sha256:a448e8b44a73d55b385b08a12ff8b918ce911c7a8e5f05ed4d39e6d5265e0e3a",
+    "prior_prompt_denylist_builder": "sha256:886c43df70e51c3c23d2f63bdac91c4b24789dd115377ba5b0563bf78e13e5bd",
+    "formal_templates": "sha256:b4139fdd0e44de9064cc55ce70ee66b3c73f8e4876a34a368d11cb1b26065ff7",
+    "dataset_module": "sha256:8b91fc03431ae266f6d8bf52c431793ba2c5f6bec8596fd58ad0b4fa7cb0eb23",
+    "hashing_module": "sha256:190d1d8a67cb1ee6a9631f7661ff22429e1f80cec0bd010c944d596021c063fb",
+    "error_types": "sha256:769e9a84e8ec95e9c93f7e1c718afb1fb7558842ab473f8b4d6be3458a4b9193",
+    "policy_module": "sha256:1e69bca21499627ad6cb34488134b8181678cb7bbf8ffa96c5adbe3e02f4288f",
+    "state_validation": "sha256:87603c38d9a792b0360758f76f8bd238fe42f44cb8def7f1a290753db6424a36",
+    "oracle_module": "sha256:a41ba5ce4304b8d286f5e0f4fc7d52a9e441b177efe62dd96db8a9cb7338f307",
+    "executable_artifacts": "sha256:0362cba0e7c2c3fae9a34faf029e735caf301a43e8e7ea90e1acf6d2828f394b",
+    "decision_validation": "sha256:fa2c90c74e428c70c58bac422c171446eb38fefef1bb5dd1d7b3dd649adc7688",
+    "prompt_novelty_audit": "sha256:69fc9f01bc5ac3e5ada34e6f8b694a0a483d370c7087700e7c95c37a5c8e187a",
+    "packet_builder": "sha256:f76cf5011365acc390f82c7d440170f4c24c3cd199f7188e9324e5b14a0f996a",
+    "c1_builder": "sha256:048d86d3017193cd8e71e38a3ffe35721307c9ec6c28ef2f84abc5e837512d06",
+    "c1_commitment_builder": "sha256:9e6a126a498e2f0b689b3b40c66f41225ed18f2c598d9922804774d22b46ed77",
+    "prompt_manifest_builder": "sha256:28cca3476801178ee832b988d7e57b56e69fcdbabb5c6ae811acf9714dfac31e",
+    "base_commitment_builder": "sha256:41884aefd458176d68a2b79b56169bbf84ee186303cf7703007fbbe17c971fc1",
+    "dataset_validator": "sha256:8f6bd1eb6579b0f82ecd4d82104b8befc9744eb7155380244420141aee78343e",
+    "packet_validator": "sha256:50757cd12fd1b91beef0436c6821a063013619fca6aff69b86e56f5f7f5a0fcb",
+    "gold_free_service_runner": "sha256:fdd625a486b4367dd876c6d2f7560be36443c3e309d1f61fe858d647d069dc30",
+    "seed_derivation": "sha256:581a0d5594d10a28d2e25a1d0d0cceddd0cad21429df3977a752702c7eb00c7b",
+    "drand_verifier": "sha256:3bcd17c29adf0d0bef66e94ea58d8ddab46bd4750bc2b92d69e43e412dc3f9b7",
+    "drand_package_lock": "sha256:58be120cc502ae492d2badc909b2907f45c58d3ee1cfee228f0d7738bc1acacf",
+    "shortcut_audit": "sha256:51973fc1dc6a1929335511f5089cbd313cb29fbec50d9a36dedc16099412ba6b",
+    "shortcut_report": "sha256:05ee2babdd0d91f7e605b2735569bb6b7567b597b4bb9a47a71c1d8b52817b1e",
+    "shortcut_features": "sha256:e4177c04ccf596d83a9194c2c889b08c8fcbeb5892609b786b7c56ba95e73aec",
+    "shortcut_model": "sha256:cd94d09a93f84c0106cb48337a86fadb8c68fcbf25985a5f47e7685261fbe0e5",
+    "metrics": "sha256:afce07e104f4170f1526ac8bfd217570a5788cd5e957bdba816bb8d48a1b96cc",
+    "invariance_audit": "sha256:a3ebe864da254b5ce194f7550ef49ddeac8ef3bafbd6face04ea3f6880eefffe",
+    "formal_fixtures": "sha256:2fe834c363db752797ffe287b885a7a4bb3381ab79db5d36902834bc0bd05d86",
+    "project_metadata": "sha256:73a0a2154699b23bee47ec1bc111b2f83ab62cfe32889e1f22cab589c373bafd",
+    "c0_validator": "sha256:ae1258e46631c0a11ecefe42e057a0474b9e569db440119569c8597aeb1f9525"
+  },
+  "go_gate": {
+    "status": "NO_GO_UNTIL_C0_SALT_HASH_AND_FUTURE_BEACON_ROUND_ARE_PUBLIC_THEN_C1_RECEIPT_IS_COMMITTED",
+    "required_before_any_model_post": [
+      "all registered C0 file hashes validated",
+      "private salt SHA-256 and a future drand round committed after this exact plan",
+      "future beacon cryptographically verified after its scheduled time",
+      "single seed derived without alternatives or rejection sampling",
+      "fresh dataset and all formal/shortcut/invariance checks pass",
+      "zero exact prompt overlap with all 600 released v1 and r4 prompt hashes",
+      "300 baseline vectors and 600 exact request bodies frozen in C1",
+      "public C1 receipt committed and independently reproducible",
+      "a credential-free clean-checkout preflight proves the C1 source commit exists and validates every source, plan, packet, baseline, schedule, and request hash",
+      "offline rehearsal proves the worker has no dataset, gold, gate, pilot, retry, redirect, or resume path"
+    ]
+  }
+}
