@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "status": "IMPORTED_AND_INDEPENDENTLY_RECOMPUTED",
+  "truth_status": "COMPUTATIONAL",
+  "repository": "f0909172434/claimpromote-bench",
+  "source_commit": "1901e471bdf94f434f9671708b93599a106b1543",
+  "workflow": {
+    "run_id": 32509532820,
+    "run_attempt": 1,
+    "run_url": "https://github.com/f0909172434/claimpromote-bench/actions/runs/32509532820",
+    "conclusion": "success"
+  },
+  "source_artifact": {
+    "id": 9460301513,
+    "name": "claimpromotebench-balanced-public-complete-32509532820",
+    "digest": "sha256:8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b",
+    "size_in_bytes": 276689,
+    "created_at": "2026-08-21T19:48:28Z",
+    "expires_at": "2026-09-20T19:48:27Z"
+  },
+  "imported_files_sha256": {
+    "aggregate.json": "sha256:b0d9824148a759ea4803f3821cacfb74642025be5c705151548dc2852b99f329",
+    "analysis/opencode-go-deepseek-v4-flash-matched-full.json": "sha256:844e0c2df4349348d43c77dca2e0b9458bf40b8e214d6091b3908377b6288330",
+    "analysis/opencode-go-qwen3.7-max-full.json": "sha256:42cfe93d40f17cb051d93809aa231cdd134317b2803636af35a0a781feb01c07",
+    "runs/opencode-go-deepseek-v4-flash-matched-full.jsonl": "sha256:ae5a4664d77853267a7d253bc6f7fe02d6f858837eea47a80f2ffd854636a81b",
+    "runs/opencode-go-qwen3.7-max-full.jsonl": "sha256:e13a560c7ce5027aad6a0dcfdf862b3f181a07e49059ef1a9f87bc0ab6475949",
+    "workflow-receipt.json": "sha256:403f0c866db5766171ff09b9f853e29f00d2b4fab2190bbc2c35f3ee64559c8a"
+  },
+  "validation": {
+    "workflow_receipt_files_verified": 106,
+    "frozen_plan_commit_verified": true,
+    "terminal_records_validated": 360,
+    "independent_aggregate_recomputation": "PASS_WITH_MACHINE_SCALE_FLOAT_EQUIVALENCE",
+    "numeric_comparison_relative_tolerance": 1e-12,
+    "numeric_comparison_absolute_tolerance": 1e-12,
+    "non_numeric_fields_exact": true,
+    "provider_account_identifier_findings": 0,
+    "retained_provider_response_ids": 0,
+    "hidden_reasoning_field_findings": 0
+  },
+  "interpretation": {
+    "design": "PUBLIC_PRECOMMITTED_BALANCED_CHALLENGE",
+    "hidden_test_generalization_claim": false,
+    "causal_cross_service_ablation_claim": false,
+    "incremental_cash_spend_usd": 0.0,
+    "host_usage_derived_quota_value_usd": 4.137798288,
+    "quota_value_is_not_incremental_cash_spend": true
+  }
+}
