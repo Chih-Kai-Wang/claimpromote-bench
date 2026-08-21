@@ -101,6 +101,7 @@ jobs:
         run: |
           python -m release.tools.verify_fresh_confirmatory_public_evidence \
             --public-root work/public \
+            --source-root work/source \
             --source-analysis work/source/confirmatory-analysis.json \
             --public-analysis work/public/confirmatory-analysis-public.json \
             --out work/public/public-release-scientific-equivalence.json

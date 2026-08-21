@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from claimpromotebench.hashing import canonical_json, sha256_bytes
 from release.tools import build_fresh_confirmatory_public_evidence as builder
 from release.tools import verify_fresh_confirmatory_public_evidence as verifier
@@ -41,7 +43,21 @@ def test_post_c2_release_redacts_reasoning_without_changing_science(tmp_path: Pa
     c2_row = dict(row, c2_cell_outcome="RESPONSE_RECORDED")
     _write_jsonl(source / "collected" / "lane-c2-complete.jsonl", [c2_row])
     (source / "safe.json").write_text('{"status":"SAFE"}\n', encoding="utf-8")
-    registry = {"github_run_id": 123, "status": "FROZEN_SOURCE"}
+    c2_receipt = {"sealed_cells": 1, "status": "C2"}
+    c2_receipt["c2_receipt_sha256"] = sha256_bytes(canonical_json(c2_receipt).encode("utf-8"))
+    c2_path = source / "collected" / "c2-receipt.json"
+    c2_path.write_text(json.dumps(c2_receipt), encoding="utf-8")
+    registry = {
+        "artifacts": [
+            {
+                "artifact_id": 456,
+                "name": "claimpromotebench-fresh-confirmatory-reviewer-evidence",
+                "zip_sha256": "sha256:artifact",
+            }
+        ],
+        "github_run_id": 123,
+        "status": "FROZEN_SOURCE",
+    }
     registry["source_artifact_registry_sha256"] = sha256_bytes(
         canonical_json(registry).encode("utf-8")
     )
@@ -62,14 +78,19 @@ def test_post_c2_release_redacts_reasoning_without_changing_science(tmp_path: Pa
         == row["sanitized_provider_envelope_sha256"]
     )
     public_envelope = public_row["sanitized_provider_envelope"]
-    assert public_envelope["content"][0]["thinking"] == builder.SENTINEL
-    assert public_envelope["content"][1]["text"] == '{"action":"ALLOW"}'
-    assert public_envelope["reasoning_content"] == builder.SENTINEL
+    assert public_envelope["content"] == [{"text": '{"action":"ALLOW"}', "type": "text"}]
+    assert "reasoning_content" not in public_envelope
+    assert "thinking" not in json.dumps(public_envelope)
     assert "private reasoning" not in (out / "collected" / "lane-run.jsonl").read_text()
     assert receipt["status"] == "POST_C2_PUBLIC_RELEASE_REDACTION"
     assert receipt["redacted_unique_model_item_cells"] == 1
     assert receipt["scientific_fields_unchanged"] is True
-    assert receipt["source_artifact_registry_sha256"] == sha256_bytes(registry_path.read_bytes())
+    assert receipt["removed_content_blocks_including_raw_and_c2_copies"] == 2
+    assert receipt["source_artifact_registry_file_sha256"] == sha256_bytes(
+        registry_path.read_bytes()
+    )
+    assert receipt["source_artifact_registry_sha256"] == registry["source_artifact_registry_sha256"]
+    assert receipt["source_c2_receipt"]["self_digest"] == c2_receipt["c2_receipt_sha256"]
     assert (out / "provenance" / "source-artifacts.json").read_bytes() == (
         registry_path.read_bytes()
     )
@@ -86,3 +107,28 @@ def test_analysis_projection_ignores_only_provenance_hashes() -> None:
         "scores": {"lane": {"raw": {"item_accuracy": 0.8}, "run_sha256": "sha256:b"}},
     }
     assert verifier._scientific_analysis(source) == verifier._scientific_analysis(public)
+
+
+@pytest.mark.parametrize(
+    "envelope",
+    [
+        {
+            "content": [{"text": "safe", "type": "text", "unknown": "value"}],
+            "id": "response-1",
+        },
+        {
+            "content": [{"data": "opaque", "type": "tool"}],
+            "id": "response-1",
+        },
+        {
+            "content": [{"text": "safe", "type": "text"}],
+            "id": "response-1",
+            "unknown": "value",
+        },
+    ],
+)
+def test_public_provider_envelope_fails_closed_on_unknown_fields(
+    envelope: dict[str, object],
+) -> None:
+    with pytest.raises(ValueError):
+        builder.derive_public_provider_envelope(envelope, builder.RedactionStats())
