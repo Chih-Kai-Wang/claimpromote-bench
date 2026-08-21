@@ -1,6 +1,11 @@
 name: fresh confirmatory post-C2 public release
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/fresh-confirmatory-public-release.yml"
+      - "release/tools/**"
+      - "v2/confirmatory/r6-execution/source-artifacts.json"
   workflow_dispatch:
     inputs:
       confirm:
@@ -22,6 +27,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - name: Require explicit post-C2 publication trigger
+        if: github.event_name == 'workflow_dispatch'
         run: test '${{ inputs.confirm }}' = 'BUILD_R6_PUBLIC_RELEASE'
 
       - name: Check out publication tooling
