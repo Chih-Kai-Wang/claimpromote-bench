@@ -1,0 +1,99 @@
+{
+  "deterministic_policy_executor": {
+    "correct_items": 300,
+    "correct_pairs": 150,
+    "item_accuracy": 1.0,
+    "pair_accuracy": 1.0,
+    "reads_model_visible_inputs_and_public_policy": true,
+    "reads_released_gold_during_prediction": false,
+    "role": "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
+  },
+  "interpretation_boundary": "Derived after r6 unblinding to expose service coverage, conditional correctness, confusion, action-factor concentration, and the deterministic policy ceiling. It does not alter the preregistered hypotheses, C2 records, frozen analysis, or claims.",
+  "invalid_action_factor_support": {
+    "DEMOTE": {
+      "current_binding": 8
+    },
+    "ESCALATE": {
+      "contradiction": 8
+    },
+    "HOLD": {
+      "age": 8,
+      "claim_identity": 8,
+      "cold_start": 8,
+      "dependency_statement": 7,
+      "dependency_verifier": 7,
+      "direct_dependency": 7,
+      "domain": 7,
+      "precision": 7,
+      "preregistration": 7,
+      "repetitions": 7,
+      "review_environment": 8,
+      "reviewer_identity": 8,
+      "run_completion": 8,
+      "statement_identity": 8,
+      "tool_exit": 7,
+      "transitive_dependency": 7,
+      "trust_base": 8,
+      "verifier_execution": 7
+    }
+  },
+  "public_dev_text_nb": {
+    "balanced_action_recall": 0.3283582089552239,
+    "end_to_end_item_accuracy": 0.6133333333333333,
+    "end_to_end_pair_accuracy": 0.22666666666666666,
+    "macro_f1": 0.3123610914077647
+  },
+  "qwen_service_configuration": {
+    "complete_pairs": 123,
+    "conditional_item_accuracy_given_valid_decision": 0.9485294117647058,
+    "conditional_pair_accuracy_given_complete_pair": 0.9186991869918699,
+    "confusion": {
+      "ALLOW": {
+        "ALLOW": 143,
+        "DEMOTE": 0,
+        "ESCALATE": 0,
+        "HOLD": 0,
+        "NO_DECISION": 7
+      },
+      "DEMOTE": {
+        "ALLOW": 8,
+        "DEMOTE": 0,
+        "ESCALATE": 0,
+        "HOLD": 0,
+        "NO_DECISION": 0
+      },
+      "ESCALATE": {
+        "ALLOW": 0,
+        "DEMOTE": 0,
+        "ESCALATE": 5,
+        "HOLD": 0,
+        "NO_DECISION": 3
+      },
+      "HOLD": {
+        "ALLOW": 4,
+        "DEMOTE": 0,
+        "ESCALATE": 2,
+        "HOLD": 110,
+        "NO_DECISION": 18
+      }
+    },
+    "correct_items": 258,
+    "correct_pairs": 113,
+    "decision_coverage": 0.9066666666666666,
+    "end_to_end_item_accuracy": 0.86,
+    "end_to_end_pair_accuracy": 0.7533333333333333,
+    "items": 300,
+    "pair_coverage": 0.82,
+    "pairs": 150,
+    "valid_decisions": 272
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:19c19c30326ca1a360beaf9e8828442dba2c4bc783825e00543853c5c68d78a0",
+  "sources": {
+    "dataset_manifest_sha256": "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de",
+    "derivation_script_sha256": "sha256:eed5a6a7f1e150f9fb15f089790bf4b44c59c855b282d19b11616c7e9c4aef01",
+    "frozen_analysis_sha256": "sha256:ed208b5a70f866249cecdf3cac2e7ac211a8f2fd02a39f8c7bb69c6ab5eeeef8",
+    "qwen_c2_public_run_sha256": "sha256:3e5efd7c174305bfb4b30285053b81e667e4489fe8bf09b265c6df572681d2fa"
+  },
+  "status": "POST_STUDY_DESCRIPTIVE_REPORTING_ADDENDUM"
+}

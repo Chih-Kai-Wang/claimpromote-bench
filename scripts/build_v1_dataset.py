@@ -66,6 +66,33 @@ POINTERS = {
     "statement_identity": ["/evidence/0/scope/statement_sha256"],
     "claim_identity": ["/evidence/0/scope/claim_id"],
     "trust_base": ["/evidence/0/scope/toolchain_lock_sha256"],
+    "current_computation_binding": [
+        "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "current_computation_stale": ["/evidence/0/timestamp"],
+    "current_computation_verifier": ["/evidence/0/verifier_result"],
+    "current_review_identity": ["/evidence/0/provenance/actor_id"],
+    "current_review_environment": ["/evidence/0/provenance/environment_sha256"],
+    "contradiction_status": ["/evidence/1/scope/contradiction_status"],
+    "contradiction_claim_identity": ["/evidence/1/scope/claim_id"],
+    "contradiction_freshness": ["/evidence/1/timestamp"],
+    "contradiction_reviewer_identity": ["/evidence/1/provenance/actor_id"],
+    "contradiction_verifier_execution": ["/evidence/1/verifier_result"],
+}
+
+CURRENT_DEMOTE_FACTORS = {
+    "current_computation_binding",
+    "current_computation_stale",
+    "current_computation_verifier",
+    "current_review_identity",
+    "current_review_environment",
+}
+CONTRADICTION_ESCALATE_FACTORS = {
+    "contradiction_status",
+    "contradiction_claim_identity",
+    "contradiction_freshness",
+    "contradiction_reviewer_identity",
+    "contradiction_verifier_execution",
 }
 
 SURFACE_TEXT = {
@@ -357,6 +384,70 @@ def configure_valid(
     artifact_hash: str,
 ) -> None:
     context = item["claim_context"]
+    if factor in CURRENT_DEMOTE_FACTORS:
+        if factor.startswith("current_computation_"):
+            context["required_domain"] = domain()
+            axis = "computation_status"
+            current = state(computation="COMPUTATIONAL")
+            target = state(
+                computation="COMPUTATIONAL", review="INDEPENDENTLY_VERIFIED"
+            )
+            basis = numerical_evidence(item, pair_id, artifact_path, artifact_hash)
+            promotion = review_evidence(item, pair_id, artifact_path, artifact_hash)
+        else:
+            context["required_domain"] = domain()
+            axis = "review_status"
+            current = state(review="INDEPENDENTLY_VERIFIED")
+            target = state(
+                computation="COMPUTATIONAL", review="INDEPENDENTLY_VERIFIED"
+            )
+            basis = review_evidence(item, pair_id, artifact_path, artifact_hash)
+            promotion = numerical_evidence(item, pair_id, artifact_path, artifact_hash)
+        item["current_state"] = current
+        item["current_state_basis"] = {
+            axis: {
+                "evidence_ids": [basis["id"]],
+                "bound_artifact_sha256": artifact_hash,
+            }
+        }
+        item["requested_transition"] = {
+            "target_state": target,
+            "basis_evidence_ids": [promotion["id"]],
+        }
+        item["evidence"] = [basis, promotion]
+        return
+    if factor in CONTRADICTION_ESCALATE_FACTORS:
+        root = formal_evidence(item, pair_id, artifact_path, artifact_hash)
+        contradiction = evidence(
+            pair_id,
+            "contradiction",
+            "CONTRADICTION",
+            context["claim_id"],
+            context["statement_sha256"],
+            artifact_path,
+            artifact_hash,
+            scope_extra={"contradiction_status": "OPEN"},
+            actor_id=f"reviewer-{opaque(f'contradiction-reviewer:{pair_id}', 12)}",
+            actor_role="INDEPENDENT_REVIEWER",
+            environment_sha256=label_digest(f"contradiction-environment:{pair_id}"),
+            cold_start=True,
+        )
+        if factor == "contradiction_status":
+            contradiction["scope"]["contradiction_status"] = "RESOLVED"
+        elif factor == "contradiction_claim_identity":
+            contradiction["scope"]["claim_id"] = "wrong-claim-id"
+        elif factor == "contradiction_freshness":
+            contradiction["timestamp"] = "2026-07-13T00:00:00Z"
+        elif factor == "contradiction_reviewer_identity":
+            contradiction["provenance"]["actor_id"] = context["author_id"]
+        elif factor == "contradiction_verifier_execution":
+            contradiction["verifier_result"] = "FAIL"
+        item["requested_transition"] = {
+            "target_state": state(formal="FORMALLY_CERTIFIED"),
+            "basis_evidence_ids": [root["id"]],
+        }
+        item["evidence"] = [root, contradiction]
+        return
     if family in {"NUMERICAL", "RUNTIME"} or factor == "age":
         context["required_domain"] = domain()
         computation = numerical_evidence(item, pair_id, artifact_path, artifact_hash)
@@ -468,7 +559,36 @@ def configure_valid(
 
 def invalidate(factor: str, item: Json) -> None:
     root = item["evidence"][0]
-    if factor in {"direct_dependency", "transitive_dependency"}:
+    if factor == "current_computation_binding":
+        item["current_state_basis"]["computation_status"]["bound_artifact_sha256"] = (
+            label_digest("stale-binding")
+        )
+    elif factor == "current_computation_stale":
+        root["timestamp"] = "2026-07-13T00:00:00Z"
+    elif factor == "current_computation_verifier":
+        root["verifier_result"] = "FAIL"
+    elif factor == "current_review_identity":
+        root["provenance"]["actor_id"] = item["claim_context"]["author_id"]
+    elif factor == "current_review_environment":
+        root["provenance"]["environment_sha256"] = item["claim_context"][
+            "author_environment_sha256"
+        ]
+    elif factor in CONTRADICTION_ESCALATE_FACTORS:
+        contradiction = item["evidence"][1]
+        if factor == "contradiction_status":
+            contradiction["scope"]["contradiction_status"] = "OPEN"
+        elif factor == "contradiction_claim_identity":
+            contradiction["scope"]["claim_id"] = item["claim_context"]["claim_id"]
+        elif factor == "contradiction_freshness":
+            contradiction["timestamp"] = "2026-08-01T00:00:00Z"
+        elif factor == "contradiction_reviewer_identity":
+            pair_id = str(item["pair_id"])
+            contradiction["provenance"]["actor_id"] = (
+                f"reviewer-{opaque(f'contradiction-reviewer:{pair_id}', 12)}"
+            )
+        elif factor == "contradiction_verifier_execution":
+            contradiction["verifier_result"] = "PASS"
+    elif factor in {"direct_dependency", "transitive_dependency"}:
         item["evidence"].pop()
     elif factor == "dependency_verifier":
         item["evidence"][1]["verifier_result"] = "FAIL"
@@ -527,7 +647,12 @@ def selected_variants(plan: Json, split: str) -> list[tuple[int, Json, int]]:
 
 
 def pair_specs(
-    plan: Json, split: str, seed: bytes, *, confirmatory_rekey: bool = False
+    plan: Json,
+    split: str,
+    seed: bytes,
+    *,
+    confirmatory_rekey: bool = False,
+    identifier_prefix: str = "v1-test-cfo",
 ) -> list[Json]:
     counters: defaultdict[str, int] = defaultdict(int)
     profiles = [str(value) for value in plan["surface_profiles"]]
@@ -560,7 +685,7 @@ def pair_specs(
             key=lambda row: keyed_bytes(seed, f"confirmatory-pair-order:{row['pair_id']}"),
         )
         for number, row in enumerate(ordered, start=1):
-            row["pair_id"] = f"v1-test-cfo-{number:03d}"
+            row["pair_id"] = f"{identifier_prefix}-{number:03d}"
             row["template_id"] = (
                 f"formal-logic-template-{(number - 1) % 24 + 1:02d}"
                 if row["family"] == "FORMAL"
@@ -576,11 +701,19 @@ def build(
     seed_file: Path | None,
     *,
     confirmatory_rekey: bool = False,
+    plan_path: Path = PLAN_PATH,
+    identifier_prefix: str = "v1-test-cfo",
 ) -> Json:
-    plan = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
     policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
     seed = load_seed(split, seed_file)
-    specs = pair_specs(plan, split, seed, confirmatory_rekey=confirmatory_rekey)
+    specs = pair_specs(
+        plan,
+        split,
+        seed,
+        confirmatory_rekey=confirmatory_rekey,
+        identifier_prefix=identifier_prefix,
+    )
     expected_pairs = int(plan["splits"][split]["pairs"])
     if len(specs) != expected_pairs:
         raise ValueError(f"constructed {len(specs)} {split} specs, expected {expected_pairs}")
@@ -710,7 +843,7 @@ def build(
     manifest = {
         "schema_version": "1.0.0",
         "dataset_id": (
-            "claimpromotebench-v1-confirmatory-test"
+            str(plan.get("confirmatory_dataset_id", "claimpromotebench-v1-confirmatory-test"))
             if confirmatory_rekey
             else f"claimpromotebench-v1-{split}"
         ),
@@ -735,7 +868,7 @@ def build(
         "family_pair_counts": dict(sorted(family_counts.items())),
         "invalid_side_counts": dict(sorted(invalid_sides.items())),
         "invalid_action_counts": dict(sorted(invalid_actions.items())),
-        "benchmark_plan_sha256": sha256_file(PLAN_PATH),
+        "benchmark_plan_sha256": sha256_file(plan_path),
         "construction_seed_sha256": sha256_bytes(seed),
         "test_manifest_commitment": "NOT_APPLICABLE" if split == "dev" else "PENDING",
         "model_experiments": "PENDING",
@@ -743,7 +876,9 @@ def build(
     }
     if confirmatory_rekey:
         manifest["confirmatory_rekey_enabled"] = True
-        manifest["identifier_namespace"] = "PRIVATE_SEED_KEYED_OPAQUE_CFM_R5"
+        manifest["identifier_namespace"] = str(
+            plan.get("identifier_namespace", "PRIVATE_SEED_KEYED_OPAQUE_CFM_R5")
+        )
     write_json(out_dir / "manifest.json", manifest)
     summary = validate_dataset(out_dir, ROOT)
     return {
@@ -765,12 +900,16 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--seed-file", type=Path)
     parser.add_argument("--confirmatory-rekey", action="store_true")
+    parser.add_argument("--plan", type=Path, default=PLAN_PATH)
+    parser.add_argument("--identifier-prefix", default="v1-test-cfo")
     args = parser.parse_args()
     report = build(
         args.split,
         args.out.resolve(),
         args.seed_file.resolve() if args.seed_file is not None else None,
         confirmatory_rekey=args.confirmatory_rekey,
+        plan_path=args.plan.resolve(),
+        identifier_prefix=args.identifier_prefix,
     )
     print(json.dumps(report, sort_keys=True))
     return 0

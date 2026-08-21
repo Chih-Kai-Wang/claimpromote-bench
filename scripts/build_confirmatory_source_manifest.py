@@ -50,6 +50,12 @@ _EXPLICIT_PATHS = (
     "v2/confirmatory/r4-execution/execution-receipt.json",
     "v2/confirmatory/r5-to-r6-change-scope.json",
 )
+_POST_R6_NON_RUNTIME_PATHS = {
+    # These scripts were introduced only after the immutable r6 scored run. They read or
+    # aggregate already terminal evidence and cannot influence C1 or scored inference.
+    "scripts/analyze_balanced_public_challenge.py",
+    "scripts/derive_r6_reporting_addendum.py",
+}
 
 
 def discover_runtime_source_paths() -> tuple[str, ...]:
@@ -61,8 +67,13 @@ def discover_runtime_source_paths() -> tuple[str, ...]:
         if not root.is_dir():
             raise ValueError(f"runtime source directory is absent: {directory}")
         for path in root.rglob("*"):
-            if path.is_file() and (path.suffix in suffixes or path.name in names):
-                paths.add(path.relative_to(ROOT).as_posix())
+            relative = path.relative_to(ROOT).as_posix()
+            if (
+                path.is_file()
+                and relative not in _POST_R6_NON_RUNTIME_PATHS
+                and (path.suffix in suffixes or path.name in names)
+            ):
+                paths.add(relative)
     missing = sorted(relative for relative in paths if not (ROOT / relative).is_file())
     if missing:
         raise ValueError(f"runtime source files are absent: {missing}")

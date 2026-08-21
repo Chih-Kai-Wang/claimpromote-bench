@@ -57,9 +57,12 @@ def build_packet(dataset_dir: Path, plan_path: Path) -> Json:
             fail("rebuilt dataset manifest differs from the study plan")
     elif expected_dataset_manifest is not None or c1_dataset_binding is not True:
         fail("study plan lacks either a dataset digest or the registered C1 binding")
-    if sha256_file(ROOT / "configs" / "v1-benchmark-plan.json") != _expected(
-        plan, "dataset", "benchmark_plan_sha256"
-    ):
+    benchmark_plan_path = ROOT / str(
+        plan.get("dataset", {}).get(
+            "benchmark_plan_path", "configs/v1-benchmark-plan.json"
+        )
+    )
+    if sha256_file(benchmark_plan_path) != _expected(plan, "dataset", "benchmark_plan_sha256"):
         fail("benchmark construction plan differs from the study plan")
     if sha256_file(ROOT / "src" / "claimpromotebench" / "prompts.py") != _expected(
         plan, "prompt", "renderer_sha256"

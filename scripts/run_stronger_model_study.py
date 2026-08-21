@@ -7,6 +7,7 @@ import argparse
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import time
@@ -35,6 +36,11 @@ Json = dict[str, Any]
 DEFAULT_PLAN = ROOT / "v2" / "stronger-model-study-plan.json"
 RUN_SCHEMA = ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json"
 DECISION_SCHEMA = ROOT / "schemas" / "agent-decision.schema.json"
+_PROVIDER_ACCOUNT_IDENTIFIER = re.compile(
+    r"\buser_(?=[A-Za-z0-9_-]{20,64}\b)"
+    r"(?=[A-Za-z0-9_-]*[A-Z])(?=[A-Za-z0-9_-]*[a-z])"
+    r"(?=[A-Za-z0-9_-]*[0-9])[A-Za-z0-9_-]+\b"
+)
 
 
 def fail(message: str) -> None:
@@ -217,6 +223,14 @@ def validate_api_key(value: str | None, env_name: str) -> str:
     if value != value.strip() or any(ord(char) < 33 or ord(char) > 126 for char in value):
         fail(f"API credential contains whitespace or control bytes: {env_name}")
     return value
+
+
+def sanitize_durable_provider_text(value: str | None) -> str | None:
+    """Remove stable provider-account identifiers before errors become durable evidence."""
+
+    if value is None:
+        return None
+    return _PROVIDER_ACCOUNT_IDENTIFIER.sub("anonymous-provider-account", value)
 
 
 def extract_single_json_object(content: str) -> str | None:
@@ -815,7 +829,7 @@ def main() -> int:
                 metadata, content, usage = call_gemini(lane, body, api_key, args.timeout)
         except RuntimeError as exc:
             transport_status = "ERROR"
-            transport_error = str(exc)
+            transport_error = sanitize_durable_provider_text(str(exc))
         latency_ms = (time.perf_counter() - start) * 1000.0
         response_received = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
@@ -839,11 +853,14 @@ def main() -> int:
                     lane.get("allow_single_json_object_extraction", False)
                 ),
             )
-            postgate = (
-                postgate_decision(raw_decision, item, policy, evaluation_time)
-                if raw_decision is not None
-                else None
-            )
+        parse_detail = sanitize_durable_provider_text(parse_detail)
+        postgate = (
+            postgate_decision(raw_decision, item, policy, evaluation_time)
+            if raw_decision is not None
+            else None
+        )
+        if plan.get("reporting", {}).get("retain_provider_response_id") is not True:
+            metadata["provider_response_id"] = None
 
         cost = actual_cost_usd(usage, lane) if formal else None
         if cost is not None:

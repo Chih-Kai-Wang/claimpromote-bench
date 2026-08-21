@@ -114,6 +114,19 @@ def test_provider_schema_is_flattened_for_strict_output_modes() -> None:
     assert "pattern" not in schema["properties"]["reason_codes"]["items"]
 
 
+def test_durable_provider_text_redacts_account_identifier_without_changing_normal_errors() -> None:
+    runner = _load_script("run_stronger_model_study")
+    identifier = "user_Aa1234567890Bb1234567890Cc1"
+
+    assert runner.sanitize_durable_provider_text(f"rejected {identifier}") == (
+        "rejected anonymous-provider-account"
+    )
+    assert runner.sanitize_durable_provider_text("HTTP 503: temporarily unavailable") == (
+        "HTTP 503: temporarily unavailable"
+    )
+    assert runner.sanitize_durable_provider_text(None) is None
+
+
 def test_provider_request_bodies_freeze_interface_specific_controls() -> None:
     runner = _load_script("run_stronger_model_study")
     plan = load_json(PLAN)

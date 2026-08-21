@@ -40,6 +40,16 @@ FORBIDDEN_CREDENTIAL_PATTERNS = {
     "GitHub token": re.compile(r"\b(?:github_pat_|gh[pousr]_)[A-Za-z0-9_]{20,}\b"),
     "bearer credential": re.compile(r"\bBearer\s+[A-Za-z0-9._~-]{24,}\b", re.IGNORECASE),
 }
+SENSITIVE_PROVENANCE_REPLACEMENTS = {
+    "provider account identifier": (
+        re.compile(
+            r"\buser_(?=[A-Za-z0-9_-]{20,64}\b)"
+            r"(?=[A-Za-z0-9_-]*[A-Z])(?=[A-Za-z0-9_-]*[a-z])"
+            r"(?=[A-Za-z0-9_-]*[0-9])[A-Za-z0-9_-]+\b"
+        ),
+        "anonymous-provider-account",
+    ),
+}
 SKIP_NAMES = {
     ".git",
     ".github",
@@ -254,6 +264,8 @@ def anonymize_provenance(value: Any) -> Any:
             PROVENANCE_REPLACEMENTS.items(), key=lambda row: len(row[0]), reverse=True
         ):
             cleaned = cleaned.replace(source, replacement)
+        for pattern, replacement in SENSITIVE_PROVENANCE_REPLACEMENTS.values():
+            cleaned = pattern.sub(replacement, cleaned)
         return cleaned
     return value
 
@@ -670,6 +682,19 @@ def build_fresh_confirmatory_anonymous_evidence(source: Path, destination: Path)
     )
     write_json(destination / "study-result.json", source_result)
 
+    source_addendum = load_object(
+        ROOT / "v2" / "confirmatory" / "r6-execution" / "reviewer-reporting-addendum.json"
+    )
+    source_addendum.pop("self_digest", None)
+    source_addendum["sources"] = {
+        "anonymous_recomputation": (
+            "Recomputed from dataset/, runs/, and reported-analysis.json in this directory."
+        ),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
+    source_addendum["self_digest"] = sha256_text(canonical_json(source_addendum))
+    write_json(destination / "reporting-addendum.json", source_addendum)
+
     source_redaction = load_object(source / "public-release-redaction-receipt.json")
     source_equivalence = load_object(source / "public-release-scientific-equivalence.json")
     anonymous_redaction = {
@@ -711,10 +736,13 @@ C2-complete service-configuration runs, the preregistered study plan, and the co
 analysis with only source-identifying provenance hashes removed.
 
 The Qwen service configuration produced 272 valid decisions and achieved 86.00% end-to-end item
-accuracy and 75.33% pair accuracy. The Flash lane returned 300 HTTP 401 responses and no model
-output; it is an authentication or client-service configuration failure, not an estimate of model
-accuracy. The Qwen result includes every failure as incorrect without retry and has zero DEMOTE
-recall (0/8).
+accuracy and 75.33% pair accuracy. Among covered outputs it achieved 258/272 item accuracy; 123/150
+pairs had two valid decisions and 113/123 of those complete pairs were correct. The Flash lane
+returned 300 HTTP 401 responses and no model output; it is an authentication or client-service
+configuration failure, not an estimate of model accuracy. The Qwen result includes every failure as
+incorrect without retry and has zero DEMOTE recall (0/8). `reporting-addendum.json` exposes the
+full confusion matrix, action-factor concentration, conditional metrics, and deterministic policy
+ceiling.
 
 Provider hidden-thinking blocks are not included. They were removed only in a deterministic
 post-C2 publication derivative; the original C2 seal and scores were not altered. `MANIFEST.json`
@@ -1193,6 +1221,9 @@ def scan_identity(bundle: Path) -> None:
             if token.lower() in text.lower():
                 findings.append(f"{path.relative_to(bundle)}: {token}")
         for label, pattern in FORBIDDEN_CREDENTIAL_PATTERNS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(bundle)}: possible {label}")
+        for label, (pattern, _replacement) in SENSITIVE_PROVENANCE_REPLACEMENTS.items():
             if pattern.search(text):
                 findings.append(f"{path.relative_to(bundle)}: possible {label}")
     if findings:

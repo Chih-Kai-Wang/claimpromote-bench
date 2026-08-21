@@ -1,4 +1,5 @@
 name: v2 naturalistic case validation
+run-name: ${{ inputs.confirm == 'RUN_BALANCED_PUBLIC_CHALLENGE_V1' && 'claimpromotebench-balanced-public-v1-singleton' || 'v2 naturalistic case validation' }}
 
 on:
   pull_request:
@@ -10,8 +11,14 @@ on:
       - "tests/test_v2_naturalistic_cases.py"
       - ".github/workflows/v2-naturalistic-case-validation.yml"
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: Leave blank for validation, or enter an explicitly registered study trigger
+        required: false
+        type: string
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -20,6 +27,7 @@ concurrency:
 
 jobs:
   validate:
+    if: ${{ inputs.confirm != 'RUN_BALANCED_PUBLIC_CHALLENGE_V1' }}
     name: validate source, licensing, time, and leakage boundaries
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -54,3 +62,10 @@ jobs:
           path: work/v2-naturalistic-case-validation.json
           if-no-files-found: error
           retention-days: 30
+
+  balanced-public-challenge:
+    if: ${{ inputs.confirm == 'RUN_BALANCED_PUBLIC_CHALLENGE_V1' }}
+    uses: ./.github/workflows/balanced-public-challenge.yml
+    with:
+      confirm: ${{ inputs.confirm }}
+    secrets: inherit

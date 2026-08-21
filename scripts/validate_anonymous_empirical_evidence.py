@@ -32,6 +32,7 @@ from claimpromotebench.v2 import diagnose_decision, postgate_decision
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "evidence"
 Json = dict[str, Any]
+ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
 
 
 def fail(message: str) -> NoReturn:
@@ -1154,9 +1155,16 @@ def validate_fresh_confirmatory() -> Json:
         fail("fresh confirmatory reported science differs from projected C2 records")
 
     study_result = load_json(root / "study-result.json")
+    reporting_addendum = load_json(root / "reporting-addendum.json")
     redaction = load_json(root / "redaction-receipt-review.json")
-    if not isinstance(study_result, dict) or not isinstance(redaction, dict):
-        fail("fresh confirmatory study result or redaction receipt is malformed")
+    if not all(isinstance(value, dict) for value in (study_result, reporting_addendum, redaction)):
+        fail(
+            "fresh confirmatory study result, reporting addendum, or redaction receipt is malformed"
+        )
+    addendum_payload = deepcopy(reporting_addendum)
+    observed_addendum_sha = addendum_payload.pop("self_digest", None)
+    if observed_addendum_sha != sha256_text(canonical_json(addendum_payload)):
+        fail("fresh confirmatory reporting addendum self-digest changed")
     qwen_score = recomputed["scores"][qwen_id]["raw"]
     qwen_test = next(
         row
@@ -1165,6 +1173,33 @@ def validate_fresh_confirmatory() -> Json:
     )
     qwen_summary = study_result.get("qwen_service_configuration", {})
     flash_summary = study_result.get("deepseek_flash_service_configuration", {})
+    gold_actions = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+    qwen_predictions = {
+        str(row["item_id"]): (
+            str(row["raw_decision"]["action"])
+            if row.get("parse_status") == "OK" and isinstance(row.get("raw_decision"), dict)
+            else None
+        )
+        for row in qwen
+    }
+    complete_pairs = [
+        pair
+        for pair in pairs
+        if all(qwen_predictions[str(item_id)] in ACTIONS for item_id in pair["member_ids"])
+    ]
+    correct_pairs = [
+        pair
+        for pair in pairs
+        if all(
+            qwen_predictions[str(item_id)] == gold_actions[str(item_id)]
+            for item_id in pair["member_ids"]
+        )
+    ]
+    factor_support: dict[str, Counter[str]] = {action: Counter() for action in ACTIONS}
+    for pair in pairs:
+        factor_support[gold_actions[str(pair["invalid_id"])]][str(pair["factor_id"])] += 1
+    qwen_addendum = reporting_addendum.get("qwen_service_configuration", {})
+    policy_ceiling = reporting_addendum.get("deterministic_policy_executor", {})
     if (
         not equivalent_json(
             qwen_summary.get("end_to_end_item_accuracy"), qwen_score["item_accuracy"]
@@ -1182,8 +1217,34 @@ def validate_fresh_confirmatory() -> Json:
         )
         or flash_summary.get("model_capability_interpretation") != "NON_EVALUABLE_NO_MODEL_OUTPUT"
         or flash_summary.get("http_401_records") != 300
+        or qwen_addendum.get("valid_decisions") != 272
+        or qwen_addendum.get("correct_items") != 258
+        or qwen_addendum.get("complete_pairs") != len(complete_pairs)
+        or len(complete_pairs) != 123
+        or qwen_addendum.get("correct_pairs") != len(correct_pairs)
+        or len(correct_pairs) != 113
+        or not equivalent_json(
+            qwen_addendum.get("conditional_item_accuracy_given_valid_decision"), 258 / 272
+        )
+        or not equivalent_json(
+            qwen_addendum.get("conditional_pair_accuracy_given_complete_pair"), 113 / 123
+        )
+        or qwen_addendum.get("confusion") != qwen_score["confusion"]
+        or reporting_addendum.get("invalid_action_factor_support")
+        != {
+            action: dict(sorted(counts.items()))
+            for action, counts in factor_support.items()
+            if counts
+        }
+        or policy_ceiling.get("role")
+        != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
+        or policy_ceiling.get("correct_items") != 300
+        or policy_ceiling.get("correct_pairs") != 150
     ):
-        fail("fresh confirmatory compact study result differs from recomputation")
+        fail(
+            "fresh confirmatory compact study result or reporting addendum "
+            "differs from recomputation"
+        )
     if (
         redaction.get("hidden_reasoning_present_in_public_release") is not False
         or redaction.get("original_scored_artifacts_modified") is not False
@@ -1203,7 +1264,14 @@ def validate_fresh_confirmatory() -> Json:
         "qwen_decision_coverage": qwen_score["decision_coverage"],
         "qwen_demote_correct": qwen_score["per_action"]["DEMOTE"]["correct"],
         "qwen_item_accuracy": qwen_score["item_accuracy"],
+        "qwen_conditional_item_accuracy": qwen_addendum[
+            "conditional_item_accuracy_given_valid_decision"
+        ],
+        "qwen_pair_coverage": qwen_addendum["pair_coverage"],
         "qwen_pair_accuracy": qwen_score["pair_accuracy"],
+        "qwen_conditional_pair_accuracy": qwen_addendum[
+            "conditional_pair_accuracy_given_complete_pair"
+        ],
         "qwen_vs_public_dev_nb_holm_p": qwen_test["holm_adjusted_p"],
         "redaction_status": redaction["status"],
     }

@@ -62,6 +62,17 @@ def test_identity_scan_rejects_embedded_api_credential(tmp_path: Path) -> None:
         builder.scan_identity(tmp_path)
 
 
+def test_identity_scan_rejects_provider_account_identifier(tmp_path: Path) -> None:
+    builder = load_builder()
+    (tmp_path / "failure.jsonl").write_text(
+        '{"transport_error":"account user_Aa1234567890Bb1234567890Cc1"}\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit, match="possible provider account identifier"):
+        builder.scan_identity(tmp_path)
+
+
 def test_empirical_copy_anonymizes_searchable_filename(tmp_path: Path) -> None:
     builder = load_builder()
     source = tmp_path / "source"
@@ -96,6 +107,24 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
     assert cleaned["nested"][2] == "/anonymous/workspace/work/result.json"
     assert "f0909172434" not in rendered
     assert "b86ee1e1d28db8a390344d28582af88e26970560" not in rendered
+
+
+def test_empirical_provenance_anonymizer_redacts_provider_account_identifier() -> None:
+    builder = load_builder()
+    account_identifier = "user_Aa1234567890Bb1234567890Cc1"
+    source = {
+        "parse_error_detail": f'provider payload: {{"user_id":"{account_identifier}"}}',
+        "transport_error": f"request rejected for {account_identifier}",
+        "legitimate_control": "user_id and user-visible text remain intact",
+    }
+
+    cleaned = builder.anonymize_provenance(source)
+    rendered = json.dumps(cleaned, sort_keys=True)
+
+    assert account_identifier not in rendered
+    assert cleaned["parse_error_detail"].count("anonymous-provider-account") == 1
+    assert cleaned["transport_error"].count("anonymous-provider-account") == 1
+    assert cleaned["legitimate_control"] == source["legitimate_control"]
 
 
 def test_capable_anonymous_evidence_rebinds_changed_file_digests(tmp_path: Path) -> None:
@@ -217,6 +246,7 @@ def test_fresh_confirmatory_anonymous_projection_is_compact_and_identity_free(
     builder.build_fresh_confirmatory_anonymous_evidence(source, destination)
 
     manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    addendum = json.loads((destination / "reporting-addendum.json").read_text(encoding="utf-8"))
     qwen_path = destination / manifest["lane_files"]["opencode-go-qwen3.7-max"]
     qwen = [json.loads(line) for line in qwen_path.read_text(encoding="utf-8").splitlines()]
     rendered = "\n".join(
@@ -228,6 +258,15 @@ def test_fresh_confirmatory_anonymous_projection_is_compact_and_identity_free(
     assert sum(row["parse_status"] == "OK" for row in qwen) == 272
     assert all("sanitized_provider_envelope" not in row for row in qwen)
     assert all("frozen_plan_commit" not in row for row in qwen)
+    assert addendum["qwen_service_configuration"]["complete_pairs"] == 123
+    assert addendum["qwen_service_configuration"]["correct_pairs"] == 113
+    assert addendum["deterministic_policy_executor"]["correct_items"] == 300
+    assert addendum["sources"] == {
+        "anonymous_recomputation": (
+            "Recomputed from dataset/, runs/, and reported-analysis.json in this directory."
+        ),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
     assert "32453310192" not in rendered
     assert "f44b01eb97418d87aa6d7486fa785c0f49b9dda2" not in rendered
     assert '"thinking":' not in rendered
