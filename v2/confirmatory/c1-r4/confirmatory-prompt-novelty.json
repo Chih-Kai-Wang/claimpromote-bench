@@ -1,0 +1,25 @@
+{
+  "contains_gold_labels": false,
+  "contains_prompt_text": false,
+  "exact_prompt_overlap_count": 0,
+  "fresh_dataset_manifest_sha256": "sha256:c119ae93f138993bd153b18cf417784d24d154e6c0cc5d0241a1ee6f873dd1db",
+  "fresh_prompt_count": 300,
+  "fresh_prompt_set_sha256": "sha256:b3fd3fe83e3a87655ba39f2f320b947fdfff8676ffbc5ea1c94819ef33ed6566",
+  "fresh_unique_prompt_count": 300,
+  "interpretation_boundary": "Zero byte-identical prompts prevents direct prompt reuse. The controlled factor ontology and most synthetic templates remain shared across realizations, so this is not evidence of naturalistic-domain generalization.",
+  "novelty_report_sha256": "sha256:819f3e4690bd09e2d9d24ba05907b8be3fe85a76fb6d21e96f0330f50be64c02",
+  "prior_dataset_manifest_sha256": "sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba",
+  "prior_prompt_count": 300,
+  "prior_prompt_set_sha256": "sha256:22b754606a2b2f4e39b60149d778b8e2884489475342987e01e45a5c56f4deaf",
+  "prior_prompt_source": {
+    "denylist_sha256": "sha256:c599ad9cb43dab0bcc26f21e92764867da3968e06837304b5d4f640a28a8aced",
+    "file_sha256": "sha256:132fa2bcfbc01ed27776ca65b2b94988bfa2bd347daf09750833ae4f40e11d6b",
+    "kind": "FROZEN_RELEASED_PROMPT_HASH_DENYLIST",
+    "source_prompt_packet_sha256": "sha256:12242737ee5ec197123af8abfe4879cc676d2bb4e5195d3797aa8c725df0cde6"
+  },
+  "prior_unique_prompt_count": 300,
+  "prompt_arm": "ledger_verifier",
+  "provider_neutral_control_suffix": "",
+  "schema_version": "1.0.0",
+  "status": "ZERO_EXACT_PROMPT_OVERLAP"
+}

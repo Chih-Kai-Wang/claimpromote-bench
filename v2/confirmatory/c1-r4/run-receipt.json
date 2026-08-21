@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "status": "C1_PUBLIC_EVIDENCE_VERIFIED",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
+  "github_run_id": 32438528730,
+  "github_job_id": 96644432402,
+  "source_commit": "4815b7ffe559c36eed3c7f820ca1e67411a51546",
+  "started_at_utc": "2026-08-21T02:04:11Z",
+  "completed_at_utc": "2026-08-21T02:05:08Z",
+  "model_post_intents": 0,
+  "model_calls": 0,
+  "cost_usd": 0.0,
+  "planned_cells": 600,
+  "exact_prior_prompt_overlap": 0,
+  "derived_seed_sha256": "sha256:30e7db07d9bd7d728f4a7049741e23804f221397c58df7b542b198640dce4d95",
+  "dataset_manifest_sha256": "sha256:c119ae93f138993bd153b18cf417784d24d154e6c0cc5d0241a1ee6f873dd1db",
+  "packet_sha256": "sha256:841d2d01635bff7184ff1f8516ee16e5e16d876ea3895358473240a3826b963e",
+  "schedule_sha256": "sha256:d201a39182b7ac6f180353fc7cd0cadf04c4f3512f82e60949c492cb1f6e0447",
+  "baseline_predictions_sha256": "sha256:5e3579ddaedb63c5009942bb30180c0d76bd575387f009c142ce4f81accefe5f",
+  "request_body_hash_set_sha256": "sha256:ebae6dbf1caf285a7c3cbdfcdfc8a8af2d119d7b1399c849ba3e317b96799829",
+  "commitment_sha256": "sha256:42293233d2ecdc3e0e17386ed8d7dea72e73eece45d867442d948b20e4b1bc3b",
+  "artifact_files_sha256": {
+    "confirmatory-c1-receipt.json": "sha256:141fbd076417190013887aede54dc79fb6b4b7b765a7893dcad233cab67d8943",
+    "confirmatory-hidden-commitment.json": "sha256:00dc77294de4ed654dd527e649ca27fa1d5d0cfaa004a468f8f616d811e27f2a",
+    "confirmatory-prompt-novelty.json": "sha256:b98e4c9ca7380e724029f4e20b1473b887c14c999f0c4555147605b6ad6332b8",
+    "confirmatory-seed-receipt.json": "sha256:8f1c5a08e4505e0071656122257cd4571495e734b0ce4ec21ebd6c5929bcbca5",
+    "confirmatory-verified-beacon.json": "sha256:2bde38b5bb7137fbbcb1c92002ae8a080d252fba9dfc63e2e65a738a9b491387"
+  },
+  "offline_verification": {
+    "all_self_digests_recomputed": true,
+    "all_registered_source_file_hashes_match": true,
+    "embedded_receipts_equal_standalone_files": true,
+    "contains_request_bodies": false,
+    "contains_prompts": false,
+    "contains_hidden_rows": false,
+    "contains_gold_labels": false,
+    "contains_seed_bytes": false
+  }
+}

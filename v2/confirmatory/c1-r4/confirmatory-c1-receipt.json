@@ -1,0 +1,22 @@
+{
+  "baseline_predictions_sha256": "sha256:5e3579ddaedb63c5009942bb30180c0d76bd575387f009c142ce4f81accefe5f",
+  "c1_receipt_sha256": "sha256:ebf08e82b23dfcddea780c2f2c1474b90e182a1a24741350c68c9a469d852bad",
+  "commitment_stage": "C1_BEFORE_ANY_MODEL_POST",
+  "contains_gold_labels": false,
+  "contains_hidden_rows": false,
+  "contains_prompts": false,
+  "contains_request_bodies": false,
+  "contains_seed_bytes": false,
+  "dataset_manifest_sha256": "sha256:c119ae93f138993bd153b18cf417784d24d154e6c0cc5d0241a1ee6f873dd1db",
+  "no_model_post_before_receipt": true,
+  "packet_sha256": "sha256:841d2d01635bff7184ff1f8516ee16e5e16d876ea3895358473240a3826b963e",
+  "plan_file_sha256": "sha256:911c8eff0b1792fb198596f932f6b29f37211dc644916becbfbc4d14ecbecaf8",
+  "planned_cells": 600,
+  "planned_items_per_lane": 300,
+  "planned_lanes": 2,
+  "request_body_hash_set_sha256": "sha256:ebae6dbf1caf285a7c3cbdfcdfc8a8af2d119d7b1399c849ba3e317b96799829",
+  "schedule_sha256": "sha256:d201a39182b7ac6f180353fc7cd0cadf04c4f3512f82e60949c492cb1f6e0447",
+  "schema_version": "1.0.0",
+  "shallow_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
+}
