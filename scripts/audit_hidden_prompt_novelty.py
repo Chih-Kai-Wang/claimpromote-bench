@@ -65,7 +65,8 @@ def audit(
             "kind": "FROZEN_RELEASED_PROMPT_HASH_DENYLIST",
             "file_sha256": sha256_file(prior_prompt_manifest),
             "denylist_sha256": frozen["denylist_sha256"],
-            "source_prompt_packet_sha256": frozen["source"]["prompt_packet_sha256"],
+            "prompt_hash_set_sha256": frozen["prompt_hash_set_sha256"],
+            "source": frozen["source"],
         }
     else:
         assert prior_dataset is not None
@@ -76,8 +77,11 @@ def audit(
             "dataset_manifest_sha256": prior_dataset_manifest_sha256,
         }
     fresh = _prompt_hashes(fresh_dataset, arm, suffix)
-    if len(prior) != 300 or len(fresh) != 300:
-        raise ValueError("both hidden realizations must contain exactly 300 prompts")
+    if len(prior) < 300 or len(prior) % 300 != 0 or len(fresh) != 300:
+        raise ValueError(
+            "the prior denylist must contain complete 300-prompt realizations and the fresh "
+            "realization must contain exactly 300 prompts"
+        )
     if len(set(prior)) != len(prior) or len(set(fresh)) != len(fresh):
         raise ValueError("a hidden realization contains duplicate exact prompts")
     overlap = set(prior) & set(fresh)

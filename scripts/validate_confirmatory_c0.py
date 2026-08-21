@@ -34,6 +34,12 @@ def _nested(value: Json, dotted: str) -> Any:
 
 
 _HASH_BINDINGS = {
+    "protocol_lineage.r4_execution_receipt_file_sha256": (
+        "v2/confirmatory/r4-execution/execution-receipt.json"
+    ),
+    "protocol_lineage.r4_to_r5_change_scope_file_sha256": (
+        "v2/confirmatory/r4-to-r5-change-scope.json"
+    ),
     "dataset.benchmark_plan_sha256": "configs/v1-benchmark-plan.json",
     "dataset.input_schema_sha256": "schemas/benchmark-input-v1.schema.json",
     "dataset.gold_schema_sha256": "schemas/gold-label.schema.json",
@@ -41,7 +47,7 @@ _HASH_BINDINGS = {
     "prompt.policy_sha256": "policies/math-evidence-transition-1.0.0.json",
     "prompt.decision_schema_sha256": "schemas/agent-decision.schema.json",
     "prompt.prior_prompt_hash_denylist_file_sha256": (
-        "configs/v1-capable-hidden-prompt-hash-denylist.json"
+        "configs/prior-hidden-prompt-hash-denylist-r5.json"
     ),
     "baselines.shallow_model_file_sha256": "v2/confirmatory/public-dev-text-nb-v1.json",
     "baselines.training_script_sha256": "scripts/train_confirmatory_shallow_baseline.py",
@@ -50,8 +56,8 @@ _HASH_BINDINGS = {
     "statistics.analysis_script_sha256": "scripts/analyze_confirmatory_hidden_study.py",
     "statistics.c2_finalizer_sha256": "scripts/finalize_confirmatory_c2.py",
     "statistics.power_analysis_script_sha256": "scripts/confirmatory_power_analysis.py",
-    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r4.json",
-    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r4.json",
+    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r5.json",
+    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r5.json",
     "workflows.c1_freeze_sha256": ".github/workflows/confirmatory-hidden-freeze.yml",
     "workflows.scored_study_sha256": ".github/workflows/confirmatory-hidden-study.yml",
     "implementation_sha256.dataset_builder": "scripts/build_v1_dataset.py",
@@ -59,6 +65,14 @@ _HASH_BINDINGS = {
         "scripts/build_prior_prompt_hash_denylist.py"
     ),
     "implementation_sha256.formal_templates": "src/claimpromotebench/formal.py",
+    "implementation_sha256.dataset_module": "src/claimpromotebench/dataset.py",
+    "implementation_sha256.hashing_module": "src/claimpromotebench/hashing.py",
+    "implementation_sha256.error_types": "src/claimpromotebench/errors.py",
+    "implementation_sha256.policy_module": "src/claimpromotebench/policy.py",
+    "implementation_sha256.state_validation": "src/claimpromotebench/state.py",
+    "implementation_sha256.oracle_module": "src/claimpromotebench/oracle.py",
+    "implementation_sha256.executable_artifacts": "src/claimpromotebench/executable.py",
+    "implementation_sha256.decision_validation": ("src/claimpromotebench/decision_validation.py"),
     "implementation_sha256.prompt_novelty_audit": "scripts/audit_hidden_prompt_novelty.py",
     "implementation_sha256.packet_builder": "scripts/build_stronger_model_packet.py",
     "implementation_sha256.c1_builder": "scripts/build_confirmatory_c1.py",
@@ -72,6 +86,10 @@ _HASH_BINDINGS = {
     "implementation_sha256.drand_verifier": "tools/drand/fetch_verified_beacon.mjs",
     "implementation_sha256.drand_package_lock": "tools/drand/package-lock.json",
     "implementation_sha256.shortcut_audit": "src/claimpromotebench/shortcuts.py",
+    "implementation_sha256.shortcut_report": "src/claimpromotebench/shortcut_report.py",
+    "implementation_sha256.shortcut_features": "src/claimpromotebench/shortcut_features.py",
+    "implementation_sha256.shortcut_model": "src/claimpromotebench/shortcut_model.py",
+    "implementation_sha256.metrics": "src/claimpromotebench/metrics.py",
     "implementation_sha256.invariance_audit": "src/claimpromotebench/invariance.py",
     "implementation_sha256.formal_fixtures": "fixtures/formal/cases.json",
     "implementation_sha256.project_metadata": "pyproject.toml",
@@ -133,8 +151,8 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     if (
         denylist.get("status") != "FROZEN_PRIOR_PROMPT_HASH_DENYLIST"
         or not isinstance(denylist_hashes, list)
-        or len(denylist_hashes) != 300
-        or len(set(denylist_hashes)) != 300
+        or len(denylist_hashes) != plan["prompt"]["prior_prompt_hash_denylist_count"]
+        or len(set(denylist_hashes)) != len(denylist_hashes)
         or denylist.get("contains_prompt_text") is not False
         or denylist.get("contains_gold_labels") is not False
         or denylist_digest != sha256_bytes(canonical_json(denylist_payload).encode("utf-8"))
@@ -147,11 +165,24 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     for forbidden in ("postgate_decision", "gold.jsonl", 'add_argument("--dataset"'):
         if forbidden in runner_source:
             raise ValueError(f"gold-free worker contains forbidden dependency: {forbidden}")
+    if (
+        "claimpromotebench.v2" in runner_source
+        or "claimpromotebench.decision_validation" not in runner_source
+    ):
+        raise ValueError("gold-free worker does not use the isolated decision validator")
+    decision_source = (ROOT / "src" / "claimpromotebench" / "decision_validation.py").read_text(
+        encoding="utf-8"
+    )
+    if "from .gate" in decision_source or "from .oracle" in decision_source:
+        raise ValueError("isolated decision validator imports a gate or oracle")
     workflow_source = (ROOT / ".github/workflows/confirmatory-hidden-study.yml").read_text(
         encoding="utf-8"
     )
     for required in (
         "test \"$GITHUB_RUN_ATTEMPT\" = '1'",
+        "preflight frozen C1 without model credentials",
+        "--preflight-only",
+        "fetch-depth: 0",
         "run_confirmatory_service_study.py",
         "finalize_confirmatory_c2.py",
         "Remove all gold-bearing and seed-bearing files before inference",
@@ -164,8 +195,9 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     if (
         "CPB_V1_HIDDEN_SEED" in freeze_source
         or "--prior-dataset" in freeze_source
-        or "--prior-prompt-manifest configs/v1-capable-hidden-prompt-hash-denylist.json"
+        or "--prior-prompt-manifest configs/prior-hidden-prompt-hash-denylist-r5.json"
         not in freeze_source
+        or freeze_source.count("--prior-commitment") != 2
     ):
         raise ValueError("C1 freeze does not use the frozen released prior-prompt denylist")
     workflow_sources = workflow_source + freeze_source

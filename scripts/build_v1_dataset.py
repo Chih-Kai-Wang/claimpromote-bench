@@ -560,7 +560,7 @@ def pair_specs(
             key=lambda row: keyed_bytes(seed, f"confirmatory-pair-order:{row['pair_id']}"),
         )
         for number, row in enumerate(ordered, start=1):
-            row["pair_id"] = f"v1-test-cfm-{number:03d}"
+            row["pair_id"] = f"v1-test-cfn-{number:03d}"
             row["template_id"] = (
                 f"formal-logic-template-{(number - 1) % 24 + 1:02d}"
                 if row["family"] == "FORMAL"
@@ -743,7 +743,7 @@ def build(
     }
     if confirmatory_rekey:
         manifest["confirmatory_rekey_enabled"] = True
-        manifest["identifier_namespace"] = "PRIVATE_SEED_KEYED_OPAQUE_CFM_V1"
+        manifest["identifier_namespace"] = "PRIVATE_SEED_KEYED_OPAQUE_CFM_R5"
     write_json(out_dir / "manifest.json", manifest)
     summary = validate_dataset(out_dir, ROOT)
     return {

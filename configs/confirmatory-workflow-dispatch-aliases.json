@@ -1,28 +1,30 @@
 {
   "schema_version": "1.0.0",
   "status": "BYTE_IDENTICAL_DISPATCH_ALIASES_ONLY",
-  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
-  "reason": "GitHub workflow_dispatch requires the workflow path to have a registered ID on the default branch. The canonical confirmatory paths are new on the draft PR branch, so two retired registered paths carry byte-identical copies solely as dispatch aliases.",
-  "c0_plan_sha256": "sha256:911c8eff0b1792fb198596f932f6b29f37211dc644916becbfbc4d14ecbecaf8",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "reason": "GitHub workflow_dispatch requires the workflow path to have a registered ID on the default branch. The canonical confirmatory paths are new on the draft PR branch, so two retired registered paths carry byte-identical copies solely as dispatch aliases. r5 replaces r4 after its zero-POST shallow-checkout failure; the alias files add no behavior beyond their canonical r5 counterparts.",
+  "c0_plan_sha256": "sha256:07149cb821319eff3c8bf1d8abfb6010f4efe9f4162cfe418f8292aed1324b72",
   "aliases": [
     {
       "purpose": "C1_FREEZE_WITHOUT_MODEL_CALLS",
       "canonical_path": ".github/workflows/confirmatory-hidden-freeze.yml",
-      "canonical_sha256": "sha256:0f3241983724dbfa6a1310fae055d04a4d51b15f95f7bbad936dee172cdb0f6d",
+      "canonical_sha256": "sha256:97d42ee3b60eac40462185dc7205bcf4c5f46de1da7bfb72c1d9482477a5cbe5",
       "dispatch_alias_path": ".github/workflows/prepare-review-alpha.yml",
-      "dispatch_alias_sha256": "sha256:0f3241983724dbfa6a1310fae055d04a4d51b15f95f7bbad936dee172cdb0f6d",
+      "dispatch_alias_sha256": "sha256:97d42ee3b60eac40462185dc7205bcf4c5f46de1da7bfb72c1d9482477a5cbe5",
       "registered_workflow_id": 335467504
     },
     {
       "purpose": "SCORED_CONFIRMATORY_STUDY",
       "canonical_path": ".github/workflows/confirmatory-hidden-study.yml",
-      "canonical_sha256": "sha256:43d524f9c4fc9981ee1ab6746ed22538c79e23ab1854f450d0ced4dedbb02b71",
+      "canonical_sha256": "sha256:2b9113b5e0defebf4919e923f6112ed46015376d70b58b0cfb1351ac333ede11",
       "dispatch_alias_path": ".github/workflows/apply-solo-pilot.yml",
-      "dispatch_alias_sha256": "sha256:43d524f9c4fc9981ee1ab6746ed22538c79e23ab1854f450d0ced4dedbb02b71",
+      "dispatch_alias_sha256": "sha256:2b9113b5e0defebf4919e923f6112ed46015376d70b58b0cfb1351ac333ede11",
       "registered_workflow_id": 335516192
     }
   ],
-  "canonical_workflow_bytes_changed": false,
-  "protocol_semantics_changed": false,
+  "canonical_workflow_bytes_changed_from_r4": true,
+  "canonical_workflow_change_scope": "Full-history checkout plus a credential-free source/C1 preflight; frozen request bodies, adapters, parser semantics, hypotheses, and statistics are otherwise unchanged.",
+  "dispatch_alias_adds_protocol_semantics": false,
+  "prior_confirmatory_model_post_count": 0,
   "model_calls_before_alias_commit": 0
 }

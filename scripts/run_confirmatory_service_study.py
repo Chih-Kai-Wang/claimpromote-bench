@@ -20,8 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from claimpromotebench.dataset import load_json  # noqa: E402
-from claimpromotebench.hashing import canonical_json, sha256_bytes  # noqa: E402
-from claimpromotebench.v2 import diagnose_decision  # noqa: E402
+from claimpromotebench.decision_validation import diagnose_decision  # noqa: E402
+from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
 Json = dict[str, Any]
 DECISION_SCHEMA = ROOT / "schemas" / "agent-decision.schema.json"
@@ -346,6 +346,14 @@ def _append_durable(path: Path, record: Json) -> None:
 def _verify_frozen_plan(plan_path: Path, commit: str) -> None:
     if len(commit) != 40 or any(character not in "0123456789abcdef" for character in commit):
         fail("frozen plan commit must be a full lowercase Git SHA")
+    exists = subprocess.run(
+        ["git", "cat-file", "-e", f"{commit}^{{commit}}"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if exists.returncode != 0:
+        fail("frozen source commit is absent from checkout history")
     relative = plan_path.resolve().relative_to(ROOT).as_posix()
     shown = subprocess.run(
         ["git", "show", f"{commit}:{relative}"],
@@ -355,6 +363,113 @@ def _verify_frozen_plan(plan_path: Path, commit: str) -> None:
     )
     if shown.returncode != 0 or shown.stdout != plan_path.read_bytes():
         fail("current plan bytes differ from the supplied frozen commit")
+
+
+def _verify_c1_and_source(
+    commitment_path: Path,
+    plan_path: Path,
+    plan: Json,
+    packet: Json,
+    schedule: Json,
+    source_commit: str,
+    baselines_path: Path | None,
+) -> None:
+    commitment = load_json(commitment_path)
+    commitment_payload = deepcopy(commitment)
+    observed_commitment_sha = commitment_payload.pop("commitment_sha256", None)
+    if observed_commitment_sha != sha256_bytes(canonical_json(commitment_payload).encode("utf-8")):
+        fail("public C1 commitment self-digest mismatch")
+    if (
+        commitment.get("study_id") != plan.get("study_id")
+        or commitment.get("source_commit") != source_commit
+    ):
+        fail("public C1 commitment differs from the frozen study or source commit")
+    c1 = commitment.get("c1_receipt")
+    if not isinstance(c1, dict):
+        fail("public C1 commitment lacks its receipt")
+    c1_payload = deepcopy(c1)
+    observed_c1_sha = c1_payload.pop("c1_receipt_sha256", None)
+    if observed_c1_sha != sha256_bytes(canonical_json(c1_payload).encode("utf-8")):
+        fail("public C1 receipt self-digest mismatch")
+    packet_payload = deepcopy(packet)
+    observed_packet_sha = packet_payload.pop("packet_sha256", None)
+    if observed_packet_sha != sha256_bytes(canonical_json(packet_payload).encode("utf-8")):
+        fail("C1 packet self-digest mismatch")
+    schedule_payload = deepcopy(schedule)
+    observed_schedule_sha = schedule_payload.pop("schedule_sha256", None)
+    if observed_schedule_sha != sha256_bytes(canonical_json(schedule_payload).encode("utf-8")):
+        fail("C1 request schedule self-digest mismatch")
+    if (
+        c1.get("plan_file_sha256") != sha256_file(plan_path)
+        or c1.get("packet_sha256") != observed_packet_sha
+        or c1.get("schedule_sha256") != observed_schedule_sha
+        or c1.get("planned_cells") != 600
+        or schedule.get("planned_cells") != 600
+        or schedule.get("study_id") != plan.get("study_id")
+        or schedule.get("packet_sha256") != observed_packet_sha
+    ):
+        fail("C1 receipt, packet, schedule, or plan binding mismatch")
+    records = packet.get("records")
+    cells = schedule.get("cells")
+    if not isinstance(records, list) or len(records) != 300:
+        fail("C1 packet does not contain exactly 300 records")
+    if not isinstance(cells, list) or len(cells) != 600:
+        fail("C1 schedule does not contain exactly 600 cells")
+    packet_by_id = {str(row["item_id"]): row for row in records}
+    if len(packet_by_id) != 300:
+        fail("C1 packet item identifiers are not unique")
+    request_hashes: list[str] = []
+    cell_ids: set[str] = set()
+    for cell in cells:
+        item_id = str(cell.get("item_id"))
+        lane_id = str(cell.get("lane_id"))
+        cell_id = f"{lane_id}/{item_id}"
+        record = packet_by_id.get(item_id)
+        if cell_id in cell_ids or record is None:
+            fail("C1 schedule has a duplicate cell or unknown packet item")
+        cell_ids.add(cell_id)
+        if (
+            cell.get("prompt_sha256") != record.get("prompt_sha256")
+            or cell.get("pair_id") != record.get("pair_id")
+            or cell.get("request_body_sha256")
+            != sha256_bytes(canonical_json(cell.get("request_body")).encode("utf-8"))
+        ):
+            fail(f"C1 request binding mismatch: {cell_id}")
+        request_hashes.append(str(cell["request_body_sha256"]))
+    if c1.get("request_body_hash_set_sha256") != sha256_bytes(
+        canonical_json(sorted(request_hashes)).encode("utf-8")
+    ):
+        fail("C1 request-body hash-set binding mismatch")
+    if baselines_path is not None:
+        baselines = load_json(baselines_path)
+        baseline_payload = deepcopy(baselines)
+        observed_baseline_sha = baseline_payload.pop("predictions_sha256", None)
+        if observed_baseline_sha != sha256_bytes(canonical_json(baseline_payload).encode("utf-8")):
+            fail("C1 baseline prediction self-digest mismatch")
+        if (
+            observed_baseline_sha != c1.get("baseline_predictions_sha256")
+            or baselines.get("packet_sha256") != observed_packet_sha
+            or baselines.get("contains_test_gold") is not False
+        ):
+            fail("C1 baseline prediction binding mismatch")
+    source_files = commitment.get("source_files_sha256")
+    if not isinstance(source_files, dict) or not source_files:
+        fail("public C1 commitment lacks source-file bindings")
+    for relative, expected in source_files.items():
+        shown = subprocess.run(
+            ["git", "show", f"{source_commit}:{relative}"],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+        )
+        current = ROOT / str(relative)
+        if (
+            shown.returncode != 0
+            or sha256_bytes(shown.stdout) != expected
+            or not current.is_file()
+            or sha256_file(current) != expected
+        ):
+            fail(f"C1 source-file binding mismatch: {relative}")
 
 
 def _validate_key(value: str | None, env_name: str) -> str:
@@ -372,10 +487,13 @@ def main() -> int:
     parser.add_argument("--packet", type=Path, required=True)
     parser.add_argument("--schedule", type=Path, required=True)
     parser.add_argument("--plan", type=Path, required=True)
+    parser.add_argument("--commitment", type=Path, required=True)
+    parser.add_argument("--baselines", type=Path)
     parser.add_argument("--lane-id", required=True)
     parser.add_argument("--frozen-plan-commit", required=True)
     parser.add_argument("--journal", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--preflight-only", action="store_true")
     args = parser.parse_args()
 
     plan_path = args.plan.resolve()
@@ -388,12 +506,17 @@ def main() -> int:
     lane = lane_by_id(plan, args.lane_id)
     packet = load_json(args.packet.resolve())
     schedule = load_json(args.schedule.resolve())
-    schedule_payload = deepcopy(schedule)
-    observed_schedule_sha = schedule_payload.pop("schedule_sha256", None)
-    if observed_schedule_sha != sha256_bytes(canonical_json(schedule_payload).encode("utf-8")):
-        fail("C1 request schedule digest mismatch")
-    if schedule.get("packet_sha256") != packet.get("packet_sha256"):
-        fail("C1 schedule is not bound to the supplied packet")
+    if args.preflight_only and args.baselines is None:
+        fail("preflight requires the C1 baseline predictions")
+    _verify_c1_and_source(
+        args.commitment.resolve(),
+        plan_path,
+        plan,
+        packet,
+        schedule,
+        args.frozen_plan_commit.lower(),
+        args.baselines.resolve() if args.baselines is not None else None,
+    )
     packet_by_id = {str(row["item_id"]): row for row in packet["records"]}
     cells = [row for row in schedule["cells"] if row["lane_id"] == lane["lane_id"]]
     if len(cells) != 300 or len({str(row["item_id"]) for row in cells}) != 300:
@@ -404,6 +527,21 @@ def main() -> int:
         or args.out.with_suffix(args.out.suffix + ".partial").exists()
     ):
         fail("refusing a retry, resume, or output overwrite")
+    if args.preflight_only:
+        print(
+            json.dumps(
+                {
+                    "status": "GOLD_FREE_CREDENTIAL_FREE_PREFLIGHT_PASS",
+                    "study_id": plan["study_id"],
+                    "source_commit": args.frozen_plan_commit.lower(),
+                    "lane_id": lane["lane_id"],
+                    "planned_lane_cells": len(cells),
+                    "application_posts": 0,
+                },
+                sort_keys=True,
+            )
+        )
+        return 0
     auth_env = str(lane["auth_env"])
     api_key = _validate_key(os.environ.get(auth_env), auth_env)
     timeout_seconds = float(lane["timeout_seconds"])

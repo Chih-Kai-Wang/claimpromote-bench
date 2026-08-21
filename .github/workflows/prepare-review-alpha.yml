@@ -76,11 +76,11 @@ jobs:
             --seed-out "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
             --receipt-out work/confirmatory-seed-receipt.json
 
-      - name: Verify the released prior prompt-hash denylist
+      - name: Verify the union of every released prior prompt-hash denylist
         run: |
           set -euo pipefail
           python scripts/build_prior_prompt_hash_denylist.py \
-            --verify configs/v1-capable-hidden-prompt-hash-denylist.json
+            --verify configs/prior-hidden-prompt-hash-denylist-r5.json
 
       - name: Build the one seed-keyed fresh realization
         run: |
@@ -136,7 +136,7 @@ jobs:
             --dataset work/confirmatory-hidden \
             --out work/confirmatory-prompt-manifest.json >/dev/null
           python scripts/audit_hidden_prompt_novelty.py \
-            --prior-prompt-manifest configs/v1-capable-hidden-prompt-hash-denylist.json \
+            --prior-prompt-manifest configs/prior-hidden-prompt-hash-denylist-r5.json \
             --fresh-dataset work/confirmatory-hidden \
             --arm ledger_verifier \
             --out work/confirmatory-prompt-novelty.json
@@ -172,6 +172,8 @@ jobs:
             --seed-file "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
             --prompt-manifest work/confirmatory-prompt-manifest.json \
             --source-commit "$GITHUB_SHA" \
+            --prior-commitment configs/v1-hidden-test-commitment.json \
+            --prior-commitment v2/confirmatory/c1-r4/confirmatory-hidden-commitment.json \
             --novelty-report work/confirmatory-prompt-novelty.json \
             --seed-receipt work/confirmatory-seed-receipt.json \
             --c1-receipt work/confirmatory-c1-receipt.json \
@@ -189,6 +191,8 @@ jobs:
           assert commitment['pairs'] == 150
           assert commitment['instances'] == 300
           assert commitment['freshness_checks']['exact_registered_prompt_overlap_with_prior_hidden'] == 0
+          assert commitment['prompt_novelty_audit']['prior_prompt_count'] == 600
+          assert len(commitment['prior_hidden_commitments']) == 2
           assert commitment['c1_receipt']['planned_cells'] == 600
           assert commitment['contains_hidden_rows'] is False
           assert commitment['contains_gold_labels'] is False

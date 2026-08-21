@@ -134,9 +134,61 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  preflight:
+    name: preflight frozen C1 without model credentials
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the complete frozen-source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Download the private C1 inference-only inputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: cpb-fresh-confirmatory-private-c1-${{ github.run_id }}
+          path: work/c1
+
+      - name: Verify source, plan, packet, baselines, schedule, and all 600 request hashes
+        run: |
+          set -euo pipefail
+          test -z "${OPENCODE_GO_API_KEY:-}"
+          source_commit=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('configs/fresh-confirmatory-hidden-commitment.json').read_text())['source_commit'])
+          PY
+          )
+          git cat-file -e "$source_commit^{commit}"
+          git show "$source_commit:v2/fresh-confirmatory-study-plan.json" >/dev/null
+          for lane in opencode-go-qwen3.7-max opencode-go-deepseek-v4-flash-matched; do
+            python scripts/run_confirmatory_service_study.py \
+              --packet work/c1/confirmatory-packet.json \
+              --baselines work/c1/confirmatory-baselines.json \
+              --schedule work/c1/confirmatory-request-schedule.json \
+              --plan v2/fresh-confirmatory-study-plan.json \
+              --commitment configs/fresh-confirmatory-hidden-commitment.json \
+              --lane-id "$lane" \
+              --frozen-plan-commit "$source_commit" \
+              --journal "work/preflight/$lane-journal.jsonl" \
+              --out "work/preflight/$lane-run.jsonl" \
+              --preflight-only
+          done
+          test ! -e work/preflight
+
   run:
     name: one POST per cell — ${{ matrix.lane }}
-    needs: prepare
+    needs: [prepare, preflight]
     runs-on: ubuntu-latest
     timeout-minutes: 360
     strategy:
@@ -149,6 +201,8 @@ jobs:
     steps:
       - name: Check out frozen source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -181,6 +235,7 @@ jobs:
             --packet work/c1/confirmatory-packet.json \
             --schedule work/c1/confirmatory-request-schedule.json \
             --plan v2/fresh-confirmatory-study-plan.json \
+            --commitment configs/fresh-confirmatory-hidden-commitment.json \
             --lane-id '${{ matrix.lane }}' \
             --frozen-plan-commit "$source_commit" \
             --journal 'work/run/${{ matrix.lane }}-journal.jsonl' \

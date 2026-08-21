@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "from_study": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
+  "to_study": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "r4_terminal_execution_receipt_file_sha256": "sha256:f15f4f3fb22d7e7affa5023d8c245cc9e0f0e587347b3c2a2979b1dcc9a8f123",
+  "r4_model_post_count": 0,
+  "r4_model_output_count": 0,
+  "r4_hidden_content_opened_before_r5_c0": true,
+  "r4_hidden_content_use_boundary": "r4 prompt hashes are included in the r5 freshness denylist, and its opened status motivates a new namespace, salt, beacon, seed, dataset, and C1. r4 rows or gold do not alter lane selection, request adapters, model aliases, response parsing semantics, baseline weights, hypotheses, effect threshold, multiplicity family, or statistics.",
+  "changes": {
+    "workflow": {
+      "changed": true,
+      "r4_scored_workflow_sha256": "sha256:43d524f9c4fc9981ee1ab6746ed22538c79e23ab1854f450d0ced4dedbb02b71",
+      "r5_scored_workflow_sha256": "sha256:2b9113b5e0defebf4919e923f6112ed46015376d70b58b0cfb1351ac333ede11",
+      "r4_c1_workflow_sha256": "sha256:0f3241983724dbfa6a1310fae055d04a4d51b15f95f7bbad936dee172cdb0f6d",
+      "r5_c1_workflow_sha256": "sha256:97d42ee3b60eac40462185dc7205bcf4c5f46de1da7bfb72c1d9482477a5cbe5",
+      "scope": "The scored lane checkout now fetches full history. A separate job with no model credential validates the ancestor source commit, plan, public C1 commitment, source hashes, packet, baseline vectors, schedule, and all 600 request hashes before a lane can start."
+    },
+    "dataset_generator": {
+      "changed": true,
+      "r4_sha256": "sha256:9f3c2284e498547caad85dd37f8095c5a4d18096ab3bf95aadf85fe2b60ee40c",
+      "r5_sha256": "sha256:a448e8b44a73d55b385b08a12ff8b918ce911c7a8e5f05ed4d39e6d5265e0e3a",
+      "scope": "Only the confirmatory opaque pair-ID namespace changes from v1-test-cfm-NNN to v1-test-cfn-NNN. Factor selection, valid/invalid construction, invalid actions, templates, evidence semantics, and counts are unchanged. The namespace is label-independent and regenerates model-visible claim/evidence/run identifiers."
+    },
+    "formal_identifier_parser": {
+      "changed": true,
+      "r4_sha256": "sha256:8172ab1daab172d9c0d04a91047b5e6c8d4d14810a333188086e09807ad8d644",
+      "r5_sha256": "sha256:b4139fdd0e44de9064cc55ce70ee66b3c73f8e4876a34a368d11cb1b26065ff7",
+      "scope": "The parser accepts both the retained r4 cfm namespace and new r5 cfn namespace; theorem statements and Lean proof templates are unchanged."
+    },
+    "prompt_renderer": {
+      "changed": false,
+      "r4_sha256": "sha256:9764f2d9b294a2050df5f9e811f6c8892d732618183ef4a50713ecf01f04d121",
+      "r5_sha256": "sha256:9764f2d9b294a2050df5f9e811f6c8892d732618183ef4a50713ecf01f04d121",
+      "provider_neutral_control_suffix_changed": false
+    },
+    "request_adapters_and_lane_settings": {
+      "model_facing_semantics_changed": false,
+      "scope": "The same two selected service aliases, endpoints, API kinds, max-output limits, response-format modes, pacing, timeouts, one-POST rule, and request-body construction remain frozen. Runner source changes only add preflight/source binding and import the isolated parser."
+    },
+    "decision_parser": {
+      "semantic_order_changed": false,
+      "r4_transitive_module_sha256": "sha256:5cf360263b608701e385089efb2a7691c44dfc38f5ee6efd0532e7dbb7a6e439",
+      "r5_isolated_module_sha256": "sha256:fa2c90c74e428c70c58bac422c171446eb38fefef1bb5dd1d7b3dd649adc7688",
+      "scope": "JSON syntax, exact schema, and cross-field semantic validation retain the same order and behavior. r5 isolates that logic in a module that imports neither gate nor oracle; r4 had imported it through a broader v2 module that also loaded unused gate/oracle code."
+    },
+    "prior_prompt_denylist": {
+      "changed": true,
+      "r4_count": 300,
+      "r5_count": 600,
+      "r5_file_sha256": "sha256:90c559db5c486ea77514e359a4cedfbb45853d2403c77c0829d7a8d77df35101",
+      "scope": "r5 rejects exact overlap against the union of original v1 and opened r4 model-facing prompt hashes."
+    },
+    "public_only_baseline": {
+      "changed": false,
+      "model_file_sha256": "sha256:3377faf0015d13e034e4ed9812af6b84fefb52dfd83be44f507c5658d933b7bc"
+    },
+    "analysis": {
+      "changed": false,
+      "analysis_script_sha256": "sha256:d010f706841313577a3867f50a315462b8fa406998b90a1f84754b743834aba1",
+      "c2_finalizer_sha256": "sha256:280de8663d0cfa3e6dfe1ee377b9e0b3a983bb610426ba1ee4ef6707db2015d9",
+      "hypotheses_changed": false,
+      "minimum_effect_changed": false,
+      "holm_family_changed": false
+    },
+    "deterministic_gate": {
+      "used_during_inference_changed": false,
+      "used_during_inference": false
+    }
+  },
+  "interpretation": "r5 is not a rerun, repair, or completion of r4. It is a new hidden confirmatory version whose scientific comparison is held fixed while orchestration, source binding, dependency isolation, and exact-prompt freshness are strengthened."
+}
