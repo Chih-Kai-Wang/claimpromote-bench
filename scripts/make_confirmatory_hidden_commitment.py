@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from build_confirmatory_source_manifest import (  # noqa: E402
+    MANIFEST_PATH,
+    validate_manifest,
+)
 from make_hidden_test_commitment import build_commitment  # noqa: E402
 
 from claimpromotebench.dataset import load_json  # noqa: E402
@@ -21,59 +26,10 @@ from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file 
 
 Json = dict[str, Any]
 _COMMIT = re.compile(r"^[0-9a-f]{40}$")
-_SOURCE_FILES = (
-    ".github/workflows/confirmatory-hidden-freeze.yml",
-    ".github/workflows/confirmatory-hidden-study.yml",
-    "configs/prior-hidden-prompt-hash-denylist-r5.json",
-    "configs/v1-benchmark-plan.json",
-    "policies/math-evidence-transition-1.0.0.json",
-    "schemas/agent-decision.schema.json",
-    "schemas/benchmark-input-v1.schema.json",
-    "schemas/gold-label.schema.json",
-    "scripts/build_v1_dataset.py",
-    "scripts/build_stronger_model_packet.py",
-    "scripts/audit_hidden_prompt_novelty.py",
-    "scripts/analyze_confirmatory_hidden_study.py",
-    "scripts/build_confirmatory_c1.py",
-    "scripts/build_prior_prompt_hash_denylist.py",
-    "scripts/confirmatory_power_analysis.py",
-    "scripts/freeze_prompt_manifest.py",
-    "scripts/finalize_confirmatory_c2.py",
-    "scripts/derive_confirmatory_seed.py",
-    "scripts/make_confirmatory_hidden_commitment.py",
-    "scripts/make_hidden_test_commitment.py",
-    "scripts/predict_confirmatory_baselines.py",
-    "scripts/run_confirmatory_service_study.py",
-    "scripts/train_confirmatory_shallow_baseline.py",
-    "scripts/validate_confirmatory_c0.py",
-    "scripts/validate_stronger_model_study.py",
-    "scripts/validate_v1_plan.py",
-    "src/claimpromotebench/confirmatory_baseline.py",
-    "src/claimpromotebench/dataset.py",
-    "src/claimpromotebench/decision_validation.py",
-    "src/claimpromotebench/errors.py",
-    "src/claimpromotebench/executable.py",
-    "src/claimpromotebench/formal.py",
-    "src/claimpromotebench/hashing.py",
-    "src/claimpromotebench/invariance.py",
-    "src/claimpromotebench/metrics.py",
-    "src/claimpromotebench/oracle.py",
-    "src/claimpromotebench/policy.py",
-    "src/claimpromotebench/prompts.py",
-    "src/claimpromotebench/shortcut_features.py",
-    "src/claimpromotebench/shortcut_model.py",
-    "src/claimpromotebench/shortcut_report.py",
-    "src/claimpromotebench/shortcuts.py",
-    "src/claimpromotebench/state.py",
-    "fixtures/formal/cases.json",
-    "pyproject.toml",
-    "tools/drand/fetch_verified_beacon.mjs",
-    "tools/drand/package-lock.json",
-    "v2/confirmatory/power-analysis-r5.json",
-    "v2/confirmatory/power-assumptions-r5.json",
-    "v2/confirmatory/public-dev-text-nb-v1.json",
-    "v2/confirmatory/r4-to-r5-change-scope.json",
-    "v2/confirmatory/r4-execution/execution-receipt.json",
+_SOURCE_EXTRAS = (
+    MANIFEST_PATH,
+    "configs/confirmatory-workflow-dispatch-aliases.json",
+    "configs/fresh-confirmatory-seed-commitment.json",
     "v2/fresh-confirmatory-study-plan.json",
 )
 _FRESH_COMPONENTS = (
@@ -83,6 +39,24 @@ _FRESH_COMPONENTS = (
     "gold.jsonl",
     "pairs.json",
 )
+
+
+def verify_recorded_source_commit(record: Json) -> None:
+    """Require the supplied C1 source commit to contain every recorded source byte."""
+
+    source_commit = str(record.get("source_commit", ""))
+    source_files = record.get("source_files_sha256")
+    if not _COMMIT.fullmatch(source_commit) or not isinstance(source_files, dict):
+        raise ValueError("C1 source commit or source map is malformed")
+    for relative, expected in source_files.items():
+        shown = subprocess.run(
+            ["git", "show", f"{source_commit}:{relative}"],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+        )
+        if shown.returncode != 0 or sha256_bytes(shown.stdout) != expected:
+            raise ValueError(f"C1 source commit does not contain recorded bytes: {relative}")
 
 
 def build_confirmatory_commitment(
@@ -105,13 +79,21 @@ def build_confirmatory_commitment(
         if isinstance(prior_commitment_paths, Path)
         else list(prior_commitment_paths)
     )
-    if len(paths) < 2:
-        raise ValueError("r5 must bind both the original and r4 hidden commitments")
+    if len(paths) < 3:
+        raise ValueError("r6 must bind the original, r4, and void r5 hidden commitments")
     priors = [load_json(path) for path in paths]
     if any(not isinstance(prior, dict) for prior in priors):
         raise ValueError("every prior commitment must be an object")
     plan_path = ROOT / "v2" / "fresh-confirmatory-study-plan.json"
     plan = load_json(plan_path)
+    runtime_manifest = load_json(ROOT / MANIFEST_PATH)
+    validate_manifest(runtime_manifest)
+    runtime_files = runtime_manifest.get("files_sha256")
+    if not isinstance(runtime_files, dict):
+        raise ValueError("runtime source manifest lacks its exact file map")
+    source_files_sha256 = {str(path): str(digest) for path, digest in runtime_files.items()}
+    for relative in _SOURCE_EXTRAS:
+        source_files_sha256[relative] = sha256_file(ROOT / relative)
     base = build_commitment(dataset_dir, seed_file, prompt_manifest)
     dataset_manifest = load_json(dataset_dir / "manifest.json")
     if dataset_manifest.get("confirmatory_rekey_enabled") is not True:
@@ -156,6 +138,16 @@ def build_confirmatory_commitment(
         raise ValueError("C1 receipt is not bound to the current study plan")
     if c1_receipt.get("planned_cells") != 600:
         raise ValueError("C1 receipt does not bind all 600 model-item cells")
+    authorization = c1_receipt.get("subscription_authorization")
+    if (
+        not isinstance(authorization, dict)
+        or authorization.get("status") != "SUBSCRIPTION_AUTHORIZATION_GATE_PASS"
+        or authorization.get("schedule_recomputed_from_exact_request_bodies") is not True
+        or authorization.get("schedule_cells_verified") != 600
+        or authorization.get("incremental_cash_cap_usd") != 0.0
+        or authorization.get("pre_post_token_cost_gate") != "NOT_APPLICABLE"
+    ):
+        raise ValueError("C1 receipt lacks the frozen subscription authorization gate")
     if any(
         c1_receipt.get(key) is not False
         for key in (
@@ -207,9 +199,8 @@ def build_confirmatory_commitment(
         "commitment_version": "2.0.0",
         "study_id": study_id,
         "source_commit": source_commit,
-        "source_files_sha256": {
-            relative: sha256_file(ROOT / relative) for relative in _SOURCE_FILES
-        },
+        "runtime_source_manifest_sha256": runtime_manifest["manifest_sha256"],
+        "source_files_sha256": dict(sorted(source_files_sha256.items())),
         "base_v1_commitment_sha256": base_commitment_sha256,
         "prior_hidden_commitments": prior_records,
         "freshness_checks": {
@@ -267,6 +258,7 @@ def main() -> int:
         args.seed_receipt.resolve(),
         args.c1_receipt.resolve(),
     )
+    verify_recorded_source_commit(record)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

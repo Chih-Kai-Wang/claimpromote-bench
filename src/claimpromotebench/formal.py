@@ -58,7 +58,7 @@ FORMAL_CLAIMS: dict[str, tuple[str, str, str]] = {
 }
 
 _V1_PAIR = re.compile(r"^v1-(dev|test)-formal-([0-9]{3})$")
-_CONFIRMATORY_PAIR = re.compile(r"^v1-test-(?:cfm|cfn)-([0-9]{3})$")
+_CONFIRMATORY_PAIR = re.compile(r"^v1-test-(?:cfm|cfn|cfo)-([0-9]{3})$")
 _V1_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
     (
         "For every natural number n, n + 0 = n.",

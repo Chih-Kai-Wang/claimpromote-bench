@@ -65,6 +65,7 @@ def validate_plan(plan: Json) -> tuple[dict[str, Json], set[str]]:
     budget = plan.get("budget")
     if not isinstance(budget, dict):
         fail("plan budget is malformed")
+    subscription_quota_only = budget.get("mode") == "PREEXISTING_SUBSCRIPTION_QUOTA_ONLY"
     subscription_or_promo = isinstance(budget.get("incremental_cash_cap_usd"), (int, float))
     if not subscription_or_promo and not isinstance(budget.get("total_paid_cap_usd"), (int, float)):
         fail("plan budget lacks a cash ceiling")
@@ -75,13 +76,18 @@ def validate_plan(plan: Json) -> tuple[dict[str, Json], set[str]]:
             "input_usd_per_million",
             "cached_input_usd_per_million",
             "output_usd_per_million",
-            "spend_cap_usd",
         )
         if any(not isinstance(lane.get(key), (int, float)) for key in required_rates):
-            fail(f"formal lane lacks a frozen price or cap: {lane_id}")
+            fail(f"formal lane lacks frozen descriptive rates: {lane_id}")
         if not isinstance(lane.get("auth_env"), str):
             fail(f"formal lane lacks an auth environment name: {lane_id}")
-        total_cap += float(lane["spend_cap_usd"])
+        if subscription_quota_only:
+            if lane.get("spend_cap_usd") is not None:
+                fail(f"subscription-only lane reintroduced a token-USD cap: {lane_id}")
+        elif not isinstance(lane.get("spend_cap_usd"), (int, float)):
+            fail(f"formal lane lacks a frozen spend cap: {lane_id}")
+        else:
+            total_cap += float(lane["spend_cap_usd"])
     declared_cap = float(
         budget["incremental_cash_cap_usd"]
         if subscription_or_promo
@@ -91,6 +97,8 @@ def validate_plan(plan: Json) -> tuple[dict[str, Json], set[str]]:
         fail(f"lane caps ${total_cap:.6f} exceed total cap ${declared_cap:.6f}")
     if declared_cap > 10.0 or declared_cap < 0.0:
         fail("declared paid cap exceeds the user-authorized USD 10 ceiling")
+    if subscription_quota_only and declared_cap != 0.0:
+        fail("subscription-only study must retain a zero incremental-cash cap")
     for lane_id, lane in lanes.items():
         if lane_id not in formal_ids:
             if lane.get("spend_cap_usd") is not None:
@@ -331,7 +339,8 @@ def validate_run(
             fail(f"evidence ceiling mismatch: {item_id}")
     if observed_ids != expected_ids:
         fail(f"run coverage differs from frozen {phase} IDs: {path}")
-    if formal and computed_cost > float(lane["spend_cap_usd"]) + 1e-12:
+    lane_cap = lane.get("spend_cap_usd")
+    if formal and isinstance(lane_cap, (int, float)) and computed_cost > float(lane_cap) + 1e-12:
         fail(f"run cost exceeds lane cap: {path}")
     return {
         "path": path,
@@ -402,13 +411,16 @@ def validate_cumulative_costs(
     run_reports: list[Json], lanes: dict[str, Json], formal_ids: set[str]
 ) -> None:
     for lane_id in formal_ids:
+        lane_cap = lanes[lane_id].get("spend_cap_usd")
+        if not isinstance(lane_cap, (int, float)):
+            continue
         known = [
             float(report["computed_cost_usd"])
             for report in run_reports
             if report["lane_id"] == lane_id
             and isinstance(report["computed_cost_usd"], (int, float))
         ]
-        if sum(known) > float(lanes[lane_id]["spend_cap_usd"]) + 1e-12:
+        if sum(known) > float(lane_cap) + 1e-12:
             fail(f"cumulative run cost exceeds lane cap: {lane_id}")
 
 
@@ -441,7 +453,8 @@ def main() -> int:
         for lane_id in formal_ids
     }
     for lane_id, bound in conservative_bounds.items():
-        if bound > float(lanes[lane_id]["spend_cap_usd"]):
+        lane_cap = lanes[lane_id].get("spend_cap_usd")
+        if isinstance(lane_cap, (int, float)) and bound > float(lane_cap):
             fail(f"conservative pilot-plus-full bound exceeds lane cap: {lane_id}")
 
     run_commits: list[tuple[Path, str]] = []
@@ -495,8 +508,13 @@ def main() -> int:
                 "packet_sha256": packet["packet_sha256"],
                 "packet_records": len(packet_by_id),
                 "pilot_records": len(packet["pilot_item_ids"]),
-                "formal_lane_cap_usd": sum(
-                    float(lanes[lane_id]["spend_cap_usd"]) for lane_id in formal_ids
+                "formal_lane_cap_usd": (
+                    sum(float(lanes[lane_id]["spend_cap_usd"]) for lane_id in formal_ids)
+                    if all(
+                        isinstance(lanes[lane_id].get("spend_cap_usd"), (int, float))
+                        for lane_id in formal_ids
+                    )
+                    else None
                 ),
                 "conservative_pilot_plus_full_bounds_usd": conservative_bounds,
                 "validated_frozen_plan_commits": sorted(frozen_contexts),

@@ -11,8 +11,11 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONPATH: src
+
 concurrency:
-  group: fresh-confirmatory-c1-v1
+  group: fresh-confirmatory-c1-r6
   cancel-in-progress: false
 
 jobs:
@@ -26,13 +29,25 @@ jobs:
 
       - name: Check out C0 source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Prove only the public r6 salt commitment differs from C0
+        run: |
+          set -euo pipefail
+          source_c0_commit=$(jq -er '.source_c0_commit | select(test("^[0-9a-f]{40}$"))' \
+            configs/fresh-confirmatory-seed-commitment.json)
+          git cat-file -e "$source_c0_commit^{commit}"
+          mapfile -t changed_paths < <(git diff --name-only "$source_c0_commit" "$GITHUB_SHA")
+          test "${#changed_paths[@]}" -eq 1
+          test "${changed_paths[0]}" = 'configs/fresh-confirmatory-seed-commitment.json'
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.11"
+          python-version: "3.11.16"
           cache: pip
-          cache-dependency-path: pyproject.toml
+          cache-dependency-path: tools/confirmatory-python311.lock
 
       - name: Set up Node for the pinned official drand verifier
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -44,8 +59,12 @@ jobs:
       - name: Install frozen dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e .
+          python -m pip install --require-hashes --only-binary=:all: \
+            -r tools/confirmatory-python311.lock
           npm ci --prefix tools/drand --ignore-scripts --no-audit --no-fund
+
+      - name: Validate the client-side subscription authorization before salt access
+        run: python scripts/validate_confirmatory_c0.py
 
       - name: Materialize the precommitted salt without logging it
         env:
@@ -80,7 +99,7 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/build_prior_prompt_hash_denylist.py \
-            --verify configs/prior-hidden-prompt-hash-denylist-r5.json
+            --verify configs/prior-hidden-prompt-hash-denylist-r6.json
 
       - name: Build the one seed-keyed fresh realization
         run: |
@@ -136,7 +155,7 @@ jobs:
             --dataset work/confirmatory-hidden \
             --out work/confirmatory-prompt-manifest.json >/dev/null
           python scripts/audit_hidden_prompt_novelty.py \
-            --prior-prompt-manifest configs/prior-hidden-prompt-hash-denylist-r5.json \
+            --prior-prompt-manifest configs/prior-hidden-prompt-hash-denylist-r6.json \
             --fresh-dataset work/confirmatory-hidden \
             --arm ledger_verifier \
             --out work/confirmatory-prompt-novelty.json
@@ -174,6 +193,7 @@ jobs:
             --source-commit "$GITHUB_SHA" \
             --prior-commitment configs/v1-hidden-test-commitment.json \
             --prior-commitment v2/confirmatory/c1-r4/confirmatory-hidden-commitment.json \
+            --prior-commitment v2/confirmatory/c1-r5/confirmatory-hidden-commitment.json \
             --novelty-report work/confirmatory-prompt-novelty.json \
             --seed-receipt work/confirmatory-seed-receipt.json \
             --c1-receipt work/confirmatory-c1-receipt.json \
@@ -191,9 +211,13 @@ jobs:
           assert commitment['pairs'] == 150
           assert commitment['instances'] == 300
           assert commitment['freshness_checks']['exact_registered_prompt_overlap_with_prior_hidden'] == 0
-          assert commitment['prompt_novelty_audit']['prior_prompt_count'] == 600
-          assert len(commitment['prior_hidden_commitments']) == 2
+          assert commitment['prompt_novelty_audit']['prior_prompt_count'] == 900
+          assert len(commitment['prior_hidden_commitments']) == 3
           assert commitment['c1_receipt']['planned_cells'] == 600
+          authorization = commitment['c1_receipt']['subscription_authorization']
+          assert authorization['status'] == 'SUBSCRIPTION_AUTHORIZATION_GATE_PASS'
+          assert authorization['incremental_cash_cap_usd'] == 0.0
+          assert authorization['schedule_cells_verified'] == 600
           assert commitment['contains_hidden_rows'] is False
           assert commitment['contains_gold_labels'] is False
           assert commitment['contains_seed_bytes'] is False

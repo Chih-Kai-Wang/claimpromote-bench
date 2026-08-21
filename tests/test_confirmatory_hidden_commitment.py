@@ -47,6 +47,16 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
     r4_record["study_id"] = "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
     r4_commitment_path = tmp_path / "r4-commitment.json"
     r4_commitment_path.write_text(json.dumps(r4_record), encoding="utf-8")
+    r5_seed = tmp_path / "r5-seed.bin"
+    r5_seed.write_bytes(bytes([23]) * 32)
+    r5_dataset = tmp_path / "r5-hidden"
+    builder.build("test", r5_dataset, r5_seed, confirmatory_rekey=True)
+    r5_prompt_manifest = tmp_path / "r5-prompt-manifest.json"
+    r5_prompt_manifest.write_text('{"r5":true}\n', encoding="utf-8")
+    r5_record = base_commitment.build_commitment(r5_dataset, r5_seed, r5_prompt_manifest)
+    r5_record["study_id"] = "claimpromotebench-v1-fresh-confirmatory-2026-08-r5"
+    r5_commitment_path = tmp_path / "r5-commitment.json"
+    r5_commitment_path.write_text(json.dumps(r5_record), encoding="utf-8")
 
     seed = tmp_path / "seed.bin"
     seed.write_bytes(bytes(range(32)))
@@ -59,7 +69,7 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
         dataset,
         "ledger_verifier",
         "",
-        prior_prompt_manifest=ROOT / "configs" / "prior-hidden-prompt-hash-denylist-r5.json",
+        prior_prompt_manifest=ROOT / "configs" / "prior-hidden-prompt-hash-denylist-r6.json",
     )
     assert novelty["prior_prompt_source"]["kind"] == "FROZEN_RELEASED_PROMPT_HASH_DENYLIST"
     novelty_path = tmp_path / "novelty.json"
@@ -74,7 +84,7 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
     seed_receipt_path = tmp_path / "seed-receipt.json"
     seed_receipt_path.write_text(json.dumps(seed_receipt), encoding="utf-8")
     c1_receipt = {
-        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
         "plan_file_sha256": sha256_file(ROOT / "v2" / "fresh-confirmatory-study-plan.json"),
         "dataset_manifest_sha256": sha256_file(dataset / "manifest.json"),
         "planned_cells": 600,
@@ -83,30 +93,49 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
         "contains_hidden_rows": False,
         "contains_gold_labels": False,
         "contains_seed_bytes": False,
+        "subscription_authorization": {
+            "status": "SUBSCRIPTION_AUTHORIZATION_GATE_PASS",
+            "schedule_recomputed_from_exact_request_bodies": True,
+            "schedule_cells_verified": 600,
+            "incremental_cash_cap_usd": 0.0,
+            "pre_post_token_cost_gate": "NOT_APPLICABLE",
+        },
     }
     c1_receipt["c1_receipt_sha256"] = sha256_bytes(canonical_json(c1_receipt).encode("utf-8"))
     c1_receipt_path = tmp_path / "c1-receipt.json"
     c1_receipt_path.write_text(json.dumps(c1_receipt), encoding="utf-8")
 
-    record = commitment.build_confirmatory_commitment(
-        dataset,
-        seed,
-        prompt_manifest,
-        "a" * 40,
-        [prior_commitment_path, r4_commitment_path],
-        novelty_path,
-        seed_receipt_path,
-        c1_receipt_path,
-    )
+    original_extras = commitment._SOURCE_EXTRAS
+    try:
+        commitment._SOURCE_EXTRAS = tuple(
+            path
+            for path in original_extras
+            if path != "configs/fresh-confirmatory-seed-commitment.json"
+        )
+        record = commitment.build_confirmatory_commitment(
+            dataset,
+            seed,
+            prompt_manifest,
+            "a" * 40,
+            [prior_commitment_path, r4_commitment_path, r5_commitment_path],
+            novelty_path,
+            seed_receipt_path,
+            c1_receipt_path,
+        )
+    finally:
+        commitment._SOURCE_EXTRAS = original_extras
     assert record["commitment_version"] == "2.0.0"
-    assert record["study_id"] == "claimpromotebench-v1-fresh-confirmatory-2026-08-r5"
+    assert record["study_id"] == "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"
     assert record["source_commit"] == "a" * 40
+    assert record["runtime_source_manifest_sha256"].startswith("sha256:")
+    assert "src/claimpromotebench/__init__.py" in record["source_files_sha256"]
+    assert "src/claimpromotebench/statistics.py" in record["source_files_sha256"]
     assert record["pairs"] == 150
     assert record["instances"] == 300
     assert record["contains_hidden_rows"] is False
     assert record["contains_gold_labels"] is False
     assert record["contains_seed_bytes"] is False
-    assert len(record["prior_hidden_commitments"]) == 2
+    assert len(record["prior_hidden_commitments"]) == 3
     assert all(
         all(differences.values())
         for differences in record["freshness_checks"][

@@ -89,16 +89,21 @@ def finalize(
                 "pair_id": cell["pair_id"],
                 "prompt_sha256": cell["prompt_sha256"],
                 "request_body_sha256": cell["request_body_sha256"],
-                "application_post_count": 1,
+                "application_post_count": None,
+                "application_post_count_range": [0, 1],
+                "request_accounting_status": "UNKNOWN_0_OR_1_POST",
                 "client_retry_count": 0,
                 "parse_status": outcome,
-                "parse_detail": "POST intent was durable but no response record was sealed.",
+                "parse_detail": (
+                    "A local POST intent was durable but no response record was sealed; the "
+                    "process may have stopped immediately before or after the application POST."
+                ),
                 "raw_decision": None,
                 "contains_gold": False,
                 "deterministic_gate_applied": False,
             }
         else:
-            outcome = "NOT_ATTEMPTED_ORCHESTRATION_FAILURE"
+            outcome = "AMBIGUOUS_ORCHESTRATION_LOSS"
             record = {
                 "schema_version": "1.0.0",
                 "study_id": schedule["study_id"],
@@ -110,11 +115,15 @@ def finalize(
                 "pair_id": cell["pair_id"],
                 "prompt_sha256": cell["prompt_sha256"],
                 "request_body_sha256": cell["request_body_sha256"],
-                "application_post_count": 0,
+                "application_post_count": None,
+                "application_post_count_range": [0, 1],
+                "request_accounting_status": "UNKNOWN_0_OR_1_POST",
                 "client_retry_count": 0,
                 "parse_status": outcome,
                 "parse_detail": (
-                    "No durable POST intent exists; the cell is incorrect and cannot be sent later."
+                    "No journal record was recovered. Ephemeral-runner loss means zero versus one "
+                    "application POST cannot be distinguished; the cell is incorrect and cannot "
+                    "be sent later."
                 ),
                 "raw_decision": None,
                 "contains_gold": False,
@@ -148,6 +157,10 @@ def finalize(
         "gold_loaded_before_receipt": False,
         "analysis_executed_before_receipt": False,
         "missing_cells_are_incorrect_and_cannot_be_retried": True,
+        "lost_cell_request_accounting": (
+            "UNKNOWN_0_OR_1_POST_PER_CELL_WHEN_NO_RESPONSE_RECORD_IS_RECOVERED"
+        ),
+        "ephemeral_runner_loss_cannot_prove_zero_posts": True,
     }
     receipt["c2_receipt_sha256"] = sha256_bytes(canonical_json(receipt).encode("utf-8"))
     return receipt, by_lane

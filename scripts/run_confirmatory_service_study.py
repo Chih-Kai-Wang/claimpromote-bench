@@ -25,6 +25,7 @@ from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file 
 
 Json = dict[str, Any]
 DECISION_SCHEMA = ROOT / "schemas" / "agent-decision.schema.json"
+RUNTIME_SOURCE_MANIFEST = ROOT / "configs" / "confirmatory-runtime-source-manifest-r6.json"
 _REDACTED = "<REDACTED_HIDDEN_REASONING>"
 _RESPONSE_HEADER_ALLOWLIST = {
     "content-type",
@@ -33,6 +34,43 @@ _RESPONSE_HEADER_ALLOWLIST = {
     "x-request-id",
     "cf-ray",
     "server",
+}
+_RUNTIME_DISCOVERY_RULES = (
+    ("src", {".py"}, {"py.typed"}),
+    ("scripts", {".py"}, set()),
+    ("schemas", {".json"}, set()),
+    ("policies", {".json"}, set()),
+)
+_RUNTIME_EXPLICIT_PATHS = {
+    ".github/workflows/apply-solo-pilot.yml",
+    ".github/workflows/confirmatory-hidden-freeze.yml",
+    ".github/workflows/confirmatory-hidden-study.yml",
+    ".github/workflows/prepare-review-alpha.yml",
+    "configs/decoding-v1.json",
+    "configs/prior-hidden-prompt-hash-denylist-r6.json",
+    "configs/v1-benchmark-plan.json",
+    "configs/v1-hidden-test-commitment.json",
+    "fixtures/formal/cases.json",
+    "pyproject.toml",
+    "tools/confirmatory-python311.lock",
+    "tools/drand/fetch_verified_beacon.mjs",
+    "tools/drand/package-lock.json",
+    "tools/drand/package.json",
+    "v2/confirmatory/c1-r4/confirmatory-hidden-commitment.json",
+    "v2/confirmatory/c1-r5/confirmatory-hidden-commitment.json",
+    "v2/confirmatory/c1-r5/prompt-hash-recovery-run-receipt.json",
+    "v2/confirmatory/c1-r5/void-pre-post-receipt.json",
+    "v2/confirmatory/power-analysis-r6.json",
+    "v2/confirmatory/power-assumptions-r6.json",
+    "v2/confirmatory/public-dev-text-nb-v1.json",
+    "v2/confirmatory/r4-execution/execution-receipt.json",
+    "v2/confirmatory/r5-to-r6-change-scope.json",
+}
+_SOURCE_MAP_EXTRAS = {
+    "configs/confirmatory-runtime-source-manifest-r6.json",
+    "configs/confirmatory-workflow-dispatch-aliases.json",
+    "configs/fresh-confirmatory-seed-commitment.json",
+    "v2/fresh-confirmatory-study-plan.json",
 }
 
 
@@ -115,6 +153,178 @@ def request_headers_template(lane: Json) -> Json:
 def endpoint_for_lane(lane: Json) -> str:
     suffix = "/messages" if lane["api_kind"] == "anthropic_messages" else "/chat/completions"
     return str(lane["base_url"]).rstrip("/") + suffix
+
+
+def _independently_reconstruct_subscription_authorization(
+    plan: Json, schedule: Json, packet: Json
+) -> Json:
+    """Rebuild all 600 requests without importing the C1 builder or its validator."""
+
+    lane_ids = (
+        "opencode-go-qwen3.7-max",
+        "opencode-go-deepseek-v4-flash-matched",
+    )
+    budget = plan.get("budget")
+    expected_budget = {
+        "mode": "PREEXISTING_SUBSCRIPTION_QUOTA_ONLY",
+        "authorization_scope": (
+            "USER_AUTHORIZED_FULL_EXISTING_OPENCODE_GO_SUBSCRIPTION_QUOTA_"
+            "FOR_THIS_FIXED_600_CELL_STUDY"
+        ),
+        "planned_application_posts": 600,
+        "planned_posts_per_lane": 300,
+        "max_output_tokens_per_post": 1536,
+        "incremental_cash_cap_usd": 0.0,
+        "workflow_initiated_purchase_or_recharge": False,
+        "cash_balance_fallback": False,
+        "alternate_provider_fallback": False,
+        "per_lane_token_usd_cap": None,
+        "pre_post_token_cost_gate": "NOT_APPLICABLE",
+        "quota_exhaustion": "CELL_INCORRECT_NO_RETRY",
+        "provider_reported_usage_and_quota_value": "POSTHOC_DESCRIPTIVE_ONLY",
+        "adaptive_stop_on_usage_or_results": False,
+    }
+    if not isinstance(budget, dict) or any(
+        budget.get(key) != value for key, value in expected_budget.items()
+    ):
+        fail("independent subscription budget reconstruction failed")
+    execution = plan.get("execution", {})
+    design = plan.get("design", {})
+    if (
+        tuple(execution.get("lane_order", [])) != lane_ids
+        or execution.get("application_posts_per_cell") != 1
+        or execution.get("client_retry_count") != 0
+        or execution.get("redirect_following") is not False
+        or execution.get("partial_resume") != "FORBIDDEN"
+        or execution.get("workflow_job_rerun")
+        != (
+            "FORBIDDEN; ANY_R6_SCORED_WORKFLOW_DISPATCH_CONSUMES_THE_VERSION_"
+            "REGARDLESS_OF_CONFIRM_VALUE_POST_COUNT_OR_JOB_OUTCOME"
+        )
+        or design.get("planned_lanes") != 2
+        or design.get("planned_instances") != 300
+        or design.get("planned_model_item_cells") != 600
+    ):
+        fail("independent subscription execution reconstruction failed")
+    expected_lanes = {
+        "opencode-go-qwen3.7-max": {
+            "model": "qwen3.7-max",
+            "api_kind": "anthropic_messages",
+            "response_format": "prompt_only_json",
+        },
+        "opencode-go-deepseek-v4-flash-matched": {
+            "model": "deepseek-v4-flash",
+            "api_kind": "openai_compatible",
+            "response_format": "json_schema",
+        },
+    }
+    lanes = {lane_id: lane_by_id(plan, lane_id) for lane_id in lane_ids}
+    for lane_id, lane in lanes.items():
+        expected = expected_lanes[lane_id]
+        if (
+            any(lane.get(key) != value for key, value in expected.items())
+            or lane.get("base_url") != "https://opencode.ai/zen/go/v1"
+            or lane.get("auth_env") != "OPENCODE_GO_API_KEY"
+            or lane.get("billing_mode") != "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA"
+            or lane.get("spend_cap_usd") is not None
+            or lane.get("quota_value_rates_use") != "POSTHOC_DESCRIPTIVE_ONLY"
+            or lane.get("max_output_tokens") != 1536
+            or "provider_routing" in lane
+        ):
+            fail(f"independent subscription lane reconstruction failed: {lane_id}")
+
+    records = packet.get("records")
+    cells = schedule.get("cells")
+    if not isinstance(records, list) or len(records) != 300:
+        fail("independent request reconstruction lacks 300 packet records")
+    if not isinstance(cells, list) or len(cells) != 600:
+        fail("independent request reconstruction lacks 600 schedule cells")
+    if (
+        schedule.get("lane_order") != list(lane_ids)
+        or schedule.get("item_order") != "LEXICOGRAPHIC_OPAQUE_ITEM_ID_WITHIN_EACH_LANE"
+        or schedule.get("planned_cells") != 600
+        or schedule.get("application_posts_per_cell") != 1
+        or schedule.get("client_retry_count") != 0
+    ):
+        fail("independent request reconstruction found changed schedule semantics")
+    ordered_records = sorted(records, key=lambda row: str(row.get("item_id")))
+    packet_by_id = {str(row.get("item_id")): row for row in ordered_records}
+    if len(packet_by_id) != 300:
+        fail("independent request reconstruction found duplicate packet items")
+    schema = portable_decision_schema(load_json(DECISION_SCHEMA))
+    counts = {lane_id: 0 for lane_id in lane_ids}
+    sequences = {lane_id: set() for lane_id in lane_ids}
+    cell_ids: set[str] = set()
+    for position, cell in enumerate(cells):
+        if not isinstance(cell, dict):
+            fail("independent request reconstruction found a malformed cell")
+        lane_id = str(cell.get("lane_id"))
+        item_id = str(cell.get("item_id"))
+        if lane_id not in lanes or item_id not in packet_by_id:
+            fail("independent request reconstruction found an unknown lane or item")
+        sequence = cell.get("sequence")
+        if not isinstance(sequence, int) or not 0 <= sequence < 300:
+            fail("independent request reconstruction found an invalid sequence")
+        if lane_id != lane_ids[position // 300] or sequence != position % 300:
+            fail("independent request reconstruction found changed cell order")
+        if item_id != str(ordered_records[sequence].get("item_id")):
+            fail("independent request reconstruction found changed item order")
+        cell_id = f"{lane_id}/{item_id}"
+        if cell.get("cell_id") != cell_id or cell_id in cell_ids:
+            fail("independent request reconstruction found a duplicate or changed cell ID")
+        cell_ids.add(cell_id)
+        counts[lane_id] += 1
+        sequences[lane_id].add(sequence)
+        record = packet_by_id[item_id]
+        prompt = record.get("prompt")
+        if not isinstance(prompt, str):
+            fail("independent request reconstruction lacks packet prompt text")
+        if record.get("prompt_sha256") != sha256_bytes(prompt.encode("utf-8")):
+            fail("independent request reconstruction found a changed prompt digest")
+        expected_body = request_body_for_lane(lanes[lane_id], prompt, schema)
+        expected_headers = request_headers_template(lanes[lane_id])
+        if (
+            cell.get("prompt_sha256") != record.get("prompt_sha256")
+            or cell.get("pair_id") != record.get("pair_id")
+            or cell.get("request_body") != expected_body
+            or cell.get("request_headers_template") != expected_headers
+            or cell.get("request_body_sha256")
+            != sha256_bytes(canonical_json(expected_body).encode("utf-8"))
+        ):
+            fail(f"independent exact request reconstruction failed: {cell_id}")
+    if any(counts[lane_id] != 300 for lane_id in lane_ids) or any(
+        sequences[lane_id] != set(range(300)) for lane_id in lane_ids
+    ):
+        fail("independent request reconstruction does not cover 300 cells per lane")
+
+    authorization: Json = {
+        "schema_version": "1.0.0",
+        "status": "SUBSCRIPTION_AUTHORIZATION_GATE_PASS",
+        "budget_mode": "PREEXISTING_SUBSCRIPTION_QUOTA_ONLY",
+        "authorized_lane_ids": list(lane_ids),
+        "planned_application_posts": 600,
+        "planned_posts_per_lane": 300,
+        "max_output_tokens_per_post": 1536,
+        "incremental_cash_cap_usd": 0.0,
+        "workflow_initiated_purchase_or_recharge": False,
+        "cash_balance_fallback": False,
+        "alternate_provider_fallback": False,
+        "per_lane_token_usd_cap": None,
+        "pre_post_token_cost_gate": "NOT_APPLICABLE",
+        "quota_exhaustion": "CELL_INCORRECT_NO_RETRY",
+        "provider_reported_usage_and_quota_value": "POSTHOC_DESCRIPTIVE_ONLY",
+        "adaptive_stop_on_usage_or_results": False,
+        "contains_request_bodies": False,
+        "contains_prompts": False,
+        "contains_credentials": False,
+        "schedule_recomputed_from_exact_request_bodies": True,
+        "schedule_cells_verified": 600,
+        "per_lane_cells_verified": {lane_id: counts[lane_id] for lane_id in lane_ids},
+    }
+    authorization["authorization_contract_sha256"] = sha256_bytes(
+        canonical_json(authorization).encode("utf-8")
+    )
+    return authorization
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -365,6 +575,52 @@ def _verify_frozen_plan(plan_path: Path, commit: str) -> None:
         fail("current plan bytes differ from the supplied frozen commit")
 
 
+def _discover_runtime_source_paths() -> set[str]:
+    paths = set(_RUNTIME_EXPLICIT_PATHS)
+    for directory, suffixes, names in _RUNTIME_DISCOVERY_RULES:
+        root = ROOT / directory
+        if not root.is_dir():
+            fail(f"runtime source directory is absent: {directory}")
+        for path in root.rglob("*"):
+            if path.is_file() and (path.suffix in suffixes or path.name in names):
+                paths.add(path.relative_to(ROOT).as_posix())
+    if any(not (ROOT / relative).is_file() for relative in paths):
+        fail("runtime source closure contains an absent file")
+    return paths
+
+
+def _verify_runtime_source_manifest(commitment: Json, source_files: Json) -> None:
+    """Independently reject missing, added, or changed runtime files."""
+
+    manifest = load_json(RUNTIME_SOURCE_MANIFEST)
+    payload = dict(manifest)
+    observed_digest = payload.pop("manifest_sha256", None)
+    expected_digest = sha256_bytes(canonical_json(payload).encode("utf-8"))
+    if (
+        observed_digest != expected_digest
+        or commitment.get("runtime_source_manifest_sha256") != expected_digest
+        or manifest.get("status") != "EXACT_RUNTIME_SOURCE_CLOSURE"
+        or manifest.get("study_id") != commitment.get("study_id")
+    ):
+        fail("runtime source manifest identity or self-digest mismatch")
+    manifest_files = manifest.get("files_sha256")
+    discovered = _discover_runtime_source_paths()
+    if (
+        not isinstance(manifest_files, dict)
+        or set(manifest_files) != discovered
+        or manifest.get("file_count") != len(discovered)
+    ):
+        fail("runtime source manifest does not cover the exact runtime file set")
+    for relative in discovered:
+        if manifest_files.get(relative) != sha256_file(ROOT / relative):
+            fail(f"runtime source manifest hash mismatch: {relative}")
+    expected_source_files = dict(manifest_files)
+    for relative in _SOURCE_MAP_EXTRAS:
+        expected_source_files[relative] = sha256_file(ROOT / relative)
+    if source_files != dict(sorted(expected_source_files.items())):
+        fail("public C1 commitment source map is not the exact runtime closure")
+
+
 def _verify_c1_and_source(
     commitment_path: Path,
     plan_path: Path,
@@ -418,6 +674,12 @@ def _verify_c1_and_source(
     packet_by_id = {str(row["item_id"]): row for row in records}
     if len(packet_by_id) != 300:
         fail("C1 packet item identifiers are not unique")
+    for item_id, record in packet_by_id.items():
+        prompt = record.get("prompt")
+        if not isinstance(prompt, str) or record.get("prompt_sha256") != sha256_bytes(
+            prompt.encode("utf-8")
+        ):
+            fail(f"C1 packet prompt digest mismatch: {item_id}")
     request_hashes: list[str] = []
     cell_ids: set[str] = set()
     for cell in cells:
@@ -440,6 +702,9 @@ def _verify_c1_and_source(
         canonical_json(sorted(request_hashes)).encode("utf-8")
     ):
         fail("C1 request-body hash-set binding mismatch")
+    authorization = _independently_reconstruct_subscription_authorization(plan, schedule, packet)
+    if c1.get("subscription_authorization") != authorization:
+        fail("independently reconstructed subscription authorization differs from C1")
     if baselines_path is not None:
         baselines = load_json(baselines_path)
         baseline_payload = deepcopy(baselines)
@@ -455,6 +720,7 @@ def _verify_c1_and_source(
     source_files = commitment.get("source_files_sha256")
     if not isinstance(source_files, dict) or not source_files:
         fail("public C1 commitment lacks source-file bindings")
+    _verify_runtime_source_manifest(commitment, source_files)
     for relative, expected in source_files.items():
         shown = subprocess.run(
             ["git", "show", f"{source_commit}:{relative}"],
@@ -496,6 +762,9 @@ def main() -> int:
     parser.add_argument("--preflight-only", action="store_true")
     args = parser.parse_args()
 
+    if sys.version_info[:3] != (3, 11, 16):
+        fail("scored runtime must be exact CPython 3.11.16")
+
     plan_path = args.plan.resolve()
     plan = load_json(plan_path)
     _verify_frozen_plan(plan_path, args.frozen_plan_commit.lower())
@@ -536,6 +805,8 @@ def main() -> int:
                     "source_commit": args.frozen_plan_commit.lower(),
                     "lane_id": lane["lane_id"],
                     "planned_lane_cells": len(cells),
+                    "subscription_authorization_gate": "PASS",
+                    "incremental_cash_cap_usd": 0.0,
                     "application_posts": 0,
                 },
                 sort_keys=True,

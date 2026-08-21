@@ -31,10 +31,11 @@ def test_c0_plan_has_no_unbound_hash_or_hidden_adaptation_path() -> None:
     assert report["pilot_instances"] == 0
     assert report["hypotheses"] == 2
     assert report["planned_cells"] == 600
+    assert report["subscription_authorization"] == "SUBSCRIPTION_AUTHORIZATION_GATE_PASS"
     assert report["go_status"].startswith("NO_GO_")
 
 
-def test_c2_seals_completed_ambiguous_and_never_attempted_cells(tmp_path: Path) -> None:
+def test_c2_seals_completed_and_conservatively_ambiguous_cells(tmp_path: Path) -> None:
     finalizer = _load_script("finalize_confirmatory_c2")
     cells = [
         {
@@ -99,12 +100,17 @@ def test_c2_seals_completed_ambiguous_and_never_attempted_cells(tmp_path: Path) 
     )
     assert receipt["planned_cells"] == receipt["sealed_cells"] == 3
     assert receipt["outcome_counts"] == {
+        "AMBIGUOUS_ORCHESTRATION_LOSS": 1,
         "AMBIGUOUS_REQUEST_LOSS": 1,
-        "NOT_ATTEMPTED_ORCHESTRATION_FAILURE": 1,
         "RESPONSE_RECORDED": 1,
     }
     assert [row["c2_cell_outcome"] for row in by_lane["lane-a"]] == [
         "RESPONSE_RECORDED",
         "AMBIGUOUS_REQUEST_LOSS",
-        "NOT_ATTEMPTED_ORCHESTRATION_FAILURE",
+        "AMBIGUOUS_ORCHESTRATION_LOSS",
     ]
+    for row in by_lane["lane-a"][1:]:
+        assert row["application_post_count"] is None
+        assert row["application_post_count_range"] == [0, 1]
+        assert row["request_accounting_status"] == "UNKNOWN_0_OR_1_POST"
+    assert receipt["ephemeral_runner_loss_cannot_prove_zero_posts"] is True
