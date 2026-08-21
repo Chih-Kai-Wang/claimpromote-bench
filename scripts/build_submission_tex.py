@@ -37,18 +37,28 @@ and final responsibility.
 
 ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
 
-The hidden set and exact prompts were fixed before scored inference. Artifact-only recovery
-reconstructed the same dataset and prompt identity and recomputed the 7,200-record v1 aggregate
-from all 24 archived runs. It issued no model query and reclassified exactly 27 cross-field-invalid
-records as format errors by invoking the registered semantic validator omitted by the original
-runner; no legal model decision was rewritten. The later studies retain their frozen prompt
-packets, item-level raw responses, parser outcomes, oracle labels, and recomputation inputs. The
-adaptive capable-model extension releases all 14 pilot attempts, both full passes, and the three
-historical request/parser snapshots.
-The anonymous review bundle replaces searchable repository provenance with role descriptions and
-includes the released hidden bytes, executable and Lean replay inputs, canonical analyses, and a
-file-hash manifest. The private construction seed is excluded. Any change to labels, policy,
-prompts, controlled factors, or hidden-test bytes creates a new benchmark version.
+The original hidden set and exact prompts were fixed before scored inference. Artifact-only
+recovery reconstructed the same dataset and prompt identity and recomputed the 7,200-record v1
+aggregate from all 24 archived runs. It issued no model query and reclassified exactly 27
+cross-field-invalid records as format errors by invoking the registered semantic validator omitted
+by the original runner; no legal model decision was rewritten.
+
+For the fresh study, public C0 and private-salt commitments precede a future randomness beacon and
+C1 construction receipt. A frozen schedule contains 600 requests, and C2 seals all 600 terminal
+cells before gold loading or analysis. A post-run audit found cleartext provider hidden-thinking
+blocks inside 275 response envelopes. Scoring used final response text and parsed decisions alone,
+so the defect left the C2 order and scientific values unchanged. The public release is a post-C2
+text-only allowlist derivative with source-to-derived row and envelope hashes and byte-identical
+scientific analysis. Its committed release has a 179-file permanent manifest.
+
+The anonymous review bundle contains the fresh dataset, study plan, prompt packet, baseline
+predictions, projected C2 records, item-level final outputs, gold, analysis, redaction receipt, and
+frozen-manifest correction overlay. Its validator recomputes the complete statistics and both
+registered lane dispositions. The bundle also retains all 14 pilot attempts and both full passes
+from the adaptive extension, plus the original and public-control evidence and executable and Lean
+replay inputs. Searchable repository provenance is replaced with role descriptions. The private
+construction seed is excluded. Any change to labels, policy, prompts, controlled factors, or
+hidden-test bytes creates a new benchmark version.
 
 """
 
@@ -211,7 +221,7 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
             "\n\\end{document}\n"
             if main_text_probe
             else (
-                "\n\\bibliographystyle{iclr2027_conference}\n"
+                "\n\\clearpage\n\\bibliographystyle{iclr2027_conference}\n"
                 "\\bibliography{references}\n\n\\end{document}\n"
             )
         )

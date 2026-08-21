@@ -128,9 +128,9 @@
   },
   "review_disposition": {
     "dual_model_confirmation": "NO_GO",
-    "public_artifact": "GO_AFTER_ALLOWLIST_REDACTION_AND_PERSISTENT_MANIFEST",
-    "qwen_scoped_scientific_result": "GO_AFTER_MAJOR_REPORTING_FIXES",
-    "scientific_rc_ready": false
+    "public_artifact": "GO",
+    "qwen_scoped_scientific_result": "GO",
+    "scientific_rc_ready": true
   },
   "schema_version": "1.0.0",
   "scored_execution": {
@@ -141,6 +141,6 @@
     "workflow_run_id": 32453310192
   },
   "status": "R6_QWEN_CONFIRMATORY_SUPPORTED_FLASH_MODEL_EFFICACY_NON_EVALUABLE",
-  "study_result_sha256": "sha256:dbe6a4f1e2985196091228bec9cd6d185daed5ff4890895db3802665c2e40e31",
+  "study_result_sha256": "sha256:292870c85c9c0ae165329ca5c31a1c403d43033d72aaf3f60ccb052703c1fc27",
   "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"
 }

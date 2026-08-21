@@ -6,7 +6,7 @@ import importlib.util
 from pathlib import Path
 from types import ModuleType
 
-from claimpromotebench.dataset import write_jsonl
+from claimpromotebench.dataset import load_json, write_jsonl
 from claimpromotebench.hashing import canonical_json, sha256_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,16 +23,25 @@ def _load_script(name: str) -> ModuleType:
 
 def test_c0_plan_has_no_unbound_hash_or_hidden_adaptation_path() -> None:
     validator = _load_script("validate_confirmatory_c0")
-    report = validator.validate_c0(
-        ROOT / "v2" / "fresh-confirmatory-study-plan.json",
-        require_seed_commitment=False,
+    plan_path = ROOT / "v2" / "fresh-confirmatory-study-plan.json"
+    plan = load_json(plan_path)
+    commitment = load_json(
+        ROOT / "v2" / "confirmatory" / "c1-r6" / "confirmatory-hidden-commitment.json"
     )
-    assert report["status"] == "C0_PASS"
-    assert report["pilot_instances"] == 0
-    assert report["hypotheses"] == 2
-    assert report["planned_cells"] == 600
-    assert report["subscription_authorization"] == "SUBSCRIPTION_AUTHORIZATION_GATE_PASS"
-    assert report["go_status"].startswith("NO_GO_")
+    assert "PENDING_C0_HASH" not in plan_path.read_text(encoding="utf-8")
+    validator.validate_plan(plan)
+    authorization = validator.validate_plan_authorization(plan)
+    assert authorization["status"] == "SUBSCRIPTION_AUTHORIZATION_GATE_PASS"
+    assert plan["pilot"]["instances"] == 0
+    assert plan["pilot"]["pairs"] == []
+    assert plan["design"]["full_requires_pilot"] is False
+    assert len(plan["statistics"]["hypotheses"]) == 2
+    assert plan["design"]["planned_model_item_cells"] == 600
+    assert plan["execution"]["client_retry_count"] == 0
+
+    frozen_files = commitment["source_files_sha256"]
+    for field, relative in validator._HASH_BINDINGS.items():
+        assert validator._nested(plan, field) == frozen_files[relative]
 
 
 def test_c2_seals_completed_and_conservatively_ambiguous_cells(tmp_path: Path) -> None:

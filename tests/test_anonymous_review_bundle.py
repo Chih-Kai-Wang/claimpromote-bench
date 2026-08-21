@@ -178,11 +178,17 @@ def test_iclr_bundle_description_matches_item_level_hidden_release() -> None:
     submission_builder = load_submission_builder()
 
     statement = submission_builder.ICLR_REPRODUCIBILITY
+    normalized = " ".join(statement.split())
     assert "recovery checks" not in statement
     assert "item-level" in statement
-    assert "exactly 27 cross-field-invalid" in statement
-    assert "all 14 pilot attempts" in statement
-    assert "The private construction seed is excluded" in statement
+    assert "exactly 27 cross-field-invalid" in normalized
+    assert "C2 seals all 600 terminal cells" in normalized
+    assert "275 response envelopes" in normalized
+    assert "byte-identical scientific analysis" in normalized
+    assert "179-file permanent manifest" in normalized
+    assert "both registered lane dispositions" in normalized
+    assert "all 14 pilot attempts" in normalized
+    assert "The private construction seed is excluded" in normalized
     assert "public preprint" not in statement
 
 

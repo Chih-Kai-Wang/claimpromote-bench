@@ -15,34 +15,38 @@ from claimpromotebench.hashing import canonical_json, sha256_bytes
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _module() -> ModuleType:
-    path = ROOT / "scripts" / "build_confirmatory_source_manifest.py"
-    spec = importlib.util.spec_from_file_location("build_confirmatory_source_manifest", path)
+def _module(name: str = "build_confirmatory_source_manifest") -> ModuleType:
+    path = ROOT / "scripts" / f"{name}.py"
+    spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
 
 
-def test_runtime_manifest_covers_the_exact_python_tree_and_lock() -> None:
+def test_runtime_manifest_is_preserved_at_the_recorded_source_commit() -> None:
     module = _module()
+    commitment_module = _module("make_confirmatory_hidden_commitment")
     manifest = load_json(ROOT / module.MANIFEST_PATH)
+    commitment = load_json(
+        ROOT / "v2" / "confirmatory" / "c1-r6" / "confirmatory-hidden-commitment.json"
+    )
     assert b"\r\n" not in (ROOT / module.MANIFEST_PATH).read_bytes()
-    report = module.validate_manifest(manifest)
-    assert report["status"] == "RUNTIME_SOURCE_MANIFEST_PASS"
+    commitment_module.verify_recorded_source_commit(commitment)
+    assert commitment["runtime_source_manifest_sha256"] == manifest["manifest_sha256"]
     files = set(manifest["files_sha256"])
+    recorded_files = commitment["source_files_sha256"]
+    assert {path: recorded_files[path] for path in manifest["files_sha256"]} == manifest[
+        "files_sha256"
+    ]
     assert "src/claimpromotebench/__init__.py" in files
     assert "src/claimpromotebench/statistics.py" in files
     assert "configs/decoding-v1.json" in files
     assert "tools/confirmatory-python311.lock" in files
-    assert {
-        path.relative_to(ROOT).as_posix() for path in (ROOT / "src").rglob("*.py") if path.is_file()
-    } <= files
-    assert {
-        path.relative_to(ROOT).as_posix()
-        for path in (ROOT / "scripts").rglob("*.py")
-        if path.is_file()
-    } <= files
+    # Publication and anonymous-review tooling changed after the scored run. The immutable
+    # manifest must keep matching its recorded Git source while refusing to describe HEAD.
+    with pytest.raises(ValueError, match="runtime source manifest hash mismatch"):
+        module.validate_manifest(manifest)
 
 
 def test_runtime_manifest_rejects_missing_added_or_changed_entries() -> None:

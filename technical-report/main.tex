@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce \cpb, a benchmark with 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test with executable numerical and formal artifacts. In the original 7,200-decision study of two small Qwen3 models, 73.99\% of responses failed format validation and all 1,873 parseable decisions chose \allow{}, yielding 13.33\% end-to-end item accuracy and zero pair accuracy. We then ran an exploratory stronger-model extension on the unchanged split. Registered adapter amendments on a fixed 12-instance pilot used transport and parser error classes alone; the procedure excluded actions, gold labels, and accuracy. All 14 pilot attempts are released. Two of seven service lanes reached terminal qualification and fresh no-retry full passes. On the 288 nonpilot instances, Qwen3.7-Max reached .990 decision coverage, .938 end-to-end action accuracy, and .875 pair accuracy; DeepSeek-V4-Flash reached .913, .628, and .257. Five other lanes lack full scores. These findings separate interface reliability from evidence-sensitive reasoning, while adaptive qualification leaves the extension exploratory; confirmatory force is unavailable. The reviewer artifact releases every attempt and deterministic recomputation checks; the same-oracle gate is only an implementation check.
+AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce \cpb, a benchmark with 200 controlled pairs over 20 policy factors, including executable numerical and formal artifacts. In a preregistered fresh 300-item study, a Qwen3.7-Max service configuration produced 272 valid decisions and achieved 86.00\% end-to-end item accuracy and 75.33\% pair accuracy. It exceeded a frozen public-development text Naive Bayes baseline by 24.67 percentage points (one-sided pair-blocked exact p=5.16e-16; Holm-adjusted p=1.03e-15). Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid outputs remained incorrect with zero retries. \demote{} recall was 0/8, so the aggregate result lacks uniform action competence. The registered Flash configuration returned 300 HTTP 401 responses and no model output; model efficacy is non-evaluable and dual-model confirmation is unsupported. Earlier small-model and adaptive studies diagnose formatting collapse and service-path sensitivity. A permanent reviewer artifact releases item-level outputs, deterministic recomputation checks, and a reasoning-free post-C2 publication derivative.
 \end{abstract}
 
 \section{Introduction}
@@ -42,12 +42,14 @@ Our question is therefore:
 
 The experiments separate three questions: whether a model returns a usable decision, whether that decision changes with the decisive evidence, and what a deterministic one-way veto changes after generation. This separation prevents interface failure and oracle execution from being mistaken for evidence-sensitive model behavior.
 
+\begin{samepage}
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item We define a four-action benchmark for deciding whether evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
-  \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, and we commit the hidden set and exact prompts before scored inference.
-  \item We evaluate small and capable model lanes with end-to-end decisions and controlled-pair sensitivity, separately from a deterministic veto that is treated only as a one-way implementation check.
+  \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, with a fresh hidden-set commitment, frozen request schedule, pre-unblinding C2 seal, and paired confirmatory analysis.
+  \item We report end-to-end decisions, controlled-pair sensitivity, action-wise failures, and service errors separately from a deterministic veto that remains a one-way implementation check.
 \end{enumerate}
+\end{samepage}
 
 \section{Related Work}
 
@@ -96,7 +98,7 @@ C_{\mathrm{pair}}(i)=C_{\mathrm{item}}(x_i^a)C_{\mathrm{item}}(x_i^b).
 \]
 Thus malformed or missing output remains in the denominator as incorrect, and a pair is correct only when the model handles both sides of the evidence change.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{One controlled pair. The claim, certificate, current state, and requested transition are identical; only the registered dependency record changes.}
@@ -157,7 +159,7 @@ The gate runs after model generation. If a parseable raw action is \allow{} whil
 
 \section{Experimental Protocol}
 
-The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.6B Q8\_0 and Qwen3-1.7B Q8\_0, four arms, and three fixed seeds (104729, 130363, 169087):
+The original v1 study contains 150 hidden controlled pairs (300 instances), Qwen3-0.6B Q8\_0 and Qwen3-1.7B Q8\_0, four arms, and three fixed seeds (104729, 130363, 169087):
 \[
 300\times 2\times 4\times 3 = 7{,}200
 \]
@@ -165,15 +167,19 @@ scored decisions. Primary scoring uses the 300 hidden instances. The hidden set 
 
 The v1 plan prespecified false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). These rates are conditional on parseable output. We therefore use end-to-end item and controlled-pair accuracy as the principal reliability summaries across studies, retaining every malformed or missing response as incorrect. Decision coverage and complete-pair coverage diagnose interface reliability. The prespecified rates, calibration, and structured reason and evidence scores remain conditional diagnostics and are interpreted only with their coverage denominators.
 
-The v1 results are shown as fixed-seed triplets; its pair-bootstrap intervals and registered paired comparisons remain in the supplementary results. The capable-model extension uses the Wilson intervals and exact tests described below.
+The v1 results are shown as fixed-seed triplets; its pair-bootstrap intervals and registered paired comparisons remain in the supplementary results. Later studies retain their own frozen analysis contracts and interpretation boundaries.
+
+\subsection{Fresh preregistered confirmatory study}
+
+After the adaptive capable-model outcomes were known, we froze a new study under a new C0 commitment, private salt, future randomness beacon, construction seed, hidden realization, and C1 receipt. The 300 items use the same controlled ontology and mostly the same synthetic template family, with new seed-keyed identifiers and assignments. Their 600 exact request bodies contain 300 unique prompts with zero exact hash overlap against the 900 prompts from prior or void confirmatory realizations. C1 fixed the dataset, prompt packet, public-only baseline predictions, model-facing requests, parser, two-lane family, and analysis before any model request.
+
+The registered lanes are time-stamped Qwen3.7-Max and Flash service configurations. Each lane has 300 fixed calls, one per item, with zero client retries. The frozen comparator is a text Naive Bayes classifier trained only on the immutable 100-item public-development split. At C2, all 600 terminal cell records were sealed before gold loading or analysis. The primary endpoints are end-to-end item and controlled-pair accuracy, so every HTTP, transport, parse, or semantic failure remains incorrect. Each lane is compared with the frozen baseline through a one-sided exact pair-blocked whole-vector swap test, followed by Holm adjustment across both registered hypotheses. A 10-percentage-point accuracy difference is a separate point-estimate gate. The preregistered crossed factor-by-template bootstrap measures composition sensitivity. The estimand is the executed service configuration; fixed-weight and cross-provider effects remain outside scope.
 
 \subsection{Adaptive capable-model case study}
 
-After the v1 and public-development outcomes were known, we registered a separate extension on the unchanged 300-instance hidden split. It covers six model labels---Qwen3.7-Max, GLM-5.2, DeepSeek-V4-Pro, DeepSeek-V4-Flash, HY-3, and Muse-Spark---plus one same-label service-path replication. The fixed 12-instance pilot selects the first pair in each benchmark family independently of model outputs. Execution exposed transport and parser failures, so registered adapter amendments were followed by requalification on those same pilot inputs. Under the recorded inspection procedure, amendments used workflow state and error classes while excluding actions, raw responses, gold comparisons, and accuracy. Full pilot analyses were technically available and lacked independent escrow. The resulting accuracy-blindness is procedural and lacks independent enforcement.
+After the v1 outcomes were known, we ran a separate adaptive case study on the prior 300-instance hidden split. Seven service lanes shared a family-balanced 12-instance pilot. Registered adapter amendments used transport and parser error classes while excluding actions, response text, gold comparisons, and accuracy. Full pilot analyses were technically available and lacked independent escrow. Across all 14 pilot attempts, a terminal lane advanced only with zero transport failures and at least 10 schema- and semantic-valid decisions. Two of seven service lanes qualified for fresh no-retry full passes; five other lanes lack full scores.
 
-In total, 14 pilot attempts were executed. A terminal canonical pilot advances a lane to a fresh 300-instance, no-retry pass only if it has no transport failure and at least 10 schema- and semantic-valid decisions; continuation ignores accuracy and action distribution. All attempts are released. Because qualification adapted to the fixed pilot, we treat the extension as exploratory. A post-hoc sensitivity excludes the 12 pilot instances and their six complete pairs from the full passes, leaving 288 instances and 144 pairs unseen during adapter development.
-
-The extension counts every non-OK response as incorrect in end-to-end action and pair accuracy. It also reports conditional accuracy with coverage, two-sided 95\% Wilson intervals, reason-code set F1, evidence-identifier precision and recall, missing-evidence exact match, Brier score, and negative log likelihood. Each completed model is paired against the always-\allow{} baseline with an exact McNemar test; missing tests from qualification failures are reported explicitly. Per-lane results support descriptive replication only; causal effects of provider, model tier, or serving stack remain unidentified.
+All attempts are released. Reuse of the pilot during adapter development makes the case study exploratory, and confirmatory force is unavailable. A post-hoc sensitivity excludes the 12 pilot inputs, leaving 288 instances and 144 pairs. End-to-end scores count every non-OK response as incorrect. Completed lanes are paired descriptively against always-\allow{}; missing tests from qualification failures remain explicit, and no confirmatory familywise claim follows adaptive lane selection.
 
 \subsection{Post-v1 public interface pilot}
 
@@ -187,36 +193,36 @@ After the base outcomes were known, a separately frozen GPT-5.4 extension used t
 
 \section{Results}
 
-\subsection{Adaptive capable-model case study}
+\subsection{Fresh preregistered confirmatory study}
 
-All 14 executed pilots are retained: the alternate-service Flash lane ran three times, the matched Flash lane once, and each other lane twice. Terminal pilots for Qwen3.7-Max and matched DeepSeek-V4-Flash return 12/12 valid decisions and advance to full passes. Each of the other five terminal pilots returns 0/12 valid decisions---four because of JSON syntax and one because of schema violations---and therefore stops before full scoring, leaving accuracy undefined. Earlier attempts include transport, syntax, and semantic failures. The failed same-label Flash replication demonstrates service-path sensitivity, while causal attribution remains unsupported.
+Table~\ref{tab:fresh-confirmatory} gives the registered end-to-end result. The Qwen3.7-Max service configuration produced 272 valid decisions and 258 correct actions from 300 items, with 113 of 150 controlled pairs correct. The frozen public-development text Naive Bayes baseline gave 184 correct actions and 34 correct pairs. The 24.67-percentage-point item-accuracy difference corresponds to 74 additional correct items. Among 94 pair blocks with a nonzero correctness difference, Qwen won 84 and lost 10. The one-sided exact $p$-value is $5.16\times10^{-16}$, and the two-hypothesis Holm-adjusted value is $1.03\times10^{-15}$. The registered point-estimate and significance gates are satisfied. The exact test addresses zero difference under pair-block exchangeability; the 10-percentage-point threshold receives no lower confidence-bound interpretation.
 
 \begin{table}[H]
 \centering
 \small
-\caption{Post-hoc sensitivity on the 288 nonpilot hidden instances (144 pairs). Every non-OK response is incorrect. Adaptive qualification makes these results exploratory. The lower panel gives end-to-end per-action recall as correct/trials.}
-\label{tab:capable-hidden}
+\caption{Fresh 300-item confirmatory result. Every failed or invalid response remains in the denominator. N/E marks model efficacy as non-evaluable because the Flash configuration returned no model output.}
+\label{tab:fresh-confirmatory}
 \setlength{\tabcolsep}{4.2pt}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-Lane & Decision cov. & Pair cov. & E2E item acc. & E2E pair acc. \\
+Configuration & Valid & E2E item acc. & E2E pair acc. & Bal. recall & Macro-F1 \\
 \midrule
-Qwen3.7-Max & .990 & .979 & .938 & .875 \\
-DeepSeek-V4-Flash & .913 & .826 & .628 & .257 \\
-Always \allow{} & 1.00 & 1.00 & .500 & .000 \\
-\midrule
-Lane & \allow{} & \hold{} & \demote{} & \escalate{} \\
-\midrule
-Qwen3.7-Max & 144/144 & 118/128 & 0/8 & 8/8 \\
-DeepSeek-V4-Flash & 144/144 & 34/128 & 0/8 & 3/8 \\
-Always \allow{} & 144/144 & 0/128 & 0/8 & 0/8 \\
+Qwen3.7-Max & 272/300 & .860 & .753 & .600 & .627 \\
+Public-dev text NB & 300/300 & .613 & .227 & .328 & .312 \\
+Flash service configuration & 0/300 & N/E & N/E & N/E & N/E \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-After excluding pilot inputs, Qwen3.7-Max gives 270/288 correct end-to-end actions and 126/144 correct pairs; the corresponding 95\% Wilson intervals are [.903, .960] and [.811, .919]. DeepSeek-V4-Flash gives 181/288 actions and 37/144 pairs, with intervals [.571, .682] and [.193, .334]. Aggregate accuracy hides a shared class failure: both lanes score 0/8 on \demote{}. Their balanced four-action recalls are .730 and .410. Raw false-promotion counts are 10/141 and 82/119 covered invalid cases. Including the 12 freshly regenerated pilot inputs changes the full-pass summaries only to 282/300 and 132/150 for Qwen, and 188/300 and 38/150 for Flash. Paired exact tests against always-\allow{} are available in the artifact, including a six-hypothesis Bonferroni sensitivity, but no confirmatory familywise claim is made after adaptive lane qualification. Their scope is one pass per completed lane; family-level rankings require a new confirmatory split.
+Failures were counted incorrect with zero retries: 14 HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid decisions. Per-action recall was 143/150 for \allow{}, 110/134 for \hold{}, 5/8 for \escalate{}, and 0/8 for \demote{}. The aggregate result therefore lacks uniform competence across actions. Its preregistered composition-sensitivity envelope is [.754, .948] for item accuracy and [.579, .903] for pair accuracy. This envelope describes benchmark composition; repeated-call uncertainty remains unestimated.
 
-\subsection{Primary v1 small-model study}
+The registered Flash lane returned 300 HTTP 401 responses with identical error-body hashes, no model-returned identity, and no usage. Its H2 result remains in the two-test Holm family with $p=1$ and is unsupported; model efficacy is non-evaluable. Post-run inspection found that the frozen runner forwarded the credential value verbatim in the authorization header, while the earlier qualified adapter prepended a bearer scheme. This lineage mismatch may explain the responses, although the unique cause remains unestablished. A corrected run after gold release would be exploratory on this split. The Flash failure leaves the Qwen comparison unchanged and precludes dual-model confirmation.
+
+\subsection{Adaptive capable-model case study}
+
+All 14 pilot attempts are retained. Qwen3.7-Max and matched DeepSeek-V4-Flash reached terminal qualification; five other lanes lack full scores. On the pilot-excluded sensitivity, Qwen gives 270/288 correct end-to-end actions and 126/144 correct pairs, while Flash gives 181/288 actions and 37/144 pairs. Their 95\% Wilson intervals are [.903, .960] and [.811, .919] for Qwen, and [.571, .682] and [.193, .334] for Flash. Aggregate accuracy again hides a shared class failure: both lanes score 0/8 on \demote{}. Including pilot inputs gives 282/300 actions and 132/150 pairs for Qwen, and 188/300 actions and 38/150 pairs for Flash. The artifact reports paired tests against always-\allow{} and a six-hypothesis Bonferroni sensitivity. Adaptive qualification leaves this case study exploratory; no confirmatory familywise claim is made.
+
+\subsection{Original v1 small-model study}
 
 Across the v1 study, 5,327 of 7,200 outputs (73.99\%) receive \texttt{FORMAT\_ERROR}. The remaining 1,873 raw decisions all select \allow{}. The gate changes the final action on covered invalid promotions, and its reach follows parseable-output coverage.
 
@@ -225,7 +231,7 @@ Table~\ref{tab:main-results} reports raw behavior before enforcement for every a
 \begin{table}[H]
 \centering
 \small
-\caption{Primary hidden-test raw model behavior. Each entry is a three-seed triplet; gate-arm rows precede enforcement.}
+\caption{Original v1 hidden-test raw model behavior. Each entry is a three-seed triplet; gate-arm rows precede enforcement.}
 \label{tab:main-results}
 \setlength{\tabcolsep}{4.5pt}
 \begin{tabular}{llccc}
@@ -264,36 +270,38 @@ The remaining response reaches the 3,072-token ceiling with reasoning tokens and
 
 \subsection{Main interpretation}
 
-The adaptive case study provides exploratory evidence against universal failure. On the 144 pilot-excluded controlled pairs, Qwen3.7-Max follows both members of 87.5\%, whereas the completed DeepSeek-V4-Flash lane reaches 25.7\% and retains a high false-promotion rate. Five other lanes stop before accuracy can be assessed. Service-level interface reliability and policy reasoning are both part of end-to-end performance, and the analysis diagnoses them separately.
+The fresh study provides scoped confirmatory evidence that one Qwen3.7-Max service configuration exceeds the frozen public-only text Naive Bayes baseline on a new controlled realization. The baseline is shallow and has zero \demote{} and \escalate{} recall. The result therefore establishes only this narrow benchmark comparison; stronger baselines remain unevaluated.
 
-The one-way gate mechanically replaces a parseable invalid \allow{} with the action from the same policy oracle used for evaluation. It remains an implementation check, separate from model behavior.
+Item accuracy alone overstates breadth. Qwen handles \allow{} and \hold{} well, yet its 0/8 \demote{} result and 5/8 \escalate{} result leave rare-action competence unresolved. The Flash lane measures an unsuccessful registered service configuration; 300 authorization errors provide no model output and make model efficacy non-evaluable. The study consequently supplies one supported hypothesis, one unsupported operational lane, and no dual-model replication.
 
-The original small-model study and public formatting control explain two failure modes. Most v1 outputs are unusable; after constrained decoding repairs coverage, those models still collapse to \allow{}. The exploratory stronger-model results show that \cpb involves more than output formatting, while the public GPT-5.4 follow-up independently establishes near-complete solvability on the development split.
+The adaptive case study remains useful as exploratory context: Qwen follows both members of 87.5\% of pilot-excluded pairs, while the completed Flash lane reaches 25.7\% and five lanes stop before full scoring. The original small-model study and public formatting control isolate two earlier failure modes. Most v1 outputs are unusable; constrained decoding repairs coverage, yet those models still collapse to \allow{}. The public GPT-5.4 follow-up shows near-complete solvability on the development split.
 
-Service paths sharing a model label can expose different effective systems. Exact backend revisions, routing, decoding support, and serving wrappers remain outside independent audit, so cross-lane differences are descriptive and causal attribution remains unsupported.
+The one-way gate mechanically replaces a parseable invalid \allow{} with the action from the same policy oracle used for evaluation. It remains an implementation check, separate from model behavior. Service-level interface reliability and policy reasoning both contribute to end-to-end performance, and the analysis reports them separately.
 
 \section{Limitations and Threats to Validity}
 
 \paragraph{Model and dataset scope.}
-The benchmark focuses on mathematical-research evidence states and synthetic controlled pairs. Only two of seven capable-model service lanes reach terminal qualification, each with one no-retry full pass; within-model variance remains unestimated. Qualification was adapted after error-class inspection on a reused 12-instance hidden pilot, and completed-lane selection depends on coverage. The post-hoc 288-instance sensitivity addresses direct input reuse only; confirmatory status remains unavailable. The GPT-5.4 extension covers public development data and one pass. Naturalistic generalization, a new private confirmatory split, additional model replications, and human-policy agreement remain open.
+The benchmark focuses on mathematical-research evidence states and synthetic controlled pairs. The fresh test is a new seed realization of the same ontology and mostly the same template family. It contains eight \demote{} and eight \escalate{} items, each concentrated in one factor. The supported result covers one time-stamped service configuration and one call per item; sampling variance, fixed-weight generalization, stronger baselines, naturalistic transfer, and human-policy agreement remain open. The adaptive case study reuses a 12-instance pilot during adapter development, and its completed-lane selection depends on interface coverage. The GPT-5.4 extension covers public development data and one pass.
 
 \paragraph{Output-format failures.}
-The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. Later studies retain raw text and distinguish transport, JSON, schema, and semantic errors, but five capable lanes still fail terminal formatting qualification despite adapter amendments. Those failures cannot be interpreted as model-accuracy estimates. The GPT-5.4 follow-up reaches 99\% coverage; its sole missing final decision exhausts the registered output ceiling. Gate metrics are conditional on covered decisions or complete covered pairs; end-to-end reliability also depends on coverage.
+The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. The fresh Qwen lane distinguishes 15 HTTP errors, ten timeouts, and three semantic-invalid outputs; all remain incorrect. The Flash authorization failures yield an operational result and no model-efficacy estimate. Provider-reported output-token counts exceed the requested 1,536-token parameter for 261 of 275 HTTP 200 responses; their relationship to hidden-thinking accounting is unresolved. The 1,536 value is a requested client parameter; an actual generation or billing cap lacks independent confirmation.
 
 \paragraph{Gate interpretation.}
 The gate-arm prompt discloses enforcement, so raw between-arm differences include that prompt change. The within-arm raw-to-final comparison measures only the deterministic one-way transformation.
 
 \paragraph{Benchmark construction and label scope.}
-The author designed the policy, controlled factors, and item generator. Oracle actions measure conformance to that author-defined benchmark; external consensus remains unevaluated. Pair-contract, executable, and Lean checks establish internal consistency, while formal acceptance covers only the exact encoded statement in the pinned environment.
+The author designed the policy, controlled factors, and item generator. Oracle actions measure conformance to that author-defined benchmark; external consensus remains unevaluated. Pair-contract, executable, and Lean checks establish internal consistency, while formal acceptance covers only the exact encoded statement in the pinned environment. The immutable r6 construction manifest retains a stale \texttt{CFM\_R5} namespace label and three construction-time \texttt{PENDING} values. All released identifiers use \texttt{v1-test-cfo-*}. A bound correction overlay records this metadata defect while preserving the C1- and C2-bound manifest bytes.
 
 \paragraph{Service identity and future contamination.}
-API model names are service-exposed labels; exact weights and upstream revisions remain outside independent audit. Some services were permitted to retain the synthetic benchmark requests for model improvement. The released hidden split is therefore a one-shot evaluation asset whose contamination risk can grow after these runs; future held-out evaluations should use a newly generated private split.
+API model names are service-exposed labels; exact weights, routing, wrappers, and upstream revisions remain outside independent audit. Some services were permitted to retain the synthetic benchmark requests for model improvement. The released hidden split is therefore a one-shot evaluation asset whose contamination risk can grow after these runs; future held-out evaluations should use a newly generated private split.
 
 \section{Reproducibility and Artifact Policy}
 
 The hidden split and exact prompts were committed before the original scored inference. Artifact-only recovery reused the 24 archived source runs, issued no model queries, and reclassified exactly 27 of 7,200 cross-field-invalid decisions as format errors under the registered semantic contract. The review bundle releases the available source and normalized item records, the normalization map, and recomputation inputs.
 
-The public formatting control and GPT-5.4 follow-up retain their prompt packets and item-level records. The anonymous bundle includes all 14 capable-model pilot attempts, both completed full passes, three historical request/parser snapshots, the frozen prompt packet, item-level raw responses, parser status, released oracle labels, canonical-selection map, and recomputation inputs. Searchable repository provenance is replaced by anonymous role labels. The private construction seed is excluded; any change to labels, policy, prompts, controlled factors, or hidden-test bytes creates a new benchmark version.
+For the fresh study, public C0 and salt commitments precede the future randomness beacon and C1 construction receipt. C2 seals all 600 scheduled terminal cells before gold loading and analysis. A post-run audit found cleartext provider hidden-thinking blocks inside 275 Qwen response envelopes, contrary to the registered retention boundary. Scoring used final response text and parsed decisions alone, so this defect leaves C2 ordering and all scientific values unchanged. The public release is a post-C2 derivative that removes complete thinking blocks through a text-only allowlist, records source-to-derived row and envelope hashes, and rejects unknown fields. Reanalysis under the frozen CPython 3.11.16 environment yields an identical scientific payload. The committed release has a 179-file permanent manifest; original reasoning-bearing records remain private.
+
+The anonymous bundle includes the fresh dataset, frozen study plan, prompt packet, baseline predictions, projected C2 records, item-level final outputs, released gold, analysis, redaction receipt, and frozen-manifest correction overlay. Its validator recomputes the full statistics and confirms the Qwen and Flash dispositions. The bundle also retains the public formatting control, GPT-5.4 follow-up, all 14 adaptive pilot attempts, both exploratory full passes, and historical parser snapshots. Searchable repository provenance is replaced by anonymous role labels. The private construction seed is excluded; any change to labels, policy, prompts, controlled factors, or hidden-test bytes creates a new benchmark version.
 
 \section{AI Assistance Disclosure}
 
@@ -301,7 +309,7 @@ Generative AI tools were used as assistants during literature search, research p
 
 \section{Conclusion}
 
-\cpb evaluates evidence-justified claim-state transitions beyond factual answer accuracy. In an exploratory pilot-excluded sensitivity, Qwen3.7-Max reaches .938 end-to-end action and .875 controlled-pair accuracy, while a completed DeepSeek-V4-Flash lane reaches .628 and .257; five other service lanes lack full scores. The original small models instead combine low coverage with an all-\allow{} collapse, even when constrained decoding repairs the interface. A same-oracle deterministic veto measures registered-policy execution alone, independently of model competence. Research-agent evaluations should therefore report qualification history, coverage, evidence-sensitive pair behavior, and deterministic safeguards as distinct quantities.
+\cpb evaluates evidence-justified claim-state transitions beyond factual answer accuracy. On a fresh preregistered realization, one Qwen3.7-Max service configuration reaches .860 end-to-end item accuracy and .753 controlled-pair accuracy, exceeding a frozen public-only text baseline by 24.67 percentage points under the complete Holm-adjusted family. Its 0/8 \demote{} result limits the breadth of that success. The registered Flash lane ends in 300 authorization errors, leaving model efficacy non-evaluable and dual-model confirmation unsupported. Earlier small models combine low coverage with an all-\allow{} collapse, while adaptive capable-model results remain exploratory. Research-agent evaluations should report service failures, coverage, action-wise and pair behavior, qualification history, and deterministic safeguards as distinct quantities.
 
 \bibliographystyle{plain}
 \bibliography{references}

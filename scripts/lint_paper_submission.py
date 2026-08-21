@@ -17,6 +17,24 @@ V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
 V2_PILOT_SHA = "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
 CAPABLE_HIDDEN = ROOT / "v2" / "capable-hidden-results" / "capable-hidden-study.json"
 CAPABLE_HIDDEN_SHA = "sha256:a1f7f64000d068dd7a83a63db5d6f13b5daaed1788b397ed37d36ad85941853d"
+FRESH_CONFIRMATORY_RESULT = ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json"
+FRESH_CONFIRMATORY_ANALYSIS = (
+    ROOT
+    / "release"
+    / "reviewer-evidence-source"
+    / "fresh-confirmatory"
+    / "confirmatory-analysis-public.json"
+)
+FRESH_CONFIRMATORY_REDACTION = (
+    ROOT
+    / "release"
+    / "reviewer-evidence-source"
+    / "fresh-confirmatory"
+    / "public-release-scientific-equivalence.json"
+)
+FRESH_CONFIRMATORY_CORRECTION = (
+    ROOT / "v2" / "confirmatory" / "r6-execution" / "frozen-manifest-metadata-correction.json"
+)
 STRONGER_FOLLOWUP = (
     ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
 )
@@ -43,6 +61,18 @@ def sha256_file(path: Path) -> str:
     # materialize CRLF. Hash the repository-level text identity on both OSes.
     normalized = path.read_text(encoding="utf-8").encode("utf-8")
     return "sha256:" + hashlib.sha256(normalized).hexdigest()
+
+
+def self_digest(value: dict[str, Any], field: str) -> str:
+    payload = dict(value)
+    payload.pop(field, None)
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
 def require_regex(tex: str, pattern: str, description: str) -> None:
@@ -173,6 +203,130 @@ def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
     ]
     for pattern, description in required_patterns:
         require_regex(tex, pattern, description)
+
+
+def validate_fresh_confirmatory_binding(
+    tex: str,
+    result: dict[str, Any],
+    analysis: dict[str, Any],
+    redaction: dict[str, Any],
+    correction: dict[str, Any],
+) -> None:
+    if result.get("study_result_sha256") != self_digest(result, "study_result_sha256"):
+        fail("fresh confirmatory study-result self-digest changed")
+    if result.get("status") != "R6_QWEN_CONFIRMATORY_SUPPORTED_FLASH_MODEL_EFFICACY_NON_EVALUABLE":
+        fail("fresh confirmatory study disposition changed")
+    if result.get("c2", {}).get("sealed_cells") != 600:
+        fail("fresh confirmatory C2 cell count changed")
+    qwen = result.get("qwen_service_configuration")
+    flash = result.get("deepseek_flash_service_configuration")
+    if not isinstance(qwen, dict) or not isinstance(flash, dict):
+        fail("fresh confirmatory lane summaries are malformed")
+    expected_qwen = {
+        "valid_decisions": 272,
+        "end_to_end_item_accuracy": 0.86,
+        "end_to_end_pair_accuracy": 0.753333333333333,
+        "decision_coverage": 0.906666666666667,
+        "balanced_action_recall": 0.599807213930348,
+        "macro_f1": 0.626502732240437,
+    }
+    for key, expected in expected_qwen.items():
+        if qwen.get(key) != expected:
+            fail(f"fresh confirmatory Qwen metric changed: {key}")
+    if qwen.get("per_action", {}).get("DEMOTE") != {
+        "correct": 0,
+        "recall": 0.0,
+        "support": 8,
+    }:
+        fail("fresh confirmatory Qwen DEMOTE result changed")
+    test = qwen.get("superiority_test_vs_public_dev_text_nb", {})
+    if (
+        test.get("additional_correct_items") != 74
+        or test.get("pair_block_wins") != 84
+        or test.get("pair_block_losses") != 10
+        or test.get("one_sided_exact_p") != 5.163495918775425e-16
+        or test.get("holm_adjusted_p") != 1.032699183755085e-15
+    ):
+        fail("fresh confirmatory Qwen exact test changed")
+    if (
+        flash.get("http_401_records") != 300
+        or flash.get("model_outputs") != 0
+        or flash.get("registered_hypothesis") != "UNSUPPORTED"
+        or flash.get("model_capability_interpretation") != "NON_EVALUABLE_NO_MODEL_OUTPUT"
+    ):
+        fail("fresh confirmatory Flash operational disposition changed")
+
+    if analysis.get("aggregate_sha256") != (
+        "sha256:726f3c5737f78c41434093b3f23e1d8da9949c7cbb4a6673bc681937fa6db9bf"
+    ):
+        fail("fresh confirmatory public analysis changed")
+    qwen_score = analysis.get("scores", {}).get("opencode-go-qwen3.7-max", {}).get("raw", {})
+    if (
+        qwen_score.get("item_accuracy") != 0.86
+        or qwen_score.get("pair_accuracy") != 0.7533333333333333
+        or qwen_score.get("per_action", {}).get("DEMOTE", {}).get("correct") != 0
+    ):
+        fail("fresh confirmatory public analysis Qwen metrics changed")
+    tests = analysis.get("confirmatory_item_correctness_tests", {}).get("tests")
+    if not isinstance(tests, list) or len(tests) != 2:
+        fail("fresh confirmatory complete Holm family changed")
+
+    if (
+        redaction.get("hidden_reasoning_present_in_public_release") is not False
+        or redaction.get("public_provider_envelopes_allowlisted") is not True
+        or redaction.get("scientific_analysis_payload_byte_identical") is not True
+        or redaction.get("source_to_derived_row_hashes_verified") is not True
+    ):
+        fail("fresh confirmatory public redaction disposition changed")
+    if correction.get("self_digest") != self_digest(correction, "self_digest"):
+        fail("fresh confirmatory frozen-manifest correction self-digest changed")
+    if (
+        correction.get("source_manifest_sha256")
+        != "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de"
+        or correction.get("scientific_impact") != "NONE"
+    ):
+        fail("fresh confirmatory frozen-manifest correction changed")
+
+    required_patterns = [
+        (r"fresh preregistered confirmatory study", "fresh confirmatory scope label"),
+        (r"272\s+valid decisions", "Qwen valid-decision count"),
+        (r"258\s+correct actions", "Qwen correct-action count"),
+        (r"113\s+of\s+150\s+controlled pairs", "Qwen correct-pair count"),
+        (r"24\.67-percentage-point", "Qwen baseline difference"),
+        (r"won\s+84\s+and lost\s+10", "Qwen pair-block wins and losses"),
+        (r"5\.16\\times10\^\{-16\}", "Qwen one-sided exact p-value"),
+        (r"1\.03\\times10\^\{-15\}", "Qwen Holm-adjusted p-value"),
+        (r"14\s+HTTP 500", "Qwen HTTP 500 count"),
+        (r"one\s+HTTP 503", "Qwen HTTP 503 count"),
+        (r"ten\s+timeouts", "Qwen timeout count"),
+        (r"three\s+semantic-invalid", "Qwen semantic-invalid count"),
+        (r"0/8\s+for\s+\\demote", "Qwen DEMOTE failure"),
+        (r"300\s+HTTP 401", "Flash HTTP 401 count"),
+        (r"model efficacy is non-evaluable", "Flash model-efficacy boundary"),
+        (r"261\s+of\s+275\s+HTTP 200", "provider token-count caveat"),
+        (r"275\s+Qwen response envelopes", "hidden-thinking disclosure"),
+        (r"179-file permanent manifest", "persistent artifact manifest"),
+        (r"stale \\texttt\{CFM\\_R5\}", "frozen-manifest metadata correction"),
+    ]
+    for pattern, description in required_patterns:
+        require_regex(tex, pattern, description)
+
+    table_match = re.search(
+        r"\\label\{tab:fresh-confirmatory\}(.*?)\\end\{table\}",
+        tex,
+        flags=re.DOTALL,
+    )
+    if not table_match:
+        fail("fresh confirmatory result table is missing")
+    table = table_match.group(1)
+    table_rows = (
+        r"Qwen3\.7-Max\s*&\s*272/300\s*&\s*\.860\s*&\s*\.753\s*&\s*\.600\s*&\s*\.627",
+        r"Public-dev text NB\s*&\s*300/300\s*&\s*\.613\s*&\s*\.227\s*&\s*\.328\s*&\s*\.312",
+        r"Flash service configuration\s*&\s*0/300\s*&\s*N/E\s*&\s*N/E\s*&\s*N/E\s*&\s*N/E",
+    )
+    for pattern in table_rows:
+        if not re.search(pattern, table):
+            fail(f"fresh confirmatory table row changed: {pattern}")
 
 
 def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
@@ -335,22 +489,6 @@ def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
     ]
     for pattern, description in required_patterns:
         require_regex(tex, pattern, description)
-    capable_table = re.search(
-        r"\\label\{tab:capable-hidden\}(.*?)\\end\{table\}", tex, flags=re.DOTALL
-    )
-    if not capable_table:
-        fail("capable hidden result table not found")
-    table = capable_table.group(1)
-    rows = (
-        r"Qwen3\.7-Max\s*&\s*\.990\s*&\s*\.979\s*&\s*\.938\s*&\s*\.875",
-        r"DeepSeek-V4-Flash\s*&\s*\.913\s*&\s*\.826\s*&\s*\.628\s*&\s*\.257",
-        r"Always \\allow\{\}\s*&\s*1\.00\s*&\s*1\.00\s*&\s*\.500\s*&\s*\.000",
-        r"Qwen3\.7-Max\s*&\s*144/144\s*&\s*118/128\s*&\s*0/8\s*&\s*8/8",
-        r"DeepSeek-V4-Flash\s*&\s*144/144\s*&\s*34/128\s*&\s*0/8\s*&\s*3/8",
-    )
-    for pattern in rows:
-        if not re.search(pattern, table):
-            fail(f"capable hidden table row changed: {pattern}")
 
 
 def validate_stronger_followup_binding(tex: str, study: dict[str, Any]) -> None:
@@ -416,6 +554,10 @@ def main() -> int:
     frozen = load_object(RESULTS_FREEZE, "results-freeze.json")
     pilot = load_object(V2_PILOT, "v2 public pilot study")
     capable_hidden = load_object(CAPABLE_HIDDEN, "capable hidden study")
+    fresh_result = load_object(FRESH_CONFIRMATORY_RESULT, "fresh confirmatory study result")
+    fresh_analysis = load_object(FRESH_CONFIRMATORY_ANALYSIS, "fresh confirmatory analysis")
+    fresh_redaction = load_object(FRESH_CONFIRMATORY_REDACTION, "fresh confirmatory redaction")
+    fresh_correction = load_object(FRESH_CONFIRMATORY_CORRECTION, "fresh manifest correction")
     stronger_followup = load_object(STRONGER_FOLLOWUP, "GPT-5.4 follow-up study")
     lower = tex.lower()
     validate_submission_metadata(tex)
@@ -549,6 +691,13 @@ def main() -> int:
 
     validate_v2_pilot_binding(tex, pilot)
     validate_capable_hidden_binding(tex, capable_hidden)
+    validate_fresh_confirmatory_binding(
+        tex,
+        fresh_result,
+        fresh_analysis,
+        fresh_redaction,
+        fresh_correction,
+    )
     validate_stronger_followup_binding(tex, stronger_followup)
 
     if r"\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}" not in tex:

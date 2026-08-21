@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from types import ModuleType
 
+from claimpromotebench.dataset import load_json
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -106,7 +107,25 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
     c1_receipt_path.write_text(json.dumps(c1_receipt), encoding="utf-8")
 
     original_extras = commitment._SOURCE_EXTRAS
+    original_manifest_validator = commitment.validate_manifest
+    frozen_manifest = load_json(ROOT / commitment.MANIFEST_PATH)
+    frozen_commitment = load_json(
+        ROOT / "v2" / "confirmatory" / "c1-r6" / "confirmatory-hidden-commitment.json"
+    )
+
+    def validate_frozen_manifest(manifest: dict[str, object]) -> dict[str, object]:
+        # This unit test exercises the historical C1 builder after post-study tooling changes.
+        # Bind it to the immutable C1 source map instead of rewriting that frozen manifest.
+        assert manifest == frozen_manifest
+        assert frozen_commitment["runtime_source_manifest_sha256"] == manifest["manifest_sha256"]
+        source_files = frozen_commitment["source_files_sha256"]
+        assert {path: source_files[path] for path in manifest["files_sha256"]} == manifest[
+            "files_sha256"
+        ]
+        return {"status": "FROZEN_RUNTIME_SOURCE_MANIFEST_PASS"}
+
     try:
+        commitment.validate_manifest = validate_frozen_manifest
         commitment._SOURCE_EXTRAS = tuple(
             path
             for path in original_extras
@@ -123,6 +142,7 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
             c1_receipt_path,
         )
     finally:
+        commitment.validate_manifest = original_manifest_validator
         commitment._SOURCE_EXTRAS = original_extras
     assert record["commitment_version"] == "2.0.0"
     assert record["study_id"] == "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"

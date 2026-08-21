@@ -6,21 +6,20 @@ paper. It is deliberately fail-closed.
 
 ## Current verdict
 
-**SCIENTIFIC_RC_READY = NO — FRESH CONFIRMATORY SPLIT OR EXPLORATORY REPOSITIONING REQUIRED**
+**SCIENTIFIC_RC_READY = YES — SCOPED QWEN RESULT AND REVIEW ARTIFACT READY; FLASH MODEL EFFICACY
+NON-EVALUABLE; ACCOUNT-SIDE SUBMISSION PENDING**
 
-The frozen v1 hidden study, post-v1 public formatting-control pilot, and post-protocol GPT-5.4
-public-development follow-up are complete. The capable-model extension is also computationally
-complete, but independent review found that it used 14 adaptive pilot executions on the same 12
-hidden inputs before selecting seven terminal canonical pilots. Its completed-lane full passes are
-therefore exploratory rather than confirmatory. The manuscript and reviewer evidence are being
-corrected to disclose every attempt, historical adapter snapshot, pilot-excluded sensitivity, and
-per-action confusion. PR #20 stays Draft and unmerged. A main-conference readiness verdict requires
-either a new zero-adjustment private split or an explicit workshop/resource-paper repositioning.
+The new r6 realization satisfies the zero-adjustment fresh-split requirement. Its Qwen hypothesis
+passes the registered point-estimate and complete-family significance gates. The registered Flash
+lane terminates in 300 authorization errors and supplies no model output, so its hypothesis is
+unsupported and dual-model confirmation remains unavailable. This is a scoped scientific release
+candidate, not a claim of uniform four-action competence or provider-independent replication.
 
-The final inspected anonymous ICLR PDF contains 9 physical pages, and the named arXiv PDF contains
-9. The ICLR main-text probe is 8 pages; references begin after the counted main text. All fonts are
-embedded. The source archives contain only required TeX/BibTeX/style files and no auxiliary build
-files.
+The manuscript now leads with the fresh result and retains the original v1, public controls, and
+adaptive capable-model extension as bounded diagnostic or exploratory evidence. The permanent
+reviewer tree is a reasoning-free post-C2 derivative with source-to-derived equivalence checks and a
+179-file manifest. PR #20 remains Draft and unmerged until the author explicitly authorizes a merge
+or account-side submission.
 
 ## Gate A — frozen v1 study remains intact
 
@@ -58,7 +57,7 @@ files.
 - [x] Two duplicate-`reason_codes` responses remain schema errors and were not manually repaired.
 - [x] No paid API or paid GPU runner was used.
 
-## Gate C — adaptive capable-model extension and replacement requirement
+## Gate C — adaptive capable-model extension and fresh replacement study
 
 - [x] The original protocol and every later transport/adapter amendment remain separately recorded.
 - [x] All 14 executed pilot attempts (168 records), not only seven terminal canonical pilots, are
@@ -83,11 +82,27 @@ files.
   model evidence.
 - [x] Only synthetic, release-intended benchmark material was sent; no secret, personal, or
   unreleased user data was included.
-- [ ] A new private split is committed after all adapters, baselines, prompts, and analyses freeze.
-- [ ] Every registered model lane runs the new split once with zero pilot-based adjustment,
-  selection, or retry.
-- [ ] New-split reporting includes always-`ALLOW`, always-`HOLD`, a public-trained shallow baseline,
-  per-action confusion/recall, and pair/factor/template-aware sensitivity.
+- [x] A new 150-pair / 300-item private realization is frozen after adapters, baselines, prompts,
+  parser, lane definitions, and analysis freeze under C0, a future randomness beacon, and C1.
+- [x] The exact 600-request schedule is fixed before inference; each registered lane receives one
+  call per item with zero client retries and no post-C1 adjustment or selection.
+- [x] C2 seals all 600 terminal cells before gold loading or analysis.
+- [x] The frozen public-development text Naive Bayes baseline is trained only on 100 public items;
+  constant baselines, per-action confusion/recall, factor/template summaries, and the registered
+  composition-sensitivity envelope are retained.
+- [x] Qwen3.7-Max produces 272 valid decisions, 258/300 correct actions, and 113/150 correct pairs,
+  for .860 item accuracy and .753 pair accuracy.
+- [x] Against the frozen text baseline, Qwen adds 74 correct actions; pair blocks give 84 wins and
+  10 losses, one-sided exact `p=5.16e-16`, and two-hypothesis Holm-adjusted `p=1.03e-15`.
+- [x] Qwen action-wise reporting preserves 143/150 `ALLOW`, 110/134 `HOLD`, 5/8 `ESCALATE`, and
+  0/8 `DEMOTE`; the paper explicitly limits the breadth of the aggregate result.
+- [x] Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid
+  Qwen outputs remain incorrect with zero retries.
+- [x] The registered Flash lane returns 300 HTTP 401 responses and no model output; H2 remains in
+  the Holm family with `p=1`, model efficacy is non-evaluable, and dual-model confirmation is
+  unsupported.
+- [x] Service labels are treated as time-stamped configurations; no fixed-weight, provider, tier,
+  serving-stack, or causal ablation claim is made.
 
 ## Gate D — post-protocol GPT-5.4 public-development follow-up
 
@@ -112,10 +127,12 @@ files.
 
 ## Gate E — manuscript claim integrity
 
-- [x] Abstract foregrounds the capable hidden extension and keeps the original v1 failure result as
-  an audit finding rather than the paper's sole capability claim.
-- [x] Abstract reports the capable-study headline counts and paired sensitivity correctly.
-- [x] Main text contains a dedicated capable hidden protocol subsection and a compact result table.
+- [x] Abstract foregrounds the fresh preregistered result and keeps the adaptive extension and
+  original v1 result in diagnostic or exploratory roles.
+- [x] Abstract reports fresh-study valid decisions, item and pair accuracy, baseline difference,
+  exact and Holm values, service failures, 0/8 `DEMOTE`, and Flash non-evaluability.
+- [x] Main text contains dedicated fresh protocol and results subsections plus a compact result
+  table that marks Flash model metrics `N/E`.
 - [x] The post-v1 public formatting pilot is compressed to reader-relevant prose rather than a
   secondary result table.
 - [x] Instance accuracy is not used as a substitute for controlled-pair sensitivity.
@@ -128,6 +145,8 @@ files.
   paper-facing metrics.
 - [x] Manuscript truth lint is bound to the capable-study aggregate, item-level results, baseline
   tests, and exact paper-facing metrics.
+- [x] Manuscript truth lint is bound to the r6 study-result self-digest, public analysis, complete
+  Holm family, redaction/equivalence receipt, correction overlay, and exact paper-facing metrics.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
 
 ## Gate F — naturalistic evaluation boundary
@@ -161,8 +180,10 @@ not claim a completed naturalistic replication.
 - [x] GPT-5.4 stronger-model protocol, pilot, full-run, provider, metric, and cost validator passes.
 - [x] Capable hidden-study prompt, dataset, pilot/full-run, analysis, aggregate, and baseline
   validators pass.
-- [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, and capable-study item-level
-  records from inside the finalized reviewer bundle.
+- [x] Fresh-study C0, C1, C2, dataset, prompt, baseline, service-runner, statistics, public-release,
+  redaction, metadata-correction, and permanent-manifest guards pass.
+- [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, capable-study, and fresh r6
+  item-level records from inside the finalized reviewer bundle.
 - [x] Naturalistic case validator and guard tests pass.
 - [x] v1 hidden freeze guard passes.
 - [x] v1 scored-study guard passes.
@@ -175,8 +196,8 @@ not claim a completed naturalistic replication.
 
 - [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 9 physical pages including references and required disclosures.
-- [x] Main-text page probe reports 8 pages, within the 9-page limit.
+- [x] ICLR PDF contains 10 physical pages including references and required disclosures.
+- [x] Main-text page probe reports 9 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
@@ -187,7 +208,7 @@ not claim a completed naturalistic replication.
 - [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
   workflow module, author identity, or public workflow/provenance identifier.
 - [x] Anonymous reviewer ZIP contains the released item-level empirical evidence needed to replay
-  the paper-facing v1, v2, GPT-5.4, and capable-study aggregates.
+  the paper-facing v1, v2, GPT-5.4, capable-study, and fresh r6 aggregates.
 - [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
   broken glyphs, unreadable tables, and figure/caption collisions.
 
@@ -198,7 +219,7 @@ conference-paper scale.
 ## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 9 physical pages.
+- [x] The arXiv PDF contains 10 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
@@ -234,7 +255,7 @@ show its own preview before submission.
 - [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and
   current pre-submission status.
 - [x] Clean-environment public validation succeeds from the release candidate.
-- [x] The committed v1, public-pilot, GPT-5.4, and capable-study evidence reproduces every
+- [x] The committed v1, public-pilot, GPT-5.4, capable-study, and fresh r6 evidence reproduces every
   paper-facing empirical result without model inference.
 - [ ] Release notes and the final package version agree with the future immutable tag.
 - [ ] Long-term citable archive is created if required by the venue or desired for the paper.
@@ -242,9 +263,10 @@ show its own preview before submission.
 
 ## Readiness rule
 
-`SCIENTIFIC_RC_READY` remains false while any fresh-confirmatory item in Gate C is unchecked. The
-completed packaging, anonymity, and replay checks establish artifact quality but cannot promote an
-adaptive exploratory study into confirmatory hidden evidence. Do not mark PR #20 ready, merge it,
-claim “submitted,” or create archival identifiers until the scientific blocker is resolved and the
-author completes Gate J. Any later Gate K release must use the exact submitted release candidate,
-without inventing an arXiv ID, DOI, or archive identifier.
+`SCIENTIFIC_RC_READY` means the scoped Qwen hypothesis, manuscript, permanent public reviewer
+artifact, anonymous evidence package, and local submission package all pass their deterministic and
+visual gates. It does not turn the Flash operational failure into model evidence, establish
+dual-model confirmation, or complete account-side submission. Keep PR #20 Draft and unmerged, and
+do not claim “submitted” or create archival identifiers, until the author explicitly authorizes the
+corresponding action and Gate J is completed. Any later Gate K release must use the exact submitted
+release candidate and must not invent an arXiv ID, DOI, or archive identifier.
