@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
   "source": {
     "boundary": "Only the prior adaptive/exploratory capable-study evidence is used; no fresh hidden salt, seed, dataset, or output exists at this stage.",
     "reviewer_evidence_run": 32421292779,

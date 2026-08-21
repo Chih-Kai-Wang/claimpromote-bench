@@ -33,6 +33,7 @@ _SOURCE_FILES = (
     "scripts/audit_hidden_prompt_novelty.py",
     "scripts/analyze_confirmatory_hidden_study.py",
     "scripts/build_confirmatory_c1.py",
+    "scripts/confirmatory_power_analysis.py",
     "scripts/freeze_prompt_manifest.py",
     "scripts/finalize_confirmatory_c2.py",
     "scripts/derive_confirmatory_seed.py",
@@ -47,6 +48,8 @@ _SOURCE_FILES = (
     "src/claimpromotebench/prompts.py",
     "tools/drand/fetch_verified_beacon.mjs",
     "tools/drand/package-lock.json",
+    "v2/confirmatory/power-analysis-r3.json",
+    "v2/confirmatory/power-assumptions-r3.json",
     "v2/confirmatory/public-dev-text-nb-v1.json",
     "v2/fresh-confirmatory-study-plan.json",
 )
@@ -110,6 +113,11 @@ def build_confirmatory_commitment(
         raise ValueError("C1 receipt digest mismatch")
     if c1_receipt.get("dataset_manifest_sha256") != base.get("dataset_manifest_sha256"):
         raise ValueError("C1 receipt is not bound to the fresh hidden dataset")
+    study_id = str(c1_receipt.get("study_id", ""))
+    if not study_id or c1_receipt.get("plan_file_sha256") != sha256_file(
+        ROOT / "v2" / "fresh-confirmatory-study-plan.json"
+    ):
+        raise ValueError("C1 receipt is not bound to the current study plan")
     if c1_receipt.get("planned_cells") != 600:
         raise ValueError("C1 receipt does not bind all 600 model-item cells")
     if any(
@@ -142,7 +150,7 @@ def build_confirmatory_commitment(
     record: Json = {
         **base,
         "commitment_version": "2.0.0",
-        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08",
+        "study_id": study_id,
         "source_commit": source_commit,
         "source_files_sha256": {
             relative: sha256_file(ROOT / relative) for relative in _SOURCE_FILES

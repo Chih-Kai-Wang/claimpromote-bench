@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+  "status": "VOID_BEFORE_BEACON_AND_BEFORE_ANY_MODEL_CALL",
+  "source_c0_commit": "ed3e63cc26ed967ea42051d341b5e155fbbb1bb5",
+  "source_seed_commitment_commit": "9996a0285c9da040026acc3a20657032ca252da8",
+  "preregistration_sha256": "sha256:51b20c0647b08a74397fefa68dfb174736700c6ade5646284c8fe3d384059390",
+  "private_salt_sha256": "sha256:2bf72c705f55cf236800089c5df390025b49c66c83ac527e60a53803311ac509",
+  "contains_private_salt_bytes": false,
+  "void_reason": {
+    "hard_coded_commitment_study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08",
+    "expected_study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+    "commitment_builder_was_c0_bound": false,
+    "dry_c1_audit_detected_before_beacon": true,
+    "fresh_seed_derived": false,
+    "fresh_dataset_built": false,
+    "model_post_intents": 0,
+    "model_calls": 0,
+    "cost_usd": 0.0
+  },
+  "superseded_by": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+  "drand": {
+    "network": "quicknet",
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "round": 31490422,
+    "round_time_utc": "2026-08-21T01:10:30Z"
+  },
+  "alternate_salt_seed_or_round_used_within_r2": false,
+  "rejection_sampling_used_within_r2": false
+}

@@ -34,7 +34,12 @@ def _nested(value: Json, dotted: str) -> Any:
 
 
 _HASH_BINDINGS = {
+    "dataset.benchmark_plan_sha256": "configs/v1-benchmark-plan.json",
+    "dataset.input_schema_sha256": "schemas/benchmark-input-v1.schema.json",
+    "dataset.gold_schema_sha256": "schemas/gold-label.schema.json",
     "prompt.renderer_sha256": "src/claimpromotebench/prompts.py",
+    "prompt.policy_sha256": "policies/math-evidence-transition-1.0.0.json",
+    "prompt.decision_schema_sha256": "schemas/agent-decision.schema.json",
     "baselines.shallow_model_file_sha256": "v2/confirmatory/public-dev-text-nb-v1.json",
     "baselines.training_script_sha256": "scripts/train_confirmatory_shallow_baseline.py",
     "baselines.predictor_sha256": "scripts/predict_confirmatory_baselines.py",
@@ -42,8 +47,8 @@ _HASH_BINDINGS = {
     "statistics.analysis_script_sha256": "scripts/analyze_confirmatory_hidden_study.py",
     "statistics.c2_finalizer_sha256": "scripts/finalize_confirmatory_c2.py",
     "statistics.power_analysis_script_sha256": "scripts/confirmatory_power_analysis.py",
-    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r2.json",
-    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r2.json",
+    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r3.json",
+    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r3.json",
     "workflows.c1_freeze_sha256": ".github/workflows/confirmatory-hidden-freeze.yml",
     "workflows.scored_study_sha256": ".github/workflows/confirmatory-hidden-study.yml",
     "implementation_sha256.dataset_builder": "scripts/build_v1_dataset.py",
@@ -51,10 +56,19 @@ _HASH_BINDINGS = {
     "implementation_sha256.prompt_novelty_audit": "scripts/audit_hidden_prompt_novelty.py",
     "implementation_sha256.packet_builder": "scripts/build_stronger_model_packet.py",
     "implementation_sha256.c1_builder": "scripts/build_confirmatory_c1.py",
+    "implementation_sha256.c1_commitment_builder": "scripts/make_confirmatory_hidden_commitment.py",
+    "implementation_sha256.prompt_manifest_builder": "scripts/freeze_prompt_manifest.py",
+    "implementation_sha256.base_commitment_builder": "scripts/make_hidden_test_commitment.py",
+    "implementation_sha256.dataset_validator": "scripts/validate_v1_plan.py",
+    "implementation_sha256.packet_validator": "scripts/validate_stronger_model_study.py",
     "implementation_sha256.gold_free_service_runner": "scripts/run_confirmatory_service_study.py",
     "implementation_sha256.seed_derivation": "scripts/derive_confirmatory_seed.py",
     "implementation_sha256.drand_verifier": "tools/drand/fetch_verified_beacon.mjs",
     "implementation_sha256.drand_package_lock": "tools/drand/package-lock.json",
+    "implementation_sha256.shortcut_audit": "src/claimpromotebench/shortcuts.py",
+    "implementation_sha256.invariance_audit": "src/claimpromotebench/invariance.py",
+    "implementation_sha256.formal_fixtures": "fixtures/formal/cases.json",
+    "implementation_sha256.project_metadata": "pyproject.toml",
     "implementation_sha256.c0_validator": "scripts/validate_confirmatory_c0.py",
 }
 
@@ -123,6 +137,15 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     ):
         if required not in workflow_source:
             raise ValueError(f"scored workflow lacks frozen safety boundary: {required}")
+    workflow_sources = workflow_source + (
+        ROOT / ".github/workflows/confirmatory-hidden-freeze.yml"
+    ).read_text(encoding="utf-8")
+    invoked_scripts = set(re.findall(r"scripts/[A-Za-z0-9_.-]+\.py", workflow_sources))
+    unbound_scripts = invoked_scripts - set(_HASH_BINDINGS.values())
+    if unbound_scripts:
+        raise ValueError(
+            f"confirmatory workflow invokes unbound scripts: {sorted(unbound_scripts)}"
+        )
     seed_status = "NOT_REQUIRED_FOR_PRE_SALT_C0"
     seed_path = ROOT / str(plan["seed"]["commitment_path"])
     if require_seed_commitment or seed_path.exists():

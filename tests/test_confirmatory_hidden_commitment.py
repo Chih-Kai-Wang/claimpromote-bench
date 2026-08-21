@@ -57,6 +57,8 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
     seed_receipt_path = tmp_path / "seed-receipt.json"
     seed_receipt_path.write_text(json.dumps(seed_receipt), encoding="utf-8")
     c1_receipt = {
+        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+        "plan_file_sha256": sha256_file(ROOT / "v2" / "fresh-confirmatory-study-plan.json"),
         "dataset_manifest_sha256": sha256_file(dataset / "manifest.json"),
         "planned_cells": 600,
         "contains_request_bodies": False,
@@ -80,6 +82,7 @@ def test_confirmatory_commitment_is_fresh_source_bound_and_public_safe(tmp_path:
         c1_receipt_path,
     )
     assert record["commitment_version"] == "2.0.0"
+    assert record["study_id"] == "claimpromotebench-v1-fresh-confirmatory-2026-08-r3"
     assert record["source_commit"] == "a" * 40
     assert record["pairs"] == 150
     assert record["instances"] == 300
