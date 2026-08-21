@@ -1,0 +1,108 @@
+name: fresh confirmatory post-C2 public release
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type BUILD_R6_PUBLIC_RELEASE to redact provider reasoning and reverify scores
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  PYTHONPATH: src:.
+
+jobs:
+  build:
+    name: derive reasoning-free public evidence and prove score equivalence
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Require explicit post-C2 publication trigger
+        run: test '${{ inputs.confirm }}' = 'BUILD_R6_PUBLIC_RELEASE'
+
+      - name: Check out publication tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up exact scored-analysis Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+          cache: pip
+          cache-dependency-path: tools/confirmatory-python311.lock
+
+      - name: Install hash-locked analysis dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Download the immutable scored reviewer evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: claimpromotebench-fresh-confirmatory-reviewer-evidence
+          path: work/source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32453310192
+
+      - name: Verify the registered source artifact anchors
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import copy
+          import json
+          from pathlib import Path
+          from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file
+
+          registry_path = Path('v2/confirmatory/r6-execution/source-artifacts.json')
+          registry = json.loads(registry_path.read_text())
+          payload = copy.deepcopy(registry)
+          observed = payload.pop('source_artifact_registry_sha256')
+          assert observed == sha256_bytes(canonical_json(payload).encode())
+          assert registry['github_run_id'] == 32453310192
+          source = Path('work/source')
+          expected = registry['uncompressed_source_files_sha256']
+          assert sha256_file(source / 'confirmatory-analysis.json') == expected['confirmatory-analysis.json']
+          assert sha256_file(
+              source / 'collected/cpb-fresh-confirmatory-c2-32453310192/c2-receipt.json'
+          ) == expected['c2-receipt.json']
+          print('R6_SOURCE_ARTIFACT_ANCHORS_PASS')
+          PY
+
+      - name: Derive a deterministic reasoning-free public tree
+        run: |
+          python -m release.tools.build_fresh_confirmatory_public_evidence \
+            --source-root work/source \
+            --source-artifact-registry v2/confirmatory/r6-execution/source-artifacts.json \
+            --github-run-id 32453310192 \
+            --out work/public
+
+      - name: Recompute the frozen analysis from redacted C2 records
+        run: |
+          python scripts/analyze_confirmatory_hidden_study.py \
+            --test-dataset work/public/dataset \
+            --packet work/public/collected/cpb-fresh-confirmatory-private-c1-32453310192/confirmatory-packet.json \
+            --plan v2/fresh-confirmatory-study-plan.json \
+            --baselines work/public/collected/cpb-fresh-confirmatory-private-c1-32453310192/confirmatory-baselines.json \
+            --run work/public/collected/cpb-fresh-confirmatory-c2-32453310192/complete/opencode-go-deepseek-v4-flash-matched-c2-complete.jsonl \
+            --run work/public/collected/cpb-fresh-confirmatory-c2-32453310192/complete/opencode-go-qwen3.7-max-c2-complete.jsonl \
+            --out work/public/confirmatory-analysis-public.json
+
+      - name: Prove the complete scientific payload is byte-identical
+        run: |
+          python -m release.tools.verify_fresh_confirmatory_public_evidence \
+            --public-root work/public \
+            --source-analysis work/source/confirmatory-analysis.json \
+            --public-analysis work/public/confirmatory-analysis-public.json \
+            --out work/public/public-release-scientific-equivalence.json
+
+      - name: Upload only the reasoning-free public release
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-fresh-confirmatory-public-release
+          path: work/public
+          if-no-files-found: error
+          retention-days: 90
