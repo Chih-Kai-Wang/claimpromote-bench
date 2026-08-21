@@ -14,10 +14,18 @@ attachments, `work/` directories, browser state, or local credentials.
 - One-shot Actions run: `32509532820`, conclusion `success`, attempt 1
 - Complete Actions artifact digest:
   `sha256:8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b`
+- Post-private-conversion PR checks: **externally blocked before runner allocation**. GitHub check
+  annotations say that recent account payments failed or the Actions spending limit must be
+  increased. For example, CI run `32521526112` has `steps=[]`; this is not a code-test failure.
 
 The Actions run and pull request are private links. Authenticate the same GitHub account on the Mac
 before opening them. Do **not** rerun the balanced-public-v1 workflow: the frozen plan registered one
 attempt and the successful singleton is already permanent evidence.
+
+The successful one-shot study ran before the repository was made private and remains valid and
+committed. New private-repository CI will not obtain a GitHub-hosted runner until the account's
+Billing & plans issue or Actions spending limit is resolved. Keep the repository private unless the
+user explicitly authorizes another visibility change; use the local Mac gates in the meantime.
 
 ## What is complete
 
@@ -118,6 +126,11 @@ Primary evidence files:
    related work, no naturalistic/human validation, chronology not independently obvious from the
    anonymous bundle, and dense presentation.
 9. Commit and push every useful artifact to the same private branch before ending a Mac session.
+
+Before expecting GitHub-hosted CI to turn green, inspect the repository owner's **Billing & plans**
+page and resolve the payment/spending-limit annotation. Do not classify the current zero-step red
+checks as scientific or code regressions, and do not change billing or repository visibility without
+the user's explicit authorization.
 
 ## Mac bootstrap
 
