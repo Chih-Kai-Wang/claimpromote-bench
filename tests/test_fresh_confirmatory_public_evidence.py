@@ -7,7 +7,10 @@ import pytest
 
 from claimpromotebench.hashing import canonical_json, sha256_bytes
 from release.tools import build_fresh_confirmatory_public_evidence as builder
+from release.tools import build_persistent_reviewer_evidence_manifest as persistent_manifest
 from release.tools import verify_fresh_confirmatory_public_evidence as verifier
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
@@ -132,3 +135,30 @@ def test_public_provider_envelope_fails_closed_on_unknown_fields(
 ) -> None:
     with pytest.raises(ValueError):
         builder.derive_public_provider_envelope(envelope, builder.RedactionStats())
+
+
+def test_committed_fresh_confirmatory_evidence_has_complete_persistent_manifest() -> None:
+    evidence = ROOT / "release" / "reviewer-evidence-source" / "fresh-confirmatory"
+    manifest = persistent_manifest.verify_manifest(
+        evidence,
+        evidence / "PERMANENT-MANIFEST.json",
+    )
+    assert manifest["file_count"] == 179
+    assert manifest["scope"]["hidden_reasoning_present"] is False
+    assert manifest["scope"]["scientific_analysis_payload_byte_identical"] is True
+
+
+@pytest.mark.parametrize(
+    ("relative", "digest_key"),
+    [
+        ("v2/confirmatory/r6-execution/study-result.json", "study_result_sha256"),
+        (
+            "v2/confirmatory/r6-execution/frozen-manifest-metadata-correction.json",
+            "self_digest",
+        ),
+    ],
+)
+def test_r6_result_receipts_have_valid_self_digests(relative: str, digest_key: str) -> None:
+    value = json.loads((ROOT / relative).read_text(encoding="utf-8"))
+    observed = value.pop(digest_key)
+    assert observed == sha256_bytes(canonical_json(value).encode("utf-8"))

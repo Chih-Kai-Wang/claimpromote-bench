@@ -1,0 +1,30 @@
+{
+  "analysis_executed_before_receipt": false,
+  "c2_receipt_sha256": "sha256:1e5219507584b788864cd5244b24009ff47174ca401bc60be7dde7c6a0f6d42a",
+  "commitment_stage": "C2_BEFORE_GOLD_UNBLINDING_OR_ANALYSIS",
+  "complete_lane_files": {
+    "opencode-go-deepseek-v4-flash-matched-c2-complete.jsonl": "sha256:e96ac11de96b83f99177eba4a9a1327f02ae0bf6c2d9c037257fd21e95452454",
+    "opencode-go-qwen3.7-max-c2-complete.jsonl": "sha256:69c0be6dd655313c21384166cfbe1b092116df583531a2e929847ac1678a950e"
+  },
+  "contains_gold_labels": false,
+  "ephemeral_runner_loss_cannot_prove_zero_posts": true,
+  "gold_loaded_before_receipt": false,
+  "journal_files": {
+    "opencode-go-deepseek-v4-flash-matched-journal.jsonl": "sha256:845e70f9978da9e34c1047d679b71fefab92233e88f523ddfefdfbae1f2ec198",
+    "opencode-go-qwen3.7-max-journal.jsonl": "sha256:8eff9f60fded563206cd17243ac57611f8a0ee47bf3e45eea73146fb621a1a77"
+  },
+  "lost_cell_request_accounting": "UNKNOWN_0_OR_1_POST_PER_CELL_WHEN_NO_RESPONSE_RECORD_IS_RECOVERED",
+  "missing_cells_are_incorrect_and_cannot_be_retried": true,
+  "outcome_counts": {
+    "RESPONSE_RECORDED": 600
+  },
+  "planned_cells": 600,
+  "raw_run_files": {
+    "opencode-go-deepseek-v4-flash-matched-run.jsonl": "sha256:e0e57273721308666fb4772f210d1a024f2baf77f989cfe030b1643eb92d93aa",
+    "opencode-go-qwen3.7-max-run.jsonl": "sha256:48755692416ab7527e16d7c9965fef26c73d6d275161a75b790fbcd9d3f7c69e"
+  },
+  "schedule_sha256": "sha256:bd8a0748c18fd8591346f5ee667f9a1de2b2adf1aba8604dd11e8eae00fd8e4b",
+  "schema_version": "1.0.0",
+  "sealed_cells": 600,
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"
+}

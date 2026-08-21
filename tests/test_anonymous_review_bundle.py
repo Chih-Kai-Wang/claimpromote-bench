@@ -199,3 +199,29 @@ def test_stronger_followup_anonymization_keeps_metrics_and_removes_provenance() 
     assert cleaned["full"]["routed_provider_values"] == ["OpenAI"]
     assert "3634ce85785e9b516abc519711fff12388307331" not in rendered
     assert "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7" not in rendered
+
+
+def test_fresh_confirmatory_anonymous_projection_is_compact_and_identity_free(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    source = ROOT / "release" / "reviewer-evidence-source" / "fresh-confirmatory"
+    destination = tmp_path / "fresh-confirmatory"
+
+    builder.build_fresh_confirmatory_anonymous_evidence(source, destination)
+
+    manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    qwen_path = destination / manifest["lane_files"]["opencode-go-qwen3.7-max"]
+    qwen = [json.loads(line) for line in qwen_path.read_text(encoding="utf-8").splitlines()]
+    rendered = "\n".join(
+        path.read_text(encoding="utf-8", errors="replace")
+        for path in destination.rglob("*")
+        if path.is_file()
+    )
+    assert len(qwen) == 300
+    assert sum(row["parse_status"] == "OK" for row in qwen) == 272
+    assert all("sanitized_provider_envelope" not in row for row in qwen)
+    assert all("frozen_plan_commit" not in row for row in qwen)
+    assert "32453310192" not in rendered
+    assert "f44b01eb97418d87aa6d7486fa785c0f49b9dda2" not in rendered
+    assert '"thinking":' not in rendered

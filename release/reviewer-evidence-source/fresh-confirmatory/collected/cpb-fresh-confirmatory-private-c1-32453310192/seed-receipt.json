@@ -1,0 +1,28 @@
+{
+  "alternate_salt_seed_or_round_permitted": false,
+  "contains_derived_seed_bytes": false,
+  "contains_private_salt_bytes": false,
+  "derivation": "HMAC-SHA256(key=private_salt, msg=CPB-CONFIRMATORY-V1\\0 || preregistration_sha256_bytes || drand_round_u64_be || drand_randomness_bytes)",
+  "derived_seed_sha256": "sha256:b96f452f8b345262d5162192bb0c1550b65b410de8ef2e1b7fd1057243a6ead9",
+  "drand": {
+    "agreeing_relays": 3,
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "randomness": "63c0eea16e3e2697ccb41ee84a2bed270b92901b7fabb445d8dff4da54b04943",
+    "round": 31496190,
+    "signature": "af6b3fce401d6231464b3a2f77aa5f1b9ad390c2966571e4e8b4ad732adc4280dc0a9ff1633f06260afbc338b9b05115",
+    "verification": {
+      "chain_verification_parameters_hardcoded_from_commitment": true,
+      "disable_beacon_verification": false,
+      "library": "drand-client",
+      "version": "1.4.2"
+    }
+  },
+  "preregistration_sha256": "sha256:a93dc958abe1854134fdbb90e402b5c06063d9244ae4efa7653932a2ee07b4e9",
+  "private_salt_sha256": "sha256:2b3fa40ed00404611c0873a7028c9e1109e57ad7035cfa3a1bfdfd0d9992465b",
+  "rejection_sampling_permitted": false,
+  "schema_version": "1.0.0",
+  "seed_commitment_file_sha256": "sha256:60f7babe895edd74c52db78689206d7586a5cb6950ffd6d7e0c049e44e572307",
+  "seed_derivation_receipt_sha256": "sha256:1d58c5d1a98bb206770fbb6dfbd1ae88a34bac1632a22c2c6f3e5ed06ca80930",
+  "status": "SINGLE_PRECOMMITTED_SEED_DERIVED",
+  "verified_beacon_file_sha256": "sha256:e7aacd6b4b17b506f009973be753c01cd8e28c354d1606f0e268702cbcfbcb64"
+}

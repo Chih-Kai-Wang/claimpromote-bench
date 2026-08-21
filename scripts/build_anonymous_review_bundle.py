@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 import shutil
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -168,6 +169,32 @@ NUMERIC_PROVENANCE_REPLACEMENTS = {
 
 Json = dict[str, Any]
 
+FRESH_CONFIRMATORY_ROW_FIELDS = (
+    "actual_cost_usd",
+    "application_post_count",
+    "client_retry_count",
+    "deterministic_gate_applied",
+    "evidence_ceiling",
+    "finish_reason",
+    "http_status",
+    "item_id",
+    "lane_id",
+    "latency_ms",
+    "model_requested",
+    "model_returned",
+    "network_error",
+    "pair_id",
+    "parse_detail",
+    "parse_status",
+    "provider_service",
+    "raw_decision",
+    "raw_final_text",
+    "raw_final_text_sha256",
+    "redirect_followed",
+    "sequence",
+    "usage",
+)
+
 
 def fail(message: str) -> None:
     raise SystemExit(f"anonymous-review-bundle: {message}")
@@ -179,6 +206,22 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return "sha256:" + digest.hexdigest()
+
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+
+
+def sha256_text(value: str) -> str:
+    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def write_json(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def load_object(path: Path) -> Json:
@@ -491,6 +534,224 @@ def repair_v2_public_anonymous_evidence(root: Path) -> None:
     )
 
 
+def _reject_hidden_reasoning(value: Any, label: str) -> None:
+    if isinstance(value, dict):
+        forbidden = {
+            "reasoning_content",
+            "thinking",
+            "thinking_content",
+            "thought",
+            "thoughts",
+        }
+        overlap = forbidden & set(value)
+        if overlap:
+            fail(f"{label} contains hidden-reasoning fields: {sorted(overlap)}")
+        block_type = str(value.get("type", "")).lower()
+        if block_type in {"reasoning", "thinking"}:
+            fail(f"{label} contains a hidden-reasoning content block")
+        for child in value.values():
+            _reject_hidden_reasoning(child, label)
+    elif isinstance(value, list):
+        for child in value:
+            _reject_hidden_reasoning(child, label)
+
+
+def _fresh_analysis_projection(value: Json) -> Json:
+    projected = deepcopy(value)
+    projected.pop("aggregate_sha256", None)
+    projected.pop("source_identity", None)
+    scores = projected.get("scores")
+    if isinstance(scores, dict):
+        for score in scores.values():
+            if isinstance(score, dict):
+                score.pop("run_sha256", None)
+    return projected
+
+
+def build_fresh_confirmatory_anonymous_evidence(source: Path, destination: Path) -> None:
+    """Create a compact, replayable, identity-free derivative of the safe r6 release."""
+
+    if not source.is_dir():
+        fail(f"missing fresh-confirmatory source: {source.relative_to(ROOT)}")
+    destination.mkdir(parents=True, exist_ok=True)
+
+    copy_tree(source / "dataset", destination / "dataset")
+    copy_file(ROOT / "v2" / "fresh-confirmatory-study-plan.json", destination / "study-plan.json")
+    correction_source = load_object(
+        ROOT / "v2" / "confirmatory" / "r6-execution" / "frozen-manifest-metadata-correction.json"
+    )
+    correction_source.pop("self_digest", None)
+    correction_source["source_manifest_path"] = "dataset/manifest.json"
+    correction_source["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    correction_source["self_digest"] = sha256_text(canonical_json(correction_source))
+    write_json(destination / "frozen-manifest-metadata-correction.json", correction_source)
+
+    packet_paths = sorted(source.glob("collected/*/confirmatory-packet.json"))
+    baseline_paths = sorted(source.glob("collected/*/confirmatory-baselines.json"))
+    c2_receipt_paths = sorted(source.glob("collected/*/c2-receipt.json"))
+    c2_run_paths = sorted(source.glob("collected/*/complete/*-c2-complete.jsonl"))
+    if not (
+        len(packet_paths) == len(baseline_paths) == len(c2_receipt_paths) == 1
+        and len(c2_run_paths) == 2
+    ):
+        fail("fresh-confirmatory source has an unexpected packet/baseline/C2 layout")
+    copy_file(packet_paths[0], destination / "prompt-packet.json")
+    copy_file(baseline_paths[0], destination / "baselines.json")
+
+    c2_source = load_object(c2_receipt_paths[0])
+    c2_review = {
+        "analysis_executed_before_receipt": c2_source.get("analysis_executed_before_receipt"),
+        "commitment_stage": c2_source.get("commitment_stage"),
+        "contains_gold_labels": c2_source.get("contains_gold_labels"),
+        "gold_loaded_before_receipt": c2_source.get("gold_loaded_before_receipt"),
+        "outcome_counts": c2_source.get("outcome_counts"),
+        "planned_cells": c2_source.get("planned_cells"),
+        "schema_version": "1.0.0-review",
+        "sealed_cells": c2_source.get("sealed_cells"),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "status": "C2_BEFORE_GOLD_UNBLINDING_OR_ANALYSIS",
+        "study_id": c2_source.get("study_id"),
+    }
+    write_json(destination / "c2-receipt-review.json", c2_review)
+
+    runs_destination = destination / "runs"
+    runs_destination.mkdir()
+    lane_files: dict[str, str] = {}
+    for source_run in c2_run_paths:
+        source_rows = [
+            json.loads(line)
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        lane_ids = {str(row.get("lane_id")) for row in source_rows}
+        if len(source_rows) != 300 or len(lane_ids) != 1:
+            fail(f"fresh-confirmatory C2 run has invalid coverage: {source_run.name}")
+        lane_id = lane_ids.pop()
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]+", lane_id) or lane_id in lane_files:
+            fail(f"fresh-confirmatory lane identity is invalid or duplicated: {lane_id}")
+        projected_rows: list[Json] = []
+        for source_row in source_rows:
+            projected = {
+                key: deepcopy(source_row[key])
+                for key in FRESH_CONFIRMATORY_ROW_FIELDS
+                if key in source_row
+            }
+            if set(projected) != set(FRESH_CONFIRMATORY_ROW_FIELDS):
+                missing = sorted(set(FRESH_CONFIRMATORY_ROW_FIELDS) - set(projected))
+                fail(f"fresh-confirmatory row lacks reviewer fields: {missing}")
+            _reject_hidden_reasoning(projected, f"fresh-confirmatory row {projected['item_id']}")
+            raw_text = projected.get("raw_final_text")
+            raw_sha = projected.get("raw_final_text_sha256")
+            if raw_text is None:
+                if raw_sha is not None:
+                    fail("fresh-confirmatory null final text has a digest")
+            elif raw_sha != sha256_text(str(raw_text)):
+                fail("fresh-confirmatory final-text digest changed")
+            projected_rows.append(projected)
+        target_name = f"{lane_id}.jsonl"
+        target_path = runs_destination / target_name
+        target_path.write_text(
+            "".join(f"{canonical_json(row)}\n" for row in projected_rows),
+            encoding="utf-8",
+        )
+        lane_files[lane_id] = f"runs/{target_name}"
+
+    source_analysis = load_object(source / "confirmatory-analysis-public.json")
+    reported_analysis = _fresh_analysis_projection(source_analysis)
+    reported_analysis["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    write_json(destination / "reported-analysis.json", reported_analysis)
+
+    source_result = load_object(ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json")
+    for key in ("public_release", "scored_execution", "study_result_sha256"):
+        source_result.pop(key, None)
+    source_result["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    source_result["review_disposition"]["public_artifact"] = (
+        "GO_REDACTED_PERSISTENT_ANONYMOUS_DERIVATIVE"
+    )
+    write_json(destination / "study-result.json", source_result)
+
+    source_redaction = load_object(source / "public-release-redaction-receipt.json")
+    source_equivalence = load_object(source / "public-release-scientific-equivalence.json")
+    anonymous_redaction = {
+        "hidden_reasoning_present_in_public_release": source_equivalence.get(
+            "hidden_reasoning_present_in_public_release"
+        ),
+        "original_scored_artifacts_modified": source_redaction.get(
+            "original_scored_artifacts_modified"
+        ),
+        "post_c2_transform": source_redaction.get("post_c2_transform"),
+        "public_provider_envelopes_allowlisted": source_equivalence.get(
+            "public_provider_envelopes_allowlisted"
+        ),
+        "redacted_unique_model_item_cells": source_redaction.get(
+            "redacted_unique_model_item_cells"
+        ),
+        "redaction_rule": source_redaction.get("redaction_rule"),
+        "redaction_rule_sha256": source_redaction.get("redaction_rule_sha256"),
+        "removed_content_blocks_including_raw_and_c2_copies": source_redaction.get(
+            "removed_content_blocks_including_raw_and_c2_copies"
+        ),
+        "schema_version": "1.0.0-review",
+        "scientific_analysis_payload_byte_identical": source_equivalence.get(
+            "scientific_analysis_payload_byte_identical"
+        ),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "source_to_derived_row_hashes_verified_before_anonymization": source_equivalence.get(
+            "source_to_derived_row_hashes_verified"
+        ),
+        "status": "POST_C2_PUBLIC_RELEASE_REDACTION_VERIFIED",
+    }
+    write_json(destination / "redaction-receipt-review.json", anonymous_redaction)
+
+    readme = """# Fresh confirmatory reviewer evidence
+
+This directory is a compact double-blind derivative of the immutable r6 execution. It contains the
+released 300-item paired dataset, the frozen prompt packet and baseline predictions, two projected
+C2-complete service-configuration runs, the preregistered study plan, and the complete scientific
+analysis with only source-identifying provenance hashes removed.
+
+The Qwen service configuration produced 272 valid decisions and achieved 86.00% end-to-end item
+accuracy and 75.33% pair accuracy. The Flash lane returned 300 HTTP 401 responses and no model
+output; it is an authentication or client-service configuration failure, not an estimate of model
+accuracy. The Qwen result includes every failure as incorrect without retry and has zero DEMOTE
+recall (0/8).
+
+Provider hidden-thinking blocks are not included. They were removed only in a deterministic
+post-C2 publication derivative; the original C2 seal and scores were not altered. `MANIFEST.json`
+binds every file in this directory. Recompute the reported analysis with
+`scripts/validate_anonymous_empirical_evidence.py` from the bundle root.
+
+The immutable dataset manifest retains one stale non-operative `CFM_R5` namespace label and three
+construction-time `PENDING` values. The released IDs are all `v1-test-cfo-*`; the bound correction
+overlay explains why the original manifest remains byte-identical and how current states are carried
+by later receipts.
+"""
+    (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "file_count": len(files),
+        "files": files,
+        "lane_files": lane_files,
+        "schema_version": "1.0.0-review",
+        "scope": {
+            "hidden_reasoning_included": False,
+            "item_level_final_outputs_included": True,
+            "original_reasoning_bearing_records_included": False,
+            "private_construction_salt_included": False,
+            "public_repository_identity_included": False,
+            "source_artifact_or_workflow_ids_included": False,
+        },
+        "status": "ANONYMOUS_FRESH_CONFIRMATORY_EVIDENCE",
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
 def anonymize_stronger_results(source: Json) -> Json:
     pilot = source.get("pilot")
     full = source.get("full")
@@ -604,7 +865,8 @@ checks, validate the compact paper-result summaries, and run selected v2 tests. 
 directory retains the available v1
 source and normalized item records, all four public-interface pilot runs, the public-development
 follow-up records, and all 14 executed capable-extension pilot attempts plus both fresh full
-passes. Public repository identities are
+passes. It also contains the r6 preregistered 300-item fresh confirmatory dataset, projected C2
+records, frozen baseline, and complete scientific analysis. Public repository identities are
 replaced by anonymous role labels;
 empirical prompts, responses, parser outcomes, gold labels, and model identities are retained.
 
@@ -630,6 +892,12 @@ response text. The private deterministic-construction seed remains excluded beca
 dataset bytes, prompt packet, labels, records, and commitments suffice for result recomputation.
 The public manifest's `model_experiments: PENDING` value is its pre-inference freeze status; the
 result files carry the completed study states.
+
+The r6 construction manifest likewise remains byte-frozen. Its stale `CFM_R5` namespace label and
+three construction-time `PENDING` values are corrected by a bound overlay; all released r6 item
+and pair IDs use the `v1-test-cfo-*` namespace. The original manifest is not rewritten because its
+digest is bound by C1 and C2. Provider hidden-thinking blocks are excluded from the r6 derivative,
+and a redaction receipt records the post-C2 publication boundary and score-equivalence check.
 
 Post-gate correctness applies the same fixed policy as the benchmark oracle. It must not be
 interpreted as model learning or independent prediction accuracy.
@@ -943,7 +1211,7 @@ def verify_bundle(bundle: Path) -> None:
     actual_paths = {
         str(path.relative_to(bundle)).replace("\\", "/"): path
         for path in sorted(bundle.rglob("*"))
-        if path.is_file() and path.name != "MANIFEST.json"
+        if path.is_file() and path != manifest_path
     }
     if set(declared) != set(actual_paths):
         missing = sorted(set(declared) - set(actual_paths))
@@ -964,6 +1232,12 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/capable-hidden/attempt-protocol-snapshots/stage-1-initial/scripts/run_stronger_model_study.py",
         "evidence/capable-hidden/attempt-protocol-snapshots/stage-2-transport-amended/scripts/run_stronger_model_study.py",
         "evidence/capable-hidden/attempt-protocol-snapshots/stage-3-final-adapter/scripts/run_stronger_model_study.py",
+        "evidence/fresh-confirmatory/MANIFEST.json",
+        "evidence/fresh-confirmatory/frozen-manifest-metadata-correction.json",
+        "evidence/fresh-confirmatory/redaction-receipt-review.json",
+        "evidence/fresh-confirmatory/reported-analysis.json",
+        "evidence/fresh-confirmatory/runs/opencode-go-deepseek-v4-flash-matched.jsonl",
+        "evidence/fresh-confirmatory/runs/opencode-go-qwen3.7-max.jsonl",
     }
     absent = sorted(required - set(actual_paths))
     if absent:
@@ -983,9 +1257,10 @@ def write_manifest(bundle: Path) -> None:
     files = {
         str(path.relative_to(bundle)).replace("\\", "/"): sha256_file(path)
         for path in sorted(bundle.rglob("*"))
-        if path.is_file() and path.name != "MANIFEST.json"
+        if path.is_file() and path != bundle / "MANIFEST.json"
     }
     capable_hidden_included = (bundle / "evidence" / "capable-hidden").is_dir()
+    fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -1005,6 +1280,9 @@ def write_manifest(bundle: Path) -> None:
             "capable_hidden_summary_included": capable_hidden_included,
             "capable_hidden_item_level_records_included": capable_hidden_included,
             "capable_hidden_all_executed_attempts_included": capable_hidden_included,
+            "fresh_confirmatory_summary_included": fresh_confirmatory_included,
+            "fresh_confirmatory_item_level_records_included": fresh_confirmatory_included,
+            "fresh_confirmatory_hidden_reasoning_included": False,
             "private_construction_seed_included": False,
         },
     }
@@ -1027,6 +1305,7 @@ def build(destination: Path) -> None:
         "configs/decoding-v1.json",
         "scripts/aggregate_capable_hidden_study.py",
         "scripts/analyze_stronger_model_study.py",
+        "scripts/analyze_confirmatory_hidden_study.py",
         "scripts/build_alpha.py",
         "scripts/build_v1_dataset.py",
         "scripts/validate_anonymous_empirical_evidence.py",
@@ -1050,10 +1329,16 @@ def build(destination: Path) -> None:
         "v2-public-pilot": (ROOT / "release" / "reviewer-evidence-source" / "v2-public-pilot"),
         "gpt54-public-dev": (ROOT / "release" / "reviewer-evidence-source" / "gpt54-public-dev"),
         "capable-hidden": (ROOT / "release" / "reviewer-evidence-source" / "capable-hidden"),
+        "fresh-confirmatory": (
+            ROOT / "release" / "reviewer-evidence-source" / "fresh-confirmatory"
+        ),
     }
     for name, source in empirical_sources.items():
         evidence_destination = destination / "evidence" / name
-        copy_anonymized_tree(source, evidence_destination)
+        if name == "fresh-confirmatory":
+            build_fresh_confirmatory_anonymous_evidence(source, evidence_destination)
+        else:
+            copy_anonymized_tree(source, evidence_destination)
         if name == "capable-hidden":
             repair_capable_anonymous_evidence(evidence_destination)
         elif name == "v2-public-pilot":

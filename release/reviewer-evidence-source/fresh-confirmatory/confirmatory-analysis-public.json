@@ -1,0 +1,2771 @@
+{
+  "aggregate_sha256": "sha256:726f3c5737f78c41434093b3f23e1d8da9949c7cbb4a6673bc681937fa6db9bf",
+  "analysis_script_sha256": "sha256:d010f706841313577a3867f50a315462b8fa406998b90a1f84754b743834aba1",
+  "analysis_status": "CONFIRMATORY_IF_ALL_FROZEN_BOUNDARIES_VALIDATE",
+  "baseline_predictions_sha256": "sha256:e0fe8e6e8bcb40b0d9e05cfdc1b4f60bb8c23074ff6454b0532a18e95275dcd5",
+  "confirmatory_item_correctness_tests": {
+    "family_size": 2,
+    "method": "one-sided exact pair-blocked whole-vector swap permutation; Holm adjustment across the complete frozen family",
+    "tests": [
+      {
+        "action_accuracy_difference": -0.6133333333333333,
+        "baseline": "public_dev_text_nb",
+        "holm_adjusted_p": 1.0,
+        "minimum_superiority_effect": 0.1,
+        "model_lane": "opencode-go-deepseek-v4-flash-matched",
+        "nonzero_pair_differences": 150,
+        "one_sided_exact_p": 1.0,
+        "pairs": 150,
+        "permutation": "swap_complete_two_member_correctness_vectors_within_pair",
+        "sum_item_correctness_difference": -184,
+        "superiority_supported": false,
+        "test_unit": "controlled_pair"
+      },
+      {
+        "action_accuracy_difference": 0.24666666666666667,
+        "baseline": "public_dev_text_nb",
+        "holm_adjusted_p": 1.032699183755085e-15,
+        "minimum_superiority_effect": 0.1,
+        "model_lane": "opencode-go-qwen3.7-max",
+        "nonzero_pair_differences": 94,
+        "one_sided_exact_p": 5.163495918775425e-16,
+        "pairs": 150,
+        "permutation": "swap_complete_two_member_correctness_vectors_within_pair",
+        "sum_item_correctness_difference": 74,
+        "superiority_supported": true,
+        "test_unit": "controlled_pair"
+      }
+    ]
+  },
+  "dataset_manifest_sha256": "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de",
+  "descriptive_model_contrast": {
+    "action_accuracy_difference": -0.86,
+    "lane_a": "opencode-go-deepseek-v4-flash-matched",
+    "lane_b": "opencode-go-qwen3.7-max",
+    "nonzero_pair_differences": 145,
+    "one_sided_exact_p": 1.0,
+    "pairs": 150,
+    "permutation": "swap_complete_two_member_correctness_vectors_within_pair",
+    "sum_item_correctness_difference": -258,
+    "test_unit": "controlled_pair"
+  },
+  "gate_interpretation": "Postgate scores are implementation-conformance checks because the deterministic gate uses the same policy oracle as the benchmark labels; raw model scores carry the claims.",
+  "packet_sha256": "sha256:4263ec938879c8f426157afca80e24b209ad617a3410127b0e951a446523ccaf",
+  "raw_prompts_or_responses_in_aggregate": false,
+  "schema_version": "1.0.0",
+  "scores": {
+    "always_allow": {
+      "kind": "DETERMINISTIC_BASELINE",
+      "raw": {
+        "balanced_action_recall": 0.25,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": 1.0,
+        "conditional_valid_promotion_rate": 1.0,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 150,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "DEMOTE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "ESCALATE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "HOLD": {
+            "ALLOW": 134,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          }
+        },
+        "decision_coverage": 1.0,
+        "end_to_end_false_promotion_rate": 1.0,
+        "end_to_end_valid_promotion_rate": 1.0,
+        "instances": 300,
+        "item_accuracy": 0.5,
+        "macro_f1": 0.16666666666666666,
+        "pair_accuracy": 0.0,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 150,
+            "f1": 0.6666666666666666,
+            "precision": 0.5,
+            "recall": 1.0,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.5,
+            "pair_accuracy": 0.0
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.3333333333333333,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.3333333333333333,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.25,
+              "low": 0.25,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.5,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      }
+    },
+    "always_hold": {
+      "kind": "DETERMINISTIC_BASELINE",
+      "raw": {
+        "balanced_action_recall": 0.25,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": 0.0,
+        "conditional_valid_promotion_rate": 0.0,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 150,
+            "NO_DECISION": 0
+          },
+          "DEMOTE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 8,
+            "NO_DECISION": 0
+          },
+          "ESCALATE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 8,
+            "NO_DECISION": 0
+          },
+          "HOLD": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 134,
+            "NO_DECISION": 0
+          }
+        },
+        "decision_coverage": 1.0,
+        "end_to_end_false_promotion_rate": 0.0,
+        "end_to_end_valid_promotion_rate": 0.0,
+        "instances": 300,
+        "item_accuracy": 0.44666666666666666,
+        "macro_f1": 0.1543778801843318,
+        "pair_accuracy": 0.0,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 134,
+            "f1": 0.6175115207373272,
+            "precision": 0.44666666666666666,
+            "recall": 1.0,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.36363636363636365,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.5,
+              "low": 0.3675496688741722,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.45,
+            "pair_accuracy": 0.0
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.3333333333333333,
+              "item_accuracy": 0.47183098591549294,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.3333333333333333,
+              "item_accuracy": 0.47183098591549294,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44366197183098594,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.44405594405594406,
+              "pair_accuracy": 0.0
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.25,
+              "low": 0.25,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.44666666666666666,
+              "low": 0.44666666666666666,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.36363636363636365,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.4658119658119658,
+              "low": 0.43041155552655624,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      }
+    },
+    "opencode-go-deepseek-v4-flash-matched": {
+      "kind": "REGISTERED_MODEL_LANE",
+      "postgate_conformance_only": {
+        "balanced_action_recall": 0.0,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": null,
+        "conditional_valid_promotion_rate": null,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 150
+          },
+          "DEMOTE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 8
+          },
+          "ESCALATE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 8
+          },
+          "HOLD": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 134
+          }
+        },
+        "decision_coverage": 0.0,
+        "end_to_end_false_promotion_rate": 0.0,
+        "end_to_end_valid_promotion_rate": 0.0,
+        "instances": 300,
+        "item_accuracy": 0.0,
+        "macro_f1": 0.0,
+        "pair_accuracy": 0.0,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 134
+          }
+        }
+      },
+      "raw": {
+        "balanced_action_recall": 0.0,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": null,
+        "conditional_valid_promotion_rate": null,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 150
+          },
+          "DEMOTE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 8
+          },
+          "ESCALATE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 8
+          },
+          "HOLD": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 134
+          }
+        },
+        "decision_coverage": 0.0,
+        "end_to_end_false_promotion_rate": 0.0,
+        "end_to_end_valid_promotion_rate": 0.0,
+        "instances": 300,
+        "item_accuracy": 0.0,
+        "macro_f1": 0.0,
+        "pair_accuracy": 0.0,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.0,
+            "pair_accuracy": 0.0
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.0,
+              "item_accuracy": 0.0,
+              "pair_accuracy": 0.0
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      },
+      "run_sha256": "sha256:e96ac11de96b83f99177eba4a9a1327f02ae0bf6c2d9c037257fd21e95452454"
+    },
+    "opencode-go-qwen3.7-max": {
+      "kind": "REGISTERED_MODEL_LANE",
+      "postgate_conformance_only": {
+        "balanced_action_recall": 0.0,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": null,
+        "conditional_valid_promotion_rate": null,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 150
+          },
+          "DEMOTE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 8
+          },
+          "ESCALATE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 8
+          },
+          "HOLD": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 134
+          }
+        },
+        "decision_coverage": 0.0,
+        "end_to_end_false_promotion_rate": 0.0,
+        "end_to_end_valid_promotion_rate": 0.0,
+        "instances": 300,
+        "item_accuracy": 0.0,
+        "macro_f1": 0.0,
+        "pair_accuracy": 0.0,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 134
+          }
+        }
+      },
+      "raw": {
+        "balanced_action_recall": 0.5998072139303483,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": 0.09302325581395349,
+        "conditional_valid_promotion_rate": 1.0,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 143,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 7
+          },
+          "DEMOTE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "ESCALATE": {
+            "ALLOW": 0,
+            "DEMOTE": 0,
+            "ESCALATE": 5,
+            "HOLD": 0,
+            "NO_DECISION": 3
+          },
+          "HOLD": {
+            "ALLOW": 4,
+            "DEMOTE": 0,
+            "ESCALATE": 2,
+            "HOLD": 110,
+            "NO_DECISION": 18
+          }
+        },
+        "decision_coverage": 0.9066666666666666,
+        "end_to_end_false_promotion_rate": 0.08,
+        "end_to_end_valid_promotion_rate": 0.9533333333333334,
+        "instances": 300,
+        "item_accuracy": 0.86,
+        "macro_f1": 0.6265027322404372,
+        "pair_accuracy": 0.7533333333333333,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 143,
+            "f1": 0.9377049180327869,
+            "precision": 0.9225806451612903,
+            "recall": 0.9533333333333334,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 5,
+            "f1": 0.6666666666666666,
+            "precision": 0.7142857142857143,
+            "recall": 0.625,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 110,
+            "f1": 0.9016393442622952,
+            "precision": 1.0,
+            "recall": 0.8208955223880597,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.9479181719653179,
+              "low": 0.7543085184102863,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.9028603411513859,
+              "low": 0.5792674596827935,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.9328859060402684,
+              "low": 0.7730263157894737,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.87248322147651,
+              "low": 0.6158940397350994,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.8629464285714284,
+            "pair_accuracy": 0.7589285714285714
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.9375,
+              "item_accuracy": 0.9375,
+              "pair_accuracy": 0.875
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.9375,
+              "item_accuracy": 0.9375,
+              "pair_accuracy": 0.875
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.9375,
+              "item_accuracy": 0.9375,
+              "pair_accuracy": 0.875
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.75,
+              "item_accuracy": 0.75,
+              "pair_accuracy": 0.625
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.375,
+              "item_accuracy": 0.375,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.35714285714285715,
+              "item_accuracy": 0.35714285714285715,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.8571428571428571,
+              "item_accuracy": 0.8571428571428571,
+              "pair_accuracy": 0.7142857142857143
+            },
+            "domain": {
+              "balanced_action_recall": 0.8571428571428572,
+              "item_accuracy": 0.8571428571428571,
+              "pair_accuracy": 0.7142857142857143
+            },
+            "precision": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.9375,
+              "item_accuracy": 0.9375,
+              "pair_accuracy": 0.875
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.8125,
+              "item_accuracy": 0.8125,
+              "pair_accuracy": 0.625
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.9375,
+              "item_accuracy": 0.9375,
+              "pair_accuracy": 0.875
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.6875,
+              "item_accuracy": 0.6875,
+              "pair_accuracy": 0.375
+            },
+            "tool_exit": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.875,
+              "item_accuracy": 0.875,
+              "pair_accuracy": 0.75
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.5982911357031075,
+              "item_accuracy": 0.8556338028169014,
+              "pair_accuracy": 0.7464788732394366
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.5982911357031075,
+              "item_accuracy": 0.8556338028169014,
+              "pair_accuracy": 0.7464788732394366
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.5982911357031075,
+              "item_accuracy": 0.8556338028169014,
+              "pair_accuracy": 0.7464788732394366
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.5928806670870997,
+              "item_accuracy": 0.8661971830985915,
+              "pair_accuracy": 0.7605633802816901
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.8035614182608087,
+              "item_accuracy": 0.8873239436619719,
+              "pair_accuracy": 0.795774647887324
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.6140441743296075,
+              "item_accuracy": 0.8846153846153846,
+              "pair_accuracy": 0.7902097902097902
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.6004848989593083,
+              "item_accuracy": 0.8601398601398601,
+              "pair_accuracy": 0.7552447552447552
+            },
+            "domain": {
+              "balanced_action_recall": 0.6007051511480646,
+              "item_accuracy": 0.8601398601398601,
+              "pair_accuracy": 0.7552447552447552
+            },
+            "precision": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.5982911357031075,
+              "item_accuracy": 0.8556338028169014,
+              "pair_accuracy": 0.7464788732394366
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.6020358260675162,
+              "item_accuracy": 0.8626760563380281,
+              "pair_accuracy": 0.7605633802816901
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.5982911357031075,
+              "item_accuracy": 0.8556338028169014,
+              "pair_accuracy": 0.7464788732394366
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.6062276436396155,
+              "item_accuracy": 0.8697183098591549,
+              "pair_accuracy": 0.7746478873239436
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.6002752626872345,
+              "item_accuracy": 0.8591549295774648,
+              "pair_accuracy": 0.7535211267605634
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.5967681432740488,
+              "item_accuracy": 0.8531468531468531,
+              "pair_accuracy": 0.7412587412587412
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.678705223880597,
+              "low": 0.5068501243781095,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.8866666666666667,
+              "low": 0.83,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.8,
+              "low": 0.7,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.9479181719653179,
+              "low": 0.7543085184102863,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.9028603411513859,
+              "low": 0.5792674596827935,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.9025988392138835,
+              "low": 0.8177956201488992,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.8240803303303302,
+              "low": 0.6792452830188679,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      },
+      "run_sha256": "sha256:3e5efd7c174305bfb4b30285053b81e667e4489fe8bf09b265c6df572681d2fa"
+    },
+    "public_dev_majority": {
+      "kind": "DETERMINISTIC_BASELINE",
+      "raw": {
+        "balanced_action_recall": 0.25,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": 1.0,
+        "conditional_valid_promotion_rate": 1.0,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 150,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "DEMOTE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "ESCALATE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "HOLD": {
+            "ALLOW": 134,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          }
+        },
+        "decision_coverage": 1.0,
+        "end_to_end_false_promotion_rate": 1.0,
+        "end_to_end_valid_promotion_rate": 1.0,
+        "instances": 300,
+        "item_accuracy": 0.5,
+        "macro_f1": 0.16666666666666666,
+        "pair_accuracy": 0.0,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 150,
+            "f1": 0.6666666666666666,
+            "precision": 0.5,
+            "recall": 1.0,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.5,
+            "pair_accuracy": 0.0
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.3333333333333333,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.3333333333333333,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.25,
+              "low": 0.25,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.5,
+              "low": 0.5,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.0,
+              "low": 0.0,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.5,
+              "low": 0.5,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.0,
+              "low": 0.0,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      }
+    },
+    "public_dev_stratified_prior": {
+      "kind": "DETERMINISTIC_BASELINE",
+      "raw": {
+        "balanced_action_recall": 0.21388059701492537,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": 0.5466666666666666,
+        "conditional_valid_promotion_rate": 0.46,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 69,
+            "DEMOTE": 2,
+            "ESCALATE": 3,
+            "HOLD": 76,
+            "NO_DECISION": 0
+          },
+          "DEMOTE": {
+            "ALLOW": 6,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 2,
+            "NO_DECISION": 0
+          },
+          "ESCALATE": {
+            "ALLOW": 3,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 5,
+            "NO_DECISION": 0
+          },
+          "HOLD": {
+            "ALLOW": 73,
+            "DEMOTE": 2,
+            "ESCALATE": 6,
+            "HOLD": 53,
+            "NO_DECISION": 0
+          }
+        },
+        "decision_coverage": 1.0,
+        "end_to_end_false_promotion_rate": 0.5466666666666666,
+        "end_to_end_valid_promotion_rate": 0.46,
+        "instances": 300,
+        "item_accuracy": 0.4066666666666667,
+        "macro_f1": 0.21276608834748367,
+        "pair_accuracy": 0.18,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 69,
+            "f1": 0.45847176079734214,
+            "precision": 0.45695364238410596,
+            "recall": 0.46,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 53,
+            "f1": 0.3925925925925926,
+            "precision": 0.3897058823529412,
+            "recall": 0.39552238805970147,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.5138908286778398,
+              "low": 0.30379512423816224,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.3,
+              "low": 0.08064516129032258,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.4675324675324675,
+              "low": 0.34639235831318826,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.24161073825503357,
+              "low": 0.12,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.40758928571428565,
+            "pair_accuracy": 0.18214285714285713
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.3125,
+              "item_accuracy": 0.3125,
+              "pair_accuracy": 0.125
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.125
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.5625,
+              "item_accuracy": 0.5625,
+              "pair_accuracy": 0.25
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.1875,
+              "item_accuracy": 0.1875,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.1875,
+              "item_accuracy": 0.1875,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.42857142857142855,
+              "item_accuracy": 0.42857142857142855,
+              "pair_accuracy": 0.2857142857142857
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.3571428571428571,
+              "item_accuracy": 0.35714285714285715,
+              "pair_accuracy": 0.14285714285714285
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.3571428571428571,
+              "item_accuracy": 0.35714285714285715,
+              "pair_accuracy": 0.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.21428571428571427,
+              "item_accuracy": 0.21428571428571427,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.42857142857142855,
+              "item_accuracy": 0.42857142857142855,
+              "pair_accuracy": 0.2857142857142857
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.42857142857142855,
+              "item_accuracy": 0.42857142857142855,
+              "pair_accuracy": 0.2857142857142857
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.42857142857142855
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.375,
+              "item_accuracy": 0.375,
+              "pair_accuracy": 0.125
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.4375,
+              "item_accuracy": 0.4375,
+              "pair_accuracy": 0.125
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.625,
+              "item_accuracy": 0.625,
+              "pair_accuracy": 0.375
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.25
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.5714285714285714,
+              "item_accuracy": 0.5714285714285714,
+              "pair_accuracy": 0.42857142857142855
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.6428571428571428,
+              "item_accuracy": 0.6428571428571429,
+              "pair_accuracy": 0.2857142857142857
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.25,
+              "item_accuracy": 0.25,
+              "pair_accuracy": 0.125
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.2857142857142857,
+              "item_accuracy": 0.2857142857142857,
+              "pair_accuracy": 0.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.21716409568522244,
+              "item_accuracy": 0.4119718309859155,
+              "pair_accuracy": 0.18309859154929578
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.21188240554437737,
+              "item_accuracy": 0.4014084507042254,
+              "pair_accuracy": 0.18309859154929578
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.2098982785602504,
+              "item_accuracy": 0.397887323943662,
+              "pair_accuracy": 0.176056338028169
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.2867703734846892,
+              "item_accuracy": 0.41901408450704225,
+              "pair_accuracy": 0.19014084507042253
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.2867703734846892,
+              "item_accuracy": 0.41901408450704225,
+              "pair_accuracy": 0.19014084507042253
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.2138098122350091,
+              "item_accuracy": 0.40559440559440557,
+              "pair_accuracy": 0.17482517482517482
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.21555806398326083,
+              "item_accuracy": 0.4090909090909091,
+              "pair_accuracy": 0.18181818181818182
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.21577831617201698,
+              "item_accuracy": 0.4090909090909091,
+              "pair_accuracy": 0.1888111888111888
+            },
+            "domain": {
+              "balanced_action_recall": 0.21949507185727657,
+              "item_accuracy": 0.4160839160839161,
+              "pair_accuracy": 0.1888111888111888
+            },
+            "precision": {
+              "balanced_action_recall": 0.21358956004625296,
+              "item_accuracy": 0.40559440559440557,
+              "pair_accuracy": 0.17482517482517482
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.2138098122350091,
+              "item_accuracy": 0.40559440559440557,
+              "pair_accuracy": 0.17482517482517482
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.2118413082980012,
+              "item_accuracy": 0.4020979020979021,
+              "pair_accuracy": 0.16783216783216784
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.21585065951263133,
+              "item_accuracy": 0.4084507042253521,
+              "pair_accuracy": 0.18309859154929578
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.21341940532081377,
+              "item_accuracy": 0.40492957746478875,
+              "pair_accuracy": 0.18309859154929578
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.2081377151799687,
+              "item_accuracy": 0.39436619718309857,
+              "pair_accuracy": 0.16901408450704225
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.21165884194053208,
+              "item_accuracy": 0.4014084507042254,
+              "pair_accuracy": 0.176056338028169
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.2103133087385056,
+              "item_accuracy": 0.3986013986013986,
+              "pair_accuracy": 0.16783216783216784
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.2083448048014977,
+              "item_accuracy": 0.3951048951048951,
+              "pair_accuracy": 0.17482517482517482
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.2191482226693494,
+              "item_accuracy": 0.4154929577464789,
+              "pair_accuracy": 0.18309859154929578
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.21774682010902485,
+              "item_accuracy": 0.4125874125874126,
+              "pair_accuracy": 0.1888111888111888
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.24127052238805966,
+              "low": 0.18669154228855722,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.46,
+              "low": 0.3566666666666667,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.24,
+              "low": 0.12666666666666668,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.5138908286778398,
+              "low": 0.30379512423816224,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.3,
+              "low": 0.08064516129032258,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.4760047619047618,
+              "low": 0.34471990871447394,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.25694940476190464,
+              "low": 0.1111111111111111,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      }
+    },
+    "public_dev_text_nb": {
+      "kind": "DETERMINISTIC_BASELINE",
+      "raw": {
+        "balanced_action_recall": 0.3283582089552239,
+        "balanced_action_recall_supported_classes": 4,
+        "conditional_false_promotion_rate": 0.2733333333333333,
+        "conditional_valid_promotion_rate": 0.5,
+        "confusion": {
+          "ALLOW": {
+            "ALLOW": 75,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 75,
+            "NO_DECISION": 0
+          },
+          "DEMOTE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "ESCALATE": {
+            "ALLOW": 8,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 0,
+            "NO_DECISION": 0
+          },
+          "HOLD": {
+            "ALLOW": 25,
+            "DEMOTE": 0,
+            "ESCALATE": 0,
+            "HOLD": 109,
+            "NO_DECISION": 0
+          }
+        },
+        "decision_coverage": 1.0,
+        "end_to_end_false_promotion_rate": 0.2733333333333333,
+        "end_to_end_valid_promotion_rate": 0.5,
+        "instances": 300,
+        "item_accuracy": 0.6133333333333333,
+        "macro_f1": 0.3123610914077647,
+        "pair_accuracy": 0.22666666666666666,
+        "pairs": 150,
+        "per_action": {
+          "ALLOW": {
+            "correct": 75,
+            "f1": 0.5639097744360902,
+            "precision": 0.646551724137931,
+            "recall": 0.5,
+            "support": 150
+          },
+          "DEMOTE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "ESCALATE": {
+            "correct": 0,
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 8
+          },
+          "HOLD": {
+            "correct": 109,
+            "f1": 0.6855345911949686,
+            "precision": 0.592391304347826,
+            "recall": 0.8134328358208955,
+            "support": 134
+          }
+        },
+        "structured_sensitivity": {
+          "crossed_factor_template_multiway_bootstrap_95pct": {
+            "item_accuracy": {
+              "high": 0.7133897591590977,
+              "low": 0.533017572050591,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            },
+            "pair_accuracy": {
+              "high": 0.4267795183181957,
+              "low": 0.06603514410118183,
+              "replicates": 10000,
+              "resampling_unit": "crossed_factor_by_template_product_weights"
+            }
+          },
+          "factor_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 20,
+              "high": 0.6959459459459459,
+              "low": 0.5392156862745098,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            },
+            "pair_accuracy": {
+              "clusters": 20,
+              "high": 0.3918918918918919,
+              "low": 0.0784313725490196,
+              "replicates": 10000,
+              "resampling_unit": "factor_id"
+            }
+          },
+          "factor_template_macro": {
+            "item_accuracy": 0.6125,
+            "pair_accuracy": 0.225
+          },
+          "factor_template_metrics": {
+            "age": {
+              "balanced_action_recall": 0.625,
+              "item_accuracy": 0.625,
+              "pair_accuracy": 0.25
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "cold_start": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.8571428571428572,
+              "item_accuracy": 0.8571428571428571,
+              "pair_accuracy": 0.7142857142857143
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 1.0,
+              "item_accuracy": 1.0,
+              "pair_accuracy": 1.0
+            },
+            "domain": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "precision": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.9375,
+              "item_accuracy": 0.9375,
+              "pair_accuracy": 0.875
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.6875,
+              "item_accuracy": 0.6875,
+              "pair_accuracy": 0.375
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.6428571428571428,
+              "item_accuracy": 0.6428571428571429,
+              "pair_accuracy": 0.2857142857142857
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.5,
+              "item_accuracy": 0.5,
+              "pair_accuracy": 0.0
+            }
+          },
+          "interval_interpretation": "Benchmark-composition sensitivity only; not model sampling reliability or naturalistic generalization.",
+          "leave_one_factor_template_out": {
+            "age": {
+              "balanced_action_recall": 0.3289179521573888,
+              "item_accuracy": 0.6126760563380281,
+              "pair_accuracy": 0.22535211267605634
+            },
+            "claim_identity": {
+              "balanced_action_recall": 0.33243907891795216,
+              "item_accuracy": 0.6197183098591549,
+              "pair_accuracy": 0.23943661971830985
+            },
+            "cold_start": {
+              "balanced_action_recall": 0.31835457187569866,
+              "item_accuracy": 0.5915492957746479,
+              "pair_accuracy": 0.18309859154929578
+            },
+            "contradiction": {
+              "balanced_action_recall": 0.42842127391212953,
+              "item_accuracy": 0.6197183098591549,
+              "pair_accuracy": 0.23943661971830985
+            },
+            "current_binding": {
+              "balanced_action_recall": 0.42842127391212953,
+              "item_accuracy": 0.6197183098591549,
+              "pair_accuracy": 0.23943661971830985
+            },
+            "dependency_statement": {
+              "balanced_action_recall": 0.3334480480149772,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            },
+            "dependency_verifier": {
+              "balanced_action_recall": 0.3236055283299378,
+              "item_accuracy": 0.6013986013986014,
+              "pair_accuracy": 0.20279720279720279
+            },
+            "direct_dependency": {
+              "balanced_action_recall": 0.31966852045592203,
+              "item_accuracy": 0.5944055944055944,
+              "pair_accuracy": 0.1888111888111888
+            },
+            "domain": {
+              "balanced_action_recall": 0.3319062826936843,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            },
+            "precision": {
+              "balanced_action_recall": 0.3319062826936843,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            },
+            "preregistration": {
+              "balanced_action_recall": 0.3319062826936843,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            },
+            "repetitions": {
+              "balanced_action_recall": 0.3319062826936843,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            },
+            "review_environment": {
+              "balanced_action_recall": 0.3342275877487145,
+              "item_accuracy": 0.6197183098591549,
+              "pair_accuracy": 0.23943661971830985
+            },
+            "reviewer_identity": {
+              "balanced_action_recall": 0.32033869885982563,
+              "item_accuracy": 0.5950704225352113,
+              "pair_accuracy": 0.19014084507042253
+            },
+            "run_completion": {
+              "balanced_action_recall": 0.3271573887771071,
+              "item_accuracy": 0.6091549295774648,
+              "pair_accuracy": 0.21830985915492956
+            },
+            "statement_identity": {
+              "balanced_action_recall": 0.33243907891795216,
+              "item_accuracy": 0.6197183098591549,
+              "pair_accuracy": 0.23943661971830985
+            },
+            "tool_exit": {
+              "balanced_action_recall": 0.3284097791971808,
+              "item_accuracy": 0.6118881118881119,
+              "pair_accuracy": 0.22377622377622378
+            },
+            "transitive_dependency": {
+              "balanced_action_recall": 0.3334480480149772,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            },
+            "trust_base": {
+              "balanced_action_recall": 0.33243907891795216,
+              "item_accuracy": 0.6197183098591549,
+              "pair_accuracy": 0.23943661971830985
+            },
+            "verifier_execution": {
+              "balanced_action_recall": 0.3319062826936843,
+              "item_accuracy": 0.6188811188811189,
+              "pair_accuracy": 0.23776223776223776
+            }
+          },
+          "pair_cluster_stratified_bootstrap_95pct": {
+            "balanced_action_recall": {
+              "high": 0.33728855721393036,
+              "low": 0.3194278606965174,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "item_accuracy": {
+              "high": 0.63,
+              "low": 0.5966666666666667,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            },
+            "pair_accuracy": {
+              "high": 0.26,
+              "low": 0.19333333333333333,
+              "replicates": 10000,
+              "resampling_unit": "pair_stratified_within_each_registered_factor_template"
+            }
+          },
+          "robust_composition_envelope_95pct": {
+            "item_accuracy": {
+              "high": 0.7133897591590977,
+              "low": 0.533017572050591,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            },
+            "pair_accuracy": {
+              "high": 0.4267795183181957,
+              "low": 0.06603514410118183,
+              "selection_rule": "outer_envelope_across_all_preregistered_composition_resamples"
+            }
+          },
+          "template_cluster_bootstrap_95pct": {
+            "item_accuracy": {
+              "clusters": 27,
+              "high": 0.6494260682158921,
+              "low": 0.5731683864915572,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            },
+            "pair_accuracy": {
+              "clusters": 27,
+              "high": 0.2988521364317841,
+              "low": 0.14633677298311445,
+              "replicates": 10000,
+              "resampling_unit": "template_id"
+            }
+          }
+        }
+      }
+    }
+  },
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"
+}

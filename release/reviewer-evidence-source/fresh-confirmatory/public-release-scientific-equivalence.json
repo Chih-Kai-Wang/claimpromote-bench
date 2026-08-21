@@ -1,0 +1,17 @@
+{
+  "equivalence_receipt_sha256": "sha256:0248046fc1e7b666bca8785937f5f5d1770a116fe1bd319272dc447013a68c04",
+  "hidden_reasoning_present_in_public_release": false,
+  "public_analysis_file_sha256": "sha256:ed208b5a70f866249cecdf3cac2e7ac211a8f2fd02a39f8c7bb69c6ab5eeeef8",
+  "public_analysis_sha256": "sha256:726f3c5737f78c41434093b3f23e1d8da9949c7cbb4a6673bc681937fa6db9bf",
+  "public_provider_envelopes_allowlisted": true,
+  "redaction_receipt_sha256": "sha256:c2ce7ee6a1b7878049bf70ca402f1d931076bcff58f492328dfee13a908b4bf8",
+  "redaction_rule_sha256": "sha256:8ff030f2e099a898eac488a58ea98a5de9335b07f1b917715ad6fde0ade76bcc",
+  "schema_version": "1.1.0",
+  "scientific_analysis_payload_byte_identical": true,
+  "scientific_analysis_payload_sha256": "sha256:d3e8dc28ee6d55e41397339dbbbdd27f9394c4686ccc7843a8aac34c0dc63cae",
+  "source_analysis_file_sha256": "sha256:625402d1027fd60ad99eef56aedb238804a5fda75fd649c410e5f1f9ca151a7e",
+  "source_analysis_sha256": "sha256:43c4601859cb613d755970c3663a72067897cbcc0506c1221e58801b4a08a261",
+  "source_c2_receipt_self_digest": "sha256:1e5219507584b788864cd5244b24009ff47174ca401bc60be7dde7c6a0f6d42a",
+  "source_to_derived_row_hashes_verified": true,
+  "status": "POST_C2_PUBLIC_RELEASE_SCIENTIFIC_EQUIVALENCE_PASS"
+}

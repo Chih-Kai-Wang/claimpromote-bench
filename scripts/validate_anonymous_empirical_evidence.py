@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from collections import Counter
 from copy import deepcopy
 from pathlib import Path
@@ -19,6 +20,7 @@ from aggregate_capable_hidden_study import (
     correctness_vector,
     pilot_excluded_summary,
 )
+from analyze_confirmatory_hidden_study import analyze as analyze_fresh_confirmatory
 from analyze_stronger_model_study import analyze as analyze_stronger_run
 
 from claimpromotebench.dataset import validate_with_schema
@@ -534,10 +536,18 @@ def diagnose_capable_content(
 
 def reject_hidden_reasoning(value: Any, label: str) -> None:
     if isinstance(value, dict):
-        forbidden = {"reasoning_content", "thought", "thoughts", "thinking_content"}
+        forbidden = {
+            "reasoning_content",
+            "thinking",
+            "thinking_content",
+            "thought",
+            "thoughts",
+        }
         overlap = forbidden & set(value)
         if overlap:
             fail(f"{label}: hidden reasoning fields survived: {sorted(overlap)}")
+        if str(value.get("type", "")).lower() in {"reasoning", "thinking"}:
+            fail(f"{label}: hidden reasoning content block survived")
         for child in value.values():
             reject_hidden_reasoning(child, label)
     elif isinstance(value, list):
@@ -985,6 +995,220 @@ def validate_capable_hidden() -> Json:
     }
 
 
+def _fresh_scientific_projection(value: Json) -> Json:
+    projected = deepcopy(value)
+    projected.pop("aggregate_sha256", None)
+    projected.pop("source_identity", None)
+    scores = projected.get("scores")
+    if isinstance(scores, dict):
+        for score in scores.values():
+            if isinstance(score, dict):
+                score.pop("run_sha256", None)
+    return projected
+
+
+def validate_fresh_confirmatory() -> Json:
+    root = EVIDENCE / "fresh-confirmatory"
+    manifest_path = root / "MANIFEST.json"
+    manifest = load_json(manifest_path)
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        fail("fresh confirmatory evidence manifest is malformed")
+    manifest_payload = deepcopy(manifest)
+    observed_manifest_sha = manifest_payload.pop("manifest_sha256", None)
+    if observed_manifest_sha != sha256_text(canonical_json(manifest_payload)):
+        fail("fresh confirmatory evidence manifest self-digest changed")
+    actual_files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path != manifest_path
+    }
+    if manifest["files"] != actual_files or manifest.get("file_count") != len(actual_files):
+        fail("fresh confirmatory evidence manifest coverage changed")
+
+    dataset = root / "dataset"
+    dataset_manifest = load_json(dataset / "manifest.json")
+    if not isinstance(dataset_manifest, dict) or not isinstance(
+        dataset_manifest.get("files"), dict
+    ):
+        fail("fresh confirmatory dataset manifest is malformed")
+    for relative, expected in dataset_manifest["files"].items():
+        path = dataset / relative
+        if not path.is_file() or sha256_file(path) != expected:
+            fail(f"fresh confirmatory dataset file digest changed: {relative}")
+
+    inputs = load_jsonl(dataset / "inputs.jsonl")
+    gold = load_jsonl(dataset / "gold.jsonl")
+    pairs = load_json(dataset / "pairs.json")
+    if not isinstance(pairs, list):
+        fail("fresh confirmatory pair file is malformed")
+    input_ids = {str(row["id"]) for row in inputs}
+    gold_ids = {str(row["id"]) for row in gold}
+    pair_ids = {str(row["pair_id"]) for row in pairs}
+    if len(input_ids) != 300 or input_ids != gold_ids or len(pair_ids) != 150:
+        fail("fresh confirmatory dataset coverage changed")
+    if any(not re.fullmatch(r"v1-test-cfo-\d{3}-[ab]", item_id) for item_id in input_ids):
+        fail("fresh confirmatory item namespace differs from released cfo IDs")
+    if any(not re.fullmatch(r"v1-test-cfo-\d{3}", pair_id) for pair_id in pair_ids):
+        fail("fresh confirmatory pair namespace differs from released cfo IDs")
+
+    correction = load_json(root / "frozen-manifest-metadata-correction.json")
+    if not isinstance(correction, dict):
+        fail("fresh confirmatory frozen-manifest correction is malformed")
+    correction_payload = deepcopy(correction)
+    observed_correction_sha = correction_payload.pop("self_digest", None)
+    if observed_correction_sha != sha256_text(canonical_json(correction_payload)):
+        fail("fresh confirmatory frozen-manifest correction self-digest changed")
+    if (
+        correction.get("source_manifest_sha256") != sha256_file(dataset / "manifest.json")
+        or correction.get("coverage_check", {}).get("item_ids_matching_observed_pattern") != 300
+        or correction.get("coverage_check", {}).get("pair_ids_matching_observed_pattern") != 150
+        or correction.get("scientific_impact") != "NONE"
+    ):
+        fail("fresh confirmatory frozen-manifest correction does not match the dataset")
+
+    c2 = load_json(root / "c2-receipt-review.json")
+    if not isinstance(c2, dict) or (
+        c2.get("analysis_executed_before_receipt") is not False
+        or c2.get("gold_loaded_before_receipt") is not False
+        or c2.get("contains_gold_labels") is not False
+        or c2.get("planned_cells") != 600
+        or c2.get("sealed_cells") != 600
+        or c2.get("outcome_counts") != {"RESPONSE_RECORDED": 600}
+    ):
+        fail("fresh confirmatory anonymous C2 receipt changed")
+
+    expected_lanes = {
+        "opencode-go-deepseek-v4-flash-matched",
+        "opencode-go-qwen3.7-max",
+    }
+    lane_files = manifest.get("lane_files")
+    if not isinstance(lane_files, dict) or set(lane_files) != expected_lanes:
+        fail("fresh confirmatory lane manifest changed")
+    rows_by_lane: dict[str, list[Json]] = {}
+    run_paths: list[Path] = []
+    for lane_id, relative in sorted(lane_files.items()):
+        path = root / str(relative)
+        rows = load_jsonl(path)
+        run_paths.append(path)
+        if (
+            len(rows) != 300
+            or {str(row.get("lane_id")) for row in rows} != {lane_id}
+            or {str(row.get("item_id")) for row in rows} != input_ids
+        ):
+            fail(f"fresh confirmatory projected run coverage changed: {lane_id}")
+        for row in rows:
+            reject_hidden_reasoning(row, f"fresh confirmatory {lane_id}")
+            if row.get("application_post_count") != 1 or row.get("client_retry_count") != 0:
+                fail(f"fresh confirmatory request accounting changed: {lane_id}")
+            if row.get("redirect_followed") is not False:
+                fail(f"fresh confirmatory redirect boundary changed: {lane_id}")
+            raw_text = row.get("raw_final_text")
+            raw_sha = row.get("raw_final_text_sha256")
+            if raw_text is None:
+                if raw_sha is not None:
+                    fail(f"fresh confirmatory null final text has a digest: {lane_id}")
+            elif raw_sha != sha256_text(str(raw_text)):
+                fail(f"fresh confirmatory final-text digest changed: {lane_id}")
+        rows_by_lane[lane_id] = rows
+
+    qwen_id = "opencode-go-qwen3.7-max"
+    flash_id = "opencode-go-deepseek-v4-flash-matched"
+    qwen = rows_by_lane[qwen_id]
+    flash = rows_by_lane[flash_id]
+    if Counter(str(row.get("parse_status")) for row in qwen) != Counter(
+        {"OK": 272, "HTTP_ERROR": 15, "TRANSPORT_ERROR": 10, "SEMANTIC_ERROR": 3}
+    ):
+        fail("fresh confirmatory Qwen parser-status distribution changed")
+    if Counter(row.get("http_status") for row in qwen) != Counter(
+        {200: 275, 500: 14, 503: 1, None: 10}
+    ):
+        fail("fresh confirmatory Qwen HTTP-status distribution changed")
+    if Counter(str(row.get("parse_status")) for row in flash) != Counter({"HTTP_ERROR": 300}):
+        fail("fresh confirmatory Flash parser-status distribution changed")
+    if Counter(row.get("http_status") for row in flash) != Counter({401: 300}):
+        fail("fresh confirmatory Flash HTTP-status distribution changed")
+    qwen_usage = [
+        row["usage"]
+        for row in qwen
+        if isinstance(row.get("usage"), dict) and isinstance(row["usage"].get("input_tokens"), int)
+    ]
+    if (
+        len(qwen_usage) != 275
+        or sum(int(row.get("input_tokens", 0)) for row in qwen_usage) != 662053
+        or sum(int(row.get("output_tokens", 0)) for row in qwen_usage) != 613618
+        or sum(int(row.get("output_tokens", 0)) > 1536 for row in qwen_usage) != 261
+    ):
+        fail("fresh confirmatory Qwen provider-reported usage changed")
+
+    plan = load_json(root / "study-plan.json")
+    packet = load_json(root / "prompt-packet.json")
+    baselines = load_json(root / "baselines.json")
+    reported = load_json(root / "reported-analysis.json")
+    if not all(isinstance(value, dict) for value in (plan, packet, baselines, reported)):
+        fail("fresh confirmatory plan, packet, baseline, or analysis is malformed")
+    recomputed = analyze_fresh_confirmatory(dataset, packet, plan, baselines, run_paths)
+    if not equivalent_json(
+        _fresh_scientific_projection(recomputed),
+        _fresh_scientific_projection(reported),
+    ):
+        fail("fresh confirmatory reported science differs from projected C2 records")
+
+    study_result = load_json(root / "study-result.json")
+    redaction = load_json(root / "redaction-receipt-review.json")
+    if not isinstance(study_result, dict) or not isinstance(redaction, dict):
+        fail("fresh confirmatory study result or redaction receipt is malformed")
+    qwen_score = recomputed["scores"][qwen_id]["raw"]
+    qwen_test = next(
+        row
+        for row in recomputed["confirmatory_item_correctness_tests"]["tests"]
+        if row["model_lane"] == qwen_id
+    )
+    qwen_summary = study_result.get("qwen_service_configuration", {})
+    flash_summary = study_result.get("deepseek_flash_service_configuration", {})
+    if (
+        not equivalent_json(
+            qwen_summary.get("end_to_end_item_accuracy"), qwen_score["item_accuracy"]
+        )
+        or not equivalent_json(
+            qwen_summary.get("end_to_end_pair_accuracy"), qwen_score["pair_accuracy"]
+        )
+        or not equivalent_json(
+            qwen_summary.get("decision_coverage"), qwen_score["decision_coverage"]
+        )
+        or qwen_score["per_action"]["DEMOTE"]["correct"] != 0
+        or not equivalent_json(
+            qwen_summary.get("superiority_test_vs_public_dev_text_nb", {}).get("holm_adjusted_p"),
+            qwen_test["holm_adjusted_p"],
+        )
+        or flash_summary.get("model_capability_interpretation") != "NON_EVALUABLE_NO_MODEL_OUTPUT"
+        or flash_summary.get("http_401_records") != 300
+    ):
+        fail("fresh confirmatory compact study result differs from recomputation")
+    if (
+        redaction.get("hidden_reasoning_present_in_public_release") is not False
+        or redaction.get("original_scored_artifacts_modified") is not False
+        or redaction.get("post_c2_transform") is not True
+        or redaction.get("public_provider_envelopes_allowlisted") is not True
+        or redaction.get("redacted_unique_model_item_cells") != 275
+        or redaction.get("removed_content_blocks_including_raw_and_c2_copies") != 550
+        or redaction.get("scientific_analysis_payload_byte_identical") is not True
+        or redaction.get("source_to_derived_row_hashes_verified_before_anonymization") is not True
+    ):
+        fail("fresh confirmatory anonymous redaction receipt changed")
+
+    return {
+        "c2_sealed_cells": c2["sealed_cells"],
+        "flash_http_401_records": 300,
+        "flash_model_efficacy": "NON_EVALUABLE",
+        "qwen_decision_coverage": qwen_score["decision_coverage"],
+        "qwen_demote_correct": qwen_score["per_action"]["DEMOTE"]["correct"],
+        "qwen_item_accuracy": qwen_score["item_accuracy"],
+        "qwen_pair_accuracy": qwen_score["pair_accuracy"],
+        "qwen_vs_public_dev_nb_holm_p": qwen_test["holm_adjusted_p"],
+        "redaction_status": redaction["status"],
+    }
+
+
 def main() -> int:
     result = {
         "status": "PASS",
@@ -992,6 +1216,7 @@ def main() -> int:
         "v2_public_pilot": validate_v2_public_pilot(),
         "gpt54_public_development": validate_gpt54_followup(),
         "capable_hidden": validate_capable_hidden(),
+        "fresh_confirmatory": validate_fresh_confirmatory(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0

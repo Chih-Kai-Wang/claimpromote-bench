@@ -1,0 +1,2260 @@
+[
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-001-b",
+    "member_ids": [
+      "v1-test-cfo-001-a",
+      "v1-test-cfo-001-b"
+    ],
+    "pair_id": "v1-test-cfo-001",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-001-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-002-a",
+    "member_ids": [
+      "v1-test-cfo-002-a",
+      "v1-test-cfo-002-b"
+    ],
+    "pair_id": "v1-test-cfo-002",
+    "template_id": "formal-logic-template-02",
+    "valid_id": "v1-test-cfo-002-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-003-a",
+    "member_ids": [
+      "v1-test-cfo-003-a",
+      "v1-test-cfo-003-b"
+    ],
+    "pair_id": "v1-test-cfo-003",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-003-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-004-a",
+    "member_ids": [
+      "v1-test-cfo-004-a",
+      "v1-test-cfo-004-b"
+    ],
+    "pair_id": "v1-test-cfo-004",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-004-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-005-a",
+    "member_ids": [
+      "v1-test-cfo-005-a",
+      "v1-test-cfo-005-b"
+    ],
+    "pair_id": "v1-test-cfo-005",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-005-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-006-a",
+    "member_ids": [
+      "v1-test-cfo-006-a",
+      "v1-test-cfo-006-b"
+    ],
+    "pair_id": "v1-test-cfo-006",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-006-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-007-b",
+    "member_ids": [
+      "v1-test-cfo-007-a",
+      "v1-test-cfo-007-b"
+    ],
+    "pair_id": "v1-test-cfo-007",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-007-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-008-b",
+    "member_ids": [
+      "v1-test-cfo-008-a",
+      "v1-test-cfo-008-b"
+    ],
+    "pair_id": "v1-test-cfo-008",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-008-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-009-b",
+    "member_ids": [
+      "v1-test-cfo-009-a",
+      "v1-test-cfo-009-b"
+    ],
+    "pair_id": "v1-test-cfo-009",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-009-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-010-a",
+    "member_ids": [
+      "v1-test-cfo-010-a",
+      "v1-test-cfo-010-b"
+    ],
+    "pair_id": "v1-test-cfo-010",
+    "template_id": "surface-profile-probability_bound",
+    "valid_id": "v1-test-cfo-010-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-011-b",
+    "member_ids": [
+      "v1-test-cfo-011-a",
+      "v1-test-cfo-011-b"
+    ],
+    "pair_id": "v1-test-cfo-011",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-011-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-012-a",
+    "member_ids": [
+      "v1-test-cfo-012-a",
+      "v1-test-cfo-012-b"
+    ],
+    "pair_id": "v1-test-cfo-012",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-012-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-013-a",
+    "member_ids": [
+      "v1-test-cfo-013-a",
+      "v1-test-cfo-013-b"
+    ],
+    "pair_id": "v1-test-cfo-013",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-013-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-014-b",
+    "member_ids": [
+      "v1-test-cfo-014-a",
+      "v1-test-cfo-014-b"
+    ],
+    "pair_id": "v1-test-cfo-014",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-014-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-015-b",
+    "member_ids": [
+      "v1-test-cfo-015-a",
+      "v1-test-cfo-015-b"
+    ],
+    "pair_id": "v1-test-cfo-015",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-015-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-016-a",
+    "member_ids": [
+      "v1-test-cfo-016-a",
+      "v1-test-cfo-016-b"
+    ],
+    "pair_id": "v1-test-cfo-016",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-016-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-017-b",
+    "member_ids": [
+      "v1-test-cfo-017-a",
+      "v1-test-cfo-017-b"
+    ],
+    "pair_id": "v1-test-cfo-017",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-017-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-018-a",
+    "member_ids": [
+      "v1-test-cfo-018-a",
+      "v1-test-cfo-018-b"
+    ],
+    "pair_id": "v1-test-cfo-018",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-018-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-019-a",
+    "member_ids": [
+      "v1-test-cfo-019-a",
+      "v1-test-cfo-019-b"
+    ],
+    "pair_id": "v1-test-cfo-019",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-019-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-020-b",
+    "member_ids": [
+      "v1-test-cfo-020-a",
+      "v1-test-cfo-020-b"
+    ],
+    "pair_id": "v1-test-cfo-020",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-020-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-021-b",
+    "member_ids": [
+      "v1-test-cfo-021-a",
+      "v1-test-cfo-021-b"
+    ],
+    "pair_id": "v1-test-cfo-021",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-021-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-022-b",
+    "member_ids": [
+      "v1-test-cfo-022-a",
+      "v1-test-cfo-022-b"
+    ],
+    "pair_id": "v1-test-cfo-022",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-022-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-023-b",
+    "member_ids": [
+      "v1-test-cfo-023-a",
+      "v1-test-cfo-023-b"
+    ],
+    "pair_id": "v1-test-cfo-023",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-023-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-024-a",
+    "member_ids": [
+      "v1-test-cfo-024-a",
+      "v1-test-cfo-024-b"
+    ],
+    "pair_id": "v1-test-cfo-024",
+    "template_id": "formal-logic-template-24",
+    "valid_id": "v1-test-cfo-024-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-025-b",
+    "member_ids": [
+      "v1-test-cfo-025-a",
+      "v1-test-cfo-025-b"
+    ],
+    "pair_id": "v1-test-cfo-025",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-025-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-026-b",
+    "member_ids": [
+      "v1-test-cfo-026-a",
+      "v1-test-cfo-026-b"
+    ],
+    "pair_id": "v1-test-cfo-026",
+    "template_id": "surface-profile-probability_bound",
+    "valid_id": "v1-test-cfo-026-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-027-b",
+    "member_ids": [
+      "v1-test-cfo-027-a",
+      "v1-test-cfo-027-b"
+    ],
+    "pair_id": "v1-test-cfo-027",
+    "template_id": "surface-profile-probability_bound",
+    "valid_id": "v1-test-cfo-027-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-028-b",
+    "member_ids": [
+      "v1-test-cfo-028-a",
+      "v1-test-cfo-028-b"
+    ],
+    "pair_id": "v1-test-cfo-028",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-028-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-029-a",
+    "member_ids": [
+      "v1-test-cfo-029-a",
+      "v1-test-cfo-029-b"
+    ],
+    "pair_id": "v1-test-cfo-029",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-029-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-030-b",
+    "member_ids": [
+      "v1-test-cfo-030-a",
+      "v1-test-cfo-030-b"
+    ],
+    "pair_id": "v1-test-cfo-030",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-030-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-031-a",
+    "member_ids": [
+      "v1-test-cfo-031-a",
+      "v1-test-cfo-031-b"
+    ],
+    "pair_id": "v1-test-cfo-031",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-031-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-032-b",
+    "member_ids": [
+      "v1-test-cfo-032-a",
+      "v1-test-cfo-032-b"
+    ],
+    "pair_id": "v1-test-cfo-032",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-032-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-033-a",
+    "member_ids": [
+      "v1-test-cfo-033-a",
+      "v1-test-cfo-033-b"
+    ],
+    "pair_id": "v1-test-cfo-033",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-033-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-034-a",
+    "member_ids": [
+      "v1-test-cfo-034-a",
+      "v1-test-cfo-034-b"
+    ],
+    "pair_id": "v1-test-cfo-034",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-034-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-035-b",
+    "member_ids": [
+      "v1-test-cfo-035-a",
+      "v1-test-cfo-035-b"
+    ],
+    "pair_id": "v1-test-cfo-035",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-035-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-036-a",
+    "member_ids": [
+      "v1-test-cfo-036-a",
+      "v1-test-cfo-036-b"
+    ],
+    "pair_id": "v1-test-cfo-036",
+    "template_id": "formal-logic-template-12",
+    "valid_id": "v1-test-cfo-036-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-037-a",
+    "member_ids": [
+      "v1-test-cfo-037-a",
+      "v1-test-cfo-037-b"
+    ],
+    "pair_id": "v1-test-cfo-037",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-037-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-038-b",
+    "member_ids": [
+      "v1-test-cfo-038-a",
+      "v1-test-cfo-038-b"
+    ],
+    "pair_id": "v1-test-cfo-038",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-038-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-039-b",
+    "member_ids": [
+      "v1-test-cfo-039-a",
+      "v1-test-cfo-039-b"
+    ],
+    "pair_id": "v1-test-cfo-039",
+    "template_id": "formal-logic-template-15",
+    "valid_id": "v1-test-cfo-039-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-040-a",
+    "member_ids": [
+      "v1-test-cfo-040-a",
+      "v1-test-cfo-040-b"
+    ],
+    "pair_id": "v1-test-cfo-040",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-040-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-041-a",
+    "member_ids": [
+      "v1-test-cfo-041-a",
+      "v1-test-cfo-041-b"
+    ],
+    "pair_id": "v1-test-cfo-041",
+    "template_id": "formal-logic-template-17",
+    "valid_id": "v1-test-cfo-041-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-042-a",
+    "member_ids": [
+      "v1-test-cfo-042-a",
+      "v1-test-cfo-042-b"
+    ],
+    "pair_id": "v1-test-cfo-042",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-042-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-043-b",
+    "member_ids": [
+      "v1-test-cfo-043-a",
+      "v1-test-cfo-043-b"
+    ],
+    "pair_id": "v1-test-cfo-043",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-043-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-044-b",
+    "member_ids": [
+      "v1-test-cfo-044-a",
+      "v1-test-cfo-044-b"
+    ],
+    "pair_id": "v1-test-cfo-044",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-044-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-045-a",
+    "member_ids": [
+      "v1-test-cfo-045-a",
+      "v1-test-cfo-045-b"
+    ],
+    "pair_id": "v1-test-cfo-045",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-045-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-046-a",
+    "member_ids": [
+      "v1-test-cfo-046-a",
+      "v1-test-cfo-046-b"
+    ],
+    "pair_id": "v1-test-cfo-046",
+    "template_id": "formal-logic-template-22",
+    "valid_id": "v1-test-cfo-046-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-047-a",
+    "member_ids": [
+      "v1-test-cfo-047-a",
+      "v1-test-cfo-047-b"
+    ],
+    "pair_id": "v1-test-cfo-047",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-047-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-048-a",
+    "member_ids": [
+      "v1-test-cfo-048-a",
+      "v1-test-cfo-048-b"
+    ],
+    "pair_id": "v1-test-cfo-048",
+    "template_id": "formal-logic-template-24",
+    "valid_id": "v1-test-cfo-048-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-049-b",
+    "member_ids": [
+      "v1-test-cfo-049-a",
+      "v1-test-cfo-049-b"
+    ],
+    "pair_id": "v1-test-cfo-049",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-049-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-050-b",
+    "member_ids": [
+      "v1-test-cfo-050-a",
+      "v1-test-cfo-050-b"
+    ],
+    "pair_id": "v1-test-cfo-050",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-050-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-051-b",
+    "member_ids": [
+      "v1-test-cfo-051-a",
+      "v1-test-cfo-051-b"
+    ],
+    "pair_id": "v1-test-cfo-051",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-051-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-052-a",
+    "member_ids": [
+      "v1-test-cfo-052-a",
+      "v1-test-cfo-052-b"
+    ],
+    "pair_id": "v1-test-cfo-052",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-052-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-053-a",
+    "member_ids": [
+      "v1-test-cfo-053-a",
+      "v1-test-cfo-053-b"
+    ],
+    "pair_id": "v1-test-cfo-053",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-053-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-054-b",
+    "member_ids": [
+      "v1-test-cfo-054-a",
+      "v1-test-cfo-054-b"
+    ],
+    "pair_id": "v1-test-cfo-054",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-054-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-055-b",
+    "member_ids": [
+      "v1-test-cfo-055-a",
+      "v1-test-cfo-055-b"
+    ],
+    "pair_id": "v1-test-cfo-055",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-055-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-056-a",
+    "member_ids": [
+      "v1-test-cfo-056-a",
+      "v1-test-cfo-056-b"
+    ],
+    "pair_id": "v1-test-cfo-056",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-056-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-057-b",
+    "member_ids": [
+      "v1-test-cfo-057-a",
+      "v1-test-cfo-057-b"
+    ],
+    "pair_id": "v1-test-cfo-057",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-057-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-058-b",
+    "member_ids": [
+      "v1-test-cfo-058-a",
+      "v1-test-cfo-058-b"
+    ],
+    "pair_id": "v1-test-cfo-058",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-058-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-059-b",
+    "member_ids": [
+      "v1-test-cfo-059-a",
+      "v1-test-cfo-059-b"
+    ],
+    "pair_id": "v1-test-cfo-059",
+    "template_id": "surface-profile-probability_bound",
+    "valid_id": "v1-test-cfo-059-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-060-b",
+    "member_ids": [
+      "v1-test-cfo-060-a",
+      "v1-test-cfo-060-b"
+    ],
+    "pair_id": "v1-test-cfo-060",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-060-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-061-b",
+    "member_ids": [
+      "v1-test-cfo-061-a",
+      "v1-test-cfo-061-b"
+    ],
+    "pair_id": "v1-test-cfo-061",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-061-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-062-a",
+    "member_ids": [
+      "v1-test-cfo-062-a",
+      "v1-test-cfo-062-b"
+    ],
+    "pair_id": "v1-test-cfo-062",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-062-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-063-a",
+    "member_ids": [
+      "v1-test-cfo-063-a",
+      "v1-test-cfo-063-b"
+    ],
+    "pair_id": "v1-test-cfo-063",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-063-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-064-a",
+    "member_ids": [
+      "v1-test-cfo-064-a",
+      "v1-test-cfo-064-b"
+    ],
+    "pair_id": "v1-test-cfo-064",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-064-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-065-a",
+    "member_ids": [
+      "v1-test-cfo-065-a",
+      "v1-test-cfo-065-b"
+    ],
+    "pair_id": "v1-test-cfo-065",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-065-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-066-a",
+    "member_ids": [
+      "v1-test-cfo-066-a",
+      "v1-test-cfo-066-b"
+    ],
+    "pair_id": "v1-test-cfo-066",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-066-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-067-a",
+    "member_ids": [
+      "v1-test-cfo-067-a",
+      "v1-test-cfo-067-b"
+    ],
+    "pair_id": "v1-test-cfo-067",
+    "template_id": "formal-logic-template-19",
+    "valid_id": "v1-test-cfo-067-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-068-b",
+    "member_ids": [
+      "v1-test-cfo-068-a",
+      "v1-test-cfo-068-b"
+    ],
+    "pair_id": "v1-test-cfo-068",
+    "template_id": "formal-logic-template-20",
+    "valid_id": "v1-test-cfo-068-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-069-b",
+    "member_ids": [
+      "v1-test-cfo-069-a",
+      "v1-test-cfo-069-b"
+    ],
+    "pair_id": "v1-test-cfo-069",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-069-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-070-a",
+    "member_ids": [
+      "v1-test-cfo-070-a",
+      "v1-test-cfo-070-b"
+    ],
+    "pair_id": "v1-test-cfo-070",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-070-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-071-b",
+    "member_ids": [
+      "v1-test-cfo-071-a",
+      "v1-test-cfo-071-b"
+    ],
+    "pair_id": "v1-test-cfo-071",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-071-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-072-a",
+    "member_ids": [
+      "v1-test-cfo-072-a",
+      "v1-test-cfo-072-b"
+    ],
+    "pair_id": "v1-test-cfo-072",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-072-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-073-a",
+    "member_ids": [
+      "v1-test-cfo-073-a",
+      "v1-test-cfo-073-b"
+    ],
+    "pair_id": "v1-test-cfo-073",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-073-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-074-a",
+    "member_ids": [
+      "v1-test-cfo-074-a",
+      "v1-test-cfo-074-b"
+    ],
+    "pair_id": "v1-test-cfo-074",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-074-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-075-a",
+    "member_ids": [
+      "v1-test-cfo-075-a",
+      "v1-test-cfo-075-b"
+    ],
+    "pair_id": "v1-test-cfo-075",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-075-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-076-b",
+    "member_ids": [
+      "v1-test-cfo-076-a",
+      "v1-test-cfo-076-b"
+    ],
+    "pair_id": "v1-test-cfo-076",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-076-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-077-a",
+    "member_ids": [
+      "v1-test-cfo-077-a",
+      "v1-test-cfo-077-b"
+    ],
+    "pair_id": "v1-test-cfo-077",
+    "template_id": "surface-profile-probability_bound",
+    "valid_id": "v1-test-cfo-077-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-078-a",
+    "member_ids": [
+      "v1-test-cfo-078-a",
+      "v1-test-cfo-078-b"
+    ],
+    "pair_id": "v1-test-cfo-078",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-078-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-079-a",
+    "member_ids": [
+      "v1-test-cfo-079-a",
+      "v1-test-cfo-079-b"
+    ],
+    "pair_id": "v1-test-cfo-079",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-079-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/actor_id"
+    ],
+    "factor_id": "reviewer_identity",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-080-b",
+    "member_ids": [
+      "v1-test-cfo-080-a",
+      "v1-test-cfo-080-b"
+    ],
+    "pair_id": "v1-test-cfo-080",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-080-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-081-a",
+    "member_ids": [
+      "v1-test-cfo-081-a",
+      "v1-test-cfo-081-b"
+    ],
+    "pair_id": "v1-test-cfo-081",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-081-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-082-a",
+    "member_ids": [
+      "v1-test-cfo-082-a",
+      "v1-test-cfo-082-b"
+    ],
+    "pair_id": "v1-test-cfo-082",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-082-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-083-a",
+    "member_ids": [
+      "v1-test-cfo-083-a",
+      "v1-test-cfo-083-b"
+    ],
+    "pair_id": "v1-test-cfo-083",
+    "template_id": "formal-logic-template-11",
+    "valid_id": "v1-test-cfo-083-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-084-b",
+    "member_ids": [
+      "v1-test-cfo-084-a",
+      "v1-test-cfo-084-b"
+    ],
+    "pair_id": "v1-test-cfo-084",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-084-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-085-a",
+    "member_ids": [
+      "v1-test-cfo-085-a",
+      "v1-test-cfo-085-b"
+    ],
+    "pair_id": "v1-test-cfo-085",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-085-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-086-b",
+    "member_ids": [
+      "v1-test-cfo-086-a",
+      "v1-test-cfo-086-b"
+    ],
+    "pair_id": "v1-test-cfo-086",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-086-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-087-b",
+    "member_ids": [
+      "v1-test-cfo-087-a",
+      "v1-test-cfo-087-b"
+    ],
+    "pair_id": "v1-test-cfo-087",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-087-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-088-a",
+    "member_ids": [
+      "v1-test-cfo-088-a",
+      "v1-test-cfo-088-b"
+    ],
+    "pair_id": "v1-test-cfo-088",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-088-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/contradiction_status"
+    ],
+    "factor_id": "contradiction",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-089-b",
+    "member_ids": [
+      "v1-test-cfo-089-a",
+      "v1-test-cfo-089-b"
+    ],
+    "pair_id": "v1-test-cfo-089",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-089-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-090-a",
+    "member_ids": [
+      "v1-test-cfo-090-a",
+      "v1-test-cfo-090-b"
+    ],
+    "pair_id": "v1-test-cfo-090",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-090-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-091-a",
+    "member_ids": [
+      "v1-test-cfo-091-a",
+      "v1-test-cfo-091-b"
+    ],
+    "pair_id": "v1-test-cfo-091",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-091-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-092-b",
+    "member_ids": [
+      "v1-test-cfo-092-a",
+      "v1-test-cfo-092-b"
+    ],
+    "pair_id": "v1-test-cfo-092",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-092-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-093-b",
+    "member_ids": [
+      "v1-test-cfo-093-a",
+      "v1-test-cfo-093-b"
+    ],
+    "pair_id": "v1-test-cfo-093",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-093-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-094-b",
+    "member_ids": [
+      "v1-test-cfo-094-a",
+      "v1-test-cfo-094-b"
+    ],
+    "pair_id": "v1-test-cfo-094",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-094-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-095-b",
+    "member_ids": [
+      "v1-test-cfo-095-a",
+      "v1-test-cfo-095-b"
+    ],
+    "pair_id": "v1-test-cfo-095",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-095-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-096-b",
+    "member_ids": [
+      "v1-test-cfo-096-a",
+      "v1-test-cfo-096-b"
+    ],
+    "pair_id": "v1-test-cfo-096",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-096-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-097-a",
+    "member_ids": [
+      "v1-test-cfo-097-a",
+      "v1-test-cfo-097-b"
+    ],
+    "pair_id": "v1-test-cfo-097",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-097-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-098-a",
+    "member_ids": [
+      "v1-test-cfo-098-a",
+      "v1-test-cfo-098-b"
+    ],
+    "pair_id": "v1-test-cfo-098",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-098-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-099-a",
+    "member_ids": [
+      "v1-test-cfo-099-a",
+      "v1-test-cfo-099-b"
+    ],
+    "pair_id": "v1-test-cfo-099",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-099-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-100-b",
+    "member_ids": [
+      "v1-test-cfo-100-a",
+      "v1-test-cfo-100-b"
+    ],
+    "pair_id": "v1-test-cfo-100",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-100-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/scope/statement_sha256"
+    ],
+    "factor_id": "dependency_statement",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-101-b",
+    "member_ids": [
+      "v1-test-cfo-101-a",
+      "v1-test-cfo-101-b"
+    ],
+    "pair_id": "v1-test-cfo-101",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-101-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-102-b",
+    "member_ids": [
+      "v1-test-cfo-102-a",
+      "v1-test-cfo-102-b"
+    ],
+    "pair_id": "v1-test-cfo-102",
+    "template_id": "formal-logic-template-06",
+    "valid_id": "v1-test-cfo-102-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-103-b",
+    "member_ids": [
+      "v1-test-cfo-103-a",
+      "v1-test-cfo-103-b"
+    ],
+    "pair_id": "v1-test-cfo-103",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-103-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/preregistered"
+    ],
+    "factor_id": "preregistration",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-104-b",
+    "member_ids": [
+      "v1-test-cfo-104-a",
+      "v1-test-cfo-104-b"
+    ],
+    "pair_id": "v1-test-cfo-104",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-104-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/domain/variables/0/upper"
+    ],
+    "factor_id": "domain",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-105-b",
+    "member_ids": [
+      "v1-test-cfo-105-a",
+      "v1-test-cfo-105-b"
+    ],
+    "pair_id": "v1-test-cfo-105",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-105-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-106-a",
+    "member_ids": [
+      "v1-test-cfo-106-a",
+      "v1-test-cfo-106-b"
+    ],
+    "pair_id": "v1-test-cfo-106",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-106-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-107-b",
+    "member_ids": [
+      "v1-test-cfo-107-a",
+      "v1-test-cfo-107-b"
+    ],
+    "pair_id": "v1-test-cfo-107",
+    "template_id": "surface-profile-probability_bound",
+    "valid_id": "v1-test-cfo-107-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-108-a",
+    "member_ids": [
+      "v1-test-cfo-108-a",
+      "v1-test-cfo-108-b"
+    ],
+    "pair_id": "v1-test-cfo-108",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-108-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-109-b",
+    "member_ids": [
+      "v1-test-cfo-109-a",
+      "v1-test-cfo-109-b"
+    ],
+    "pair_id": "v1-test-cfo-109",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-109-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "direct_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-110-a",
+    "member_ids": [
+      "v1-test-cfo-110-a",
+      "v1-test-cfo-110-b"
+    ],
+    "pair_id": "v1-test-cfo-110",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-110-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-111-b",
+    "member_ids": [
+      "v1-test-cfo-111-a",
+      "v1-test-cfo-111-b"
+    ],
+    "pair_id": "v1-test-cfo-111",
+    "template_id": "formal-logic-template-15",
+    "valid_id": "v1-test-cfo-111-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-112-a",
+    "member_ids": [
+      "v1-test-cfo-112-a",
+      "v1-test-cfo-112-b"
+    ],
+    "pair_id": "v1-test-cfo-112",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-112-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-113-a",
+    "member_ids": [
+      "v1-test-cfo-113-a",
+      "v1-test-cfo-113-b"
+    ],
+    "pair_id": "v1-test-cfo-113",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-113-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-114-a",
+    "member_ids": [
+      "v1-test-cfo-114-a",
+      "v1-test-cfo-114-b"
+    ],
+    "pair_id": "v1-test-cfo-114",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-114-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-115-a",
+    "member_ids": [
+      "v1-test-cfo-115-a",
+      "v1-test-cfo-115-b"
+    ],
+    "pair_id": "v1-test-cfo-115",
+    "template_id": "surface-profile-order_inequality",
+    "valid_id": "v1-test-cfo-115-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-116-a",
+    "member_ids": [
+      "v1-test-cfo-116-a",
+      "v1-test-cfo-116-b"
+    ],
+    "pair_id": "v1-test-cfo-116",
+    "template_id": "surface-profile-polynomial_grid",
+    "valid_id": "v1-test-cfo-116-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-117-b",
+    "member_ids": [
+      "v1-test-cfo-117-a",
+      "v1-test-cfo-117-b"
+    ],
+    "pair_id": "v1-test-cfo-117",
+    "template_id": "surface-profile-finite_sequence",
+    "valid_id": "v1-test-cfo-117-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-118-a",
+    "member_ids": [
+      "v1-test-cfo-118-a",
+      "v1-test-cfo-118-b"
+    ],
+    "pair_id": "v1-test-cfo-118",
+    "template_id": "formal-logic-template-22",
+    "valid_id": "v1-test-cfo-118-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-119-a",
+    "member_ids": [
+      "v1-test-cfo-119-a",
+      "v1-test-cfo-119-b"
+    ],
+    "pair_id": "v1-test-cfo-119",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-119-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/1/verifier_result"
+    ],
+    "factor_id": "dependency_verifier",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-120-b",
+    "member_ids": [
+      "v1-test-cfo-120-a",
+      "v1-test-cfo-120-b"
+    ],
+    "pair_id": "v1-test-cfo-120",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-120-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-121-a",
+    "member_ids": [
+      "v1-test-cfo-121-a",
+      "v1-test-cfo-121-b"
+    ],
+    "pair_id": "v1-test-cfo-121",
+    "template_id": "formal-logic-template-01",
+    "valid_id": "v1-test-cfo-121-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-122-a",
+    "member_ids": [
+      "v1-test-cfo-122-a",
+      "v1-test-cfo-122-b"
+    ],
+    "pair_id": "v1-test-cfo-122",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-122-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/timestamp"
+    ],
+    "factor_id": "age",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-123-b",
+    "member_ids": [
+      "v1-test-cfo-123-a",
+      "v1-test-cfo-123-b"
+    ],
+    "pair_id": "v1-test-cfo-123",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-123-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-124-b",
+    "member_ids": [
+      "v1-test-cfo-124-a",
+      "v1-test-cfo-124-b"
+    ],
+    "pair_id": "v1-test-cfo-124",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-124-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-125-a",
+    "member_ids": [
+      "v1-test-cfo-125-a",
+      "v1-test-cfo-125-b"
+    ],
+    "pair_id": "v1-test-cfo-125",
+    "template_id": "formal-logic-template-05",
+    "valid_id": "v1-test-cfo-125-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-126-b",
+    "member_ids": [
+      "v1-test-cfo-126-a",
+      "v1-test-cfo-126-b"
+    ],
+    "pair_id": "v1-test-cfo-126",
+    "template_id": "formal-logic-template-06",
+    "valid_id": "v1-test-cfo-126-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-127-b",
+    "member_ids": [
+      "v1-test-cfo-127-a",
+      "v1-test-cfo-127-b"
+    ],
+    "pair_id": "v1-test-cfo-127",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-127-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-128-b",
+    "member_ids": [
+      "v1-test-cfo-128-a",
+      "v1-test-cfo-128-b"
+    ],
+    "pair_id": "v1-test-cfo-128",
+    "template_id": "formal-logic-template-08",
+    "valid_id": "v1-test-cfo-128-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-129-b",
+    "member_ids": [
+      "v1-test-cfo-129-a",
+      "v1-test-cfo-129-b"
+    ],
+    "pair_id": "v1-test-cfo-129",
+    "template_id": "formal-logic-template-09",
+    "valid_id": "v1-test-cfo-129-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-130-b",
+    "member_ids": [
+      "v1-test-cfo-130-a",
+      "v1-test-cfo-130-b"
+    ],
+    "pair_id": "v1-test-cfo-130",
+    "template_id": "formal-logic-template-10",
+    "valid_id": "v1-test-cfo-130-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-131-a",
+    "member_ids": [
+      "v1-test-cfo-131-a",
+      "v1-test-cfo-131-b"
+    ],
+    "pair_id": "v1-test-cfo-131",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-131-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "verifier_execution",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-132-a",
+    "member_ids": [
+      "v1-test-cfo-132-a",
+      "v1-test-cfo-132-b"
+    ],
+    "pair_id": "v1-test-cfo-132",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-132-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/repetitions"
+    ],
+    "factor_id": "repetitions",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-133-b",
+    "member_ids": [
+      "v1-test-cfo-133-a",
+      "v1-test-cfo-133-b"
+    ],
+    "pair_id": "v1-test-cfo-133",
+    "template_id": "surface-profile-set_relation",
+    "valid_id": "v1-test-cfo-133-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-134-a",
+    "member_ids": [
+      "v1-test-cfo-134-a",
+      "v1-test-cfo-134-b"
+    ],
+    "pair_id": "v1-test-cfo-134",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-134-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-135-b",
+    "member_ids": [
+      "v1-test-cfo-135-a",
+      "v1-test-cfo-135-b"
+    ],
+    "pair_id": "v1-test-cfo-135",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-135-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-136-b",
+    "member_ids": [
+      "v1-test-cfo-136-a",
+      "v1-test-cfo-136-b"
+    ],
+    "pair_id": "v1-test-cfo-136",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-136-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence"
+    ],
+    "factor_id": "transitive_dependency",
+    "family": "DEPENDENCY",
+    "invalid_id": "v1-test-cfo-137-a",
+    "member_ids": [
+      "v1-test-cfo-137-a",
+      "v1-test-cfo-137-b"
+    ],
+    "pair_id": "v1-test-cfo-137",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-137-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/precision_bits"
+    ],
+    "factor_id": "precision",
+    "family": "NUMERICAL",
+    "invalid_id": "v1-test-cfo-138-b",
+    "member_ids": [
+      "v1-test-cfo-138-a",
+      "v1-test-cfo-138-b"
+    ],
+    "pair_id": "v1-test-cfo-138",
+    "template_id": "surface-profile-number_theory",
+    "valid_id": "v1-test-cfo-138-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-139-b",
+    "member_ids": [
+      "v1-test-cfo-139-a",
+      "v1-test-cfo-139-b"
+    ],
+    "pair_id": "v1-test-cfo-139",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-139-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/environment_sha256"
+    ],
+    "factor_id": "review_environment",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-140-a",
+    "member_ids": [
+      "v1-test-cfo-140-a",
+      "v1-test-cfo-140-b"
+    ],
+    "pair_id": "v1-test-cfo-140",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-140-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit",
+      "/evidence/0/verifier_result"
+    ],
+    "factor_id": "run_completion",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-141-b",
+    "member_ids": [
+      "v1-test-cfo-141-a",
+      "v1-test-cfo-141-b"
+    ],
+    "pair_id": "v1-test-cfo-141",
+    "template_id": "surface-profile-recurrence",
+    "valid_id": "v1-test-cfo-141-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-142-a",
+    "member_ids": [
+      "v1-test-cfo-142-a",
+      "v1-test-cfo-142-b"
+    ],
+    "pair_id": "v1-test-cfo-142",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-142-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-143-a",
+    "member_ids": [
+      "v1-test-cfo-143-a",
+      "v1-test-cfo-143-b"
+    ],
+    "pair_id": "v1-test-cfo-143",
+    "template_id": "formal-logic-template-23",
+    "valid_id": "v1-test-cfo-143-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-144-b",
+    "member_ids": [
+      "v1-test-cfo-144-a",
+      "v1-test-cfo-144-b"
+    ],
+    "pair_id": "v1-test-cfo-144",
+    "template_id": "formal-logic-template-24",
+    "valid_id": "v1-test-cfo-144-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/statement_sha256"
+    ],
+    "factor_id": "statement_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-145-b",
+    "member_ids": [
+      "v1-test-cfo-145-a",
+      "v1-test-cfo-145-b"
+    ],
+    "pair_id": "v1-test-cfo-145",
+    "template_id": "formal-logic-template-01",
+    "valid_id": "v1-test-cfo-145-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/provenance/cold_start"
+    ],
+    "factor_id": "cold_start",
+    "family": "PROVENANCE",
+    "invalid_id": "v1-test-cfo-146-a",
+    "member_ids": [
+      "v1-test-cfo-146-a",
+      "v1-test-cfo-146-b"
+    ],
+    "pair_id": "v1-test-cfo-146",
+    "template_id": "surface-profile-algebraic_identity",
+    "valid_id": "v1-test-cfo-146-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/toolchain_lock_sha256"
+    ],
+    "factor_id": "trust_base",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-147-b",
+    "member_ids": [
+      "v1-test-cfo-147-a",
+      "v1-test-cfo-147-b"
+    ],
+    "pair_id": "v1-test-cfo-147",
+    "template_id": "formal-logic-template-03",
+    "valid_id": "v1-test-cfo-147-a"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/tool_exit"
+    ],
+    "factor_id": "tool_exit",
+    "family": "RUNTIME",
+    "invalid_id": "v1-test-cfo-148-a",
+    "member_ids": [
+      "v1-test-cfo-148-a",
+      "v1-test-cfo-148-b"
+    ],
+    "pair_id": "v1-test-cfo-148",
+    "template_id": "surface-profile-graph_property",
+    "valid_id": "v1-test-cfo-148-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/current_state_basis/computation_status/bound_artifact_sha256"
+    ],
+    "factor_id": "current_binding",
+    "family": "STALE_CONTRADICTION",
+    "invalid_id": "v1-test-cfo-149-a",
+    "member_ids": [
+      "v1-test-cfo-149-a",
+      "v1-test-cfo-149-b"
+    ],
+    "pair_id": "v1-test-cfo-149",
+    "template_id": "surface-profile-matrix_property",
+    "valid_id": "v1-test-cfo-149-b"
+  },
+  {
+    "controlled_json_pointers": [
+      "/evidence/0/scope/claim_id"
+    ],
+    "factor_id": "claim_identity",
+    "family": "FORMAL",
+    "invalid_id": "v1-test-cfo-150-b",
+    "member_ids": [
+      "v1-test-cfo-150-a",
+      "v1-test-cfo-150-b"
+    ],
+    "pair_id": "v1-test-cfo-150",
+    "template_id": "formal-logic-template-06",
+    "valid_id": "v1-test-cfo-150-a"
+  }
+]
