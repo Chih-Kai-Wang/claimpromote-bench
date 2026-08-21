@@ -16,7 +16,7 @@ RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
 V2_PILOT_SHA = "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
 CAPABLE_HIDDEN = ROOT / "v2" / "capable-hidden-results" / "capable-hidden-study.json"
-CAPABLE_HIDDEN_SHA = "sha256:abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91"
+CAPABLE_HIDDEN_SHA = "sha256:a1f7f64000d068dd7a83a63db5d6f13b5daaed1788b397ed37d36ad85941853d"
 STRONGER_FOLLOWUP = (
     ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
 )
@@ -39,7 +39,10 @@ def pct(value: float, digits: int = 1) -> str:
 
 
 def sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    # Git normalizes this tracked JSON file to LF, while Windows worktrees may
+    # materialize CRLF. Hash the repository-level text identity on both OSes.
+    normalized = path.read_text(encoding="utf-8").encode("utf-8")
+    return "sha256:" + hashlib.sha256(normalized).hexdigest()
 
 
 def require_regex(tex: str, pattern: str, description: str) -> None:
