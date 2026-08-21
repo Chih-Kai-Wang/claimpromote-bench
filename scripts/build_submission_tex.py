@@ -14,11 +14,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
+TITLE = r"\cpb: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions"
 ICLR_TITLE = (
-    r"\mbox{\textsc{ClaimPromoteBench}: Evaluating Whether}\protect\\"
-    r"\mbox{Evidence Justifies Claim-State Transitions}\protect\\"
-    r"\mbox{in AI Research Agents}"
+    r"\mbox{\textsc{ClaimPromoteBench}: Synthetic}\protect\\"
+    r"\mbox{Policy-Constrained Evaluation of}\protect\\"
+    r"\mbox{Evidence-State Transitions}"
 )
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
@@ -49,7 +49,13 @@ cells before gold loading or analysis. A post-run audit found cleartext provider
 blocks inside 275 response envelopes. Scoring used final response text and parsed decisions alone,
 so the defect left the C2 order and scientific values unchanged. The public release is a post-C2
 text-only allowlist derivative with source-to-derived row and envelope hashes and byte-identical
-scientific analysis. Its committed release has a 179-file permanent manifest.
+scientific analysis. Its manifest records the generated tree's current file count.
+
+The public balanced challenge froze its dataset, action distribution, prompt packet, adapters,
+statistics, and one-call zero-retry schedule before inference. Its receipt validates all 360
+item-level records and reports zero provider-account findings, retained provider response
+identifiers, and hidden-reasoning findings. The challenge is public robustness evidence and is not
+a hidden-test generalization estimate or a causal comparison between its differing service stacks.
 
 The anonymous review bundle contains the fresh dataset, study plan, prompt packet, baseline
 predictions, projected C2 records, item-level final outputs, gold, analysis, redaction receipt, and
@@ -58,7 +64,8 @@ registered lane dispositions. The bundle also retains all 14 pilot attempts and 
 from the adaptive extension, plus the original and public-control evidence and executable and Lean
 replay inputs. Searchable repository provenance is replaced with role descriptions. The private
 construction seed is excluded. Any change to labels, policy, prompts, controlled factors, or
-hidden-test bytes creates a new benchmark version.
+hidden-test bytes creates a new benchmark version. Bundle construction records the actual file
+count in its manifest, and validation recomputes that count from the generated tree.
 
 """
 
@@ -85,12 +92,20 @@ ICLR_PUBLIC_IDENTIFIERS = (
     "32403718086",
     "32405565039",
     "32421292779",
+    "32453310192",
     "119e4759",
     "b86ee1e1",
     "cc67096b",
     "8775a8f9",
     "05d9921c",
     "300dc094",
+    "32509532820",
+    "9460301513",
+    "1901e471",
+    "3746403e",
+    "057e7854",
+    "f44b01eb",
+    "8821e710",
 )
 
 
@@ -221,8 +236,8 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
             "\n\\end{document}\n"
             if main_text_probe
             else (
-                "\n\\clearpage\n\\bibliographystyle{iclr2027_conference}\n"
-                "\\bibliography{references}\n\n\\end{document}\n"
+                "\n\\clearpage\n{\\small\n\\bibliographystyle{iclr2027_conference}\n"
+                "\\bibliography{references}\n}\n\n\\end{document}\n"
             )
         )
     )
@@ -264,7 +279,10 @@ def arxiv_tex(body: str) -> str:
         + r"\maketitle"
         + "\n\n"
         + body
-        + "\n\\bibliographystyle{plain}\n\\bibliography{references}\n\n\\end{document}\n"
+        + (
+            "\n{\\small\n\\bibliographystyle{plain}\n"
+            "\\bibliography{references}\n}\n\n\\end{document}\n"
+        )
     )
 
 

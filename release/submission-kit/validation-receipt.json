@@ -1,0 +1,148 @@
+{
+  "anonymous_bundle": {
+    "manifest_file_count": 736,
+    "manifest_plus_self_file_count": 737,
+    "manifest_sha256": "ca77f0298360d8d8ec147d57b96c3917fccdaef026320124f9f99c5b730ea231",
+    "privacy_scope": {
+      "balanced_public_challenge_hidden_reasoning_included": false,
+      "balanced_public_challenge_item_level_records_included": true,
+      "balanced_public_challenge_summary_included": true,
+      "capable_hidden_all_executed_attempts_included": true,
+      "capable_hidden_item_level_records_included": true,
+      "capable_hidden_summary_included": true,
+      "fresh_confirmatory_hidden_reasoning_included": false,
+      "fresh_confirmatory_item_level_records_included": true,
+      "fresh_confirmatory_summary_included": true,
+      "gpt54_public_development_item_level_records_included": true,
+      "gpt54_public_development_summary_included": true,
+      "human_subject_study_records_included": false,
+      "item_level_empirical_records_included": true,
+      "private_construction_seed_included": false,
+      "provider_response_identifiers_included": false,
+      "public_alpha_included": true,
+      "public_repository_identity_included": false,
+      "reviewer_release_hidden_data_included": true,
+      "v1_compact_result_summary_included": true,
+      "v2_public_pilot_item_level_records_included": true,
+      "v2_public_pilot_summary_included": true
+    },
+    "verification": "PASS",
+    "zip_file_entries": 737
+  },
+  "artifacts": {
+    "arxiv.pdf": {
+      "bytes": 309399,
+      "sha256": "108b1384fba447557927d93f83a7979162b6227c93b60aa8ff17b925759a4dec"
+    },
+    "claimpromotebench-anonymous-review-bundle.zip": {
+      "bytes": 2849212,
+      "sha256": "d029a38df58db446291146f62287a923e1bb4997534ac99a788a8e9d28a1d826"
+    },
+    "claimpromotebench-arxiv-source.zip": {
+      "bytes": 13811,
+      "sha256": "27af1d5f1449e683938719cf93bcba8cafb5d73f83b0ee6b467b503f3f3cb4a1"
+    },
+    "claimpromotebench-iclr2027-source.zip": {
+      "bytes": 23193,
+      "sha256": "e6d6391c001ffd32593d5f3b0c2c7b6943b5f30a534014614ef73ca044a7572a"
+    },
+    "iclr2027.pdf": {
+      "bytes": 183853,
+      "sha256": "da60ba96e48105d86717f820e6fa605209c0dbcce50993d4e5c093fa26c261fb"
+    }
+  },
+  "checks": {
+    "arxiv_identity": "PASS",
+    "bundle_manifest_and_privacy": "PASS",
+    "iclr_anonymity": "PASS",
+    "latex_logs": "PASS",
+    "pdf_fonts_embedded": "PASS",
+    "visual_page_review": "PASS"
+  },
+  "environment": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.12.13"
+  },
+  "schema_version": "1.0.0",
+  "source_archives": {
+    "arxiv_entries": [
+      "arxiv.tex",
+      "references.bib"
+    ],
+    "iclr2027_entries": [
+      "iclr2027.tex",
+      "iclr2027_conference.bst",
+      "iclr2027_conference.sty",
+      "references.bib"
+    ]
+  },
+  "status": "PASS",
+  "submission": {
+    "arxiv": {
+      "author_metadata": "",
+      "creator": "LaTeX with hyperref",
+      "fonts": {
+        "all_embedded": true,
+        "font_count": 22,
+        "fonts": [
+          "/AEBNPW+CMR10",
+          "/BPMBND+CMSY8",
+          "/BSTKNX+MSBM10",
+          "/DBITMS+CMSY10",
+          "/EEJZXU+CMTT8",
+          "/EUWOLL+CMBX9",
+          "/FDZZRC+CMTI10",
+          "/GKCPUR+CMTT10",
+          "/ICTROM+CMR17",
+          "/JJKIWB+CMBX12",
+          "/KOGKSS+CMMI7",
+          "/LQBNTO+CMR12",
+          "/LUHZZW+CMTI9",
+          "/MOGIOU+CMSY9",
+          "/NCFQGZ+CMR7",
+          "/OKZUMG+CMR8",
+          "/POFRLQ+CMCSC10",
+          "/PXBGHL+CMSY7",
+          "/QTAPRA+CMTT9",
+          "/SVIAYZ+CMBX10",
+          "/VGZARF+CMMI10",
+          "/XNDSBZ+CMR9"
+        ]
+      },
+      "named_author_and_affiliation_scan": "PASS",
+      "page_size": "612 x 792 pts (letter)",
+      "pages": 8,
+      "producer": "pdfTeX-1.40.29",
+      "visual_pages_inspected": 8
+    },
+    "iclr2027": {
+      "anonymous_source_and_pdf_scan": "PASS",
+      "author_metadata": "",
+      "creator": "LaTeX with hyperref",
+      "fonts": {
+        "all_embedded": true,
+        "font_count": 13,
+        "fonts": [
+          "/ALVSVR+NimbusSanL-Bold",
+          "/BIWMPA+NimbusRomNo9L-ReguItal",
+          "/BSTKNX+MSBM10",
+          "/DBITMS+CMSY10",
+          "/FHSKJP+NimbusMonL-Regu",
+          "/KOGKSS+CMMI7",
+          "/LRHGOR+CMR7",
+          "/MOGIOU+CMSY9",
+          "/MXCHCL+NimbusRomNo9L-Medi",
+          "/PXBGHL+CMSY7",
+          "/VGZARF+CMMI10",
+          "/VPNJFL+NimbusRomNo9L-Regu",
+          "/YRAIWQ+CMR10"
+        ]
+      },
+      "main_text_pages": 7,
+      "page_size": "612 x 792 pts (letter)",
+      "pages": 9,
+      "producer": "pdfTeX-1.40.29",
+      "visual_pages_inspected": 9
+    }
+  }
+}

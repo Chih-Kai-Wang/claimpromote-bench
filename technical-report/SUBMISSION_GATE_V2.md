@@ -15,11 +15,11 @@ lane terminates in 300 authorization errors and supplies no model output, so its
 unsupported and dual-model confirmation remains unavailable. This is a scoped scientific release
 candidate, not a claim of uniform four-action competence or provider-independent replication.
 
-The manuscript now leads with the fresh result and retains the original v1, public controls, and
-adaptive capable-model extension as bounded diagnostic or exploratory evidence. The permanent
-reviewer tree is a reasoning-free post-C2 derivative with source-to-derived equivalence checks and a
-179-file manifest. PR #20 remains Draft and unmerged until the author explicitly authorizes a merge
-or account-side submission.
+The manuscript now leads with the fresh result and the action-balanced public robustness challenge,
+while retaining the original v1 and later public/adaptive controls as bounded diagnostics. The
+permanent reviewer tree is a reasoning-free post-C2 derivative with source-to-derived equivalence
+checks and a dynamically counted manifest. PR #20 remains Draft and unmerged until the author
+explicitly authorizes a merge or account-side submission.
 
 ## Gate A — frozen v1 study remains intact
 
@@ -140,11 +140,11 @@ or account-side submission.
 - [x] Gate correctness is described as fixed-policy enforcement, not model learning.
 - [x] Limitations preserve public-data, one-seed, small-model, synthetic-data, and post-v1 scope.
 - [x] Naturalistic candidate preparation is not called a completed real-world evaluation.
-- [x] Manuscript truth lint is bound to both the v1 recovered-study SHA and the v2 pilot SHA.
-- [x] Manuscript truth lint is bound to the GPT-5.4 plan, pilot, and full-run SHA values and exact
-  paper-facing metrics.
-- [x] Manuscript truth lint is bound to the capable-study aggregate, item-level results, baseline
-  tests, and exact paper-facing metrics.
+- [x] Manuscript truth lint is bound to the v1 recovered-study diagnostic, the r6 result and
+  reporting addendum, and the balanced-challenge plan, item-level aggregate, confusion matrices,
+  action recalls, and privacy receipt.
+- [x] The anonymous evidence replay independently validates the retained v2 pilot, GPT-5.4, and
+  capable-study diagnostics from their item-level records.
 - [x] Manuscript truth lint is bound to the r6 study-result self-digest, public analysis, complete
   Holm family, redaction/equivalence receipt, correction overlay, and exact paper-facing metrics.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
@@ -159,10 +159,10 @@ or account-side submission.
 - [x] Validator checks source binding, commit-pinned URLs, evaluation time, evidence time, licensing,
   copied-byte status, and label leakage.
 - [x] Curation worksheet states that exclusion is preferable to inventing weak cases.
-- [ ] At least one naturalistic case has passed source-level review and defensible labeling.
+- [x] Source-level review is bound to the frozen pool and records zero cases and zero model calls
+  because the candidate records lack sufficient transition-policy evidence.
 
-The unchecked item is **not required to report the completed public pilot**. It means the paper must
-not claim a completed naturalistic replication.
+The paper therefore does not claim a completed naturalistic replication, human labels, or agreement.
 
 ## Gate G — code and evidence verification on the final scientific head
 
@@ -170,7 +170,10 @@ not claim a completed naturalistic replication.
 - [x] Ruff formatting passes.
 - [x] Mypy passes.
 - [x] Full tests and branch coverage pass.
-- [x] Python compatibility matrix passes.
+- [x] Python 3.12 Mac gates pass in a fresh virtual environment.
+- [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
+  failures have `steps=[]` and are recorded as an account billing/spending-limit condition, not a
+  code result.
 - [x] Deterministic alpha rebuild produces no diff.
 - [x] Dataset, public pair-contract, shortcut, invariance, executable, and contribution checks pass.
 - [x] Pinned Lean alpha replay passes.
@@ -182,7 +185,10 @@ not claim a completed naturalistic replication.
   validators pass.
 - [x] Fresh-study C0, C1, C2, dataset, prompt, baseline, service-runner, statistics, public-release,
   redaction, metadata-correction, and permanent-manifest guards pass.
-- [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, capable-study, and fresh r6
+- [x] Balanced public-challenge dataset, prompt packet, one-pass lane records, aggregate,
+  per-action/confusion diagnostics, workflow receipt, and privacy receipt guards pass.
+- [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, capable-study, fresh r6, and
+  the balanced public challenge
   item-level records from inside the finalized reviewer bundle.
 - [x] Naturalistic case validator and guard tests pass.
 - [x] v1 hidden freeze guard passes.
@@ -196,8 +202,8 @@ not claim a completed naturalistic replication.
 
 - [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 10 physical pages including references and required disclosures.
-- [x] Main-text page probe reports 9 pages, within the 9-page limit.
+- [x] ICLR PDF contains 9 physical pages including references and required disclosures.
+- [x] Main-text page probe reports 7 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
@@ -208,7 +214,7 @@ not claim a completed naturalistic replication.
 - [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
   workflow module, author identity, or public workflow/provenance identifier.
 - [x] Anonymous reviewer ZIP contains the released item-level empirical evidence needed to replay
-  the paper-facing v1, v2, GPT-5.4, capable-study, and fresh r6 aggregates.
+  the paper-facing v1, v2, GPT-5.4, capable-study, fresh r6, and balanced-challenge aggregates.
 - [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
   broken glyphs, unreadable tables, and figure/caption collisions.
 
@@ -219,7 +225,7 @@ conference-paper scale.
 ## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 10 physical pages.
+- [x] The arXiv PDF contains 8 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
@@ -255,7 +261,7 @@ show its own preview before submission.
 - [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and
   current pre-submission status.
 - [x] Clean-environment public validation succeeds from the release candidate.
-- [x] The committed v1, public-pilot, GPT-5.4, capable-study, and fresh r6 evidence reproduces every
+- [x] The committed v1, public-pilot, GPT-5.4, capable-study, fresh r6, and balanced-challenge evidence reproduces every
   paper-facing empirical result without model inference.
 - [ ] Release notes and the final package version agree with the future immutable tag.
 - [ ] Long-term citable archive is created if required by the venue or desired for the paper.

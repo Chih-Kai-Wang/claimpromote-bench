@@ -6,6 +6,7 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.tools/
 dist/
 build/
 *.egg-info/
@@ -13,4 +14,3 @@ work/
 .lake/
 *.olean
 *.ilean
-

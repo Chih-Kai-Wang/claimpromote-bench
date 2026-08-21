@@ -10,13 +10,13 @@ the corresponding service has issued it and the author has verified it.
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents
+ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions
 ```
 
 ## ICLR 2027 abstract
 
 ```text
-AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce ClaimPromoteBench, a benchmark with 200 controlled pairs over 20 policy factors, including executable numerical and formal artifacts. In a preregistered fresh 300-item study, a Qwen3.7-Max service configuration produced 272 valid decisions and achieved 86.00% end-to-end item accuracy and 75.33% pair accuracy. It exceeded a frozen public-development text Naive Bayes baseline by 24.67 percentage points (one-sided pair-blocked exact p=5.16e-16; Holm-adjusted p=1.03e-15). Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid outputs remained incorrect with zero retries. DEMOTE recall was 0/8, so the aggregate result lacks uniform action competence. The registered Flash configuration returned 300 HTTP 401 responses and no model output; model efficacy is non-evaluable and dual-model confirmation is unsupported. Earlier small-model and adaptive studies diagnose formatting collapse and service-path sensitivity. A permanent reviewer artifact releases item-level outputs, deterministic recomputation checks, and a reasoning-free post-C2 publication derivative.
+Producing evidence and deciding what status that evidence licenses are different tasks. We frame the latter as synthetic policy conformance, rather than a broad test of research-agent ability. ClaimPromoteBench presents a claim, typed evidence, a current state, and a requested transition under a fixed author-defined policy. In a preregistered 300-item hidden study, a Qwen3.7-Max service configuration returned 272 valid decisions (decision coverage .9067) and 123 complete pairs (pair coverage .8200). End-to-end item and pair accuracy were .8600 and .7533; conditional accuracy among valid decisions and complete pairs was .9485 and .9187. End-to-end recall was .9533/ALLOW, .8209/HOLD, 0/DEMOTE, and .6250/ESCALATE. A weak public-development text Naive Bayes comparator reached .6133 item and .2267 pair accuracy. A separately precommitted public robustness challenge balanced 90 ALLOW members against 30 each of HOLD, DEMOTE, and ESCALATE over 90 pairs and 15 factors. Qwen produced 148/180 valid decisions, with .7333/.5333 end-to-end and .8919/.7500 conditional item/pair accuracy; a Flash route produced 146/180 valid decisions, with .5000/.1444 end-to-end and .6164/.2131 conditional accuracy. Every service, syntax, schema, and semantic failure remains incorrect in the end-to-end denominator. The earlier Flash lane's 300 HTTP 401 responses diagnose its frozen service interface; the later route establishes executability only. Different service stacks preclude a strict causal model ablation. A deterministic policy executor is a definitional policy ceiling, not a learned baseline.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -26,7 +26,7 @@ out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents
+ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions
 ```
 
 ## arXiv abstract
@@ -55,11 +55,11 @@ account-side choices and any endorsement requirement.
 
 ## ICLR suggested keywords and topics
 
-- AI agents
 - AI evaluation
-- scientific reasoning
-- research agents
-- evidence-aware reasoning
+- synthetic benchmarks
+- policy conformance
+- evidence-state transitions
+- behavioral testing
 - structured decision making
 - trustworthy AI
 - formal verification / verification-aware systems
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-A fresh preregistered 300-item study gives one Qwen3.7-Max service configuration .860 end-to-end item and .753 pair accuracy against a .613 public-only text baseline (Holm-adjusted p=1.03e-15), while 0/8 DEMOTE and a registered Flash lane with 300 authorization errors limit the claim and leave dual-model confirmation unsupported.
+A hidden 300-item evaluation and a separately precommitted 180-item action-balanced public challenge expose coverage and DEMOTE failures in service configurations applying a fixed synthetic evidence-transition policy; all unusable responses remain incorrect, and cross-stack differences are descriptive rather than causal.
 ```
 
 ## Main empirical findings
@@ -79,7 +79,8 @@ A fresh preregistered 300-item study gives one Qwen3.7-Max service configuration
 - fresh confirmatory realization: 150 controlled pairs / 300 items, 600 frozen requests, and all
   600 terminal cells C2-sealed before gold loading or analysis;
 - Qwen3.7-Max: 272 / 300 valid decisions, 258 / 300 correct actions, and 113 / 150 correct pairs;
-- Qwen3.7-Max E2E item / pair accuracy: 0.860 and 0.753;
+- Qwen3.7-Max decision / pair coverage: 0.907 and 0.820; E2E item / pair accuracy: 0.860 and
+  0.753; conditional item / pair accuracy: 0.949 and 0.919;
 - frozen public-development text Naive Bayes baseline: 184 / 300 correct actions and 34 / 150
   correct pairs;
 - Qwen3.7-Max versus baseline: 74 additional correct actions, 84 pair-block wins, 10 losses,
@@ -89,9 +90,19 @@ A fresh preregistered 300-item study gives one Qwen3.7-Max service configuration
 - Qwen3.7-Max service failures: 14 HTTP 500 responses, one HTTP 503 response, ten timeouts, and
   three semantic-invalid outputs, all incorrect with zero retries;
 - registered Flash lane: 300 HTTP 401 responses, no model output, model efficacy non-evaluable,
-  and dual-model confirmation unsupported;
-- permanent fresh-study reviewer evidence: 179 files with a reasoning-free post-C2 derivative and
-  byte-identical scientific analysis payload;
+  and dual-model confirmation unsupported; this is the old frozen service-interface failure;
+- balanced public challenge: 90 pairs / 180 items / 15 factors, with 90 `ALLOW` and 30 each of
+  `HOLD`, `DEMOTE`, and `ESCALATE`;
+- challenge Qwen: 148 / 180 valid decisions, 0.733 / 0.533 E2E item / pair accuracy, and
+  0.892 / 0.750 conditional item / pair accuracy;
+- challenge Flash: 146 / 180 valid decisions, 0.500 / 0.144 E2E item / pair accuracy, and
+  0.616 / 0.213 conditional item / pair accuracy;
+- challenge Qwen action recall (`ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE`):
+  0.878 / 0.867 / 0.133 / 0.767; Flash: 0.756 / 0.300 / 0.000 / 0.433;
+- the later Flash route establishes service-path executability only; differing service stacks
+  preclude a strict causal model ablation;
+- permanent fresh-study reviewer evidence uses a dynamically counted manifest with a reasoning-free
+  post-C2 derivative and byte-identical scientific analysis payload;
 - frozen v1 hidden study: 24 runs and 7,200 decisions;
 - v1 format errors: 5,327 / 7,200 (73.99%);
 - v1 parseable raw decisions: 1,873, all `ALLOW`;
@@ -111,26 +122,27 @@ A fresh preregistered 300-item study gives one Qwen3.7-Max service configuration
 - GPT-5.4 covered decision accuracy: 99 / 99;
 - GPT-5.4 covered pair accuracy and raw flip rate: 49 / 49 and 1.0;
 - GPT-5.4 raw false promotions: 0 / 49;
-- deterministic post-gate correctness measures execution of the fixed benchmark policy.
+- deterministic policy execution is a definitional policy ceiling, not a learned baseline; the
+  public-development text Naive Bayes comparator remains weak.
 
 ## Data and code availability
 
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, the reviewer-release hidden datasets and oracle labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, redaction and correction receipts, and executable and formal replay inputs. It excludes private construction seeds, provider hidden-thinking content, author-identifying provenance, generated caches, and unused human-review workflow files. Public repository and archival identifiers will be released when double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, balanced public challenge, reviewer-release hidden datasets and oracle labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, privacy/redaction/correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, provider hidden-thinking content, provider response identifiers, author-identifying provenance, generated caches, and unused human-review workflow files. Public repository and archival identifiers will be released when double-blind review permits disclosure.
 ```
 
 ### Public preprint version
 
 ```text
-Code, public benchmark data, reviewer-release hidden datasets, item-level empirical records, validation workflows, redaction and scientific-equivalence receipts, and executable and formal replay inputs are available in the project repository. Private construction seeds and provider hidden-thinking content are not released. Exact workflow and artifact identities are recorded in repository evidence manifests. A long-term archival identifier will be added only after it exists.
+Code, public benchmark and balanced-challenge data, reviewer-release hidden datasets, item-level empirical records, validation workflows, privacy/redaction/scientific-equivalence receipts, and executable and formal replay inputs are available in the project repository. Private construction seeds and provider hidden-thinking content are not released. Exact workflow and artifact identities are recorded in repository evidence manifests. A long-term archival identifier will be added only after it exists.
 ```
 
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The fresh study binds public C0 and salt commitments, a future randomness beacon, C1 construction, a frozen request schedule, and all 600 pre-gold C2 terminal cells. A post-C2 text-only allowlist derivative removes provider hidden-thinking blocks and verifies source-to-derived row hashes and byte-identical scientific analysis. Paper-facing values are recomputed from released item records and checked against machine-readable summaries in CI.
+The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The fresh study binds public C0 and salt commitments, a future randomness beacon, C1 construction, a frozen request schedule, and all 600 pre-gold C2 terminal cells. A post-C2 text-only allowlist derivative removes provider hidden-thinking blocks and verifies source-to-derived row hashes and byte-identical scientific analysis. The public balanced challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference; its receipt validates 360 records and privacy scans. Paper-facing values are recomputed from released item records and checked against machine-readable summaries in CI.
 ```
 
 ## AI-use disclosure summary

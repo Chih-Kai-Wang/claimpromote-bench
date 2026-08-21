@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
+import json
 from copy import deepcopy
 from pathlib import Path
 
@@ -9,6 +11,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 BUILD_SCRIPT = ROOT / "scripts" / "build_v2_naturalistic_candidates.py"
 VALIDATE_SCRIPT = ROOT / "scripts" / "validate_v2_naturalistic_candidates.py"
+DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
 
 def _module(path: Path, name: str):
@@ -135,3 +138,36 @@ def test_naturalistic_candidate_pool_validator_rejects_result_leakage() -> None:
     invalid["candidates"][0]["results"] = {"answer": 1}
     with pytest.raises(SystemExit, match="result/label keys"):
         validator.validate(registry, invalid)
+
+
+def test_naturalistic_source_review_is_bound_and_pre_model_call() -> None:
+    pool_path = ROOT / "v2" / "naturalistic-candidates.json"
+    pool = json.loads(pool_path.read_text(encoding="utf-8"))
+    decision = json.loads(DECISION.read_text(encoding="utf-8"))
+
+    observed_sha = "sha256:" + hashlib.sha256(pool_path.read_bytes()).hexdigest()
+    assert decision["candidate_pool"] == {
+        "path": "v2/naturalistic-candidates.json",
+        "sha256": observed_sha,
+        "candidate_count": len(pool["candidates"]),
+    }
+    assert decision["reviewed_candidate_ids"] == [
+        candidate["candidate_id"] for candidate in pool["candidates"]
+    ]
+    source = decision["source_snapshot"]
+    frozen_source = pool["source_snapshots"][0]
+    assert source["repository"] == frozen_source["repository"]
+    assert source["commit"] == frozen_source["commit"]
+    assert source["path"] == frozen_source["path"]
+    assert source["sha256"] == frozen_source["source_bytes_sha256"]
+
+    assert decision["status"] == "NO_CASES_INCLUDED_AFTER_SOURCE_LEVEL_REVIEW"
+    assert decision["decision"] == {
+        "cases_created": 0,
+        "model_calls": 0,
+        "claimpromotebench_model_outputs_consulted": False,
+        "human_annotators": 0,
+        "agreement_statistic": None,
+        "selection_frozen_before_model_calls": True,
+    }
+    assert len(decision["exclusion_reasons"]) == 3

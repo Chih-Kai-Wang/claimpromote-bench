@@ -16,7 +16,7 @@
 \newcommand{\demote}{\texttt{DEMOTE}}
 \newcommand{\escalate}{\texttt{ESCALATE}}
 
-\title{\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents}
+\title{\cpb: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions}
 \author{Anonymous Author(s)}
 \date{}
 
@@ -24,292 +24,229 @@
 \maketitle
 
 \begin{abstract}
-AI research agents can possess valid artifacts yet assign a claim status beyond their registered scope. We study whether a requested state transition conforms to a fixed policy given a claim, evidence, and current state. We introduce \cpb, a benchmark with 200 controlled pairs over 20 policy factors, including executable numerical and formal artifacts. In a preregistered fresh 300-item study, a Qwen3.7-Max service configuration produced 272 valid decisions and achieved 86.00\% end-to-end item accuracy and 75.33\% pair accuracy. It exceeded a frozen public-development text Naive Bayes baseline by 24.67 percentage points (one-sided pair-blocked exact p=5.16e-16; Holm-adjusted p=1.03e-15). Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid outputs remained incorrect with zero retries. \demote{} recall was 0/8, so the aggregate result lacks uniform action competence. The registered Flash configuration returned 300 HTTP 401 responses and no model output; model efficacy is non-evaluable and dual-model confirmation is unsupported. Earlier small-model and adaptive studies diagnose formatting collapse and service-path sensitivity. A permanent reviewer artifact releases item-level outputs, deterministic recomputation checks, and a reasoning-free post-C2 publication derivative.
+Producing evidence and deciding what status that evidence licenses are different tasks. We frame the latter as synthetic policy conformance, rather than a broad test of research-agent ability. \cpb presents a claim, typed evidence, a current state, and a requested transition under a fixed author-defined policy. In a preregistered 300-item hidden study, a Qwen3.7-Max service configuration returned 272 valid decisions (decision coverage .9067) and 123 complete pairs (pair coverage .8200). End-to-end item and pair accuracy were .8600 and .7533; conditional accuracy among valid decisions and complete pairs was .9485 and .9187. End-to-end recall was .9533/\allow, .8209/\hold, 0/\demote, and .6250/\escalate. A weak public-development text Naive Bayes comparator reached .6133 item and .2267 pair accuracy. A separately precommitted public robustness challenge balanced 90 \allow{} members against 30 each of \hold, \demote, and \escalate{} over 90 pairs and 15 factors. Qwen produced 148/180 valid decisions, with .7333/.5333 end-to-end and .8919/.7500 conditional item/pair accuracy; a Flash route produced 146/180 valid decisions, with .5000/.1444 end-to-end and .6164/.2131 conditional accuracy. Every service, syntax, schema, and semantic failure remains incorrect in the end-to-end denominator. The earlier Flash lane's 300 HTTP 401 responses diagnose its frozen service interface; the later route establishes executability only. Different service stacks preclude a strict causal model ablation. A deterministic policy executor is a definitional policy ceiling, not a learned baseline.
 \end{abstract}
 
 \section{Introduction}
 
-A research agent can have valid evidence and still assign a claim status beyond that evidence's registered scope. A finite computation certifies its registered finite domain. A Lean certificate covers the exact encoded statement in its pinned environment. An internal reproduction records execution by the originating workflow. These evidence types support different claim-state transitions, so their scope and provenance remain explicit.
+A valid artifact licenses only the scope that was actually checked. A finite computation can support its registered finite domain; a proof certificate can support its exact encoded statement in a pinned environment; and an internal reproduction carries different provenance from an independent review. A system that conflates these evidence types can assign a claim status stronger than the evidence state warrants.
 
-Most existing evaluations ask nearby questions. They test scientific claim verification, computational reproducibility, data-driven research tasks, hypothesis falsification, or abstention \cite{javaji2025claimbench,huang2026deepfact,siegel2025corebench,chen2025scienceagentbench,huang2025popper,kirichenko2025abstentionbench}. We focus on the decision in between: whether the evidence already on record is enough to justify a specific change in research status.
-
-Our question is therefore:
+We study the narrow decision between evidence production and claim-state assignment:
 \begin{quote}
-\emph{Given a claim, typed evidence, a current evidence state, and a requested transition, can an AI system decide whether that transition is allowed by a fixed, machine-checkable policy?}
+\emph{Given a claim, typed evidence, a current state, and a requested transition, which action conforms to a fixed, machine-checkable policy?}
 \end{quote}
+This is a synthetic policy-conformance problem. It does not measure open-ended discovery, experimental design, literature synthesis, or general research-agent competence. The policy is an authored operational definition, so oracle agreement measures behavior relative to that definition rather than scientific truth or community consensus.
 
-\cpb turns this question into a controlled evaluation. It keeps research status, computational evidence, formal certification, and independent review as separate parts of the evidence state. Each controlled pair keeps the claim and requested transition fixed while changing one policy-relevant prerequisite. The oracle evaluates conformance between the requested transition and the registered evidence state under the fixed policy. Numerical and formal cases use executable artifacts, and the hidden data and exact prompts were fixed before the scored runs.
+\cpb represents research status, computational support, formal certification, and independent review as separate state axes. Controlled pairs keep the claim and target transition fixed while changing one registered prerequisite. We score four policy actions---\allow, \hold, \demote, and \escalate---and retain unusable responses in the end-to-end denominator. This design exposes three distinct questions: whether a service returns a valid decision, whether the decision is correct when valid, and whether both members of an evidence contrast are handled correctly.
 
-The experiments separate three questions: whether a model returns a usable decision, whether that decision changes with the decisive evidence, and what a deterministic one-way veto changes after generation. This separation prevents interface failure and oracle execution from being mistaken for evidence-sensitive model behavior.
-
-\begin{samepage}
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item We define a four-action benchmark for deciding whether evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
-  \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, with a fresh hidden-set commitment, frozen request schedule, pre-unblinding C2 seal, and paired confirmatory analysis.
-  \item We report end-to-end decisions, controlled-pair sensitivity, action-wise failures, and service errors separately from a deterministic veto that remains a one-way implementation check.
+  \item a synthetic, policy-constrained evaluation of evidence-state transitions with executable numerical and formal checks and local controlled contrasts;
+  \item failure-aware item and pair estimands that report coverage, conditional correctness, end-to-end correctness, action recall, and a no-valid-decision confusion column;
+  \item two complementary evaluations: a preregistered hidden realization of the 20-factor benchmark and a precommitted public robustness challenge balanced across all three non-\allow{} actions; and
+  \item a replayable evidence chain that separates model behavior, service-interface behavior, a definitional policy ceiling, and privacy-filtered reviewer artifacts.
 \end{enumerate}
-\end{samepage}
 
 \section{Related Work}
 
-\paragraph{Scientific claim verification.}
-CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports \cite{huang2026deepfact}, while ClaimDB evaluates fact verification over large structured databases \cite{theologitis2026claimdb}. These tasks ask whether evidence supports a factual claim. \cpb starts from an explicit evidence record and evaluates whether it licenses a particular change in claim status.
+\paragraph{Behavioral and contrastive evaluation.}
+CheckList organizes behavioral tests around capabilities and expected invariances \cite{ribeiro2020checklist}, while contrast sets probe local decision boundaries through small, meaningful input changes \cite{gardner2020contrastsets}. Metamorphic testing similarly checks relations among transformed inputs when a conventional test oracle is difficult to apply \cite{chan1998metamorphic}. \cpb uses authored policy labels and controlled pairs: most pairs intentionally change the action, while separate metamorphic checks preserve the action under identifier renaming, evidence reordering, and irrelevant-evidence insertion. These tests characterize selected local behaviors; they are not an estimate of natural-distribution performance.
 
-\paragraph{Research-agent evaluation and reproducibility.}
-ScienceAgentBench evaluates executable data-driven research tasks \cite{chen2025scienceagentbench}; CORE-Bench evaluates computational reproduction of published work \cite{siegel2025corebench}; and POPPER studies agentic hypothesis falsification with sequential statistical control \cite{huang2025popper}. \cpb isolates the decision between producing evidence and assigning a stronger status to a claim.
+\paragraph{Structured output and selective prediction.}
+Incremental parsing and grammar-constrained decoding can prevent structurally invalid generations \cite{scholak2021picard,geng2023grammar}. They cannot guarantee that a structurally valid action satisfies cross-field semantics or the evidence policy. Selective classification studies risk--coverage trade-offs and reject options \cite{geifman2017selective,geifman2019selectivenet}; recent abstention benchmarks expose continuing failures on unanswerable tasks \cite{kirichenko2025abstentionbench}. We therefore report coverage and conditional correctness together, while end-to-end metrics count every absent or invalid decision as incorrect. \hold{} is a policy action about current evidence, whereas service failure is recorded as no valid decision.
 
-\paragraph{Evidence-state maintenance and verifier-governed workflows.}
-SeekBench evaluates grounding, recovery, and answer calibration as evidence quality changes \cite{shao2025seekbench}. Omni-Decision maintains a structured evidence state for multimodal question answering \cite{ma2026omnidecision}; EviGraph tracks claim--support consistency in autonomous research \cite{ren2026evigraph}; and the contemporaneous ClaimLedger report proposes verifier-governed claim maintenance \cite{elliman2026claimledger}. These systems share the motivation of explicit evidence-state maintenance. Our evaluation fixes the policy, changes one registered prerequisite per pair, uses four actions, and reports raw model decisions separately from deterministic gate actions.
+\paragraph{Scientific evidence and research-agent evaluation.}
+CLAIM-BENCH, DeepFact, and ClaimDB evaluate scientific claim extraction or factual verification \cite{javaji2025claimbench,huang2026deepfact,theologitis2026claimdb}. ScienceAgentBench, CORE-Bench, and POPPER evaluate executable research tasks, computational reproduction, or hypothesis falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. SeekBench, Omni-Decision, EviGraph, and ClaimLedger emphasize grounding or explicit evidence maintenance \cite{shao2025seekbench,ma2026omnidecision,ren2026evigraph,elliman2026claimledger}. \cpb complements these tasks by fixing an authored policy and isolating the status-transition decision after evidence has been registered. Formal artifacts are interpreted only for their exact statements, consistent with the narrow verification scope highlighted by OSVBench \cite{li2026osvbench}.
 
-\paragraph{Abstention and formal verification.}
-AbstentionBench shows that models remain unreliable on unanswerable or underspecified questions \cite{kirichenko2025abstentionbench}. In \cpb, \hold{} records insufficient current support, \demote{} records loss of a valid basis for an elevated state, and \escalate{} records an unresolved authoritative contradiction. OSVBench shows that formal-specification generation remains difficult \cite{li2026osvbench}. A proof artifact contributes formal evidence for its exact encoded statement.
+\section{Task and Evidence Flow}
 
-\section{Task Definition}
-
-Each instance contains a claim record, typed evidence records, dependency and provenance metadata, a current evidence-state vector, and a requested transition. The model returns one action from
-\[
-\{\allow,\hold,\demote,\escalate\}
-\]
-plus an admissibility score and structured reason and evidence identifiers. \allow{} marks policy satisfaction; \hold{} records insufficient current support; \demote{} records the loss of a valid basis for an elevated state; and \escalate{} records an unresolved authoritative contradiction. Malformed output receives \texttt{FORMAT\_ERROR} and remains outside the four action labels.
-
-\subsection{Separate evidence states}
-
-The benchmark tracks four state axes:
+Each item is \(x=(c,E,s,\tau,t)\): a claim \(c\), typed evidence \(E\), current state \(s\), requested target \(\tau\), and frozen evaluation time \(t\). The state has four axes:
 \begin{align*}
 \texttt{research\_status} &\in \{\texttt{PROPOSED},\texttt{OPEN},\texttt{RESOLVED}\},\\
 \texttt{computation\_status} &\in \{\texttt{NONE},\texttt{COMPUTATIONAL}\},\\
 \texttt{formal\_status} &\in \{\texttt{NONE},\texttt{FORMALLY\_CERTIFIED}\},\\
 \texttt{review\_status} &\in \{\texttt{UNREVIEWED},\texttt{INDEPENDENTLY\_VERIFIED}\}.
 \end{align*}
-Each axis is evaluated independently, allowing computation, formal certification, review, and research status to remain distinct fields.
+The public policy checks dependencies, scope, freshness, provenance, runtime completion, contradictions, statement identity, and artifact integrity. Its deterministic oracle \(\pi_P(x)\) returns one of four actions: \allow, \hold, \demote, or \escalate. \allow{} accepts the requested target; \hold{} preserves the current state because support is insufficient; \demote{} weakens a state whose recorded basis has failed; and \escalate{} preserves the state while flagging an unresolved authoritative contradiction.
 
-\subsection{Fixed policy oracle}
-
-A public policy lists the requirements for each transition at a fixed evaluation time. The oracle checks dependencies, evidence status, scope, staleness, provenance, runtime success, contradictions, and artifact integrity. Numerical and formal \allow{} cases also require the executable artifact to match the registered scope. We use ``oracle action'' to denote conformance to this benchmark policy; it differs from an independently adjudicated claim of scientific validity.
-
-Let \(x=(c,E,s,\tau)\) denote a claim, its registered evidence, the current state, and a requested transition. For fixed policy \(P\), the oracle action is \(y_P=\pi_P(x)\). If a model response has parser status \(z\) and parsed action \(\hat y\), end-to-end action correctness is
+Let \(v(x)\) indicate a syntactically, schema-, and semantically valid response and let \(\hat y(x)\) be its action. End-to-end item correctness is
 \[
-C_{\mathrm{item}}(x)=\mathbb{1}[z=\texttt{OK}]\,\mathbb{1}[\hat y=y_P].
+C_{\mathrm{item}}(x)=\mathbb{1}[v(x)=1]\mathbb{1}[\hat y(x)=\pi_P(x)].
 \]
-For a controlled pair \((x_i^a,x_i^b)\), pair correctness is
-\[
-C_{\mathrm{pair}}(i)=C_{\mathrm{item}}(x_i^a)C_{\mathrm{item}}(x_i^b).
-\]
-Thus malformed or missing output remains in the denominator as incorrect, and a pair is correct only when the model handles both sides of the evidence change.
+For controlled pair \(i=(x_i^a,x_i^b)\), \(C_{\mathrm{pair}}(i)=C_{\mathrm{item}}(x_i^a)C_{\mathrm{item}}(x_i^b)\). Decision coverage is the fraction with \(v=1\); pair coverage is the fraction with both members valid. Conditional accuracies divide correct items or pairs by those coverage denominators. End-to-end accuracies divide by all scheduled items or pairs.
 
-\begin{table}[H]
+\begin{figure}[H]
 \centering
 \small
-\caption{One controlled pair. The claim, certificate, current state, and requested transition are identical; only the registered dependency record changes.}
-\label{tab:pair-example}
-\begin{tabular}{p{0.12\linewidth}p{0.61\linewidth}p{0.16\linewidth}}
-\toprule
-Case & Registered evidence & Oracle action \\
-\midrule
-A & A formal certificate cites a dependency, but that dependency record is absent. & \hold{} \\
-B & The same certificate plus the missing dependency record. & \allow{} \\
-\bottomrule
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}c@{\;}c@{\;}c@{\;}c@{\;}c@{}}
+\fbox{\parbox[c][0.43in][c]{0.16\linewidth}{\centering Frozen policy\\and time}}
+&$\longrightarrow$&
+\fbox{\parbox[c][0.43in][c]{0.19\linewidth}{\centering Claim, evidence,\\state, target}}
+&$\longrightarrow$&
+\fbox{\parbox[c][0.43in][c]{0.18\linewidth}{\centering Controlled\\pair + prompt}}
+\\[5pt]
+&&$\downarrow$&&\\[-1pt]
+\fbox{\parbox[c][0.43in][c]{0.16\linewidth}{\centering Anonymous bundle\\+ replay}}
+&$\longleftarrow$&
+\fbox{\parbox[c][0.43in][c]{0.19\linewidth}{\centering Manifest, receipt,\\privacy scan}}
+&$\longleftarrow$&
+\fbox{\parbox[c][0.43in][c]{0.18\linewidth}{\centering One service cell\\then parse}}
+\\[-1pt]
+&&$\uparrow$&&\\[-1pt]
+&&\multicolumn{3}{c}{\footnotesize sealed records \(\rightarrow\) gold load \(\rightarrow\) coverage, item/pair, recall, confusion}
 \end{tabular}
-\end{table}
+\caption{Benchmark and evidence flow. Model-facing inputs are fixed before service calls. End-to-end analysis retains every terminal failure; reviewer artifacts are derived only after records are sealed and privacy checked.}
+\label{fig:evidence-flow}
+\end{figure}
 
-\section{Benchmark Construction}
+Within a controlled pair, only registered fields relevant to one factor change. For example, a certificate with a missing dependency maps to \hold; adding that exact dependency maps to \allow. Separate invariance tests rename identifiers, reorder evidence, or add irrelevant records and require both the oracle and rendered prompt semantics to remain unchanged.
 
-\subsection{Controlled pairs}
+\section{Benchmark and Evaluation Design}
 
-Within each pair, the natural-language claim and requested transition are fixed. The two members differ only in registered fields that matter to the policy. This lets us ask a direct question: when the decisive prerequisite changes, does the model change its decision?
+\subsection{Synthetic benchmark}
 
-Version~1 contains 200 pairs (400 instances) over 20 factors covering dependency closure, numerical sufficiency and scope, runtime completion, freshness and contradictions, provenance and independent review, statement identity, and formal trust-base binding. Fifty pairs (100 instances) are public development data. Primary scoring uses only the preregistered 150-pair private hidden split (300 instances).
+Version~1 contains 200 pairs (400 items) over 20 factors spanning dependencies, numerical sufficiency, runtime, freshness and contradiction, provenance and review, and formal identity and trust base. Fifty pairs form public development data; 150 pairs form the hidden evaluation. Numerical cases use exact-rational finite-grid artifacts whose registered values and scope are recomputed. Formal cases use generated Lean sources under a pinned toolchain. These checks establish internal policy consistency, not external scientific validity.
 
-The public development split is rebuilt and checked end to end in hosted CI. Its inputs, fixed oracle labels, pair descriptors, exact-rational artifacts, and generated Lean package pass the dataset, executable, and formal checks. The private hidden split was constructed and validated separately.
+The fresh r6 realization was constructed after earlier outcomes under a new public commitment, private salt, future randomness beacon, construction receipt, and frozen request schedule. It contains 150 hidden pairs and 300 unique prompts from the same ontology and mostly the same template family. Its gold distribution is imbalanced: 150 \allow, 134 \hold, eight \demote, and eight \escalate{} items. All 600 terminal cells for two registered lanes were sealed before gold loading and analysis. Each item received one call with zero client retries. A text Naive Bayes classifier trained only on the 100 public-development items was frozen as a low-cost comparator.
 
-\subsection{Executable evidence and shortcut checks}
+\subsection{Balanced public robustness challenge}
 
-Numerical cases use exact-rational finite-grid artifacts. Validation recomputes their registered values, extrema, predicates, repetition digests, and scope fields. These artifacts support only the finite computational claim that was registered. Formal cases use generated Lean sources under a pinned toolchain; kernel acceptance supports only the exact encoded declaration in that environment.
+To expose action asymmetry, a separately precommitted public challenge selects 15 factors and six test pairs per factor. Its 90 pairs contain 90 \allow{} members and exactly 30 members for each of \hold, \demote, and \escalate. The complete dataset, labels, prompts, adapters, analysis, and execution contract were frozen before inference. Each of two service routes made exactly 180 calls with zero client retries. This is a public, preregistered robustness challenge: it tests behavior on a known policy and public synthetic construction, not generalization to a hidden or natural distribution.
 
-We also check for metadata-only and shallow structural shortcuts. Registered meaning-preserving transformations include identifier renaming, changes in evidence order, and insertion of irrelevant evidence. The oracle and prompt renderers must give the same result after normalization. These checks detect selected metadata and representation shortcuts; naturalistic validity remains unevaluated. The controlled synthetic design provides factor isolation.
+The two routes differ in model and service stack, including output-constraining behavior. Their results are descriptive service-configuration outcomes. They do not identify a causal effect of model weights, provider, schema mode, or any single component.
 
+\subsection{Naturalistic-candidate decision}
 
-\subsection{Machine-checkable validation strategy}
+A deterministic pointer-only sample of 12 CORE-Bench training candidates was frozen before any \cpb model call for this question. Source-level review found task prompts and benchmark answer fields, but no candidate record supplied the time-stamped execution artifact, dependency chain, runtime status, and provenance needed to map a transition under the fixed policy. Capsule-level redistribution terms also require case-specific review. We therefore created zero naturalistic benchmark cases and performed zero model calls. No human annotators, human gold labels, or agreement statistic are claimed. Naturalistic transfer remains open.
 
-Oracle actions come from the public versioned policy. The public pair-contract audit verifies each registered pair difference and reproduces all 40 public labels with the versioned oracle. Dataset generation is deterministic; numerical artifacts are recomputed with exact rational arithmetic; formal artifacts are replayed with the pinned Lean kernel; and metamorphic checks cover identifier, ordering, and irrelevant-evidence invariance. The hidden study and public formatting pilot are recomputed from archived source artifacts containing the original model responses. Later model studies bind each request to a frozen prompt packet and retain item-level response text, parser status, model identity, and response hashes. The policy remains an author-defined benchmark rule.
+\subsection{Secondary diagnostics}
 
-\section{Intervention Arms}
-
-Table~\ref{tab:arms} summarizes the four fixed arms. The first three change what the model sees. Only the last arm changes the final action after the model has responded.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Intervention arms. ``Gate'' indicates whether an invalid raw \allow{} may be replaced after generation.}
-\label{tab:arms}
-\begin{tabular}{lll}
-\toprule
-Arm & Model-facing information & Gate \\
-\midrule
-Narrative & Evidence rendered as prose & No \\
-Ledger & Typed evidence-state ledger & No \\
-Ledger + verifier & Ledger + deterministic verifier information & No \\
-Ledger + verifier + gate & Same information + disclosed enforcement & Yes \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The gate runs after model generation. If a parseable raw action is \allow{} while the policy oracle requires another action, the gate substitutes that oracle action. Malformed output and incorrect \hold{}, \demote{}, or \escalate{} actions remain unchanged. The gate-arm prompt discloses this enforcement, so raw comparisons with the passive-verifier arm include a prompt difference. Because the same oracle defines the benchmark labels, post-gate agreement is reported solely as an implementation check; it supplies no evidence of learned model performance or independent safety.
-
-\section{Experimental Protocol}
-
-The original v1 study contains 150 hidden controlled pairs (300 instances), Qwen3-0.6B Q8\_0 and Qwen3-1.7B Q8\_0, four arms, and three fixed seeds (104729, 130363, 169087):
-\[
-300\times 2\times 4\times 3 = 7{,}200
-\]
-scored decisions. Primary scoring uses the 300 hidden instances. The hidden set was committed to Git before the scored runs. Both models use the same pinned llama.cpp build recorded in the released manifests.
-
-The v1 plan prespecified false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). These rates are conditional on parseable output. We therefore use end-to-end item and controlled-pair accuracy as the principal reliability summaries across studies, retaining every malformed or missing response as incorrect. Decision coverage and complete-pair coverage diagnose interface reliability. The prespecified rates, calibration, and structured reason and evidence scores remain conditional diagnostics and are interpreted only with their coverage denominators.
-
-The v1 results are shown as fixed-seed triplets; its pair-bootstrap intervals and registered paired comparisons remain in the supplementary results. Later studies retain their own frozen analysis contracts and interpretation boundaries.
-
-\subsection{Fresh preregistered confirmatory study}
-
-After the adaptive capable-model outcomes were known, we froze a new study under a new C0 commitment, private salt, future randomness beacon, construction seed, hidden realization, and C1 receipt. The 300 items use the same controlled ontology and mostly the same synthetic template family, with new seed-keyed identifiers and assignments. Their 600 exact request bodies contain 300 unique prompts with zero exact hash overlap against the 900 prompts from prior or void confirmatory realizations. C1 fixed the dataset, prompt packet, public-only baseline predictions, model-facing requests, parser, two-lane family, and analysis before any model request.
-
-The registered lanes are time-stamped Qwen3.7-Max and Flash service configurations. Each lane has 300 fixed calls, one per item, with zero client retries. The frozen comparator is a text Naive Bayes classifier trained only on the immutable 100-item public-development split. At C2, all 600 terminal cell records were sealed before gold loading or analysis. The primary endpoints are end-to-end item and controlled-pair accuracy, so every HTTP, transport, parse, or semantic failure remains incorrect. Each lane is compared with the frozen baseline through a one-sided exact pair-blocked whole-vector swap test, followed by Holm adjustment across both registered hypotheses. A 10-percentage-point accuracy difference is a separate point-estimate gate. The preregistered crossed factor-by-template bootstrap measures composition sensitivity. The estimand is the executed service configuration; fixed-weight and cross-provider effects remain outside scope.
-
-\subsection{Adaptive capable-model case study}
-
-After the v1 outcomes were known, we ran a separate adaptive case study on the prior 300-instance hidden split. Seven service lanes shared a family-balanced 12-instance pilot. Registered adapter amendments used transport and parser error classes while excluding actions, response text, gold comparisons, and accuracy. Full pilot analyses were technically available and lacked independent escrow. Across all 14 pilot attempts, a terminal lane advanced only with zero transport failures and at least 10 schema- and semantic-valid decisions. Two of seven service lanes qualified for fresh no-retry full passes; five other lanes lack full scores.
-
-All attempts are released. Reuse of the pilot during adapter development makes the case study exploratory, and confirmatory force is unavailable. A post-hoc sensitivity excludes the 12 pilot inputs, leaving 288 instances and 144 pairs. End-to-end scores count every non-OK response as incorrect. Completed lanes are paired descriptively against always-\allow{}; missing tests from qualification failures remain explicit, and no confirmatory familywise claim follows adaptive lane selection.
-
-\subsection{Post-v1 public interface pilot}
-
-After the hidden v1 results were known, we ran a separately labeled post-v1 public diagnostic of output coverage and transition decisions. It uses the 20 public alpha pairs (40 instances), the same two frozen model artifacts and llama.cpp runtime, the ledger-plus-verifier prompt, and seed 104729. For each model, the free and constrained runs have identical prompt hashes, model artifact, runtime, seed, and hardware record; the llama.cpp JSON-schema response constraint is the sole registered difference. Full raw response text is retained.
-
-Both decoding conditions receive identical model-facing inputs; the 160-decision matrix is a post-v1, one-seed formatting control.
-
-\subsection{Post-protocol GPT-5.4 public-development follow-up}
-
-After the base outcomes were known, a separately frozen GPT-5.4 extension used the ledger-plus-verifier prompt, strict JSON Schema, and zero retries. Its family-balanced 12-instance public-development pilot required zero transport errors and at least 10 parseable decisions for \texttt{GO}; a fresh 100-instance pass followed. This is descriptive post-protocol evidence, distinct from the preregistered hidden study.
+Earlier studies are retained as diagnostics rather than a chronology of model development. The original 7,200-decision v1 hidden matrix produced 5,327 format errors; all 1,873 parseable raw decisions selected \allow, yielding .1333 end-to-end item accuracy and zero pair accuracy. A post-v1 public formatting control produced 108 valid decisions among 160; schema-constrained runs accounted for 78/80 valid decisions and 38/40 complete pairs, yet every valid action remained \allow{} and pair accuracy remained zero. An adaptive hidden service study and a one-pass GPT-5.4 public-development follow-up show that outcomes depend strongly on service qualification and configuration. They are descriptive and do not alter the two primary evidence regimes above.
 
 \section{Results}
 
-\subsection{Fresh preregistered confirmatory study}
+\subsection{Coverage, conditional accuracy, and end-to-end accuracy}
 
-Table~\ref{tab:fresh-confirmatory} gives the registered end-to-end result. The Qwen3.7-Max service configuration produced 272 valid decisions and 258 correct actions from 300 items, with 113 of 150 controlled pairs correct. The frozen public-development text Naive Bayes baseline gave 184 correct actions and 34 correct pairs. The 24.67-percentage-point item-accuracy difference corresponds to 74 additional correct items. Among 94 pair blocks with a nonzero correctness difference, Qwen won 84 and lost 10. The one-sided exact $p$-value is $5.16\times10^{-16}$, and the two-hypothesis Holm-adjusted value is $1.03\times10^{-15}$. The registered point-estimate and significance gates are satisfied. The exact test addresses zero difference under pair-block exchangeability; the 10-percentage-point threshold receives no lower confidence-bound interpretation.
+Table~\ref{tab:core-results} reports both estimands. The r6 Qwen configuration returned 272/300 valid decisions and 123/150 complete pairs. Its .9485 conditional item accuracy becomes .8600 end to end; its .9187 conditional pair accuracy becomes .7533 end to end. Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid outputs remain incorrect. Against the frozen Naive Bayes comparator, Qwen added 74 correct items; across the 94 pair blocks with unequal correctness it won 84 and lost 10 (one-sided exact \(p=5.16\times10^{-16}\), two-hypothesis Holm-adjusted \(p=1.03\times10^{-15}\)). The comparator's .6133 item and .2267 pair accuracy confirm that the released text baseline is weak rather than a competitive estimate of the best shallow method.
 
 \begin{table}[H]
 \centering
-\small
-\caption{Fresh 300-item confirmatory result. Every failed or invalid response remains in the denominator. N/E marks model efficacy as non-evaluable because the Flash configuration returned no model output.}
-\label{tab:fresh-confirmatory}
-\setlength{\tabcolsep}{4.2pt}
-\begin{tabular}{lccccc}
+\scriptsize
+\caption{Coverage and accuracy. Conditional values use only valid decisions or complete pairs; end-to-end (E2E) values retain all scheduled failures. ``Old'' identifies the frozen r6 interface. N/E means model efficacy is non-evaluable because no model output was returned.}
+\label{tab:core-results}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Configuration & Valid & E2E item acc. & E2E pair acc. & Bal. recall & Macro-F1 \\
+Configuration & Valid & E2E item & Cond. item & Pair cov. & E2E pair & Cond. pair \\
 \midrule
-Qwen3.7-Max & 272/300 & .860 & .753 & .600 & .627 \\
-Public-dev text NB & 300/300 & .613 & .227 & .328 & .312 \\
-Flash service configuration & 0/300 & N/E & N/E & N/E & N/E \\
+r6 Qwen3.7-Max & 272/300 & .8600 & .9485 & .8200 & .7533 & .9187 \\
+r6 public-dev text NB & 300/300 & .6133 & .6133 & 1.0000 & .2267 & .2267 \\
+r6 old Flash interface & 0/300 & N/E & N/E & .0000 & N/E & N/E \\
+\midrule
+Public challenge Qwen & 148/180 & .7333 & .8919 & .7111 & .5333 & .7500 \\
+Public challenge Flash & 146/180 & .5000 & .6164 & .6778 & .1444 & .2131 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Failures were counted incorrect with zero retries: 14 HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid decisions. Per-action recall was 143/150 for \allow{}, 110/134 for \hold{}, 5/8 for \escalate{}, and 0/8 for \demote{}. The aggregate result therefore lacks uniform competence across actions. Its preregistered composition-sensitivity envelope is [.754, .948] for item accuracy and [.579, .903] for pair accuracy. This envelope describes benchmark composition; repeated-call uncertainty remains unestimated.
+The r6 Flash configuration returned 300 HTTP 401 responses and no model output. This was a failure of the old frozen service interface, so model efficacy and the registered second confirmation are non-evaluable. In the later public challenge, the new Flash route returned 146 valid decisions. That establishes that the newer service path was executable under its challenge contract; it does not retrospectively repair r6 or support a strict causal comparison.
 
-The registered Flash lane returned 300 HTTP 401 responses with identical error-body hashes, no model-returned identity, and no usage. Its H2 result remains in the two-test Holm family with $p=1$ and is unsupported; model efficacy is non-evaluable. Post-run inspection found that the frozen runner forwarded the credential value verbatim in the authorization header, while the earlier qualified adapter prepended a bearer scheme. This lineage mismatch may explain the responses, although the unique cause remains unestablished. A corrected run after gold release would be exploratory on this split. The Flash failure leaves the Qwen comparison unchanged and precludes dual-model confirmation.
+On the balanced challenge, Qwen recorded 31 transport failures and one semantic failure; Flash recorded 34 semantic failures. Qwen achieved 132/180 correct items and 48/90 correct pairs. Flash achieved 90/180 correct items and 13/90 correct pairs. The conditional scores are materially higher than the corresponding end-to-end scores, especially for pairs, showing why both coverage and correctness must be retained.
 
-\subsection{Adaptive capable-model case study}
+\subsection{Action recall and full confusion matrices}
 
-All 14 pilot attempts are retained. Qwen3.7-Max and matched DeepSeek-V4-Flash reached terminal qualification; five other lanes lack full scores. On the pilot-excluded sensitivity, Qwen gives 270/288 correct end-to-end actions and 126/144 correct pairs, while Flash gives 181/288 actions and 37/144 pairs. Their 95\% Wilson intervals are [.903, .960] and [.811, .919] for Qwen, and [.571, .682] and [.193, .334] for Flash. Aggregate accuracy again hides a shared class failure: both lanes score 0/8 on \demote{}. Including pilot inputs gives 282/300 actions and 132/150 pairs for Qwen, and 188/300 actions and 38/150 pairs for Flash. The artifact reports paired tests against always-\allow{} and a six-hypothesis Bonferroni sensitivity. Adaptive qualification leaves this case study exploratory; no confirmatory familywise claim is made.
-
-\subsection{Original v1 small-model study}
-
-Across the v1 study, 5,327 of 7,200 outputs (73.99\%) receive \texttt{FORMAT\_ERROR}. The remaining 1,873 raw decisions all select \allow{}. The gate changes the final action on covered invalid promotions, and its reach follows parseable-output coverage.
-
-Table~\ref{tab:main-results} reports raw behavior before enforcement for every arm. Triplets are ordered by seeds 104729, 130363, and 169087. End-to-end scores retain all 300 hidden instances or 150 controlled pairs per run, assigning every format error a score of zero.
+Table~\ref{tab:action-recall} shows end-to-end recall, so no-valid-decision cells count as misses. R6's eight-item \demote{} and \escalate{} supports are too small for a uniform four-action claim. The balanced challenge supplies 30 invalid members per action and preserves the same qualitative \demote{} weakness: Qwen recovers 4/30 and Flash 0/30.
 
 \begin{table}[H]
 \centering
 \small
-\caption{Original v1 hidden-test raw model behavior. Each entry is a three-seed triplet; gate-arm rows precede enforcement.}
-\label{tab:main-results}
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{llccc}
+\caption{End-to-end recall by gold action; no-valid cells are misses. Gold supports by row: r6 150/134/8/8; each challenge lane 90/30/30/30.}
+\label{tab:action-recall}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Model & Arm & Decision coverage & E2E item acc. & E2E pair acc. \\
+Configuration & \allow{} & \hold{} & \demote{} & \escalate{} & Bal. recall & Macro-F1 \\
 \midrule
-Qwen3-0.6B & Narrative & 0/0/0 & 0/0/0 & 0/0/0 \\
-Qwen3-0.6B & Ledger & .667/.893/.570 & .353/.453/.293 & 0/0/0 \\
-Qwen3-0.6B & Ledger + verifier & .703/.787/.393 & .357/.403/.193 & 0/0/0 \\
-Qwen3-0.6B & Ledger + verifier + gate & .490/.420/.140 & .277/.210/.087 & 0/0/0 \\
-\midrule
-Qwen3-1.7B & Narrative & 0/0/0 & 0/0/0 & 0/0/0 \\
-Qwen3-1.7B & Ledger & 0/0/0 & 0/0/0 & 0/0/0 \\
-Qwen3-1.7B & Ledger + verifier & 0/0/0 & 0/0/0 & 0/0/0 \\
-Qwen3-1.7B & Ledger + verifier + gate & .483/.217/.480 & .230/.113/.230 & 0/0/0 \\
+r6 Qwen3.7-Max & .9533 & .8209 & .0000 & .6250 & .5998 & .6265 \\
+Public challenge Qwen & .8778 & .8667 & .1333 & .7667 & .6611 & .7004 \\
+Public challenge Flash & .7556 & .3000 & .0000 & .4333 & .3722 & .5237 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Each model--arm cell contains 900 decisions. For Qwen3-0.6B, the format-error counts are 900, 261, 335, and 585 for narrative, ledger, passive verifier, and gate. For Qwen3-1.7B they are 900, 900, 900, and 546. The ledger raises output coverage over narrative for Qwen3-0.6B; all parseable decisions in the ledger and passive-verifier arms still select \allow{}. Qwen3-1.7B records zero decision coverage in the first three arms. Every end-to-end pair score is zero because each controlled pair changes the oracle action while all parseable model actions remain \allow{}. Conditional FPR and VPR are both 1.0 whenever defined, a direct consequence of that uniform action distribution.
+Table~\ref{tab:confusion} gives every end-to-end confusion cell. The final column distinguishes absence of a valid decision from any policy action. R6 Qwen maps all eight gold \demote{} items to \allow. On the public challenge, Qwen's 20 valid gold-\demote{} responses split across all four actions, while Flash never predicts \demote. Flash also maps 13 gold-\hold{} items to \allow{} and loses 14/30 gold-\escalate{} items to invalid responses.
 
-The source records contain parse status and structured decisions. Original free-form text for outputs classified as parse failures is absent, so v1 \texttt{FORMAT\_ERROR} aggregates syntax, schema, interface, and decision causes. All analyses use the frozen outputs from the scored runs.
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Full confusion matrices. Rows are gold actions; action columns are valid predictions; ``No valid'' includes service, syntax, schema, and semantic failures.}
+\label{tab:confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & No valid \\
+\midrule
+r6 Qwen & \allow{} & 143 & 0 & 0 & 0 & 7 \\
+& \hold{} & 4 & 110 & 0 & 2 & 18 \\
+& \demote{} & 8 & 0 & 0 & 0 & 0 \\
+& \escalate{} & 0 & 0 & 0 & 5 & 3 \\
+\midrule
+Challenge Qwen & \allow{} & 79 & 0 & 0 & 0 & 11 \\
+& \hold{} & 0 & 26 & 0 & 0 & 4 \\
+& \demote{} & 8 & 4 & 4 & 4 & 10 \\
+& \escalate{} & 0 & 0 & 0 & 23 & 7 \\
+\midrule
+Challenge Flash & \allow{} & 68 & 4 & 0 & 8 & 10 \\
+& \hold{} & 13 & 9 & 0 & 0 & 8 \\
+& \demote{} & 25 & 3 & 0 & 0 & 2 \\
+& \escalate{} & 0 & 3 & 0 & 13 & 14 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
+\subsection{Definitional policy ceiling}
 
-\subsection{Public formatting-control pilot}
-
-On the 40-instance public split, schema constraints raise decision coverage from .75 to 1.00 for Qwen3-0.6B and from 0 to .95 for Qwen3-1.7B; complete-pair coverage rises from .70 to 1.00 and from 0 to .90. Across all four free/constrained runs, 108 of 160 decisions are parseable and every one selects \allow{}. The constrained runs therefore reach .500 and .475 end-to-end item accuracy but zero pair accuracy. Formatting control repairs the interface while evidence sensitivity remains zero in these small models.
-
-\subsection{Post-protocol GPT-5.4 follow-up}
-
-The revised pilot returns 12/12 parseable decisions and satisfies its prespecified continuation gate. On the full public-development split, GPT-5.4 returns 99 parseable decisions from 100, for decision coverage .99; 49 of 50 pairs are complete, for pair coverage .98. All 99 parseable decisions match the policy oracle, with 50 \allow{}, 45 \hold{}, 2 \demote{}, and 2 \escalate{} decisions. End-to-end action and pair accuracy are therefore .99 and .98; conditional pair accuracy and decision-flip rate are 1.0 over 49 complete pairs. Raw FPR is 0/49 and raw VPR is 50/50.
-
-The remaining response reaches the 3,072-token ceiling with reasoning tokens and returns no final response text. These results provide descriptive public-development evidence from one post-protocol GPT-5.4 pass.
+The deterministic policy executor reads the same model-visible item and public policy that define the labels. It reproduces 300/300 r6 items and 150/150 pairs, and all 360 scheduled public-challenge item cells and 180 pair cells. This perfect agreement is true by definition of the evaluation target. We call it a \emph{definitional policy ceiling}; it is neither a learned baseline nor independent evidence that the authored policy is scientifically correct. Post-generation gates driven by the same executor are implementation checks and provide no evidence of learned model competence.
 
 \section{Discussion}
 
-\subsection{Main interpretation}
+\paragraph{What the positive result supports.}
+The preregistered r6 result supports one time-stamped Qwen service configuration on a fresh hidden realization of the same synthetic ontology. Its .8600/.7533 end-to-end item/pair accuracy and .9067/.8200 coverage show substantial policy conformance under that contract. The higher .9485/.9187 conditional values answer a different question---correctness after a usable response exists. Neither estimand measures broad research ability or naturalistic scientific judgment.
 
-The fresh study provides scoped confirmatory evidence that one Qwen3.7-Max service configuration exceeds the frozen public-only text Naive Bayes baseline on a new controlled realization. The baseline is shallow and has zero \demote{} and \escalate{} recall. The result therefore establishes only this narrow benchmark comparison; stronger baselines remain unevaluated.
+\paragraph{Action balance changes the picture.}
+R6's aggregate is dominated by \allow{} and \hold. Its 0/8 \demote{} recall already blocks a uniform competence claim, and the public challenge makes the weakness harder to dismiss: Qwen reaches only 4/30 and Flash 0/30 on \demote. The complete matrices also show different error modes. Qwen's challenge errors concentrate in missing decisions and confused demotions; Flash frequently substitutes \allow{} for \hold{} or \demote{} and has lower pair sensitivity. Balanced recall and pair accuracy therefore add information that item accuracy alone hides.
 
-Item accuracy alone overstates breadth. Qwen handles \allow{} and \hold{} well, yet its 0/8 \demote{} result and 5/8 \escalate{} result leave rare-action competence unresolved. The Flash lane measures an unsuccessful registered service configuration; 300 authorization errors provide no model output and make model efficacy non-evaluable. The study consequently supplies one supported hypothesis, one unsupported operational lane, and no dual-model replication.
+\paragraph{Service reliability is part of end-to-end behavior.}
+Every transport, syntax, schema, and semantic failure is a failed scheduled decision. Conditional reporting remains useful for separating interface reliability from policy reasoning, but it cannot replace the end-to-end estimand. The old r6 Flash 401 result diagnoses a frozen interface that never reached model output. The later Flash route proves only that a different service path executed. Because the routes differ in both service stack and model configuration, the observed Qwen--Flash gap is descriptive and cannot be interpreted as a strict causal ablation.
 
-The adaptive case study remains useful as exploratory context: Qwen follows both members of 87.5\% of pilot-excluded pairs, while the completed Flash lane reaches 25.7\% and five lanes stop before full scoring. The original small-model study and public formatting control isolate two earlier failure modes. Most v1 outputs are unusable; constrained decoding repairs coverage, yet those models still collapse to \allow{}. The public GPT-5.4 follow-up shows near-complete solvability on the development split.
+\paragraph{Comparators and enforcement.}
+The public-development Naive Bayes model gives a reproducible low-cost reference, but .6133 item accuracy, .2267 pair accuracy, .3284 balanced recall, and .3124 macro-F1 make it a weak baseline. Stronger learned comparators remain needed. Conversely, the deterministic executor is maximally strong only because it is the operational definition of gold. Treating it as empirical model evidence would be circular.
 
-The one-way gate mechanically replaces a parseable invalid \allow{} with the action from the same policy oracle used for evaluation. It remains an implementation check, separate from model behavior. Service-level interface reliability and policy reasoning both contribute to end-to-end performance, and the analysis reports them separately.
+\section{Limitations}
 
-\section{Limitations and Threats to Validity}
+The benchmark is synthetic and policy-constrained. R6 is a new seeded realization of the same ontology and mostly the same template family, so its hidden design controls leakage more strongly than distribution shift. The balanced challenge is public and precommitted; its 90 pairs and 15 factors measure robustness to an action-balanced synthetic construction, not hidden-test generalization.
 
-\paragraph{Model and dataset scope.}
-The benchmark focuses on mathematical-research evidence states and synthetic controlled pairs. The fresh test is a new seed realization of the same ontology and mostly the same template family. It contains eight \demote{} and eight \escalate{} items, each concentrated in one factor. The supported result covers one time-stamped service configuration and one call per item; sampling variance, fixed-weight generalization, stronger baselines, naturalistic transfer, and human-policy agreement remain open. The adaptive case study reuses a 12-instance pilot during adapter development, and its completed-lane selection depends on interface coverage. The GPT-5.4 extension covers public development data and one pass.
+Coverage remains a material limitation. R6 loses 28/300 decisions and 27/150 complete pairs; the public challenge loses 32/180 Qwen decisions and 34/180 Flash decisions. Conditional accuracies of .9485/.9187, .8919/.7500, and .6164/.2131 must therefore be read beside their end-to-end counterparts. The confusion matrices reveal severe \demote{} weakness even after balancing, and 30 examples per invalid action still support only coarse action-level estimates.
 
-\paragraph{Output-format failures.}
-The v1 records lack original free-form text for parse failures, so \texttt{FORMAT\_ERROR} combines syntax, schema, interface, and decision-task causes. The fresh Qwen lane distinguishes 15 HTTP errors, ten timeouts, and three semantic-invalid outputs; all remain incorrect. The Flash authorization failures yield an operational result and no model-efficacy estimate. Provider-reported output-token counts exceed the requested 1,536-token parameter for 261 of 275 HTTP 200 responses; their relationship to hidden-thinking accounting is unresolved. The 1,536 value is a requested client parameter; an actual generation or billing cap lacks independent confirmation.
+The evidence covers a few time-stamped service configurations and one call per item. Zero retries make the estimand clear but do not characterize retry policies, sampling variance, fixed model weights, or alternate providers. The old and new Flash routes differ enough that executability of the latter cannot identify why the former returned 401 or what r6 model accuracy would have been. No strict causal provider, model, or structured-output comparison follows.
 
-\paragraph{Gate interpretation.}
-The gate-arm prompt discloses enforcement, so raw between-arm differences include that prompt change. The within-arm raw-to-final comparison measures only the deterministic one-way transformation.
-
-\paragraph{Benchmark construction and label scope.}
-The author designed the policy, controlled factors, and item generator. Oracle actions measure conformance to that author-defined benchmark; external consensus remains unevaluated. Pair-contract, executable, and Lean checks establish internal consistency, while formal acceptance covers only the exact encoded statement in the pinned environment. The immutable r6 construction manifest retains a stale \texttt{CFM\_R5} namespace label and three construction-time \texttt{PENDING} values. All released identifiers use \texttt{v1-test-cfo-*}. A bound correction overlay records this metadata defect while preserving the C1- and C2-bound manifest bytes.
-
-\paragraph{Service identity and future contamination.}
-API model names are service-exposed labels; exact weights, routing, wrappers, and upstream revisions remain outside independent audit. Some services were permitted to retain the synthetic benchmark requests for model improvement. The released hidden split is therefore a one-shot evaluation asset whose contamination risk can grow after these runs; future held-out evaluations should use a newly generated private split.
+The policy and labels are authored operational definitions. There is no human annotation study, external policy consensus, inter-annotator agreement, or validation against downstream scientific outcomes. Twelve frozen CORE-Bench candidates lacked the source-level evidence snapshot needed for a defensible mapping, so no naturalistic cases were created or scored. The Naive Bayes comparator is shallow, while the deterministic executor is circular by design. Naturalistic transfer, stronger learned baselines, human-policy agreement, and downstream utility remain open.
 
 \section{Reproducibility and Artifact Policy}
 
-The hidden split and exact prompts were committed before the original scored inference. Artifact-only recovery reused the 24 archived source runs, issued no model queries, and reclassified exactly 27 of 7,200 cross-field-invalid decisions as format errors under the registered semantic contract. The review bundle releases the available source and normalized item records, the normalization map, and recomputation inputs.
+The repository binds policies, generators, datasets, prompts, terminal records, gold-loading order, analyses, and receipts. R6 uses public and salted commitments, a future randomness beacon, a construction receipt, a frozen 600-request schedule, and a pre-gold C2 seal. The public challenge freezes its public dataset, action balance, prompt packet, service adapters, and statistics before model inference. Neither completed singleton study is rerun during paper construction.
 
-For the fresh study, public C0 and salt commitments precede the future randomness beacon and C1 construction receipt. C2 seals all 600 scheduled terminal cells before gold loading and analysis. A post-run audit found cleartext provider hidden-thinking blocks inside 275 Qwen response envelopes, contrary to the registered retention boundary. Scoring used final response text and parsed decisions alone, so this defect leaves C2 ordering and all scientific values unchanged. The public release is a post-C2 derivative that removes complete thinking blocks through a text-only allowlist, records source-to-derived row and envelope hashes, and rejects unknown fields. Reanalysis under the frozen CPython 3.11.16 environment yields an identical scientific payload. The committed release has a 179-file permanent manifest; original reasoning-bearing records remain private.
+A post-r6 audit found cleartext provider hidden-thinking blocks in 275 source envelopes. Scoring used final response text and parsed decisions only. The reviewer derivative uses a text-only allowlist, verifies source-to-derived hashes and scientific-payload equivalence, and excludes the reasoning-bearing envelopes. The public-challenge receipt verifies 360 item records, exact nonnumeric fields, numerical agreement within \(10^{-12}\), zero retained provider response identifiers, zero hidden-reasoning findings, and zero provider-account findings.
 
-The anonymous bundle includes the fresh dataset, frozen study plan, prompt packet, baseline predictions, projected C2 records, item-level final outputs, released gold, analysis, redaction receipt, and frozen-manifest correction overlay. Its validator recomputes the full statistics and confirms the Qwen and Flash dispositions. The bundle also retains the public formatting control, GPT-5.4 follow-up, all 14 adaptive pilot attempts, both exploratory full passes, and historical parser snapshots. Searchable repository provenance is replaced by anonymous role labels. The private construction seed is excluded; any change to labels, policy, prompts, controlled factors, or hidden-test bytes creates a new benchmark version.
+The anonymous bundle includes replayable item-level evidence for the principal and diagnostic studies, policy and prompt bindings, executable and formal checks, and privacy receipts. Its manifest computes the current file count from the generated tree; validators recompute that count rather than relying on a prose constant. Fail-closed scans reject author identity, repository and workflow identifiers, provider response identifiers, hidden reasoning fields, and unknown record fields.
 
 \section{AI Assistance Disclosure}
 
-Generative AI tools were used as assistants during literature search, research planning and methodological discussion, synthetic benchmark-template and code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the generated benchmark through deterministic validators, checked the reported results against the released artifacts, checked the references, and is responsible for the final manuscript and submission. The quantitative results reported in this paper come from the validated study artifacts. The author retains authorship and final responsibility.
+Generative AI tools assisted literature search, research planning and methodological discussion, synthetic benchmark-template and code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the benchmark through deterministic validators, checked the reported results against released artifacts, checked the references, and is responsible for the manuscript. Quantitative results come from the validated study artifacts. AI systems are not authors or human annotators.
 
 \section{Conclusion}
 
-\cpb evaluates evidence-justified claim-state transitions beyond factual answer accuracy. On a fresh preregistered realization, one Qwen3.7-Max service configuration reaches .860 end-to-end item accuracy and .753 controlled-pair accuracy, exceeding a frozen public-only text baseline by 24.67 percentage points under the complete Holm-adjusted family. Its 0/8 \demote{} result limits the breadth of that success. The registered Flash lane ends in 300 authorization errors, leaving model efficacy non-evaluable and dual-model confirmation unsupported. Earlier small models combine low coverage with an all-\allow{} collapse, while adaptive capable-model results remain exploratory. Research-agent evaluations should report service failures, coverage, action-wise and pair behavior, qualification history, and deterministic safeguards as distinct quantities.
+\cpb evaluates a narrow capability: selecting an evidence-state transition that conforms to a fixed author-defined policy on synthetic controlled pairs. The fresh hidden r6 result combines .9067 decision coverage with .8600 end-to-end item accuracy and .8200 pair coverage with .7533 end-to-end pair accuracy; its conditional values are .9485 and .9187. The public action-balanced challenge yields .7333/.5333 end-to-end item/pair accuracy for Qwen and .5000/.1444 for Flash, while \demote{} recall remains 4/30 and 0/30. These results support service-configuration-specific policy conformance, not general research-agent competence.
+
+The evidence chain also limits interpretation. All unusable responses remain in the denominator; the old Flash 401 lane is an interface failure, the newer route establishes executability only, and cross-stack outcomes are not a causal ablation. The deterministic executor is a definitional policy ceiling, whereas the Naive Bayes comparator is weak. The most important next tests are source-grounded naturalistic cases, stronger learned baselines, repeated service configurations, and independent assessment of whether the policy itself matches scientific practice.
 
 \bibliographystyle{plain}
 \bibliography{references}

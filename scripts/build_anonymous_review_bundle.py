@@ -40,6 +40,12 @@ FORBIDDEN_CREDENTIAL_PATTERNS = {
     "GitHub token": re.compile(r"\b(?:github_pat_|gh[pousr]_)[A-Za-z0-9_]{20,}\b"),
     "bearer credential": re.compile(r"\bBearer\s+[A-Za-z0-9._~-]{24,}\b", re.IGNORECASE),
 }
+FORBIDDEN_PROVIDER_RESPONSE_PATTERNS = {
+    "Anthropic-style response ID": re.compile(r"\bmsg_[0-9a-f-]{16,}\b", re.IGNORECASE),
+    "OpenAI-style response ID": re.compile(
+        r"\b(?:chatcmpl-|resp_)[A-Za-z0-9_-]{10,}\b", re.IGNORECASE
+    ),
+}
 SENSITIVE_PROVENANCE_REPLACEMENTS = {
     "provider account identifier": (
         re.compile(
@@ -87,6 +93,9 @@ FORBIDDEN_TEXT = {
     "32402993463",
     "32403718086",
     "32405565039",
+    "32453310192",
+    "32509532820",
+    "9460301513",
     "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664",
     "83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e",
     "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5",
@@ -108,6 +117,11 @@ FORBIDDEN_TEXT = {
     "b86ee1e1d28db8a390344d28582af88e26970560",
     "cc67096ba0a91866ab442647b9f82301dd6cb317",
     "300dc094852e74c8139344248b25a4d637a94c7c",
+    "1901e471bdf94f434f9671708b93599a106b1543",
+    "3746403ea8784a95ae2cb1c66ee1b95e4a67ad42",
+    "057e785483eed14742e63817f81bea6add579c53",
+    "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
+    "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b",
     LOCAL_WORKSPACE_ROOT,
     GITHUB_RUNNER_ROOT,
 }
@@ -129,6 +143,9 @@ PROVENANCE_REPLACEMENTS = {
     "32402993463": "anonymous-capable-transport-run",
     "32403718086": "anonymous-capable-first-qualified-run",
     "32405565039": "anonymous-capable-final-qualified-run",
+    "32453310192": "anonymous-fresh-confirmatory-run",
+    "32509532820": "anonymous-balanced-challenge-run",
+    "9460301513": "anonymous-balanced-challenge-artifact",
     "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1": "anonymous-hidden-commitment",
     "aa5268dcde2aa44f8eabf0246631efbca27de7e5": "anonymous-v1-scored-source",
     "e2b09f30b0573cf7bcb244eef1917691755f2877": "anonymous-v1-recovery-source",
@@ -140,6 +157,10 @@ PROVENANCE_REPLACEMENTS = {
     "b86ee1e1d28db8a390344d28582af88e26970560": ("0000000000000000000000000000000000000002"),
     "cc67096ba0a91866ab442647b9f82301dd6cb317": ("anonymous-capable-collection-source"),
     "300dc094852e74c8139344248b25a4d637a94c7c": ("0000000000000000000000000000000000000000"),
+    "1901e471bdf94f434f9671708b93599a106b1543": ("0000000000000000000000000000000000000005"),
+    "3746403ea8784a95ae2cb1c66ee1b95e4a67ad42": ("0000000000000000000000000000000000000006"),
+    "057e785483eed14742e63817f81bea6add579c53": "0000000000000000000000000000000000000007",
+    "f44b01eb97418d87aa6d7486fa785c0f49b9dda2": ("0000000000000000000000000000000000000008"),
     LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
     GITHUB_RUNNER_ROOT: "/anonymous/workspace",
     "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664": (
@@ -169,6 +190,9 @@ PROVENANCE_REPLACEMENTS = {
     ),
     "f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4": (
         "anonymous-followup-digest-e"
+    ),
+    "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b": (
+        "anonymous-balanced-challenge-artifact-digest"
     ),
 }
 NUMERIC_PROVENANCE_REPLACEMENTS = {
@@ -253,7 +277,22 @@ def anonymize_provenance(value: Any) -> Any:
     """Replace searchable repository provenance while preserving empirical payloads."""
 
     if isinstance(value, dict):
-        return {key: anonymize_provenance(child) for key, child in value.items()}
+        hidden_reasoning_keys = {
+            "reasoning_content",
+            "thinking",
+            "thinking_content",
+            "thought",
+            "thoughts",
+        }
+        cleaned: Json = {}
+        for key, child in value.items():
+            if key in hidden_reasoning_keys:
+                continue
+            if key in {"provider_response_id", "provider_request_id"}:
+                cleaned[key] = None
+            else:
+                cleaned[key] = anonymize_provenance(child)
+        return cleaned
     if isinstance(value, list):
         return [anonymize_provenance(child) for child in value]
     if isinstance(value, int) and value in NUMERIC_PROVENANCE_REPLACEMENTS:
@@ -780,6 +819,143 @@ by later receipts.
     write_json(destination / "MANIFEST.json", manifest)
 
 
+def build_balanced_public_anonymous_evidence(destination: Path) -> None:
+    """Create a replayable anonymous derivative of the balanced public challenge."""
+
+    source = ROOT / "v2" / "balanced-public-challenge"
+    results = source / "results"
+    destination.mkdir(parents=True, exist_ok=True)
+    copy_tree(source / "dataset", destination / "dataset")
+    copy_file(source / "prompt-packet.json", destination / "prompt-packet.json")
+    copy_file(
+        ROOT / "v2" / "balanced-public-challenge-study-plan.json",
+        destination / "study-plan.json",
+    )
+
+    run_destination = destination / "runs"
+    analysis_destination = destination / "analysis"
+    run_destination.mkdir()
+    analysis_destination.mkdir()
+    lane_files: dict[str, str] = {}
+    analysis_files: dict[str, str] = {}
+    run_paths: dict[str, Path] = {}
+    for source_run in sorted((results / "runs").glob("*.jsonl")):
+        rows = [
+            anonymize_provenance(json.loads(line))
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        lane_ids = {str(row.get("lane_id")) for row in rows}
+        if len(rows) != 180 or len(lane_ids) != 1:
+            fail(f"balanced challenge run has invalid coverage: {source_run.name}")
+        lane_id = lane_ids.pop()
+        if lane_id in lane_files:
+            fail(f"balanced challenge lane is duplicated: {lane_id}")
+        for row in rows:
+            _reject_hidden_reasoning(row, f"balanced challenge row {row.get('item_id')}")
+            if row.get("provider_response_id") is not None:
+                fail(f"balanced challenge retained a provider response ID: {row.get('item_id')}")
+            raw_text = row.get("raw_response_text")
+            raw_digest = row.get("raw_response_sha256")
+            if raw_text is None:
+                if raw_digest is not None:
+                    fail("balanced challenge null response has a digest")
+            elif raw_digest != sha256_text(str(raw_text)):
+                fail("balanced challenge response digest changed")
+        target = run_destination / source_run.name
+        target.write_text(
+            "".join(f"{canonical_json(row)}\n" for row in rows),
+            encoding="utf-8",
+        )
+        lane_files[lane_id] = f"runs/{target.name}"
+        run_paths[lane_id] = target
+
+    for source_analysis in sorted((results / "analysis").glob("*.json")):
+        analysis = anonymize_provenance(load_object(source_analysis))
+        lane_id = str(analysis.get("lane_id"))
+        if lane_id not in run_paths or lane_id in analysis_files:
+            fail(f"balanced challenge analysis lane differs from runs: {lane_id}")
+        analysis["run_path"] = lane_files[lane_id]
+        analysis["run_sha256"] = sha256_file(run_paths[lane_id])
+        target = analysis_destination / source_analysis.name
+        write_json(target, analysis)
+        analysis_files[lane_id] = f"analysis/{target.name}"
+    if set(analysis_files) != set(lane_files):
+        fail("balanced challenge analysis matrix differs from run matrix")
+
+    aggregate = anonymize_provenance(load_object(results / "aggregate.json"))
+    aggregate["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    external = aggregate.get("external_commitment")
+    lanes = aggregate.get("lanes")
+    if not isinstance(external, dict) or not isinstance(lanes, list):
+        fail("balanced challenge aggregate is malformed")
+    external["plan_sha256"] = sha256_file(destination / "study-plan.json")
+    external["workflow_run_url"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    for lane in lanes:
+        lane_id = str(lane.get("lane_id"))
+        if lane_id not in run_paths:
+            fail(f"balanced challenge aggregate contains an unknown lane: {lane_id}")
+        lane["run_sha256"] = sha256_file(run_paths[lane_id])
+    write_json(destination / "reported-aggregate.json", aggregate)
+
+    source_receipt = load_object(results / "github-artifact-receipt.json")
+    validation = source_receipt.get("validation")
+    interpretation = source_receipt.get("interpretation")
+    if not isinstance(validation, dict) or not isinstance(interpretation, dict):
+        fail("balanced challenge source receipt is malformed")
+    receipt = {
+        "schema_version": "1.0.0-review",
+        "status": source_receipt.get("status"),
+        "truth_status": source_receipt.get("truth_status"),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "source_artifact_or_workflow_ids_included": False,
+        "validation": deepcopy(validation),
+        "interpretation": deepcopy(interpretation),
+    }
+    write_json(destination / "privacy-receipt-review.json", receipt)
+
+    readme = """# Balanced public challenge reviewer evidence
+
+This directory contains the frozen 90-pair / 180-item public challenge, its prompt packet, two
+one-pass zero-retry service runs, lane analyses, and reported aggregate. The invalid members are
+balanced across HOLD, DEMOTE, and ESCALATE (30 each), with 90 ALLOW members over 15 factors.
+
+Every non-OK response remains incorrect in end-to-end item and pair metrics. The two service
+stacks differ, so the lane comparison is descriptive and is not a causal model ablation or a
+hidden-test generalization estimate. `privacy-receipt-review.json` records the independent
+360-record validation and zero findings for provider account identifiers, retained provider
+response IDs, and hidden reasoning. Source workflow, artifact, repository, and commit identities
+are withheld during double-blind review.
+
+Run `scripts/validate_anonymous_empirical_evidence.py` from the bundle root to recompute coverage,
+conditional and end-to-end accuracy, per-action recall, and the complete confusion matrices.
+"""
+    (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_BALANCED_PUBLIC_CHALLENGE_EVIDENCE",
+        "file_count": len(files),
+        "files": files,
+        "lane_files": lane_files,
+        "analysis_files": analysis_files,
+        "scope": {
+            "hidden_reasoning_included": False,
+            "item_level_final_outputs_included": True,
+            "provider_response_identifiers_included": False,
+            "public_repository_identity_included": False,
+            "source_artifact_or_workflow_ids_included": False,
+        },
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
 def anonymize_stronger_results(source: Json) -> Json:
     pilot = source.get("pilot")
     full = source.get("full")
@@ -889,13 +1065,16 @@ python scripts/run_review_checks.py
 ```
 
 The checks rebuild and validate the public alpha benchmark, run shortcut/invariance/executable
-checks, validate the compact paper-result summaries, and run selected v2 tests. The evidence
+checks, validate the compact paper-result summaries, verify the frozen naturalistic-candidate
+pool and its pre-model-call zero-case decision, and run selected v2 tests. The evidence
 directory retains the available v1
 source and normalized item records, all four public-interface pilot runs, the public-development
 follow-up records, and all 14 executed capable-extension pilot attempts plus both fresh full
 passes. It also contains the r6 preregistered 300-item fresh confirmatory dataset, projected C2
-records, frozen baseline, and complete scientific analysis. Public repository identities are
-replaced by anonymous role labels;
+records, frozen baseline, and complete scientific analysis. The balanced public challenge adds
+90 pairs / 180 items, both one-pass service runs, full confusion matrices, conditional and
+end-to-end metrics, and a privacy receipt. Public repository identities are replaced by anonymous
+role labels;
 empirical prompts, responses, parser outcomes, gold labels, and model identities are retained.
 
 For the public formal artifacts:
@@ -926,6 +1105,18 @@ three construction-time `PENDING` values are corrected by a bound overlay; all r
 and pair IDs use the `v1-test-cfo-*` namespace. The original manifest is not rewritten because its
 digest is bound by C1 and C2. Provider hidden-thinking blocks are excluded from the r6 derivative,
 and a redaction receipt records the post-C2 publication boundary and score-equivalence check.
+
+The balanced challenge is public precommitted robustness evidence, not a hidden-test estimate.
+Its service stacks differ, so their outcomes are descriptive rather than a causal model ablation.
+All unusable responses remain incorrect. Provider response identifiers and hidden-reasoning
+content are excluded from the bundle. The top-level manifest records the generated tree's actual
+file count, which verification recomputes from disk.
+
+The frozen naturalistic-candidate pool contains 12 source pointers. Source-level review created
+zero benchmark cases and made zero model calls because the records lacked the time-stamped
+execution, dependency, runtime, provenance, and licensing evidence required for a defensible
+author-policy mapping. This is an inclusion decision, not a naturalistic evaluation result; no
+human annotators, human gold labels, or agreement statistic are claimed.
 
 Post-gate correctness applies the same fixed policy as the benchmark oracle. It must not be
 interpreted as model learning or independent prediction accuracy.
@@ -1175,10 +1366,21 @@ COMMANDS = [
     [sys.executable, "scripts/validate_anonymous_empirical_evidence.py"],
     [
         sys.executable,
+        "scripts/validate_v2_naturalistic_candidates.py",
+        "--registry",
+        "v2/naturalistic-sources.json",
+        "--pool",
+        "v2/naturalistic-candidates.json",
+        "--out",
+        "work/naturalistic-candidate-validation.json",
+    ],
+    [
+        sys.executable,
         "-m",
         "pytest",
         "-q",
         "tests/test_v2.py",
+        "tests/test_v2_naturalistic.py",
     ],
 ]
 
@@ -1223,11 +1425,57 @@ def scan_identity(bundle: Path) -> None:
         for label, pattern in FORBIDDEN_CREDENTIAL_PATTERNS.items():
             if pattern.search(text):
                 findings.append(f"{path.relative_to(bundle)}: possible {label}")
+        for label, pattern in FORBIDDEN_PROVIDER_RESPONSE_PATTERNS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(bundle)}: possible {label}")
         for label, (pattern, _replacement) in SENSITIVE_PROVENANCE_REPLACEMENTS.items():
             if pattern.search(text):
                 findings.append(f"{path.relative_to(bundle)}: possible {label}")
     if findings:
         fail("identity/provenance leak detected:\n" + "\n".join(findings))
+
+
+def scan_sensitive_payloads(bundle: Path) -> None:
+    """Reject retained provider IDs and machine-readable hidden-reasoning content."""
+
+    def inspect(value: Any, label: str) -> None:
+        if isinstance(value, dict):
+            hidden_keys = {
+                "reasoning_content",
+                "thinking",
+                "thinking_content",
+                "thought",
+                "thoughts",
+            }
+            overlap = hidden_keys & set(value)
+            if overlap:
+                fail(f"{label}: hidden-reasoning fields survived: {sorted(overlap)}")
+            if str(value.get("type", "")).lower() in {"reasoning", "thinking"}:
+                fail(f"{label}: hidden-reasoning content block survived")
+            for key in ("provider_response_id", "provider_request_id"):
+                if value.get(key) not in (None, ""):
+                    fail(f"{label}: retained {key}")
+            for child in value.values():
+                inspect(child, label)
+        elif isinstance(value, list):
+            for child in value:
+                inspect(child, label)
+
+    for path in sorted(bundle.rglob("*")):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(bundle)
+        label = relative.as_posix()
+        if "schemas" in relative.parts or path.name.endswith(".schema.json"):
+            # Schema property names document the record contract; they are not retained values.
+            # Literal identifiers in schema examples remain covered by the text-pattern scan.
+            continue
+        if path.suffix == ".json":
+            inspect(json.loads(path.read_text(encoding="utf-8")), label)
+        elif path.suffix == ".jsonl":
+            for index, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+                if line.strip():
+                    inspect(json.loads(line), f"{label}:{index}")
 
 
 def verify_bundle(bundle: Path) -> None:
@@ -1239,6 +1487,8 @@ def verify_bundle(bundle: Path) -> None:
         fail("MANIFEST.json does not contain a file map")
 
     declared = manifest["files"]
+    if manifest.get("file_count") != len(declared):
+        fail("MANIFEST.json file_count differs from its generated file map")
     actual_paths = {
         str(path.relative_to(bundle)).replace("\\", "/"): path
         for path in sorted(bundle.rglob("*"))
@@ -1269,6 +1519,14 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/fresh-confirmatory/reported-analysis.json",
         "evidence/fresh-confirmatory/runs/opencode-go-deepseek-v4-flash-matched.jsonl",
         "evidence/fresh-confirmatory/runs/opencode-go-qwen3.7-max.jsonl",
+        "evidence/balanced-public-challenge/MANIFEST.json",
+        "evidence/balanced-public-challenge/privacy-receipt-review.json",
+        "evidence/balanced-public-challenge/reported-aggregate.json",
+        "evidence/balanced-public-challenge/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl",
+        "evidence/balanced-public-challenge/runs/opencode-go-qwen3.7-max-full.jsonl",
+        "v2/naturalistic-candidates.json",
+        "v2/naturalistic-review-decision.json",
+        "v2/naturalistic-sources.json",
     }
     absent = sorted(required - set(actual_paths))
     if absent:
@@ -1282,6 +1540,7 @@ def verify_bundle(bundle: Path) -> None:
     if survived:
         fail(f"unused human-review workflow files survived staging: {survived}")
     scan_identity(bundle)
+    scan_sensitive_payloads(bundle)
 
 
 def write_manifest(bundle: Path) -> None:
@@ -1292,6 +1551,7 @@ def write_manifest(bundle: Path) -> None:
     }
     capable_hidden_included = (bundle / "evidence" / "capable-hidden").is_dir()
     fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
+    balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -1300,7 +1560,7 @@ def write_manifest(bundle: Path) -> None:
         "scope": {
             "public_alpha_included": True,
             "reviewer_release_hidden_data_included": True,
-            "raw_human_review_submissions_included": False,
+            "human_subject_study_records_included": False,
             "public_repository_identity_included": False,
             "item_level_empirical_records_included": True,
             "v1_compact_result_summary_included": True,
@@ -1314,6 +1574,10 @@ def write_manifest(bundle: Path) -> None:
             "fresh_confirmatory_summary_included": fresh_confirmatory_included,
             "fresh_confirmatory_item_level_records_included": fresh_confirmatory_included,
             "fresh_confirmatory_hidden_reasoning_included": False,
+            "balanced_public_challenge_summary_included": balanced_challenge_included,
+            "balanced_public_challenge_item_level_records_included": (balanced_challenge_included),
+            "balanced_public_challenge_hidden_reasoning_included": False,
+            "provider_response_identifiers_included": False,
             "private_construction_seed_included": False,
         },
     }
@@ -1337,12 +1601,19 @@ def build(destination: Path) -> None:
         "scripts/aggregate_capable_hidden_study.py",
         "scripts/analyze_stronger_model_study.py",
         "scripts/analyze_confirmatory_hidden_study.py",
+        "scripts/analyze_balanced_public_challenge.py",
         "scripts/build_alpha.py",
         "scripts/build_v1_dataset.py",
+        "scripts/build_v2_naturalistic_candidates.py",
         "scripts/validate_anonymous_empirical_evidence.py",
         "scripts/validate_v1_plan.py",
         "scripts/validate_v1_public_dev_freeze.py",
+        "scripts/validate_v2_naturalistic_candidates.py",
         "tests/test_v2.py",
+        "tests/test_v2_naturalistic.py",
+        "v2/naturalistic-candidates.json",
+        "v2/naturalistic-review-decision.json",
+        "v2/naturalistic-sources.json",
         "v2/schemas/run-record-v2.schema.json",
         "v2/schemas/stronger-model-run-record.schema.json",
     )
@@ -1375,6 +1646,8 @@ def build(destination: Path) -> None:
         elif name == "v2-public-pilot":
             repair_v2_public_anonymous_evidence(evidence_destination)
 
+    build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
+
     (destination / "results").mkdir()
     v1 = anonymize_v1_results(load_object(ROOT / "release" / "v1-paper-results.json"))
     v2 = anonymize_v2_results(
@@ -1406,8 +1679,10 @@ def build(destination: Path) -> None:
     (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")
 
     scan_identity(destination)
+    scan_sensitive_payloads(destination)
     write_manifest(destination)
     scan_identity(destination)
+    scan_sensitive_payloads(destination)
     verify_bundle(destination)
 
 

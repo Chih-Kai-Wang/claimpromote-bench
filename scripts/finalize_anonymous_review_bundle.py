@@ -66,16 +66,6 @@ def patch_readme(bundle: Path) -> None:
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
-def patch_manifest_scope(bundle: Path) -> None:
-    path = bundle / "MANIFEST.json"
-    text = path.read_text(encoding="utf-8")
-    text = text.replace(
-        '"raw_human_review_submissions_included": false',
-        '"human_subject_study_records_included": false',
-    )
-    path.write_text(text, encoding="utf-8", newline="\n")
-
-
 def finalize(bundle: Path) -> None:
     for relative in ("scripts/audit_public_pair_contracts.py",):
         copy_public_check(relative, bundle)
@@ -85,10 +75,7 @@ def finalize(bundle: Path) -> None:
     builder = load_builder()
     builder.scan_identity(bundle)
     builder.write_manifest(bundle)
-    patch_manifest_scope(bundle)
-    builder.write_manifest(bundle)
-    patch_manifest_scope(bundle)
-    builder.scan_identity(bundle)
+    builder.verify_bundle(bundle)
 
 
 def main() -> int:

@@ -20,6 +20,7 @@ from aggregate_capable_hidden_study import (
     correctness_vector,
     pilot_excluded_summary,
 )
+from analyze_balanced_public_challenge import derive_reporting_metrics as derive_balanced_metrics
 from analyze_confirmatory_hidden_study import analyze as analyze_fresh_confirmatory
 from analyze_stronger_model_study import analyze as analyze_stronger_run
 
@@ -1277,6 +1278,186 @@ def validate_fresh_confirmatory() -> Json:
     }
 
 
+def validate_balanced_public_challenge() -> Json:
+    root = EVIDENCE / "balanced-public-challenge"
+    manifest = load_json(root / "MANIFEST.json")
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        fail("balanced challenge manifest is malformed")
+    manifest_payload = deepcopy(manifest)
+    observed_manifest_sha = manifest_payload.pop("manifest_sha256", None)
+    if observed_manifest_sha != sha256_text(canonical_json(manifest_payload)):
+        fail("balanced challenge manifest self-digest changed")
+    declared = manifest["files"]
+    actual = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    if manifest.get("file_count") != len(actual) or declared != actual:
+        fail("balanced challenge manifest differs from the generated tree")
+    scope = manifest.get("scope", {})
+    if (
+        scope.get("hidden_reasoning_included") is not False
+        or scope.get("provider_response_identifiers_included") is not False
+        or scope.get("source_artifact_or_workflow_ids_included") is not False
+    ):
+        fail("balanced challenge anonymous scope changed")
+
+    dataset = root / "dataset"
+    inputs = load_jsonl(dataset / "inputs.jsonl")
+    gold = load_jsonl(dataset / "gold.jsonl")
+    pairs = load_json(dataset / "pairs.json")
+    plan = load_json(root / "study-plan.json")
+    packet = load_json(root / "prompt-packet.json")
+    aggregate = load_json(root / "reported-aggregate.json")
+    receipt = load_json(root / "privacy-receipt-review.json")
+    if not all(isinstance(value, dict) for value in (plan, packet, aggregate, receipt)):
+        fail("balanced challenge plan, packet, aggregate, or receipt is malformed")
+    if not isinstance(pairs, list):
+        fail("balanced challenge pairs are malformed")
+    input_ids = {str(row["id"]) for row in inputs}
+    gold_by_id = {str(row["id"]): row for row in gold}
+    pair_ids = {str(row["pair_id"]) for row in pairs}
+    factor_ids = {str(row["factor_id"]) for row in pairs}
+    if (
+        len(input_ids) != 180
+        or input_ids != set(gold_by_id)
+        or len(pair_ids) != 90
+        or len(factor_ids) != 15
+    ):
+        fail("balanced challenge dataset coverage changed")
+    action_counts = Counter(str(row["decision"]["action"]) for row in gold)
+    if action_counts != Counter({"ALLOW": 90, "HOLD": 30, "DEMOTE": 30, "ESCALATE": 30}):
+        fail("balanced challenge gold action distribution changed")
+    if (
+        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or plan.get("design", {}).get("attempts_per_item") != 1
+        or plan.get("design", {}).get("held_out_generalization_claim") is not False
+        or plan.get("statistics", {}).get("failure_rule")
+        != "Every non-OK response remains in the denominator as incorrect."
+    ):
+        fail("balanced challenge plan boundary changed")
+    packet_rows = packet.get("records")
+    if (
+        not isinstance(packet_rows, list)
+        or {str(row.get("item_id")) for row in packet_rows} != input_ids
+    ):
+        fail("balanced challenge prompt-packet coverage changed")
+
+    lane_files = manifest.get("lane_files")
+    analysis_files = manifest.get("analysis_files")
+    expected_lanes = {
+        "opencode-go-deepseek-v4-flash-matched",
+        "opencode-go-qwen3.7-max",
+    }
+    if (
+        not isinstance(lane_files, dict)
+        or not isinstance(analysis_files, dict)
+        or set(lane_files) != expected_lanes
+        or set(analysis_files) != expected_lanes
+    ):
+        fail("balanced challenge lane manifest changed")
+    aggregate_lanes = {
+        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
+    }
+    if set(aggregate_lanes) != expected_lanes:
+        fail("balanced challenge aggregate lane set changed")
+
+    lane_metrics: dict[str, Json] = {}
+    for lane_id in sorted(expected_lanes):
+        run_path = root / str(lane_files[lane_id])
+        rows = load_jsonl(run_path)
+        if (
+            len(rows) != 180
+            or {str(row.get("item_id")) for row in rows} != input_ids
+            or {str(row.get("lane_id")) for row in rows} != {lane_id}
+        ):
+            fail(f"balanced challenge run coverage changed: {lane_id}")
+        validate_raw_response_hashes(rows, f"balanced challenge {lane_id}")
+        validate_prompt_binding(rows, root / "prompt-packet.json", f"balanced challenge {lane_id}")
+        for row in rows:
+            item_id = str(row.get("item_id"))
+            validate_with_schema(
+                row,
+                ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json",
+                item_id,
+            )
+            reject_hidden_reasoning(row, f"balanced challenge {lane_id}")
+            if row.get("provider_response_id") is not None:
+                fail(f"balanced challenge retained a provider response ID: {item_id}")
+        metrics = derive_balanced_metrics(gold, pairs, rows)
+        if not equivalent_json(metrics, aggregate_lanes[lane_id].get("metrics")):
+            fail(f"balanced challenge aggregate differs from item-level records: {lane_id}")
+        if aggregate_lanes[lane_id].get("run_sha256") != sha256_file(run_path):
+            fail(f"balanced challenge aggregate run digest changed: {lane_id}")
+        analysis_path = root / str(analysis_files[lane_id])
+        analysis = load_json(analysis_path)
+        if (
+            not isinstance(analysis, dict)
+            or analysis.get("lane_id") != lane_id
+            or analysis.get("run_sha256") != sha256_file(run_path)
+        ):
+            fail(f"balanced challenge lane analysis binding changed: {lane_id}")
+        lane_metrics[lane_id] = metrics
+
+    qwen = lane_metrics["opencode-go-qwen3.7-max"]
+    flash = lane_metrics["opencode-go-deepseek-v4-flash-matched"]
+    expected_qwen = {
+        "parseable_items": 148,
+        "correct_items": 132,
+        "covered_pairs": 64,
+        "correct_pairs": 48,
+        "end_to_end_item_accuracy": 0.7333333333333333,
+        "conditional_item_accuracy": 0.8918918918918919,
+        "end_to_end_pair_accuracy": 0.5333333333333333,
+        "conditional_pair_accuracy": 0.75,
+    }
+    expected_flash = {
+        "parseable_items": 146,
+        "correct_items": 90,
+        "covered_pairs": 61,
+        "correct_pairs": 13,
+        "end_to_end_item_accuracy": 0.5,
+        "conditional_item_accuracy": 0.6164383561643836,
+        "end_to_end_pair_accuracy": 0.14444444444444443,
+        "conditional_pair_accuracy": 0.21311475409836064,
+    }
+    for label, observed, expected in (
+        ("Qwen", qwen, expected_qwen),
+        ("Flash", flash, expected_flash),
+    ):
+        for key, value in expected.items():
+            if not equivalent_json(observed.get(key), value):
+                fail(f"balanced challenge {label} metric changed: {key}")
+    validation = receipt.get("validation", {})
+    if (
+        receipt.get("source_artifact_or_workflow_ids_included") is not False
+        or validation.get("terminal_records_validated") != 360
+        or validation.get("provider_account_identifier_findings") != 0
+        or validation.get("retained_provider_response_ids") != 0
+        or validation.get("hidden_reasoning_field_findings") != 0
+    ):
+        fail("balanced challenge privacy receipt changed")
+    if (
+        aggregate.get("design") != "PUBLIC_PRECOMMITTED_BALANCED_CHALLENGE"
+        or aggregate.get("service_comparison", {}).get("causal_model_ablation_claimed") is not False
+        or aggregate.get("deterministic_policy_executor", {}).get("label")
+        != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
+    ):
+        fail("balanced challenge interpretation boundary changed")
+    return {
+        "items_per_lane": 180,
+        "pairs_per_lane": 90,
+        "qwen_valid_decisions": qwen["parseable_items"],
+        "qwen_end_to_end_item_accuracy": qwen["end_to_end_item_accuracy"],
+        "qwen_end_to_end_pair_accuracy": qwen["end_to_end_pair_accuracy"],
+        "flash_valid_decisions": flash["parseable_items"],
+        "flash_end_to_end_item_accuracy": flash["end_to_end_item_accuracy"],
+        "flash_end_to_end_pair_accuracy": flash["end_to_end_pair_accuracy"],
+        "privacy_status": receipt["status"],
+    }
+
+
 def main() -> int:
     result = {
         "status": "PASS",
@@ -1285,6 +1466,7 @@ def main() -> int:
         "gpt54_public_development": validate_gpt54_followup(),
         "capable_hidden": validate_capable_hidden(),
         "fresh_confirmatory": validate_fresh_confirmatory(),
+        "balanced_public_challenge": validate_balanced_public_challenge(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0

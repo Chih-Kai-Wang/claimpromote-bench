@@ -1,9 +1,10 @@
-# ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents
+# ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions
 
-**A benchmark for deciding when evidence justifies a change in research-claim status.**
+**A synthetic benchmark for evaluating evidence-state transitions against a fixed authored policy.**
 
-> **SCIENTIFIC_RC_READY: fresh preregistered Qwen result and permanent reasoning-free reviewer artifact verified; the registered Flash lane is non-evaluable, dual-model confirmation is unsupported, and account-side submission is pending.**
-> The scoped Qwen comparison is confirmatory. The adaptive capable-model extension, public formatting control, and GPT-5.4 public-development follow-up remain separately labeled with their own interpretation boundaries.
+> The fresh hidden result and balanced public robustness challenge are complete. The benchmark
+> measures conformance to an author-defined synthetic policy; it is not a broad research-agent
+> capability test, a naturalistic generalization estimate, or a cross-service causal ablation.
 
 ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
 
@@ -20,11 +21,11 @@ commitments, a future randomness beacon, a C1 construction receipt, and a fixed 
 schedule. C2 sealed all 600 terminal records before gold loading or analysis. Each registered lane
 received one zero-retry call per item.
 
-| Configuration | Valid decisions | E2E item accuracy | E2E pair accuracy | Balanced recall | Macro-F1 |
-|---|---:|---:|---:|---:|---:|
-| Qwen3.7-Max | 272 / 300 | 0.860 | 0.753 | 0.600 | 0.627 |
-| Public-development text Naive Bayes | 300 / 300 | 0.613 | 0.227 | 0.328 | 0.312 |
-| Registered Flash configuration | 0 / 300 | N/E | N/E | N/E | N/E |
+| Configuration | Valid | Pair coverage | E2E item / pair | Conditional item / pair | Balanced recall | Macro-F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3.7-Max | 272 / 300 | 0.820 | 0.860 / 0.753 | 0.949 / 0.919 | 0.600 | 0.627 |
+| Public-development text Naive Bayes | 300 / 300 | 1.000 | 0.613 / 0.227 | 0.613 / 0.227 | 0.328 | 0.312 |
+| Registered old Flash interface | 0 / 300 | 0.000 | N/E | N/E | N/E | N/E |
 
 Qwen produced 74 more correct actions than the frozen public-development baseline. Across 94
 pair blocks with a nonzero correctness difference, it won 84 and lost 10; the one-sided exact
@@ -34,16 +35,36 @@ value is `p=5.163495918775425e-16`, with two-hypothesis Holm-adjusted
 `ALLOW`, 110/134 for `HOLD`, 5/8 for `ESCALATE`, and 0/8 for `DEMOTE`, so the aggregate score does
 not establish uniform four-action competence.
 
-The registered Flash lane returned 300 HTTP 401 responses and no model output. This is an
-operational failure, not a model-accuracy estimate, and it leaves dual-model confirmation
-unsupported. The supported result concerns one time-stamped service configuration; it is not a
-causal provider, tier, or fixed-weight comparison.
+The registered Flash lane returned 300 HTTP 401 responses and no model output. This is a failure of
+the old frozen service interface, not a model-accuracy estimate, and it leaves dual-model
+confirmation unsupported. The supported result concerns one time-stamped service configuration.
 
 Reviewer evidence is permanently committed under
-`release/reviewer-evidence-source/fresh-confirmatory/`. Its 179-file manifest binds the released
-tree. A post-C2 text-only allowlist derivative removes provider hidden-thinking blocks while
+`release/reviewer-evidence-source/fresh-confirmatory/`. Its manifest binds the released tree and
+records its generated file count. A post-C2 text-only allowlist derivative removes provider hidden-thinking blocks while
 preserving the scientific analysis payload byte-for-byte; the original reasoning-bearing audit
 records remain private.
+
+## Balanced public robustness challenge
+
+The precommitted challenge has 90 controlled pairs / 180 items over 15 factors. It balances 90
+`ALLOW` members against 30 each of `HOLD`, `DEMOTE`, and `ESCALATE`. Each service route made exactly
+180 calls with zero client retries, and every non-OK response remains incorrect end to end.
+
+| Configuration | Valid | Pair coverage | E2E item / pair | Conditional item / pair | `ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE` recall |
+|---|---:|---:|---:|---:|---:|
+| Qwen3.7-Max route | 148 / 180 | 0.711 | 0.733 / 0.533 | 0.892 / 0.750 | 0.878 / 0.867 / 0.133 / 0.767 |
+| DeepSeek-V4-Flash route | 146 / 180 | 0.678 | 0.500 / 0.144 | 0.616 / 0.213 | 0.756 / 0.300 / 0.000 / 0.433 |
+
+Qwen has 31 transport failures and one semantic failure; Flash has 34 semantic failures. The
+public challenge demonstrates robustness behavior on a known synthetic construction. The two
+routes use different service stacks, so their difference is descriptive rather than a strict
+causal model ablation. The later Flash route establishes that its new service path executed; it
+does not repair or reinterpret the old r6 HTTP 401 lane.
+
+The deterministic policy executor scores 1.0 by computing the policy that defines gold. It is a
+definitional policy ceiling, not a learned empirical baseline. The public-development Naive Bayes
+comparator remains a weak learned baseline.
 
 ## v1 benchmark
 
@@ -211,14 +232,22 @@ Oracle actions are generated by the public versioned policy and function as poli
 - the fresh study binds C0, C1, a frozen request schedule, all 600 pre-gold C2 terminal cells, the
   complete Holm family, and the final item-level analysis;
 - the permanent fresh-study release is checked against its allowlist-redaction receipt,
-  source-to-derivative row hashes, scientific-payload equivalence record, and 179-file manifest;
+  source-to-derivative row hashes, scientific-payload equivalence record, and dynamically counted manifest;
+- the balanced public challenge retains all 360 item-level service records and a receipt reporting
+  zero provider-account, retained provider-response-ID, and hidden-reasoning findings;
 - an anonymous supplementary bundle reruns the public checks without revealing author identity.
 
 These checks make the implementation and evidence chain inspectable. The policy remains an author-defined benchmark rule, and the paper states that scope explicitly.
 
 ## Naturalistic evaluation preparation
 
-A deterministic, unlabeled, pointer-only pool of 12 public CORE-Bench candidates is frozen in `v2/naturalistic-candidates.json`. Selection occurred without looking at ClaimPromoteBench model outputs. Every candidate remains `PENDING_SOURCE_LEVEL_REVIEW` and outside the scored ClaimPromoteBench set. Source-level licensing, a defensible transition question, evaluation time, and evidence snapshot must all be verified before inclusion.
+A deterministic, unlabeled, pointer-only pool of 12 public CORE-Bench candidates is frozen in
+`v2/naturalistic-candidates.json`. The source-level decision in
+`v2/naturalistic-review-decision.json` binds that pool and records zero model calls. The pinned
+records expose task instructions and benchmark answers but lack the time-stamped execution,
+dependency, runtime, and provenance evidence required for a defensible policy mapping. Therefore
+zero cases were created or scored. No human annotators, human gold labels, or agreement statistic
+are claimed.
 
 ## What the executable evidence means
 

@@ -2,120 +2,103 @@
 
 ## Purpose
 
-The `anonymous review bundle` workflow builds a double-blind supplementary artifact from public
-ClaimPromoteBench material. It is meant to let reviewers inspect and rerun the public benchmark,
-selected validators, the public pair-contract audit, compact paper-result summaries, and public Lean evidence without revealing the
-author or the public repository during review.
+The `anonymous review bundle` workflow builds a double-blind supplementary artifact for
+ClaimPromoteBench. It combines the public benchmark with privacy-filtered reviewer-release
+evidence so reviewers can recompute paper-facing results without receiving repository identity,
+provider response identifiers, hidden reasoning, credentials, or private construction seeds.
 
-The bundle is supplementary validation evidence. It is not the private hidden v1 dataset, does not
-contain the hidden seed, and cannot by itself reproduce the original model inference.
+The bundle replays archived evidence; it does not rerun model inference. Its top-level
+`MANIFEST.json` computes `file_count` and every file digest from the generated tree. Documentation
+must not replace that dynamic value with a hard-coded file total.
 
 ## Included material
 
 The staged bundle contains:
 
-- the public 20-pair / 40-instance alpha benchmark;
-- public policies, schemas, exact-rational fixtures, and the public Lean package;
-- the benchmark Python package needed for public validation;
-- selected v2 diagnostic and naturalistic-boundary validators and tests;
-- an anonymized compact v1 per-run result summary sufficient to validate the 24-run matrix,
-  headline counts, conditional rates, coverage ranges, and Python patch-version distribution;
-- an anonymized v2 public-pilot aggregate sufficient to validate the four-run / 160-decision
-  matrix, coverage changes, constrained parseable count, complete-pair count, and zero raw pair
-  sensitivity;
-- an anonymized GPT-5.4 public-development aggregate sufficient to validate the 100-decision
-  matrix, 99 parseable decisions, 49 complete pairs, action distribution, and perfect conditional
-  pair sensitivity;
-- a generated manifest binding every staged file to a SHA-256 digest;
-- a double-blind MIT license copy naming the copyright holder as `Anonymous Authors`;
-- a one-command public review check runner.
+- the public 20-pair / 40-instance alpha benchmark, policy, schemas, exact-rational fixtures,
+  executable checks, and pinned Lean package;
+- anonymized v1 source and normalized records plus the compact 24-run result summary;
+- all four public-interface pilot runs and the GPT-5.4 public-development follow-up records;
+- all 14 executed capable-extension pilot attempts, both fresh full passes, protocol snapshots,
+  analyses, and aggregate evidence;
+- the preregistered r6 reviewer-release dataset, study plan, prompt packet, frozen baseline,
+  projected C2 records, item-level final outputs, gold, analysis, redaction/equivalence receipt,
+  and frozen-manifest correction overlay;
+- the balanced public challenge's 90 pairs / 180 items, two one-pass lane records, analyses,
+  aggregate, full confusion matrices, action-level metrics, and privacy receipt;
+- the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
+  zero created cases, zero model calls, zero human annotators, and no agreement statistic;
+- selected validation code and tests, an anonymous MIT license, a one-command review runner, and a
+  generated SHA-256 manifest.
 
 ## Deliberately excluded material
 
 The builder excludes:
 
-- Git history and GitHub workflow files;
-- author name, institution, username, email, and public repository URL;
-- v1/v2 public workflow IDs, trigger commits, and searchable public aggregate and run hashes;
-- the private hidden v1 dataset, hidden seed, hidden prompts, and hidden raw source artifacts;
-- any human-subject or annotation-study records;
-- unused human-review workflow modules;
-- manuscript source and public project-status documents that could reveal identity;
-- generated caches and build artifacts.
+- Git history, GitHub workflow files, public branch names, repository links, author name,
+  institution, username, and email;
+- source workflow, artifact, commit, and searchable released-digest identifiers;
+- credentials, provider account identifiers, provider response/request identifiers, and
+  machine-readable hidden-reasoning fields or content blocks;
+- private construction seeds or salts, raw human-subject records, unused human-review workflow
+  modules, manuscript source, and identity-bearing status documents;
+- caches, bytecode, logs, generated work products, and unrelated build artifacts.
 
-The compact v1 result summary is therefore a paper-value validation input rather than a full
-hidden-study release. This limitation is stated in the bundle README.
+The original v1 archive did not retain free-form text for records classified as format failures,
+so no reviewer derivative can reconstruct those bytes. The bundle preserves every archived field
+used by the released analysis and states this boundary in its generated README.
 
-## Fail-closed identity scan
+## Fail-closed privacy and identity scan
 
-Before packaging, the builder recursively scans staged text files for known identity and public
-provenance tokens, including:
-
-- the author name and institution;
-- GitHub username, email, and direct repository path;
-- frozen v1 scoring/recovery workflow IDs;
-- the post-v1 pilot/recovery workflow IDs;
-- known public source, trigger, and aggregate hashes;
-- public branch names.
-
-Any match stops the build. JSON Schema `$id` values are removed from staged schemas because their
-public repository URLs would reveal identity. The alpha manifest is then rewritten to bind the
-anonymized schema bytes. Extensionless text files such as `LICENSE` are scanned explicitly; the
-public repository's named copyright notice is replaced only in the double-blind bundle.
+Before manifesting or packaging, the builder recursively scans filenames and text for known author
+and repository identity, frozen provenance tokens, common credential forms, provider response IDs,
+provider account IDs, and hidden-reasoning keys/content blocks. Unknown fields in protected
+empirical record types fail validation. JSON Schema `$id` values and named license provenance are
+rewritten only in the anonymous derivative. Any finding stops the build.
 
 ## Automated validation
 
-The workflow performs the following steps inside the staged artifact rather than only in the source
-repository:
+Validation runs inside the staged artifact:
 
-1. installs the staged Python package in editable mode;
-2. validates the public alpha dataset and oracle labels;
-3. reruns the public pair-contract, shortcut, metamorphic-invariance, and executable-fixture checks;
-4. validates the anonymized v1, public-pilot, and GPT-5.4 result summaries;
-5. validates the naturalistic candidate and case-boundary rules;
-6. runs the selected v2 test suite;
-7. builds the staged public Lean package;
-8. replays its declarations with `leanchecker`;
-9. executes the public formal fixtures;
-10. rebuilds a fresh bundle after validation and requires its manifest to be byte-identical;
-11. verifies that the fresh staging tree contains exactly the files and hashes in the manifest and
-    no cache, bytecode, or excluded workflow file;
-12. packages that fresh tree as a ZIP with a SHA-256 sidecar.
+1. install the staged Python package;
+2. validate the public alpha dataset, oracle labels, pair contracts, shortcut resistance,
+   metamorphic invariance, and executable fixtures;
+3. recompute the v1, public-pilot, GPT-5.4, capable-extension, r6, and balanced-challenge results
+   from included item-level evidence;
+4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
+5. run the selected v2 tests;
+6. build and replay the public Lean package and execute formal fixtures;
+7. rebuild a fresh clean bundle and require a byte-identical manifest;
+8. verify that every manifested path and digest matches disk and that no excluded file survives;
+9. package the clean tree as a ZIP and produce a SHA-256 sidecar.
 
 ## Reviewer command
 
-After extracting the bundle:
+After extraction:
 
 ```bash
 python -m pip install -e ".[test]"
 python scripts/run_review_checks.py
 ```
 
-The public formal replay is documented separately in the generated bundle README.
+The generated README documents the separate Lean replay commands.
 
 ## Artifact identity
 
-GitHub Actions artifact name:
+The workflow artifact name is:
 
 ```text
 claimpromotebench-anonymous-review-bundle
 ```
 
-The Actions artifact is temporary. The final submission should upload the verified ZIP itself to
-the venue's supplementary-material interface or another double-blind-compatible location. Do not
-link reviewers directly to the public repository during double-blind review.
+The Actions artifact is temporary. A future venue upload must use the verified ZIP itself or a
+double-blind-compatible location; reviewers must not be directed to the identity-bearing private
+repository during review.
 
 ## Interpretation boundary
 
-A passing bundle shows that the included public data, validators, compact result summaries, and
-public formal artifacts are internally reproducible in the staged anonymous package. It does not
-show that:
-
-- the hidden model inference was rerun;
-- the private hidden dataset is publicly available;
-- deterministic gate correctness is model reasoning;
-- the author-defined policy has been independently validated as universal scientific judgment;
-- naturalistic external validation is complete;
-- the author identity may be revealed during double-blind review.
-
-These limitations must remain visible in the paper and review artifact description.
+A passing bundle establishes internal replayability of the included data, validators, archived
+service outputs, and paper-facing statistics. It does not establish that model inference was
+rerun, that the author-defined policy is external scientific consensus, that the deterministic
+executor is a learned baseline, that naturalistic transfer was measured, or that differing service
+stacks form a causal ablation.

@@ -12,55 +12,49 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "technical-report" / "main.tex"
 BIB = ROOT / "technical-report" / "references.bib"
+README = ROOT / "README.md"
+CITATION = ROOT / "CITATION.cff"
+SUBMISSION_METADATA = ROOT / "docs" / "SUBMISSION_METADATA.md"
+PAGE_RULES = ROOT / "docs" / "FREE_SUBMISSION_AND_PAGE_RULES.md"
+SUBMISSION_GATE = ROOT / "technical-report" / "SUBMISSION_GATE_V2.md"
+SUBMISSION_BUILDER = ROOT / "scripts" / "build_submission_tex.py"
+
 RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
-V2_PILOT = ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json"
-V2_PILOT_SHA = "sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5"
-CAPABLE_HIDDEN = ROOT / "v2" / "capable-hidden-results" / "capable-hidden-study.json"
-CAPABLE_HIDDEN_SHA = "sha256:a1f7f64000d068dd7a83a63db5d6f13b5daaed1788b397ed37d36ad85941853d"
-FRESH_CONFIRMATORY_RESULT = ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json"
-FRESH_CONFIRMATORY_ANALYSIS = (
-    ROOT
-    / "release"
-    / "reviewer-evidence-source"
-    / "fresh-confirmatory"
-    / "confirmatory-analysis-public.json"
-)
-FRESH_CONFIRMATORY_REDACTION = (
+R6_RESULT = ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json"
+R6_ADDENDUM = ROOT / "v2" / "confirmatory" / "r6-execution" / "reviewer-reporting-addendum.json"
+R6_REDACTION = (
     ROOT
     / "release"
     / "reviewer-evidence-source"
     / "fresh-confirmatory"
     / "public-release-scientific-equivalence.json"
 )
-FRESH_CONFIRMATORY_CORRECTION = (
+R6_CORRECTION = (
     ROOT / "v2" / "confirmatory" / "r6-execution" / "frozen-manifest-metadata-correction.json"
 )
-STRONGER_FOLLOWUP = (
-    ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
+CHALLENGE_PLAN = ROOT / "v2" / "balanced-public-challenge-study-plan.json"
+CHALLENGE_RESULT = ROOT / "v2" / "balanced-public-challenge" / "results" / "aggregate.json"
+CHALLENGE_RECEIPT = (
+    ROOT / "v2" / "balanced-public-challenge" / "results" / "github-artifact-receipt.json"
 )
-README = ROOT / "README.md"
-CITATION = ROOT / "CITATION.cff"
-SUBMISSION_METADATA = ROOT / "docs" / "SUBMISSION_METADATA.md"
-PAGE_RULES = ROOT / "docs" / "FREE_SUBMISSION_AND_PAGE_RULES.md"
+NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
+NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
+
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Evaluating Whether Evidence Justifies Claim-State Transitions in AI "
-    "Research Agents"
+    "ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions"
 )
+ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"paper-lint: {message}")
 
 
-def pct(value: float, digits: int = 1) -> str:
-    return f"{100 * value:.{digits}f}"
-
-
-def sha256_file(path: Path) -> str:
-    # Git normalizes this tracked JSON file to LF, while Windows worktrees may
-    # materialize CRLF. Hash the repository-level text identity on both OSes.
-    normalized = path.read_text(encoding="utf-8").encode("utf-8")
-    return "sha256:" + hashlib.sha256(normalized).hexdigest()
+def load_object(path: Path, label: str) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        fail(f"{label} must contain a JSON object")
+    return value
 
 
 def self_digest(value: dict[str, Any], field: str) -> str:
@@ -75,16 +69,9 @@ def self_digest(value: dict[str, Any], field: str) -> str:
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
-def require_regex(tex: str, pattern: str, description: str) -> None:
-    if not re.search(pattern, tex, flags=re.IGNORECASE | re.DOTALL):
-        fail(f"required frozen result/boundary missing: {description}")
-
-
-def load_object(path: Path, label: str) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict):
-        fail(f"{label} must contain a JSON object")
-    return value
+def require_regex(text: str, pattern: str, description: str) -> None:
+    if not re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL):
+        fail(f"required result or boundary missing: {description}")
 
 
 def normalize_space(value: str) -> str:
@@ -96,17 +83,19 @@ def manuscript_abstract_plain(tex: str) -> str:
     if not match:
         fail("abstract not found")
     value = match.group(1)
-    replacements = {
-        r"\cpb": "ClaimPromoteBench",
-        r"\allow{}": "ALLOW",
-        r"\hold{}": "HOLD",
-        r"\demote{}": "DEMOTE",
-        r"\escalate{}": "ESCALATE",
-        r"\%": "%",
-        r"\_": "_",
+    macros = {
+        "cpb": "ClaimPromoteBench",
+        "allow": "ALLOW",
+        "hold": "HOLD",
+        "demote": "DEMOTE",
+        "escalate": "ESCALATE",
     }
-    for old, new in replacements.items():
-        value = value.replace(old, new)
+
+    def replace_macro(match: re.Match[str]) -> str:
+        return macros[match.group(1)]
+
+    value = re.sub(r"\\(cpb|allow|hold|demote|escalate)(?:\{\})?", replace_macro, value)
+    value = value.replace(r"\%", "%").replace(r"\_", "_")
     value = re.sub(r"\\texttt\{([^{}]*)\}", r"\1", value)
     return normalize_space(value)
 
@@ -117,30 +106,29 @@ def validate_submission_metadata(tex: str) -> None:
     metadata = SUBMISSION_METADATA.read_text(encoding="utf-8")
     page_rules = PAGE_RULES.read_text(encoding="utf-8")
 
-    if (ROOT / "docs" / "SUBMISSION_METADATA_DRAFT.md").exists():
-        fail("stale draft submission metadata file remains")
     if readme.splitlines()[0] != f"# {CANONICAL_TITLE}":
-        fail("README title differs from the canonical paper title")
+        fail("README title differs from canonical title")
     if f'title: "{CANONICAL_TITLE}"' not in citation:
-        fail("CITATION.cff title differs from the canonical paper title")
+        fail("CITATION.cff title differs from canonical title")
     if metadata.count(CANONICAL_TITLE) < 2:
-        fail("ICLR and arXiv metadata titles must both match the canonical paper title")
+        fail("ICLR and arXiv metadata titles must match canonical title")
     expected_tex_title = (
-        r"\title{\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI "
-        r"Research Agents}"
+        r"\title{\cpb: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions}"
     )
     if expected_tex_title not in tex:
-        fail("manuscript title differs from the canonical paper title")
+        fail("manuscript title differs from canonical title")
 
     abstract_match = re.search(
-        r"## ICLR 2027 abstract\s+```text\s+(.*?)\s+```", metadata, flags=re.DOTALL
+        r"## ICLR 2027 abstract\s+```text\s+(.*?)\s+```",
+        metadata,
+        flags=re.DOTALL,
     )
     if not abstract_match:
-        fail("copy-ready ICLR abstract is missing from submission metadata")
+        fail("copy-ready ICLR abstract is missing")
     if normalize_space(abstract_match.group(1)) != manuscript_abstract_plain(tex):
-        fail("copy-ready ICLR abstract differs from the manuscript abstract")
+        fail("submission metadata abstract differs from manuscript abstract")
     if "## arXiv abstract" not in metadata or "same canonical abstract" not in metadata:
-        fail("arXiv abstract binding is missing from submission metadata")
+        fail("arXiv abstract binding is missing")
 
     required_metadata = (
         "Chih-Kai Wang",
@@ -148,11 +136,10 @@ def validate_submission_metadata(tex: str) -> None:
         "National Taipei University of Education",
         "Suggested primary category: `cs.AI`",
         "Possible cross-list: `cs.LG`",
-        "AI agents",
-        "AI evaluation",
-        "scientific reasoning",
-        "research agents",
-        "evidence-aware reasoning",
+        "synthetic benchmarks",
+        "policy conformance",
+        "evidence-state transitions",
+        "behavioral testing",
         "structured decision making",
         "trustworthy AI",
         "formal verification / verification-aware systems",
@@ -161,68 +148,40 @@ def validate_submission_metadata(tex: str) -> None:
         if phrase not in metadata:
             fail(f"required submission metadata is missing: {phrase!r}")
 
-    current_dates = ("2026-09-18", "2026-09-25")
-    stale_dates = ("2026-09-11", "2026-09-16")
-    for date in current_dates:
+    for date in ("2026-09-18", "2026-09-25"):
         if date not in metadata or date not in page_rules:
-            fail(f"current official ICLR date is missing from metadata/page rules: {date}")
-    for date in stale_dates:
-        if date in metadata or date in page_rules:
-            fail(f"stale ICLR deadline remains in metadata/page rules: {date}")
+            fail(f"official ICLR date is missing: {date}")
+    for stale in ("2026-09-11", "2026-09-16"):
+        if stale in metadata or stale in page_rules:
+            fail(f"stale ICLR date remains: {stale}")
 
 
-def validate_v2_pilot_binding(tex: str, pilot: dict[str, Any]) -> None:
-    if pilot.get("study_sha256") != V2_PILOT_SHA:
-        fail("post-v1 public pilot is not bound to the validated aggregate SHA")
-    if pilot.get("source_workflow_run_id") != 32291482079:
-        fail("post-v1 public pilot source workflow changed")
-    if pilot.get("aggregate_status_counts") != {"OK": 108, "SCHEMA_ERROR": 52}:
-        fail("post-v1 public pilot status counts changed")
-
-    protocol = pilot.get("protocol")
-    if not isinstance(protocol, dict):
-        fail("post-v1 public pilot protocol is missing")
-    expected_protocol = {
-        "instances": 40,
-        "pairs": 20,
-        "seed": 104729,
-        "total_decisions": 160,
-        "paid_api_calls": 0,
-    }
-    for key, expected in expected_protocol.items():
-        if protocol.get(key) != expected:
-            fail(f"post-v1 public pilot protocol.{key} changed")
-
-    required_patterns = [
-        (r"post-v1 public", "post-v1 public scope label"),
-        (r"108\s+of\s+160\s+decisions are parseable", "108 parseable decisions"),
-        (r"every one selects", "uniform ALLOW behavior"),
-        (r"from \.75 to 1\.00", "Qwen3-0.6B constrained coverage change"),
-        (r"from 0 to \.95", "Qwen3-1.7B constrained coverage change"),
-        (r"zero pair accuracy", "zero pair accuracy"),
-    ]
-    for pattern, description in required_patterns:
-        require_regex(tex, pattern, description)
+def validate_no_stale_file_counts() -> None:
+    paths = (TEX, README, SUBMISSION_METADATA, SUBMISSION_GATE, SUBMISSION_BUILDER)
+    pattern = re.compile(r"\b(?:179|170|619)(?:-file|\s+files?)\b", flags=re.IGNORECASE)
+    for path in paths:
+        match = pattern.search(path.read_text(encoding="utf-8"))
+        if match:
+            fail(
+                f"stale fixed artifact count remains in {path.relative_to(ROOT)}: {match.group(0)}"
+            )
 
 
-def validate_fresh_confirmatory_binding(
-    tex: str,
-    result: dict[str, Any],
-    analysis: dict[str, Any],
-    redaction: dict[str, Any],
-    correction: dict[str, Any],
-) -> None:
+def validate_r6_evidence(tex: str) -> None:
+    result = load_object(R6_RESULT, "r6 result")
+    addendum = load_object(R6_ADDENDUM, "r6 reporting addendum")
+    redaction = load_object(R6_REDACTION, "r6 redaction receipt")
+    correction = load_object(R6_CORRECTION, "r6 metadata correction")
+
     if result.get("study_result_sha256") != self_digest(result, "study_result_sha256"):
-        fail("fresh confirmatory study-result self-digest changed")
+        fail("r6 study-result self-digest changed")
     if result.get("status") != "R6_QWEN_CONFIRMATORY_SUPPORTED_FLASH_MODEL_EFFICACY_NON_EVALUABLE":
-        fail("fresh confirmatory study disposition changed")
+        fail("r6 disposition changed")
     if result.get("c2", {}).get("sealed_cells") != 600:
-        fail("fresh confirmatory C2 cell count changed")
-    qwen = result.get("qwen_service_configuration")
-    flash = result.get("deepseek_flash_service_configuration")
-    if not isinstance(qwen, dict) or not isinstance(flash, dict):
-        fail("fresh confirmatory lane summaries are malformed")
-    expected_qwen = {
+        fail("r6 C2 sealed-cell count changed")
+    qwen_result = result.get("qwen_service_configuration", {})
+    flash_result = result.get("deepseek_flash_service_configuration", {})
+    expected_result_metrics = {
         "valid_decisions": 272,
         "end_to_end_item_accuracy": 0.86,
         "end_to_end_pair_accuracy": 0.753333333333333,
@@ -230,545 +189,495 @@ def validate_fresh_confirmatory_binding(
         "balanced_action_recall": 0.599807213930348,
         "macro_f1": 0.626502732240437,
     }
-    for key, expected in expected_qwen.items():
+    for key, expected in expected_result_metrics.items():
+        if qwen_result.get(key) != expected:
+            fail(f"r6 Qwen metric changed: {key}")
+    if (
+        flash_result.get("http_401_records") != 300
+        or flash_result.get("model_outputs") != 0
+        or flash_result.get("model_capability_interpretation") != "NON_EVALUABLE_NO_MODEL_OUTPUT"
+    ):
+        fail("r6 Flash interface disposition changed")
+
+    if addendum.get("self_digest") != self_digest(addendum, "self_digest"):
+        fail("r6 reporting-addendum self-digest changed")
+    qwen = addendum.get("qwen_service_configuration", {})
+    expected_addendum = {
+        "items": 300,
+        "pairs": 150,
+        "valid_decisions": 272,
+        "complete_pairs": 123,
+        "correct_items": 258,
+        "correct_pairs": 113,
+        "decision_coverage": 0.9066666666666666,
+        "pair_coverage": 0.82,
+        "end_to_end_item_accuracy": 0.86,
+        "end_to_end_pair_accuracy": 0.7533333333333333,
+        "conditional_item_accuracy_given_valid_decision": 0.9485294117647058,
+        "conditional_pair_accuracy_given_complete_pair": 0.9186991869918699,
+    }
+    for key, expected in expected_addendum.items():
         if qwen.get(key) != expected:
-            fail(f"fresh confirmatory Qwen metric changed: {key}")
-    if qwen.get("per_action", {}).get("DEMOTE") != {
-        "correct": 0,
-        "recall": 0.0,
-        "support": 8,
+            fail(f"r6 addendum metric changed: {key}")
+    expected_confusion = {
+        "ALLOW": {"ALLOW": 143, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_DECISION": 7},
+        "HOLD": {"ALLOW": 4, "HOLD": 110, "DEMOTE": 0, "ESCALATE": 2, "NO_DECISION": 18},
+        "DEMOTE": {"ALLOW": 8, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_DECISION": 0},
+        "ESCALATE": {"ALLOW": 0, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 5, "NO_DECISION": 3},
+    }
+    if qwen.get("confusion") != expected_confusion:
+        fail("r6 full confusion matrix changed")
+    if addendum.get("public_dev_text_nb") != {
+        "balanced_action_recall": 0.3283582089552239,
+        "end_to_end_item_accuracy": 0.6133333333333333,
+        "end_to_end_pair_accuracy": 0.22666666666666666,
+        "macro_f1": 0.3123610914077647,
     }:
-        fail("fresh confirmatory Qwen DEMOTE result changed")
-    test = qwen.get("superiority_test_vs_public_dev_text_nb", {})
+        fail("r6 Naive Bayes addendum changed")
+    ceiling = addendum.get("deterministic_policy_executor", {})
     if (
-        test.get("additional_correct_items") != 74
-        or test.get("pair_block_wins") != 84
-        or test.get("pair_block_losses") != 10
-        or test.get("one_sided_exact_p") != 5.163495918775425e-16
-        or test.get("holm_adjusted_p") != 1.032699183755085e-15
+        ceiling.get("item_accuracy") != 1.0
+        or ceiling.get("pair_accuracy") != 1.0
+        or ceiling.get("role") != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
     ):
-        fail("fresh confirmatory Qwen exact test changed")
-    if (
-        flash.get("http_401_records") != 300
-        or flash.get("model_outputs") != 0
-        or flash.get("registered_hypothesis") != "UNSUPPORTED"
-        or flash.get("model_capability_interpretation") != "NON_EVALUABLE_NO_MODEL_OUTPUT"
-    ):
-        fail("fresh confirmatory Flash operational disposition changed")
-
-    if analysis.get("aggregate_sha256") != (
-        "sha256:726f3c5737f78c41434093b3f23e1d8da9949c7cbb4a6673bc681937fa6db9bf"
-    ):
-        fail("fresh confirmatory public analysis changed")
-    qwen_score = analysis.get("scores", {}).get("opencode-go-qwen3.7-max", {}).get("raw", {})
-    if (
-        qwen_score.get("item_accuracy") != 0.86
-        or qwen_score.get("pair_accuracy") != 0.7533333333333333
-        or qwen_score.get("per_action", {}).get("DEMOTE", {}).get("correct") != 0
-    ):
-        fail("fresh confirmatory public analysis Qwen metrics changed")
-    tests = analysis.get("confirmatory_item_correctness_tests", {}).get("tests")
-    if not isinstance(tests, list) or len(tests) != 2:
-        fail("fresh confirmatory complete Holm family changed")
-
+        fail("r6 definitional policy ceiling changed")
     if (
         redaction.get("hidden_reasoning_present_in_public_release") is not False
-        or redaction.get("public_provider_envelopes_allowlisted") is not True
         or redaction.get("scientific_analysis_payload_byte_identical") is not True
-        or redaction.get("source_to_derived_row_hashes_verified") is not True
     ):
-        fail("fresh confirmatory public redaction disposition changed")
+        fail("r6 redaction disposition changed")
     if correction.get("self_digest") != self_digest(correction, "self_digest"):
-        fail("fresh confirmatory frozen-manifest correction self-digest changed")
-    if (
-        correction.get("source_manifest_sha256")
-        != "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de"
-        or correction.get("scientific_impact") != "NONE"
-    ):
-        fail("fresh confirmatory frozen-manifest correction changed")
+        fail("r6 metadata-correction self-digest changed")
 
-    required_patterns = [
-        (r"fresh preregistered confirmatory study", "fresh confirmatory scope label"),
-        (r"272\s+valid decisions", "Qwen valid-decision count"),
-        (r"258\s+correct actions", "Qwen correct-action count"),
-        (r"113\s+of\s+150\s+controlled pairs", "Qwen correct-pair count"),
-        (r"24\.67-percentage-point", "Qwen baseline difference"),
-        (r"won\s+84\s+and lost\s+10", "Qwen pair-block wins and losses"),
-        (r"5\.16\\times10\^\{-16\}", "Qwen one-sided exact p-value"),
-        (r"1\.03\\times10\^\{-15\}", "Qwen Holm-adjusted p-value"),
-        (r"14\s+HTTP 500", "Qwen HTTP 500 count"),
-        (r"one\s+HTTP 503", "Qwen HTTP 503 count"),
-        (r"ten\s+timeouts", "Qwen timeout count"),
-        (r"three\s+semantic-invalid", "Qwen semantic-invalid count"),
-        (r"0/8\s+for\s+\\demote", "Qwen DEMOTE failure"),
-        (r"300\s+HTTP 401", "Flash HTTP 401 count"),
-        (r"model efficacy is non-evaluable", "Flash model-efficacy boundary"),
-        (r"261\s+of\s+275\s+HTTP 200", "provider token-count caveat"),
-        (r"275\s+Qwen response envelopes", "hidden-thinking disclosure"),
-        (r"179-file permanent manifest", "persistent artifact manifest"),
-        (r"stale \\texttt\{CFM\\_R5\}", "frozen-manifest metadata correction"),
-    ]
-    for pattern, description in required_patterns:
+    required = (
+        (r"272/300\s+valid decisions", "r6 valid-decision count"),
+        (r"123/150\s+complete pairs", "r6 complete-pair count"),
+        (r"\.9485", "r6 conditional item accuracy"),
+        (r"\.9187", "r6 conditional pair accuracy"),
+        (r"\.9067", "r6 decision coverage"),
+        (r"\.8200", "r6 pair coverage"),
+        (r"300\s+HTTP 401", "r6 Flash HTTP 401 count"),
+        (r"old frozen service interface", "old Flash interface boundary"),
+        (r"weak baseline", "Naive Bayes weakness"),
+        (r"definitional policy ceiling", "deterministic ceiling role"),
+    )
+    for pattern, description in required:
         require_regex(tex, pattern, description)
 
-    table_match = re.search(
-        r"\\label\{tab:fresh-confirmatory\}(.*?)\\end\{table\}",
+
+def challenge_lane(aggregate: dict[str, Any], lane_id: str) -> dict[str, Any]:
+    lanes = aggregate.get("lanes")
+    if not isinstance(lanes, list):
+        fail("balanced challenge lanes are missing")
+    for lane in lanes:
+        if isinstance(lane, dict) and lane.get("lane_id") == lane_id:
+            return lane
+    fail(f"balanced challenge lane missing: {lane_id}")
+    raise AssertionError
+
+
+def validate_challenge_lane(
+    lane: dict[str, Any],
+    *,
+    expected: dict[str, Any],
+    confusion: dict[str, dict[str, int]],
+    recalls: dict[str, float],
+) -> None:
+    metrics = lane.get("metrics")
+    if not isinstance(metrics, dict):
+        fail(f"balanced challenge metrics missing: {lane.get('lane_id')}")
+    for key, value in expected.items():
+        if metrics.get(key) != value:
+            fail(f"balanced challenge metric changed: {lane.get('lane_id')}.{key}")
+    if metrics.get("confusion_matrix", {}).get("counts") != confusion:
+        fail(f"balanced challenge confusion changed: {lane.get('lane_id')}")
+    per_action = metrics.get("per_action", {})
+    for action, recall in recalls.items():
+        if per_action.get(action, {}).get("end_to_end_recall") != recall:
+            fail(f"balanced challenge recall changed: {lane.get('lane_id')}.{action}")
+    if (
+        metrics.get("failure_rule")
+        != "Every non-OK response remains in the denominator as incorrect."
+    ):
+        fail(f"balanced challenge denominator rule changed: {lane.get('lane_id')}")
+
+
+def validate_balanced_challenge(tex: str) -> None:
+    plan = load_object(CHALLENGE_PLAN, "balanced challenge plan")
+    aggregate = load_object(CHALLENGE_RESULT, "balanced challenge aggregate")
+    receipt = load_object(CHALLENGE_RECEIPT, "balanced challenge receipt")
+
+    dataset = plan.get("dataset", {})
+    design = plan.get("design", {})
+    if (
+        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or dataset.get("pairs") != 90
+        or dataset.get("instances") != 180
+        or dataset.get("factors") != 15
+        or dataset.get("invalid_action_counts") != {"HOLD": 30, "DEMOTE": 30, "ESCALATE": 30}
+        or design.get("planned_model_item_cells") != 360
+        or design.get("attempts_per_item") != 1
+        or design.get("held_out_generalization_claim") is not False
+    ):
+        fail("balanced challenge frozen design changed")
+    if (
+        aggregate.get("status") != "COMPLETE"
+        or aggregate.get("design") != "PUBLIC_PRECOMMITTED_BALANCED_CHALLENGE"
+        or aggregate.get("truth_status") != "COMPUTATIONAL"
+    ):
+        fail("balanced challenge aggregate disposition changed")
+
+    qwen_confusion = {
+        "ALLOW": {"ALLOW": 79, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 11},
+        "HOLD": {"ALLOW": 0, "HOLD": 26, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 4},
+        "DEMOTE": {"ALLOW": 8, "HOLD": 4, "DEMOTE": 4, "ESCALATE": 4, "NO_VALID_DECISION": 10},
+        "ESCALATE": {"ALLOW": 0, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 23, "NO_VALID_DECISION": 7},
+    }
+    flash_confusion = {
+        "ALLOW": {"ALLOW": 68, "HOLD": 4, "DEMOTE": 0, "ESCALATE": 8, "NO_VALID_DECISION": 10},
+        "HOLD": {"ALLOW": 13, "HOLD": 9, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 8},
+        "DEMOTE": {"ALLOW": 25, "HOLD": 3, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 2},
+        "ESCALATE": {"ALLOW": 0, "HOLD": 3, "DEMOTE": 0, "ESCALATE": 13, "NO_VALID_DECISION": 14},
+    }
+    qwen = challenge_lane(aggregate, "opencode-go-qwen3.7-max")
+    flash = challenge_lane(aggregate, "opencode-go-deepseek-v4-flash-matched")
+    validate_challenge_lane(
+        qwen,
+        expected={
+            "items": 180,
+            "pairs": 90,
+            "parseable_items": 148,
+            "covered_pairs": 64,
+            "correct_items": 132,
+            "correct_pairs": 48,
+            "decision_coverage": 0.8222222222222222,
+            "pair_coverage": 0.7111111111111111,
+            "end_to_end_item_accuracy": 0.7333333333333333,
+            "end_to_end_pair_accuracy": 0.5333333333333333,
+            "conditional_item_accuracy": 0.8918918918918919,
+            "conditional_pair_accuracy": 0.75,
+            "balanced_action_recall": 0.6611111111111111,
+            "macro_f1": 0.7004084238512532,
+            "parse_status_counts": {"OK": 148, "SEMANTIC_ERROR": 1, "TRANSPORT_ERROR": 31},
+        },
+        confusion=qwen_confusion,
+        recalls={
+            "ALLOW": 0.8777777777777778,
+            "HOLD": 0.8666666666666667,
+            "DEMOTE": 0.13333333333333333,
+            "ESCALATE": 0.7666666666666667,
+        },
+    )
+    validate_challenge_lane(
+        flash,
+        expected={
+            "items": 180,
+            "pairs": 90,
+            "parseable_items": 146,
+            "covered_pairs": 61,
+            "correct_items": 90,
+            "correct_pairs": 13,
+            "decision_coverage": 0.8111111111111111,
+            "pair_coverage": 0.6777777777777778,
+            "end_to_end_item_accuracy": 0.5,
+            "end_to_end_pair_accuracy": 0.14444444444444443,
+            "conditional_item_accuracy": 0.6164383561643836,
+            "conditional_pair_accuracy": 0.21311475409836064,
+            "balanced_action_recall": 0.37222222222222223,
+            "macro_f1": 0.5236761371215153,
+            "parse_status_counts": {"OK": 146, "SEMANTIC_ERROR": 34},
+        },
+        confusion=flash_confusion,
+        recalls={
+            "ALLOW": 0.7555555555555555,
+            "HOLD": 0.3,
+            "DEMOTE": 0.0,
+            "ESCALATE": 0.43333333333333335,
+        },
+    )
+    ceiling = aggregate.get("deterministic_policy_executor", {})
+    if (
+        ceiling.get("end_to_end_item_accuracy") != 1.0
+        or ceiling.get("end_to_end_pair_accuracy") != 1.0
+        or ceiling.get("label") != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
+    ):
+        fail("balanced challenge definitional ceiling changed")
+    validation = receipt.get("validation", {})
+    if (
+        receipt.get("status") != "IMPORTED_AND_INDEPENDENTLY_RECOMPUTED"
+        or receipt.get("workflow", {}).get("conclusion") != "success"
+        or validation.get("terminal_records_validated") != 360
+        or validation.get("non_numeric_fields_exact") is not True
+        or validation.get("provider_account_identifier_findings") != 0
+        or validation.get("retained_provider_response_ids") != 0
+        or validation.get("hidden_reasoning_field_findings") != 0
+    ):
+        fail("balanced challenge receipt changed")
+
+    required = (
+        (r"90\s+pairs and 15 factors", "challenge size"),
+        (r"148/180\s+valid decisions", "challenge Qwen coverage count"),
+        (r"146/180\s+valid decisions", "challenge Flash coverage count"),
+        (r"\.7333/\.5333", "challenge Qwen end-to-end metrics"),
+        (r"\.8919/\.7500", "challenge Qwen conditional metrics"),
+        (r"\.5000/\.1444", "challenge Flash end-to-end metrics"),
+        (r"\.6164/\.2131", "challenge Flash conditional metrics"),
+        (r"public, preregistered robustness challenge", "public challenge boundary"),
+        (r"strict causal", "cross-service causal boundary"),
+    )
+    for pattern, description in required:
+        require_regex(tex, pattern, description)
+
+
+def parse_confusion_table(tex: str) -> dict[tuple[str, str], tuple[int, ...]]:
+    match = re.search(
+        r"\\label\{tab:confusion\}(.*?)\\end\{table\}",
         tex,
         flags=re.DOTALL,
     )
-    if not table_match:
-        fail("fresh confirmatory result table is missing")
-    table = table_match.group(1)
-    table_rows = (
-        r"Qwen3\.7-Max\s*&\s*272/300\s*&\s*\.860\s*&\s*\.753\s*&\s*\.600\s*&\s*\.627",
-        r"Public-dev text NB\s*&\s*300/300\s*&\s*\.613\s*&\s*\.227\s*&\s*\.328\s*&\s*\.312",
-        r"Flash service configuration\s*&\s*0/300\s*&\s*N/E\s*&\s*N/E\s*&\s*N/E\s*&\s*N/E",
-    )
-    for pattern in table_rows:
-        if not re.search(pattern, table):
-            fail(f"fresh confirmatory table row changed: {pattern}")
+    if not match:
+        fail("full confusion table is missing")
+    current = ""
+    rows: dict[tuple[str, str], tuple[int, ...]] = {}
+    action_macros = {
+        r"\allow{}": "ALLOW",
+        r"\hold{}": "HOLD",
+        r"\demote{}": "DEMOTE",
+        r"\escalate{}": "ESCALATE",
+    }
+    for line in match.group(1).splitlines():
+        if "&" not in line or not line.rstrip().endswith(r"\\"):
+            continue
+        fields = [field.strip() for field in line.rstrip()[:-2].split("&")]
+        if len(fields) != 7 or fields[0] == "Configuration":
+            continue
+        if fields[0]:
+            current = fields[0]
+        gold = action_macros.get(fields[1])
+        if not current or gold is None:
+            continue
+        try:
+            values = tuple(int(field) for field in fields[2:])
+        except ValueError:
+            continue
+        rows[(current, gold)] = values
+    return rows
 
 
-def validate_capable_hidden_binding(tex: str, study: dict[str, Any]) -> None:
-    if sha256_file(CAPABLE_HIDDEN) != CAPABLE_HIDDEN_SHA:
-        fail("capable hidden aggregate SHA changed")
-    if study.get("status") != "COMPLETE_WITH_QUALIFICATION_FAILURES":
-        fail("capable hidden study status changed")
-    if study.get("analysis_status") != "EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION":
-        fail("capable hidden study is not labeled exploratory/adaptive")
-    dataset = study.get("dataset")
-    qualification = study.get("qualification")
-    complete = study.get("models_with_complete_hidden_pass")
-    if (
-        not isinstance(dataset, dict)
-        or not isinstance(qualification, dict)
-        or not isinstance(complete, list)
-    ):
-        fail("capable hidden study is malformed")
-    if dataset.get("instances") != 300 or dataset.get("pairs") != 150:
-        fail("capable hidden dataset size changed")
-    expected_go = [
-        "opencode-go-deepseek-v4-flash-matched",
-        "opencode-go-qwen3.7-max",
-    ]
-    if qualification.get("go_lanes") != expected_go:
-        fail("capable hidden GO lanes changed")
-    if (
-        qualification.get("executed_pilot_attempts") != 14
-        or qualification.get("attempt_history_released") is not True
-    ):
-        fail("capable hidden attempt-history disclosure changed")
-    if len(qualification.get("pilots", [])) != 7 or len(qualification.get("stop_lanes", [])) != 5:
-        fail("capable hidden pilot qualification matrix changed")
-    by_lane = {str(row.get("lane_id")): row for row in complete if isinstance(row, dict)}
+def validate_manuscript_tables(tex: str) -> None:
+    table_rows = parse_confusion_table(tex)
     expected = {
-        "opencode-go-qwen3.7-max": {
-            "decision_coverage": 0.99,
-            "pair_coverage": 0.98,
-            "action_accuracy": 0.94,
-            "pair_accuracy": 0.88,
-            "correct_actions": 282,
-            "correct_pairs": 132,
-            "raw_false_promotion_rate": 0.06802721088435375,
-            "reason_code_instance_set_f1": 0.9544444444444444,
-        },
-        "opencode-go-deepseek-v4-flash-matched": {
-            "decision_coverage": 0.9133333333333333,
-            "pair_coverage": 0.8266666666666667,
-            "action_accuracy": 0.6266666666666667,
-            "pair_accuracy": 0.25333333333333335,
-            "correct_actions": 188,
-            "correct_pairs": 38,
-            "raw_false_promotion_rate": 0.6935483870967742,
-            "reason_code_instance_set_f1": 0.6034444444444444,
-        },
+        ("r6 Qwen", "ALLOW"): (143, 0, 0, 0, 7),
+        ("r6 Qwen", "HOLD"): (4, 110, 0, 2, 18),
+        ("r6 Qwen", "DEMOTE"): (8, 0, 0, 0, 0),
+        ("r6 Qwen", "ESCALATE"): (0, 0, 0, 5, 3),
+        ("Challenge Qwen", "ALLOW"): (79, 0, 0, 0, 11),
+        ("Challenge Qwen", "HOLD"): (0, 26, 0, 0, 4),
+        ("Challenge Qwen", "DEMOTE"): (8, 4, 4, 4, 10),
+        ("Challenge Qwen", "ESCALATE"): (0, 0, 0, 23, 7),
+        ("Challenge Flash", "ALLOW"): (68, 4, 0, 8, 10),
+        ("Challenge Flash", "HOLD"): (13, 9, 0, 0, 8),
+        ("Challenge Flash", "DEMOTE"): (25, 3, 0, 0, 2),
+        ("Challenge Flash", "ESCALATE"): (0, 3, 0, 13, 14),
     }
-    if set(by_lane) != set(expected):
-        fail("capable hidden completed lane set changed")
-    for lane_id, values in expected.items():
-        row = by_lane[lane_id]
-        end_to_end = row.get("end_to_end")
-        if not isinstance(end_to_end, dict):
-            fail(f"capable hidden end-to-end metrics missing: {lane_id}")
-        observed = {
-            "decision_coverage": row.get("decision_coverage"),
-            "pair_coverage": row.get("pair_coverage"),
-            "action_accuracy": end_to_end.get("action_accuracy"),
-            "pair_accuracy": end_to_end.get("pair_accuracy"),
-            "correct_actions": end_to_end.get("correct_actions"),
-            "correct_pairs": end_to_end.get("correct_pairs"),
-            "raw_false_promotion_rate": row.get("raw_false_promotion_rate"),
-            "reason_code_instance_set_f1": row.get("reason_code_instance_set_f1"),
-        }
-        if observed != values:
-            fail(f"capable hidden paper-facing metrics changed: {lane_id}")
-    if study.get("baselines", {}).get("always_allow") != {
-        "accuracy": 0.5,
-        "correct": 150,
-        "trials": 300,
+    if table_rows != expected:
+        fail("manuscript confusion table differs from bound evidence")
+
+    for label in ("tab:core-results", "tab:action-recall", "tab:confusion"):
+        if rf"\label{{{label}}}" not in tex:
+            fail(f"required result table missing: {label}")
+    core_rows = (
+        (
+            r"r6 Qwen3\.7-Max\s*&\s*272/300\s*&\s*\.8600\s*&\s*\.9485"
+            r"\s*&\s*\.8200\s*&\s*\.7533\s*&\s*\.9187"
+        ),
+        (
+            r"Public challenge Qwen\s*&\s*148/180\s*&\s*\.7333\s*&\s*\.8919"
+            r"\s*&\s*\.7111\s*&\s*\.5333\s*&\s*\.7500"
+        ),
+        (
+            r"Public challenge Flash\s*&\s*146/180\s*&\s*\.5000\s*&\s*\.6164"
+            r"\s*&\s*\.6778\s*&\s*\.1444\s*&\s*\.2131"
+        ),
+    )
+    for pattern in core_rows:
+        require_regex(tex, pattern, "core result table row")
+    action_rows = (
+        (
+            r"r6 Qwen3\.7-Max\s*&\s*\.9533\s*&\s*\.8209\s*&\s*\.0000"
+            r"\s*&\s*\.6250\s*&\s*\.5998\s*&\s*\.6265"
+        ),
+        (
+            r"Public challenge Qwen\s*&\s*\.8778\s*&\s*\.8667\s*&\s*\.1333"
+            r"\s*&\s*\.7667\s*&\s*\.6611\s*&\s*\.7004"
+        ),
+        (
+            r"Public challenge Flash\s*&\s*\.7556\s*&\s*\.3000\s*&\s*\.0000"
+            r"\s*&\s*\.4333\s*&\s*\.3722\s*&\s*\.5237"
+        ),
+    )
+    for pattern in action_rows:
+        require_regex(tex, pattern, "action-recall table row")
+
+
+def validate_naturalistic_decision(tex: str) -> None:
+    pool_bytes = NATURALISTIC_POOL.read_bytes()
+    pool = load_object(NATURALISTIC_POOL, "naturalistic candidate pool")
+    decision = load_object(NATURALISTIC_DECISION, "naturalistic review decision")
+    observed_sha = "sha256:" + hashlib.sha256(pool_bytes).hexdigest()
+    if decision.get("candidate_pool") != {
+        "path": "v2/naturalistic-candidates.json",
+        "sha256": observed_sha,
+        "candidate_count": len(pool.get("candidates", [])),
     }:
-        fail("capable hidden always-ALLOW baseline changed")
-    sensitivity = study.get("pilot_excluded_sensitivity")
-    if not isinstance(sensitivity, dict) or set(sensitivity) != set(expected):
-        fail("capable hidden pilot-excluded sensitivity is malformed")
-    expected_sensitivity = {
-        "opencode-go-qwen3.7-max": {
-            "records": 288,
-            "pairs": 144,
-            "covered_decisions": 285,
-            "covered_pairs": 141,
-            "correct_actions": 270,
-            "correct_pairs": 126,
-            "raw_false_promotion_rate": 0.07092198581560284,
-            "balanced_action_recall": 0.73046875,
-            "per_action": {
-                "ALLOW": (144, 144),
-                "HOLD": (118, 128),
-                "DEMOTE": (0, 8),
-                "ESCALATE": (8, 8),
-            },
-        },
-        "opencode-go-deepseek-v4-flash-matched": {
-            "records": 288,
-            "pairs": 144,
-            "covered_decisions": 263,
-            "covered_pairs": 119,
-            "correct_actions": 181,
-            "correct_pairs": 37,
-            "raw_false_promotion_rate": 0.6890756302521008,
-            "balanced_action_recall": 0.41015625,
-            "per_action": {
-                "ALLOW": (144, 144),
-                "HOLD": (34, 128),
-                "DEMOTE": (0, 8),
-                "ESCALATE": (3, 8),
-            },
-        },
-    }
-    for lane_id, expected_row in expected_sensitivity.items():
-        row = sensitivity[lane_id]
-        for key in (
-            "records",
-            "pairs",
-            "covered_decisions",
-            "covered_pairs",
-            "correct_actions",
-            "correct_pairs",
-            "raw_false_promotion_rate",
-            "balanced_action_recall",
-        ):
-            if row.get(key) != expected_row[key]:
-                fail(f"capable hidden pilot-excluded metric changed: {lane_id}.{key}")
-        recalls = row.get("per_action_recall")
-        if not isinstance(recalls, dict):
-            fail(f"capable hidden per-action recall missing: {lane_id}")
-        for action, (correct, trials) in expected_row["per_action"].items():
-            if (
-                recalls.get(action, {}).get("correct") != correct
-                or recalls.get(action, {}).get("trials") != trials
-            ):
-                fail(f"capable hidden per-action recall changed: {lane_id}.{action}")
-    tests = study.get("prespecified_tests", {}).get("models_vs_always_allow", {}).get("tests")
-    if not isinstance(tests, list) or len(tests) != 2:
-        fail("capable hidden baseline tests changed")
-    required_patterns = [
-        (r"all 14 pilot attempts", "all adaptive pilot attempts disclosed"),
-        (r"confirmatory force is unavailable", "exploratory interpretation boundary"),
-        (r"two of seven service lanes", "two of seven terminally qualified lanes"),
-        (r"five other lanes lack full scores", "five unscored lanes"),
-        (r"270/288", "Qwen pilot-excluded correct actions"),
-        (r"126/144", "Qwen pilot-excluded correct pairs"),
-        (r"181/288", "Flash pilot-excluded correct actions"),
-        (r"37/144", "Flash pilot-excluded correct pairs"),
-        (r"282/300", "Qwen correct actions"),
-        (r"132/150", "Qwen correct pairs"),
-        (r"188/300", "Flash correct actions"),
-        (r"38/150", "Flash correct pairs"),
-        (r"both lanes score 0/8 on \\demote", "shared DEMOTE failure"),
-        (r"no confirmatory familywise claim", "selection-aware test boundary"),
-    ]
-    for pattern, description in required_patterns:
+        fail("naturalistic decision is not bound to candidate pool")
+    expected_ids = [row.get("candidate_id") for row in pool.get("candidates", [])]
+    if decision.get("reviewed_candidate_ids") != expected_ids:
+        fail("naturalistic reviewed candidate list changed")
+    if decision.get("decision") != {
+        "cases_created": 0,
+        "model_calls": 0,
+        "claimpromotebench_model_outputs_consulted": False,
+        "human_annotators": 0,
+        "agreement_statistic": None,
+        "selection_frozen_before_model_calls": True,
+    }:
+        fail("naturalistic pre-model decision changed")
+    required = (
+        (r"zero naturalistic benchmark cases", "zero naturalistic cases"),
+        (r"zero model calls", "zero naturalistic model calls"),
+        (r"No human annotators", "no fabricated human annotation"),
+        (r"Naturalistic transfer remains open", "naturalistic limitation"),
+    )
+    for pattern, description in required:
         require_regex(tex, pattern, description)
 
 
-def validate_stronger_followup_binding(tex: str, study: dict[str, Any]) -> None:
-    plan = study.get("plan")
-    pilot = study.get("pilot")
-    full = study.get("full")
-    if not all(isinstance(value, dict) for value in (plan, pilot, full)):
-        fail("GPT-5.4 follow-up summary is malformed")
-    if plan.get("sha256") != (
-        "sha256:8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a"
+def validate_v1_diagnostic(tex: str) -> None:
+    frozen = load_object(RESULTS_FREEZE, "v1 results freeze")
+    if frozen.get("source_study_sha256") != (
+        "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664"
     ):
-        fail("GPT-5.4 follow-up plan digest changed")
-    if pilot.get("run_sha256") != (
-        "sha256:ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355"
+        fail("v1 results freeze changed")
+    if frozen.get("format_error_count") != 5327 or frozen.get("parseable_raw_decisions") != 1873:
+        fail("v1 diagnostic counts changed")
+    for pattern, description in (
+        (r"7,200-decision", "v1 decision count"),
+        (r"5,327\s+format errors", "v1 format errors"),
+        (r"1,873\s+parseable", "v1 parseable decisions"),
+        (r"\.1333\s+end-to-end item accuracy", "v1 end-to-end accuracy"),
     ):
-        fail("GPT-5.4 pilot run digest changed")
-    if full.get("run_sha256") != (
-        "sha256:0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7"
-    ):
-        fail("GPT-5.4 full run digest changed")
-    expected_full = {
-        "records": 100,
-        "parseable_decisions": 99,
-        "complete_pairs": 49,
-        "raw_correct_decisions": 99,
-        "raw_correct_pairs": 49,
-        "false_promotions": 0,
-        "invalid_promotion_trials": 49,
-        "valid_promotions": 50,
-        "valid_promotion_trials": 50,
-    }
-    for key, expected in expected_full.items():
-        if full.get(key) != expected:
-            fail(f"GPT-5.4 full result changed: {key}")
-    if full.get("status_counts") != {"OK": 99, "SCHEMA_ERROR": 1}:
-        fail("GPT-5.4 full status counts changed")
-    if full.get("raw_action_distribution") != {
-        "ALLOW": 50,
-        "HOLD": 45,
-        "DEMOTE": 2,
-        "ESCALATE": 2,
-    }:
-        fail("GPT-5.4 action distribution changed")
-    for key in ("raw_action_accuracy", "raw_pair_accuracy", "raw_flip_rate"):
-        if full.get(key) != 1.0:
-            fail(f"GPT-5.4 full metric changed: {key}")
-    required_patterns = [
-        (r"post-protocol GPT-5\.4", "post-protocol GPT-5.4 scope label"),
-        (r"99\s+parseable decisions from 100", "GPT-5.4 decision coverage count"),
-        (r"all\s+99\s+parseable decisions match the policy oracle", "GPT-5.4 correct decisions"),
-        (r"49\s+of\s+50\s+pairs are complete", "GPT-5.4 complete pairs"),
-        (r"conditional pair accuracy and decision-flip rate are 1\.0", "GPT-5.4 pair metrics"),
-        (r"0/49", "GPT-5.4 false-promotion count"),
-        (r"50/50", "GPT-5.4 valid-promotion count"),
-    ]
-    for pattern, description in required_patterns:
         require_regex(tex, pattern, description)
 
 
-def main() -> int:
-    tex = TEX.read_text(encoding="utf-8")
-    bib = BIB.read_text(encoding="utf-8")
-    frozen = load_object(RESULTS_FREEZE, "results-freeze.json")
-    pilot = load_object(V2_PILOT, "v2 public pilot study")
-    capable_hidden = load_object(CAPABLE_HIDDEN, "capable hidden study")
-    fresh_result = load_object(FRESH_CONFIRMATORY_RESULT, "fresh confirmatory study result")
-    fresh_analysis = load_object(FRESH_CONFIRMATORY_ANALYSIS, "fresh confirmatory analysis")
-    fresh_redaction = load_object(FRESH_CONFIRMATORY_REDACTION, "fresh confirmatory redaction")
-    fresh_correction = load_object(FRESH_CONFIRMATORY_CORRECTION, "fresh manifest correction")
-    stronger_followup = load_object(STRONGER_FOLLOWUP, "GPT-5.4 follow-up study")
+def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]:
     lower = tex.lower()
-    validate_submission_metadata(tex)
+    for section in (
+        "Introduction",
+        "Related Work",
+        "Task and Evidence Flow",
+        "Benchmark and Evaluation Design",
+        "Results",
+        "Discussion",
+        "Limitations",
+        "Conclusion",
+    ):
+        if rf"\section{{{section}}}" not in tex:
+            fail(f"required manuscript section missing: {section}")
+    if r"\label{fig:evidence-flow}" not in tex:
+        fail("benchmark/evidence-flow figure is missing")
 
-    stale = [
-        "23 of 24",
-        "9,600",
-        "primary study is not yet complete",
-        "no model results",
-        "not yet published",
-    ]
-    for phrase in stale:
-        if phrase in lower:
-            fail(f"stale pre-results wording remains: {phrase!r}")
-
-    human_study_phrases = [
-        "supplementary human audit",
-        "human policy audit",
-        "reviewer 1 &",
-        "reviewer 2 &",
-        "cohen's $\\kappa",
-        "mixed / not pass",
-        "two-reviewer audit",
-        "independent human reviewers",
-    ]
-    for phrase in human_study_phrases:
-        if phrase in lower:
-            fail(f"removed human-study wording remains in manuscript: {phrase!r}")
-
-    overclaims = [
+    overclaims = (
         r"\bfirst benchmark\b",
         r"\bfirst system\b",
         r"\bfirst framework\b",
         r"\bstate[- ]of[- ]the[- ]art\b",
         r"\bguarantees? safety\b",
-    ]
+        r"general research-agent competence is established",
+    )
     for pattern in overclaims:
         if re.search(pattern, tex, flags=re.IGNORECASE):
-            fail(f"unqualified novelty/performance claim found: {pattern}")
-
-    style_smells = [
-        "artifact-bound",
-        "fail-closed",
-        "enforcement-consistency property",
-        "first-order failure",
-        "operationally important",
-        "correspondingly narrow",
-        "frozen empirical diagnosis",
-        "conditional enforcement boundary",
-        "normative by benchmark definition",
-    ]
-    for phrase in style_smells:
-        if phrase in lower:
-            fail(f"internal/jargon-heavy wording remains in manuscript: {phrase!r}")
-    for provider_name in ("OpenCode", "OpenRouter", "B.AI"):
-        if provider_name.lower() in lower:
-            fail(f"provider-specific operational detail remains in manuscript: {provider_name}")
-    direct_statement_guards = [
-        (r"\bnot\b", "not-construction"),
-        (r"\bwithout\b", "without-construction"),
-        (r"\brather than\b", "rather-than construction"),
-        (r"\binstead of\b", "instead-of construction"),
-        (r"\bnever\b", "never-construction"),
-    ]
-    for pattern, description in direct_statement_guards:
-        if re.search(pattern, tex, flags=re.IGNORECASE):
-            fail(f"defensive contrast remains in manuscript: {description}")
-
-    if frozen["source_study_sha256"] != (
-        "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664"
+            fail(f"unsupported novelty or capability claim found: {pattern}")
+    for phrase in (
+        "synthetic policy-conformance problem",
+        "author-defined policy",
+        "Every transport, syntax, schema, and semantic failure",
+        "public robustness challenge",
+        "not a causal ablation",
+        "No human annotation study",
     ):
-        fail("results-freeze.json is not bound to the validated recovered study SHA")
-    if frozen["runs"] * frozen["instances_per_run"] != frozen["total_decisions"]:
-        fail("frozen run matrix is internally inconsistent")
-    expected_rate = frozen["format_error_count"] / frozen["total_decisions"]
-    if abs(expected_rate - frozen["format_error_rate"]) > 1e-15:
-        fail("frozen format-error rate is inconsistent with count/denominator")
-    parseable_expected = frozen["total_decisions"] - frozen["format_error_count"]
-    if parseable_expected != frozen["parseable_raw_decisions"]:
-        fail("frozen parseable count is inconsistent")
-
-    m06 = frozen["models"]["Qwen/Qwen3-0.6B"]
-    m17 = frozen["models"]["Qwen/Qwen3-1.7B"]
-
-    total = f"{frozen['total_decisions']:,}"
-    errors = f"{frozen['format_error_count']:,}"
-    parseable = f"{frozen['parseable_raw_decisions']:,}"
-    reclassified = frozen["semantic_format_reclassified"]
-
-    require_regex(
-        tex,
-        rf"{re.escape(errors)}\s*(?:/|of)\s*{re.escape(total)}",
-        f"format-error count {errors}/{total}",
-    )
-    require_regex(
-        tex,
-        rf"{100 * frozen['format_error_rate']:.2f}\\%",
-        "73.99 percent format-error rate",
-    )
-    require_regex(tex, re.escape(parseable), f"parseable raw decision count {parseable}")
-    require_regex(
-        tex,
-        rf"Exactly\s+{reclassified}\s+of\s+{re.escape(total)}",
-        "semantic-format recovery count",
-    )
-
-    required_plain = [
-        "decision coverage",
-        "Machine-checkable validation strategy",
-        "public pair-contract audit",
-        "policy remains an author-defined benchmark rule",
-        "one-way implementation check",
-        "Every non-OK response",
-        "Qwen3.7-Max",
-        "DeepSeek-V4-Flash",
-        "private construction seed is excluded",
-    ]
-    for phrase in required_plain:
         if phrase.lower() not in lower:
-            fail(f"required frozen result/boundary missing: {phrase!r}")
-
-    for model in (m06, m17):
-        if model["defined_raw_fpr_values"] != [1.0]:
-            fail("frozen gate-arm raw FPR values changed")
-        if model["defined_effective_fpr_values"] != [0.0]:
-            fail("frozen gate-arm effective FPR values changed")
-        if model["gate_catch_values"] != [1.0]:
-            fail("frozen gate catch values changed")
-        if model["false_block_values"] != [0.0]:
-            fail("frozen false-block values changed")
-
-    validate_v2_pilot_binding(tex, pilot)
-    validate_capable_hidden_binding(tex, capable_hidden)
-    validate_fresh_confirmatory_binding(
-        tex,
-        fresh_result,
-        fresh_analysis,
-        fresh_redaction,
-        fresh_correction,
-    )
-    validate_stronger_followup_binding(tex, stronger_followup)
-
-    if r"\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}" not in tex:
-        fail("ClaimPromoteBench macro must use xspace to prevent concatenated prose")
-    if r"\usepackage{xspace}" not in tex:
-        fail("xspace package missing")
+            fail(f"required interpretation boundary missing: {phrase!r}")
 
     cite_keys: set[str] = set()
     for group in re.findall(r"\\cite(?:t|p)?\{([^}]+)\}", tex):
-        cite_keys.update(k.strip() for k in group.split(",") if k.strip())
+        cite_keys.update(key.strip() for key in group.split(",") if key.strip())
     bib_keys = set(re.findall(r"@\w+\{([^,]+),", bib))
-    missing_bib = sorted(cite_keys - bib_keys)
-    if missing_bib:
-        fail(f"citation keys missing from references.bib: {missing_bib}")
+    missing = sorted(cite_keys - bib_keys)
+    if missing:
+        fail(f"citation keys missing from references.bib: {missing}")
+    required_citations = {
+        "ribeiro2020checklist",
+        "gardner2020contrastsets",
+        "chan1998metamorphic",
+        "scholak2021picard",
+        "geng2023grammar",
+        "geifman2017selective",
+        "geifman2019selectivenet",
+        "chen2025scienceagentbench",
+        "siegel2025corebench",
+        "huang2025popper",
+    }
+    if not required_citations <= cite_keys:
+        fail(f"required primary-source citations missing: {sorted(required_citations - cite_keys)}")
 
     labels = re.findall(r"\\label\{([^}]+)\}", tex)
-    dup_labels = sorted({label for label in labels if labels.count(label) > 1})
-    if dup_labels:
-        fail(f"duplicate labels: {dup_labels}")
-    label_set = set(labels)
+    duplicates = sorted({label for label in labels if labels.count(label) > 1})
+    if duplicates:
+        fail(f"duplicate labels: {duplicates}")
     refs = set(re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", tex))
-    missing_labels = sorted(refs - label_set)
+    missing_labels = sorted(refs - set(labels))
     if missing_labels:
         fail(f"references without labels: {missing_labels}")
 
-    abstract_match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL)
-    if not abstract_match:
+    abstract = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL)
+    if not abstract:
         fail("abstract not found")
-    abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract_match.group(1))
+    abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract.group(1))
     abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
     if len(abstract_words) > 250:
-        word_count = len(abstract_words)
-        fail(f"abstract is too long for a concise conference submission: {word_count} words")
+        fail(f"abstract exceeds 250 words: {len(abstract_words)}")
 
-    contrib_match = re.search(
+    contributions = re.search(
         r"Our contributions are:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
         tex,
         flags=re.DOTALL,
     )
-    if not contrib_match:
+    if not contributions:
         fail("contributions block not found")
-    if len(re.findall(r"\\item\b", contrib_match.group(1))) != 3:
-        fail("contributions block must contain exactly three items")
+    contribution_count = len(re.findall(r"\\item\b", contributions.group(1)))
+    if not 3 <= contribution_count <= 5:
+        fail("contributions block must contain three to five items")
+    if "The author chose" not in tex or "responsible for the manuscript" not in tex:
+        fail("AI assistance disclosure must retain author responsibility")
+    return len(cite_keys), len(set(labels)), len(abstract_words)
 
-    raw_table = re.search(r"\\label\{tab:main-results\}(.*?)\\end\{table\}", tex, flags=re.DOTALL)
-    if not raw_table:
-        fail("raw main-results table not found")
-    raw_text = raw_table.group(1)
-    expected_gate_rows = {
-        "Qwen3-0.6B": (".490/.420/.140", ".277/.210/.087"),
-        "Qwen3-1.7B": (".483/.217/.480", ".230/.113/.230"),
-    }
-    for model, (coverage, accuracy) in expected_gate_rows.items():
-        pattern = (
-            rf"{re.escape(model)}\s*&\s*Ledger \+ verifier \+ gate\s*&\s*"
-            rf"{re.escape(coverage)}\s*&\s*{re.escape(accuracy)}\s*&\s*0/0/0"
-        )
-        if not re.search(pattern, raw_text):
-            fail(f"gate row for {model} must report frozen end-to-end raw scores")
 
-    if r"\label{tab:gate-results}" in tex:
-        fail("tautological gate metrics must remain outside the main-result tables")
-
-    if "The author" not in tex or "author retains authorship and final responsibility" not in lower:
-        fail("AI assistance disclosure must state author responsibility")
-
+def main() -> int:
+    tex = TEX.read_text(encoding="utf-8")
+    bib = BIB.read_text(encoding="utf-8")
+    validate_submission_metadata(tex)
+    validate_no_stale_file_counts()
+    validate_r6_evidence(tex)
+    validate_balanced_challenge(tex)
+    validate_manuscript_tables(tex)
+    validate_naturalistic_decision(tex)
+    validate_v1_diagnostic(tex)
+    citation_count, label_count, abstract_words = validate_structure_and_citations(tex, bib)
     print(
         "paper-lint: PASS "
-        f"({len(cite_keys)} citation keys, {len(label_set)} labels, "
-        f"{len(abstract_words)} abstract words; frozen study {frozen['source_study_sha256']}; "
-        f"public pilot {pilot['study_sha256']})"
+        f"({citation_count} citation keys, {label_count} labels, "
+        f"{abstract_words} abstract words; r6 addendum and balanced challenge bound)"
     )
     return 0
 

@@ -73,6 +73,17 @@ def test_identity_scan_rejects_provider_account_identifier(tmp_path: Path) -> No
         builder.scan_identity(tmp_path)
 
 
+def test_sensitive_scan_rejects_provider_response_identifier(tmp_path: Path) -> None:
+    builder = load_builder()
+    (tmp_path / "record.json").write_text(
+        '{"provider_response_id":"msg_977a9766-548a-49f3-9193-af73ce878e67"}\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit, match="retained provider_response_id"):
+        builder.scan_sensitive_payloads(tmp_path)
+
+
 def test_empirical_copy_anonymizes_searchable_filename(tmp_path: Path) -> None:
     builder = load_builder()
     source = tmp_path / "source"
@@ -89,7 +100,9 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
     builder = load_builder()
     source = {
         "github_run_id": 32405565039,
+        "fresh_confirmatory_run_id": 32453310192,
         "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "fresh_confirmatory_commit": "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
         "raw_response_text": '{"action":"ALLOW"}',
         "nested": [
             "github.com/f0909172434/project",
@@ -101,12 +114,15 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
     rendered = json.dumps(cleaned, sort_keys=True)
 
     assert cleaned["github_run_id"] == "anonymous-capable-final-qualified-run"
+    assert cleaned["fresh_confirmatory_run_id"] == "anonymous-fresh-confirmatory-run"
     assert cleaned["frozen_plan_commit"] == "0000000000000000000000000000000000000002"
+    assert cleaned["fresh_confirmatory_commit"] == "0000000000000000000000000000000000000008"
     assert cleaned["raw_response_text"] == source["raw_response_text"]
     assert cleaned["nested"][1] == 99
     assert cleaned["nested"][2] == "/anonymous/workspace/work/result.json"
     assert "f0909172434" not in rendered
     assert "b86ee1e1d28db8a390344d28582af88e26970560" not in rendered
+    assert "f44b01eb97418d87aa6d7486fa785c0f49b9dda2" not in rendered
 
 
 def test_empirical_provenance_anonymizer_redacts_provider_account_identifier() -> None:
@@ -125,6 +141,23 @@ def test_empirical_provenance_anonymizer_redacts_provider_account_identifier() -
     assert cleaned["parse_error_detail"].count("anonymous-provider-account") == 1
     assert cleaned["transport_error"].count("anonymous-provider-account") == 1
     assert cleaned["legitimate_control"] == source["legitimate_control"]
+
+
+def test_empirical_provenance_anonymizer_removes_provider_ids_and_hidden_reasoning() -> None:
+    builder = load_builder()
+    source = {
+        "provider_response_id": "provider-id-must-not-survive",
+        "provider_request_id": "provider-request-must-not-survive",
+        "reasoning_content": "private chain of thought",
+        "raw_response_text": '{"action":"ALLOW"}',
+    }
+
+    cleaned = builder.anonymize_provenance(source)
+
+    assert cleaned["provider_response_id"] is None
+    assert cleaned["provider_request_id"] is None
+    assert "reasoning_content" not in cleaned
+    assert cleaned["raw_response_text"] == source["raw_response_text"]
 
 
 def test_capable_anonymous_evidence_rebinds_changed_file_digests(tmp_path: Path) -> None:
@@ -203,6 +236,19 @@ def test_review_runner_prefers_the_bundled_source_tree() -> None:
     assert "subprocess.run(command, cwd=ROOT, check=True, env=env)" in runner
 
 
+def test_review_runner_checks_frozen_naturalistic_decision() -> None:
+    builder = load_builder()
+
+    runner = builder.review_runner()
+    readme = builder.review_readme()
+    assert "scripts/validate_v2_naturalistic_candidates.py" in runner
+    assert "tests/test_v2_naturalistic.py" in runner
+    normalized = " ".join(readme.split())
+    assert "zero benchmark cases" in normalized
+    assert "zero model calls" in normalized
+    assert "no human annotators" in normalized
+
+
 def test_iclr_bundle_description_matches_item_level_hidden_release() -> None:
     submission_builder = load_submission_builder()
 
@@ -214,7 +260,9 @@ def test_iclr_bundle_description_matches_item_level_hidden_release() -> None:
     assert "C2 seals all 600 terminal cells" in normalized
     assert "275 response envelopes" in normalized
     assert "byte-identical scientific analysis" in normalized
-    assert "179-file permanent manifest" in normalized
+    assert "manifest records the generated tree's current file count" in normalized
+    assert "receipt validates all 360 item-level records" in normalized
+    assert "retained provider response identifiers" in normalized
     assert "both registered lane dispositions" in normalized
     assert "all 14 pilot attempts" in normalized
     assert "The private construction seed is excluded" in normalized
@@ -270,3 +318,46 @@ def test_fresh_confirmatory_anonymous_projection_is_compact_and_identity_free(
     assert "32453310192" not in rendered
     assert "f44b01eb97418d87aa6d7486fa785c0f49b9dda2" not in rendered
     assert '"thinking":' not in rendered
+
+
+def test_balanced_public_anonymous_projection_is_replayable_and_identity_free(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    destination = tmp_path / "balanced-public-challenge"
+
+    builder.build_balanced_public_anonymous_evidence(destination)
+
+    manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    aggregate = json.loads((destination / "reported-aggregate.json").read_text(encoding="utf-8"))
+    receipt = json.loads((destination / "privacy-receipt-review.json").read_text(encoding="utf-8"))
+    qwen_path = destination / manifest["lane_files"]["opencode-go-qwen3.7-max"]
+    flash_path = destination / manifest["lane_files"]["opencode-go-deepseek-v4-flash-matched"]
+    qwen = [json.loads(line) for line in qwen_path.read_text(encoding="utf-8").splitlines()]
+    flash = [json.loads(line) for line in flash_path.read_text(encoding="utf-8").splitlines()]
+    actual_files = [
+        path for path in destination.rglob("*") if path.is_file() and path.name != "MANIFEST.json"
+    ]
+    rendered = "\n".join(
+        path.read_text(encoding="utf-8", errors="replace")
+        for path in destination.rglob("*")
+        if path.is_file()
+    )
+
+    assert manifest["file_count"] == len(actual_files) == len(manifest["files"])
+    assert len(qwen) == len(flash) == 180
+    assert sum(row["parse_status"] == "OK" for row in qwen) == 148
+    assert sum(row["parse_status"] == "OK" for row in flash) == 146
+    assert all(row["provider_response_id"] is None for row in qwen + flash)
+    lane_metrics = {row["lane_id"]: row["metrics"] for row in aggregate["lanes"]}
+    assert lane_metrics["opencode-go-qwen3.7-max"]["correct_pairs"] == 48
+    assert lane_metrics["opencode-go-deepseek-v4-flash-matched"]["correct_pairs"] == 13
+    assert receipt["validation"]["terminal_records_validated"] == 360
+    assert receipt["validation"]["retained_provider_response_ids"] == 0
+    assert "f0909172434" not in rendered
+    assert "32509532820" not in rendered
+    assert "9460301513" not in rendered
+    assert "1901e471bdf94f434f9671708b93599a106b1543" not in rendered
+    assert "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b" not in rendered
+    builder.scan_identity(destination)
+    builder.scan_sensitive_payloads(destination)

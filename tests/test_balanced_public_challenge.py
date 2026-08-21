@@ -49,8 +49,7 @@ def test_balanced_challenge_dataset_rebuilds_byte_identically(tmp_path: Path) ->
 def test_rare_actions_cross_five_independent_factors() -> None:
     pairs = json.loads((DATASET / "pairs.json").read_text(encoding="utf-8"))
     gold = {
-        str(row["id"]): str(row["decision"]["action"])
-        for row in load_jsonl(DATASET / "gold.jsonl")
+        str(row["id"]): str(row["decision"]["action"]) for row in load_jsonl(DATASET / "gold.jsonl")
     }
     factors: dict[str, set[str]] = defaultdict(set)
     counts: Counter[str] = Counter()
