@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08",
+  "status": "VOID_BEFORE_BEACON_AND_BEFORE_ANY_MODEL_CALL",
+  "source_c0_commit": "4d5e4a8aaaac9d3a92f34db6c92c15ca55149b3a",
+  "source_seed_commitment_commit": "a69d1bb5924894f0ef949da43b1eb25d409e819b",
+  "preregistration_sha256": "sha256:e54be7c103b5e2a5d91f16d758c2ae466d54e12142f3292aeb11caec7dc8a1eb",
+  "private_salt_sha256": "sha256:2fdadc22df5cbf8a6ebd584042c30ca172ae483339e6f4f1ebcb2cbf332ccf3b",
+  "contains_private_salt_bytes": false,
+  "void_reason": {
+    "failed_remote_binding": "baselines.shallow_model_file_sha256",
+    "registered_windows_crlf_sha256": "sha256:275491122dac04c92bc6a429580f921f57ce6a32b8d6e4ea1930a61dcd684def",
+    "git_lf_artifact_sha256": "sha256:3377faf0015d13e034e4ed9812af6b84fefb52dfd83be44f507c5658d933b7bc",
+    "remote_ci_detected_before_beacon": true,
+    "fresh_seed_derived": false,
+    "fresh_dataset_built": false,
+    "model_post_intents": 0,
+    "model_calls": 0,
+    "cost_usd": 0.0
+  },
+  "superseded_by": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+  "drand": {
+    "network": "quicknet",
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "round": 31489977,
+    "round_time_utc": "2026-08-21T00:48:15Z"
+  },
+  "alternate_salt_seed_or_round_used_within_r1": false,
+  "rejection_sampling_used_within_r1": false
+}

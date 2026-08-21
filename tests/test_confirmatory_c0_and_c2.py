@@ -29,7 +29,7 @@ def test_c0_plan_has_no_unbound_hash_or_hidden_adaptation_path() -> None:
     )
     assert report["status"] == "C0_PASS"
     assert report["pilot_instances"] == 0
-    assert report["hypotheses"] == 6
+    assert report["hypotheses"] == 2
     assert report["planned_cells"] == 600
     assert report["go_status"].startswith("NO_GO_")
 

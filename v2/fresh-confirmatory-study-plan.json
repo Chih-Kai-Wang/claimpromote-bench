@@ -1,8 +1,13 @@
 {
   "schema_version": "1.0.0",
-  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
   "status": "FROZEN_BEFORE_SCORED_INFERENCE",
   "truth_status": "OPEN",
+  "protocol_lineage": {
+    "supersedes": "claimpromotebench-v1-fresh-confirmatory-2026-08",
+    "superseded_before_beacon_or_model_calls": true,
+    "reason": "The r1 C0 recorded the Windows CRLF byte hash of the frozen shallow-model JSON, while Git stored its LF-normalized bytes. Remote validation therefore failed before the committed beacon round and before any scored request. r2 binds the repository LF artifact and narrows the powered primary family without inspecting fresh hidden data."
+  },
   "c0": {
     "stage": "C0_BEFORE_PRIVATE_SALT_COMMITMENT_AND_FUTURE_BEACON",
     "new_hidden_rows_seen_before_c0": false,
@@ -141,7 +146,7 @@
     "public_dev_manifest_sha256": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
     "shallow_model_path": "v2/confirmatory/public-dev-text-nb-v1.json",
     "shallow_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
-    "shallow_model_file_sha256": "sha256:275491122dac04c92bc6a429580f921f57ce6a32b8d6e4ea1930a61dcd684def",
+    "shallow_model_file_sha256": "sha256:3377faf0015d13e034e4ed9812af6b84fefb52dfd83be44f507c5658d933b7bc",
     "training_script_sha256": "sha256:9c1d86cd27cd27dd97d33ae31d21e591d3cb7def4cc9a5e70f4c7b145b1e85d5",
     "predictor_sha256": "sha256:b7bc891fb3488c985392dd3e3f82d3de97d591c25fbdb5d4cd75663f7a6719a1",
     "feature_module_sha256": "sha256:c9647e7e34b4e3bb93ce1646f99e7e507277f6178c1bda55440d7c2e2293dbf8",
@@ -152,9 +157,11 @@
       "public_dev_stratified_prior",
       "public_dev_text_nb"
     ],
-    "confirmatory_comparators": [
+    "descriptive_reference_comparators": [
       "always_allow",
-      "always_hold",
+      "always_hold"
+    ],
+    "confirmatory_comparators": [
       "public_dev_text_nb"
     ],
     "majority_equivalence": "Public-dev majority is ALLOW (50/100) and is exactly the always-ALLOW sanity check; it is never duplicated in the hypothesis family.",
@@ -163,22 +170,16 @@
   },
   "statistics": {
     "primary_outcome": "raw end-to-end action correctness with every non-OK cell incorrect",
-    "confirmatory_family_size": 6,
+    "confirmatory_family_size": 2,
     "confirmatory_baseline_comparators": [
-      "always_allow",
-      "always_hold",
       "public_dev_text_nb"
     ],
     "hypotheses": [
-      "H1: Qwen-service action accuracy <= always-ALLOW; A1: Qwen-service action accuracy > always-ALLOW.",
-      "H2: Qwen-service action accuracy <= always-HOLD; A2: Qwen-service action accuracy > always-HOLD.",
-      "H3: Qwen-service action accuracy <= public-only shallow NB; A3: Qwen-service action accuracy > public-only shallow NB.",
-      "H4: Flash-service action accuracy <= always-ALLOW; A4: Flash-service action accuracy > always-ALLOW.",
-      "H5: Flash-service action accuracy <= always-HOLD; A5: Flash-service action accuracy > always-HOLD.",
-      "H6: Flash-service action accuracy <= public-only shallow NB; A6: Flash-service action accuracy > public-only shallow NB."
+      "H1: Qwen-service action accuracy <= public-only shallow NB; A1: Qwen-service action accuracy > public-only shallow NB.",
+      "H2: Flash-service action accuracy <= public-only shallow NB; A2: Flash-service action accuracy > public-only shallow NB."
     ],
     "test": "For each hypothesis, compute the two-member correctness difference per controlled pair and use the exact one-sided whole-vector within-pair swap/sign-permutation distribution.",
-    "multiplicity": "Holm step-down across all six hypotheses, including failed, incomplete, or all-transport-error lanes.",
+    "multiplicity": "Holm step-down across both registered service-vs-public-only-NB hypotheses, including failed, incomplete, or all-transport-error lanes.",
     "minimum_superiority_effect": 0.1,
     "support_rule": "Superiority is supported only when the direction is positive, action-accuracy difference is at least 0.10, and Holm-adjusted p is below 0.05.",
     "secondary_metrics": [
@@ -194,6 +195,12 @@
     "bootstrap_replicates": 10000,
     "bootstrap_seed_label": "CPB-FRESH-CONFIRMATORY-COMPOSITION-SENSITIVITY-V1",
     "uncertainty_interpretation": "Pair/factor/template resampling is benchmark-composition sensitivity only, not model stochastic reliability or natural-world generalization.",
+    "power_analysis_report_path": "v2/confirmatory/power-analysis-r2.json",
+    "power_analysis_method": "Exact pre-hidden pair-sign power using prior exploratory nonzero-pair rates, magnitude-one clipping, the registered 0.10 effect, and Bonferroni alpha 0.025 as a conservative sufficient condition for Holm rejection.",
+    "power_analysis_minimum_power": 0.8132626158167235,
+    "power_analysis_script_sha256": "sha256:4861c12d37f56aa18e086b1c03afed13dc925fc169a7a9efdc82e85881ea3069",
+    "power_assumptions_file_sha256": "sha256:c41d9bfd1ab926ee9efa9fe387f7a82e47c9f2152f10089ff3b98e4b5bebcc57",
+    "power_analysis_report_file_sha256": "sha256:427ead653ddad18a8f8455e120c10bf7d21cb20a9d84d4addedfd359ea365beb",
     "analysis_script_sha256": "sha256:d010f706841313577a3867f50a315462b8fa406998b90a1f84754b743834aba1",
     "c2_finalizer_sha256": "sha256:280de8663d0cfa3e6dfe1ee377b9e0b3a983bb610426ba1ee4ef6707db2015d9"
   },
@@ -201,7 +208,7 @@
     "used_during_inference": false,
     "worker_imports_gate": false,
     "worker_reads_gold": false,
-    "posthoc_interpretation": "Any later same-oracle gate result is deterministic implementation conformance only and cannot enter the six hypotheses, abstract model claim, or causal interpretation."
+    "posthoc_interpretation": "Any later same-oracle gate result is deterministic implementation conformance only and cannot enter the two hypotheses, abstract model claim, or causal interpretation."
   },
   "seed": {
     "commitment_path": "configs/fresh-confirmatory-seed-commitment.json",
@@ -244,7 +251,7 @@
     "seed_derivation": "sha256:581a0d5594d10a28d2e25a1d0d0cceddd0cad21429df3977a752702c7eb00c7b",
     "drand_verifier": "sha256:3bcd17c29adf0d0bef66e94ea58d8ddab46bd4750bc2b92d69e43e412dc3f9b7",
     "drand_package_lock": "sha256:58be120cc502ae492d2badc909b2907f45c58d3ee1cfee228f0d7738bc1acacf",
-    "c0_validator": "sha256:2a530c2fe077f65ec4656f49611b8a1af54418c67d7eb8de936c2c4b47085276"
+    "c0_validator": "sha256:6bf1d730247bb86a919e161dfcef182ef37c874db5a08051b5e37d10a600d7fb"
   },
   "go_gate": {
     "status": "NO_GO_UNTIL_C0_SALT_HASH_AND_FUTURE_BEACON_ROUND_ARE_PUBLIC_THEN_C1_RECEIPT_IS_COMMITTED",

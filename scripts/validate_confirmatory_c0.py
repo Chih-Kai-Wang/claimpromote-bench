@@ -41,6 +41,9 @@ _HASH_BINDINGS = {
     "baselines.feature_module_sha256": "src/claimpromotebench/confirmatory_baseline.py",
     "statistics.analysis_script_sha256": "scripts/analyze_confirmatory_hidden_study.py",
     "statistics.c2_finalizer_sha256": "scripts/finalize_confirmatory_c2.py",
+    "statistics.power_analysis_script_sha256": "scripts/confirmatory_power_analysis.py",
+    "statistics.power_assumptions_file_sha256": "v2/confirmatory/power-assumptions-r2.json",
+    "statistics.power_analysis_report_file_sha256": "v2/confirmatory/power-analysis-r2.json",
     "workflows.c1_freeze_sha256": ".github/workflows/confirmatory-hidden-freeze.yml",
     "workflows.scored_study_sha256": ".github/workflows/confirmatory-hidden-study.yml",
     "implementation_sha256.dataset_builder": "scripts/build_v1_dataset.py",
@@ -68,15 +71,11 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     if len(plan.get("formal_lanes", [])) != 2 or plan.get("exploratory_lanes") != []:
         raise ValueError("C0 must contain exactly two formal service lanes")
     statistics = plan.get("statistics", {})
-    if statistics.get("confirmatory_family_size") != 6:
-        raise ValueError("C0 hypothesis family is not exactly six")
-    if len(statistics.get("hypotheses", [])) != 6:
-        raise ValueError("C0 does not enumerate all six hypotheses")
-    if statistics.get("confirmatory_baseline_comparators") != [
-        "always_allow",
-        "always_hold",
-        "public_dev_text_nb",
-    ]:
+    if statistics.get("confirmatory_family_size") != 2:
+        raise ValueError("C0 primary hypothesis family is not exactly two")
+    if len(statistics.get("hypotheses", [])) != 2:
+        raise ValueError("C0 does not enumerate both primary hypotheses")
+    if statistics.get("confirmatory_baseline_comparators") != ["public_dev_text_nb"]:
         raise ValueError("C0 confirmatory comparator family changed")
     execution = plan.get("execution", {})
     if execution.get("application_posts_per_cell") != 1:
@@ -96,6 +95,17 @@ def validate_c0(plan_path: Path, require_seed_commitment: bool) -> Json:
     validate_model(model)
     if model["model_sha256"] != plan["baselines"]["shallow_model_sha256"]:
         raise ValueError("C0 shallow-model identity mismatch")
+    power = load_json(ROOT / str(statistics["power_analysis_report_path"]))
+    if (
+        power.get("status") != "PRE_HIDDEN_POWER_GATE_PASS"
+        or power.get("study_id") != plan.get("study_id")
+        or power.get("all_comparisons_pass_0_80") is not True
+        or float(power.get("minimum_power", 0.0)) < 0.8
+        or power.get("design", {}).get("confirmatory_family_size") != 2
+        or power.get("design", {}).get("pairs") != 150
+        or power.get("design", {}).get("minimum_action_accuracy_effect") != 0.1
+    ):
+        raise ValueError("C0 pre-hidden power gate is not satisfied")
     runner_source = (ROOT / "scripts" / "run_confirmatory_service_study.py").read_text(
         encoding="utf-8"
     )

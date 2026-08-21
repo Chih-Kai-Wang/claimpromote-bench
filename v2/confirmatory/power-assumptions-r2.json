@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r2",
+  "source": {
+    "boundary": "Only the prior adaptive/exploratory capable-study evidence is used; no fresh hidden salt, seed, dataset, or output exists at this stage.",
+    "reviewer_evidence_run": 32421292779,
+    "old_gold_jsonl_sha256": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
+    "old_prompt_packet_sha256": "sha256:12242737ee5ec197123af8abfe4879cc676d2bb4e5195d3797aa8c725df0cde6",
+    "old_qwen_full_jsonl_sha256": "sha256:fb6ce0adfabcadeddd221aff7fbc56eae99ef246d77331e51aed1e3b4f18f793",
+    "old_flash_full_jsonl_sha256": "sha256:b044984d4699603949e16d1d886cbe4eef1defa462872b87bf0efd2c641d0a20",
+    "public_only_nb_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea"
+  },
+  "design": {
+    "pairs": 150,
+    "items": 300,
+    "confirmatory_family_size": 2,
+    "familywise_alpha": 0.05,
+    "minimum_action_accuracy_effect": 0.1,
+    "required_power": 0.8
+  },
+  "comparisons": [
+    {
+      "comparison_id": "qwen_service_vs_public_dev_text_nb",
+      "old_pair_difference_histogram": {
+        "-1": 2,
+        "0": 44,
+        "1": 104
+      }
+    },
+    {
+      "comparison_id": "flash_service_vs_public_dev_text_nb",
+      "old_pair_difference_histogram": {
+        "-1": 12,
+        "0": 118,
+        "1": 20
+      }
+    }
+  ]
+}
