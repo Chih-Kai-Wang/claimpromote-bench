@@ -58,6 +58,9 @@
         "DeepSeek",
         "Qwen",
         "GLM",
+        "Kimi",
+        "MiMo",
+        "MiniMax",
         "Tencent Hunyuan",
         "Meta Muse"
       ]

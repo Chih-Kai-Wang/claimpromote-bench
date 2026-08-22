@@ -54,8 +54,13 @@ _POST_R6_NON_RUNTIME_PATHS = {
     # These scripts were introduced only after the immutable r6 scored run. They read or
     # aggregate already terminal evidence and cannot influence C1 or scored inference.
     "scripts/analyze_balanced_public_challenge.py",
+    "scripts/analyze_public_model_breadth_study.py",
     "scripts/build_local_release_kit.py",
+    "scripts/build_public_model_breadth_study.py",
     "scripts/derive_r6_reporting_addendum.py",
+    "scripts/finalize_public_model_breadth_study.py",
+    "scripts/run_public_model_breadth_study.py",
+    "scripts/validate_public_model_breadth_study.py",
 }
 
 

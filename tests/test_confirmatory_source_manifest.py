@@ -44,8 +44,13 @@ def test_runtime_manifest_is_preserved_at_the_recorded_source_commit() -> None:
     assert "configs/decoding-v1.json" in files
     assert "tools/confirmatory-python311.lock" in files
     assert "scripts/analyze_balanced_public_challenge.py" not in files
+    assert "scripts/analyze_public_model_breadth_study.py" not in files
     assert "scripts/build_local_release_kit.py" not in files
+    assert "scripts/build_public_model_breadth_study.py" not in files
     assert "scripts/derive_r6_reporting_addendum.py" not in files
+    assert "scripts/finalize_public_model_breadth_study.py" not in files
+    assert "scripts/run_public_model_breadth_study.py" not in files
+    assert "scripts/validate_public_model_breadth_study.py" not in files
     # Publication and anonymous-review tooling changed after the scored run. The immutable
     # manifest must keep matching its recorded Git source while refusing to describe HEAD.
     with pytest.raises(ValueError, match="runtime source manifest hash mismatch"):
