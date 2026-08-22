@@ -112,18 +112,21 @@ def _scan_text(value: str, *, api_key: str) -> list[str]:
     return findings
 
 
+def validate_private_payload(value: Any, *, api_key: str, label: str) -> None:
+    findings = _scan_text(canonical_json(value), api_key=api_key)
+    if findings:
+        fail(f"{label} contains privacy finding classes: {sorted(set(findings))}")
+    if _walk_hidden_reasoning_keys(value):
+        fail(f"{label} contains hidden-reasoning fields")
+
+
 def validate_private_record(row: Json, *, api_key: str, label: str) -> None:
     validate_with_schema(row, RUN_SCHEMA, label)
     if row.get("provider_response_id") is not None:
         fail(f"{label} retains a provider response identifier")
     if row.get("system_fingerprint") is not None:
         fail(f"{label} retains a system fingerprint")
-    record_findings = _scan_text(canonical_json(row), api_key=api_key)
-    if record_findings:
-        fail(f"{label} contains privacy finding classes: {sorted(set(record_findings))}")
-    hidden = _walk_hidden_reasoning_keys(row)
-    if hidden:
-        fail(f"{label} contains hidden-reasoning fields")
+    validate_private_payload(row, api_key=api_key, label=label)
     for field in PRIVATE_TEXT_FIELDS:
         value = row.get(field)
         if value is not None and not isinstance(value, str):
@@ -212,6 +215,8 @@ def build_public_evidence(
     receipt = load_json(source_results / "execution-receipt.json")
     if not all(isinstance(value, dict) for value in (plan, aggregate, receipt)):
         fail("plan, aggregate, or execution receipt is malformed")
+    validate_private_payload(aggregate, api_key=api_key, label="source aggregate")
+    validate_private_payload(receipt, api_key=api_key, label="source execution receipt")
     if (
         receipt.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
         or receipt.get("planned_cells") != 1260
@@ -273,6 +278,15 @@ def build_public_evidence(
     reported_aggregate = _transform_aggregate(aggregate, lane_hashes)
     write_json(out_root / "reported-aggregate.json", reported_aggregate)
     write_jsonl(out_root / "source-to-public-row-hashes.jsonl", row_map)
+
+    for path in sorted(out_root.rglob("*")):
+        if path.is_file():
+            findings = _scan_text(path.read_text(encoding="utf-8"), api_key=api_key)
+            if findings:
+                fail(
+                    f"public derivative {path.relative_to(out_root)} contains privacy "
+                    f"finding classes: {sorted(set(findings))}"
+                )
 
     derived_files = _file_map(out_root, exclude={"privacy-receipt.json"})
     public_receipt: Json = {

@@ -63,6 +63,25 @@ def test_private_record_rejects_provider_response_identifier() -> None:
         )
 
 
+def test_private_metadata_rejects_exact_study_credential() -> None:
+    credential = "test-private-study-credential-123456789"
+    with pytest.raises(ValueError, match="privacy finding classes"):
+        builder.validate_private_payload(
+            {"execution_note": credential},
+            api_key=credential,
+            label="execution receipt",
+        )
+
+
+def test_private_metadata_rejects_hidden_reasoning() -> None:
+    with pytest.raises(ValueError, match="hidden-reasoning fields"):
+        builder.validate_private_payload(
+            {"analysis": "private chain of thought"},
+            api_key="test-credential-that-is-not-present",
+            label="aggregate",
+        )
+
+
 def test_aggregate_transform_changes_only_lane_record_bindings() -> None:
     aggregate = {
         "lanes": [
