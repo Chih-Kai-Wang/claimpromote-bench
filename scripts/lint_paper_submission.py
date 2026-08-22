@@ -19,6 +19,9 @@ SUBMISSION_METADATA = ROOT / "docs" / "SUBMISSION_METADATA.md"
 PAGE_RULES = ROOT / "docs" / "FREE_SUBMISSION_AND_PAGE_RULES.md"
 SUBMISSION_GATE = ROOT / "technical-report" / "SUBMISSION_GATE_V2.md"
 SUBMISSION_BUILDER = ROOT / "scripts" / "build_submission_tex.py"
+STYLE_AUDIT = ROOT / "docs" / "MANUSCRIPT_STYLE_AUDIT_2026-08-23.json"
+STYLE_CORPUS_MANIFEST = ROOT / "docs" / "PAPER_STYLE_CORPUS_MANIFEST_2026-08-23.json"
+STYLE_CORPUS_STATISTICS = ROOT / "docs" / "PAPER_STYLE_CORPUS_STATISTICS_2026-08-23.json"
 
 RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
 R6_RESULT = ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json"
@@ -172,6 +175,39 @@ def validate_submission_metadata(tex: str) -> None:
     for stale in ("2026-09-11", "2026-09-16"):
         if stale in metadata or stale in page_rules:
             fail(f"stale ICLR date remains: {stale}")
+
+
+def validate_manuscript_style_audit() -> None:
+    audit = load_object(STYLE_AUDIT, "manuscript style audit")
+    after = audit.get("after")
+    boundary = audit.get("scientific_content_boundary")
+    if not isinstance(after, dict) or not isinstance(boundary, dict):
+        fail("manuscript style audit is malformed")
+    expected_hashes = {
+        "corpus_manifest_sha256": sha256_file(STYLE_CORPUS_MANIFEST).removeprefix("sha256:"),
+        "corpus_statistics_sha256": sha256_file(STYLE_CORPUS_STATISTICS).removeprefix("sha256:"),
+    }
+    if audit.get("status") != "PASS" or any(
+        audit.get(field) != value for field, value in expected_hashes.items()
+    ):
+        fail("manuscript style audit corpus binding changed")
+    if after.get("manuscript_sha256") != sha256_file(TEX).removeprefix("sha256:"):
+        fail("manuscript style audit is stale for technical-report/main.tex")
+    findings = after.get("configured_pattern_findings")
+    if (
+        not isinstance(findings, dict)
+        or not findings
+        or any(value != 0 for value in findings.values())
+    ):
+        fail("manuscript style audit retains a configured negative-pattern finding")
+    if (
+        boundary.get("metrics_changed") is not False
+        or boundary.get("terminal_records_changed") is not False
+        or boundary.get("model_calls_performed") != 0
+        or boundary.get("completed_singleton_workflows_rerun") is not False
+        or boundary.get("paper_binding_validator") != "scripts/lint_paper_submission.py"
+    ):
+        fail("manuscript style audit scientific-content boundary changed")
 
 
 def validate_no_stale_file_counts() -> None:
@@ -1045,6 +1081,7 @@ def main() -> int:
     tex = TEX.read_text(encoding="utf-8")
     bib = BIB.read_text(encoding="utf-8")
     validate_submission_metadata(tex)
+    validate_manuscript_style_audit()
     validate_no_stale_file_counts()
     validate_submission_builder(tex)
     validate_r6_evidence(tex)

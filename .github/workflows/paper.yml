@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "technical-report/**"
+      - "docs/MANUSCRIPT_STYLE_AUDIT_2026-08-23.json"
+      - "docs/PAPER_STYLE_CORPUS_MANIFEST_2026-08-23.json"
+      - "docs/PAPER_STYLE_CORPUS_STATISTICS_2026-08-23.json"
       - "release/v1-paper-results.json"
       - "v2/pilot-results/v2-public-pilot-study.json"
       - "v2/capable-hidden-results/**"
