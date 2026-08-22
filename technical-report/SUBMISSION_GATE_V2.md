@@ -6,7 +6,7 @@ paper. It is deliberately fail-closed.
 
 ## Current verdict
 
-**SCIENTIFIC_RC_READY = YES — SCOPED QWEN RESULT AND REVIEW ARTIFACT READY; FLASH MODEL EFFICACY
+**SCIENTIFIC_RC_READY = YES — SCOPED QWEN RESULT AND REVIEW ARTIFACT READY; R6 FLASH LANE
 NON-EVALUABLE; ACCOUNT-SIDE SUBMISSION PENDING**
 
 The new r6 realization satisfies the zero-adjustment fresh-split requirement. Its Qwen hypothesis
@@ -20,6 +20,12 @@ while retaining the original v1 and later public/adaptive controls as bounded di
 permanent reviewer tree is a reasoning-free post-C2 derivative with source-to-derived equivalence
 checks and a dynamically counted manifest. PR #20 remains Draft and unmerged until the author
 explicitly authorizes a merge or account-side submission.
+
+The later balanced public challenge has an executable Flash service path, but it uses a different
+stack and does not retroactively turn the r6 HTTP 401 lane into model evidence or a causal ablation.
+A post-analysis reporting correction assigns zero to Flash's zero-prediction `DEMOTE` class in the
+fixed-four-class Macro-F1, changing only that derived end-to-end value from .5237 to .3928 and its
+conditional counterpart from .6243 to .4682. The historical aggregate remains immutable.
 
 ## Gate A — frozen v1 study remains intact
 
@@ -147,6 +153,9 @@ explicitly authorizes a merge or account-side submission.
   capable-study diagnostics from their item-level records.
 - [x] Manuscript truth lint is bound to the r6 study-result self-digest, public analysis, complete
   Holm family, redaction/equivalence receipt, correction overlay, and exact paper-facing metrics.
+- [x] Balanced-challenge Macro-F1 is a fixed-four-class mean with zero division set to zero; a
+  self-digested correction receipt binds the unchanged historical aggregate, analyzer, dataset, and
+  360 terminal records.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
 
 ## Gate F — naturalistic evaluation boundary
@@ -169,7 +178,8 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Ruff lint passes.
 - [x] Ruff formatting passes.
 - [x] Mypy passes.
-- [x] Full tests and branch coverage pass.
+- [x] Full tests and branch coverage pass: 196 tests and 83.24% branch coverage on the final
+  scientific/release checkpoint.
 - [x] Python 3.12 Mac gates pass in a fresh virtual environment.
 - [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
   failures have `steps=[]` and are recorded as an account billing/spending-limit condition, not a
@@ -185,8 +195,9 @@ The paper therefore does not claim a completed naturalistic replication, human l
   validators pass.
 - [x] Fresh-study C0, C1, C2, dataset, prompt, baseline, service-runner, statistics, public-release,
   redaction, metadata-correction, and permanent-manifest guards pass.
-- [x] Balanced public-challenge dataset, prompt packet, one-pass lane records, aggregate,
-  per-action/confusion diagnostics, workflow receipt, and privacy receipt guards pass.
+- [x] Balanced public-challenge dataset, prompt packet, one-pass lane records, immutable historical
+  aggregate, reporting-correction receipt, corrected reviewer aggregate, per-action/confusion
+  diagnostics, workflow receipt, and privacy receipt guards pass.
 - [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, capable-study, fresh r6, and
   the balanced public challenge
   item-level records from inside the finalized reviewer bundle.
@@ -243,6 +254,16 @@ Observed result: the named PDF and repository-bound provenance statement are cor
 defect was found.
 The final metadata/preview item necessarily remains account-side because arXiv must compile and
 show its own preview before submission.
+
+## Independent final review checkpoint
+
+- [x] Exactly one isolated final strict review was conducted after the scientific and packaging work.
+- [x] It found zero high-severity issues and one medium-severity issue: Flash Macro-F1 omitted the
+  supported but zero-prediction `DEMOTE` class.
+- [x] The issue was fixed by the bound reporting correction and regression tests without model
+  calls, primary-endpoint changes, or mutation of the historical aggregate.
+- [x] The reviewer reported no other high- or medium-severity issue. No second final reviewer is
+  required under this one-review protocol.
 
 ## Gate J — account-side submission
 
