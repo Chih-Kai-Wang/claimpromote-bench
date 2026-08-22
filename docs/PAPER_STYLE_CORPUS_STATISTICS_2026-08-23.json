@@ -1,0 +1,412 @@
+{
+  "corpus": {
+    "discovered": 73,
+    "downloaded_and_analyzed": 70,
+    "award_recognized": 52,
+    "genre_aligned": 18,
+    "total_pdf_bytes": 434106590,
+    "total_pdf_pages": 2438,
+    "corpus_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f"
+  },
+  "prose": {
+    "usable_sentences": 42592,
+    "alpha_words": 784208,
+    "sentence_words_mean": 18.41,
+    "sentence_words_median": 16.0,
+    "sentence_words_p10": 7.0,
+    "sentence_words_p90": 33.0,
+    "sentence_words_p95": 39.0,
+    "sentence_words_over_40_pct": 4.5807,
+    "paragraph_words_median": 44.0,
+    "paragraph_sentences_median": 3.0,
+    "first_person_sentence_pct": 26.1551,
+    "passive_sentence_pct": 12.1431,
+    "numeric_sentence_pct": 42.7662,
+    "phrase_counts_per_10000_words": {
+      "can potentially": 0.153,
+      "could": 4.9094,
+      "however": 7.9061,
+      "importantly": 0.4081,
+      "in conclusion": 0.0638,
+      "in summary": 0.2933,
+      "in this paper": 1.1349,
+      "is consistent with": 0.2805,
+      "it is worth noting": 0.051,
+      "may": 9.449,
+      "might": 2.9074,
+      "moreover": 1.0711,
+      "notably": 0.8544,
+      "novel": 1.9893,
+      "our results": 1.3517,
+      "robust": 1.4664,
+      "serves as": 0.3698,
+      "state-of-the-art": 1.1349,
+      "suggests that": 0.9564,
+      "therefore": 4.0423,
+      "these results": 0.9054,
+      "thus": 4.3866,
+      "we find": 3.0094,
+      "we present": 1.543,
+      "we propose": 1.1349,
+      "we show": 3.2134
+    }
+  },
+  "per_paper": [
+    {
+      "title": "Generalization in diffusion models arises from geometry-adaptive harmonic representations",
+      "sentences": 446,
+      "mean_sentence_words": 19.46
+    },
+    {
+      "title": "Learning Interactive Real-World Simulators",
+      "sentences": 499,
+      "mean_sentence_words": 18.02
+    },
+    {
+      "title": "Never Train from Scratch: Fair Comparison of Long-Sequence Models Requires Data-Driven Priors",
+      "sentences": 412,
+      "mean_sentence_words": 19.8
+    },
+    {
+      "title": "Protein Discovery with Discrete Walk-Jump Sampling",
+      "sentences": 428,
+      "mean_sentence_words": 18.84
+    },
+    {
+      "title": "Vision Transformers Need Registers",
+      "sentences": 437,
+      "mean_sentence_words": 16.71
+    },
+    {
+      "title": "Amortizing intractable inference in large language models",
+      "sentences": 879,
+      "mean_sentence_words": 15.7
+    },
+    {
+      "title": "Approximating Nash Equilibria in Normal-Form Games via Stochastic Optimization",
+      "sentences": 607,
+      "mean_sentence_words": 20.0
+    },
+    {
+      "title": "Beyond Weisfeiler-Lehman: A Quantitative Framework for GNN Expressiveness",
+      "sentences": 988,
+      "mean_sentence_words": 17.33
+    },
+    {
+      "title": "Flow Matching on General Geometries",
+      "sentences": 501,
+      "mean_sentence_words": 18.26
+    },
+    {
+      "title": "Is ImageNet worth 1 video? Learning strong image encoders from 1 long unlabelled video",
+      "sentences": 568,
+      "mean_sentence_words": 16.18
+    },
+    {
+      "title": "Model Tells You What to Discard: Adaptive KV Cache Compression for LLMs",
+      "sentences": 337,
+      "mean_sentence_words": 17.31
+    },
+    {
+      "title": "Proving Test Set Contamination in Black-Box Language Models",
+      "sentences": 358,
+      "mean_sentence_words": 20.49
+    },
+    {
+      "title": "Robust agents learn causal world models",
+      "sentences": 722,
+      "mean_sentence_words": 20.76
+    },
+    {
+      "title": "The mechanistic basis of data dependence and abrupt learning in an in-context classification task",
+      "sentences": 328,
+      "mean_sentence_words": 18.19
+    },
+    {
+      "title": "Towards a statistical theory of data selection under weak supervision",
+      "sentences": 699,
+      "mean_sentence_words": 18.22
+    },
+    {
+      "title": "Safety Alignment Should be Made More Than Just a Few Tokens Deep.",
+      "sentences": 598,
+      "mean_sentence_words": 20.87
+    },
+    {
+      "title": "Learning Dynamics of LLM Finetuning.",
+      "sentences": 839,
+      "mean_sentence_words": 19.88
+    },
+    {
+      "title": "AlphaEdit: Null-Space Constrained Model Editing for Language Models.",
+      "sentences": 606,
+      "mean_sentence_words": 17.3
+    },
+    {
+      "title": "Data Shapley in One Training Run.",
+      "sentences": 824,
+      "mean_sentence_words": 18.98
+    },
+    {
+      "title": "SAM 2: Segment Anything in Images and Videos.",
+      "sentences": 929,
+      "mean_sentence_words": 18.46
+    },
+    {
+      "title": "Faster Cascades via Speculative Decoding.",
+      "sentences": 572,
+      "mean_sentence_words": 20.17
+    },
+    {
+      "title": "Transformers are Inherently Succinct",
+      "sentences": 476,
+      "mean_sentence_words": 19.03
+    },
+    {
+      "title": "LLMs Get Lost In Multi-Turn Conversation",
+      "sentences": 816,
+      "mean_sentence_words": 20.13
+    },
+    {
+      "title": "The Polar Express: Optimal Matrix Sign Methods and their Application to the Muon Algorithm",
+      "sentences": 790,
+      "mean_sentence_words": 17.31
+    },
+    {
+      "title": "Visual Autoregressive Modeling: Scalable Image Generation via Next-Scale Prediction",
+      "sentences": 499,
+      "mean_sentence_words": 14.57
+    },
+    {
+      "title": "Stochastic Taylor Derivative Estimator: Efficient amortization for arbitrary differential operators",
+      "sentences": 488,
+      "mean_sentence_words": 21.62
+    },
+    {
+      "title": "Not All Tokens Are What You Need for Pretraining",
+      "sentences": 870,
+      "mean_sentence_words": 17.37
+    },
+    {
+      "title": "Guiding a Diffusion Model with a Bad Version of Itself",
+      "sentences": 422,
+      "mean_sentence_words": 18.46
+    },
+    {
+      "title": "The PRISM Alignment Dataset: What Participatory, Representative and Individualised Human Feedback Reveals About the Subjective and Multicultural Alignment of Large Language Models",
+      "sentences": 781,
+      "mean_sentence_words": 17.89
+    },
+    {
+      "title": "Artificial Hivemind: The Open-Ended Homogeneity of Language Models (and Beyond)",
+      "sentences": 960,
+      "mean_sentence_words": 17.41
+    },
+    {
+      "title": "Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free",
+      "sentences": 462,
+      "mean_sentence_words": 16.17
+    },
+    {
+      "title": "1000 Layer Networks for Self-Supervised RL: Scaling Depth Can Enable New Goal-Reaching Capabilities",
+      "sentences": 600,
+      "mean_sentence_words": 17.95
+    },
+    {
+      "title": "Why Diffusion Models Don’t Memorize: The Role of Implicit Dynamical Regularization in Training",
+      "sentences": 570,
+      "mean_sentence_words": 19.68
+    },
+    {
+      "title": "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?",
+      "sentences": 580,
+      "mean_sentence_words": 18.32
+    },
+    {
+      "title": "Optimal Mistake Bounds for Transductive Online Learning",
+      "sentences": 610,
+      "mean_sentence_words": 20.95
+    },
+    {
+      "title": "Superposition Yields Robust Neural Scaling",
+      "sentences": 791,
+      "mean_sentence_words": 18.59
+    },
+    {
+      "title": "Debating with More Persuasive LLMs Leads to More Truthful Answers",
+      "sentences": 971,
+      "mean_sentence_words": 17.72
+    },
+    {
+      "title": "Stealing part of a production language model",
+      "sentences": 626,
+      "mean_sentence_words": 20.76
+    },
+    {
+      "title": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis",
+      "sentences": 621,
+      "mean_sentence_words": 17.96
+    },
+    {
+      "title": "Probabilistic Inference in Language Models via Twisted Sequential Monte Carlo",
+      "sentences": 908,
+      "mean_sentence_words": 18.17
+    },
+    {
+      "title": "Position: Considerations for Differentially Private Learning with Large-Scale Public Pretraining",
+      "sentences": 524,
+      "mean_sentence_words": 19.55
+    },
+    {
+      "title": "Position: Measure Dataset Diversity, Don't Just Claim It",
+      "sentences": 945,
+      "mean_sentence_words": 15.14
+    },
+    {
+      "title": "VideoPoet: A Large Language Model for Zero-Shot Video Generation",
+      "sentences": 578,
+      "mean_sentence_words": 16.63
+    },
+    {
+      "title": "Genie: Generative Interactive Environments",
+      "sentences": 517,
+      "mean_sentence_words": 16.9
+    },
+    {
+      "title": "Discrete Diffusion Modeling by Estimating the Ratios of the Data Distribution",
+      "sentences": 867,
+      "mean_sentence_words": 18.28
+    },
+    {
+      "title": "CollabLLM: From Passive Responders to Active Collaborators",
+      "sentences": 642,
+      "mean_sentence_words": 18.12
+    },
+    {
+      "title": "Roll the dice & look before you leap: Going beyond the creative limits of next-token prediction",
+      "sentences": 810,
+      "mean_sentence_words": 19.32
+    },
+    {
+      "title": "Score Matching with Missing Data",
+      "sentences": 606,
+      "mean_sentence_words": 18.04
+    },
+    {
+      "title": "Conformal Prediction as Bayesian Quadrature",
+      "sentences": 333,
+      "mean_sentence_words": 17.86
+    },
+    {
+      "title": "The Value of Prediction in Identifying the Worst-Off",
+      "sentences": 408,
+      "mean_sentence_words": 19.53
+    },
+    {
+      "title": "Train for the Worst, Plan for the Best: Understanding Token Ordering in Masked Diffusions",
+      "sentences": 596,
+      "mean_sentence_words": 19.51
+    },
+    {
+      "title": "Position: The AI Conference Peer Review Crisis Demands Author Feedback and Reviewer Rewards",
+      "sentences": 413,
+      "mean_sentence_words": 21.39
+    },
+    {
+      "title": "Behavioral Testing of NLP Models with CheckList",
+      "sentences": 424,
+      "mean_sentence_words": 16.96
+    },
+    {
+      "title": "Evaluating Models' Local Decision Boundaries via Contrast Sets",
+      "sentences": 576,
+      "mean_sentence_words": 17.68
+    },
+    {
+      "title": "Metamorphic Testing: A New Approach for Generating Next Test Cases",
+      "sentences": 27,
+      "mean_sentence_words": 28.44
+    },
+    {
+      "title": "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models",
+      "sentences": 181,
+      "mean_sentence_words": 17.62
+    },
+    {
+      "title": "Grammar-Constrained Decoding for Structured NLP Tasks without Finetuning",
+      "sentences": 518,
+      "mean_sentence_words": 18.79
+    },
+    {
+      "title": "Selective Classification for Deep Neural Networks",
+      "sentences": 210,
+      "mean_sentence_words": 19.46
+    },
+    {
+      "title": "SelectiveNet: A Deep Neural Network with an Integrated Reject Option",
+      "sentences": 266,
+      "mean_sentence_words": 18.24
+    },
+    {
+      "title": "AbstentionBench: Reasoning LLMs Fail on Unanswerable Questions",
+      "sentences": 820,
+      "mean_sentence_words": 17.28
+    },
+    {
+      "title": "ScienceAgentBench: Toward Rigorous Assessment of Language Agents for Data-Driven Scientific Discovery",
+      "sentences": 642,
+      "mean_sentence_words": 18.31
+    },
+    {
+      "title": "CORE-Bench: Fostering the Credibility of Published Research Through a Computational Reproducibility Agent Benchmark",
+      "sentences": 601,
+      "mean_sentence_words": 19.0
+    },
+    {
+      "title": "POPPER: Automated Hypothesis Validation with Agentic Sequential Falsifications",
+      "sentences": 764,
+      "mean_sentence_words": 18.51
+    },
+    {
+      "title": "HELM: Holistic Evaluation of Language Models",
+      "sentences": 654,
+      "mean_sentence_words": 23.49
+    },
+    {
+      "title": "Beyond the Imitation Game: Quantifying and Extrapolating the Capabilities of Language Models",
+      "sentences": 762,
+      "mean_sentence_words": 18.42
+    },
+    {
+      "title": "Dynabench: Rethinking Benchmarking in NLP",
+      "sentences": 532,
+      "mean_sentence_words": 16.53
+    },
+    {
+      "title": "Measuring Massive Multitask Language Understanding",
+      "sentences": 592,
+      "mean_sentence_words": 17.16
+    },
+    {
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "sentences": 756,
+      "mean_sentence_words": 20.91
+    },
+    {
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "sentences": 1035,
+      "mean_sentence_words": 16.14
+    },
+    {
+      "title": "Basilisk: Using Provenance Invariants to Automate Proofs of Undecidable Protocols",
+      "sentences": 575,
+      "mean_sentence_words": 19.27
+    }
+  ],
+  "environment": {
+    "python": "3.12.13",
+    "spacy": "3.8.15",
+    "model": "spacy.blank('en') + sentencizer; regex passive heuristic",
+    "pymupdf": "1.28.2"
+  }
+}
