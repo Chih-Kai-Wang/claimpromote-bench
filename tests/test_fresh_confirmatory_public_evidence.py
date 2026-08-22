@@ -148,6 +148,30 @@ def test_committed_fresh_confirmatory_evidence_has_complete_persistent_manifest(
     assert manifest["scope"]["scientific_analysis_payload_byte_identical"] is True
 
 
+def test_persistent_manifest_ignores_only_lean_build_cache(tmp_path: Path) -> None:
+    evidence = tmp_path / "reviewer-evidence"
+    evidence.mkdir()
+    (evidence / "evidence.json").write_text('{"status":"FROZEN"}\n', encoding="utf-8")
+    manifest_path = evidence / "PERMANENT-MANIFEST.json"
+    persistent_manifest.build_manifest(
+        evidence,
+        manifest_path,
+        workflow_run_id=123,
+        artifact_id=456,
+        artifact_zip_sha256="sha256:artifact",
+        head_commit="a" * 40,
+    )
+
+    lean_cache = evidence / "dataset" / ".lake" / "build" / "lib" / "cache.olean"
+    lean_cache.parent.mkdir(parents=True)
+    lean_cache.write_bytes(b"rebuildable Lean output")
+    persistent_manifest.verify_manifest(evidence, manifest_path)
+
+    (evidence / "unmanifested.json").write_text('{"status":"EXTRA"}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="file coverage or digest mismatch"):
+        persistent_manifest.verify_manifest(evidence, manifest_path)
+
+
 @pytest.mark.parametrize(
     ("relative", "digest_key"),
     [

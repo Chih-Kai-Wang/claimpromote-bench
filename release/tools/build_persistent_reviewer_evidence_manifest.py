@@ -6,11 +6,12 @@ import argparse
 import copy
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file
 
 Json = dict[str, Any]
+TRANSIENT_DIRECTORY_NAMES = frozenset({".lake"})
 
 
 def fail(message: str) -> None:
@@ -21,7 +22,9 @@ def _file_map(root: Path, manifest_path: Path) -> dict[str, str]:
     return {
         path.relative_to(root).as_posix(): sha256_file(path)
         for path in sorted(root.rglob("*"))
-        if path.is_file() and path != manifest_path
+        if path.is_file()
+        and path != manifest_path
+        and not TRANSIENT_DIRECTORY_NAMES.intersection(path.relative_to(root).parts[:-1])
     }
 
 
@@ -84,7 +87,7 @@ def verify_manifest(root: Path, manifest_path: Path) -> Json:
     files = _file_map(root, manifest_path)
     if manifest.get("files") != files or manifest.get("file_count") != len(files):
         fail("persistent manifest file coverage or digest mismatch")
-    return manifest
+    return cast(Json, manifest)
 
 
 def main() -> int:
