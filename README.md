@@ -307,13 +307,12 @@ python -m claimpromotebench compare-runs \
 
 ## Scope
 
-Related work includes SeekBench, Omni-Decision, EviGraph, ClaimLedger, scientific
-claim-verification benchmarks, reproducibility benchmarks, hypothesis-falsification systems,
-abstention evaluation, and formal-specification benchmarks. ClaimPromoteBench contributes a
-controlled-pair benchmark for deciding whether typed scientific evidence justifies a requested
-research-claim status change, with executable evidence checks, a committed hidden test, separate
-reporting of raw model decisions and deterministic gate actions, and a public formatting control
-for the tested models.
+Related work includes evidence-ledger adjudication, trace graphs, claim-verification benchmarks,
+reproducibility benchmarks, hypothesis-falsification systems, abstention evaluation, and
+formal-specification benchmarks. ClaimPromoteBench contributes an executable controlled-pair
+protocol for deciding whether typed scientific evidence justifies a requested research-claim
+status change. The experiments demonstrate the protocol on selected service configurations; they
+do not establish broad benchmark validity.
 
 ## Paper and project status
 
@@ -326,8 +325,12 @@ for the tested models.
 - Experiment protocol/history: `docs/EXPERIMENTS.md`
 - Roadmap: `docs/ROADMAP.md`
 - Related work: `docs/RELATED_WORK.md`
+- Future public-release boundary: `docs/PUBLIC_RELEASE_BOUNDARY.md`
+- Data-license status: `DATA_LICENSE.md`
+- Third-party notices: `THIRD_PARTY_NOTICES.md`
 - AI assistance disclosure: `AI_ASSISTANCE.md`
 
-The v1 hidden model outputs remain frozen, and all analyses use the existing artifacts. PR #20
-remains Draft and unmerged until the author completes account-side preview checks and explicitly
-authorizes any readiness or merge transition.
+All completed model outputs remain frozen, and paper construction uses existing artifacts. A
+future public repository must be generated from a clean, history-free export rather than by making
+this private development repository public. The export must pass its dynamic manifest, privacy,
+licensing, and standalone replay gates.

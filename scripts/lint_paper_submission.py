@@ -830,6 +830,8 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "public robustness challenge",
         "not a causal ablation",
         "No human annotation study",
+        "artifact demonstrates a failure-aware evaluation protocol",
+        "rather than establish broad benchmark validity",
     ):
         if phrase.lower() not in lower:
             fail(f"required interpretation boundary missing: {phrase!r}")
@@ -854,6 +856,8 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "chen2025scienceagentbench",
         "siegel2025corebench",
         "huang2025popper",
+        "chen2026evidenceledger",
+        "kim2026ledger",
     }
     if not required_citations <= cite_keys:
         fail(f"required primary-source citations missing: {sorted(required_citations - cite_keys)}")

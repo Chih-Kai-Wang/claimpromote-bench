@@ -216,10 +216,10 @@ The paper therefore does not claim a completed naturalistic replication, human l
 
 ## Gate H — final ICLR 2027 package
 
-- [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
+- [x] Official ICLR 2027 style archive and file hashes are committed in a fail-closed lock.
 - [x] ICLR PDF compiles from the final scientific head.
 - [x] ICLR PDF contains 10 physical pages including references and required disclosures.
-- [x] Main-text page probe reports 7 pages, within the 9-page limit.
+- [x] Main-text page probe reports 8 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public

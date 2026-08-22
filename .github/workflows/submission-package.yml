@@ -97,8 +97,10 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location --retry 3 \
-            https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip \
+            "$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["official_source_url"])')" \
             --output /tmp/iclr2027.zip
+          expected_archive="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["archive_sha256"])')"
+          printf '%s  %s\n' "$expected_archive" /tmp/iclr2027.zip | sha256sum -c -
           rm -rf /tmp/iclr2027-style
           mkdir -p /tmp/iclr2027-style
           unzip -q /tmp/iclr2027.zip -d /tmp/iclr2027-style
@@ -108,6 +110,10 @@ jobs:
           test -n "$bst"
           cp "$sty" work/submission/iclr2027_conference.sty
           cp "$bst" work/submission/iclr2027_conference.bst
+          expected_sty="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["files"]["iclr2027_conference.sty"])')"
+          expected_bst="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["files"]["iclr2027_conference.bst"])')"
+          printf '%s  %s\n' "$expected_sty" work/submission/iclr2027_conference.sty | sha256sum -c -
+          printf '%s  %s\n' "$expected_bst" work/submission/iclr2027_conference.bst | sha256sum -c -
           sha256sum /tmp/iclr2027.zip \
             work/submission/iclr2027_conference.sty \
             work/submission/iclr2027_conference.bst \

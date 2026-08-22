@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-Producing evidence does not determine which claim-state transition it licenses. We evaluate this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return \allow, \hold, \demote, or \escalate. \cpb uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, one Qwen3.7-Max service configuration returned 272/300 valid decisions and 123/150 complete pairs, yielding .8600/.7533 end-to-end item/pair accuracy versus .9485/.9187 conditional accuracy at .9067/.8200 coverage. End-to-end action recall was .9533/.8209/.0000/.6250 in the order above. A precommitted public challenge balanced 90 \allow{} members with 30 per other action across 15 factors. Qwen and Flash routes reached .7333/.5333 and .5000/.1444 end-to-end item/pair accuracy; conditional values were .8919/.7500 and .6164/.2131. Their full confusion matrices expose \demote{} recall of 4/30 and 0/30; each configuration has a zero-accuracy factor. The old Flash lane documents 300/300 HTTP 401 authorization failures on its old frozen service interface and supplies no model-efficacy estimate; the later route establishes only execution under a different stack. This preregistered diagnostic case study is neither a causal ablation nor evidence of general research-agent ability. The deterministic executor is the definitional policy ceiling, and the Naive Bayes comparator remains a weak baseline.
+Producing evidence does not determine which claim-state transition it licenses. We evaluate this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return \allow, \hold, \demote, or \escalate. \cpb uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, the Qwen3.7-Max configuration returned 272/300 valid decisions and 123/150 complete pairs, yielding .8600/.7533 end-to-end item/pair accuracy versus .9485/.9187 conditional accuracy at .9067/.8200 coverage. End-to-end action recall was .9533/.8209/.0000/.6250 in the order above. A precommitted public challenge balanced 90 \allow{} members with 30 per other action across 15 factors. Qwen and Flash routes reached .7333/.5333 and .5000/.1444 end-to-end item/pair accuracy; conditional values were .8919/.7500 and .6164/.2131. Their full confusion matrices expose \demote{} recall of 4/30 and 0/30; each configuration has a zero-accuracy factor. The old Flash lane records 300/300 HTTP 401 failures on its frozen interface and supplies no efficacy estimate; the later route establishes only execution under a different stack. The artifact demonstrates a failure-aware evaluation protocol on selected configurations; it is neither a causal ablation nor evidence of general research-agent ability. The deterministic executor is the definitional policy ceiling, and the Naive Bayes comparator remains a weak baseline.
 \end{abstract}
 
 \section{Introduction}
@@ -42,9 +42,9 @@ The benchmark treats this question as synthetic policy conformance under an auth
 \begin{samepage}
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item a synthetic benchmark that maps typed evidence and requested state transitions to four actions under a fixed executable policy;
+  \item an executable controlled-pair protocol that maps typed evidence and requested state transitions to four actions under a fixed authored policy;
   \item failure-aware item and pair estimands, applied in a preregistered hidden diagnostic and a precommitted action-balanced public challenge; and
-  \item a replayable evidence chain that separates service output from a definitional policy ceiling and produces privacy-filtered reviewer artifacts.
+  \item a replayable evidence artifact that separates service output from a definitional policy ceiling and produces privacy-filtered reviewer derivatives.
 \end{enumerate}
 \end{samepage}
 
@@ -61,6 +61,9 @@ RuleArena evaluates long-context natural-language rule application for airline b
 
 \paragraph{Scientific evidence and research-agent evaluation.}
 CLAIM-BENCH, DeepFact, and ClaimDB evaluate scientific claim extraction or factual verification \cite{javaji2025claimbench,huang2026deepfact,theologitis2026claimdb}. ScienceAgentBench, CORE-Bench, and POPPER evaluate executable research tasks, computational reproduction, or hypothesis falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. SeekBench, Omni-Decision, EviGraph, and ClaimLedger emphasize grounding or explicit evidence maintenance \cite{shao2025seekbench,ma2026omnidecision,ren2026evigraph,elliman2026claimledger}. Unlike these broader tasks, \cpb fixes an authored policy and scores only the status-transition decision after evidence registration.
+
+\paragraph{Evidence ledgers and traceability.}
+Evidence-Ledger Adjudication assigns externally labeled support relations and routes claims on a 2,335-row benchmark \cite{chen2026evidenceledger}. LEDGER reconstructs claim-support paths and artifact lineage from observed agent sessions \cite{kim2026ledger}. \cpb instead tests executable conformance of state transitions to an authored synthetic policy through controlled pairs; it neither predicts external support labels nor reconstructs session traces.
 
 \section{Task and Evidence Flow}
 
@@ -308,7 +311,7 @@ The public-development Naive Bayes model gives a reproducible low-cost reference
 
 \section{Limitations}
 
-The benchmark is synthetic and policy-constrained. R6 reduces post hoc adaptation through a fresh hidden realization, but it retains the same ontology and mostly the same template family. The public, precommitted challenge tests an action-balanced construction rather than hidden-test generalization. Its 90 pairs and 15 factors broaden action coverage, although six pairs per factor cannot support precise factor-specific estimates. The full factor matrix is diagnostic: zero cells identify failures but do not establish stable factor rankings.
+The benchmark is synthetic and policy-constrained, and the experiments demonstrate the protocol on selected service configurations rather than establish broad benchmark validity. R6 reduces post hoc adaptation through a fresh hidden realization, but it retains the same ontology and mostly the same template family. The public, precommitted challenge tests an action-balanced construction rather than hidden-test generalization. Its 90 pairs and 15 factors broaden action coverage, although six pairs per factor cannot support precise factor-specific estimates. The full factor matrix is diagnostic: zero cells identify failures but do not establish stable factor rankings.
 
 Coverage remains a material limitation. R6 loses 28/300 decisions and 27/150 complete pairs; the public challenge loses 32/180 Qwen decisions and 34/180 Flash decisions. Conditional accuracies of .9485/.9187, .8919/.7500, and .6164/.2131 must therefore be read beside their end-to-end counterparts. Thirty challenge cases per non-\allow{} action still support only coarse recall estimates, including the observed 4/30 and 0/30 \demote{} results.
 
@@ -328,7 +331,7 @@ Generative AI tools assisted literature search, planning, code and benchmark dra
 
 \section{Conclusion}
 
-\cpb isolates policy-constrained evidence-state transitions from broader research-agent tasks. The hidden r6 Qwen configuration reached .8600/.7533 end-to-end item/pair accuracy at .9067/.8200 coverage; conditional accuracy was .9485/.9187. On the action-balanced public challenge, Qwen and Flash reached .7333/.5333 and .5000/.1444 end to end, with conditional values of .8919/.7500 and .6164/.2131. Their full confusion matrices show \demote{} recall of only 4/30 and 0/30, and every configuration has a zero-accuracy factor. These results support a configuration-specific diagnostic under an authored synthetic policy, not uniform policy competence or general research ability.
+\cpb provides an evaluation protocol and replayable artifact for policy-constrained evidence-state transitions. The hidden r6 Qwen configuration reached .8600/.7533 end-to-end item/pair accuracy at .9067/.8200 coverage; conditional accuracy was .9485/.9187. On the action-balanced public challenge, Qwen and Flash reached .7333/.5333 and .5000/.1444 end to end, with conditional values of .8919/.7500 and .6164/.2131. Their full confusion matrices show \demote{} recall of only 4/30 and 0/30, and every configuration has a zero-accuracy factor. These results support a configuration-specific diagnostic under an authored synthetic policy, not uniform policy competence or general research ability.
 
 All unusable responses remain in the denominator. The old Flash lane documents 300/300 authorization failures on its frozen service interface and no model output; the later route establishes only executability under a different stack. Their outcomes do not form a causal ablation. The deterministic executor is a definitional policy ceiling, and the Naive Bayes comparator remains weak. Source-grounded naturalistic cases, stronger learned baselines, repeated configurations, and independent policy assessment are the next tests.
 

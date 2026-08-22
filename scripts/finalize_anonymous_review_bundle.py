@@ -54,9 +54,9 @@ def patch_runner(bundle: Path) -> None:
 def patch_readme(bundle: Path) -> None:
     path = bundle / "README.md"
     text = path.read_text(encoding="utf-8")
-    old = "The checks rebuild and validate the public alpha benchmark, run"
+    old = "The checks validate the public alpha benchmark, run"
     new = (
-        "The checks rebuild and validate the public alpha benchmark, verify all 20 "
+        "The checks validate the public alpha benchmark, verify all 20 "
         "controlled-pair contracts, run"
     )
     if new not in text:

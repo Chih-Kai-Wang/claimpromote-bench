@@ -249,6 +249,14 @@ def test_review_runner_checks_frozen_naturalistic_decision() -> None:
     assert "no human annotators" in normalized
 
 
+def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None:
+    builder = load_builder()
+
+    readme = builder.review_readme()
+    assert "validate the public alpha benchmark" in readme
+    assert "rebuild and validate" not in readme
+
+
 def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> None:
     submission_builder = load_submission_builder()
 

@@ -22,6 +22,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[1]
 ANONYMOUS_BUILDER = ROOT / "scripts" / "build_anonymous_review_bundle.py"
 SUBMISSION_BUILDER = ROOT / "scripts" / "build_submission_tex.py"
+STYLE_LOCK = ROOT / "technical-report" / "iclr2027-style-lock.json"
 OFFICIAL_STYLE_URL = "https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 LOG_FAILURE_RE = re.compile(
@@ -58,6 +59,26 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def load_style_lock() -> Json:
+    try:
+        lock = json.loads(STYLE_LOCK.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"cannot load ICLR style lock: {exc}")
+    if not isinstance(lock, dict) or lock.get("schema_version") != "1.0.0":
+        fail("ICLR style lock has an unsupported schema")
+    if lock.get("official_source_url") != OFFICIAL_STYLE_URL:
+        fail("ICLR style lock source URL differs from the approved venue archive")
+    if not SHA256_RE.fullmatch(str(lock.get("archive_sha256", ""))):
+        fail("ICLR style lock has an invalid archive digest")
+    expected_names = {"iclr2027_conference.bst", "iclr2027_conference.sty"}
+    files = lock.get("files")
+    if not isinstance(files, dict) or set(files) != expected_names:
+        fail("ICLR style lock has an unexpected file set")
+    if any(not SHA256_RE.fullmatch(str(digest)) for digest in files.values()):
+        fail("ICLR style lock has an invalid file digest")
+    return lock
 
 
 def load_module(path: Path, name: str) -> ModuleType:
@@ -227,7 +248,11 @@ def write_readme(path: Path, receipt: Json) -> None:
         f"- arXiv PDF: {submission['arxiv']['pages']} pages.\n"
         f"- Anonymous manifest: {bundle['manifest_file_count']} listed files plus the manifest; "
         f"ZIP entries {bundle['zip_file_entries']}.\n\n"
-        "Use `SHA256SUMS.txt` and `validation-receipt.json` to verify the generated artifacts. "
+        "Verify every release artifact from this directory with:\n\n"
+        "```bash\n"
+        "cd release/submission-kit && shasum -a 256 -c SHA256SUMS.txt\n"
+        "```\n\n"
+        "Use `validation-receipt.json` for the corresponding structural checks. "
         "The anonymous bundle file total is read from its generated manifest; do not copy it into "
         "long-lived prose.\n",
         encoding="utf-8",
@@ -290,6 +315,14 @@ def build(args: argparse.Namespace) -> Json:
     style_archive_sha256 = args.style_archive_sha256.lower()
     if not SHA256_RE.fullmatch(style_archive_sha256):
         fail("--style-archive-sha256 must be exactly 64 lowercase hexadecimal characters")
+    style_lock = load_style_lock()
+    if style_archive_sha256 != style_lock["archive_sha256"]:
+        fail("style archive digest differs from the committed ICLR style lock")
+    observed_style_files = {
+        name: sha256_file(submission / name) for name in sorted(style_lock["files"])
+    }
+    if observed_style_files != style_lock["files"]:
+        fail("submission style files differ from the committed ICLR style lock")
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=output.parent, prefix=".submission-kit-") as staging_name:
@@ -325,12 +358,10 @@ def build(args: argparse.Namespace) -> Json:
         style_receipt = {
             "schema_version": "1.0.0",
             "status": "PASS",
-            "official_source_url": OFFICIAL_STYLE_URL,
+            "official_source_url": style_lock["official_source_url"],
             "style_archive_sha256": style_archive_sha256,
-            "files": {
-                "iclr2027_conference.bst": sha256_file(submission / "iclr2027_conference.bst"),
-                "iclr2027_conference.sty": sha256_file(submission / "iclr2027_conference.sty"),
-            },
+            "style_lock_sha256": sha256_file(STYLE_LOCK),
+            "files": observed_style_files,
         }
         (staging / "iclr-style-receipt.json").write_text(
             json.dumps(style_receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"

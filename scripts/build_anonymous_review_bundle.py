@@ -1149,7 +1149,7 @@ python -m pip install -e ".[test]"
 python scripts/run_review_checks.py
 ```
 
-The checks rebuild and validate the public alpha benchmark, run shortcut/invariance/executable
+The checks validate the public alpha benchmark, run shortcut/invariance/executable
 checks, validate the compact paper-result summaries, verify the frozen naturalistic-candidate
 pool and its pre-model-call zero-case decision, and run selected v2 tests. The evidence
 directory retains the available v1
@@ -1591,8 +1591,10 @@ def verify_bundle(bundle: Path) -> None:
             fail(f"manifest digest mismatch: {relative}")
 
     required = {
+        "DATA_LICENSE.md",
         "LICENSE",
         "README.md",
+        "THIRD_PARTY_NOTICES.md",
         "pyproject.toml",
         "evidence/capable-hidden/attempt-protocol-snapshots/manifest.json",
         "evidence/capable-hidden/attempt-protocol-snapshots/stage-1-initial/scripts/run_stronger_model_study.py",
@@ -1681,7 +1683,9 @@ def build(destination: Path) -> None:
         copy_tree(ROOT / directory, destination / directory)
 
     selected_files = (
+        "DATA_LICENSE.md",
         "LICENSE",
+        "THIRD_PARTY_NOTICES.md",
         "configs/decoding-v1.json",
         "scripts/aggregate_capable_hidden_study.py",
         "scripts/analyze_stronger_model_study.py",
