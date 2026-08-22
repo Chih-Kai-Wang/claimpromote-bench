@@ -41,6 +41,12 @@ CHALLENGE_RECEIPT = (
 CHALLENGE_CORRECTION = (
     ROOT / "v2" / "balanced-public-challenge" / "results" / "reporting-correction-v1.json"
 )
+BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
+BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
+BREADTH_RESULT = BREADTH_RESULT_ROOT / "reported-aggregate.json"
+BREADTH_PACKET = ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json"
+BREADTH_DATASET = ROOT / "v2" / "balanced-public-challenge" / "dataset"
+BREADTH_VERIFIER = ROOT / "release" / "tools" / "verify_public_model_breadth_public_evidence.py"
 NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
 NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
@@ -604,6 +610,129 @@ def validate_balanced_challenge(tex: str) -> None:
         require_regex(tex, pattern, description)
 
 
+def paper_rate(value: Any) -> str:
+    if value is None:
+        return "N/E"
+    if not isinstance(value, (int, float)):
+        fail(f"paper rate is not numeric: {value!r}")
+    return f"{float(value):.4f}".removeprefix("0")
+
+
+def validate_public_model_breadth(tex: str) -> bool:
+    if not BREADTH_RESULT.exists():
+        return False
+
+    verifier_module = runpy.run_path(str(BREADTH_VERIFIER))
+    verify = verifier_module.get("verify_public_evidence")
+    if not callable(verify):
+        fail("public model-breadth verifier entry point is missing")
+    verification = verify(
+        BREADTH_RESULT_ROOT,
+        BREADTH_PLAN,
+        BREADTH_PACKET,
+        BREADTH_DATASET,
+        api_key="",
+    )
+    if verification.get("status") != "PUBLIC_MODEL_BREADTH_EVIDENCE_PASS":
+        fail("public model-breadth evidence replay failed")
+
+    plan = load_object(BREADTH_PLAN, "public model-breadth plan")
+    aggregate = load_object(BREADTH_RESULT, "public model-breadth aggregate")
+    lane_order = plan.get("execution", {}).get("base_lane_order")
+    if not isinstance(lane_order, list) or len(lane_order) != 7:
+        fail("public model-breadth plan does not retain seven lanes")
+    lane_ids = {str(value) for value in lane_order}
+    lanes = {
+        str(lane.get("lane_id")): lane
+        for lane in aggregate.get("lanes", [])
+        if isinstance(lane, dict)
+    }
+    if set(lanes) != lane_ids:
+        fail("public model-breadth aggregate lane set changed")
+    if (
+        aggregate.get("status") != "COMPLETE"
+        or aggregate.get("design") != "PUBLIC_PRECOMMITTED_MODEL_BREADTH_SUPPLEMENT"
+        or aggregate.get("service_comparison", {}).get("causal_model_ablation_claimed") is not False
+        or aggregate.get("scope_limits")
+        != {
+            "breadth_dimension_added": "MODEL_FAMILY_ONLY",
+            "hidden_generalization_claimed": False,
+            "naturalistic_cases": 0,
+            "ontology_count": 1,
+            "policy_count": 1,
+            "public_known_challenge": True,
+        }
+    ):
+        fail("public model-breadth interpretation boundary changed")
+
+    labels = {
+        "opencode-go-qwen3.8-max-breadth": "Qwen3.8-Max",
+        "opencode-go-deepseek-v4-pro-breadth": "DeepSeek-V4-Pro",
+        "opencode-go-glm-5.3-breadth": "GLM-5.3",
+        "opencode-go-kimi-k3-breadth": "Kimi-K3",
+        "opencode-go-mimo-v2.5-pro-breadth": "MiMo-V2.5-Pro",
+        "opencode-go-minimax-m3-breadth": "MiniMax-M3",
+        "opencode-go-hy3-breadth": "Hunyuan-HY3",
+    }
+    if set(labels) != lane_ids:
+        fail("public model-breadth paper label map changed")
+    for lane_id in lane_order:
+        lane = lanes[str(lane_id)]
+        metrics = lane.get("metrics")
+        if not isinstance(metrics, dict):
+            fail(f"public model-breadth metrics are missing: {lane_id}")
+        confusion = metrics.get("confusion_matrix", {})
+        counts = confusion.get("counts")
+        per_action = metrics.get("per_action")
+        if (
+            not isinstance(counts, dict)
+            or set(counts) != set(ACTIONS)
+            or any(
+                not isinstance(counts.get(action), dict)
+                or set(counts[action])
+                != {"ALLOW", "HOLD", "DEMOTE", "ESCALATE", "NO_VALID_DECISION"}
+                for action in ACTIONS
+            )
+            or not isinstance(per_action, dict)
+            or set(per_action) != set(ACTIONS)
+        ):
+            fail(f"public model-breadth class reporting is incomplete: {lane_id}")
+        core_row = (
+            f"{labels[str(lane_id)]} & {metrics['parseable_items']}/180 & "
+            f"{paper_rate(metrics['end_to_end_item_accuracy'])} & "
+            f"{paper_rate(metrics['conditional_item_accuracy'])} & "
+            f"{paper_rate(metrics['pair_coverage'])} & "
+            f"{paper_rate(metrics['end_to_end_pair_accuracy'])} & "
+            f"{paper_rate(metrics['conditional_pair_accuracy'])}"
+        )
+        if core_row not in tex:
+            fail(f"public model-breadth result row is missing or changed: {lane_id}")
+        action_row = (
+            f"{labels[str(lane_id)]} & "
+            + " & ".join(paper_rate(per_action[action]["end_to_end_recall"]) for action in ACTIONS)
+            + f" & {paper_rate(metrics['balanced_action_recall'])} & "
+            f"{paper_rate(metrics['macro_f1'])}"
+        )
+        if action_row not in tex:
+            fail(f"public model-breadth action row is missing or changed: {lane_id}")
+
+    for label in ("tab:breadth-results", "tab:breadth-action-recall"):
+        if rf"\label{{{label}}}" not in tex:
+            fail(f"required public model-breadth table missing: {label}")
+    required = (
+        (r"prospectively frozen.*model-family breadth", "prospective breadth freeze"),
+        (r"seven.*configurations", "seven breadth configurations"),
+        (r"1\{?,?\}?260.*terminal", "breadth terminal-cell count"),
+        (r"known public.*challenge", "known-public interpretation"),
+        (r"five additional model families", "incremental family breadth"),
+        (r"complete per-configuration confusion matrices", "breadth class artifact"),
+        (r"model.*serving.*adapter.*not causally", "breadth causal boundary"),
+    )
+    for pattern, description in required:
+        require_regex(tex, pattern, description)
+    return True
+
+
 def parse_confusion_table(tex: str) -> dict[tuple[str, str], tuple[int, ...]]:
     match = re.search(
         r"\\label\{tab:confusion\}(.*?)\\end\{table\}",
@@ -920,6 +1049,7 @@ def main() -> int:
     validate_submission_builder(tex)
     validate_r6_evidence(tex)
     validate_balanced_challenge(tex)
+    breadth_bound = validate_public_model_breadth(tex)
     validate_manuscript_tables(tex)
     validate_naturalistic_decision(tex)
     validate_v1_diagnostic(tex)
@@ -927,7 +1057,8 @@ def main() -> int:
     print(
         "paper-lint: PASS "
         f"({citation_count} citation keys, {label_count} labels, "
-        f"{abstract_words} abstract words; r6 addendum and balanced challenge bound)"
+        f"{abstract_words} abstract words; r6 addendum, balanced challenge"
+        f"{', and model breadth' if breadth_bound else ''} bound)"
     )
     return 0
 
