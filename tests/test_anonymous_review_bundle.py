@@ -308,6 +308,12 @@ def test_fresh_confirmatory_anonymous_projection_is_compact_and_identity_free(
     assert all("frozen_plan_commit" not in row for row in qwen)
     assert addendum["qwen_service_configuration"]["complete_pairs"] == 123
     assert addendum["qwen_service_configuration"]["correct_pairs"] == 113
+    assert len(addendum["qwen_service_configuration"]["factor_metrics"]) == 20
+    assert {
+        factor["factor_id"]
+        for factor in addendum["qwen_service_configuration"]["factor_metrics"]
+        if factor["end_to_end_pair_accuracy"] == 0
+    } == {"current_binding", "dependency_statement"}
     assert addendum["deterministic_policy_executor"]["correct_items"] == 300
     assert addendum["sources"] == {
         "anonymous_recomputation": (

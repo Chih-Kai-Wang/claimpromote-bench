@@ -841,8 +841,8 @@ pairs had two valid decisions and 113/123 of those complete pairs were correct. 
 returned 300 HTTP 401 responses and no model output; it is an authentication or client-service
 configuration failure, not an estimate of model accuracy. The Qwen result includes every failure as
 incorrect without retry and has zero DEMOTE recall (0/8). `reporting-addendum.json` exposes the
-full confusion matrix, action-factor concentration, conditional metrics, and deterministic policy
-ceiling.
+full confusion matrix, factor-level pair outcomes, action-factor concentration, conditional metrics,
+and deterministic policy ceiling.
 
 Provider hidden-thinking blocks are not included. They were removed only in a deterministic
 post-C2 publication derivative; the original C2 seal and scores were not altered. `MANIFEST.json`

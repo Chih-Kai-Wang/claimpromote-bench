@@ -16,7 +16,7 @@ ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Tr
 ## ICLR 2027 abstract
 
 ```text
-Producing evidence and deciding what status that evidence licenses are different tasks. We frame the latter as synthetic policy conformance, rather than a broad test of research-agent ability. ClaimPromoteBench presents a claim, typed evidence, a current state, and a requested transition under a fixed author-defined policy. In a preregistered 300-item hidden study, a Qwen3.7-Max service configuration returned 272 valid decisions (decision coverage .9067) and 123 complete pairs (pair coverage .8200). End-to-end item and pair accuracy were .8600 and .7533; conditional accuracy among valid decisions and complete pairs was .9485 and .9187. End-to-end recall was .9533/ALLOW, .8209/HOLD, 0/DEMOTE, and .6250/ESCALATE. A weak public-development text Naive Bayes comparator reached .6133 item and .2267 pair accuracy. A separately precommitted public robustness challenge balanced 90 ALLOW members against 30 each of HOLD, DEMOTE, and ESCALATE over 90 pairs and 15 factors. Qwen produced 148/180 valid decisions, with .7333/.5333 end-to-end and .8919/.7500 conditional item/pair accuracy; a Flash route produced 146/180 valid decisions, with .5000/.1444 end-to-end and .6164/.2131 conditional accuracy. Every service, syntax, schema, and semantic failure remains incorrect in the end-to-end denominator. The earlier Flash lane's 300 HTTP 401 responses diagnose its frozen service interface; the later route establishes executability only. Different service stacks preclude a strict causal model ablation. A deterministic policy executor is a definitional policy ceiling, not a learned baseline.
+Producing evidence and deciding what status that evidence licenses are different tasks. We frame the latter as synthetic policy conformance, rather than a broad test of research-agent ability. ClaimPromoteBench presents a claim, typed evidence, a current state, and a requested transition under a fixed author-defined policy. In a preregistered 300-item hidden study, a Qwen3.7-Max service configuration returned 272 valid decisions (decision coverage .9067) and 123 complete pairs (pair coverage .8200). End-to-end item and pair accuracy were .8600 and .7533; conditional accuracy among valid decisions and complete pairs was .9485 and .9187. End-to-end recall was .9533/ALLOW, .8209/HOLD, 0/DEMOTE, and .6250/ESCALATE. A weak public-development text Naive Bayes comparator reached .6133 item and .2267 pair accuracy. A separately precommitted public robustness challenge balanced 90 ALLOW members against 30 each of HOLD, DEMOTE, and ESCALATE over 90 pairs and 15 factors. Qwen produced 148/180 valid decisions, with .7333/.5333 end-to-end and .8919/.7500 conditional item/pair accuracy; a Flash route produced 146/180 valid decisions, with .5000/.1444 end-to-end and .6164/.2131 conditional accuracy. Factor-level end-to-end pair accuracy spans .000--1.000 in both Qwen regimes and .000--.833 for Flash, exposing heterogeneity hidden by aggregates. Every service, syntax, schema, and semantic failure remains incorrect in the end-to-end denominator. The earlier Flash lane's 300 HTTP 401 responses diagnose its frozen service interface; the later route establishes executability only. Different service stacks preclude a strict causal model ablation. A deterministic policy executor is a definitional policy ceiling, not a learned baseline.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -89,14 +89,17 @@ A hidden 300-item evaluation and a separately precommitted 180-item action-balan
   `ESCALATE`, and 0 / 8 `DEMOTE`;
 - Qwen3.7-Max service failures: 14 HTTP 500 responses, one HTTP 503 response, ten timeouts, and
   three semantic-invalid outputs, all incorrect with zero retries;
-- registered Flash lane: 300 HTTP 401 responses, no model output, model efficacy non-evaluable,
-  and dual-model confirmation unsupported; this is the old frozen service-interface failure;
+- registered Flash lane: 300 HTTP 401 responses and no model output; scheduled service-configuration
+  E2E scores are 0 / 300 items and 0 / 150 pairs, while conditional correctness and model efficacy
+  are non-evaluable and dual-model confirmation is unsupported;
 - balanced public challenge: 90 pairs / 180 items / 15 factors, with 90 `ALLOW` and 30 each of
   `HOLD`, `DEMOTE`, and `ESCALATE`;
 - challenge Qwen: 148 / 180 valid decisions, 0.733 / 0.533 E2E item / pair accuracy, and
   0.892 / 0.750 conditional item / pair accuracy;
 - challenge Flash: 146 / 180 valid decisions, 0.500 / 0.144 E2E item / pair accuracy, and
   0.616 / 0.213 conditional item / pair accuracy;
+- factor-level E2E pair accuracy ranges from 0 to 1.0 in r6 Qwen and challenge Qwen, and from 0
+  to 0.833 in challenge Flash; every configuration has zero-accuracy factors;
 - challenge Qwen action recall (`ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE`):
   0.878 / 0.867 / 0.133 / 0.767; Flash: 0.756 / 0.300 / 0.000 / 0.433;
 - the later Flash route establishes service-path executability only; differing service stacks

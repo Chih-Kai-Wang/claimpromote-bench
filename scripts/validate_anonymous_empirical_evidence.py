@@ -1197,8 +1197,44 @@ def validate_fresh_confirmatory() -> Json:
         )
     ]
     factor_support: dict[str, Counter[str]] = {action: Counter() for action in ACTIONS}
+    factor_counts: dict[str, Json] = {}
     for pair in pairs:
-        factor_support[gold_actions[str(pair["invalid_id"])]][str(pair["factor_id"])] += 1
+        factor_id = str(pair["factor_id"])
+        invalid_action = gold_actions[str(pair["invalid_id"])]
+        factor_support[invalid_action][factor_id] += 1
+        factor = factor_counts.setdefault(
+            factor_id,
+            {
+                "factor_id": factor_id,
+                "family": str(pair["family"]),
+                "invalid_action": invalid_action,
+                "pairs": 0,
+                "covered_pairs": 0,
+                "correct_pairs": 0,
+            },
+        )
+        member_ids = [str(item_id) for item_id in pair["member_ids"]]
+        factor["pairs"] += 1
+        factor["covered_pairs"] += int(
+            all(qwen_predictions[item_id] in ACTIONS for item_id in member_ids)
+        )
+        factor["correct_pairs"] += int(
+            all(qwen_predictions[item_id] == gold_actions[item_id] for item_id in member_ids)
+        )
+    factor_metrics: list[Json] = []
+    for factor_id in sorted(factor_counts):
+        factor = factor_counts[factor_id]
+        covered = int(factor["covered_pairs"])
+        pair_count = int(factor["pairs"])
+        pair_correct = int(factor["correct_pairs"])
+        factor_metrics.append(
+            {
+                **factor,
+                "pair_coverage": covered / pair_count,
+                "end_to_end_pair_accuracy": pair_correct / pair_count,
+                "conditional_pair_accuracy": pair_correct / covered if covered else None,
+            }
+        )
     qwen_addendum = reporting_addendum.get("qwen_service_configuration", {})
     policy_ceiling = reporting_addendum.get("deterministic_policy_executor", {})
     if (
@@ -1231,6 +1267,7 @@ def validate_fresh_confirmatory() -> Json:
             qwen_addendum.get("conditional_pair_accuracy_given_complete_pair"), 113 / 123
         )
         or qwen_addendum.get("confusion") != qwen_score["confusion"]
+        or qwen_addendum.get("factor_metrics") != factor_metrics
         or reporting_addendum.get("invalid_action_factor_support")
         != {
             action: dict(sorted(counts.items()))
@@ -1270,6 +1307,7 @@ def validate_fresh_confirmatory() -> Json:
         ],
         "qwen_pair_coverage": qwen_addendum["pair_coverage"],
         "qwen_pair_accuracy": qwen_score["pair_accuracy"],
+        "qwen_factor_count": len(factor_metrics),
         "qwen_conditional_pair_accuracy": qwen_addendum[
             "conditional_pair_accuracy_given_complete_pair"
         ],

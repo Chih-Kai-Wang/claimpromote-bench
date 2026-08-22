@@ -138,7 +138,8 @@ conditional counterpart from .6243 to .4682. The historical aggregate remains im
 - [x] Abstract reports fresh-study valid decisions, item and pair accuracy, baseline difference,
   exact and Holm values, service failures, 0/8 `DEMOTE`, and Flash non-evaluability.
 - [x] Main text contains dedicated fresh protocol and results subsections plus a compact result
-  table that marks Flash model metrics `N/E`.
+  table that reports the old Flash service-configuration E2E item/pair scores as zero while marking
+  conditional correctness and model efficacy `N/E`.
 - [x] The post-v1 public formatting pilot is compressed to reader-relevant prose rather than a
   secondary result table.
 - [x] Instance accuracy is not used as a substitute for controlled-pair sensitivity.
@@ -156,6 +157,9 @@ conditional counterpart from .6243 to .4682. The historical aggregate remains im
 - [x] Balanced-challenge Macro-F1 is a fixed-four-class mean with zero division set to zero; a
   self-digested correction receipt binds the unchanged historical aggregate, analyzer, dataset, and
   360 terminal records.
+- [x] A factor-level table reports support, coverage range, E2E pair-accuracy range, and
+  zero/perfect-factor counts from existing frozen records; r6 factor values are included in the
+  self-digested reporting addendum and independently replayed in the anonymous bundle.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
 
 ## Gate F — naturalistic evaluation boundary
@@ -179,8 +183,8 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Ruff formatting passes.
 - [x] Mypy passes.
 - [x] Full tests and branch coverage pass: 196 tests and 83.24% branch coverage on scientific/release
-  checkpoint `4ce6680`; after the fail-closed Lean-cache manifest regression was added, the current
-  maintenance branch passes 197 tests at the same 83.24% coverage.
+  checkpoint `4ce6680`; after the Lean-cache manifest regression and factor-level reporting guard
+  were added, the current branch passes 198 tests at the same 83.24% coverage.
 - [x] Python 3.12 Mac gates pass in a fresh virtual environment.
 - [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
   failures have `steps=[]` and are recorded as an account billing/spending-limit condition, not a
@@ -214,7 +218,7 @@ The paper therefore does not claim a completed naturalistic replication, human l
 
 - [x] Official ICLR 2027 style files are fetched and their hashes are recorded.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 9 physical pages including references and required disclosures.
+- [x] ICLR PDF contains 10 physical pages including references and required disclosures.
 - [x] Main-text page probe reports 7 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
@@ -237,7 +241,7 @@ conference-paper scale.
 ## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 8 physical pages.
+- [x] The arXiv PDF contains 9 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
@@ -256,15 +260,22 @@ defect was found.
 The final metadata/preview item necessarily remains account-side because arXiv must compile and
 show its own preview before submission.
 
-## Independent final review checkpoint
+## Independent final review checkpoints
 
-- [x] Exactly one isolated final strict review was conducted after the scientific and packaging work.
-- [x] It found zero high-severity issues and one medium-severity issue: Flash Macro-F1 omitted the
+- [x] One isolated final strict review found zero high-severity issues and one medium-severity issue:
+  Flash Macro-F1 omitted the
   supported but zero-prediction `DEMOTE` class.
 - [x] The issue was fixed by the bound reporting correction and regression tests without model
   calls, primary-endpoint changes, or mutation of the historical aggregate.
-- [x] The reviewer reported no other high- or medium-severity issue. No second final reviewer is
-  required under this one-review protocol.
+- [x] At the user's explicit request, one additional context-isolated, read-only strict AI reviewer
+  started from scientific head `e52cee4` without access to the first review disposition, handoff,
+  submission gate, or commit narrative. This was an internal audit, not human peer review.
+- [x] The additional reviewer found zero blocker/high issues, two medium issues, and one low issue:
+  the old Flash E2E denominator was mislabeled `N/E`, factor heterogeneity was hidden by aggregate
+  reporting, and a software-release DOI was attached to a technical-report citation.
+- [x] All three findings were resolved from frozen records without model calls, primary-endpoint
+  changes, or causal/generalization overclaim; the resolutions are regression-guarded and recorded
+  separately in `docs/reviews/2026-08-22-additional-isolated-review-disposition.md`.
 
 ## Gate J — account-side submission
 

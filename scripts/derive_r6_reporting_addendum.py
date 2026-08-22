@@ -108,9 +108,44 @@ def build_addendum(evidence_root: Path = DEFAULT_EVIDENCE) -> Json:
     ]
 
     factor_support: dict[str, Counter[str]] = {action: Counter() for action in ACTIONS}
+    factor_counts: dict[str, Json] = {}
     for pair in pairs:
         invalid_id = str(pair["invalid_id"])
-        factor_support[gold[invalid_id]][str(pair["factor_id"])] += 1
+        factor_id = str(pair["factor_id"])
+        invalid_action = gold[invalid_id]
+        factor_support[invalid_action][factor_id] += 1
+        factor = factor_counts.setdefault(
+            factor_id,
+            {
+                "factor_id": factor_id,
+                "family": str(pair["family"]),
+                "invalid_action": invalid_action,
+                "pairs": 0,
+                "covered_pairs": 0,
+                "correct_pairs": 0,
+            },
+        )
+        if factor["family"] != str(pair["family"]) or factor["invalid_action"] != invalid_action:
+            raise ValueError(f"inconsistent r6 factor metadata: {factor_id}")
+        member_ids = [str(item_id) for item_id in pair["member_ids"]]
+        factor["pairs"] += 1
+        factor["covered_pairs"] += all(predictions[item_id] is not None for item_id in member_ids)
+        factor["correct_pairs"] += all(correct[item_id] for item_id in member_ids)
+
+    factor_metrics: list[Json] = []
+    for factor_id in sorted(factor_counts):
+        factor = factor_counts[factor_id]
+        covered = int(factor["covered_pairs"])
+        pair_count = int(factor["pairs"])
+        pair_correct = int(factor["correct_pairs"])
+        factor_metrics.append(
+            {
+                **factor,
+                "pair_coverage": covered / pair_count,
+                "end_to_end_pair_accuracy": pair_correct / pair_count,
+                "conditional_pair_accuracy": pair_correct / covered if covered else None,
+            }
+        )
 
     policy = load_policy(ROOT / "policies" / str(manifest["policy_file"]))
     evaluation_time = str(manifest["evaluation_time"])
@@ -140,12 +175,13 @@ def build_addendum(evidence_root: Path = DEFAULT_EVIDENCE) -> Json:
         raise ValueError("deterministic policy executor differs from released gold")
 
     addendum: Json = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "status": "POST_STUDY_DESCRIPTIVE_REPORTING_ADDENDUM",
         "interpretation_boundary": (
             "Derived after r6 unblinding to expose service coverage, conditional correctness, "
-            "confusion, action-factor concentration, and the deterministic policy ceiling. It "
-            "does not alter the preregistered hypotheses, C2 records, frozen analysis, or claims."
+            "confusion, factor-level pair outcomes, action-factor concentration, and the "
+            "deterministic policy ceiling. It does not alter the preregistered hypotheses, C2 "
+            "records, frozen analysis, or claims."
         ),
         "sources": {
             "dataset_manifest_sha256": sha256_file(manifest_path),
@@ -168,6 +204,7 @@ def build_addendum(evidence_root: Path = DEFAULT_EVIDENCE) -> Json:
             "conditional_pair_accuracy_given_complete_pair": len(correct_pairs)
             / len(complete_pairs),
             "confusion": confusion,
+            "factor_metrics": factor_metrics,
         },
         "public_dev_text_nb": {
             "end_to_end_item_accuracy": reported_nb["item_accuracy"],

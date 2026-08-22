@@ -2,7 +2,7 @@
   "anonymous_bundle": {
     "manifest_file_count": 737,
     "manifest_plus_self_file_count": 738,
-    "manifest_sha256": "941fff3ec0ea831269d17c902b107207399935a3f17a3dccdfcbf1473769690c",
+    "manifest_sha256": "0a983d82490f065686c21b12cb84278defce3a3b9b99997db9fd3cf4d962c2d9",
     "privacy_scope": {
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
@@ -31,24 +31,24 @@
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 309765,
-      "sha256": "1de457b0467b2becd0626ff231b6e2b1f963418dd4ef8860f980dadbc5efc8b0"
+      "bytes": 312468,
+      "sha256": "0c71b1aeaf8b88db2800b5e3001d80a5a5e81971eb9188a7e6f1b6e5c533e874"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 2851118,
-      "sha256": "9e01d93b34bff164c04ce52f1cf6b96b1100ff4b289f713c19317d453450ec5a"
+      "bytes": 2851847,
+      "sha256": "acfdb0b2746d86aeb5f337447b567b142192635f7791e9483c1edd219605e501"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 13978,
-      "sha256": "ac2cc26b6f3fb11037cbeaccf57258bc547d36f0bd45bb0e768bde64d9f236fa"
+      "bytes": 14590,
+      "sha256": "7a25c9d48eb61d532a41363450b6009adb77ba4b3ee0a4d7aaabf5a89fc2dfbe"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 23360,
-      "sha256": "452842b2bc1cf3235e1960ca387bc05e14bcae87489688052176386baf76e56b"
+      "bytes": 23971,
+      "sha256": "68945bc9e16ba2c4d4d489e66f5582fc3c3b739c0371de19eb4e264427091ddf"
     },
     "iclr2027.pdf": {
-      "bytes": 184121,
-      "sha256": "392f33a65d6c9d84fdf129f16b7d2686e559b175e272f1199f8d400bee6b851b"
+      "bytes": 186470,
+      "sha256": "5bab8da80ca51c4d4203cb9c0a79376a9144d0b915bf4c5429ba9ea058416c9b"
     }
   },
   "checks": {
@@ -85,13 +85,13 @@
         "all_embedded": true,
         "font_count": 22,
         "fonts": [
-          "/AEBNPW+CMR10",
           "/BPMBND+CMSY8",
           "/BSTKNX+MSBM10",
           "/DBITMS+CMSY10",
           "/EEJZXU+CMTT8",
           "/EUWOLL+CMBX9",
           "/FDZZRC+CMTI10",
+          "/FQLWWY+CMR10",
           "/GKCPUR+CMTT10",
           "/ICTROM+CMR17",
           "/JJKIWB+CMBX12",
@@ -99,21 +99,21 @@
           "/LQBNTO+CMR12",
           "/LUHZZW+CMTI9",
           "/MOGIOU+CMSY9",
-          "/NCFQGZ+CMR7",
           "/OKZUMG+CMR8",
           "/POFRLQ+CMCSC10",
           "/PXBGHL+CMSY7",
           "/QTAPRA+CMTT9",
           "/SVIAYZ+CMBX10",
           "/VGZARF+CMMI10",
-          "/XNDSBZ+CMR9"
+          "/XNDSBZ+CMR9",
+          "/XTIWGI+CMR7"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 8,
+      "pages": 9,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 8
+      "visual_pages_inspected": 9
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -140,9 +140,9 @@
       },
       "main_text_pages": 7,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 9,
+      "pages": 10,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 9
+      "visual_pages_inspected": 10
     }
   }
 }

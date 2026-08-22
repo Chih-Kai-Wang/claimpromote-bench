@@ -178,6 +178,41 @@ def validate_no_stale_file_counts() -> None:
             )
 
 
+def validate_factor_metrics(
+    metrics: Any,
+    *,
+    label: str,
+    factor_count: int,
+    pair_support: set[int],
+    pair_coverage_range: tuple[float, float],
+    end_to_end_range: tuple[float, float],
+    zero_factor_ids: set[str],
+    perfect_factor_ids: set[str],
+) -> dict[str, dict[str, Any]]:
+    if not isinstance(metrics, list) or not all(isinstance(row, dict) for row in metrics):
+        fail(f"{label} factor metrics are malformed")
+    by_id = {str(row.get("factor_id")): row for row in metrics}
+    if len(metrics) != factor_count or len(by_id) != factor_count:
+        fail(f"{label} factor count changed")
+    if {int(row.get("pairs", -1)) for row in metrics} != pair_support:
+        fail(f"{label} pair support changed")
+    coverages = [float(row.get("pair_coverage", -1)) for row in metrics]
+    accuracies = [float(row.get("end_to_end_pair_accuracy", -1)) for row in metrics]
+    if (min(coverages), max(coverages)) != pair_coverage_range:
+        fail(f"{label} factor pair-coverage range changed")
+    if (min(accuracies), max(accuracies)) != end_to_end_range:
+        fail(f"{label} factor end-to-end pair range changed")
+    observed_zero = {
+        factor_id for factor_id, row in by_id.items() if row.get("end_to_end_pair_accuracy") == 0
+    }
+    observed_perfect = {
+        factor_id for factor_id, row in by_id.items() if row.get("end_to_end_pair_accuracy") == 1
+    }
+    if observed_zero != zero_factor_ids or observed_perfect != perfect_factor_ids:
+        fail(f"{label} zero/perfect factor identities changed")
+    return by_id
+
+
 def validate_r6_evidence(tex: str) -> None:
     result = load_object(R6_RESULT, "r6 result")
     addendum = load_object(R6_ADDENDUM, "r6 reporting addendum")
@@ -212,6 +247,8 @@ def validate_r6_evidence(tex: str) -> None:
 
     if addendum.get("self_digest") != self_digest(addendum, "self_digest"):
         fail("r6 reporting-addendum self-digest changed")
+    if addendum.get("schema_version") != "1.1.0":
+        fail("r6 reporting-addendum schema changed")
     qwen = addendum.get("qwen_service_configuration", {})
     expected_addendum = {
         "items": 300,
@@ -238,6 +275,31 @@ def validate_r6_evidence(tex: str) -> None:
     }
     if qwen.get("confusion") != expected_confusion:
         fail("r6 full confusion matrix changed")
+    r6_factors = validate_factor_metrics(
+        qwen.get("factor_metrics"),
+        label="r6 Qwen",
+        factor_count=20,
+        pair_support={7, 8},
+        pair_coverage_range=(2 / 7, 1.0),
+        end_to_end_range=(0.0, 1.0),
+        zero_factor_ids={"current_binding", "dependency_statement"},
+        perfect_factor_ids={
+            "dependency_verifier",
+            "precision",
+            "preregistration",
+            "repetitions",
+            "tool_exit",
+            "transitive_dependency",
+            "verifier_execution",
+        },
+    )
+    if (
+        r6_factors["dependency_statement"].get("covered_pairs") != 2
+        or r6_factors["dependency_statement"].get("pairs") != 7
+        or r6_factors["current_binding"].get("covered_pairs") != 6
+        or r6_factors["current_binding"].get("pairs") != 8
+    ):
+        fail("r6 zero-accuracy factor details changed")
     if addendum.get("public_dev_text_nb") != {
         "balanced_action_recall": 0.3283582089552239,
         "end_to_end_item_accuracy": 0.6133333333333333,
@@ -269,6 +331,8 @@ def validate_r6_evidence(tex: str) -> None:
         (r"\.8200", "r6 pair coverage"),
         (r"300\s+HTTP 401", "r6 Flash HTTP 401 count"),
         (r"old frozen service interface", "old Flash interface boundary"),
+        (r"dependency.statement.*0/7", "r6 dependency-statement factor result"),
+        (r"current.binding.*0/8", "r6 current-binding factor result"),
         (r"weak baseline", "Naive Bayes weakness"),
         (r"definitional policy ceiling", "deterministic ceiling role"),
     )
@@ -420,6 +484,42 @@ def validate_balanced_challenge(tex: str) -> None:
             "ESCALATE": 0.43333333333333335,
         },
     )
+    validate_factor_metrics(
+        qwen.get("metrics", {}).get("factor_metrics"),
+        label="challenge Qwen",
+        factor_count=15,
+        pair_support={6},
+        pair_coverage_range=(0.5, 1.0),
+        end_to_end_range=(0.0, 1.0),
+        zero_factor_ids={
+            "current_computation_binding",
+            "current_computation_stale",
+            "current_review_environment",
+        },
+        perfect_factor_ids={"contradiction_status", "tool_exit"},
+    )
+    validate_factor_metrics(
+        flash.get("metrics", {}).get("factor_metrics"),
+        label="challenge Flash",
+        factor_count=15,
+        pair_support={6},
+        pair_coverage_range=(0.0, 1.0),
+        end_to_end_range=(0.0, 5 / 6),
+        zero_factor_ids={
+            "age",
+            "contradiction_claim_identity",
+            "contradiction_freshness",
+            "contradiction_reviewer_identity",
+            "contradiction_verifier_execution",
+            "current_computation_binding",
+            "current_computation_stale",
+            "current_computation_verifier",
+            "current_review_environment",
+            "current_review_identity",
+            "reviewer_identity",
+        },
+        perfect_factor_ids=set(),
+    )
     flash_correction = correction.get("affected_lanes", {}).get(
         "opencode-go-deepseek-v4-flash-matched", {}
     )
@@ -469,6 +569,7 @@ def validate_balanced_challenge(tex: str) -> None:
         (r"zero division", "fixed-four-class zero-division convention"),
         (r"public, preregistered robustness challenge", "public challenge boundary"),
         (r"strict causal", "cross-service causal boundary"),
+        (r"factor-level pair", "factor-level pair reporting"),
     )
     for pattern, description in required:
         require_regex(tex, pattern, description)
@@ -528,7 +629,12 @@ def validate_manuscript_tables(tex: str) -> None:
     if table_rows != expected:
         fail("manuscript confusion table differs from bound evidence")
 
-    for label in ("tab:core-results", "tab:action-recall", "tab:confusion"):
+    for label in (
+        "tab:core-results",
+        "tab:action-recall",
+        "tab:confusion",
+        "tab:factor-results",
+    ):
         if rf"\label{{{label}}}" not in tex:
             fail(f"required result table missing: {label}")
     core_rows = (
@@ -543,6 +649,10 @@ def validate_manuscript_tables(tex: str) -> None:
         (
             r"Public challenge Flash\s*&\s*146/180\s*&\s*\.5000\s*&\s*\.6164"
             r"\s*&\s*\.6778\s*&\s*\.1444\s*&\s*\.2131"
+        ),
+        (
+            r"r6 old Flash interface\s*&\s*0/300\s*&\s*\.0000\s*&\s*N/E"
+            r"\s*&\s*\.0000\s*&\s*\.0000\s*&\s*N/E"
         ),
     )
     for pattern in core_rows:
@@ -563,6 +673,22 @@ def validate_manuscript_tables(tex: str) -> None:
     )
     for pattern in action_rows:
         require_regex(tex, pattern, "action-recall table row")
+    factor_rows = (
+        (
+            r"r6 Qwen\s*&\s*20\s*&\s*7--8\s*&\s*\.286--1\.000"
+            r"\s*&\s*\.000--1\.000\s*&\s*2/7"
+        ),
+        (
+            r"Challenge Qwen\s*&\s*15\s*&\s*6\s*&\s*\.500--1\.000"
+            r"\s*&\s*\.000--1\.000\s*&\s*3/2"
+        ),
+        (
+            r"Challenge Flash\s*&\s*15\s*&\s*6\s*&\s*\.000--1\.000"
+            r"\s*&\s*\.000--\.833\s*&\s*11/0"
+        ),
+    )
+    for pattern in factor_rows:
+        require_regex(tex, pattern, "factor-result table row")
 
 
 def validate_naturalistic_decision(tex: str) -> None:
@@ -675,6 +801,10 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
     }
     if not required_citations <= cite_keys:
         fail(f"required primary-source citations missing: {sorted(required_citations - cite_keys)}")
+    if "10.5281/zenodo.21468895" in bib:
+        fail("ClaimLedger software-release DOI must not identify the cited technical report")
+    if "https://neusym.ai/papers/claimledger.pdf" not in bib:
+        fail("ClaimLedger technical-report URL is missing")
 
     labels = re.findall(r"\\label\{([^}]+)\}", tex)
     duplicates = sorted({label for label in labels if labels.count(label) > 1})
