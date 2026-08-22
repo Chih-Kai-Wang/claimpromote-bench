@@ -14,7 +14,7 @@ The benchmark evaluates requested claim-status transitions under a fixed policy.
 
 A deterministic one-way gate can replace a parseable invalid `ALLOW` with the policy-oracle action. This is reported only as an implementation check, separately from model behavior.
 
-## Fresh preregistered confirmatory study
+## Fresh preregistered diagnostic study
 
 A new 150-pair / 300-item hidden realization was frozen under public C0 and private-salt
 commitments, a future randomness beacon, a C1 construction receipt, and a fixed 600-request
@@ -25,19 +25,18 @@ received one zero-retry call per item.
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3.7-Max | 272 / 300 | 0.820 | 0.860 / 0.753 | 0.949 / 0.919 | 0.600 | 0.627 |
 | Public-development text Naive Bayes | 300 / 300 | 1.000 | 0.613 / 0.227 | 0.613 / 0.227 | 0.328 | 0.312 |
-| Registered old Flash interface | 0 / 300 | 0.000 | N/E | N/E | N/E | N/E |
+| Registered old Flash interface | 0 / 300 | 0.000 | 0.000 / 0.000 | N/E | N/E | N/E |
 
-Qwen produced 74 more correct actions than the frozen public-development baseline. Across 94
-pair blocks with a nonzero correctness difference, it won 84 and lost 10; the one-sided exact
-value is `p=5.163495918775425e-16`, with two-hypothesis Holm-adjusted
-`p=1.032699183755085e-15`. Failures remain in the denominator: 14 HTTP 500 responses, one HTTP
-503 response, ten timeouts, and three semantic-invalid outputs. Per-action recall is 143/150 for
-`ALLOW`, 110/134 for `HOLD`, 5/8 for `ESCALATE`, and 0/8 for `DEMOTE`, so the aggregate score does
-not establish uniform four-action competence.
+The frozen identifier-normalized unigram--bigram Naive Bayes model is a weak low-cost comparator,
+not a representative competitive baseline. Failures remain in the denominator: 14 HTTP 500
+responses, one HTTP 503 response, ten timeouts, and three semantic-invalid outputs. Per-action
+recall is 143/150 for `ALLOW`, 110/134 for `HOLD`, 5/8 for `ESCALATE`, and 0/8 for `DEMOTE`, so the
+aggregate score does not establish uniform four-action competence.
 
-The registered Flash lane returned 300 HTTP 401 responses and no model output. This is a failure of
-the old frozen service interface, not a model-accuracy estimate, and it leaves dual-model
-confirmation unsupported. The supported result concerns one time-stamped service configuration.
+The registered Flash lane returned 300/300 HTTP 401 authorization failures on the old frozen
+service interface and no model output. Its scheduled end-to-end scores are zero, while model
+accuracy is non-evaluable; dual-model confirmation remains unsupported. The supported diagnostic
+concerns one time-stamped service configuration.
 
 Reviewer evidence is permanently committed under
 `release/reviewer-evidence-source/fresh-confirmatory/`. Its manifest binds the released tree and

@@ -98,8 +98,8 @@ conditional counterpart from .6243 to .4682. The historical aggregate remains im
   composition-sensitivity envelope are retained.
 - [x] Qwen3.7-Max produces 272 valid decisions, 258/300 correct actions, and 113/150 correct pairs,
   for .860 item accuracy and .753 pair accuracy.
-- [x] Against the frozen text baseline, Qwen adds 74 correct actions; pair blocks give 84 wins and
-  10 losses, one-sided exact `p=5.16e-16`, and two-hypothesis Holm-adjusted `p=1.03e-15`.
+- [x] The registered pair-blocked comparison remains machine-readable, but the paper does not use
+  it as a model-superiority claim because the frozen text Naive Bayes comparator is weak.
 - [x] Qwen action-wise reporting preserves 143/150 `ALLOW`, 110/134 `HOLD`, 5/8 `ESCALATE`, and
   0/8 `DEMOTE`; the paper explicitly limits the breadth of the aggregate result.
 - [x] Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid

@@ -9,11 +9,15 @@ with it:
 - keep public robustness evidence distinct from hidden-test generalization;
 - report coverage, conditional accuracy, and end-to-end accuracy as different estimands;
 - retain every service, syntax, schema, and semantic failure in end-to-end denominators;
-- describe the old Flash 401 lane as a frozen interface failure and the later route as evidence of
-  executability only;
+- describe the old Flash lane as 300/300 authorization failures on its frozen service interface,
+  with no model-efficacy estimate; the later route establishes executability only;
 - treat cross-stack model results as descriptive, not causal;
 - call the deterministic executor a definitional policy ceiling, never a learned baseline;
 - call the public-development Naive Bayes model a weak baseline;
+- frame the empirical evidence as a preregistered diagnostic case study rather than a model
+  superiority result;
+- make the task self-contained with one concrete pair, action precedence, the model-visible input,
+  and the exact six-field output contract;
 - do not claim human labels, annotator agreement, naturalistic transfer, or broad research-agent
   competence;
 - keep artifact identifiers and execution history in receipts unless a reader needs them to

@@ -23,49 +23,39 @@ ICLR_TITLE = (
 
 AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
 
-Generative AI tools were used as assistants during literature search, research planning and
-methodological discussion, synthetic benchmark-template and code drafting and debugging, analysis
-checks and result interpretation, and parts of manuscript drafting and editing. The author chose
-the research question, defined the benchmark policy and experimental protocol, made the final study
-and analysis decisions, checked the generated benchmark through deterministic validators, checked
-the reported results against the released artifacts, checked the references, and is responsible
-for the final manuscript and submission. The quantitative results
-reported in this paper come from the validated study artifacts. The author retains authorship
-and final responsibility.
+Generative AI tools assisted literature search, research planning and methodological discussion,
+benchmark-template and code drafting, debugging, analysis checks, result interpretation, and
+manuscript drafting and editing. The author chose the research question, defined the benchmark
+policy and protocol, made the final study and analysis decisions, and verified the benchmark,
+reported results, and references. Quantitative results come from validated study artifacts. The
+author is responsible for the manuscript and submission; AI systems are neither authors nor human
+annotators.
 
 """
 
 ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
 
-The original hidden set and exact prompts were fixed before scored inference. Artifact-only
-recovery reconstructed the same dataset and prompt identity and recomputed the 7,200-record v1
-aggregate from all 24 archived runs. It issued no model query and reclassified exactly 27
-cross-field-invalid records as format errors by invoking the registered semantic validator omitted
-by the original runner; no legal model decision was rewritten.
+The original hidden set and prompts were fixed before inference. Artifact-only recovery rebuilt the
+same 7,200-record aggregate without model calls and reclassified exactly 27 cross-field-invalid
+records as format errors under the registered semantic validator; no valid decision changed.
 
-For the fresh study, public C0 and private-salt commitments precede a future randomness beacon and
-C1 construction receipt. A frozen schedule contains 600 requests, and C2 seals all 600 terminal
-cells before gold loading or analysis. A post-run audit found cleartext provider hidden-thinking
-blocks inside 275 response envelopes. Scoring used final response text and parsed decisions alone,
-so the defect left the C2 order and scientific values unchanged. The public release is a post-C2
-text-only allowlist derivative with source-to-derived row and envelope hashes and byte-identical
+The fresh hidden study binds public and private-salt commitments to a future randomness beacon,
+construction receipt, and frozen request schedule; C2 seals all 600 terminal cells before gold
+loading or analysis. A post-run audit found hidden-thinking blocks in 275 response envelopes, but
+scoring had used only final response text and parsed decisions. The public derivative therefore
+uses a text-only allowlist, binds source and derived rows by hash, and reproduces byte-identical
 scientific analysis. Its manifest records the generated tree's current file count.
 
-The public balanced challenge froze its dataset, action distribution, prompt packet, adapters,
-statistics, and one-call zero-retry schedule before inference. Its receipt validates all 360
-item-level records and reports zero provider-account findings, retained provider response
-identifiers, and hidden-reasoning findings. The challenge is public robustness evidence and is not
-a hidden-test generalization estimate or a causal comparison between its differing service stacks.
+The public balanced challenge separately froze its dataset, action distribution, prompts,
+adapters, analysis, and one-call zero-retry schedule before inference. Its receipt validates all
+360 item-level records and reports zero findings for provider accounts, retained provider response
+identifiers, and hidden reasoning. Paper construction reruns neither completed singleton study.
 
-The anonymous review bundle contains the fresh dataset, study plan, prompt packet, baseline
-predictions, projected C2 records, item-level final outputs, gold, analysis, redaction receipt, and
-frozen-manifest correction overlay. Its validator recomputes the complete statistics and both
-registered lane dispositions. The bundle also retains all 14 pilot attempts and both full passes
-from the adaptive extension, plus the original and public-control evidence and executable and Lean
-replay inputs. Searchable repository provenance is replaced with role descriptions. The private
-construction seed is excluded. Any change to labels, policy, prompts, controlled factors, or
-hidden-test bytes creates a new benchmark version. Bundle construction records the actual file
-count in its manifest, and validation recomputes that count from the generated tree.
+The anonymous bundle retains item-level evidence, both registered lane dispositions, all 14 pilot
+attempts, recomputation code, executable and Lean checks, and privacy receipts. Its validator
+recomputes the reported statistics and dynamic file count. Fail-closed scans reject author,
+repository, workflow, provider-response, hidden-reasoning, and unknown-field leakage. The private
+construction seed is excluded.
 
 """
 

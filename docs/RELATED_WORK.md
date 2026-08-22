@@ -4,7 +4,7 @@ This is a living comparison, not a claim of exhaustive priority. Publication sta
 
 ## Fresh search record
 
-A paper-preparation search was refreshed on **2026-08-19** after the v1 task, public-dev protocol, and external-audit results had stabilized. Queries included:
+A paper-preparation search was refreshed on **2026-08-23** after the r6 addendum and balanced public challenge had stabilized. Queries included:
 
 - `research claim evidence state transition benchmark agent`;
 - `policy governed claim promotion evidence benchmark`;
@@ -14,6 +14,7 @@ A paper-preparation search was refreshed on **2026-08-19** after the v1 task, pu
 - `formal proof scientific evidence provenance agent benchmark`;
 - `evidence state agent benchmark`;
 - `verifier governed claim state research agent`.
+- `rule following benchmark explicit policy language model`.
 
 The refresh identified several closer conceptual neighbors than the earlier survey: SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report. Their existence materially narrows the novelty language. ClaimPromoteBench should **not** claim to have invented evidence-state maintenance, claim ledgers, or verifier-governed claim updates.
 
@@ -26,6 +27,7 @@ The refresh identified several closer conceptual neighbors than the earlier surv
 | ScienceAgentBench (ICLR 2025) | Executable scientific data-analysis tasks | Task success, not whether an evidence-state promotion is policy-admissible |
 | CORE-Bench (TMLR 2025) | Computational reproduction of published work | Reproduction correctness, not transitions across orthogonal evidence states |
 | POPPER (ICML 2025) | Sequential falsification with statistical error control | Hypothesis testing, not versioned state-transition governance |
+| RuleArena (ACL 2025) | Long-context natural-language rule application in airline, basketball, and tax scenarios | Domain rule-guided answers, not four-way transitions over a typed evidence ledger under a machine-readable policy |
 | OSVBench (AAAI 2026) | Formal specification generation for operating-system verification | Specification synthesis, not whether heterogeneous evidence licenses a state change |
 | SeekBench (2025 preprint) | Grounding, recovery, and readiness/calibration as evidence quality changes during information seeking | Evidence sufficiency affects answer readiness, but the benchmark target is not a four-way research-claim state-transition oracle |
 | Omni-Decision (2026 preprint) | Progressive query-scoped evidence state with deterministic updates for multimodal QA | Explicit evidence-state maintenance is prior art; ClaimPromoteBench instead evaluates admissibility under a frozen research-transition policy |

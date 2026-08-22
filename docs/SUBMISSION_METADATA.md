@@ -16,7 +16,7 @@ ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Tr
 ## ICLR 2027 abstract
 
 ```text
-Producing evidence and deciding what status that evidence licenses are different tasks. We frame the latter as synthetic policy conformance, rather than a broad test of research-agent ability. ClaimPromoteBench presents a claim, typed evidence, a current state, and a requested transition under a fixed author-defined policy. In a preregistered 300-item hidden study, a Qwen3.7-Max service configuration returned 272 valid decisions (decision coverage .9067) and 123 complete pairs (pair coverage .8200). End-to-end item and pair accuracy were .8600 and .7533; conditional accuracy among valid decisions and complete pairs was .9485 and .9187. End-to-end recall was .9533/ALLOW, .8209/HOLD, 0/DEMOTE, and .6250/ESCALATE. A weak public-development text Naive Bayes comparator reached .6133 item and .2267 pair accuracy. A separately precommitted public robustness challenge balanced 90 ALLOW members against 30 each of HOLD, DEMOTE, and ESCALATE over 90 pairs and 15 factors. Qwen produced 148/180 valid decisions, with .7333/.5333 end-to-end and .8919/.7500 conditional item/pair accuracy; a Flash route produced 146/180 valid decisions, with .5000/.1444 end-to-end and .6164/.2131 conditional accuracy. Factor-level end-to-end pair accuracy spans .000--1.000 in both Qwen regimes and .000--.833 for Flash, exposing heterogeneity hidden by aggregates. Every service, syntax, schema, and semantic failure remains incorrect in the end-to-end denominator. The earlier Flash lane's 300 HTTP 401 responses diagnose its frozen service interface; the later route establishes executability only. Different service stacks preclude a strict causal model ablation. A deterministic policy executor is a definitional policy ceiling, not a learned baseline.
+Producing evidence does not determine which claim-state transition it licenses. We evaluate this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return ALLOW, HOLD, DEMOTE, or ESCALATE. ClaimPromoteBench uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, one Qwen3.7-Max service configuration returned 272/300 valid decisions and 123/150 complete pairs, yielding .8600/.7533 end-to-end item/pair accuracy versus .9485/.9187 conditional accuracy at .9067/.8200 coverage. End-to-end action recall was .9533/.8209/.0000/.6250 in the order above. A precommitted public challenge balanced 90 ALLOW members with 30 per other action across 15 factors. Qwen and Flash routes reached .7333/.5333 and .5000/.1444 end-to-end item/pair accuracy; conditional values were .8919/.7500 and .6164/.2131. Their full confusion matrices expose DEMOTE recall of 4/30 and 0/30; each configuration has a zero-accuracy factor. The old Flash lane documents 300/300 HTTP 401 authorization failures on its old frozen service interface and supplies no model-efficacy estimate; the later route establishes only execution under a different stack. This preregistered diagnostic case study is neither a causal ablation nor evidence of general research-agent ability. The deterministic executor is the definitional policy ceiling, and the Naive Bayes comparator remains a weak baseline.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-A hidden 300-item evaluation and a separately precommitted 180-item action-balanced public challenge expose coverage and DEMOTE failures in service configurations applying a fixed synthetic evidence-transition policy; all unusable responses remain incorrect, and cross-stack differences are descriptive rather than causal.
+A hidden 300-item diagnostic and a separately precommitted 180-item action-balanced public challenge expose coverage, factor, and DEMOTE failures under a fixed synthetic evidence-transition policy; all unusable responses remain incorrect, and cross-stack differences are descriptive.
 ```
 
 ## Main empirical findings
@@ -81,10 +81,9 @@ A hidden 300-item evaluation and a separately precommitted 180-item action-balan
 - Qwen3.7-Max: 272 / 300 valid decisions, 258 / 300 correct actions, and 113 / 150 correct pairs;
 - Qwen3.7-Max decision / pair coverage: 0.907 and 0.820; E2E item / pair accuracy: 0.860 and
   0.753; conditional item / pair accuracy: 0.949 and 0.919;
-- frozen public-development text Naive Bayes baseline: 184 / 300 correct actions and 34 / 150
-  correct pairs;
-- Qwen3.7-Max versus baseline: 74 additional correct actions, 84 pair-block wins, 10 losses,
-  one-sided exact `p=5.16e-16`, and two-hypothesis Holm-adjusted `p=1.03e-15`;
+- frozen public-development four-class multinomial Naive Bayes (`alpha=1`, identifier-normalized
+  unigram and bigram prompt counts): 184 / 300 correct actions and 34 / 150 correct pairs; this is
+  a weak low-cost comparator, not a representative competitive baseline;
 - Qwen3.7-Max per-action correct counts: 143 / 150 `ALLOW`, 110 / 134 `HOLD`, 5 / 8
   `ESCALATE`, and 0 / 8 `DEMOTE`;
 - Qwen3.7-Max service failures: 14 HTTP 500 responses, one HTTP 503 response, ten timeouts, and
@@ -98,8 +97,8 @@ A hidden 300-item evaluation and a separately precommitted 180-item action-balan
   0.892 / 0.750 conditional item / pair accuracy;
 - challenge Flash: 146 / 180 valid decisions, 0.500 / 0.144 E2E item / pair accuracy, and
   0.616 / 0.213 conditional item / pair accuracy;
-- factor-level E2E pair accuracy ranges from 0 to 1.0 in r6 Qwen and challenge Qwen, and from 0
-  to 0.833 in challenge Flash; every configuration has zero-accuracy factors;
+- the manuscript reports complete/correct pair counts for all 20 r6 factors and all 15 challenge
+  factors; every configuration has zero-accuracy factors;
 - challenge Qwen action recall (`ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE`):
   0.878 / 0.867 / 0.133 / 0.767; Flash: 0.756 / 0.300 / 0.000 / 0.433;
 - the later Flash route establishes service-path executability only; differing service stacks

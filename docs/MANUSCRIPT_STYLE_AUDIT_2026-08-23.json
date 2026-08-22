@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PASS",
+  "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",
+  "corpus_manifest_sha256": "4e279705710d18f163ef621132874364e814a3a7db82cee758d1688cdb0eb923",
+  "corpus_statistics_sha256": "e1f55b661794d50c824d85e89f164699b58b6b9e6b01f2549557e76472c91940",
+  "installed_skill": {
+    "name": "deslop",
+    "repository": "https://github.com/stephenturner/skill-deslop",
+    "commit": "a906154bef375d9d49ed2ad7da13b2db16f0d3d2",
+    "license": "MIT",
+    "use": "negative editorial pattern filter, not detector evasion"
+  },
+  "method": {
+    "latex_tables_figures_and_display_math_excluded": true,
+    "sentence_filter_alpha_words_min_max": [5, 100],
+    "paragraph_min_alpha_words": 8,
+    "pattern_scan": "case-insensitive regular expressions",
+    "limitations": [
+      "LaTeX stripping and PDF text blocks are approximate",
+      "the passive-voice corpus measure is a regular-expression heuristic",
+      "metrics guide editing ranges and do not determine scientific quality"
+    ]
+  },
+  "before": {
+    "git_blob_sha256": "5e247fb5d0423e0521dde0dfb44b617039487e0483500930a3862b3c3c85be4c",
+    "prose_words": 3234,
+    "sentences": 183,
+    "sentence_words_mean": 17.32,
+    "sentence_words_median": 16,
+    "sentence_words_p90": 27.0,
+    "sentence_words_p95": 29.9,
+    "sentence_words_over_40_percent": 1.0929,
+    "abstract_extracted_words": 231,
+    "configured_pattern_findings": {
+      "throat_clearing": 0,
+      "vague_importance": 0,
+      "pompous_copula": 1,
+      "ai_lexicon": 0,
+      "formulaic_pivot": 0,
+      "superficial_participle": 0,
+      "signposted_summary": 0,
+      "grandiose": 0
+    }
+  },
+  "after": {
+    "manuscript_sha256": "551c28a1037638749f5a8c4d8516d4cfd7a7e271ff5d8fd3e053e1c4f28b76fb",
+    "prose_words": 2796,
+    "prose_reduction_percent": 13.5436,
+    "sentences": 168,
+    "sentence_words_mean": 16.25,
+    "sentence_words_median": 15.0,
+    "sentence_words_p90": 24.0,
+    "sentence_words_p95": 28.0,
+    "sentence_words_over_40_percent": 0.5952,
+    "abstract_extracted_words": 203,
+    "abstract_submission_lint_tokens": 218,
+    "configured_pattern_findings": {
+      "throat_clearing": 0,
+      "vague_importance": 0,
+      "pompous_copula": 0,
+      "ai_lexicon": 0,
+      "formulaic_pivot": 0,
+      "superficial_participle": 0,
+      "signposted_summary": 0,
+      "grandiose": 0
+    }
+  },
+  "scientific_content_boundary": {
+    "metrics_changed": false,
+    "terminal_records_changed": false,
+    "model_calls_performed": 0,
+    "completed_singleton_workflows_rerun": false,
+    "paper_binding_validator": "scripts/lint_paper_submission.py"
+  }
+}

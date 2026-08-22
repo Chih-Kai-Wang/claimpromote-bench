@@ -565,7 +565,6 @@ def validate_balanced_challenge(tex: str) -> None:
         (r"\.5000/\.1444", "challenge Flash end-to-end metrics"),
         (r"\.6164/\.2131", "challenge Flash conditional metrics"),
         (r"\.3928", "corrected challenge Flash fixed-four-class Macro-F1"),
-        (r"\.4682", "corrected challenge Flash conditional Macro-F1"),
         (r"zero division", "fixed-four-class zero-division convention"),
         (r"public, preregistered robustness challenge", "public challenge boundary"),
         (r"strict causal", "cross-service causal boundary"),
@@ -631,6 +630,7 @@ def validate_manuscript_tables(tex: str) -> None:
 
     for label in (
         "tab:core-results",
+        "tab:factor-inventory",
         "tab:action-recall",
         "tab:confusion",
         "tab:factor-results",
@@ -674,21 +674,35 @@ def validate_manuscript_tables(tex: str) -> None:
     for pattern in action_rows:
         require_regex(tex, pattern, "action-recall table row")
     factor_rows = (
-        (
-            r"r6 Qwen\s*&\s*20\s*&\s*7--8\s*&\s*\.286--1\.000"
-            r"\s*&\s*\.000--1\.000\s*&\s*2/7"
-        ),
-        (
-            r"Challenge Qwen\s*&\s*15\s*&\s*6\s*&\s*\.500--1\.000"
-            r"\s*&\s*\.000--1\.000\s*&\s*3/2"
-        ),
-        (
-            r"Challenge Flash\s*&\s*15\s*&\s*6\s*&\s*\.000--1\.000"
-            r"\s*&\s*\.000--\.833\s*&\s*11/0"
-        ),
+        "Age (8) & 7/7 & Claim identity (8) & 7/7",
+        "Cold start (8) & 7/7 & Contradiction (8) & 5/5",
+        "Current binding (8) & 6/0 & Dependency statement (7) & 2/0",
+        "Dependency verifier (7) & 7/7 & Direct dependency (7) & 6/5",
+        "Domain (7) & 5/5 & Precision (7) & 7/7",
+        "Preregistration (7) & 7/7 & Repetitions (7) & 7/7",
+        "Review environment (8) & 7/7 & Reviewer identity (8) & 5/5",
+        "Run completion (8) & 7/7 & Statement identity (8) & 4/3",
+        "Tool exit (7) & 7/7 & Transitive dependency (7) & 7/7",
+        "Trust base (8) & 6/6 & Verifier execution (7) & 7/7",
+        "Age & 5/5 & 6/0",
+        "Contradiction claim identity & 5/5 & 0/0",
+        "Contradiction freshness & 3/3 & 4/0",
+        "Contradiction reviewer identity & 3/3 & 2/0",
+        "Contradiction status & 6/6 & 4/4",
+        "Contradiction verifier execution & 3/3 & 1/0",
+        "Current computation binding & 4/0 & 6/0",
+        "Current computation stale & 5/0 & 6/0",
+        "Current computation verifier & 4/2 & 4/0",
+        "Current review environment & 3/0 & 6/0",
+        "Current review identity & 3/1 & 6/0",
+        "Dependency verifier & 5/5 & 5/5",
+        "Repetitions & 5/5 & 4/1",
+        "Reviewer identity & 4/4 & 4/0",
+        "Tool exit & 6/6 & 3/3",
     )
-    for pattern in factor_rows:
-        require_regex(tex, pattern, "factor-result table row")
+    for row in factor_rows:
+        if row not in tex:
+            fail(f"factor-result table row missing or changed: {row}")
 
 
 def validate_naturalistic_decision(tex: str) -> None:
@@ -732,13 +746,9 @@ def validate_v1_diagnostic(tex: str) -> None:
         fail("v1 results freeze changed")
     if frozen.get("format_error_count") != 5327 or frozen.get("parseable_raw_decisions") != 1873:
         fail("v1 diagnostic counts changed")
-    for pattern, description in (
-        (r"7,200-decision", "v1 decision count"),
-        (r"5,327\s+format errors", "v1 format errors"),
-        (r"1,873\s+parseable", "v1 parseable decisions"),
-        (r"\.1333\s+end-to-end item accuracy", "v1 end-to-end accuracy"),
-    ):
-        require_regex(tex, pattern, description)
+    # The frozen v1 artifact remains bound and available to reviewers, but its execution history
+    # is no longer required in the main narrative. The paper centers the r6 and balanced-challenge
+    # evidence regimes.
 
 
 def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]:
@@ -757,6 +767,16 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
             fail(f"required manuscript section missing: {section}")
     if r"\label{fig:evidence-flow}" not in tex:
         fail("benchmark/evidence-flow figure is missing")
+    for phrase in (
+        "complete versioned policy contract",
+        "exactly six fields",
+        r"DEPENDENCY\_NOT\_VERIFIED",
+        r"POLICY\_SATISFIED",
+        r"verifier\_result=FAIL",
+        r"verifier\_result=PASS",
+    ):
+        if phrase not in tex:
+            fail(f"self-contained task description is missing: {phrase!r}")
 
     overclaims = (
         r"\bfirst benchmark\b",
@@ -764,13 +784,14 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         r"\bfirst framework\b",
         r"\bstate[- ]of[- ]the[- ]art\b",
         r"\bguarantees? safety\b",
+        r"\bdiagnos(?:e|es|ed)\b",
         r"general research-agent competence is established",
     )
     for pattern in overclaims:
         if re.search(pattern, tex, flags=re.IGNORECASE):
             fail(f"unsupported novelty or capability claim found: {pattern}")
     for phrase in (
-        "synthetic policy-conformance problem",
+        "synthetic policy conformance",
         "author-defined policy",
         "Every transport, syntax, schema, and semantic failure",
         "public robustness challenge",
@@ -795,6 +816,8 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "geng2023grammar",
         "geifman2017selective",
         "geifman2019selectivenet",
+        "zhou2025rulearena",
+        "li2026osvbench",
         "chen2025scienceagentbench",
         "siegel2025corebench",
         "huang2025popper",
@@ -820,8 +843,22 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         fail("abstract not found")
     abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract.group(1))
     abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
-    if len(abstract_words) > 250:
-        fail(f"abstract exceeds 250 words: {len(abstract_words)}")
+    if len(abstract_words) > 220:
+        fail(f"abstract exceeds 220 words: {len(abstract_words)}")
+
+    for pattern in (
+        r"\bit is worth noting\b",
+        r"\bserves as\b",
+        r"\bin conclusion\b",
+        r"\bto sum up\b",
+        r"\bdelve\b",
+        r"\btapestry\b",
+        r"\b(?:research|technical|ai) landscape\b",
+        r"\bpost-v1 public formatting control\b",
+        r"\badaptive hidden service study\b",
+    ):
+        if re.search(pattern, tex, flags=re.IGNORECASE):
+            fail(f"manuscript retains formulaic or reader-irrelevant prose: {pattern}")
 
     contributions = re.search(
         r"Our contributions are:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
