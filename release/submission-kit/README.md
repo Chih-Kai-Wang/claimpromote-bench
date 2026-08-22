@@ -4,6 +4,12 @@ This directory is a verified build artifact, not evidence of submission. It cont
 
 - ICLR PDF: 10 pages; main-text probe 8 pages.
 - arXiv PDF: 9 pages.
-- Anonymous manifest: 737 listed files plus the manifest; ZIP entries 738.
+- Anonymous manifest: 739 listed files plus the manifest; ZIP entries 740.
 
-Use `SHA256SUMS.txt` and `validation-receipt.json` to verify the generated artifacts. The anonymous bundle file total is read from its generated manifest; do not copy it into long-lived prose.
+Verify every release artifact from this directory with:
+
+```bash
+cd release/submission-kit && shasum -a 256 -c SHA256SUMS.txt
+```
+
+Use `validation-receipt.json` for the corresponding structural checks. The anonymous bundle file total is read from its generated manifest; do not copy it into long-lived prose.

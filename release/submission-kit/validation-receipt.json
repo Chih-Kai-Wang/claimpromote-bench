@@ -1,8 +1,8 @@
 {
   "anonymous_bundle": {
-    "manifest_file_count": 737,
-    "manifest_plus_self_file_count": 738,
-    "manifest_sha256": "0a983d82490f065686c21b12cb84278defce3a3b9b99997db9fd3cf4d962c2d9",
+    "manifest_file_count": 739,
+    "manifest_plus_self_file_count": 740,
+    "manifest_sha256": "fe655b6c8d4fabebbb58a562a61ef75282825c4e2e29d625e9cddbf126e789c5",
     "privacy_scope": {
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
@@ -27,28 +27,28 @@
       "v2_public_pilot_summary_included": true
     },
     "verification": "PASS",
-    "zip_file_entries": 738
+    "zip_file_entries": 740
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 328984,
-      "sha256": "8d8bdecfa125cfba660b9ff4168348d78534d1a1dddd382f71e3eabffa08952d"
+      "bytes": 330770,
+      "sha256": "54582427a420fb5a2b3a41cd2086cfd74b9560da68b1c52cfb96be4dc5144862"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 2851847,
-      "sha256": "acfdb0b2746d86aeb5f337447b567b142192635f7791e9483c1edd219605e501"
+      "bytes": 2854143,
+      "sha256": "4f67b2735c5eac879c48f1ae9d55655eedc3c7fddc79206d3e3a9ea8612b162f"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 14415,
-      "sha256": "ed34beba2a0f4b784273b20cba0ec8ba2b0e72a41605586c01d2b338f03db207"
+      "bytes": 14816,
+      "sha256": "6fffe475dcf002bf7789435fa707f4bc3229382d74f571c32ae23690fe093f11"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 23488,
-      "sha256": "097e9b782a2439f5844f6dbc577b4a8647400079689768733434e010ac0bc60f"
+      "bytes": 23886,
+      "sha256": "36221d0d69b6e423caaaa297bc8ef10ddfba3da0c32fb6982a70541fa1b2c1e4"
     },
     "iclr2027.pdf": {
-      "bytes": 175838,
-      "sha256": "5f5345ceb294e3a715868e2b38dbcdf0e23fbea52da4a2ced83226b840078f40"
+      "bytes": 177284,
+      "sha256": "8925f3296b2bd5b24f6bc6181343e59da0c08cd53748796059923b0b216d3060"
     }
   },
   "checks": {
@@ -101,11 +101,11 @@
           "/KOGKSS+CMMI7",
           "/LKDQDP+CMR7",
           "/LQBNTO+CMR12",
-          "/LUHZZW+CMTI9",
           "/MNATLR+CMCSC10",
           "/QTAPRA+CMTT9",
           "/VVMUIO+CMR9",
           "/WOPLFA+CMR10",
+          "/YZCYSG+CMTI9",
           "/ZKFGNS+CMBX8"
         ]
       },
@@ -129,7 +129,7 @@
           "/FHSKJP+NimbusMonL-Regu",
           "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
-          "/NEIPCK+NimbusRomNo9L-ReguItal",
+          "/OKEGRF+NimbusRomNo9L-ReguItal",
           "/SPQDLC+CMR10",
           "/SSDDAS+CMR7",
           "/URVXZM+CMSY9",
