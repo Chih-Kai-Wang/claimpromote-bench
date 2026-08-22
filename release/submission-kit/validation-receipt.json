@@ -31,24 +31,24 @@
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 312468,
-      "sha256": "0c71b1aeaf8b88db2800b5e3001d80a5a5e81971eb9188a7e6f1b6e5c533e874"
+      "bytes": 328984,
+      "sha256": "8d8bdecfa125cfba660b9ff4168348d78534d1a1dddd382f71e3eabffa08952d"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
       "bytes": 2851847,
       "sha256": "acfdb0b2746d86aeb5f337447b567b142192635f7791e9483c1edd219605e501"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 14590,
-      "sha256": "7a25c9d48eb61d532a41363450b6009adb77ba4b3ee0a4d7aaabf5a89fc2dfbe"
+      "bytes": 14415,
+      "sha256": "ed34beba2a0f4b784273b20cba0ec8ba2b0e72a41605586c01d2b338f03db207"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 23971,
-      "sha256": "68945bc9e16ba2c4d4d489e66f5582fc3c3b739c0371de19eb4e264427091ddf"
+      "bytes": 23488,
+      "sha256": "097e9b782a2439f5844f6dbc577b4a8647400079689768733434e010ac0bc60f"
     },
     "iclr2027.pdf": {
-      "bytes": 186470,
-      "sha256": "5bab8da80ca51c4d4203cb9c0a79376a9144d0b915bf4c5429ba9ea058416c9b"
+      "bytes": 175838,
+      "sha256": "5f5345ceb294e3a715868e2b38dbcdf0e23fbea52da4a2ced83226b840078f40"
     }
   },
   "checks": {
@@ -85,28 +85,28 @@
         "all_embedded": true,
         "font_count": 22,
         "fonts": [
+          "/AMPTTW+CMR8",
+          "/BAVVNA+CMSY10",
+          "/BIERUZ+CMBX10",
           "/BPMBND+CMSY8",
           "/BSTKNX+MSBM10",
-          "/DBITMS+CMSY10",
-          "/EEJZXU+CMTT8",
+          "/EGAPYX+CMTT8",
+          "/ELWDLY+CMBX12",
           "/EUWOLL+CMBX9",
           "/FDZZRC+CMTI10",
-          "/FQLWWY+CMR10",
-          "/GKCPUR+CMTT10",
+          "/HQDLYU+CMTI8",
           "/ICTROM+CMR17",
-          "/JJKIWB+CMBX12",
+          "/JYAWND+CMTT10",
+          "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
+          "/LKDQDP+CMR7",
           "/LQBNTO+CMR12",
           "/LUHZZW+CMTI9",
-          "/MOGIOU+CMSY9",
-          "/OKZUMG+CMR8",
-          "/POFRLQ+CMCSC10",
-          "/PXBGHL+CMSY7",
+          "/MNATLR+CMCSC10",
           "/QTAPRA+CMTT9",
-          "/SVIAYZ+CMBX10",
-          "/VGZARF+CMMI10",
-          "/XNDSBZ+CMR9",
-          "/XTIWGI+CMR7"
+          "/VVMUIO+CMR9",
+          "/WOPLFA+CMR10",
+          "/ZKFGNS+CMBX8"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
@@ -121,24 +121,23 @@
       "creator": "LaTeX with hyperref",
       "fonts": {
         "all_embedded": true,
-        "font_count": 13,
+        "font_count": 12,
         "fonts": [
           "/ALVSVR+NimbusSanL-Bold",
-          "/BIWMPA+NimbusRomNo9L-ReguItal",
+          "/BAVVNA+CMSY10",
           "/BSTKNX+MSBM10",
-          "/DBITMS+CMSY10",
           "/FHSKJP+NimbusMonL-Regu",
+          "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
-          "/LRHGOR+CMR7",
-          "/MOGIOU+CMSY9",
-          "/MXCHCL+NimbusRomNo9L-Medi",
-          "/PXBGHL+CMSY7",
-          "/VGZARF+CMMI10",
-          "/VPNJFL+NimbusRomNo9L-Regu",
-          "/YRAIWQ+CMR10"
+          "/NEIPCK+NimbusRomNo9L-ReguItal",
+          "/SPQDLC+CMR10",
+          "/SSDDAS+CMR7",
+          "/URVXZM+CMSY9",
+          "/VATACO+NimbusRomNo9L-Medi",
+          "/VPNJFL+NimbusRomNo9L-Regu"
         ]
       },
-      "main_text_pages": 7,
+      "main_text_pages": 8,
       "page_size": "612 x 792 pts (letter)",
       "pages": 10,
       "producer": "pdfTeX-1.40.29",
