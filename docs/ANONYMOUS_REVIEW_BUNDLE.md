@@ -27,6 +27,9 @@ The staged bundle contains:
 - the balanced public challenge's 90 pairs / 180 items, two one-pass lane records, analyses,
   corrected reporting aggregate, bound Macro-F1 correction receipt, full confusion matrices,
   action-level metrics, and privacy receipt;
+- the prospectively frozen model-breadth supplement's seven one-pass configurations and 1,260
+  terminal records, with scoring fields, complete per-configuration confusion matrices, action
+  metrics, row bindings, and a privacy-minimized aggregate;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
   zero created cases, zero model calls, zero human annotators, and no agreement statistic;
 - selected validation code and tests, an anonymous MIT license, a one-command review runner, and a
@@ -41,6 +44,8 @@ The builder excludes:
 - source workflow, artifact, commit, and searchable released-digest identifiers;
 - credentials, provider account identifiers, provider response/request identifiers, and
   machine-readable hidden-reasoning fields or content blocks;
+- breadth-study final-response text, free-form transport or parse errors, private source-row
+  hashes, and source journal digests;
 - private construction seeds or salts, raw human-subject records, unused human-review workflow
   modules, manuscript source, and identity-bearing status documents;
 - caches, bytecode, logs, generated work products, and unrelated build artifacts.
@@ -64,9 +69,9 @@ Validation runs inside the staged artifact:
 1. install the staged Python package;
 2. validate the public alpha dataset, oracle labels, pair contracts, shortcut resistance,
    metamorphic invariance, and executable fixtures;
-3. recompute the v1, public-pilot, GPT-5.4, capable-extension, r6, and balanced-challenge results
-   from included item-level evidence, including fixed-four-class Macro-F1 with zero division set
-   to zero;
+3. recompute the v1, public-pilot, GPT-5.4, capable-extension, r6, balanced-challenge, and
+   model-breadth results from included item-level evidence, including fixed-four-class Macro-F1
+   with zero division set to zero;
 4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
 5. run the selected v2 tests;
 6. build and replay the public Lean package and execute formal fixtures;
