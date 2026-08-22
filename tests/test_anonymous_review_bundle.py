@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -386,5 +387,117 @@ def test_balanced_public_anonymous_projection_is_replayable_and_identity_free(
     assert "9460301513" not in rendered
     assert "1901e471bdf94f434f9671708b93599a106b1543" not in rendered
     assert "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b" not in rendered
+    builder.scan_identity(destination)
+    builder.scan_sensitive_payloads(destination)
+
+
+def test_public_model_breadth_projection_drops_private_text_and_rebinds_rows(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    builder = load_builder()
+    fake_root = tmp_path / "source-root"
+    study = fake_root / "v2" / "public-model-breadth-v1"
+    results = study / "results"
+    results.mkdir(parents=True)
+    for name in ("study-plan.json", "request-schedule.json", "catalog-snapshot.json"):
+        source = ROOT / "v2" / "public-model-breadth-v1" / name
+        target = study / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+
+    plan = json.loads((study / "study-plan.json").read_text(encoding="utf-8"))
+    lane_order = plan["execution"]["base_lane_order"]
+    lane_files: dict[str, str] = {}
+    aggregate_lanes = []
+    lane_output_sha256: dict[str, str] = {}
+    frozen_commit = "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516"
+    for lane_id in lane_order:
+        path = results / "runs" / f"{lane_id}.jsonl"
+        rows = [
+            {
+                "frozen_plan_commit": frozen_commit,
+                "item_id": f"item-{index:03d}",
+                "lane_id": lane_id,
+                "parse_error_detail": None,
+                "provider_response_id": None,
+                "raw_response_text": None,
+                "system_fingerprint": None,
+                "transport_error": None,
+            }
+            for index in range(180)
+        ]
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "".join(f"{builder.canonical_json(row)}\n" for row in rows),
+            encoding="utf-8",
+        )
+        lane_files[lane_id] = path.relative_to(results).as_posix()
+        lane_output_sha256[path.name] = builder.sha256_file(path)
+        aggregate_lanes.append(
+            {"lane_id": lane_id, "metrics": {"parseable_items": 0}, "run_sha256": "source"}
+        )
+
+    builder.write_json(
+        results / "reported-aggregate.json",
+        {
+            "external_commitment": {"frozen_plan_commit": frozen_commit},
+            "lanes": aggregate_lanes,
+        },
+    )
+    builder.write_json(
+        results / "execution-receipt.json",
+        {
+            "frozen_plan_commit": frozen_commit,
+            "lane_output_sha256": lane_output_sha256,
+            "request_intent_journal_sha256": "sha256:private-intents",
+            "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+            "terminal_journal_sha256": "sha256:private-terminals",
+        },
+    )
+    source_files = {
+        path.relative_to(results).as_posix(): builder.sha256_file(path)
+        for path in sorted(results.rglob("*"))
+        if path.is_file()
+    }
+    builder.write_json(
+        results / "privacy-receipt.json",
+        {
+            "credentials_included": False,
+            "derived_files_sha256": source_files,
+            "free_form_error_detail_included": False,
+            "hidden_reasoning_fields_included": False,
+            "provider_response_identifiers_included": False,
+            "public_lane_files": lane_files,
+            "raw_final_response_text_included": False,
+            "status": "POST_EXECUTION_PUBLIC_SAFE_DERIVATIVE",
+            "terminal_records_validated": 1260,
+        },
+    )
+
+    monkeypatch.setattr(builder, "ROOT", fake_root)
+    destination = tmp_path / "anonymous-breadth"
+    builder.build_public_model_breadth_anonymous_evidence(destination)
+
+    rendered = "\n".join(
+        path.read_text(encoding="utf-8") for path in destination.rglob("*") if path.is_file()
+    )
+    row_map = [
+        json.loads(line)
+        for line in (destination / "review-row-hashes.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    execution = json.loads(
+        (destination / "execution-receipt-review.json").read_text(encoding="utf-8")
+    )
+    manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+
+    assert frozen_commit not in rendered
+    assert "0000000000000000000000000000000000000009" in rendered
+    assert len(row_map) == 1260
+    assert all("source_row_sha256" not in row for row in row_map)
+    assert execution["source_journal_digests_included"] is False
+    assert "request_intent_journal_sha256" not in execution
+    assert manifest["file_count"] == len(manifest["files"])
     builder.scan_identity(destination)
     builder.scan_sensitive_payloads(destination)

@@ -260,6 +260,14 @@ def write_json(path: Path, value: Any) -> None:
     )
 
 
+def write_jsonl(path: Path, rows: list[Json]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(f"{canonical_json(row)}\n" for row in rows),
+        encoding="utf-8",
+    )
+
+
 def load_object(path: Path) -> Json:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
@@ -1043,6 +1051,206 @@ no model calls and changes no primary endpoint, confusion cell, recall, or item-
     write_json(destination / "MANIFEST.json", manifest)
 
 
+def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
+    """Create a replayable anonymous projection of the seven-lane breadth supplement."""
+
+    source = ROOT / "v2" / "public-model-breadth-v1"
+    results = source / "results"
+    source_receipt = load_object(results / "privacy-receipt.json")
+    source_files = {
+        path.relative_to(results).as_posix(): sha256_file(path)
+        for path in sorted(results.rglob("*"))
+        if path.is_file() and path.name != "privacy-receipt.json"
+    }
+    if (
+        source_receipt.get("status") != "POST_EXECUTION_PUBLIC_SAFE_DERIVATIVE"
+        or source_receipt.get("derived_files_sha256") != source_files
+        or source_receipt.get("terminal_records_validated") != 1260
+        or source_receipt.get("raw_final_response_text_included") is not False
+        or source_receipt.get("free_form_error_detail_included") is not False
+        or source_receipt.get("provider_response_identifiers_included") is not False
+        or source_receipt.get("hidden_reasoning_fields_included") is not False
+        or source_receipt.get("credentials_included") is not False
+    ):
+        fail("public model-breadth source is not a sealed public-safe derivative")
+
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in ("study-plan.json", "request-schedule.json", "catalog-snapshot.json"):
+        value = anonymize_provenance(load_object(source / name))
+        write_json(destination / name, value)
+
+    plan = load_object(destination / "study-plan.json")
+    lane_order = plan.get("execution", {}).get("base_lane_order")
+    source_lane_files = source_receipt.get("public_lane_files")
+    if (
+        not isinstance(lane_order, list)
+        or len(lane_order) != 7
+        or not isinstance(source_lane_files, dict)
+        or set(source_lane_files) != {str(value) for value in lane_order}
+    ):
+        fail("public model-breadth lane map differs from the frozen seven-lane plan")
+
+    run_destination = destination / "runs"
+    run_destination.mkdir()
+    review_lane_files: dict[str, str] = {}
+    review_lane_hashes: dict[str, str] = {}
+    review_row_hashes: list[Json] = []
+    for lane_value in lane_order:
+        lane_id = str(lane_value)
+        source_run = results / str(source_lane_files[lane_id])
+        rows = [
+            json.loads(line)
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        if (
+            len(rows) != 180
+            or {str(row.get("lane_id")) for row in rows} != {lane_id}
+            or len({str(row.get("item_id")) for row in rows}) != 180
+        ):
+            fail(f"public model-breadth run coverage changed: {lane_id}")
+        review_rows: list[Json] = []
+        for row in rows:
+            label = f"public model-breadth row {lane_id}:{row.get('item_id')}"
+            if any(
+                row.get(field) is not None
+                for field in ("raw_response_text", "transport_error", "parse_error_detail")
+            ):
+                fail(f"{label} retains private response or error text")
+            if (
+                row.get("provider_response_id") is not None
+                or row.get("system_fingerprint") is not None
+            ):
+                fail(f"{label} retains a provider identifier")
+            _reject_hidden_reasoning(row, label)
+            projected = anonymize_provenance(row)
+            review_rows.append(projected)
+            review_row_hashes.append(
+                {
+                    "item_id": projected.get("item_id"),
+                    "lane_id": projected.get("lane_id"),
+                    "review_row_sha256": sha256_text(canonical_json(projected)),
+                    "scientific_fields_unchanged": True,
+                }
+            )
+        target = run_destination / source_run.name
+        write_jsonl(target, review_rows)
+        review_lane_files[lane_id] = target.relative_to(destination).as_posix()
+        review_lane_hashes[lane_id] = sha256_file(target)
+
+    write_jsonl(destination / "review-row-hashes.jsonl", review_row_hashes)
+
+    aggregate = anonymize_provenance(load_object(results / "reported-aggregate.json"))
+    aggregate_lanes = aggregate.get("lanes")
+    if not isinstance(aggregate_lanes, list):
+        fail("public model-breadth aggregate lanes are malformed")
+    seen_lanes: set[str] = set()
+    for lane in aggregate_lanes:
+        if not isinstance(lane, dict):
+            fail("public model-breadth aggregate contains a malformed lane")
+        lane_id = str(lane.get("lane_id"))
+        if lane_id not in review_lane_hashes or lane_id in seen_lanes:
+            fail(f"public model-breadth aggregate lane changed: {lane_id}")
+        seen_lanes.add(lane_id)
+        lane["run_sha256"] = review_lane_hashes[lane_id]
+    if seen_lanes != set(review_lane_hashes):
+        fail("public model-breadth aggregate omits a frozen lane")
+    external = aggregate.get("external_commitment")
+    if not isinstance(external, dict):
+        fail("public model-breadth aggregate commitment is malformed")
+    external["plan_sha256"] = sha256_file(destination / "study-plan.json")
+    external["workflow_run_url"] = None
+    external["workflow_run_attempt"] = None
+    aggregate["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    write_json(destination / "reported-aggregate.json", aggregate)
+
+    execution = anonymize_provenance(load_object(results / "execution-receipt.json"))
+    if execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL":
+        fail("public model-breadth execution receipt is not complete")
+    execution["schema_version"] = "1.0.0-review"
+    execution["schedule_sha256"] = load_object(destination / "request-schedule.json")[
+        "schedule_sha256"
+    ]
+    execution["lane_output_sha256"] = {
+        Path(review_lane_files[lane_id]).name: review_lane_hashes[lane_id]
+        for lane_id in sorted(review_lane_files)
+    }
+    execution.pop("request_intent_journal_sha256", None)
+    execution.pop("terminal_journal_sha256", None)
+    execution["source_journal_digests_included"] = False
+    execution["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    write_json(destination / "execution-receipt-review.json", execution)
+
+    readme = """# Public model-breadth reviewer evidence
+
+This directory contains a prospectively frozen seven-configuration supplement on the known
+180-item balanced public challenge. Each scheduled cell has one terminal outcome and zero
+client retries. Every unusable outcome remains incorrect in end-to-end metrics.
+
+The runs retain scoring fields and final-response digests but exclude final-response text,
+free-form error detail, provider response identifiers, account identifiers, credentials, and
+hidden reasoning. The comparison expands model-family and configuration coverage only; model,
+serving implementation, and API adapter are not causally isolated. The shared dataset and prompt
+packet are in the sibling `balanced-public-challenge` evidence directory.
+"""
+    (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+
+    review_files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name not in {"MANIFEST.json", "privacy-receipt-review.json"}
+    }
+    privacy_receipt: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_PUBLIC_MODEL_BREADTH_DERIVATIVE",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "terminal_records_validated": len(review_row_hashes),
+        "raw_final_response_text_included": False,
+        "free_form_error_detail_included": False,
+        "provider_response_identifiers_included": False,
+        "system_fingerprints_included": False,
+        "hidden_reasoning_fields_included": False,
+        "credentials_included": False,
+        "source_row_hashes_included": False,
+        "scientific_fields_unchanged": True,
+        "model_calls_performed": 0,
+        "review_lane_files": review_lane_files,
+        "review_lane_files_sha256": review_lane_hashes,
+        "review_row_hashes": {
+            "path": "review-row-hashes.jsonl",
+            "rows": len(review_row_hashes),
+            "sha256": sha256_file(destination / "review-row-hashes.jsonl"),
+        },
+        "review_files_sha256": review_files,
+    }
+    privacy_receipt["privacy_receipt_sha256"] = sha256_text(canonical_json(privacy_receipt))
+    write_json(destination / "privacy-receipt-review.json", privacy_receipt)
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_PUBLIC_MODEL_BREADTH_EVIDENCE",
+        "file_count": len(files),
+        "files": files,
+        "lane_files": review_lane_files,
+        "scope": {
+            "breadth_dimension_added": "MODEL_FAMILY_ONLY",
+            "hidden_generalization_claimed": False,
+            "hidden_reasoning_included": False,
+            "naturalistic_cases": 0,
+            "provider_response_identifiers_included": False,
+            "public_known_challenge": True,
+            "source_row_hashes_included": False,
+        },
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
 def anonymize_stronger_results(source: Json) -> Json:
     pilot = source.get("pilot")
     full = source.get("full")
@@ -1160,9 +1368,11 @@ follow-up records, and all 14 executed capable-extension pilot attempts plus bot
 passes. It also contains the r6 preregistered 300-item fresh confirmatory dataset, projected C2
 records, frozen baseline, and complete scientific analysis. The balanced public challenge adds
 90 pairs / 180 items, both one-pass service runs, full confusion matrices, conditional and
-end-to-end metrics, and a privacy receipt. Public repository identities are replaced by anonymous
-role labels;
-empirical prompts, responses, parser outcomes, gold labels, and model identities are retained.
+end-to-end metrics, and a privacy receipt. When present, the prospectively frozen model-breadth
+supplement adds seven one-pass configurations over the same 180 public items. Its reviewer runs
+retain scoring fields and response digests but omit final-response text and free-form errors.
+Public repository identities are replaced by anonymous role labels; empirical prompts, parser
+outcomes, gold labels, and model identities are retained.
 
 For the public formal artifacts:
 
@@ -1196,8 +1406,9 @@ and a redaction receipt records the post-C2 publication boundary and score-equiv
 The balanced challenge is public precommitted robustness evidence, not a hidden-test estimate.
 Its service stacks differ, so their outcomes are descriptive rather than a causal model ablation.
 All unusable responses remain incorrect. Provider response identifiers and hidden-reasoning
-content are excluded from the bundle. The top-level manifest records the generated tree's actual
-file count, which verification recomputes from disk.
+content are excluded from the bundle. The breadth comparison adds model-family/configuration
+coverage only and does not isolate model, serving stack, or adapter effects. The top-level
+manifest records the generated tree's actual file count, which verification recomputes from disk.
 
 The frozen naturalistic-candidate pool contains 12 source pointers. Source-level review created
 zero benchmark cases and made zero model calls because the records lacked the time-stamped
@@ -1617,6 +1828,17 @@ def verify_bundle(bundle: Path) -> None:
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
     }
+    if (bundle / "evidence" / "public-model-breadth").is_dir():
+        required.update(
+            {
+                "evidence/public-model-breadth/MANIFEST.json",
+                "evidence/public-model-breadth/execution-receipt-review.json",
+                "evidence/public-model-breadth/privacy-receipt-review.json",
+                "evidence/public-model-breadth/reported-aggregate.json",
+                "evidence/public-model-breadth/review-row-hashes.jsonl",
+                "evidence/public-model-breadth/study-plan.json",
+            }
+        )
     absent = sorted(required - set(actual_paths))
     if absent:
         fail(f"required reviewer-bundle files are missing: {absent}")
@@ -1641,6 +1863,7 @@ def write_manifest(bundle: Path) -> None:
     capable_hidden_included = (bundle / "evidence" / "capable-hidden").is_dir()
     fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
     balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
+    model_breadth_included = (bundle / "evidence" / "public-model-breadth").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -1666,6 +1889,10 @@ def write_manifest(bundle: Path) -> None:
             "balanced_public_challenge_summary_included": balanced_challenge_included,
             "balanced_public_challenge_item_level_records_included": (balanced_challenge_included),
             "balanced_public_challenge_hidden_reasoning_included": False,
+            "public_model_breadth_summary_included": model_breadth_included,
+            "public_model_breadth_item_level_records_included": model_breadth_included,
+            "public_model_breadth_raw_final_response_text_included": False,
+            "public_model_breadth_hidden_reasoning_included": False,
             "provider_response_identifiers_included": False,
             "private_construction_seed_included": False,
         },
@@ -1693,6 +1920,7 @@ def build(destination: Path) -> None:
         "scripts/analyze_stronger_model_study.py",
         "scripts/analyze_confirmatory_hidden_study.py",
         "scripts/analyze_balanced_public_challenge.py",
+        "scripts/analyze_public_model_breadth_study.py",
         "scripts/build_alpha.py",
         "scripts/build_v1_dataset.py",
         "scripts/build_v2_naturalistic_candidates.py",
@@ -1738,6 +1966,11 @@ def build(destination: Path) -> None:
             repair_v2_public_anonymous_evidence(evidence_destination)
 
     build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
+    breadth_results = ROOT / "v2" / "public-model-breadth-v1" / "results"
+    if breadth_results.is_dir():
+        build_public_model_breadth_anonymous_evidence(
+            destination / "evidence" / "public-model-breadth"
+        )
 
     (destination / "results").mkdir()
     v1 = anonymize_v1_results(load_object(ROOT / "release" / "v1-paper-results.json"))
