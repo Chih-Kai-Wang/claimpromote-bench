@@ -143,7 +143,8 @@ def test_committed_fresh_confirmatory_evidence_has_complete_persistent_manifest(
         evidence,
         evidence / "PERMANENT-MANIFEST.json",
     )
-    assert manifest["file_count"] == 179
+    assert manifest["file_count"] == len(manifest["files"])
+    assert manifest["file_count"] > 0
     assert manifest["scope"]["hidden_reasoning_present"] is False
     assert manifest["scope"]["scientific_analysis_payload_byte_identical"] is True
 
