@@ -330,6 +330,9 @@ def test_balanced_public_anonymous_projection_is_replayable_and_identity_free(
 
     manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
     aggregate = json.loads((destination / "reported-aggregate.json").read_text(encoding="utf-8"))
+    correction = json.loads(
+        (destination / "reporting-correction-review.json").read_text(encoding="utf-8")
+    )
     receipt = json.loads((destination / "privacy-receipt-review.json").read_text(encoding="utf-8"))
     qwen_path = destination / manifest["lane_files"]["opencode-go-qwen3.7-max"]
     flash_path = destination / manifest["lane_files"]["opencode-go-deepseek-v4-flash-matched"]
@@ -351,7 +354,21 @@ def test_balanced_public_anonymous_projection_is_replayable_and_identity_free(
     assert all(row["provider_response_id"] is None for row in qwen + flash)
     lane_metrics = {row["lane_id"]: row["metrics"] for row in aggregate["lanes"]}
     assert lane_metrics["opencode-go-qwen3.7-max"]["correct_pairs"] == 48
-    assert lane_metrics["opencode-go-deepseek-v4-flash-matched"]["correct_pairs"] == 13
+    flash_metrics = lane_metrics["opencode-go-deepseek-v4-flash-matched"]
+    assert flash_metrics["correct_pairs"] == 13
+    assert flash_metrics["macro_f1"] == 0.39275710284113646
+    assert flash_metrics["conditional_macro_f1"] == 0.46822747216138244
+    assert flash_metrics["per_action"]["DEMOTE"]["precision"] == 0.0
+    assert correction["status"] == "REPORTING_CORRECTION"
+    assert correction["metric_convention"] == (
+        "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
+    )
+    assert correction["scope"]["model_calls_performed"] == 0
+    assert correction["scope"]["primary_endpoints_changed"] is False
+    assert correction["anonymous_run_sha256"] == {
+        "opencode-go-deepseek-v4-flash-matched": builder.sha256_file(flash_path),
+        "opencode-go-qwen3.7-max": builder.sha256_file(qwen_path),
+    }
     assert receipt["validation"]["terminal_records_validated"] == 360
     assert receipt["validation"]["retained_provider_response_ids"] == 0
     assert "f0909172434" not in rendered

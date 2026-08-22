@@ -56,7 +56,12 @@ These are public-precommitted robustness results, **not** a hidden-test generali
 | Service configuration | Valid decisions | E2E item | Conditional item | Complete pairs | E2E pair | Conditional pair | Balanced recall | Macro-F1 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | Qwen3.7-Max | 148/180 | 132/180 = .7333 | 132/148 = .8919 | 64/90 = .7111 | 48/90 = .5333 | 48/64 = .7500 | .6611 | .7004 |
-| DeepSeek-V4-Flash | 146/180 | 90/180 = .5000 | 90/146 = .6164 | 61/90 = .6778 | 13/90 = .1444 | 13/61 = .2131 | .3722 | .5237 |
+| DeepSeek-V4-Flash | 146/180 | 90/180 = .5000 | 90/146 = .6164 | 61/90 = .6778 | 13/90 = .1444 | 13/61 = .2131 | .3722 | .3928 |
+
+Post-review reporting correction: the historical aggregate omitted Flash's zero-prediction
+`DEMOTE` class from Macro-F1. The fixed-four-class values are `.3928` end to end and `.4682`
+conditional; `results/reporting-correction-v1.json` binds the unchanged raw records and historical
+aggregate. No model calls or primary endpoints changed.
 
 End-to-end action recall in `ALLOW / HOLD / DEMOTE / ESCALATE` order:
 

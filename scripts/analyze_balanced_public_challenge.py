@@ -32,17 +32,16 @@ def _rate(numerator: int, denominator: int) -> float | None:
     return numerator / denominator if denominator else None
 
 
-def _f1(precision: float | None, recall: float | None) -> float | None:
-    if precision is None or recall is None:
-        return None
+def _zero_division_rate(numerator: int, denominator: int) -> float:
+    """Return a fixed-class classification rate with zero division defined as zero."""
+
+    return numerator / denominator if denominator else 0.0
+
+
+def _f1(precision: float, recall: float) -> float:
     if precision + recall == 0:
         return 0.0
     return 2.0 * precision * recall / (precision + recall)
-
-
-def _mean_defined(values: list[float | None]) -> float | None:
-    defined = [value for value in values if value is not None]
-    return sum(defined) / len(defined) if defined else None
 
 
 def _class_metrics(confusion: Json) -> Json:
@@ -52,9 +51,11 @@ def _class_metrics(confusion: Json) -> Json:
         parseable_gold = gold_total - int(confusion[action]["NO_VALID_DECISION"])
         predicted_total = sum(int(confusion[gold][action]) for gold in ACTIONS)
         correct = int(confusion[action][action])
-        precision = _rate(correct, predicted_total)
-        end_to_end_recall = _rate(correct, gold_total)
-        conditional_recall = _rate(correct, parseable_gold)
+        # The registered endpoint is fixed-four-class macro-F1. A supported class with no
+        # predictions therefore contributes zero rather than disappearing from the macro mean.
+        precision = _zero_division_rate(correct, predicted_total)
+        end_to_end_recall = _zero_division_rate(correct, gold_total)
+        conditional_recall = _zero_division_rate(correct, parseable_gold)
         per_action[action] = {
             "gold_instances": gold_total,
             "parseable_gold_instances": parseable_gold,
@@ -68,18 +69,20 @@ def _class_metrics(confusion: Json) -> Json:
         }
     return {
         "per_action": per_action,
-        "balanced_action_recall": _mean_defined(
-            [per_action[action]["end_to_end_recall"] for action in ACTIONS]
-        ),
-        "conditional_balanced_action_recall": _mean_defined(
-            [per_action[action]["conditional_recall"] for action in ACTIONS]
-        ),
-        "macro_f1": _mean_defined(
-            [per_action[action]["end_to_end_f1"] for action in ACTIONS]
-        ),
-        "conditional_macro_f1": _mean_defined(
-            [per_action[action]["conditional_f1"] for action in ACTIONS]
-        ),
+        "balanced_action_recall": sum(
+            per_action[action]["end_to_end_recall"] for action in ACTIONS
+        )
+        / len(ACTIONS),
+        "conditional_balanced_action_recall": sum(
+            per_action[action]["conditional_recall"] for action in ACTIONS
+        )
+        / len(ACTIONS),
+        "macro_f1": sum(per_action[action]["end_to_end_f1"] for action in ACTIONS)
+        / len(ACTIONS),
+        "conditional_macro_f1": sum(
+            per_action[action]["conditional_f1"] for action in ACTIONS
+        )
+        / len(ACTIONS),
     }
 
 

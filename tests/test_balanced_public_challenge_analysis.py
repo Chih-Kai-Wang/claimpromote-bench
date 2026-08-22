@@ -92,3 +92,48 @@ def test_pooling_sums_cells_and_preserves_failure_denominators() -> None:
     assert pooled["covered_pairs"] == 0
     assert pooled["conditional_pair_accuracy"] is None
     assert pooled["confusion_matrix"]["counts"]["HOLD"]["NO_VALID_DECISION"] == 2
+
+
+def test_fixed_four_class_macro_f1_counts_zero_prediction_class_as_zero() -> None:
+    gold = [
+        {"id": "allow", "decision": _decision("ALLOW")},
+        {"id": "hold", "decision": _decision("HOLD")},
+        {"id": "demote", "decision": _decision("DEMOTE")},
+        {"id": "escalate", "decision": _decision("ESCALATE")},
+    ]
+    pairs = [
+        {
+            "pair_id": "p1",
+            "member_ids": ["allow", "hold"],
+            "factor_id": "f1",
+        },
+        {
+            "pair_id": "p2",
+            "member_ids": ["demote", "escalate"],
+            "factor_id": "f2",
+        },
+    ]
+    records = [
+        {"item_id": "allow", "parse_status": "OK", "raw_decision": _decision("ALLOW")},
+        {"item_id": "hold", "parse_status": "OK", "raw_decision": _decision("HOLD")},
+        {"item_id": "demote", "parse_status": "OK", "raw_decision": _decision("ALLOW")},
+        {
+            "item_id": "escalate",
+            "parse_status": "OK",
+            "raw_decision": _decision("ESCALATE"),
+        },
+    ]
+
+    result = analysis.derive_reporting_metrics(gold, pairs, records)
+    demote = result["per_action"]["DEMOTE"]
+
+    assert demote["predicted_instances"] == 0
+    assert demote["precision"] == 0.0
+    assert demote["end_to_end_f1"] == 0.0
+    assert demote["conditional_f1"] == 0.0
+    assert result["macro_f1"] == sum(
+        result["per_action"][action]["end_to_end_f1"] for action in analysis.ACTIONS
+    ) / len(analysis.ACTIONS)
+    assert result["conditional_macro_f1"] == sum(
+        result["per_action"][action]["conditional_f1"] for action in analysis.ACTIONS
+    ) / len(analysis.ACTIONS)

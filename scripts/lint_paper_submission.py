@@ -37,6 +37,9 @@ CHALLENGE_RESULT = ROOT / "v2" / "balanced-public-challenge" / "results" / "aggr
 CHALLENGE_RECEIPT = (
     ROOT / "v2" / "balanced-public-challenge" / "results" / "github-artifact-receipt.json"
 )
+CHALLENGE_CORRECTION = (
+    ROOT / "v2" / "balanced-public-challenge" / "results" / "reporting-correction-v1.json"
+)
 NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
 NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
@@ -67,6 +70,14 @@ def self_digest(value: dict[str, Any], field: str) -> str:
         sort_keys=True,
     ).encode("utf-8")
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return "sha256:" + digest.hexdigest()
 
 
 def require_regex(text: str, pattern: str, description: str) -> None:
@@ -306,6 +317,7 @@ def validate_balanced_challenge(tex: str) -> None:
     plan = load_object(CHALLENGE_PLAN, "balanced challenge plan")
     aggregate = load_object(CHALLENGE_RESULT, "balanced challenge aggregate")
     receipt = load_object(CHALLENGE_RECEIPT, "balanced challenge receipt")
+    correction = load_object(CHALLENGE_CORRECTION, "balanced challenge reporting correction")
 
     dataset = plan.get("dataset", {})
     design = plan.get("design", {})
@@ -326,6 +338,19 @@ def validate_balanced_challenge(tex: str) -> None:
         or aggregate.get("truth_status") != "COMPUTATIONAL"
     ):
         fail("balanced challenge aggregate disposition changed")
+    if (
+        self_digest(correction, "receipt_sha256") != correction.get("receipt_sha256")
+        or correction.get("status") != "REPORTING_CORRECTION"
+        or correction.get("metric_convention")
+        != "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
+        or correction.get("scope", {}).get("model_calls_performed") != 0
+        or correction.get("scope", {}).get("raw_or_terminal_records_changed") is not False
+        or correction.get("scope", {}).get("primary_endpoints_changed") is not False
+    ):
+        fail("balanced challenge reporting-correction boundary changed")
+    for relative, expected in correction.get("source_bindings", {}).items():
+        if sha256_file(ROOT / relative) != expected:
+            fail(f"balanced challenge reporting-correction binding changed: {relative}")
 
     qwen_confusion = {
         "ALLOW": {"ALLOW": 79, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 11},
@@ -395,6 +420,23 @@ def validate_balanced_challenge(tex: str) -> None:
             "ESCALATE": 0.43333333333333335,
         },
     )
+    flash_correction = correction.get("affected_lanes", {}).get(
+        "opencode-go-deepseek-v4-flash-matched", {}
+    )
+    if flash_correction.get("historical") != {
+        "conditional_macro_f1": 0.6243032962151766,
+        "macro_f1": 0.5236761371215153,
+        "per_action.DEMOTE.conditional_f1": None,
+        "per_action.DEMOTE.end_to_end_f1": None,
+        "per_action.DEMOTE.precision": None,
+    } or flash_correction.get("corrected") != {
+        "conditional_macro_f1": 0.46822747216138244,
+        "macro_f1": 0.39275710284113646,
+        "per_action.DEMOTE.conditional_f1": 0.0,
+        "per_action.DEMOTE.end_to_end_f1": 0.0,
+        "per_action.DEMOTE.precision": 0.0,
+    }:
+        fail("balanced challenge reporting-correction values changed")
     ceiling = aggregate.get("deterministic_policy_executor", {})
     if (
         ceiling.get("end_to_end_item_accuracy") != 1.0
@@ -422,6 +464,9 @@ def validate_balanced_challenge(tex: str) -> None:
         (r"\.8919/\.7500", "challenge Qwen conditional metrics"),
         (r"\.5000/\.1444", "challenge Flash end-to-end metrics"),
         (r"\.6164/\.2131", "challenge Flash conditional metrics"),
+        (r"\.3928", "corrected challenge Flash fixed-four-class Macro-F1"),
+        (r"\.4682", "corrected challenge Flash conditional Macro-F1"),
+        (r"zero division", "fixed-four-class zero-division convention"),
         (r"public, preregistered robustness challenge", "public challenge boundary"),
         (r"strict causal", "cross-service causal boundary"),
     )
@@ -513,7 +558,7 @@ def validate_manuscript_tables(tex: str) -> None:
         ),
         (
             r"Public challenge Flash\s*&\s*\.7556\s*&\s*\.3000\s*&\s*\.0000"
-            r"\s*&\s*\.4333\s*&\s*\.3722\s*&\s*\.5237"
+            r"\s*&\s*\.4333\s*&\s*\.3722\s*&\s*\.3928"
         ),
     )
     for pattern in action_rows:

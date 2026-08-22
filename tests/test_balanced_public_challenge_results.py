@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import math
 import re
+from copy import deepcopy
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -13,6 +15,7 @@ RESULTS = ROOT / "v2" / "balanced-public-challenge" / "results"
 PLAN = ROOT / "v2" / "balanced-public-challenge-study-plan.json"
 DATASET = ROOT / "v2" / "balanced-public-challenge" / "dataset"
 PACKET = ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json"
+CORRECTION = RESULTS / "reporting-correction-v1.json"
 ACCOUNT_IDENTIFIER = re.compile(
     r"\buser_(?=[A-Za-z0-9_-]{20,64}\b)"
     r"(?=[A-Za-z0-9_-]*[A-Z])(?=[A-Za-z0-9_-]*[a-z])"
@@ -110,7 +113,75 @@ def test_imported_aggregate_recomputes_from_all_360_terminal_records() -> None:
         workflow_run_attempt=1,
     )
     committed = _json(RESULTS / "aggregate.json")
-    assert _equivalent(committed, recomputed)
+    correction = _json(CORRECTION)
+    receipt_payload = dict(correction)
+    observed_receipt_sha = receipt_payload.pop("receipt_sha256")
+    expected_receipt_sha = (
+        "sha256:"
+        + hashlib.sha256(
+            json.dumps(
+                receipt_payload,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest()
+    )
+    assert observed_receipt_sha == expected_receipt_sha
+    assert correction["status"] == "REPORTING_CORRECTION"
+    assert correction["metric_convention"] == (
+        "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
+    )
+    assert correction["scope"] == {
+        "conditional_macro_f1_changed": True,
+        "confusion_matrix_changed": False,
+        "end_to_end_item_or_pair_metrics_changed": False,
+        "macro_f1_changed": True,
+        "model_calls_performed": 0,
+        "per_action_recall_changed": False,
+        "primary_endpoints_changed": False,
+        "raw_or_terminal_records_changed": False,
+    }
+    for relative, expected in correction["source_bindings"].items():
+        assert analysis.sha256_file(ROOT / relative) == expected
+
+    corrected_flash = next(
+        lane["metrics"]
+        for lane in recomputed["lanes"]
+        if lane["lane_id"] == "opencode-go-deepseek-v4-flash-matched"
+    )
+    corrected = correction["affected_lanes"]["opencode-go-deepseek-v4-flash-matched"]
+    assert corrected["corrected"] == {
+        "conditional_macro_f1": corrected_flash["conditional_macro_f1"],
+        "macro_f1": corrected_flash["macro_f1"],
+        "per_action.DEMOTE.conditional_f1": corrected_flash["per_action"]["DEMOTE"][
+            "conditional_f1"
+        ],
+        "per_action.DEMOTE.end_to_end_f1": corrected_flash["per_action"]["DEMOTE"]["end_to_end_f1"],
+        "per_action.DEMOTE.precision": corrected_flash["per_action"]["DEMOTE"]["precision"],
+    }
+
+    # Preserve the imported workflow aggregate byte-for-byte. Its only differences from the
+    # corrected recomputation are the five explicitly receipted Flash class metrics.
+    historical_projection = deepcopy(recomputed)
+    historical_flash = next(
+        lane["metrics"]
+        for lane in historical_projection["lanes"]
+        if lane["lane_id"] == "opencode-go-deepseek-v4-flash-matched"
+    )
+    historical = corrected["historical"]
+    historical_flash["conditional_macro_f1"] = historical["conditional_macro_f1"]
+    historical_flash["macro_f1"] = historical["macro_f1"]
+    historical_flash["per_action"]["DEMOTE"]["conditional_f1"] = historical[
+        "per_action.DEMOTE.conditional_f1"
+    ]
+    historical_flash["per_action"]["DEMOTE"]["end_to_end_f1"] = historical[
+        "per_action.DEMOTE.end_to_end_f1"
+    ]
+    historical_flash["per_action"]["DEMOTE"]["precision"] = historical[
+        "per_action.DEMOTE.precision"
+    ]
+    assert _equivalent(committed, historical_projection)
 
     lanes = {row["lane_id"]: row["metrics"] for row in committed["lanes"]}
     qwen = lanes["opencode-go-qwen3.7-max"]
@@ -127,3 +198,5 @@ def test_imported_aggregate_recomputes_from_all_360_terminal_records() -> None:
     assert flash["end_to_end_pair_accuracy"] == 13 / 90
     assert qwen["per_action"]["DEMOTE"]["correct"] == 4
     assert flash["per_action"]["DEMOTE"]["correct"] == 0
+    assert corrected_flash["macro_f1"] == 0.39275710284113646
+    assert corrected_flash["conditional_macro_f1"] == 0.46822747216138244

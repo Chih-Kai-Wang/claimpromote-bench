@@ -168,10 +168,12 @@ Configuration & \allow{} & \hold{} & \demote{} & \escalate{} & Bal. recall & Mac
 \midrule
 r6 Qwen3.7-Max & .9533 & .8209 & .0000 & .6250 & .5998 & .6265 \\
 Public challenge Qwen & .8778 & .8667 & .1333 & .7667 & .6611 & .7004 \\
-Public challenge Flash & .7556 & .3000 & .0000 & .4333 & .3722 & .5237 \\
+Public challenge Flash & .7556 & .3000 & .0000 & .4333 & .3722 & .3928 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Macro-F1 is a fixed-four-class mean with zero division set to zero. A post-analysis audit found that the historical challenge aggregate had instead omitted Flash's zero-prediction \demote{} class, emitting .5237 end to end and .6243 conditionally. The versioned correction receipt binds the unchanged terminal records and historical aggregate; deterministic recomputation gives .3928 and .4682, respectively. No model calls, confusion cells, recalls, or primary item/pair endpoints changed.
 
 Table~\ref{tab:confusion} gives every end-to-end confusion cell. The final column distinguishes absence of a valid decision from any policy action. R6 Qwen maps all eight gold \demote{} items to \allow. On the public challenge, Qwen's 20 valid gold-\demote{} responses split across all four actions, while Flash never predicts \demote. Flash also maps 13 gold-\hold{} items to \allow{} and loses 14/30 gold-\escalate{} items to invalid responses.
 

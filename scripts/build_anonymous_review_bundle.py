@@ -265,6 +265,67 @@ def load_object(path: Path) -> Json:
     return value
 
 
+def apply_balanced_reporting_correction(aggregate: Json, correction: Json) -> Json:
+    """Apply the receipted derived-metric correction without altering historical source files."""
+
+    payload = deepcopy(correction)
+    observed_receipt_sha = payload.pop("receipt_sha256", None)
+    if observed_receipt_sha != sha256_text(canonical_json(payload)):
+        fail("balanced challenge reporting-correction self-digest changed")
+    if (
+        correction.get("status") != "REPORTING_CORRECTION"
+        or correction.get("metric_convention")
+        != "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
+        or correction.get("scope", {}).get("model_calls_performed") != 0
+        or correction.get("scope", {}).get("raw_or_terminal_records_changed") is not False
+        or correction.get("scope", {}).get("primary_endpoints_changed") is not False
+    ):
+        fail("balanced challenge reporting-correction boundary changed")
+    bindings = correction.get("source_bindings")
+    if not isinstance(bindings, dict):
+        fail("balanced challenge reporting-correction bindings are missing")
+    for relative, expected in bindings.items():
+        source = ROOT / str(relative)
+        if not source.is_file() or sha256_file(source) != expected:
+            fail(f"balanced challenge reporting-correction binding changed: {relative}")
+
+    corrected = deepcopy(aggregate)
+    lanes = {
+        str(lane.get("lane_id")): lane.get("metrics")
+        for lane in corrected.get("lanes", [])
+        if isinstance(lane, dict) and isinstance(lane.get("metrics"), dict)
+    }
+    affected = correction.get("affected_lanes")
+    if not isinstance(affected, dict) or set(affected) != {"opencode-go-deepseek-v4-flash-matched"}:
+        fail("balanced challenge reporting-correction lane set changed")
+    for lane_id, change in affected.items():
+        metrics = lanes.get(lane_id)
+        if not isinstance(metrics, dict) or not isinstance(change, dict):
+            fail(f"balanced challenge reporting-correction lane is malformed: {lane_id}")
+        historical = change.get("historical")
+        replacement = change.get("corrected")
+        if not isinstance(historical, dict) or not isinstance(replacement, dict):
+            fail(f"balanced challenge reporting-correction values are malformed: {lane_id}")
+        demote = metrics.get("per_action", {}).get("DEMOTE")
+        if not isinstance(demote, dict):
+            fail(f"balanced challenge DEMOTE metrics are missing: {lane_id}")
+        observed = {
+            "conditional_macro_f1": metrics.get("conditional_macro_f1"),
+            "macro_f1": metrics.get("macro_f1"),
+            "per_action.DEMOTE.conditional_f1": demote.get("conditional_f1"),
+            "per_action.DEMOTE.end_to_end_f1": demote.get("end_to_end_f1"),
+            "per_action.DEMOTE.precision": demote.get("precision"),
+        }
+        if observed != historical:
+            fail(f"balanced challenge historical correction values changed: {lane_id}")
+        metrics["conditional_macro_f1"] = replacement["conditional_macro_f1"]
+        metrics["macro_f1"] = replacement["macro_f1"]
+        demote["conditional_f1"] = replacement["per_action.DEMOTE.conditional_f1"]
+        demote["end_to_end_f1"] = replacement["per_action.DEMOTE.end_to_end_f1"]
+        demote["precision"] = replacement["per_action.DEMOTE.precision"]
+    return corrected
+
+
 def strip_schema_ids(value: Any) -> Any:
     if isinstance(value, dict):
         return {key: strip_schema_ids(child) for key, child in value.items() if key != "$id"}
@@ -883,7 +944,11 @@ def build_balanced_public_anonymous_evidence(destination: Path) -> None:
     if set(analysis_files) != set(lane_files):
         fail("balanced challenge analysis matrix differs from run matrix")
 
-    aggregate = anonymize_provenance(load_object(results / "aggregate.json"))
+    source_aggregate = load_object(results / "aggregate.json")
+    source_correction = load_object(results / "reporting-correction-v1.json")
+    aggregate = anonymize_provenance(
+        apply_balanced_reporting_correction(source_aggregate, source_correction)
+    )
     aggregate["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
     external = aggregate.get("external_commitment")
     lanes = aggregate.get("lanes")
@@ -897,6 +962,23 @@ def build_balanced_public_anonymous_evidence(destination: Path) -> None:
             fail(f"balanced challenge aggregate contains an unknown lane: {lane_id}")
         lane["run_sha256"] = sha256_file(run_paths[lane_id])
     write_json(destination / "reported-aggregate.json", aggregate)
+
+    review_correction = {
+        "affected_lanes": deepcopy(source_correction["affected_lanes"]),
+        "anonymous_run_sha256": {
+            lane_id: sha256_file(run_path) for lane_id, run_path in sorted(run_paths.items())
+        },
+        "authoritative_reporting_rule": source_correction["authoritative_reporting_rule"],
+        "correction_id": source_correction["correction_id"],
+        "issued_on": source_correction["issued_on"],
+        "metric_convention": source_correction["metric_convention"],
+        "reason": source_correction["reason"],
+        "schema_version": "1.0.0-review",
+        "scope": deepcopy(source_correction["scope"]),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "status": "REPORTING_CORRECTION",
+    }
+    write_json(destination / "reporting-correction-review.json", review_correction)
 
     source_receipt = load_object(results / "github-artifact-receipt.json")
     validation = source_receipt.get("validation")
@@ -917,8 +999,9 @@ def build_balanced_public_anonymous_evidence(destination: Path) -> None:
     readme = """# Balanced public challenge reviewer evidence
 
 This directory contains the frozen 90-pair / 180-item public challenge, its prompt packet, two
-one-pass zero-retry service runs, lane analyses, and reported aggregate. The invalid members are
-balanced across HOLD, DEMOTE, and ESCALATE (30 each), with 90 ALLOW members over 15 factors.
+one-pass zero-retry service runs, lane analyses, a corrected reported aggregate, and the bound
+reporting-correction receipt. The invalid members are balanced across HOLD, DEMOTE, and ESCALATE
+(30 each), with 90 ALLOW members over 15 factors.
 
 Every non-OK response remains incorrect in end-to-end item and pair metrics. The two service
 stacks differ, so the lane comparison is descriptive and is not a causal model ablation or a
@@ -929,6 +1012,8 @@ are withheld during double-blind review.
 
 Run `scripts/validate_anonymous_empirical_evidence.py` from the bundle root to recompute coverage,
 conditional and end-to-end accuracy, per-action recall, and the complete confusion matrices.
+The correction defines zero-prediction classes as zero for fixed-four-class Macro-F1; it performs
+no model calls and changes no primary endpoint, confusion cell, recall, or item-level record.
 """
     (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
 

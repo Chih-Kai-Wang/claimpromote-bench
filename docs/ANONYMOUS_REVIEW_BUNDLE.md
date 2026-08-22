@@ -25,7 +25,8 @@ The staged bundle contains:
   projected C2 records, item-level final outputs, gold, analysis, redaction/equivalence receipt,
   and frozen-manifest correction overlay;
 - the balanced public challenge's 90 pairs / 180 items, two one-pass lane records, analyses,
-  aggregate, full confusion matrices, action-level metrics, and privacy receipt;
+  corrected reporting aggregate, bound Macro-F1 correction receipt, full confusion matrices,
+  action-level metrics, and privacy receipt;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
   zero created cases, zero model calls, zero human annotators, and no agreement statistic;
 - selected validation code and tests, an anonymous MIT license, a one-command review runner, and a
@@ -64,7 +65,8 @@ Validation runs inside the staged artifact:
 2. validate the public alpha dataset, oracle labels, pair contracts, shortcut resistance,
    metamorphic invariance, and executable fixtures;
 3. recompute the v1, public-pilot, GPT-5.4, capable-extension, r6, and balanced-challenge results
-   from included item-level evidence;
+   from included item-level evidence, including fixed-four-class Macro-F1 with zero division set
+   to zero;
 4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
 5. run the selected v2 tests;
 6. build and replay the public Lean package and execute formal fixtures;

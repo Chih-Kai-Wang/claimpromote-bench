@@ -1,0 +1,47 @@
+{
+  "affected_lanes": {
+    "opencode-go-deepseek-v4-flash-matched": {
+      "corrected": {
+        "conditional_macro_f1": 0.46822747216138244,
+        "macro_f1": 0.39275710284113646,
+        "per_action.DEMOTE.conditional_f1": 0.0,
+        "per_action.DEMOTE.end_to_end_f1": 0.0,
+        "per_action.DEMOTE.precision": 0.0
+      },
+      "historical": {
+        "conditional_macro_f1": 0.6243032962151766,
+        "macro_f1": 0.5236761371215153,
+        "per_action.DEMOTE.conditional_f1": null,
+        "per_action.DEMOTE.end_to_end_f1": null,
+        "per_action.DEMOTE.precision": null
+      }
+    }
+  },
+  "authoritative_reporting_rule": "Use the corrected values for fixed-four-class Macro-F1 reporting; retain aggregate.json as immutable historical workflow output.",
+  "correction_id": "balanced-public-fixed-four-class-macro-f1-v1",
+  "issued_on": "2026-08-22",
+  "metric_convention": "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO",
+  "reason": "The historical analyzer represented precision and F1 as null when a supported gold class received zero predictions, then averaged only defined class F1 values. The registered fixed-four-class endpoint requires that class to contribute zero.",
+  "receipt_sha256": "sha256:e2d7c163bbfcdb59a564557ff0326e5d82eaff0b7d22dc49833317af71bb2e1f",
+  "schema_version": "1.0.0",
+  "scope": {
+    "conditional_macro_f1_changed": true,
+    "confusion_matrix_changed": false,
+    "end_to_end_item_or_pair_metrics_changed": false,
+    "macro_f1_changed": true,
+    "model_calls_performed": 0,
+    "per_action_recall_changed": false,
+    "primary_endpoints_changed": false,
+    "raw_or_terminal_records_changed": false
+  },
+  "source_bindings": {
+    "scripts/analyze_balanced_public_challenge.py": "sha256:db3a05911735675d9e8138c2bf6d4272c9b15e5ecba758787aec47b74526a42f",
+    "v2/balanced-public-challenge-study-plan.json": "sha256:b63a188b5a785ecd637239645c0892d2156560f8ed79098b34d2acfecddad1a1",
+    "v2/balanced-public-challenge/dataset/gold.jsonl": "sha256:35035a5a7505b0f54dc5577bd9d26380c733041b3ab95b118237876e27509056",
+    "v2/balanced-public-challenge/dataset/pairs.json": "sha256:af5f397f981fb0f2f8db3f7616b1db305d90a8764575333f78d78afbd44c9a26",
+    "v2/balanced-public-challenge/results/aggregate.json": "sha256:b0d9824148a759ea4803f3821cacfb74642025be5c705151548dc2852b99f329",
+    "v2/balanced-public-challenge/results/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl": "sha256:ae5a4664d77853267a7d253bc6f7fe02d6f858837eea47a80f2ffd854636a81b",
+    "v2/balanced-public-challenge/results/runs/opencode-go-qwen3.7-max-full.jsonl": "sha256:e13a560c7ce5027aad6a0dcfdf862b3f181a07e49059ef1a9f87bc0ab6475949"
+  },
+  "status": "REPORTING_CORRECTION"
+}

@@ -1310,9 +1310,10 @@ def validate_balanced_public_challenge() -> Json:
     plan = load_json(root / "study-plan.json")
     packet = load_json(root / "prompt-packet.json")
     aggregate = load_json(root / "reported-aggregate.json")
+    correction = load_json(root / "reporting-correction-review.json")
     receipt = load_json(root / "privacy-receipt-review.json")
-    if not all(isinstance(value, dict) for value in (plan, packet, aggregate, receipt)):
-        fail("balanced challenge plan, packet, aggregate, or receipt is malformed")
+    if not all(isinstance(value, dict) for value in (plan, packet, aggregate, correction, receipt)):
+        fail("balanced challenge plan, packet, aggregate, correction, or receipt is malformed")
     if not isinstance(pairs, list):
         fail("balanced challenge pairs are malformed")
     input_ids = {str(row["id"]) for row in inputs}
@@ -1402,6 +1403,36 @@ def validate_balanced_public_challenge() -> Json:
 
     qwen = lane_metrics["opencode-go-qwen3.7-max"]
     flash = lane_metrics["opencode-go-deepseek-v4-flash-matched"]
+    if (
+        correction.get("status") != "REPORTING_CORRECTION"
+        or correction.get("source_identity") != "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+        or correction.get("metric_convention")
+        != "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
+        or correction.get("scope", {}).get("model_calls_performed") != 0
+        or correction.get("scope", {}).get("raw_or_terminal_records_changed") is not False
+        or correction.get("scope", {}).get("primary_endpoints_changed") is not False
+        or correction.get("anonymous_run_sha256")
+        != {
+            lane_id: sha256_file(root / str(lane_files[lane_id]))
+            for lane_id in sorted(expected_lanes)
+        }
+    ):
+        fail("balanced challenge reporting-correction boundary changed")
+    affected = correction.get("affected_lanes", {}).get("opencode-go-deepseek-v4-flash-matched", {})
+    if affected.get("historical") != {
+        "conditional_macro_f1": 0.6243032962151766,
+        "macro_f1": 0.5236761371215153,
+        "per_action.DEMOTE.conditional_f1": None,
+        "per_action.DEMOTE.end_to_end_f1": None,
+        "per_action.DEMOTE.precision": None,
+    } or affected.get("corrected") != {
+        "conditional_macro_f1": flash["conditional_macro_f1"],
+        "macro_f1": flash["macro_f1"],
+        "per_action.DEMOTE.conditional_f1": flash["per_action"]["DEMOTE"]["conditional_f1"],
+        "per_action.DEMOTE.end_to_end_f1": flash["per_action"]["DEMOTE"]["end_to_end_f1"],
+        "per_action.DEMOTE.precision": flash["per_action"]["DEMOTE"]["precision"],
+    }:
+        fail("balanced challenge reporting-correction values changed")
     expected_qwen = {
         "parseable_items": 148,
         "correct_items": 132,
@@ -1421,6 +1452,8 @@ def validate_balanced_public_challenge() -> Json:
         "conditional_item_accuracy": 0.6164383561643836,
         "end_to_end_pair_accuracy": 0.14444444444444443,
         "conditional_pair_accuracy": 0.21311475409836064,
+        "macro_f1": 0.39275710284113646,
+        "conditional_macro_f1": 0.46822747216138244,
     }
     for label, observed, expected in (
         ("Qwen", qwen, expected_qwen),

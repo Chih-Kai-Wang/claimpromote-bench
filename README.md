@@ -56,6 +56,10 @@ The precommitted challenge has 90 controlled pairs / 180 items over 15 factors. 
 | Qwen3.7-Max route | 148 / 180 | 0.711 | 0.733 / 0.533 | 0.892 / 0.750 | 0.878 / 0.867 / 0.133 / 0.767 |
 | DeepSeek-V4-Flash route | 146 / 180 | 0.678 | 0.500 / 0.144 | 0.616 / 0.213 | 0.756 / 0.300 / 0.000 / 0.433 |
 
+Fixed-four-class end-to-end Macro-F1 is 0.7004 for Qwen and 0.3928 for Flash; conditional
+Macro-F1 is 0.7834 and 0.4682. A versioned reporting-correction receipt preserves the historical
+aggregate while binding this zero-division correction to unchanged item-level records.
+
 Qwen has 31 transport failures and one semantic failure; Flash has 34 semantic failures. The
 public challenge demonstrates robustness behavior on a known synthetic construction. The two
 routes use different service stacks, so their difference is descriptive rather than a strict
