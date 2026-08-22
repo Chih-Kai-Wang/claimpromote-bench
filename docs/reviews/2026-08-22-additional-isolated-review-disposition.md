@@ -41,4 +41,5 @@ reviewer or agreement claim is introduced.
 After resolution, the local Python 3.12 gates passed with 198 tests, 83.24% branch coverage, Ruff
 lint and format, strict mypy, the recomputed r6 addendum check, and paper truth lint. Final anonymous
 bundle replay, release packaging, privacy scans, Lean replay, and page-by-page PDF inspection are
-recorded in the release validation receipt generated from the final branch head.
+recorded in the release validation receipt generated from resolution commit
+`b3dd1d60726bc3c10ac8555d4aab1401ad9d139b`.

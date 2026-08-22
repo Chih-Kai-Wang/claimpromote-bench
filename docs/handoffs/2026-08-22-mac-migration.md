@@ -13,6 +13,8 @@ attachments, `work/` directories, browser state, or local credentials.
 - Imported-results commit: `3746403ea8784a95ae2cb1c66ee1b95e4a67ad42`
 - Scientific/release checkpoint before the user-requested additional review:
   `4ce6680d9ff7826db66fd01dcd87982a28574684`
+- Additional-review scientific/release commit:
+  `b3dd1d60726bc3c10ac8555d4aab1401ad9d139b`
 - One-shot Actions run: `32509532820`, conclusion `success`, attempt 1
 - Complete Actions artifact digest:
   `sha256:8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b`
@@ -162,9 +164,10 @@ For any future continuation:
 
 1. Fetch the private branch and inspect PR `#20` for new commits, comments, or review findings before
    editing. The remote branch, not a workstation copy, remains authoritative.
-2. Treat the latest pushed branch head as the completed scientific/release checkpoint. Make further scientific changes
-   only for a concrete defect, new authorized evidence, or a user-directed scope change; do not add
-   unsupported claims merely to create activity.
+2. Treat `b3dd1d60726bc3c10ac8555d4aab1401ad9d139b` as the completed additional-review
+   scientific/release checkpoint. Make further scientific changes only for a concrete defect, new
+   authorized evidence, or a user-directed scope change; do not add unsupported claims merely to
+   create activity.
 3. Do not rerun the balanced-public-v1 singleton or any completed model study. Two context-isolated
    internal AI review checkpoints are now complete; do not create another unless the user explicitly
    asks for it.
