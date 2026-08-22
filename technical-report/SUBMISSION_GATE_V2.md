@@ -178,8 +178,9 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Ruff lint passes.
 - [x] Ruff formatting passes.
 - [x] Mypy passes.
-- [x] Full tests and branch coverage pass: 196 tests and 83.24% branch coverage on the final
-  scientific/release checkpoint.
+- [x] Full tests and branch coverage pass: 196 tests and 83.24% branch coverage on scientific/release
+  checkpoint `4ce6680`; after the fail-closed Lean-cache manifest regression was added, the current
+  maintenance branch passes 197 tests at the same 83.24% coverage.
 - [x] Python 3.12 Mac gates pass in a fresh virtual environment.
 - [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
   failures have `steps=[]` and are recorded as an account billing/spending-limit condition, not a
