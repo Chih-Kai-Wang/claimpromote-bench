@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import runpy
 from pathlib import Path
 from typing import Any
 
@@ -176,6 +177,35 @@ def validate_no_stale_file_counts() -> None:
             fail(
                 f"stale fixed artifact count remains in {path.relative_to(ROOT)}: {match.group(0)}"
             )
+
+
+def validate_submission_builder(tex: str) -> None:
+    namespace = runpy.run_path(str(SUBMISSION_BUILDER))
+    canonical_body = namespace["canonical_body"]()
+    body_start = tex.index(r"\begin{abstract}")
+    bib_start = tex.rindex(r"\bibliographystyle")
+    expected_body = tex[body_start:bib_start].rstrip() + "\n\n"
+    if canonical_body != expected_body:
+        fail("submission builder changes the canonical manuscript body")
+
+    reproducibility_start = expected_body.index(r"\section{Reproducibility and Artifact Policy}")
+    conclusion_start = expected_body.index(r"\section{Conclusion}", reproducibility_start)
+    canonical_tail = expected_body[reproducibility_start:conclusion_start]
+    rendered = {
+        "ICLR": namespace["iclr_tex"](canonical_body),
+        "arXiv": namespace["arxiv_tex"](canonical_body),
+    }
+    for label, wrapper in rendered.items():
+        if canonical_tail not in wrapper:
+            fail(f"{label} wrapper changes reproducibility or AI-disclosure prose")
+    for stale in (
+        "same 7,200-record aggregate",
+        "all 14 pilot attempts",
+        "ICLR_REPRODUCIBILITY",
+        "AI_DISCLOSURE =",
+    ):
+        if stale in SUBMISSION_BUILDER.read_text(encoding="utf-8"):
+            fail(f"submission builder retains stale injected prose: {stale!r}")
 
 
 def validate_factor_metrics(
@@ -770,6 +800,9 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
     for phrase in (
         "complete versioned policy contract",
         "exactly six fields",
+        "first matching row fixes both the action and proposed state",
+        "A currently elevated axis has an absent, broken, stale, mismatched",
+        "airline baggage fees, NBA transactions, and tax regulations",
         r"DEPENDENCY\_NOT\_VERIFIED",
         r"POLICY\_SATISFIED",
         r"verifier\_result=FAIL",
@@ -880,6 +913,7 @@ def main() -> int:
     bib = BIB.read_text(encoding="utf-8")
     validate_submission_metadata(tex)
     validate_no_stale_file_counts()
+    validate_submission_builder(tex)
     validate_r6_evidence(tex)
     validate_balanced_challenge(tex)
     validate_manuscript_tables(tex)

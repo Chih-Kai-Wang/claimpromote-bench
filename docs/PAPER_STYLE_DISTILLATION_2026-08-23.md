@@ -115,9 +115,10 @@ AI-detector evasion method.
 ## Application to ClaimPromoteBench
 
 The first manuscript audit measured 3,234 prose words and a 231-word extracted abstract. The
-revised audit measures 2,663 prose words and a 200-word extracted abstract, a 17.7% reduction in
-main prose. The submission lint counts 212 abstract tokens under its TeX-aware rule. Median sentence
-length changed from 16 to 15 words; the 95th percentile changed from 29.9 to 26.0. The revision:
+commit-bound revised audit measures 2,774 prose words and a 203-word extracted abstract, a 14.2%
+reduction in main prose. The submission lint counts 218 abstract tokens under its TeX-aware rule.
+Median sentence length changed from 16 to 15 words; the 95th percentile changed from 29.9 to 27.7.
+The revision:
 
 - removes the v1 formatting-control and adaptive-pilot chronology from the main narrative;
 - removes the historical Macro-F1 correction ledger while retaining the corrected value and

@@ -249,24 +249,20 @@ def test_review_runner_checks_frozen_naturalistic_decision() -> None:
     assert "no human annotators" in normalized
 
 
-def test_iclr_bundle_description_matches_item_level_hidden_release() -> None:
+def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> None:
     submission_builder = load_submission_builder()
 
-    statement = submission_builder.ICLR_REPRODUCIBILITY
-    normalized = " ".join(statement.split())
-    assert "recovery checks" not in statement
-    assert "item-level" in statement
-    assert "exactly 27 cross-field-invalid" in normalized
-    assert "C2 seals all 600 terminal cells" in normalized
-    assert "275 response envelopes" in normalized
-    assert "byte-identical scientific analysis" in normalized
-    assert "manifest records the generated tree's current file count" in normalized
-    assert "receipt validates all 360 item-level records" in normalized
-    assert "retained provider response identifiers" in normalized
-    assert "both registered lane dispositions" in normalized
-    assert "all 14 pilot attempts" in normalized
-    assert "The private construction seed is excluded" in normalized
-    assert "public preprint" not in statement
+    body = submission_builder.canonical_body()
+    reproducibility_start = body.index(r"\section{Reproducibility and Artifact Policy}")
+    conclusion_start = body.index(r"\section{Conclusion}", reproducibility_start)
+    canonical_tail = body[reproducibility_start:conclusion_start]
+
+    assert "275 source envelopes" in canonical_tail
+    assert "derives the current file count" in canonical_tail
+    assert "Generative AI tools assisted" in canonical_tail
+    assert "all 14 pilot attempts" not in canonical_tail
+    assert canonical_tail in submission_builder.iclr_tex(body)
+    assert canonical_tail in submission_builder.arxiv_tex(body)
 
 
 def test_stronger_followup_anonymization_keeps_metrics_and_removes_provenance() -> None:

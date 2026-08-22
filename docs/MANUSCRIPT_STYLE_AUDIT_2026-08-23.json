@@ -44,15 +44,15 @@
     }
   },
   "after": {
-    "manuscript_sha256": "551c28a1037638749f5a8c4d8516d4cfd7a7e271ff5d8fd3e053e1c4f28b76fb",
-    "prose_words": 2796,
-    "prose_reduction_percent": 13.5436,
-    "sentences": 168,
-    "sentence_words_mean": 16.25,
+    "manuscript_sha256": "41db5f3129f514201ae32f50fadf1b9f3901767c8ab062af27929fa7b8541cab",
+    "prose_words": 2774,
+    "prose_reduction_percent": 14.2239,
+    "sentences": 167,
+    "sentence_words_mean": 16.22,
     "sentence_words_median": 15.0,
     "sentence_words_p90": 24.0,
-    "sentence_words_p95": 28.0,
-    "sentence_words_over_40_percent": 0.5952,
+    "sentence_words_p95": 27.7,
+    "sentence_words_over_40_percent": 0.5988,
     "abstract_extracted_words": 203,
     "abstract_submission_lint_tokens": 218,
     "configured_pattern_findings": {

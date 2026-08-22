@@ -57,7 +57,7 @@ CheckList organizes behavioral tests around capabilities and expected invariance
 Incremental parsing and grammar-constrained decoding can prevent structurally invalid generations \cite{scholak2021picard,geng2023grammar}. They cannot guarantee that a structurally valid action satisfies cross-field semantics or the evidence policy. Selective classification studies risk--coverage trade-offs and reject options \cite{geifman2017selective,geifman2019selectivenet}; recent abstention benchmarks expose continuing failures on unanswerable tasks \cite{kirichenko2025abstentionbench}. We therefore report coverage and conditional correctness together, while end-to-end metrics count every absent or invalid decision as incorrect. \hold{} is a policy action about current evidence, whereas service failure is recorded as no valid decision.
 
 \paragraph{Explicit rule following and formal specifications.}
-RuleArena evaluates long-context natural-language rule application in airline, basketball, and tax scenarios, including logical and numerical reasoning \cite{zhou2025rulearena}. OSVBench instead asks models to generate formal specifications for operating-system verification \cite{li2026osvbench}. \cpb neither answers domain questions nor generates specifications: it applies a complete machine-readable evidence policy to a typed ledger and scores a four-way state-transition action. Its oracle is an authored synthetic definition, not an external judgment of scientific truth.
+RuleArena evaluates long-context natural-language rule application for airline baggage fees, NBA transactions, and tax regulations, including logical and numerical reasoning \cite{zhou2025rulearena}. OSVBench instead asks models to generate formal specifications for operating-system verification \cite{li2026osvbench}. \cpb neither answers domain questions nor generates specifications: it applies a complete machine-readable evidence policy to a typed ledger and scores a four-way state-transition action. Its oracle is an authored synthetic definition, not an external judgment of scientific truth.
 
 \paragraph{Scientific evidence and research-agent evaluation.}
 CLAIM-BENCH, DeepFact, and ClaimDB evaluate scientific claim extraction or factual verification \cite{javaji2025claimbench,huang2026deepfact,theologitis2026claimdb}. ScienceAgentBench, CORE-Bench, and POPPER evaluate executable research tasks, computational reproduction, or hypothesis falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. SeekBench, Omni-Decision, EviGraph, and ClaimLedger emphasize grounding or explicit evidence maintenance \cite{shao2025seekbench,ma2026omnidecision,ren2026evigraph,elliman2026claimledger}. Unlike these broader tasks, \cpb fixes an authored policy and scores only the status-transition decision after evidence registration.
@@ -71,7 +71,22 @@ Each item is \(x=(c,E,s,\tau,t)\): a claim \(c\), typed evidence \(E\), current 
 \texttt{formal\_status} &\in \{\texttt{NONE},\texttt{FORMALLY\_CERTIFIED}\},\\
 \texttt{review\_status} &\in \{\texttt{UNREVIEWED},\texttt{INDEPENDENTLY\_VERIFIED}\}.
 \end{align*}
-The public policy checks dependencies, scope, freshness, provenance, runtime completion, contradictions, statement identity, and artifact integrity. Its deterministic oracle \(\pi_P(x)\) returns one of four actions: \allow, \hold, \demote, or \escalate. \allow{} accepts the requested target; \hold{} preserves the current state because support is insufficient; \demote{} weakens a state whose recorded basis has failed; and \escalate{} preserves the state while flagging an unresolved authoritative contradiction.
+The public policy checks dependencies, scope, freshness, provenance, runtime completion, contradictions, statement identity, and artifact integrity. Its deterministic oracle \(\pi_P(x)\) evaluates the following rows from top to bottom; the first matching row fixes both the action and proposed state.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{@{}p{0.12\linewidth}p{0.62\linewidth}p{0.18\linewidth}@{}}
+\toprule
+Action & First-match condition & Proposed state \\
+\midrule
+\demote{} & A currently elevated axis has an absent, broken, stale, mismatched, or policy-nonconforming recorded basis. & Lower each affected axis. \\
+\escalate{} & A fresh, identity-matched, independently produced contradiction is open and passes its runtime and verifier checks. & Keep current state. \\
+\hold{} & The requested promotion lacks a complete valid dependency closure or any required scope, freshness, runtime, verifier, provenance, or axis-specific check. & Keep current state. \\
+\allow{} & None of the preceding conditions holds. & Accept target state. \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 The model receives the complete versioned policy contract, a canonical JSON evidence ledger, and passive verifier checks that report raw facts but no transition decision. Action precedence is \demote{} \(>\) \escalate{} \(>\) \hold{} \(>\) \allow; reason codes follow the policy's published total order. The response must be one JSON object with exactly six fields: \texttt{action}, \texttt{proposed\_state}, \texttt{p\_admissible}, \texttt{used\_evidence\_ids}, \texttt{reason\_codes}, and \texttt{missing\_evidence\_ids}. No rationale text is requested.
 
@@ -176,7 +191,7 @@ On the balanced challenge, Qwen returned 148/180 valid decisions and 64/90 compl
 
 Factor-level pair results vary sharply (Table~\ref{tab:factor-results}). For r6 Qwen, dependency statement scores 0/7 and current binding scores 0/8, with pair coverage of 2/7 and 6/8; seven factors are perfect. Challenge Qwen has three zero-accuracy factors and two perfect factors. Challenge Flash has 11 zero-accuracy factors and none that are perfect. Supports of six to eight pairs make these descriptive breakdowns, not separate confirmatory tests.
 
-\begin{table}[!t]
+\begin{table}[H]
 \centering
 \scriptsize
 \caption{Factor-level pair coverage and correctness. Each entry is complete/correct pairs; E2E accuracy is correct/all pairs. Parentheses give r6 support; every challenge factor has six pairs.}

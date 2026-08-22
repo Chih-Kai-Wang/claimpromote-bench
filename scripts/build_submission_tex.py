@@ -21,44 +21,6 @@ ICLR_TITLE = (
     r"\mbox{Evidence-State Transitions}"
 )
 
-AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
-
-Generative AI tools assisted literature search, research planning and methodological discussion,
-benchmark-template and code drafting, debugging, analysis checks, result interpretation, and
-manuscript drafting and editing. The author chose the research question, defined the benchmark
-policy and protocol, made the final study and analysis decisions, and verified the benchmark,
-reported results, and references. Quantitative results come from validated study artifacts. The
-author is responsible for the manuscript and submission; AI systems are neither authors nor human
-annotators.
-
-"""
-
-ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
-
-The original hidden set and prompts were fixed before inference. Artifact-only recovery rebuilt the
-same 7,200-record aggregate without model calls and reclassified exactly 27 cross-field-invalid
-records as format errors under the registered semantic validator; no valid decision changed.
-
-The fresh hidden study binds public and private-salt commitments to a future randomness beacon,
-construction receipt, and frozen request schedule; C2 seals all 600 terminal cells before gold
-loading or analysis. A post-run audit found hidden-thinking blocks in 275 response envelopes, but
-scoring had used only final response text and parsed decisions. The public derivative therefore
-uses a text-only allowlist, binds source and derived rows by hash, and reproduces byte-identical
-scientific analysis. Its manifest records the generated tree's current file count.
-
-The public balanced challenge separately froze its dataset, action distribution, prompts,
-adapters, analysis, and one-call zero-retry schedule before inference. Its receipt validates all
-360 item-level records and reports zero findings for provider accounts, retained provider response
-identifiers, and hidden reasoning. Paper construction reruns neither completed singleton study.
-
-The anonymous bundle retains item-level evidence, both registered lane dispositions, all 14 pilot
-attempts, recomputation code, executable and Lean checks, and privacy receipts. Its validator
-recomputes the reported statistics and dynamic file count. Fail-closed scans reject author,
-repository, workflow, provider-response, hidden-reasoning, and unknown-field leakage. The private
-construction seed is excluded.
-
-"""
-
 ICLR_PUBLIC_IDENTIFIERS = (
     "32255636879",
     "32274814703",
@@ -104,10 +66,6 @@ def canonical_body() -> str:
     body_start = source.index(r"\begin{abstract}")
     bib_start = source.rindex(r"\bibliographystyle")
     body = source[body_start:bib_start].rstrip() + "\n\n"
-
-    ai_start = body.index(r"\section{AI Assistance Disclosure}")
-    conclusion_start = body.index(r"\section{Conclusion}", ai_start)
-    body = body[:ai_start] + AI_DISCLOSURE + body[conclusion_start:]
 
     # Keep exact identities in public repository/provenance records while avoiding long
     # monospace strings in venue-formatted prose. These substitutions preserve study data.
@@ -181,15 +139,9 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
     # ICLR excludes both the mandatory AI-use statement and the reproducibility statement from
     # the main-text page limit. The diagnostic probe removes exactly those sections and omits the
     # bibliography; it otherwise keeps the full scientific text, including limitations and the
-    # conclusion. The anonymous submission replaces repository-identifying provenance with a
-    # double-blind reproducibility statement while the arXiv version retains exact identifiers.
-    body_for_output = without_reproducibility(anonymous_iclr_body(body))
-    reproducibility_start = body_for_output.index(r"\section{AI Assistance Disclosure}")
-    body_for_output = (
-        body_for_output[:reproducibility_start]
-        + ICLR_REPRODUCIBILITY
-        + body_for_output[reproducibility_start:]
-    )
+    # conclusion. The full wrapper keeps the canonical disclosure and reproducibility prose;
+    # anonymous_iclr_body changes only citations and explicit public provenance identifiers.
+    body_for_output = anonymous_iclr_body(body)
     if main_text_probe:
         body_for_output = without_reproducibility_or_ai(body_for_output)
 
