@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ANONYMOUS_BUILDER = ROOT / "scripts" / "build_anonymous_review_bundle.py"
 SUBMISSION_BUILDER = ROOT / "scripts" / "build_submission_tex.py"
 STYLE_LOCK = ROOT / "technical-report" / "iclr2027-style-lock.json"
+BREADTH_RESULTS = ROOT / "v2" / "public-model-breadth-v1" / "results"
 OFFICIAL_STYLE_URL = "https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 LOG_FAILURE_RE = re.compile(
@@ -215,9 +216,16 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "public_repository_identity_included",
         "fresh_confirmatory_hidden_reasoning_included",
         "balanced_public_challenge_hidden_reasoning_included",
+        "public_model_breadth_hidden_reasoning_included",
+        "public_model_breadth_raw_final_response_text_included",
     )
     if any(scope.get(key) is not False for key in false_guards):
         fail("anonymous manifest privacy scope changed")
+    if BREADTH_RESULTS.is_dir() and (
+        scope.get("public_model_breadth_summary_included") is not True
+        or scope.get("public_model_breadth_item_level_records_included") is not True
+    ):
+        fail("anonymous manifest omits completed public model-breadth evidence")
     return manifest, actual
 
 
