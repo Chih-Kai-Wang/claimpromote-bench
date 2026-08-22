@@ -76,11 +76,13 @@ LOCAL_WORKSPACE_ROOT = (
     "\\work\\claimpromote-bench"
 )
 GITHUB_RUNNER_ROOT = "/home/runner/work/claimpromote-bench/claimpromote-bench"
+MAC_WORKSPACE_ROOT = "/Users/wangzhikai/Documents/ChatGPT/claimpromotebranch投稿/claimpromote-bench"
 FORBIDDEN_TEXT = {
     "Chih-Kai Wang",
     "Wang, Chih-Kai",
     "National Taipei University of Education",
     "f0909172434",
+    "wangzhikai",
     "f0909172434@gmail.com",
     "github.com/f0909172434",
     "paper/v1-submission-prep",
@@ -125,6 +127,7 @@ FORBIDDEN_TEXT = {
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
     LOCAL_WORKSPACE_ROOT,
     GITHUB_RUNNER_ROOT,
+    MAC_WORKSPACE_ROOT,
 }
 
 PROVENANCE_REPLACEMENTS = {
@@ -134,6 +137,7 @@ PROVENANCE_REPLACEMENTS = {
     "f0909172434@gmail.com": "anonymous@example.invalid",
     "github.com/f0909172434": "anonymous.invalid/repository",
     "f0909172434": "anonymous-owner",
+    "wangzhikai": "anonymous-local-user",
     "paper/v1-submission-prep": "anonymous-base-branch",
     "agent/iclr2027-v2-low-cost-study": "anonymous-study-branch",
     "32255636879": "anonymous-v1-source-run",
@@ -165,6 +169,7 @@ PROVENANCE_REPLACEMENTS = {
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516": ("0000000000000000000000000000000000000009"),
     LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
     GITHUB_RUNNER_ROOT: "/anonymous/workspace",
+    MAC_WORKSPACE_ROOT: "/anonymous/workspace",
     "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664": (
         "anonymous-v1-study-digest"
     ),

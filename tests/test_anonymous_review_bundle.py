@@ -109,6 +109,7 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
             "github.com/f0909172434/project",
             99,
             "/home/runner/work/claimpromote-bench/claimpromote-bench/work/result.json",
+            "/Users/wangzhikai/Documents/ChatGPT/claimpromotebranch投稿/claimpromote-bench/work/result.json",
         ],
     }
     cleaned = builder.anonymize_provenance(source)
@@ -121,9 +122,11 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
     assert cleaned["raw_response_text"] == source["raw_response_text"]
     assert cleaned["nested"][1] == 99
     assert cleaned["nested"][2] == "/anonymous/workspace/work/result.json"
+    assert cleaned["nested"][3] == "/anonymous/workspace/work/result.json"
     assert "f0909172434" not in rendered
     assert "b86ee1e1d28db8a390344d28582af88e26970560" not in rendered
     assert "f44b01eb97418d87aa6d7486fa785c0f49b9dda2" not in rendered
+    assert "wangzhikai" not in rendered
 
 
 def test_empirical_provenance_anonymizer_redacts_provider_account_identifier() -> None:

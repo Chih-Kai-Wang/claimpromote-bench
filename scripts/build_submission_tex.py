@@ -22,6 +22,7 @@ ICLR_TITLE = (
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (
+    "wangzhikai",
     "32255636879",
     "32274814703",
     "32291482079",
