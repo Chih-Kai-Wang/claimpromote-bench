@@ -39,14 +39,14 @@ def test_style_audit_records_honest_revision_call_boundary() -> None:
         ROOT / "docs" / "PAPER_STYLE_CORPUS_MANIFEST_2026-08-23.json",
         ROOT / "docs" / "PAPER_STYLE_CORPUS_STATISTICS_2026-08-23.json",
         ROOT / "docs" / "MANUSCRIPT_STYLE_AUDIT_2026-08-23.json",
-        480,
-        24,
+        720,
+        1,
     )
     assert value["status"] == "PASS"
     assert value["after"]["abstract_submission_lint_tokens"] <= 220
     assert all(value == 0 for value in value["after"]["configured_pattern_findings"].values())
     boundary = value["scientific_content_boundary"]
-    assert boundary["scored_model_calls_performed"] == 480
-    assert boundary["void_protocol_application_posts"] == 24
-    assert boundary["total_application_posts_during_revision"] == 504
+    assert boundary["scored_model_calls_performed"] == 720
+    assert boundary["void_protocol_application_posts"] == 1
+    assert boundary["total_application_posts_during_revision"] == 721
     assert boundary["completed_singleton_workflows_rerun"] is False
