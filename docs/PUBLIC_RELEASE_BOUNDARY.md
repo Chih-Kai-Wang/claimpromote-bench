@@ -17,6 +17,8 @@ establish redistribution rights.
 - the clean r6, balanced-challenge, SLSA-derived portability, and counterfactual policy-switch
   derivatives needed to recompute every scheduled denominator, confusion cell, action recall,
   coverage value, and conditional or end-to-end metric;
+- the two local-replication plans, model catalog, pinned revisions, snapshot and environment
+  receipts, minimal MLX runner, and redacted item records; model weights remain upstream;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
 - `LICENSE`, `DATA_LICENSE.md`, `THIRD_PARTY_NOTICES.md`, a concise README, and a dynamic manifest.
@@ -49,6 +51,7 @@ minimum replay path.
 - the void SLSA v1 attempt's raw records; retain only a public-safe exclusion receipt if needed to
   document why those records never entered model selection or manuscript metrics;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
+- downloaded model weights and Hugging Face caches;
 - the private repository's Git history.
 
 ## Required publication gates

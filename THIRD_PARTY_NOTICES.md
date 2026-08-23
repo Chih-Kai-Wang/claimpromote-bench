@@ -27,6 +27,15 @@ retain the source registry and upstream attribution while continuing to describe
 author operationalization. The counterfactual policy-switch profiles are also author-defined test
 instruments; neither profile is a standards interpretation or deployment recommendation.
 
+## Pinned local model snapshots
+
+The local replication downloads, but does not redistribute, two MLX Community snapshots. The
+catalog records `mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit` as Apache-2.0 and
+`mlx-community/phi-4-4bit` as MIT, with exact repository revisions and upstream model-card URLs.
+The anonymous evidence contains snapshot file names, sizes, and digests, not weight bytes. Users
+who reproduce inference must obtain each model from its upstream repository and comply with the
+model, conversion, and dependency terms in effect there.
+
 ## Venue and software dependencies
 
 ICLR style files come from the official ICLR 2027 style archive and are not relicensed by this

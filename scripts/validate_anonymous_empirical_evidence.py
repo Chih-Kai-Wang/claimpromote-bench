@@ -70,6 +70,12 @@ def sha256_text(value: str) -> str:
     return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def validate_self_digest(value: Json, field: str, label: str) -> None:
+    payload = {key: child for key, child in value.items() if key != field}
+    if value.get(field) != sha256_text(canonical_json(payload)):
+        fail(f"{label}: self-digest changed")
+
+
 def equivalent_json(left: Any, right: Any) -> bool:
     """Compare recomputed JSON while tolerating only machine-scale float summation drift."""
 
@@ -1571,6 +1577,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         "SLSA_DERIVED_POLICY_PORTABILITY": {
             "directory": "slsa-portability",
             "aggregate_design": "PROSPECTIVELY_FROZEN_SECOND_POLICY_PORTABILITY_STUDY",
+            "plan_status": "FROZEN_BEFORE_SCORED_INFERENCE",
             "baseline_files": {"structured": "predictions.jsonl"},
             "aggregate_baseline_key": "structured_random_forest_action_baseline",
             "controlled_path": "evidence_field",
@@ -1578,6 +1585,28 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         "COUNTERFACTUAL_POLICY_PROFILE_SWITCH": {
             "directory": "policy-switch",
             "aggregate_design": "PROSPECTIVELY_FROZEN_COUNTERFACTUAL_POLICY_PROFILE_STUDY",
+            "plan_status": "FROZEN_BEFORE_SCORED_INFERENCE",
+            "baseline_files": {
+                "policy_aware": "policy_aware-predictions.jsonl",
+                "profile_blind": "profile_blind-predictions.jsonl",
+            },
+            "aggregate_baseline_key": "structured_random_forest_comparators",
+            "controlled_path": "active_profile",
+        },
+        "LOCAL_MODEL_SLSA_POLICY_REPLICATION": {
+            "directory": "local-model-replications/slsa",
+            "aggregate_design": "LOCAL_MODEL_REPLICATION_OF_PROSPECTIVELY_FROZEN_SLSA_POLICY_STUDY",
+            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION",
+            "baseline_files": {"structured": "predictions.jsonl"},
+            "aggregate_baseline_key": "structured_random_forest_action_baseline",
+            "controlled_path": "evidence_field",
+        },
+        "LOCAL_MODEL_POLICY_SWITCH_REPLICATION": {
+            "directory": "local-model-replications/policy-switch",
+            "aggregate_design": (
+                "LOCAL_MODEL_REPLICATION_OF_PROSPECTIVELY_FROZEN_POLICY_SWITCH_STUDY"
+            ),
+            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION",
             "baseline_files": {
                 "policy_aware": "policy_aware-predictions.jsonl",
                 "profile_blind": "profile_blind-predictions.jsonl",
@@ -1598,7 +1627,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
     actual_files = {
         path.relative_to(root).as_posix(): sha256_file(path)
         for path in sorted(root.rglob("*"))
-        if path.is_file() and path.name != "MANIFEST.json"
+        if path.is_file() and path != root / "MANIFEST.json"
     }
     if manifest.get("file_count") != len(actual_files) or manifest.get("files") != actual_files:
         fail(f"{study_kind}: manifest differs from the generated tree")
@@ -1623,11 +1652,15 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
     gold = load_jsonl(dataset / "evaluation-gold.jsonl")
     pairs = load_json(dataset / "evaluation-pairs.json")
     packet = load_json(dataset / "evaluation-prompt-packet.json")
+    dataset_manifest = load_json(dataset / "manifest.json")
     plan = load_json(root / "study-plan.json")
     schedule = load_json(root / "request-schedule.json")
     aggregate = load_json(root / "reported-aggregate.json")
     receipt = load_json(root / "execution-receipt.json")
-    if not all(isinstance(value, dict) for value in (packet, plan, schedule, aggregate, receipt)):
+    if not all(
+        isinstance(value, dict)
+        for value in (packet, dataset_manifest, plan, schedule, aggregate, receipt)
+    ):
         fail(f"{study_kind}: plan, packet, schedule, aggregate, or receipt is malformed")
     if not isinstance(pairs, list):
         fail(f"{study_kind}: evaluation pairs are malformed")
@@ -1672,6 +1705,23 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         item_by_id
     ):
         fail(f"{study_kind}: prompt-packet coverage changed")
+    packet_payload = {key: value for key, value in packet.items() if key != "packet_sha256"}
+    if (
+        packet.get("packet_sha256") != sha256_text(canonical_json(packet_payload))
+        or dataset_manifest.get("packet_sha256") != packet.get("packet_sha256")
+        or dataset_manifest.get("packet_file_sha256")
+        != sha256_file(dataset / "evaluation-prompt-packet.json")
+    ):
+        fail(f"{study_kind}: anonymous prompt-packet binding changed")
+    for row in packet_rows:
+        prompt = str(row.get("prompt"))
+        if (
+            row.get("prompt_sha256") != sha256_text(prompt)
+            or row.get("utf8_bytes") != len(prompt.encode("utf-8"))
+            or "github.com/f0909172434" in prompt
+            or "anonymous.invalid/repository" not in prompt
+        ):
+            fail(f"{study_kind}: anonymous prompt projection changed: {row.get('item_id')}")
     lane_files = manifest.get("lane_files")
     expected_lanes = {str(row["lane_id"]) for row in plan.get("formal_lanes", [])}
     if (
@@ -1681,14 +1731,44 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
     ):
         fail(f"{study_kind}: lane manifest changed")
     cells = schedule.get("cells")
+    projection = plan.get("anonymous_projection")
     if (
-        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        plan.get("status") != specification["plan_status"]
         or plan.get("execution", {}).get("client_retry_count") != 0
+        or plan.get("execution", {}).get("schedule_sha256") != schedule.get("schedule_sha256")
+        or not isinstance(projection, dict)
+        or projection.get("scientific_prompt_content_changed") is not False
+        or projection.get("schema_identifier_redacted") is not True
+        or projection.get("source_request_body_digests_included") is not False
+        or projection.get("redacted_prompts") != 120
         or not isinstance(cells, list)
         or len(cells) != 240
         or len({str(cell["cell_id"]) for cell in cells}) != 240
     ):
         fail(f"{study_kind}: frozen execution boundary changed")
+    validate_self_digest(schedule, "schedule_sha256", f"{study_kind} schedule")
+    packet_hashes = {str(row["item_id"]): str(row["prompt_sha256"]) for row in packet_rows}
+    projected_requests: dict[str, str] = {}
+    for cell in cells:
+        lane_id = str(cell.get("lane_id"))
+        item_id = str(cell.get("item_id"))
+        expected_request = sha256_text(
+            canonical_json(
+                {
+                    "anonymous_projection_version": "1.0.0-review",
+                    "item_id": item_id,
+                    "lane_id": lane_id,
+                    "prompt_sha256": packet_hashes.get(item_id),
+                }
+            )
+        )
+        if (
+            cell.get("prompt_sha256") != packet_hashes.get(item_id)
+            or cell.get("request_body_sha256") != expected_request
+            or cell.get("request_digest_scope") != "ANONYMOUS_LANE_ITEM_PROMPT_PROJECTION"
+        ):
+            fail(f"{study_kind}: anonymous request projection changed: {lane_id}/{item_id}")
+        projected_requests[f"{lane_id}\0{item_id}"] = expected_request
     if (
         receipt.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
         or receipt.get("planned_cells") != 240
@@ -1701,16 +1781,26 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         or receipt.get("provider_response_identifiers_retained") is not False
         or receipt.get("hidden_reasoning_blocks_retained") is not False
         or receipt.get("source_journal_digests_included") is not False
+        or receipt.get("schedule_sha256") != schedule.get("schedule_sha256")
     ):
         fail(f"{study_kind}: execution receipt changed")
 
     aggregate_lanes = {
         str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
     }
+    aggregate_freeze = aggregate.get("freeze")
     if (
         aggregate.get("status") != "COMPLETE"
         or aggregate.get("design") != specification["aggregate_design"]
         or set(aggregate_lanes) != expected_lanes
+        or not isinstance(aggregate_freeze, dict)
+        or aggregate_freeze.get("plan_sha256") != sha256_file(root / "study-plan.json")
+        or aggregate_freeze.get("schedule_sha256") != schedule.get("schedule_sha256")
+        or aggregate_freeze.get("dataset_manifest_sha256")
+        != sha256_file(dataset / "manifest.json")
+        or aggregate_freeze.get("packet_sha256") != packet.get("packet_sha256")
+        or aggregate_freeze.get("execution_receipt_sha256")
+        != sha256_file(root / "execution-receipt.json")
         or aggregate.get("deterministic_policy_executor", {}).get("label")
         != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE"
     ):
@@ -1743,6 +1833,10 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
                 or row.get("parse_error_detail") is not None
                 or row.get("transport_error") is not None
                 or row.get("frozen_plan_commit") != "0000000000000000000000000000000000000010"
+                or row.get("packet_sha256") != packet.get("packet_sha256")
+                or row.get("dataset_manifest_sha256") != sha256_file(dataset / "manifest.json")
+                or row.get("request_sha256")
+                != projected_requests[f"{lane_id}\0{row.get('item_id')}"]
             ):
                 fail(f"{study_kind}: private response or provenance fields survived")
         metrics = derive_balanced_metrics(gold, pairs, rows)
@@ -1789,6 +1883,76 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         ):
             fail(f"{study_kind}: registered shortcut comparator result changed")
 
+    failure = load_json(root / "failure-taxonomy.json")
+    privacy = load_json(root / "privacy-receipt-review.json")
+    result_receipt = load_json(root / "result-receipt-review.json")
+    if not all(isinstance(value, dict) for value in (failure, privacy, result_receipt)):
+        fail(f"{study_kind}: review receipt chain is malformed")
+    validate_self_digest(failure, "self_digest", f"{study_kind} failure taxonomy")
+    validate_self_digest(privacy, "self_digest", f"{study_kind} privacy receipt")
+    validate_self_digest(result_receipt, "self_digest", f"{study_kind} result receipt")
+    failure_lanes = failure.get("lanes")
+    if (
+        failure.get("status") != "COMPLETE_FROZEN_FAILURE_TAXONOMY"
+        or failure.get("free_form_error_text_included") is not False
+        or not isinstance(failure_lanes, dict)
+        or set(failure_lanes) != expected_lanes
+    ):
+        fail(f"{study_kind}: failure taxonomy boundary changed")
+    for lane_id, metrics in lane_metrics.items():
+        lane_failure = failure_lanes[lane_id]
+        if (
+            lane_failure.get("terminal_records") != 120
+            or lane_failure.get("parse_status_counts") != metrics.get("parse_status_counts")
+            or sum(lane_failure.get("transport_failure_categories", {}).values())
+            != metrics.get("parse_status_counts", {}).get("TRANSPORT_ERROR", 0)
+        ):
+            fail(f"{study_kind}: failure taxonomy counts changed for {lane_id}")
+    expected_review_files = {
+        "execution-receipt.json": sha256_file(root / "execution-receipt.json"),
+        "failure-taxonomy.json": sha256_file(root / "failure-taxonomy.json"),
+        "reported-aggregate.json": sha256_file(root / "reported-aggregate.json"),
+        **{
+            str(relative): sha256_file(root / str(relative)) for relative in lane_files.values()
+        },
+    }
+    if (
+        privacy.get("status") != "ANONYMOUS_SYNTHETIC_POLICY_DERIVATIVE_VALIDATED"
+        or privacy.get("terminal_records_validated") != 240
+        or privacy.get("credentials_included") is not False
+        or privacy.get("provider_response_identifiers_included") is not False
+        or privacy.get("hidden_reasoning_fields_included") is not False
+        or privacy.get("raw_final_response_text_included") is not False
+        or privacy.get("free_form_error_text_included") is not False
+        or privacy.get("all_scheduled_terminal_failures_included") is not True
+        or privacy.get("review_file_sha256") != dict(sorted(expected_review_files.items()))
+    ):
+        fail(f"{study_kind}: privacy receipt boundary changed")
+    expected_result_hashes = {
+        "plan_sha256": sha256_file(root / "study-plan.json"),
+        "schedule_sha256": sha256_file(root / "request-schedule.json"),
+        "dataset_manifest_sha256": sha256_file(dataset / "manifest.json"),
+        "baseline_report_sha256": sha256_file(root / "baseline" / "report.json"),
+        "execution_receipt_sha256": sha256_file(root / "execution-receipt.json"),
+        "aggregate_sha256": sha256_file(root / "reported-aggregate.json"),
+        "failure_taxonomy_sha256": sha256_file(root / "failure-taxonomy.json"),
+        "privacy_receipt_sha256": sha256_file(root / "privacy-receipt-review.json"),
+    }
+    if (
+        result_receipt.get("status") != "ANONYMOUS_SYNTHETIC_POLICY_RESULTS_SEALED"
+        or result_receipt.get("planned_and_terminal_cells") != 240
+        or result_receipt.get("application_posts_per_cell") != 1
+        or result_receipt.get("client_retry_count") != 0
+        or result_receipt.get("all_failures_retained_in_end_to_end_denominator") is not True
+        or any(result_receipt.get(key) != value for key, value in expected_result_hashes.items())
+        or result_receipt.get("run_sha256")
+        != {
+            Path(str(relative)).name: sha256_file(root / str(relative))
+            for relative in lane_files.values()
+        }
+    ):
+        fail(f"{study_kind}: result receipt chain changed")
+
     return {
         "study_kind": study_kind,
         "items_per_lane": 120,
@@ -1805,6 +1969,130 @@ def validate_slsa_portability() -> Json:
 
 def validate_policy_switch() -> Json:
     return validate_synthetic_policy_evidence("COUNTERFACTUAL_POLICY_PROFILE_SWITCH")
+
+
+def validate_local_model_replications() -> Json:
+    root = EVIDENCE / "local-model-replications"
+    manifest = load_json(root / "MANIFEST.json")
+    catalog = load_json(root / "model-catalog.json")
+    snapshot = load_json(root / "model-snapshot-receipt.json")
+    qualification = load_json(root / "environment-qualification.json")
+    if not all(isinstance(value, dict) for value in (manifest, catalog, snapshot, qualification)):
+        fail("local-model replication metadata is malformed")
+    manifest_payload = deepcopy(manifest)
+    observed_manifest_sha = manifest_payload.pop("manifest_sha256", None)
+    actual_files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path != root / "MANIFEST.json"
+    }
+    if (
+        observed_manifest_sha != sha256_text(canonical_json(manifest_payload))
+        or manifest.get("status") != "ANONYMOUS_LOCAL_MODEL_REPLICATIONS"
+        or manifest.get("file_count") != len(actual_files)
+        or manifest.get("files") != actual_files
+        or manifest.get("studies") != ["policy-switch", "slsa"]
+        or manifest.get("model_weights_included") is not False
+        or manifest.get("exact_model_revisions_included") is not True
+        or manifest.get("snapshot_file_digests_included") is not True
+        or manifest.get("raw_generation_text_included") is not False
+        or manifest.get("hidden_reasoning_included") is not False
+        or manifest.get("credentials_included") is not False
+    ):
+        fail("local-model replication manifest changed")
+    lanes = catalog.get("lanes")
+    if (
+        catalog.get("status") != "PREINFERENCE_LOCAL_MODEL_CATALOG"
+        or not isinstance(lanes, list)
+        or len(lanes) != 2
+        or len({str(row.get("model_family")) for row in lanes}) != 2
+        or any(not re.fullmatch(r"[0-9a-f]{40}", str(row.get("model_revision"))) for row in lanes)
+        or catalog.get("selection_boundary", {}).get(
+            "models_selected_before_any_benchmark_inference"
+        )
+        is not True
+        or catalog.get("selection_boundary", {}).get("benchmark_accuracy_or_labels_consulted")
+        is not False
+    ):
+        fail("local-model pre-inference catalog changed")
+    validate_self_digest(snapshot, "self_digest", "local-model snapshot receipt")
+    validate_self_digest(qualification, "self_digest", "local-model qualification receipt")
+    catalog_hash = sha256_file(root / "model-catalog.json")
+    if (
+        snapshot.get("status") != "PINNED_LOCAL_MODEL_SNAPSHOTS_VALIDATED"
+        or snapshot.get("catalog_sha256") != catalog_hash
+        or qualification.get("status")
+        != "LOCAL_MODEL_ENVIRONMENT_QUALIFIED_BEFORE_BENCHMARK_INFERENCE"
+        or qualification.get("catalog_sha256") != catalog_hash
+        or qualification.get("snapshot_receipt_self_digest") != snapshot.get("self_digest")
+        or qualification.get("benchmark_inference_calls") != 0
+        or qualification.get("credentials_used_or_retained") is not False
+    ):
+        fail("local-model environment qualification changed")
+    snapshots = snapshot.get("snapshots")
+    qualified_models = qualification.get("models")
+    if (
+        not isinstance(snapshots, list)
+        or not isinstance(qualified_models, list)
+        or len(snapshots) != 2
+        or len(qualified_models) != 2
+        or any(row.get("load_and_generation_succeeded") is not True for row in qualified_models)
+        or any(row.get("stream_generation_api_succeeded") is not True for row in qualified_models)
+    ):
+        fail("local-model snapshot or smoke-test coverage changed")
+    catalog_models = {
+        (str(row["model_repo"]), str(row["model_revision"])) for row in lanes
+    }
+    if (
+        {(str(row.get("model_repo")), str(row.get("model_revision"))) for row in snapshots}
+        != catalog_models
+        or {
+            (str(row.get("model_repo")), str(row.get("model_revision")))
+            for row in qualified_models
+        }
+        != catalog_models
+    ):
+        fail("local-model metadata model sets differ")
+    for row in snapshots:
+        payload = {key: child for key, child in row.items() if key != "snapshot_digest"}
+        if (
+            row.get("snapshot_digest") != sha256_text(canonical_json(payload))
+            or not isinstance(row.get("files"), list)
+            or row.get("file_count") != len(row["files"])
+        ):
+            fail(f"local-model snapshot tree changed: {row.get('model_repo')}")
+
+    slsa = validate_synthetic_policy_evidence("LOCAL_MODEL_SLSA_POLICY_REPLICATION")
+    policy_switch = validate_synthetic_policy_evidence("LOCAL_MODEL_POLICY_SWITCH_REPLICATION")
+    expected_bindings = {
+        "catalog_sha256": catalog_hash,
+        "requirements_sha256": sha256_file(root / "requirements.txt"),
+        "snapshot_receipt_sha256": sha256_file(root / "model-snapshot-receipt.json"),
+        "snapshot_receipt_self_digest": snapshot["self_digest"],
+        "qualification_receipt_sha256": sha256_file(
+            root / "environment-qualification.json"
+        ),
+        "qualification_receipt_self_digest": qualification["self_digest"],
+    }
+    for dataset_key in ("slsa", "policy-switch"):
+        plan = load_json(root / dataset_key / "study-plan.json")
+        if not isinstance(plan, dict) or any(
+            plan.get("freeze", {}).get(key) != value for key, value in expected_bindings.items()
+        ):
+            fail(f"local-model plan environment binding changed: {dataset_key}")
+        planned_models = {
+            (str(row.get("model")), str(row.get("model_revision")))
+            for row in plan.get("formal_lanes", [])
+        }
+        if planned_models != catalog_models:
+            fail(f"local-model plan model set changed: {dataset_key}")
+    return {
+        "studies": 2,
+        "models": len(catalog_models),
+        "terminal_records": 480,
+        "slsa": slsa,
+        "policy_switch": policy_switch,
+    }
 
 
 def validate_public_model_breadth() -> Json:
@@ -2101,6 +2389,7 @@ def main() -> int:
         "balanced_public_challenge": validate_balanced_public_challenge(),
         "slsa_portability": validate_slsa_portability(),
         "policy_switch": validate_policy_switch(),
+        "local_model_replications": validate_local_model_replications(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0

@@ -276,6 +276,7 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
     assert "def validate_balanced_public_challenge" in validator
     assert "def validate_slsa_portability" in validator
     assert "def validate_policy_switch" in validator
+    assert "def validate_local_model_replications" in validator
     assert "def validate_synthetic_policy_evidence" in validator
     assert "def validate_capable_hidden" not in validator
     assert "def validate_public_model_breadth" not in validator
@@ -285,16 +286,50 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
     assert "def derive_reporting_metrics" in balanced
 
 
+def test_slsa_anonymous_projection_redacts_schema_identity_and_rebinds_receipts(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    destination = tmp_path / "slsa-portability"
+
+    builder.build_slsa_portability_anonymous_evidence(destination)
+    builder.scan_identity(destination)
+    builder.scan_sensitive_payloads(destination)
+
+    packet = json.loads(
+        (destination / "dataset" / "evaluation-prompt-packet.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    schedule = json.loads((destination / "request-schedule.json").read_text(encoding="utf-8"))
+    privacy = json.loads(
+        (destination / "privacy-receipt-review.json").read_text(encoding="utf-8")
+    )
+    result = json.loads(
+        (destination / "result-receipt-review.json").read_text(encoding="utf-8")
+    )
+
+    assert len(packet["records"]) == 120
+    assert all("anonymous.invalid/repository" in row["prompt"] for row in packet["records"])
+    assert all("github.com/f0909172434" not in row["prompt"] for row in packet["records"])
+    assert all(
+        cell["request_digest_scope"] == "ANONYMOUS_LANE_ITEM_PROMPT_PROJECTION"
+        for cell in schedule["cells"]
+    )
+    assert privacy["status"] == "ANONYMOUS_SYNTHETIC_POLICY_DERIVATIVE_VALIDATED"
+    assert result["status"] == "ANONYMOUS_SYNTHETIC_POLICY_RESULTS_SEALED"
+
+
 def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> None:
     submission_builder = load_submission_builder()
 
     body = submission_builder.canonical_body()
-    reproducibility_start = body.index(r"\section{Reproducibility and Artifact Policy}")
+    reproducibility_start = body.index(r"\section{Reproducibility Statement}")
     conclusion_start = body.index(r"\section{Conclusion}", reproducibility_start)
     canonical_tail = body[reproducibility_start:conclusion_start]
 
-    assert "275 source envelopes" in canonical_tail
-    assert "derives the current file count" in canonical_tail
+    assert "binds policies, source standards, generators" in canonical_tail
+    assert "manifest derives file counts from the generated tree" in canonical_tail
     assert "Generative AI tools assisted" in canonical_tail
     assert "all 14 pilot attempts" not in canonical_tail
     assert canonical_tail in submission_builder.iclr_tex(body)
