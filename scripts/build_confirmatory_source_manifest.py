@@ -53,12 +53,15 @@ _EXPLICIT_PATHS = (
 _POST_R6_NON_RUNTIME_PATHS = {
     # These scripts were introduced only after the immutable r6 scored run. They read or
     # aggregate already terminal evidence and cannot influence C1 or scored inference.
+    "src/claimpromotebench/policy_difference.py",
     "scripts/analyze_balanced_public_challenge.py",
     "scripts/audit_manuscript_style.py",
     "scripts/analyze_public_model_breadth_study.py",
     "scripts/analyze_slsa_portability_study.py",
     "scripts/analyze_policy_switch_study.py",
     "scripts/analyze_local_model_replication.py",
+    "scripts/analyze_minimal_policy_migration_gate.py",
+    "scripts/analyze_minimal_policy_migration_hosted_study.py",
     "scripts/build_policy_switch_study.py",
     "scripts/build_slsa_portability_study.py",
     "scripts/build_local_release_kit.py",
@@ -67,6 +70,9 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_policy_switch_hosted_exclusion.py",
     "scripts/derive_policy_switch_hosted_replacement_eligibility.py",
     "scripts/derive_policy_difference_coverage.py",
+    "scripts/derive_minimal_policy_migration_hosted_eligibility.py",
+    "scripts/derive_minimal_policy_migration_suite.py",
+    "scripts/derive_policy_migration_mutation_audit.py",
     "scripts/analyze_policy_switch_hosted_replacement.py",
     "scripts/freeze_policy_switch_hosted_replacement.py",
     "scripts/run_policy_switch_hosted_replacement.py",
@@ -74,6 +80,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_r6_reporting_addendum.py",
     "scripts/finalize_public_model_breadth_study.py",
     "scripts/finalize_local_model_results.py",
+    "scripts/finalize_minimal_policy_migration_hosted_results.py",
     "scripts/finalize_synthetic_policy_results.py",
     "scripts/build_policy_transition_graph_study.py",
     "scripts/validate_policy_transition_graph_study.py",
@@ -88,6 +95,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/run_policy_transition_graph_hosted_study.py",
     "scripts/validate_policy_transition_graph_hosted_study.py",
     "scripts/freeze_local_model_replications.py",
+    "scripts/freeze_minimal_policy_migration_hosted_study.py",
     "scripts/frozen_run_io.py",
     "scripts/freeze_slsa_portability_study.py",
     "scripts/freeze_policy_switch_study.py",
@@ -98,6 +106,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/run_slsa_portability_study.py",
     "scripts/run_policy_switch_study.py",
     "scripts/run_local_model_replication.py",
+    "scripts/run_minimal_policy_migration_hosted_study.py",
     "scripts/seal_local_model_void_attempt.py",
     "scripts/slsa_policy.py",
     "scripts/snapshot_slsa_portability_catalog.py",
@@ -109,6 +118,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/validate_slsa_portability_study.py",
     "scripts/validate_policy_switch_study.py",
     "scripts/validate_local_model_replications.py",
+    "scripts/validate_minimal_policy_migration_hosted_study.py",
 }
 
 
