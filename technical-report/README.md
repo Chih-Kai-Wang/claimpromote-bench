@@ -5,12 +5,15 @@ with matched evidence and policy contrasts. The experiments are synthetic and
 configuration-specific; they do not measure general research-agent ability or natural-distribution
 performance.
 
-The paper reports four frozen datasets:
+The paper reports five frozen datasets:
 
 - a hidden research-evidence realization with 300 items and 150 evidence pairs;
 - a public action-balanced challenge with 180 items and 90 evidence pairs;
-- a software-artifact portability study with 120 items and 60 evidence pairs; and
-- a policy-switch study with 120 items and 60 pairs that change only the active profile.
+- a software-artifact portability study with 120 items and 60 evidence pairs;
+- a rule-stratified policy-switch study with 120 items and 60 pairs that change only the active
+  profile; and
+- a policy-transition graph with 120 items and 60 pairs covering all ten semantically reachable
+  directed non-self action transitions.
 
 Every scheduled service, syntax, schema, and semantic failure remains incorrect in end-to-end
 metrics. Conditional accuracy is reported only alongside decision or pair coverage. The

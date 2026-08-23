@@ -42,6 +42,7 @@ verifier-governed updates.
 | Policy Compliance of User Requests (ACL Industry 2026) | Classification of natural-language user requests against organizational policies | Policy compliance classification, not relational state-transition conformance with item, pair, and route-failure accounting |
 | COMPASS (ACL 2026) | Base and adversarial queries for organization-specific allow and deny lists, evaluated with an LLM judge | Organization-policy alignment is close prior art; ClaimPromoteBench instead uses the same typed state under two executable profiles, exact oracle scoring, and pair-level failure accounting |
 | (Why) Is My Prompt Getting Worse? (CAIN 2024) | Regression testing for behavioral changes across evolving hosted LLM APIs | Changes the model-service dependency while preserving an application task; ClaimPromoteBench changes the application policy while holding the tested route and typed context fixed |
+| Testing Software Design Modeled by Finite-State Machines (IEEE TSE 1978) | Specification-derived finite-state test sequences and test covers | Transition coverage is established prior art; ClaimPromoteBench instead covers ordered oracle-action changes induced by switching policy on an otherwise identical context |
 | PolicyLLM / PolicyBench (ACL Findings 2026) | Bilingual public-policy memorization, understanding, and application over 21K cases | Broad policy comprehension, not matched evidence and policy interventions with an executable transition oracle |
 | Analyzing and Internalizing Complex Policy Documents for LLM Agents (ACL 2026) | A controllable-complexity generator and methods for internalizing in-context business policies | Policy complexity and internalization, not whether the same evidence induces the prescribed action after only the active policy changes |
 | Business as Rulesual / BREX (ACL 2026) | Extraction of rules, operators, and dependencies from real business documents | Rule-flow reconstruction from unstructured text, not conformance of a structured decision route to an already published executable policy |
@@ -72,7 +73,9 @@ Its distinctive evaluation choices are the combination of:
 6. frozen one-call, zero-retry execution with replayable item records and fail-closed artifact
    validation; and
 7. learned comparators that expose both fixed-policy learnability and the registered
-   profile-oblivious shortcut boundary.
+   profile-oblivious shortcut boundary; and
+8. a two-coordinate policy-migration adequacy criterion that separates changed-rule coverage from
+   reachable oracle-action edge coverage and records structurally impossible edges.
 
 This is not a truth benchmark. A transition can be admissible under the public policy while the underlying research claim remains scientifically wrong, unimportant, or semantically misstated; conversely, a true claim may correctly remain unpromoted because required evidence is absent.
 

@@ -23,6 +23,9 @@ The staged bundle contains:
 - the balanced public challenge's 90 pairs / 180 items, two one-pass lane records, analyses,
   corrected reporting aggregate, bound Macro-F1 correction receipt, full confusion matrices,
   action-level metrics, and privacy receipt;
+- the hosted SLSA portability study and three zero-retry local studies on the fixed policy,
+  rule-stratified policy switch, and complete reachable policy-transition graph, with item-level
+  records, learned comparators, freeze receipts, and recomputable coverage certificates;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
   zero created cases, zero model calls, zero human annotators, and no agreement statistic;
 - selected validation code and tests, an anonymous MIT license, a one-command review runner, and a
@@ -64,8 +67,9 @@ Validation runs inside the staged artifact:
 1. install the staged Python package;
 2. validate the public alpha dataset, oracle labels, pair contracts, shortcut resistance,
    metamorphic invariance, and executable fixtures;
-3. recompute the r6 and balanced-challenge results from included item-level evidence, including
-   fixed-four-class Macro-F1 with zero division set to zero;
+3. recompute the r6, balanced-challenge, SLSA portability, and three local-study results from
+   included item-level evidence, including fixed-four-class Macro-F1 with zero division set to
+   zero;
 4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
 5. run the selected v2 tests;
 6. build and replay the public Lean package and execute formal fixtures;

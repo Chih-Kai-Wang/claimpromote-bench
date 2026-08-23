@@ -14,12 +14,12 @@ establish redistribution rights.
   executable or formal fixtures;
 - dataset builders and scoring, audit, validation, and replay scripts used by the paper;
 - selected tests that exercise the public replay path;
-- the clean r6, balanced challenge, hosted SLSA-field study, and both replacement-v2 local studies
+- the clean r6, balanced challenge, hosted SLSA-field study, and all three retained local studies
   needed to recompute every scheduled denominator, confusion cell, action recall, coverage value,
   and conditional or end-to-end metric;
 - a redacted full-study exclusion receipt, but no item records, from the hosted policy-switch run
   that exhausted shared subscription quota;
-- the two replacement-v2 local plans, model catalog, pinned revisions, snapshot and environment
+- the three local plans, model catalog, pinned revisions, snapshot and environment
   receipts, minimal MLX runner, redacted item records, and a redacted receipt for the excluded
   one-intent/zero-terminal v1 attempt; model weights remain upstream;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
