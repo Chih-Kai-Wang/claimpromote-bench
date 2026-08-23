@@ -1,0 +1,39 @@
+{
+  "analysis_timing": "POST_RUN_NO_NEW_MODEL_CALLS",
+  "interpretation_boundary": {
+    "completed_study_rerun": false,
+    "model_calls_performed": 0,
+    "model_family_comparison_supported": false,
+    "registered_denominators_changed": false,
+    "route_reliability_comparison_supported": false,
+    "shared_account_quota_confound_present": true
+  },
+  "privacy": {
+    "credentials_included": false,
+    "provider_response_identifiers_included": false,
+    "raw_error_text_included": false
+  },
+  "quota_cutoff": {
+    "cells": 547,
+    "contiguous_schedule_tail": true,
+    "first_zero_based_sequence": 713,
+    "last_zero_based_sequence": 1259
+  },
+  "scheduled_cells": 1260,
+  "schema_version": "1.0.0",
+  "source": {
+    "identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    "private_source_digest_included": false,
+    "records": 1260
+  },
+  "status": "POST_RUN_FROZEN_LOG_AUDIT_COMPLETE",
+  "study_id": "public-model-breadth-v1",
+  "transport_failure_categories": {
+    "AUTHORIZATION": 76,
+    "CONNECTION": 1,
+    "QUOTA_RATE_LIMIT": 547,
+    "SERVER": 5,
+    "TIMEOUT": 1
+  },
+  "transport_failures": 630
+}

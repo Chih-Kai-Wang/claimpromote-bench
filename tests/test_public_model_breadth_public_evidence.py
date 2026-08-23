@@ -239,6 +239,11 @@ def test_full_seven_lane_public_derivative_replays_without_private_text(tmp_path
         public_results,
         api_key="test-credential-that-is-not-present",
     )
+    (public_results / "failure-cause-addendum.json").write_bytes(
+        (
+            ROOT / "v2" / "public-model-breadth-v1" / "results" / "failure-cause-addendum.json"
+        ).read_bytes()
+    )
     replay = verifier.verify_public_evidence(
         public_results,
         plan_path,
@@ -255,6 +260,7 @@ def test_full_seven_lane_public_derivative_replays_without_private_text(tmp_path
         "pairs_per_lane": 90,
         "terminal_records": 1260,
         "parseable_records": 1036,
+        "quota_rate_limit_tail_records": 547,
         "privacy_receipt_sha256": receipt["privacy_receipt_sha256"],
     }
     for lane_id, relative in receipt["public_lane_files"].items():

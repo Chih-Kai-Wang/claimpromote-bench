@@ -66,14 +66,21 @@ def verify_public_evidence(
     packet = load_json(packet_path)
     aggregate = load_json(evidence_root / "reported-aggregate.json")
     execution = load_json(evidence_root / "execution-receipt.json")
-    if not all(isinstance(value, dict) for value in (receipt, plan, packet, aggregate, execution)):
+    failure_addendum = load_json(evidence_root / "failure-cause-addendum.json")
+    if not all(
+        isinstance(value, dict)
+        for value in (receipt, plan, packet, aggregate, execution, failure_addendum)
+    ):
         fail("public evidence metadata is malformed")
 
     receipt_payload = copy.deepcopy(receipt)
     observed_receipt_digest = receipt_payload.pop("privacy_receipt_sha256", None)
     if observed_receipt_digest != sha256_bytes(canonical_json(receipt_payload).encode("utf-8")):
         fail("privacy receipt self-digest differs")
-    actual_files = builder._file_map(evidence_root, exclude={"privacy-receipt.json"})
+    actual_files = builder._file_map(
+        evidence_root,
+        exclude={"failure-cause-addendum.json", "privacy-receipt.json"},
+    )
     if receipt.get("derived_files_sha256") != actual_files:
         fail("privacy receipt file map differs from the public evidence tree")
     if (
@@ -97,6 +104,43 @@ def verify_public_evidence(
         or execution.get("partial_resume_used") is not False
     ):
         fail("execution receipt no longer records a complete zero-retry run")
+    if (
+        failure_addendum.get("status") != "POST_RUN_FROZEN_LOG_AUDIT_COMPLETE"
+        or failure_addendum.get("scheduled_cells") != 1260
+        or failure_addendum.get("transport_failures") != 630
+        or failure_addendum.get("transport_failure_categories")
+        != {
+            "AUTHORIZATION": 76,
+            "CONNECTION": 1,
+            "QUOTA_RATE_LIMIT": 547,
+            "SERVER": 5,
+            "TIMEOUT": 1,
+        }
+        or failure_addendum.get("quota_cutoff")
+        != {
+            "cells": 547,
+            "contiguous_schedule_tail": True,
+            "first_zero_based_sequence": 713,
+            "last_zero_based_sequence": 1259,
+        }
+        or failure_addendum.get("interpretation_boundary", {}).get(
+            "shared_account_quota_confound_present"
+        )
+        is not True
+        or failure_addendum.get("interpretation_boundary", {}).get(
+            "model_family_comparison_supported"
+        )
+        is not False
+        or failure_addendum.get("interpretation_boundary", {}).get(
+            "route_reliability_comparison_supported"
+        )
+        is not False
+        or failure_addendum.get("privacy", {}).get("raw_error_text_included") is not False
+        or failure_addendum.get("privacy", {}).get("credentials_included") is not False
+        or failure_addendum.get("privacy", {}).get("provider_response_identifiers_included")
+        is not False
+    ):
+        fail("post-run frozen-log failure addendum differs")
 
     lane_order = plan.get("execution", {}).get("base_lane_order")
     lane_files = receipt.get("public_lane_files")
@@ -205,6 +249,7 @@ def verify_public_evidence(
         "pairs_per_lane": 90,
         "terminal_records": 1260,
         "parseable_records": parseable_total,
+        "quota_rate_limit_tail_records": failure_addendum["quota_cutoff"]["cells"],
         "privacy_receipt_sha256": observed_receipt_digest,
     }
 
