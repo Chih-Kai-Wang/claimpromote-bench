@@ -14,9 +14,9 @@ establish redistribution rights.
   executable or formal fixtures;
 - dataset builders and scoring, audit, validation, and replay scripts used by the paper;
 - selected tests that exercise the public replay path;
-- the clean r6, balanced-challenge, and SLSA-derived portability derivatives needed to recompute
-  every scheduled denominator, confusion cell, action recall, coverage value, and conditional or
-  end-to-end metric;
+- the clean r6, balanced-challenge, SLSA-derived portability, and counterfactual policy-switch
+  derivatives needed to recompute every scheduled denominator, confusion cell, action recall,
+  coverage value, and conditional or end-to-end metric;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
 - `LICENSE`, `DATA_LICENSE.md`, `THIRD_PARTY_NOTICES.md`, a concise README, and a dynamic manifest.

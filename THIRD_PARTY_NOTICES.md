@@ -24,7 +24,8 @@ The SLSA-derived portability study pins public SLSA 1.2 and in-toto Attestation 
 files by repository commit, path, and SHA-256. The study's states, four actions, precedence, and
 labels are new author policy rather than copied certification decisions. A public export should
 retain the source registry and upstream attribution while continuing to describe the policy as an
-author operationalization.
+author operationalization. The counterfactual policy-switch profiles are also author-defined test
+instruments; neither profile is a standards interpretation or deployment recommendation.
 
 ## Venue and software dependencies
 
