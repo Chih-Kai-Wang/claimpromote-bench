@@ -14,11 +14,14 @@ establish redistribution rights.
   executable or formal fixtures;
 - dataset builders and scoring, audit, validation, and replay scripts used by the paper;
 - selected tests that exercise the public replay path;
-- the clean r6, balanced-challenge, SLSA-derived portability, and counterfactual policy-switch
-  derivatives needed to recompute every scheduled denominator, confusion cell, action recall,
-  coverage value, and conditional or end-to-end metric;
-- the two local-replication plans, model catalog, pinned revisions, snapshot and environment
-  receipts, minimal MLX runner, and redacted item records; model weights remain upstream;
+- the clean r6, balanced challenge, hosted SLSA-field study, and both replacement-v2 local studies
+  needed to recompute every scheduled denominator, confusion cell, action recall, coverage value,
+  and conditional or end-to-end metric;
+- a redacted full-study exclusion receipt, but no item records, from the hosted policy-switch run
+  that exhausted shared subscription quota;
+- the two replacement-v2 local plans, model catalog, pinned revisions, snapshot and environment
+  receipts, minimal MLX runner, redacted item records, and a redacted receipt for the excluded
+  one-intent/zero-terminal v1 attempt; model weights remain upstream;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
 - `LICENSE`, `DATA_LICENSE.md`, `THIRD_PARTY_NOTICES.md`, a concise README, and a dynamic manifest.
@@ -48,8 +51,12 @@ minimum replay path.
   source envelopes under `release/reviewer-evidence-source/fresh-confirmatory/collected/`;
 - the quota-confounded seven-route study, its service-specific execution records, and its private
   failure journal, which are not needed to reproduce the paper;
-- the void SLSA v1 attempt's raw records; retain only a public-safe exclusion receipt if needed to
-  document why those records never entered model selection or manuscript metrics;
+- the void hosted SLSA v1 attempt's raw records; retain only a public-safe exclusion receipt if
+  needed to document why those records never entered model selection or manuscript metrics;
+- the local v1 schema-incompatible attempt's request journal and source bindings; retain only its
+  redacted receipt showing one invocation, zero terminal records, and zero retained outputs;
+- the quota-confounded hosted policy-switch run's raw records, valid-output subset, conditional
+  metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
 - downloaded model weights and Hugging Face caches;
 - the private repository's Git history.

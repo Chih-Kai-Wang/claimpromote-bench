@@ -260,7 +260,8 @@ def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None
     assert "validate the public alpha benchmark" in readme
     assert "rebuild and validate" not in readme
     assert "1,260" not in readme
-    assert "quota" not in readme
+    assert "subscription quota" in readme
+    assert "excluded in\nfull" in readme
     assert "seven-route" not in readme
 
 
@@ -275,9 +276,9 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
     assert "def validate_fresh_confirmatory" in validator
     assert "def validate_balanced_public_challenge" in validator
     assert "def validate_slsa_portability" in validator
-    assert "def validate_policy_switch" in validator
     assert "def validate_local_model_replications" in validator
     assert "def validate_synthetic_policy_evidence" in validator
+    assert '"policy_switch": validate_policy_switch()' not in validator
     assert "def validate_capable_hidden" not in validator
     assert "def validate_public_model_breadth" not in validator
     assert "def validate_v1_" not in validator
@@ -297,17 +298,11 @@ def test_slsa_anonymous_projection_redacts_schema_identity_and_rebinds_receipts(
     builder.scan_sensitive_payloads(destination)
 
     packet = json.loads(
-        (destination / "dataset" / "evaluation-prompt-packet.json").read_text(
-            encoding="utf-8"
-        )
+        (destination / "dataset" / "evaluation-prompt-packet.json").read_text(encoding="utf-8")
     )
     schedule = json.loads((destination / "request-schedule.json").read_text(encoding="utf-8"))
-    privacy = json.loads(
-        (destination / "privacy-receipt-review.json").read_text(encoding="utf-8")
-    )
-    result = json.loads(
-        (destination / "result-receipt-review.json").read_text(encoding="utf-8")
-    )
+    privacy = json.loads((destination / "privacy-receipt-review.json").read_text(encoding="utf-8"))
+    result = json.loads((destination / "result-receipt-review.json").read_text(encoding="utf-8"))
 
     assert len(packet["records"]) == 120
     assert all("anonymous.invalid/repository" in row["prompt"] for row in packet["records"])
@@ -318,6 +313,34 @@ def test_slsa_anonymous_projection_redacts_schema_identity_and_rebinds_receipts(
     )
     assert privacy["status"] == "ANONYMOUS_SYNTHETIC_POLICY_DERIVATIVE_VALIDATED"
     assert result["status"] == "ANONYMOUS_SYNTHETIC_POLICY_RESULTS_SEALED"
+
+
+def test_hosted_policy_switch_exclusion_receipt_contains_no_selected_rows(tmp_path: Path) -> None:
+    builder = load_builder()
+    destination = tmp_path / "hosted-policy-switch-exclusion.json"
+    builder.build_hosted_policy_switch_exclusion_receipt(destination)
+    receipt = json.loads(destination.read_text(encoding="utf-8"))
+    assert receipt["status"] == ("HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION")
+    assert receipt["decision"]["hosted_model_rows_enter_manuscript"] is False
+    assert receipt["decision"]["successful_row_subset_selected"] is False
+    assert receipt["raw_terminal_records_included"] is False
+    assert receipt["valid_output_subset_included"] is False
+    assert receipt["source_bindings_included"] is False
+
+
+def test_local_void_attempt_projects_only_a_redacted_exclusion_receipt(tmp_path: Path) -> None:
+    builder = load_builder()
+    destination = tmp_path / "initial-void-exclusion.json"
+    source = ROOT / "v2" / "local-model-replication-v1"
+    builder.build_local_void_exclusion_receipt(source, destination)
+    receipt = json.loads(destination.read_text(encoding="utf-8"))
+    assert receipt["status"] == "INELIGIBLE_LOCAL_ATTEMPT_PRE_TERMINAL_SCHEMA_REJECTION"
+    assert receipt["observed_counts"]["application_invocations"] == 1
+    assert receipt["observed_counts"]["durable_terminal_records"] == 0
+    assert receipt["observed_counts"]["retained_model_outputs"] == 0
+    assert receipt["source_bindings_included"] is False
+    assert receipt["raw_generation_text_included"] is False
+    assert receipt["model_outcome_included"] is False
 
 
 def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> None:

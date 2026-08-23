@@ -1581,6 +1581,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
             "baseline_files": {"structured": "predictions.jsonl"},
             "aggregate_baseline_key": "structured_random_forest_action_baseline",
             "controlled_path": "evidence_field",
+            "run_schema": "stronger-model-run-record.schema.json",
         },
         "COUNTERFACTUAL_POLICY_PROFILE_SWITCH": {
             "directory": "policy-switch",
@@ -1592,27 +1593,34 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
             },
             "aggregate_baseline_key": "structured_random_forest_comparators",
             "controlled_path": "active_profile",
+            "run_schema": "stronger-model-run-record.schema.json",
         },
         "LOCAL_MODEL_SLSA_POLICY_REPLICATION": {
             "directory": "local-model-replications/slsa",
-            "aggregate_design": "LOCAL_MODEL_REPLICATION_OF_PROSPECTIVELY_FROZEN_SLSA_POLICY_STUDY",
-            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION",
+            "aggregate_design": (
+                "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY"
+            ),
+            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION_REPLACEMENT_V2",
             "baseline_files": {"structured": "predictions.jsonl"},
             "aggregate_baseline_key": "structured_random_forest_action_baseline",
             "controlled_path": "evidence_field",
+            "run_schema": "local-model-run-record.schema.json",
+            "replacement_version": 2,
         },
         "LOCAL_MODEL_POLICY_SWITCH_REPLICATION": {
             "directory": "local-model-replications/policy-switch",
             "aggregate_design": (
-                "LOCAL_MODEL_REPLICATION_OF_PROSPECTIVELY_FROZEN_POLICY_SWITCH_STUDY"
+                "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_POLICY_SWITCH_STUDY"
             ),
-            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION",
+            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION_REPLACEMENT_V2",
             "baseline_files": {
                 "policy_aware": "policy_aware-predictions.jsonl",
                 "profile_blind": "profile_blind-predictions.jsonl",
             },
             "aggregate_baseline_key": "structured_random_forest_comparators",
             "controlled_path": "active_profile",
+            "run_schema": "local-model-run-record.schema.json",
+            "replacement_version": 2,
         },
     }
     specification = specifications[study_kind]
@@ -1746,6 +1754,15 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         or len({str(cell["cell_id"]) for cell in cells}) != 240
     ):
         fail(f"{study_kind}: frozen execution boundary changed")
+    replacement_version = specification.get("replacement_version")
+    if replacement_version is not None and (
+        plan.get("replacement_version") != replacement_version
+        or plan.get("freeze", {}).get("prior_ineligible_application_invocations") != 1
+        or plan.get("freeze", {}).get("prior_durable_terminal_records") != 0
+        or plan.get("freeze", {}).get("prior_retained_model_outputs") != 0
+        or plan.get("freeze", {}).get("eligible_replacement_inference_calls_before_freeze") != 0
+    ):
+        fail(f"{study_kind}: replacement-v2 exclusion boundary changed")
     validate_self_digest(schedule, "schedule_sha256", f"{study_kind} schedule")
     packet_hashes = {str(row["item_id"]): str(row["prompt_sha256"]) for row in packet_rows}
     projected_requests: dict[str, str] = {}
@@ -1784,6 +1801,13 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         or receipt.get("schedule_sha256") != schedule.get("schedule_sha256")
     ):
         fail(f"{study_kind}: execution receipt changed")
+    if replacement_version is not None and (
+        receipt.get("replacement_version") != replacement_version
+        or receipt.get("prior_ineligible_application_invocations") != 1
+        or receipt.get("void_attempt_receipt_sha256")
+        != sha256_file(root.parent / "initial-void-exclusion.json")
+    ):
+        fail(f"{study_kind}: replacement execution boundary changed")
 
     aggregate_lanes = {
         str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
@@ -1796,8 +1820,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         or not isinstance(aggregate_freeze, dict)
         or aggregate_freeze.get("plan_sha256") != sha256_file(root / "study-plan.json")
         or aggregate_freeze.get("schedule_sha256") != schedule.get("schedule_sha256")
-        or aggregate_freeze.get("dataset_manifest_sha256")
-        != sha256_file(dataset / "manifest.json")
+        or aggregate_freeze.get("dataset_manifest_sha256") != sha256_file(dataset / "manifest.json")
         or aggregate_freeze.get("packet_sha256") != packet.get("packet_sha256")
         or aggregate_freeze.get("execution_receipt_sha256")
         != sha256_file(root / "execution-receipt.json")
@@ -1805,6 +1828,10 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE"
     ):
         fail(f"{study_kind}: aggregate interpretation boundary changed")
+    if replacement_version is not None and aggregate_freeze.get(
+        "void_attempt_receipt_sha256"
+    ) != sha256_file(root.parent / "initial-void-exclusion.json"):
+        fail(f"{study_kind}: aggregate void-attempt binding changed")
     lane_metrics: Json = {}
     for lane_id in sorted(expected_lanes):
         run_path = root / str(lane_files[lane_id])
@@ -1822,7 +1849,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         for row in rows:
             validate_with_schema(
                 row,
-                ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json",
+                ROOT / "v2" / "schemas" / str(specification["run_schema"]),
                 str(row.get("item_id")),
             )
             reject_hidden_reasoning(row, f"{study_kind} {lane_id}")
@@ -1912,9 +1939,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         "execution-receipt.json": sha256_file(root / "execution-receipt.json"),
         "failure-taxonomy.json": sha256_file(root / "failure-taxonomy.json"),
         "reported-aggregate.json": sha256_file(root / "reported-aggregate.json"),
-        **{
-            str(relative): sha256_file(root / str(relative)) for relative in lane_files.values()
-        },
+        **{str(relative): sha256_file(root / str(relative)) for relative in lane_files.values()},
     }
     if (
         privacy.get("status") != "ANONYMOUS_SYNTHETIC_POLICY_DERIVATIVE_VALIDATED"
@@ -1977,7 +2002,11 @@ def validate_local_model_replications() -> Json:
     catalog = load_json(root / "model-catalog.json")
     snapshot = load_json(root / "model-snapshot-receipt.json")
     qualification = load_json(root / "environment-qualification.json")
-    if not all(isinstance(value, dict) for value in (manifest, catalog, snapshot, qualification)):
+    void_receipt = load_json(root / "initial-void-exclusion.json")
+    if not all(
+        isinstance(value, dict)
+        for value in (manifest, catalog, snapshot, qualification, void_receipt)
+    ):
         fail("local-model replication metadata is malformed")
     manifest_payload = deepcopy(manifest)
     observed_manifest_sha = manifest_payload.pop("manifest_sha256", None)
@@ -1998,6 +2027,7 @@ def validate_local_model_replications() -> Json:
         or manifest.get("raw_generation_text_included") is not False
         or manifest.get("hidden_reasoning_included") is not False
         or manifest.get("credentials_included") is not False
+        or manifest.get("initial_void_attempt_excluded_in_full") is not True
     ):
         fail("local-model replication manifest changed")
     lanes = catalog.get("lanes")
@@ -2017,6 +2047,7 @@ def validate_local_model_replications() -> Json:
         fail("local-model pre-inference catalog changed")
     validate_self_digest(snapshot, "self_digest", "local-model snapshot receipt")
     validate_self_digest(qualification, "self_digest", "local-model qualification receipt")
+    validate_self_digest(void_receipt, "self_digest", "local-model void-attempt receipt")
     catalog_hash = sha256_file(root / "model-catalog.json")
     if (
         snapshot.get("status") != "PINNED_LOCAL_MODEL_SNAPSHOTS_VALIDATED"
@@ -2029,6 +2060,16 @@ def validate_local_model_replications() -> Json:
         or qualification.get("credentials_used_or_retained") is not False
     ):
         fail("local-model environment qualification changed")
+    if (
+        void_receipt.get("status") != "INELIGIBLE_LOCAL_ATTEMPT_PRE_TERMINAL_SCHEMA_REJECTION"
+        or void_receipt.get("observed_counts", {}).get("application_invocations") != 1
+        or void_receipt.get("observed_counts", {}).get("durable_terminal_records") != 0
+        or void_receipt.get("observed_counts", {}).get("retained_model_outputs") != 0
+        or void_receipt.get("source_bindings_included") is not False
+        or void_receipt.get("raw_generation_text_included") is not False
+        or void_receipt.get("model_outcome_included") is not False
+    ):
+        fail("local-model initial void-attempt boundary changed")
     snapshots = snapshot.get("snapshots")
     qualified_models = qualification.get("models")
     if (
@@ -2040,18 +2081,12 @@ def validate_local_model_replications() -> Json:
         or any(row.get("stream_generation_api_succeeded") is not True for row in qualified_models)
     ):
         fail("local-model snapshot or smoke-test coverage changed")
-    catalog_models = {
-        (str(row["model_repo"]), str(row["model_revision"])) for row in lanes
-    }
-    if (
-        {(str(row.get("model_repo")), str(row.get("model_revision"))) for row in snapshots}
-        != catalog_models
-        or {
-            (str(row.get("model_repo")), str(row.get("model_revision")))
-            for row in qualified_models
-        }
-        != catalog_models
-    ):
+    catalog_models = {(str(row["model_repo"]), str(row["model_revision"])) for row in lanes}
+    if {
+        (str(row.get("model_repo")), str(row.get("model_revision"))) for row in snapshots
+    } != catalog_models or {
+        (str(row.get("model_repo")), str(row.get("model_revision"))) for row in qualified_models
+    } != catalog_models:
         fail("local-model metadata model sets differ")
     for row in snapshots:
         payload = {key: child for key, child in row.items() if key != "snapshot_digest"}
@@ -2069,10 +2104,10 @@ def validate_local_model_replications() -> Json:
         "requirements_sha256": sha256_file(root / "requirements.txt"),
         "snapshot_receipt_sha256": sha256_file(root / "model-snapshot-receipt.json"),
         "snapshot_receipt_self_digest": snapshot["self_digest"],
-        "qualification_receipt_sha256": sha256_file(
-            root / "environment-qualification.json"
-        ),
+        "qualification_receipt_sha256": sha256_file(root / "environment-qualification.json"),
         "qualification_receipt_self_digest": qualification["self_digest"],
+        "void_attempt_receipt_sha256": sha256_file(root / "initial-void-exclusion.json"),
+        "void_attempt_receipt_self_digest": void_receipt["self_digest"],
     }
     for dataset_key in ("slsa", "policy-switch"):
         plan = load_json(root / dataset_key / "study-plan.json")

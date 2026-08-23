@@ -1328,6 +1328,7 @@ def _project_synthetic_policy_aggregate(
                 "catalog_sha256",
                 "snapshot_receipt_sha256",
                 "qualification_receipt_sha256",
+                "void_attempt_receipt_sha256",
             ):
                 if key in freeze and key in projection:
                     freeze[key] = projection[key]
@@ -1346,7 +1347,12 @@ def _project_synthetic_policy_aggregate(
 
 
 def _project_synthetic_policy_execution_receipt(
-    source: Json, destination: Path, lane_files: Json, *, schedule_sha256: str
+    source: Json,
+    destination: Path,
+    lane_files: Json,
+    *,
+    schedule_sha256: str,
+    projection: Json | None = None,
 ) -> Json:
     receipt = anonymize_provenance(source)
     receipt["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
@@ -1354,6 +1360,8 @@ def _project_synthetic_policy_execution_receipt(
     receipt["terminal_journal_sha256"] = None
     receipt["source_journal_digests_included"] = False
     receipt["schedule_sha256"] = schedule_sha256
+    if projection is not None and "void_attempt_receipt_sha256" in receipt:
+        receipt["void_attempt_receipt_sha256"] = projection["void_attempt_receipt_sha256"]
     receipt["lane_output_sha256"] = {
         Path(str(relative)).name: sha256_file(destination / str(relative))
         for relative in lane_files.values()
@@ -1379,8 +1387,7 @@ def _write_synthetic_policy_review_receipts(
     source_failure = load_object(source_results / "failure-taxonomy.json")
     source_result = load_object(source_results / "result-receipt.json")
     if (
-        source_privacy.get("status")
-        != "PRIVATE_RESULTS_VALIDATED_ANONYMOUS_DERIVATIVE_REQUIRED"
+        source_privacy.get("status") != "PRIVATE_RESULTS_VALIDATED_ANONYMOUS_DERIVATIVE_REQUIRED"
         or source_privacy.get("terminal_records_validated") != 240
         or source_privacy.get("credentials_included") is not False
         or source_privacy.get("provider_response_identifiers_included") is not False
@@ -1615,8 +1622,86 @@ remain.
     )
 
 
+def build_hosted_policy_switch_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-switch-v1"
+        / "frozen"
+        / "results"
+        / "manuscript-exclusion-receipt.json"
+    )
+    decision = source.get("decision")
+    counts = source.get("observed_terminal_counts")
+    if (
+        source.get("status") != "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("hosted_model_rows_enter_manuscript") is not False
+        or decision.get("successful_row_subset_selected") is not False
+        or decision.get("conditional_model_efficacy_interpreted") is not False
+        or decision.get("hosted_study_resumed_or_retried") is not False
+        or not isinstance(counts, dict)
+        or counts.get("scheduled_and_terminal") != 240
+        or counts.get("quota_or_rate_limit_errors") != 114
+        or counts.get("last_quota_or_rate_limit_sequence") != 239
+    ):
+        fail("hosted policy-switch exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "observed_terminal_counts": counts,
+        "decision": decision,
+        "interpretation": source["interpretation"],
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "valid_output_subset_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
+def build_local_void_exclusion_receipt(source_root: Path, destination: Path) -> Json:
+    source = load_object(source_root / "frozen" / "slsa" / "void-exclusion-receipt.json")
+    counts = source.get("observed_counts")
+    boundary = source.get("failure_boundary")
+    decision = source.get("decision")
+    if (
+        source.get("status") != "INELIGIBLE_LOCAL_ATTEMPT_PRE_TERMINAL_SCHEMA_REJECTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(counts, dict)
+        or counts.get("application_invocations") != 1
+        or counts.get("durable_terminal_records") != 0
+        or counts.get("retained_model_outputs") != 0
+        or not isinstance(boundary, dict)
+        or boundary.get("benchmark_label_or_accuracy_consulted") is not False
+        or not isinstance(decision, dict)
+        or decision.get("attempt_enters_manuscript") is not False
+        or decision.get("resume_or_overwrite_used") is not False
+    ):
+        fail("local-model void-attempt receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "observed_counts": counts,
+        "failure_boundary": boundary,
+        "decision": decision,
+        "interpretation": source["interpretation"],
+        "source_bindings_included": False,
+        "raw_generation_text_included": False,
+        "model_outcome_included": False,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+    return review
+
+
 def build_local_model_replications_anonymous_evidence(destination: Path) -> None:
     source = ROOT / "v2" / "local-model-replication-v1"
+    study_source = source / "replacement-v2" / "frozen"
     destination.mkdir(parents=True, exist_ok=True)
     catalog = anonymize_provenance(load_object(source / "model-catalog.json"))
     write_json(destination / "model-catalog.json", catalog)
@@ -1637,15 +1722,19 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
     qualification["self_digest"] = _digest_without(qualification, "self_digest")
     write_json(destination / "environment-qualification.json", qualification)
 
+    void_receipt = build_local_void_exclusion_receipt(
+        source, destination / "initial-void-exclusion.json"
+    )
+
     environment_bindings: Json = {
         "catalog_sha256": sha256_file(destination / "model-catalog.json"),
         "requirements_sha256": sha256_file(destination / "requirements.txt"),
         "snapshot_receipt_sha256": sha256_file(destination / "model-snapshot-receipt.json"),
         "snapshot_receipt_self_digest": snapshot["self_digest"],
-        "qualification_receipt_sha256": sha256_file(
-            destination / "environment-qualification.json"
-        ),
+        "qualification_receipt_sha256": sha256_file(destination / "environment-qualification.json"),
         "qualification_receipt_self_digest": qualification["self_digest"],
+        "void_attempt_receipt_sha256": sha256_file(destination / "initial-void-exclusion.json"),
+        "void_attempt_receipt_self_digest": void_receipt["self_digest"],
     }
     configurations = {
         "slsa": {
@@ -1662,7 +1751,7 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
         },
     }
     for dataset_key, configuration in configurations.items():
-        source_study = source / "frozen" / dataset_key
+        source_study = study_source / dataset_key
         study_destination = destination / dataset_key
         dataset_projection = _project_synthetic_policy_dataset(
             Path(configuration["dataset"]), study_destination / "dataset"
@@ -1692,6 +1781,7 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
             study_destination,
             lane_files,
             schedule_sha256=projection["schedule_sha256"],
+            projection=projection,
         )
         write_json(study_destination / "execution-receipt.json", execution)
         write_json(
@@ -1700,9 +1790,7 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
                 aggregate,
                 study_destination,
                 lane_files,
-                execution_receipt_sha256=sha256_file(
-                    study_destination / "execution-receipt.json"
-                ),
+                execution_receipt_sha256=sha256_file(study_destination / "execution-receipt.json"),
                 projection=projection,
             ),
         )
@@ -1738,8 +1826,9 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
 The two preselected model families were fixed before any benchmark inference. The bundle records
 exact model revisions and snapshot file digests but does not redistribute model weights. The SLSA
 evidence contrast and active-policy contrast each contain two complete 120-item local routes.
-These runs add replayable configuration breadth, not a model-population estimate or causal model
-comparison.
+An initial schema-incompatible attempt retained one request intent and no terminal model output;
+it is excluded in full and represented only by a redacted receipt. The replacement runs add
+replayable configuration breadth, not a model-population estimate or causal model comparison.
 """,
         encoding="utf-8",
         newline="\n",
@@ -1762,6 +1851,7 @@ comparison.
         "hidden_reasoning_included": False,
         "credentials_included": False,
         "source_repository_or_commit_identity_included": False,
+        "initial_void_attempt_excluded_in_full": True,
     }
     manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
     write_json(destination / "MANIFEST.json", manifest)
@@ -2099,8 +2189,8 @@ def review_readme() -> str:
 
 This focused bundle contains the material needed to replay the paper: the public controlled
 benchmark, executable and Lean fixtures, the reviewer-release r6 data, the pair-balanced public
-challenge, the SLSA-derived portability study, the counterfactual policy-switch study, two pinned
-open-weight local replications, and item-level scoring records. It
+challenge, the SLSA-derived evidence study, two pinned open-weight local replications on the SLSA
+and policy-switch datasets, and item-level scoring records. It
 contains no Git history, author metadata, public repository link, private construction seed,
 human-subject record, or public workflow identifier.
 
@@ -2119,11 +2209,11 @@ if `lake` is missing.
 Use `--python-only` for an explicitly partial replay when Lean is unavailable.
 
 The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
-records, and analysis; the 180-item public challenge; and both 120-item software-supply-chain
-studies. The balanced-challenge records retain the model's final JSON text and sanitized error text
-for parser audit. The newer studies retain structured decisions but omit raw response text and
-free-form provider errors. Provider account and response identifiers, credentials, author
-provenance, and hidden reasoning are excluded.
+records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; and two
+local 120-item software-policy studies. The balanced-challenge records retain the model's final
+JSON text and sanitized error text for parser audit. The newer studies retain structured decisions
+but omit raw response text and free-form errors. Provider account and response identifiers,
+credentials, author provenance, and hidden reasoning are excluded.
 
 ## Scope limitation
 
@@ -2140,12 +2230,16 @@ four-class-balanced hidden test. Its service stacks differ, so their outcomes do
 model ablation. Every unusable r6 or challenge response remains in the registered denominator. The
 top-level manifest records the generated tree's actual file count.
 
-The SLSA-derived study tests protocol portability to a second authored policy ontology. The
-policy-switch study then holds evidence and states fixed while changing only the applicable
-published policy profile. SLSA and in-toto ground the evidence vocabulary; all transition rules,
-profiles, and labels remain author-defined. These studies are not standards certification,
-naturalistic deployment estimates, or between-route causal comparisons. Every scheduled failure
-remains in the end-to-end denominator.
+The SLSA-derived study instantiates a second authored policy ontology. The local policy-switch
+study holds evidence and states fixed while changing only the applicable published profile. SLSA
+and in-toto ground the evidence vocabulary; all transition rules, profiles, and labels remain
+author-defined. These studies are not standards certification, naturalistic deployment estimates,
+or between-route causal comparisons. Every scheduled failure in a retained study remains in the
+end-to-end denominator.
+
+A frozen hosted policy-switch execution exhausted a shared subscription quota. It is excluded in
+full, and the bundle retains only a redacted exclusion receipt. No successful hosted row or
+conditional hosted metric enters the paper or reviewer evidence.
 
 Two open-weight model families were selected and revision-pinned before benchmark inference, then
 run locally on both software-policy datasets with greedy decoding and zero retries. Exact model
@@ -2614,9 +2708,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/slsa-portability/execution-receipt.json",
         "evidence/slsa-portability/reported-aggregate.json",
         "evidence/slsa-portability/void-exclusion-receipt.json",
-        "evidence/policy-switch/MANIFEST.json",
-        "evidence/policy-switch/execution-receipt.json",
-        "evidence/policy-switch/reported-aggregate.json",
+        "evidence/hosted-policy-switch-exclusion.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -2631,6 +2723,8 @@ def verify_bundle(bundle: Path) -> None:
     }
     if (bundle / "evidence" / "public-model-breadth").exists():
         fail("excluded seven-route evidence survived anonymous staging")
+    if (bundle / "evidence" / "policy-switch").exists():
+        fail("excluded hosted policy-switch records survived anonymous staging")
     absent = sorted(required - set(actual_paths))
     if absent:
         fail(f"required reviewer-bundle files are missing: {absent}")
@@ -2661,7 +2755,9 @@ def write_manifest(bundle: Path) -> None:
     fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
     balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
     slsa_portability_included = (bundle / "evidence" / "slsa-portability").is_dir()
-    policy_switch_included = (bundle / "evidence" / "policy-switch").is_dir()
+    hosted_policy_switch_exclusion_included = (
+        bundle / "evidence" / "hosted-policy-switch-exclusion.json"
+    ).is_file()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
@@ -2688,9 +2784,12 @@ def write_manifest(bundle: Path) -> None:
             "slsa_portability_item_level_records_included": slsa_portability_included,
             "slsa_portability_raw_response_text_included": False,
             "slsa_portability_void_raw_records_included": False,
-            "policy_switch_summary_included": policy_switch_included,
-            "policy_switch_item_level_records_included": policy_switch_included,
+            "policy_switch_summary_included": False,
+            "policy_switch_item_level_records_included": False,
             "policy_switch_raw_response_text_included": False,
+            "hosted_policy_switch_exclusion_receipt_included": (
+                hosted_policy_switch_exclusion_included
+            ),
             "local_model_replications_included": local_replications_included,
             "local_model_replication_item_level_records_included": local_replications_included,
             "local_model_replication_raw_generation_text_included": False,
@@ -2815,7 +2914,6 @@ def paper_empirical_validator() -> str:
             "validate_fresh_confirmatory",
             "validate_balanced_public_challenge",
             "validate_slsa_portability",
-            "validate_policy_switch",
             "validate_local_model_replications",
         },
         "Recompute the paper-facing studies from anonymous item-level records.",
@@ -2828,7 +2926,6 @@ def main() -> int:
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
         "slsa_portability": validate_slsa_portability(),
-        "policy_switch": validate_policy_switch(),
         "local_model_replications": validate_local_model_replications(),
     }
     print(json.dumps(result, sort_keys=True))
@@ -2890,6 +2987,7 @@ def build(destination: Path) -> None:
         "v2/naturalistic-sources.json",
         "v2/local-model-replication-v1/model-catalog.json",
         "v2/local-model-replication-v1/requirements.txt",
+        "v2/schemas/local-model-run-record.schema.json",
         "v2/schemas/slsa-agent-decision.schema.json",
         "v2/schemas/run-record-v2.schema.json",
         "v2/schemas/stronger-model-run-record.schema.json",
@@ -2924,7 +3022,9 @@ def build(destination: Path) -> None:
             copy_anonymized_tree(source, evidence_destination)
     build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
     build_slsa_portability_anonymous_evidence(destination / "evidence" / "slsa-portability")
-    build_policy_switch_anonymous_evidence(destination / "evidence" / "policy-switch")
+    build_hosted_policy_switch_exclusion_receipt(
+        destination / "evidence" / "hosted-policy-switch-exclusion.json"
+    )
     build_local_model_replications_anonymous_evidence(
         destination / "evidence" / "local-model-replications"
     )
