@@ -1,0 +1,241 @@
+{
+  "baselines": {
+    "comparators": {
+      "policy_aware": {
+        "feature_count": 27,
+        "include_active_policy_profile": true,
+        "predictions_sha256": "sha256:3d9d5a4dcf87b2dc05eac05810db35b315d2b4150dc28f173332ce0c0315171f",
+        "training_accuracy": 1.0,
+        "training_correct": 60
+      },
+      "profile_blind": {
+        "feature_count": 25,
+        "include_active_policy_profile": false,
+        "predictions_sha256": "sha256:494c959131739a35fadaaed4561555c5498147acae89a1a116aa5875658bc5ac",
+        "training_accuracy": 0.5,
+        "training_correct": 30
+      }
+    },
+    "evaluation_gold_loaded": false,
+    "model_outputs_loaded": false,
+    "report_sha256": "sha256:6b96c979cbafa3ff337904f28b01197ee2bdbacadc53d571cfc99d5865d2243a",
+    "requirements_path": "v2/slsa-portability-v1/requirements-baseline.txt",
+    "requirements_sha256": "sha256:9d790a87f155134acc0d102efa4b6af644565fabc1aabf96f84882fede486add",
+    "root": "v2/policy-transition-graph-v1/frozen/baseline"
+  },
+  "budget": {
+    "adaptive_stop_on_usage_or_results": false,
+    "authorization_scope": "USER_AUTHORIZED_CURRENT_AVAILABLE_OPENCODE_GO_QUOTA",
+    "incremental_cash_cap_usd": 0.0,
+    "subscription_quota_only": true,
+    "workflow_initiated_purchase_or_recharge": false
+  },
+  "catalog": {
+    "file_sha256": "sha256:8dd9de20d56a2ca8149b2e8917fcac81a1920e1b214e3f265da3659f2b83db2f",
+    "path": "v2/policy-transition-graph-v1/hosted-v1/catalog-snapshot.json",
+    "selected_before_new_study_outputs": true,
+    "selected_model_ids": [
+      "qwen3.7-max",
+      "deepseek-v4-flash"
+    ]
+  },
+  "dataset": {
+    "dataset_fingerprint": "sha256:cf3ece1b05948214cfb60292cb655eb860c92276fd6f0c5c2a36c7618586fa13",
+    "manifest_file_sha256": "sha256:74db5b754619a65a12f202c908de4467e0ec166d078693f0f07b42a942dc1c23",
+    "pair_contract": "Both members contain byte-identical evidence and states. Only active_policy_profile changes, and the definitional action must change.",
+    "private_git_freeze_before_inference": true,
+    "public_before_inference": false,
+    "root": "v2/policy-transition-graph-v1/frozen/dataset",
+    "source_study_id": "claimpromotebench-policy-transition-graph-2026-08-v1"
+  },
+  "design": {
+    "attempts_per_cell": 1,
+    "authored_policy_difference_rules_covered": 12,
+    "contexts_per_transition": 1,
+    "controlled_path": "/active_policy_profile",
+    "item_call_reduction_fraction_against_balanced_diagnostic_suite": 0.8333333333333334,
+    "naturalistic_case_count": 0,
+    "planned_lanes": 2,
+    "planned_model_item_cells": 40,
+    "reachable_directed_nonself_transitions_covered": 10,
+    "selected_action_support": {
+      "ALLOW": 6,
+      "DEMOTE": 4,
+      "ESCALATE": 6,
+      "HOLD": 4
+    },
+    "selected_items": 20,
+    "selected_pairs": 10,
+    "selection_uses_model_outputs": false,
+    "source_evaluation_items": 120,
+    "source_evaluation_pairs": 60
+  },
+  "execution": {
+    "application_posts_per_cell": 1,
+    "base_lane_order": [
+      "opencode-go-qwen3.7-max-minimal-policy-migration-hosted-v1",
+      "opencode-go-deepseek-v4-flash-minimal-policy-migration-hosted-v1"
+    ],
+    "client_retry_count": 0,
+    "interruption_rule": "INCOMPLETE_STUDY_INELIGIBLE_FOR_REPORTING_NO_RESUME",
+    "minimum_global_request_interval_seconds": 0.75,
+    "order_rule": "SELECTED_ITEM_MAJOR_WITH_CYCLIC_LANE_ROTATION",
+    "partial_resume": "FORBIDDEN",
+    "planned_application_posts": 40,
+    "quota_error_rule": "TERMINAL_ERROR_RETAINED_IN_END_TO_END_DENOMINATOR",
+    "resource_exhaustion_eligibility_rule": "Ordinary service, syntax, schema, semantic, adapter, and rate-limit failures remain incorrect in the complete 40-cell end-to-end denominator. If a terminal provider error explicitly states that the shared subscription quota or usage allowance is exhausted, at least 20 scheduled cells remain, and every later cell is a transport failure, the complete hosted minimum-suite study is ineligible for route-conformance reporting. In that case, retain only a redacted full-study exclusion receipt; never select a successful subset.",
+    "schedule_path": "v2/policy-transition-graph-v1/hosted-minimal-v1/request-schedule.json",
+    "schedule_sha256": "sha256:d08574cd8bf0f6d2337480f91ab8d7ea57e167ae59d33a3371616473f8abb8f2",
+    "timeout_seconds": 180
+  },
+  "formal_lanes": [
+    {
+      "allow_single_json_object_extraction": true,
+      "api_kind": "anthropic_messages",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "billing_mode": "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA",
+      "cached_input_usd_per_million": 0.5,
+      "input_usd_per_million": 2.5,
+      "lane_id": "opencode-go-qwen3.7-max-minimal-policy-migration-hosted-v1",
+      "max_output_tokens": 1536,
+      "model": "qwen3.7-max",
+      "model_family": "Qwen",
+      "output_usd_per_million": 7.5,
+      "provider": "OpenCode Go",
+      "repeated_configuration": "opencode-go-qwen3.7-max",
+      "response_format": "prompt_only_json"
+    },
+    {
+      "allow_single_json_object_extraction": true,
+      "api_kind": "openai_compatible",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "billing_mode": "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA",
+      "cached_input_usd_per_million": 0.014,
+      "input_usd_per_million": 0.44,
+      "lane_id": "opencode-go-deepseek-v4-flash-minimal-policy-migration-hosted-v1",
+      "max_output_tokens": 1536,
+      "model": "deepseek-v4-flash",
+      "model_family": "DeepSeek",
+      "output_usd_per_million": 1.32,
+      "provider": "OpenCode Go",
+      "repeated_configuration": "opencode-go-deepseek-v4-flash-matched",
+      "response_format": "json_schema"
+    }
+  ],
+  "frozen_at_utc": "2026-08-23T15:07:50.396216Z",
+  "interpretation_boundary": "The minimum suite is a deterministic structural smoke gate over one author-defined synthetic policy migration. It does not preserve six-context balance, estimate stochastic reliability, or support unseen-policy, deployment, or model-family claims.",
+  "minimum_suite": {
+    "coverage": {
+      "changed_rules": {
+        "covered": 12,
+        "total": 12
+      },
+      "reachable_edges": {
+        "covered": 10,
+        "total": 10
+      }
+    },
+    "derivation_model_calls": 0,
+    "file_sha256": "sha256:911fedf5de57dbad9728a0b1725324416d5553c34cb9aa17864129b468fe996b",
+    "optimality_certificate": {
+      "bound_met": true,
+      "lower_bound_pairs": 10,
+      "lower_bound_reason": "Each controlled pair realizes exactly one directed action edge, so covering ten distinct reachable edges requires at least ten pairs.",
+      "witness_pairs": 10
+    },
+    "path": "v2/policy-transition-graph-v1/minimal-release-suite.json",
+    "self_digest": "sha256:3917f1d81cbb8f9bc1885de5f6f5f04d30da317b06179ca417af1412d0b3ce9e"
+  },
+  "promotion_rule": "Only the complete set of all 40 terminal outcomes may enter reporting. No partial, resumed, or selectively retained run is eligible. A lane passes the strict smoke gate only with 20 valid and action-correct items and 10 correct pairs.",
+  "prompt": {
+    "complete_decision_schema_visible_to_every_lane": true,
+    "decision_schema_sha256": "sha256:654db2a57694a0754a248a506df29934da7282d01946044067233fee64e22dcc",
+    "numeric_probability_type_visible_to_every_lane": true,
+    "packet_file_sha256": "sha256:17f145ea91382e09eed0cc68f1e8846b5b5053c03768996201ab9188786cf268",
+    "packet_sha256": "sha256:bd155db5ce07c80ecb667eec725bf0f4e2ebe53059a636626f47955721458845",
+    "path": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-prompt-packet.json",
+    "same_prompt_bytes_for_every_lane": true,
+    "source_study_id": "claimpromotebench-policy-transition-graph-2026-08-v1"
+  },
+  "purpose": "Execute a low-cost structural release gate that preserves reachable-edge and authored-rule coverage for the frozen policy migration.",
+  "runtime_source_sha256": {
+    "scripts/analyze_balanced_public_challenge.py": "sha256:db3a05911735675d9e8138c2bf6d4272c9b15e5ecba758787aec47b74526a42f",
+    "scripts/analyze_minimal_policy_migration_hosted_study.py": "sha256:951f5f6e0e0b7911eb55f67188dd87c1243dde74da41d2caa5f255c39c550ce6",
+    "scripts/build_policy_switch_study.py": "sha256:dde1009d27ffa5252da41cd862152c72238694e403a5c929a80a90aa22ea7391",
+    "scripts/derive_minimal_policy_migration_hosted_eligibility.py": "sha256:91bcf2d0d4890c5c576acbdc8943cd6c96a574c08efdfef6b90d436ad7f81f67",
+    "scripts/derive_minimal_policy_migration_suite.py": "sha256:24051c5c138960fd00c5212ba2a2c8e1e00a29d8838c11c82614940ab5b4ef29",
+    "scripts/finalize_minimal_policy_migration_hosted_results.py": "sha256:130e16bfb27f1d6f76e9c4fb30fdc34b633c16c715a9076530b71147488e2f70",
+    "scripts/finalize_synthetic_policy_results.py": "sha256:9dad7b72c5091c4ac58a843044cfc19d4d285a8f494ac849094352b7f0e18e73",
+    "scripts/freeze_minimal_policy_migration_hosted_study.py": "sha256:af694d9bd0dca944554e55cc8612f216930b5e989dbffb6a3d9428d89a02cd45",
+    "scripts/freeze_slsa_portability_study.py": "sha256:63907b7143812ad08c86f07cfd35ab2d9de5cfdd5d12a183e87861f4f12eff13",
+    "scripts/policy_switch.py": "sha256:7bbf6d72584f95763642ef8cecdd616327489feb1d83ef3195590564f283be4a",
+    "scripts/run_minimal_policy_migration_hosted_study.py": "sha256:c282489dea3cf4587042131a47dde4993c1f4e6ef753b6b573f24fb6628373bd",
+    "scripts/run_public_model_breadth_study.py": "sha256:7f3e32ceae1b3c0bb5efbcd7c0c062fcf4996308314a576a4da8a3279f7bd393",
+    "scripts/run_slsa_portability_study.py": "sha256:8001e152c56b2c6e2edb6942dc872f0c6757f10d40513afe14fb8ae4276a9113",
+    "scripts/run_stronger_model_study.py": "sha256:128b2c2d9b63ddb972b83c7907332b4896cf25e16dc60b3abf3120a19d50b4a9",
+    "scripts/slsa_policy.py": "sha256:565d2d5653daf69b4e80c6624e2e1e930496f6cf4350de19419b11fcba6570c3",
+    "scripts/validate_minimal_policy_migration_hosted_study.py": "sha256:f020684f2eba3d408175b3a89bbbf87872ff2132af632f6c76b26707685eae1a",
+    "scripts/validate_policy_switch_study.py": "sha256:8f829b7192b4454544966f01b127ad7df10bc597d9493ceebf512338465b673b",
+    "scripts/validate_policy_transition_graph_study.py": "sha256:3c498b21c50cc261048084df4b6a8598ffdd318041c32bf25bfc05f622d0e928",
+    "src/claimpromotebench/dataset.py": "sha256:8b91fc03431ae266f6d8bf52c431793ba2c5f6bec8596fd58ad0b4fa7cb0eb23",
+    "src/claimpromotebench/decision_validation.py": "sha256:fa2c90c74e428c70c58bac422c171446eb38fefef1bb5dd1d7b3dd649adc7688",
+    "src/claimpromotebench/hashing.py": "sha256:190d1d8a67cb1ee6a9631f7661ff22429e1f80cec0bd010c944d596021c063fb",
+    "v2/policy-switch-v1/policy-contract.json": "sha256:f8c045667715238e9717bf6cec75aa87dc750191b617a3b414e77a5c40981f3c",
+    "v2/schemas/slsa-agent-decision.schema.json": "sha256:654db2a57694a0754a248a506df29934da7282d01946044067233fee64e22dcc",
+    "v2/schemas/stronger-model-run-record.schema.json": "sha256:846bd3242fb06602ce8e5358f82788c653c6806cc05a0ec11b0a1125c773662c",
+    "v2/slsa-portability-v1/policy-contract.json": "sha256:52adedd71d9a0d54dd8cdc0c67471c2b898619194940512c4e82bc3015731af7",
+    "v2/slsa-portability-v1/requirements-baseline.txt": "sha256:9d790a87f155134acc0d102efa4b6af644565fabc1aabf96f84882fede486add"
+  },
+  "schema_version": "1.0.0",
+  "selection_receipt": {
+    "file_sha256": "sha256:a73b9b4dbd50b839806a73802aa541048dcc8606f6e0256ce1f26c761021bb25",
+    "path": "v2/policy-transition-graph-v1/hosted-minimal-v1/selection-receipt.json",
+    "self_digest": "sha256:caa5915c9b4f58d530b4ac0f05b0de3b579c8775eef60ab7661fbcb00ca498cd"
+  },
+  "sources": {
+    "base_policy_path": "v2/slsa-portability-v1/policy-contract.json",
+    "base_policy_sha256": "sha256:52adedd71d9a0d54dd8cdc0c67471c2b898619194940512c4e82bc3015731af7",
+    "external_requirements_author_labels_separated": true,
+    "registry_path": "v2/slsa-portability-v1/source-registry.json",
+    "registry_sha256": "sha256:22e1b3f0ae76d11826cb57fcc7899d6dee1f052496ae21a456054ae0d494edee",
+    "switch_policy_path": "v2/policy-switch-v1/policy-contract.json",
+    "switch_policy_sha256": "sha256:f8c045667715238e9717bf6cec75aa87dc750191b617a3b414e77a5c40981f3c",
+    "validation_receipt_path": "v2/slsa-portability-v1/replacement-v2/source-validation-receipt.json",
+    "validation_receipt_sha256": "sha256:c2795ebc67ae194545b8cb4b0a57301845d7a2e673af9254bb81c3d8cafd2ef4"
+  },
+  "statistics": {
+    "between_lane_boundary": "Model, service adapter, and output-constraining mode differ between lanes; between-lane differences are descriptive.",
+    "failure_rule": "Every service, syntax, schema, semantic, quota, and adapter failure remains incorrect in the scheduled end-to-end denominator.",
+    "pair_rule": "A migration pair is correct only when both profile members are valid and action-correct.",
+    "primary_endpoints": [
+      "strict_all_items_and_pairs_smoke_pass",
+      "end_to_end_policy_transition_pair_accuracy",
+      "end_to_end_item_accuracy"
+    ],
+    "secondary_endpoints": [
+      "decision_coverage",
+      "pair_coverage",
+      "conditional_item_accuracy",
+      "conditional_pair_accuracy",
+      "per_action_recall",
+      "balanced_action_recall",
+      "macro_f1"
+    ],
+    "strict_smoke_pass_rule": "A lane passes only if all 20 items yield valid, action-correct decisions and all 10 controlled pairs are correct."
+  },
+  "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+  "study_id": "claimpromotebench-minimal-policy-migration-hosted-2026-08-v1",
+  "transition_graph": {
+    "coverage_path": "v2/policy-transition-graph-v1/frozen/transition-coverage.json",
+    "coverage_sha256": "sha256:bb02a0165b3be0db63dc842442b93fa25d4bd37aa9a45bdeff1b502d6331df83",
+    "directed_nonself_transitions_possible": 12,
+    "directed_transitions_semantically_reachable": 10,
+    "structurally_unreachable_transitions": [
+      "HOLD->DEMOTE",
+      "DEMOTE->HOLD"
+    ]
+  },
+  "truth_status": "SEALED_UNTIL_ALL_TERMINAL_RECORDS_EXIST"
+}
