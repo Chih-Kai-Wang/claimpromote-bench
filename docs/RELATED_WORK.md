@@ -89,7 +89,9 @@ Its distinctive evaluation choices are the combination of:
     and
 11. a provably minimum joint-adequacy smoke suite: ten pairs cover all ten reachable edges and all
     12 changed rules, reducing the structural route gate from 120 to 20 calls. The balanced 60-pair
-    suite remains necessary for repeated-context diagnostics.
+    suite remains necessary for repeated-context diagnostics; and
+12. a domain-independent compiler interface that accepts two deterministic policies and a finite
+    context grammar, with an independent cross-check that reconstructs the frozen 10-pair witness.
 
 This is not a truth benchmark. A transition can be admissible under the public policy while the underlying research claim remains scientifically wrong, unimportant, or semantically misstated; conversely, a true claim may correctly remain unpromoted because required evidence is absent.
 

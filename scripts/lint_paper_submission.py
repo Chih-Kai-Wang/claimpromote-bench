@@ -63,6 +63,14 @@ HOSTED_POLICY_REPLACEMENT_RECEIPT = (
     / "results"
     / "manuscript-eligibility-receipt.json"
 )
+HOSTED_MINIMUM_MIGRATION_RECEIPT = (
+    ROOT
+    / "v2"
+    / "policy-transition-graph-v1"
+    / "hosted-minimal-v1"
+    / "results"
+    / "manuscript-eligibility-receipt.json"
+)
 LOCAL_REPLICATION_ROOT = ROOT / "v2" / "local-model-replication-v1" / "replacement-v2" / "frozen"
 LOCAL_TRANSITION_GRAPH_ROOT = (
     ROOT / "v2" / "local-model-replication-v1" / "transition-graph-v1" / "frozen"
@@ -238,12 +246,12 @@ def validate_manuscript_style_audit() -> None:
         or boundary.get("existing_terminal_records_changed") is not False
         or boundary.get("retained_scored_terminal_records_added") != 720
         or boundary.get("retained_scored_model_calls_performed") != 720
-        or boundary.get("excluded_resource_failure_terminal_records_added") != 480
-        or boundary.get("excluded_resource_failure_model_calls_performed") != 480
-        or boundary.get("total_model_calls_performed") != 1200
+        or boundary.get("excluded_resource_failure_terminal_records_added") != 520
+        or boundary.get("excluded_resource_failure_model_calls_performed") != 520
+        or boundary.get("total_model_calls_performed") != 1240
         or boundary.get("excluded_resource_failure_model_rows_entered_manuscript") is not False
         or boundary.get("void_protocol_application_posts") != 1
-        or boundary.get("total_application_posts_during_revision") != 1201
+        or boundary.get("total_application_posts_during_revision") != 1241
         or boundary.get("completed_singleton_workflows_rerun") is not False
         or boundary.get("balanced_public_v1_rerun") is not False
         or boundary.get("paper_binding_validator") != "scripts/lint_paper_submission.py"
@@ -1030,7 +1038,12 @@ def confusion_counts(metrics: dict[str, Any]) -> dict[str, dict[str, int]]:
 
 
 def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
-    for label in ("tab:core-results", "tab:action-recall", "tab:confusion"):
+    for label in (
+        "tab:core-results",
+        "tab:action-recall",
+        "tab:conditional-action-recall",
+        "tab:confusion",
+    ):
         if rf"\label{{{label}}}" not in tex:
             fail(f"required paper table is missing: {label}")
     for config in configs:
@@ -1061,6 +1074,11 @@ def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
         )
         if action not in tex:
             fail(f"paper action-recall row is missing or stale: {label}")
+        conditional_action = f"{label} & " + " & ".join(
+            paper_rate(per_action[name]["conditional_recall"]) for name in ACTIONS
+        )
+        if conditional_action not in tex:
+            fail(f"paper conditional-action-recall row is missing or stale: {label}")
         counts = confusion_counts(metrics)
         confusion = f"{label} & " + " & ".join(
             "/".join(
@@ -1109,6 +1127,27 @@ def validate_new_study_claims(tex: str) -> None:
         or replacement_exclusion.get("free_form_error_text_included") is not False
     ):
         fail("hosted policy-switch replacement exclusion boundary changed")
+    minimum_exclusion = load_object(
+        HOSTED_MINIMUM_MIGRATION_RECEIPT,
+        "hosted minimum policy-migration exclusion receipt",
+    )
+    minimum_classification = minimum_exclusion.get("classification", {})
+    minimum_decision = minimum_exclusion.get("decision", {})
+    if (
+        minimum_exclusion.get("status")
+        != "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or minimum_exclusion.get("self_digest") != self_digest(minimum_exclusion, "self_digest")
+        or minimum_classification.get("eligible_for_route_conformance_reporting") is not False
+        or minimum_classification.get("explicit_resource_exhaustion_errors") != 40
+        or minimum_classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or minimum_classification.get("transport_status_counts") != {"ERROR": 40}
+        or minimum_classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 40}
+        or minimum_decision.get("all_40_terminal_outcomes_considered") is not True
+        or minimum_decision.get("hosted_route_rows_enter_manuscript") is not False
+        or minimum_decision.get("conditional_success_subset_selected") is not False
+        or minimum_exclusion.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted minimum policy-migration exclusion boundary changed")
     difference_coverage = load_object(
         POLICY_DIFFERENCE_COVERAGE, "policy-difference coverage receipt"
     )
@@ -1303,6 +1342,10 @@ def validate_new_study_claims(tex: str) -> None:
         (r"invalid response contents are omitted", "invalid-content publication boundary"),
         (r"hosted policy-switch.*excluded in full", "hosted full-study exclusion"),
         (r"no successful hosted row", "no valid-subset selection"),
+        (
+            r"40-cell hosted smoke.*excluded in full.*no.*model rows",
+            "minimum-suite hosted full-study exclusion",
+        ),
     )
     for pattern, description in required:
         require_regex(tex, pattern, description)

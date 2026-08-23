@@ -124,6 +124,15 @@ grammar, groups contexts by rule witness and ordered action pair, selects the re
 contexts, and freezes them before the evaluated route is called. Thus adequacy is established on
 the oracle side and cannot be chosen from model errors.
 
+The released compiler is independent of either ontology. Its interface accepts two deterministic
+policy evaluators, a finite context sequence, stable context identifiers, and authored rule
+witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
+difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. For $r$ changed rules and
+$k$ required edges, a dynamic program keeps at most $2^r$ rule masks while selecting one context
+per edge. If it returns a $k$-context joint-complete witness, the one-edge-per-context lower bound
+certifies global minimality. The implementation independently reconstructs the frozen witness from
+the published 60-pair candidate graph.
+
 The rule-stratified \texttt{BLUE}$\rightarrow$\texttt{AMBER} suite covers all 12 authored
 profile differences with five contexts each, but only six admission-centered edges:
 \allow$\leftrightarrow$\hold, \allow$\leftrightarrow$\demote, and
@@ -320,8 +329,11 @@ rates certify coverage only for that registered family; they neither estimate th
 production regressions nor exhaust other implementation faults.
 
 The minimum smoke suite was derived without model outputs but after the candidate graph existed.
-Its proof is structural and candidate-pool-relative; the study did not prospectively evaluate it as
-a deployment gate. Its 20 calls provide no repeated-context reliability estimate.
+Its proof is structural and candidate-pool-relative. A prospective 40-cell hosted smoke execution
+was excluded in full under its frozen shared-resource rule after every cell returned explicit quota
+exhaustion; no hosted model rows or efficacy metric from that run enters the paper. The retained
+evidence therefore does not establish deployment-gate reliability, and one context per edge cannot
+estimate repeated-context reliability.
 
 Conditional metrics describe a selected valid-output subset. They must be read beside end-to-end denominators. Invalid response contents are omitted from the paper and anonymous release, but their failure types and counts remain auditable.
 

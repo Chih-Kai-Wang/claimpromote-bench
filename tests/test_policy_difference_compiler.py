@@ -13,7 +13,9 @@ from claimpromotebench.policy_difference import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1"
+PRIVATE_GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1"
+REVIEW_GRAPH_ROOT = ROOT / "evidence" / "local-model-replications" / "policy-transition-graph"
+GRAPH_ROOT = PRIVATE_GRAPH_ROOT if PRIVATE_GRAPH_ROOT.is_dir() else REVIEW_GRAPH_ROOT
 
 
 def load_json(path: Path) -> Any:
@@ -52,8 +54,11 @@ def test_compile_policy_differences_retains_only_changed_actions() -> None:
 
 
 def test_generic_minimum_witness_reproduces_frozen_policy_migration_suite() -> None:
-    pairs = load_json(GRAPH_ROOT / "frozen" / "dataset" / "evaluation-pairs.json")
-    coverage = load_json(GRAPH_ROOT / "frozen" / "transition-coverage.json")
+    dataset_root = GRAPH_ROOT / "frozen" / "dataset"
+    if not dataset_root.is_dir():
+        dataset_root = GRAPH_ROOT / "dataset"
+    pairs = load_json(dataset_root / "evaluation-pairs.json")
+    coverage = load_json(dataset_root.parent / "transition-coverage.json")
     expected = load_json(GRAPH_ROOT / "minimal-release-suite.json")
     candidates = []
     for pair in pairs:

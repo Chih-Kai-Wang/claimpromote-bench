@@ -59,11 +59,20 @@ changed rules but only 6/10 reachable edges and detects 6/10 registered edge-loc
 mutants. The balanced graph suite covers and detects all ten edges; two other directions are
 structurally impossible because pair members share their current state.
 
+The reusable compiler in `src/claimpromotebench/policy_difference.py` accepts arbitrary
+deterministic policies, a finite context grammar, stable context identifiers, and authored rule
+witnesses. It has no dependency on the two study ontologies, prompts, models, or providers. A
+cross-check reconstructs the published minimum witness from the frozen 60-pair candidate graph.
+
 A deterministic selection over the frozen graph yields a provably minimum joint-adequacy smoke
 suite: ten pairs, 20 route calls, all 12 rules, and all ten reachable edges. This cuts the structural
 gate by 83.3% relative to the 60-pair graph suite. The full suite remains the diagnostic tier for
 six-context-per-edge evidence, factor localization, and stochastic-route assessment. Neither the
 mutation family nor the minimum suite estimates production fault prevalence.
+
+A separately frozen 40-cell hosted execution of this minimum suite was excluded in full after all
+cells returned explicit shared-quota exhaustion. It supplies no model-efficacy row and was not
+retried; the public-safe artifact retains only a redacted all-or-nothing exclusion receipt.
 
 ## Install and run checks
 
