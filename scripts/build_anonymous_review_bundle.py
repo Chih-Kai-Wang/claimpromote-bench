@@ -2971,6 +2971,7 @@ def build(destination: Path) -> None:
         "scripts/build_alpha.py",
         "scripts/build_v2_naturalistic_candidates.py",
         "scripts/finalize_synthetic_policy_results.py",
+        "scripts/finalize_local_model_results.py",
         "scripts/freeze_local_model_replications.py",
         "scripts/frozen_run_io.py",
         "scripts/local_model_replication.py",
