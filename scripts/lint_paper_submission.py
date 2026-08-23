@@ -49,6 +49,8 @@ SLSA_RESULT = SLSA_ROOT / "results" / "aggregate.json"
 POLICY_SWITCH_ROOT = ROOT / "v2" / "policy-switch-v1" / "frozen"
 POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
 POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
+POLICY_TRANSITION_GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1" / "frozen"
+POLICY_TRANSITION_GRAPH_COVERAGE = POLICY_TRANSITION_GRAPH_ROOT / "transition-coverage.json"
 HOSTED_POLICY_REPLACEMENT_RECEIPT = (
     ROOT
     / "v2"
@@ -58,6 +60,9 @@ HOSTED_POLICY_REPLACEMENT_RECEIPT = (
     / "manuscript-eligibility-receipt.json"
 )
 LOCAL_REPLICATION_ROOT = ROOT / "v2" / "local-model-replication-v1" / "replacement-v2" / "frozen"
+LOCAL_TRANSITION_GRAPH_ROOT = (
+    ROOT / "v2" / "local-model-replication-v1" / "transition-graph-v1" / "frozen"
+)
 BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
 BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
 BREADTH_RESULT = BREADTH_RESULT_ROOT / "reported-aggregate.json"
@@ -945,20 +950,34 @@ def synthetic_configs() -> list[dict[str, Any]]:
 
 def local_configs() -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
-    for dataset_key, prefix, source_root in (
-        ("slsa", "SLSA", SLSA_ROOT / "dataset"),
-        ("policy-switch", "Switch", POLICY_SWITCH_ROOT / "dataset"),
+    for dataset_key, prefix, study_root, source_root, expected_design in (
+        (
+            "slsa",
+            "SLSA",
+            LOCAL_REPLICATION_ROOT / "slsa",
+            SLSA_ROOT / "dataset",
+            "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY",
+        ),
+        (
+            "policy-switch",
+            "Switch",
+            LOCAL_REPLICATION_ROOT / "policy-switch",
+            POLICY_SWITCH_ROOT / "dataset",
+            "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_POLICY_SWITCH_STUDY",
+        ),
+        (
+            "policy-transition-graph",
+            "Graph",
+            LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph",
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset",
+            "LOCAL_MODEL_EVALUATION_OF_FROZEN_REACHABLE_POLICY_TRANSITION_GRAPH",
+        ),
     ):
-        study_root = LOCAL_REPLICATION_ROOT / dataset_key
         lanes = recompute_synthetic_lanes(
             study_root=study_root,
             dataset_root=source_root,
             aggregate_path=study_root / "results" / "aggregate.json",
-            expected_design=(
-                "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY"
-                if dataset_key == "slsa"
-                else "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_POLICY_SWITCH_STUDY"
-            ),
+            expected_design=expected_design,
         )
         families = {
             str(row.get("model_family")): row for row in lanes.values() if isinstance(row, dict)
@@ -967,14 +986,15 @@ def local_configs() -> list[dict[str, Any]]:
             fail(f"local replication family set changed: {dataset_key}")
         for family, label in (("Mistral", "Mistral local"), ("Phi", "Phi-4 local")):
             result.append({"label": f"{prefix} {label}", "metrics": families[family]["metrics"]})
-        if dataset_key == "policy-switch":
+        if dataset_key in {"policy-switch", "policy-transition-graph"}:
             aggregate = load_object(
-                study_root / "results" / "aggregate.json", "local policy-switch aggregate"
+                study_root / "results" / "aggregate.json",
+                f"local {dataset_key} aggregate",
             )
             comparators = aggregate.get("structured_random_forest_comparators", {})
             for comparator_id, label in (
-                ("policy_aware", "Switch policy-aware RF"),
-                ("profile_blind", "Switch profile-blind RF"),
+                ("policy_aware", f"{prefix} policy-aware RF"),
+                ("profile_blind", f"{prefix} profile-blind RF"),
             ):
                 result.append(
                     {
@@ -1129,9 +1149,74 @@ def validate_new_study_claims(tex: str) -> None:
         or blind.get("correct_pairs") != 0
     ):
         fail("registered policy-switch shortcut result changed")
+    transition_coverage = load_object(
+        POLICY_TRANSITION_GRAPH_COVERAGE, "policy-transition graph coverage receipt"
+    )
+    transition_source_bindings = transition_coverage.get("source_bindings", {})
+    expected_transition_bindings = {
+        "base_policy_sha256": sha256_file(
+            ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json"
+        ),
+        "switch_policy_sha256": sha256_file(
+            ROOT / "v2" / "policy-switch-v1" / "policy-contract.json"
+        ),
+        "evaluation_items_sha256": sha256_file(
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-items.jsonl"
+        ),
+        "evaluation_gold_sha256": sha256_file(
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-gold.jsonl"
+        ),
+        "evaluation_pairs_sha256": sha256_file(
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
+        ),
+        "manifest_sha256": sha256_file(
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "manifest.json"
+        ),
+    }
+    if (
+        transition_coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
+        or transition_coverage.get("self_digest")
+        != self_digest(transition_coverage, "self_digest")
+        or transition_source_bindings != expected_transition_bindings
+        or transition_coverage.get("authored_profile_difference_rules_covered") != 12
+        or transition_coverage.get("authored_profile_difference_rules_total") != 12
+        or transition_coverage.get("directed_action_transitions_covered") != 10
+        or transition_coverage.get("directed_action_transitions_semantically_reachable") != 10
+        or transition_coverage.get("directed_nonself_action_transitions_possible") != 12
+        or set(transition_coverage.get("evaluation_transition_counts", {}).values()) != {6}
+        or transition_coverage.get("structurally_unreachable_transitions")
+        != ["HOLD->DEMOTE", "DEMOTE->HOLD"]
+        or transition_coverage.get("profile_action_support")
+        != {
+            "POLICY_AMBER": {"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18},
+            "POLICY_BLUE": {"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18},
+        }
+    ):
+        fail("reachable policy-transition graph coverage changed")
+    graph_aggregate = load_object(
+        LOCAL_TRANSITION_GRAPH_ROOT
+        / "policy-transition-graph"
+        / "results"
+        / "aggregate.json",
+        "local policy-transition graph aggregate",
+    )
+    graph_comparators = graph_aggregate.get("structured_random_forest_comparators", {})
+    graph_aware = graph_comparators.get("policy_aware", {}).get("metrics", {})
+    graph_blind = graph_comparators.get("profile_blind", {}).get("metrics", {})
+    if (
+        graph_aware.get("correct_items") != 107
+        or graph_aware.get("correct_pairs") != 47
+        or graph_blind.get("correct_items") != 57
+        or graph_blind.get("correct_pairs") != 0
+    ):
+        fail("registered transition-graph shortcut result changed")
     for aggregate_path in (
         LOCAL_REPLICATION_ROOT / "slsa" / "results" / "aggregate.json",
         LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
+        LOCAL_TRANSITION_GRAPH_ROOT
+        / "policy-transition-graph"
+        / "results"
+        / "aggregate.json",
     ):
         aggregate = load_object(aggregate_path, "local replication aggregate")
         lanes = aggregate.get("lanes")
@@ -1148,7 +1233,10 @@ def validate_new_study_claims(tex: str) -> None:
         (r"0/60 pair accuracy", "profile-blind shortcut result"),
         (r"all 12 authored.*five contexts each", "policy-difference factor coverage"),
         (r"six admission-centered transitions.*ten pairs each", "policy transition balance"),
-        (r"does not cover transitions between two non-.*actions", "transition-graph boundary"),
+        (r"10/10 reachable non-self edges", "reachable transition-graph coverage"),
+        (r"six contexts for each.*reachable directed edge", "transition-graph balance"),
+        (r"HOLD.*DEMOTE.*structurally", "unreachable transition certificate"),
+        (r"18/12/12/18", "transition-graph per-profile action balance"),
         (r"30.*\\allow.*ten.*other action", "per-profile action balance"),
         (r"Mistral Small 3\.2 24B", "pinned Mistral route"),
         (r"Phi-4", "pinned Phi route"),

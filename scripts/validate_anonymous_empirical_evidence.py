@@ -1622,6 +1622,29 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
             "run_schema": "local-model-run-record.schema.json",
             "replacement_version": 2,
         },
+        "LOCAL_MODEL_POLICY_TRANSITION_GRAPH_REPLICATION": {
+            "directory": "local-model-replications/policy-transition-graph",
+            "aggregate_design": (
+                "LOCAL_MODEL_EVALUATION_OF_FROZEN_REACHABLE_POLICY_TRANSITION_GRAPH"
+            ),
+            "plan_status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION_REPLACEMENT_V2",
+            "baseline_files": {
+                "policy_aware": "policy_aware-predictions.jsonl",
+                "profile_blind": "profile_blind-predictions.jsonl",
+            },
+            "aggregate_baseline_key": "structured_random_forest_comparators",
+            "controlled_path": "active_profile",
+            "run_schema": "local-model-run-record.schema.json",
+            "replacement_version": 2,
+            "action_support": {"ALLOW": 36, "HOLD": 24, "DEMOTE": 24, "ESCALATE": 36},
+            "factor_count": 10,
+            "pair_requires_allow": False,
+            "transition_graph": True,
+            "baseline_correct": {
+                "policy_aware": {"items": 107, "pairs": 47},
+                "profile_blind": {"items": 57, "pairs": 0},
+            },
+        },
     }
     specification = specifications[study_kind]
     root = EVIDENCE / str(specification["directory"])
@@ -1676,9 +1699,13 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
     gold_by_id = {str(row["id"]): row for row in gold}
     if len(items) != 120 or len(item_by_id) != 120 or set(item_by_id) != set(gold_by_id):
         fail(f"{study_kind}: evaluation item coverage changed")
-    if Counter(str(row["decision"]["action"]) for row in gold) != Counter(
-        {"ALLOW": 60, "HOLD": 20, "DEMOTE": 20, "ESCALATE": 20}
-    ):
+    expected_action_support = Counter(
+        specification.get(
+            "action_support",
+            {"ALLOW": 60, "HOLD": 20, "DEMOTE": 20, "ESCALATE": 20},
+        )
+    )
+    if Counter(str(row["decision"]["action"]) for row in gold) != expected_action_support:
         fail(f"{study_kind}: gold action support changed")
     seen_member_ids: set[str] = set()
     factor_ids: set[str] = set()
@@ -1699,14 +1726,100 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         elif len(paths) != 1 or not paths[0].startswith("/evidence/0/observed/"):
             fail(f"{study_kind}: a pair changes more than one verifier field")
         pair_actions = {str(gold_by_id[item_id]["decision"]["action"]) for item_id in ids}
-        if "ALLOW" not in pair_actions or len(pair_actions) != 2:
+        if len(pair_actions) != 2 or (
+            specification.get("pair_requires_allow", True) and "ALLOW" not in pair_actions
+        ):
             fail(f"{study_kind}: pair actions no longer define an action-changing contrast")
-    if len(pairs) != 60 or seen_member_ids != set(item_by_id) or len(factor_ids) != 12:
+    if (
+        len(pairs) != 60
+        or seen_member_ids != set(item_by_id)
+        or len(factor_ids) != int(specification.get("factor_count", 12))
+    ):
         fail(f"{study_kind}: pair or factor coverage changed")
     if specification["controlled_path"] == "active_profile" and Counter(
         str(row["model_visible"]["active_policy_profile"]) for row in items
     ) != Counter({"POLICY_BLUE": 60, "POLICY_AMBER": 60}):
         fail(f"{study_kind}: policy-profile support changed")
+    if specification.get("transition_graph") is True:
+        transition_counts = Counter(str(pair.get("blue_to_amber_transition")) for pair in pairs)
+        expected_transitions = {
+            "ALLOW->HOLD",
+            "ALLOW->DEMOTE",
+            "ALLOW->ESCALATE",
+            "HOLD->ALLOW",
+            "HOLD->ESCALATE",
+            "DEMOTE->ALLOW",
+            "DEMOTE->ESCALATE",
+            "ESCALATE->ALLOW",
+            "ESCALATE->HOLD",
+            "ESCALATE->DEMOTE",
+        }
+        profile_support: dict[str, Counter[str]] = {
+            "POLICY_BLUE": Counter(),
+            "POLICY_AMBER": Counter(),
+        }
+        for item_id, item in item_by_id.items():
+            profile = str(item["model_visible"]["active_policy_profile"])
+            profile_support[profile][str(gold_by_id[item_id]["decision"]["action"])] += 1
+        coverage = load_json(root / "transition-coverage.json")
+        if not isinstance(coverage, dict):
+            fail(f"{study_kind}: transition-coverage receipt is malformed")
+        validate_self_digest(coverage, "self_digest", f"{study_kind} transition coverage")
+        expected_bindings = {
+            "manifest_sha256": sha256_file(dataset / "manifest.json"),
+            "evaluation_items_sha256": sha256_file(dataset / "evaluation-items.jsonl"),
+            "evaluation_gold_sha256": sha256_file(dataset / "evaluation-gold.jsonl"),
+            "evaluation_pairs_sha256": sha256_file(dataset / "evaluation-pairs.json"),
+            "base_policy_sha256": sha256_file(root / "base-policy-contract.json"),
+            "switch_policy_sha256": sha256_file(root / "policy-contract.json"),
+        }
+        expected_profile_support = Counter(
+            {"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18}
+        )
+        if (
+            transition_counts != Counter({transition: 6 for transition in expected_transitions})
+            or coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
+            or coverage.get("directed_nonself_action_transitions_possible") != 12
+            or coverage.get("directed_action_transitions_semantically_reachable") != 10
+            or coverage.get("directed_action_transitions_covered") != 10
+            or coverage.get("structurally_unreachable_transitions")
+            != ["HOLD->DEMOTE", "DEMOTE->HOLD"]
+            or coverage.get("authored_profile_difference_rules_covered") != 12
+            or coverage.get("authored_profile_difference_rules_total") != 12
+            or coverage.get("source_bindings") != expected_bindings
+            or any(value != expected_profile_support for value in profile_support.values())
+            or {
+                profile: Counter(actions)
+                for profile, actions in coverage.get("profile_action_support", {}).items()
+            }
+            != profile_support
+        ):
+            fail(f"{study_kind}: reachable transition-graph coverage changed")
+        decision = load_json(root / "design-decision-receipt.json")
+        if not isinstance(decision, dict):
+            fail(f"{study_kind}: design-decision receipt is malformed")
+        validate_self_digest(decision, "self_digest", f"{study_kind} design decision")
+        if (
+            decision.get("status")
+            != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
+            or decision.get("outcomes_used_to_choose_edges_or_contexts") is not False
+            or decision.get("transition_graph_model_calls_before_freeze") != 0
+            or decision.get("evaluation_gold_used_to_train_comparators") is not False
+            or decision.get("dataset_manifest_sha256") != sha256_file(dataset / "manifest.json")
+            or decision.get("transition_coverage_sha256")
+            != sha256_file(root / "transition-coverage.json")
+            or decision.get("baseline_report_sha256")
+            != sha256_file(root / "baseline" / "report.json")
+            or decision.get("baseline_prediction_sha256")
+            != {
+                name: sha256_file(root / "baseline" / name)
+                for name in (
+                    "policy_aware-predictions.jsonl",
+                    "profile_blind-predictions.jsonl",
+                )
+            }
+        ):
+            fail(f"{study_kind}: preinference transition-graph decision changed")
 
     packet_rows = packet.get("records")
     if not isinstance(packet_rows, list) or {str(row.get("item_id")) for row in packet_rows} != set(
@@ -1902,11 +2015,18 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
     if specification["controlled_path"] == "active_profile":
         aware = baseline_metrics["policy_aware"]
         blind = baseline_metrics["profile_blind"]
+        expected_correct = specification.get(
+            "baseline_correct",
+            {
+                "policy_aware": {"items": 120, "pairs": 60},
+                "profile_blind": {"items": 60, "pairs": 0},
+            },
+        )
         if (
-            aware.get("correct_items") != 120
-            or aware.get("correct_pairs") != 60
-            or blind.get("correct_items") != 60
-            or blind.get("correct_pairs") != 0
+            aware.get("correct_items") != expected_correct["policy_aware"]["items"]
+            or aware.get("correct_pairs") != expected_correct["policy_aware"]["pairs"]
+            or blind.get("correct_items") != expected_correct["profile_blind"]["items"]
+            or blind.get("correct_pairs") != expected_correct["profile_blind"]["pairs"]
         ):
             fail(f"{study_kind}: registered shortcut comparator result changed")
 
@@ -2020,7 +2140,7 @@ def validate_local_model_replications() -> Json:
         or manifest.get("status") != "ANONYMOUS_LOCAL_MODEL_REPLICATIONS"
         or manifest.get("file_count") != len(actual_files)
         or manifest.get("files") != actual_files
-        or manifest.get("studies") != ["policy-switch", "slsa"]
+        or manifest.get("studies") != ["policy-switch", "policy-transition-graph", "slsa"]
         or manifest.get("model_weights_included") is not False
         or manifest.get("exact_model_revisions_included") is not True
         or manifest.get("snapshot_file_digests_included") is not True
@@ -2099,6 +2219,9 @@ def validate_local_model_replications() -> Json:
 
     slsa = validate_synthetic_policy_evidence("LOCAL_MODEL_SLSA_POLICY_REPLICATION")
     policy_switch = validate_synthetic_policy_evidence("LOCAL_MODEL_POLICY_SWITCH_REPLICATION")
+    transition_graph = validate_synthetic_policy_evidence(
+        "LOCAL_MODEL_POLICY_TRANSITION_GRAPH_REPLICATION"
+    )
     expected_bindings = {
         "catalog_sha256": catalog_hash,
         "requirements_sha256": sha256_file(root / "requirements.txt"),
@@ -2109,7 +2232,7 @@ def validate_local_model_replications() -> Json:
         "void_attempt_receipt_sha256": sha256_file(root / "initial-void-exclusion.json"),
         "void_attempt_receipt_self_digest": void_receipt["self_digest"],
     }
-    for dataset_key in ("slsa", "policy-switch"):
+    for dataset_key in ("slsa", "policy-switch", "policy-transition-graph"):
         plan = load_json(root / dataset_key / "study-plan.json")
         if not isinstance(plan, dict) or any(
             plan.get("freeze", {}).get(key) != value for key, value in expected_bindings.items()
@@ -2122,11 +2245,12 @@ def validate_local_model_replications() -> Json:
         if planned_models != catalog_models:
             fail(f"local-model plan model set changed: {dataset_key}")
     return {
-        "studies": 2,
+        "studies": 3,
         "models": len(catalog_models),
-        "terminal_records": 480,
+        "terminal_records": 720,
         "slsa": slsa,
         "policy_switch": policy_switch,
+        "policy_transition_graph": transition_graph,
     }
 
 

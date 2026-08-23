@@ -363,6 +363,43 @@ def test_policy_difference_coverage_derivation_is_replayable_in_review_bundle() 
     assert "--expect" in runner
 
 
+def test_policy_transition_graph_review_receipts_are_rebound_and_identity_free(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    source = ROOT / "v2" / "policy-transition-graph-v1" / "frozen"
+    destination = tmp_path / "policy-transition-graph"
+    builder._project_synthetic_policy_dataset(source / "dataset", destination / "dataset")
+    builder.copy_tree(source / "baseline", destination / "baseline")
+    builder.copy_file(
+        ROOT / "v2" / "policy-switch-v1" / "policy-contract.json",
+        destination / "policy-contract.json",
+    )
+    builder.copy_file(
+        ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json",
+        destination / "base-policy-contract.json",
+    )
+    bindings = builder.build_transition_graph_review_receipts(source, destination)
+    coverage = json.loads((destination / "transition-coverage.json").read_text(encoding="utf-8"))
+    decision = json.loads(
+        (destination / "design-decision-receipt.json").read_text(encoding="utf-8")
+    )
+    rendered = json.dumps({"coverage": coverage, "decision": decision}, sort_keys=True)
+
+    assert coverage["directed_action_transitions_covered"] == 10
+    assert coverage["directed_action_transitions_semantically_reachable"] == 10
+    assert coverage["authored_profile_difference_rules_covered"] == 12
+    assert decision["transition_graph_model_calls_before_freeze"] == 0
+    assert decision["outcomes_used_to_choose_edges_or_contexts"] is False
+    assert bindings["dataset"]["transition_coverage_sha256"] == builder.sha256_file(
+        destination / "transition-coverage.json"
+    )
+    assert bindings["freeze"]["design_decision_receipt_sha256"] == builder.sha256_file(
+        destination / "design-decision-receipt.json"
+    )
+    assert "f0909172434" not in rendered
+
+
 def test_local_void_attempt_projects_only_a_redacted_exclusion_receipt(tmp_path: Path) -> None:
     builder = load_builder()
     destination = tmp_path / "initial-void-exclusion.json"

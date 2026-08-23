@@ -1178,6 +1178,7 @@ def _project_synthetic_policy_plan_and_schedule(
     destination: Path,
     dataset_projection: Json,
     *,
+    dataset_bindings: Json | None = None,
     environment_bindings: Json | None = None,
 ) -> Json:
     plan = anonymize_provenance(load_object(source_root / "study-plan.json"))
@@ -1229,6 +1230,11 @@ def _project_synthetic_policy_plan_and_schedule(
         dataset["packet_sha256"] = dataset_projection["packet_sha256"]
     else:
         fail("synthetic-policy plan lacks a prompt-packet binding")
+    if dataset_bindings is not None:
+        for key, value in dataset_bindings.items():
+            if key not in dataset:
+                fail(f"synthetic-policy plan lacks dataset field: {key}")
+            dataset[key] = value
     freeze = plan.get("freeze")
     if environment_bindings is not None:
         if not isinstance(freeze, dict):
@@ -1760,6 +1766,98 @@ def derive_policy_difference_coverage(dataset_root: Path, policy_path: Path) -> 
     return value
 
 
+def build_transition_graph_review_receipts(
+    source_root: Path,
+    destination: Path,
+) -> Json:
+    source_coverage = load_object(source_root / "transition-coverage.json")
+    if (
+        source_coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
+        or source_coverage.get("directed_action_transitions_semantically_reachable") != 10
+        or source_coverage.get("directed_action_transitions_covered") != 10
+        or source_coverage.get("authored_profile_difference_rules_covered") != 12
+        or source_coverage.get("self_digest")
+        != _digest_without(source_coverage, "self_digest")
+    ):
+        fail("policy-transition graph coverage receipt changed")
+    dataset = destination / "dataset"
+    coverage = anonymize_provenance(source_coverage)
+    coverage["schema_version"] = "1.0.0-review"
+    coverage["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    coverage["source_bindings"] = {
+        "manifest_sha256": sha256_file(dataset / "manifest.json"),
+        "evaluation_items_sha256": sha256_file(dataset / "evaluation-items.jsonl"),
+        "evaluation_gold_sha256": sha256_file(dataset / "evaluation-gold.jsonl"),
+        "evaluation_pairs_sha256": sha256_file(dataset / "evaluation-pairs.json"),
+        "base_policy_sha256": sha256_file(destination / "base-policy-contract.json"),
+        "switch_policy_sha256": sha256_file(destination / "policy-contract.json"),
+    }
+    coverage["self_digest"] = _digest_without(coverage, "self_digest")
+    write_json(destination / "transition-coverage.json", coverage)
+
+    source_decision = load_object(
+        ROOT
+        / "v2"
+        / "local-model-replication-v1"
+        / "transition-graph-v1"
+        / "frozen"
+        / "policy-transition-graph"
+        / "design-decision-receipt.json"
+    )
+    expected_source_baseline_predictions = {
+        name: sha256_file(source_root / "baseline" / name)
+        for name in (
+            "policy_aware-predictions.jsonl",
+            "profile_blind-predictions.jsonl",
+        )
+    }
+    if (
+        source_decision.get("status")
+        != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
+        or source_decision.get("outcomes_used_to_choose_edges_or_contexts") is not False
+        or source_decision.get("transition_graph_model_calls_before_freeze") != 0
+        or source_decision.get("evaluation_gold_used_to_train_comparators") is not False
+        or source_decision.get("baseline_report_sha256")
+        != sha256_file(source_root / "baseline" / "report.json")
+        or source_decision.get("baseline_prediction_sha256")
+        != expected_source_baseline_predictions
+        or source_decision.get("self_digest")
+        != _digest_without(source_decision, "self_digest")
+    ):
+        fail("policy-transition graph design-decision receipt changed")
+    decision = anonymize_provenance(source_decision)
+    decision["schema_version"] = "1.0.0-review"
+    decision["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    decision["dataset_manifest_sha256"] = sha256_file(dataset / "manifest.json")
+    decision["transition_coverage_sha256"] = sha256_file(
+        destination / "transition-coverage.json"
+    )
+    decision["baseline_report_sha256"] = sha256_file(destination / "baseline" / "report.json")
+    decision["baseline_prediction_sha256"] = {
+        name: sha256_file(destination / "baseline" / name)
+        for name in (
+            "policy_aware-predictions.jsonl",
+            "profile_blind-predictions.jsonl",
+        )
+    }
+    decision["self_digest"] = _digest_without(decision, "self_digest")
+    write_json(destination / "design-decision-receipt.json", decision)
+    return {
+        "dataset": {
+            "baseline_report_sha256": sha256_file(destination / "baseline" / "report.json"),
+            "transition_coverage_sha256": sha256_file(
+                destination / "transition-coverage.json"
+            ),
+        },
+        "freeze": {
+            "design_decision_receipt_sha256": sha256_file(
+                destination / "design-decision-receipt.json"
+            ),
+            "transition_graph_model_calls_before_freeze": 0,
+        },
+    }
+
+
 def build_local_model_replications_anonymous_evidence(destination: Path) -> None:
     source = ROOT / "v2" / "local-model-replication-v1"
     study_source = source / "replacement-v2" / "frozen"
@@ -1810,20 +1908,45 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
             "policy": ROOT / "v2" / "policy-switch-v1" / "policy-contract.json",
             "study_kind": "LOCAL_MODEL_POLICY_SWITCH_REPLICATION",
         },
+        "policy-transition-graph": {
+            "source_study": (
+                source
+                / "transition-graph-v1"
+                / "frozen"
+                / "policy-transition-graph"
+            ),
+            "dataset": ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "dataset",
+            "baseline": ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "baseline",
+            "policy": ROOT / "v2" / "policy-switch-v1" / "policy-contract.json",
+            "base_policy": ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json",
+            "study_kind": "LOCAL_MODEL_POLICY_TRANSITION_GRAPH_REPLICATION",
+        },
     }
     for dataset_key, configuration in configurations.items():
-        source_study = study_source / dataset_key
+        source_study = Path(configuration.get("source_study", study_source / dataset_key))
         study_destination = destination / dataset_key
         dataset_projection = _project_synthetic_policy_dataset(
             Path(configuration["dataset"]), study_destination / "dataset"
         )
         copy_tree(Path(configuration["baseline"]), study_destination / "baseline")
         copy_file(Path(configuration["policy"]), study_destination / "policy-contract.json")
+        graph_bindings: Json = {"dataset": {}, "freeze": {}}
+        if dataset_key == "policy-transition-graph":
+            copy_file(
+                Path(configuration["base_policy"]),
+                study_destination / "base-policy-contract.json",
+            )
+            graph_bindings = build_transition_graph_review_receipts(
+                ROOT / "v2" / "policy-transition-graph-v1" / "frozen",
+                study_destination,
+            )
+        study_environment_bindings = {**environment_bindings, **graph_bindings["freeze"]}
         projection = _project_synthetic_policy_plan_and_schedule(
             source_study,
             study_destination,
             dataset_projection,
-            environment_bindings=environment_bindings,
+            dataset_bindings=graph_bindings["dataset"],
+            environment_bindings=study_environment_bindings,
         )
         plan = load_object(source_study / "study-plan.json")
         expected_lanes = {str(row["lane_id"]) for row in plan["formal_lanes"]}
@@ -1894,7 +2017,8 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
 
 The two preselected model families were fixed before any benchmark inference. The bundle records
 exact model revisions and snapshot file digests but does not redistribute model weights. The SLSA
-evidence contrast and active-policy contrast each contain two complete 120-item local routes.
+evidence contrast, rule-stratified policy contrast, and reachable transition graph each contain
+two complete 120-item local routes.
 An initial schema-incompatible attempt retained one request intent and no terminal model output;
 it is excluded in full and represented only by a redacted receipt. The replacement runs add
 replayable configuration breadth, not a model-population estimate or causal model comparison.
@@ -1912,7 +2036,7 @@ replayable configuration breadth, not a model-population estimate or causal mode
         "status": "ANONYMOUS_LOCAL_MODEL_REPLICATIONS",
         "file_count": len(files),
         "files": files,
-        "studies": ["policy-switch", "slsa"],
+        "studies": ["policy-switch", "policy-transition-graph", "slsa"],
         "model_weights_included": False,
         "exact_model_revisions_included": True,
         "snapshot_file_digests_included": True,
@@ -2258,8 +2382,8 @@ def review_readme() -> str:
 
 This focused bundle contains the material needed to replay the paper: the public controlled
 benchmark, executable and Lean fixtures, the reviewer-release r6 data, the pair-balanced public
-challenge, the SLSA-derived evidence study, two pinned open-weight local replications on the SLSA
-and policy-switch datasets, and item-level scoring records. It
+challenge, the SLSA-derived evidence study, and three pinned open-weight local replications on the
+fixed-policy, rule-stratified, and transition-graph datasets. It
 contains no Git history, author metadata, public repository link, private construction seed,
 human-subject record, or public workflow identifier.
 
@@ -2278,11 +2402,11 @@ if `lake` is missing.
 Use `--python-only` for an explicitly partial replay when Lean is unavailable.
 
 The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
-records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; and two
-local 120-item software-policy studies. The balanced-challenge records retain the model's final
-JSON text and sanitized error text for parser audit. The newer studies retain structured decisions
-but omit raw response text and free-form errors. Provider account and response identifiers,
-credentials, author provenance, and hidden reasoning are excluded.
+records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; and
+three local 120-item software-policy studies. The balanced-challenge records retain the model's
+final JSON text and sanitized error text for parser audit. The newer studies retain structured
+decisions but omit raw response text and free-form errors. Provider account and response
+identifiers, credentials, author provenance, and hidden reasoning are excluded.
 
 ## Scope limitation
 
@@ -2304,15 +2428,17 @@ study holds evidence and states fixed while changing only the applicable publish
 and in-toto ground the evidence vocabulary; all transition rules, profiles, and labels remain
 author-defined. These studies are not standards certification, naturalistic deployment estimates,
 or between-route causal comparisons. Every scheduled failure in a retained study remains in the
-end-to-end denominator. A recomputable receipt verifies coverage of all 12 authored profile
-differences and six of the 12 possible directed non-self action transitions.
+end-to-end denominator. Recomputable receipts distinguish coverage of all 12 authored profile
+differences from behavioral coverage: the rule-stratified suite covers 6/10 reachable directed
+non-self action transitions, while the transition graph covers 10/10 and certifies two impossible
+directions.
 
 Two frozen hosted policy-switch executions exhausted a shared subscription quota. Both are
 excluded in full, and the bundle retains only redacted exclusion receipts. No hosted row or
 conditional hosted metric enters the paper or reviewer evidence.
 
 Two open-weight model families were selected and revision-pinned before benchmark inference, then
-run locally on both software-policy datasets with greedy decoding and zero retries. Exact model
+run locally on all three software-policy datasets with greedy decoding and zero retries. Exact model
 revisions, snapshot file digests, qualification receipts, and every terminal outcome are included;
 weights are downloaded from their upstream repositories and are not redistributed in this bundle.
 
@@ -2801,6 +2927,10 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/local-model-replications/policy-switch/MANIFEST.json",
         "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
         "evidence/local-model-replications/policy-switch/reported-aggregate.json",
+        "evidence/local-model-replications/policy-transition-graph/MANIFEST.json",
+        "evidence/local-model-replications/policy-transition-graph/design-decision-receipt.json",
+        "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
+        "evidence/local-model-replications/policy-transition-graph/reported-aggregate.json",
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
