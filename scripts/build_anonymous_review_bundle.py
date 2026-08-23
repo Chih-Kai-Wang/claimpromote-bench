@@ -2902,6 +2902,7 @@ PYTHON_COMMANDS = [
         "-q",
         "tests/test_v2.py",
         "tests/test_v2_naturalistic.py",
+        "tests/test_policy_difference_compiler.py",
     ],
 ]
 
@@ -3069,6 +3070,7 @@ def verify_bundle(bundle: Path) -> None:
         "README.md",
         "THIRD_PARTY_NOTICES.md",
         "docs/PUBLIC_RELEASE_BOUNDARY.md",
+        "docs/POLICY_DIFFERENCE_COMPILER.md",
         "pyproject.toml",
         "requirements-review.lock",
         "scripts/build_policy_switch_study.py",
@@ -3081,6 +3083,7 @@ def verify_bundle(bundle: Path) -> None:
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
         "scripts/validate_policy_transition_graph_study.py",
+        "src/claimpromotebench/policy_difference.py",
         "evidence/fresh-confirmatory/MANIFEST.json",
         "evidence/fresh-confirmatory/frozen-manifest-metadata-correction.json",
         "evidence/fresh-confirmatory/redaction-receipt-review.json",
