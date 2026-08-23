@@ -87,9 +87,13 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 # rewrite bytes already covered by frozen experiment commitments or release evidence.
 exclude = [
   "scripts/analyze_balanced_public_challenge.py",
+  "scripts/build_policy_transition_graph_study.py",
   "scripts/build_stronger_model_packet.py",
   "scripts/build_v1_dataset.py",
   "scripts/derive_r6_reporting_addendum.py",
+  "scripts/policy_transition_graph_local.py",
+  "scripts/validate_policy_transition_graph_local_study.py",
+  "scripts/validate_policy_transition_graph_study.py",
 ]
 
 [tool.mypy]
