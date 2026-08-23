@@ -216,7 +216,7 @@ We register one stale-policy mutant $m_e$ for each reachable edge $e=(a,b)$. On 
 execution whose correct profile transition is $e$, $m_e$ returns the stale \texttt{BLUE} action
 $a$. A controlled pair kills $m_e$ if and only if it covers $e$. The rule-stratified suite therefore
 kills 6/10 registered edge mutants, whereas the graph suite kills 10/10. This oracle-side audit
-explains the coverage criterion; it does not estimate fault prevalence.
+explains the coverage criterion; it is not a model of fault prevalence.
 
 One pair realizes one edge, so ten reachable edges require at least ten pairs. A deterministic
 search over the six frozen contexts per edge finds a ten-pair witness that also covers all 12 rules.
@@ -292,7 +292,7 @@ The fixed SLSA Random Forest is perfect on held-out templates, but this does not
 \paragraph{Policy revisions yield regression tests.}
 Rule coverage misses four reachable non-\allow{} edges; the graph covers all ten. The registered
 mutants mirror this distinction by construction, so they validate adequacy rather than estimate
-fault prevalence. The 20-call minimum gate supports structural screening; the 120-call suite retains
+fault prevalence. The 20-call minimum gate does not replace the 60-pair diagnostic, which retains
 repeated contexts and factor localization. A policy edit regenerates the difference set and receipt,
 whereas a route edit reruns frozen pairs. This separates missing coverage, invalid output, and wrong
 actions. The compiler applies to finite typed decision surfaces, but we validate it only on two
@@ -311,13 +311,13 @@ The old r6 Flash interface produced 300 HTTP 401 responses; later Flash configur
 
 All labels come from authored synthetic policies. Compilation assumes two deterministic policies, authored rule witnesses, and a finite grammar; it neither extracts rules from prose nor exhausts deployment behavior. Action edges are recomputed, but incorrect witnesses would invalidate the rule-coverage certificate. SLSA and in-toto ground the software fields but do not endorse our state machine. Two ontologies do not define a policy population, and the profiles are fixed instruments rather than unseen-policy synthesis.
 
-R6 and the public challenge share one ontology and mostly the same templates; the challenge is public robustness evidence, not hidden-test generalization. Canonical ledgers leave extraction, ambiguity, policy retrieval, and downstream outcomes untested. Twelve source-traceable CORE-Bench candidates yielded zero defensible cases because time-stamped artifacts and provenance were missing. Naturalistic validity remains untested; we claim no human labels or agreement.
+R6 and the public challenge share one ontology and mostly the same templates; the challenge is public robustness evidence, not hidden-test generalization. Canonical ledgers leave extraction, ambiguity, policy retrieval, and downstream outcomes untested. Reviewing 12 source-traceable CORE-Bench candidates created zero cases and zero model calls because time-stamped artifacts and provenance were missing. Naturalistic validity remains untested. No human annotators or agreement statistic are claimed.
 
 Each configuration receives one call per item with zero retries. The results do not estimate sampling variance, temporal stability, retry policies, or a model population. Primary conformance is action-level after structural validation, not six-field exact match. Local routes use four-bit snapshots on one Apple Silicon stack; route differences are not causal.
 
 The research ontology has only a weak Naive Bayes comparator. The Random Forest's fixed-policy result exposes direct label encoding, and its policy-aware graph result is 107/120. Profile ablations close one shortcut but do not establish rule following under paraphrase, long policies, adversarial evidence, or unseen profile composition.
 
-The edge-local mutants cover only their registered family, and minimum-suite optimality is candidate-pool-relative. Quota-confounded hosted policy-switch studies and a 40-cell hosted smoke are excluded in full; no hosted row or successful subset enters the paper. Invalid response contents are omitted from the paper and anonymous release, but their counts remain in end-to-end denominators and auditable records.
+The edge-local mutants cover only their registered family, and minimum-suite optimality is candidate-pool-relative. Quota-confounded hosted policy-switch studies and a 40-cell hosted smoke are excluded in full; no successful hosted row, conditional subset, or hosted model rows enter the paper. Invalid response contents are omitted from the paper and anonymous release, but their counts remain in end-to-end denominators and auditable records.
 
 \section{Reproducibility Statement}
 
