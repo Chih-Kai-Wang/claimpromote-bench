@@ -17,8 +17,8 @@ establish redistribution rights.
 - the clean r6, balanced challenge, hosted SLSA-field study, and all three retained local studies
   needed to recompute every scheduled denominator, confusion cell, action recall, coverage value,
   and conditional or end-to-end metric;
-- a redacted full-study exclusion receipt, but no item records, from the hosted policy-switch run
-  that exhausted shared subscription quota;
+- redacted full-study exclusion receipts, but no item records or model rows, from the hosted policy
+  studies that exhausted shared subscription quota;
 - the three local plans, model catalog, pinned revisions, snapshot and environment
   receipts, minimal MLX runner, redacted item records, and a redacted receipt for the excluded
   one-intent/zero-terminal v1 attempt; model weights remain upstream;
@@ -57,6 +57,8 @@ minimum replay path.
   redacted receipt showing one invocation, zero terminal records, and zero retained outputs;
 - the quota-confounded hosted policy-switch run's raw records, valid-output subset, conditional
   metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
+- the quota-confounded hosted transition-graph run's raw records, route labels, model rows,
+  conditional metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
 - downloaded model weights and Hugging Face caches;
 - the private repository's Git history.

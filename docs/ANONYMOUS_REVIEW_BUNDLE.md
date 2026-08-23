@@ -26,6 +26,8 @@ The staged bundle contains:
 - the hosted SLSA portability study and three zero-retry local studies on the fixed policy,
   rule-stratified policy switch, and complete reachable policy-transition graph, with item-level
   records, learned comparators, freeze receipts, and recomputable coverage certificates;
+- redacted all-or-nothing exclusion receipts for three hosted policy studies that exhausted shared
+  subscription quota, without their item records, route labels, free-form errors, or model rows;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
   zero created cases, zero model calls, zero human annotators, and no agreement statistic;
 - selected validation code and tests, an anonymous MIT license, a one-command review runner, and a

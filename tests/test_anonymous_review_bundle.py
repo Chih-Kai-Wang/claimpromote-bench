@@ -383,6 +383,26 @@ def test_hosted_policy_switch_replacement_exclusion_contains_no_selected_rows(
     assert receipt["source_bindings_included"] is False
 
 
+def test_hosted_transition_graph_exclusion_contains_no_model_rows(tmp_path: Path) -> None:
+    builder = load_builder()
+    destination = tmp_path / "hosted-policy-transition-graph-exclusion.json"
+    builder.build_hosted_transition_graph_exclusion_receipt(destination)
+    receipt = json.loads(destination.read_text(encoding="utf-8"))
+    assert receipt["status"] == (
+        "HOSTED_TRANSITION_GRAPH_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+    )
+    assert receipt["study_scope"] == "REACHABLE_POLICY_TRANSITION_GRAPH"
+    assert receipt["classification"]["explicit_resource_exhaustion_errors"] == 240
+    assert receipt["decision"]["all_240_terminal_outcomes_considered"] is True
+    assert receipt["decision"]["hosted_model_rows_enter_manuscript"] is False
+    assert receipt["decision"]["conditional_success_subset_selected"] is False
+    assert receipt["raw_terminal_records_included"] is False
+    assert receipt["free_form_error_text_included"] is False
+    assert receipt["valid_output_subset_included"] is False
+    assert receipt["model_configuration_labels_included"] is False
+    assert receipt["source_bindings_included"] is False
+
+
 def test_policy_difference_coverage_derivation_is_replayable_in_review_bundle() -> None:
     builder = load_builder()
     dataset = ROOT / "v2" / "policy-switch-v1" / "frozen" / "dataset"
