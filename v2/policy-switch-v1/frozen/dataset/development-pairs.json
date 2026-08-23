@@ -1,0 +1,722 @@
+[
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-001-a",
+      "psw-dev-001-b"
+    ],
+    "pair_id": "psw-dev-001",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-002-a",
+      "psw-dev-002-b"
+    ],
+    "pair_id": "psw-dev-002",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-003-a",
+      "psw-dev-003-b"
+    ],
+    "pair_id": "psw-dev-003",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-004-a",
+      "psw-dev-004-b"
+    ],
+    "pair_id": "psw-dev-004",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-005-a",
+      "psw-dev-005-b"
+    ],
+    "pair_id": "psw-dev-005",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-006-a",
+      "psw-dev-006-b"
+    ],
+    "pair_id": "psw-dev-006",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-007-a",
+      "psw-dev-007-b"
+    ],
+    "pair_id": "psw-dev-007",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-008-a",
+      "psw-dev-008-b"
+    ],
+    "pair_id": "psw-dev-008",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-009-a",
+      "psw-dev-009-b"
+    ],
+    "pair_id": "psw-dev-009",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-010-a",
+      "psw-dev-010-b"
+    ],
+    "pair_id": "psw-dev-010",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-011-a",
+      "psw-dev-011-b"
+    ],
+    "pair_id": "psw-dev-011",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-dev-012-a",
+      "psw-dev-012-b"
+    ],
+    "pair_id": "psw-dev-012",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-013-a",
+      "psw-dev-013-b"
+    ],
+    "pair_id": "psw-dev-013",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-014-a",
+      "psw-dev-014-b"
+    ],
+    "pair_id": "psw-dev-014",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-015-a",
+      "psw-dev-015-b"
+    ],
+    "pair_id": "psw-dev-015",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-016-a",
+      "psw-dev-016-b"
+    ],
+    "pair_id": "psw-dev-016",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-017-a",
+      "psw-dev-017-b"
+    ],
+    "pair_id": "psw-dev-017",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-018-a",
+      "psw-dev-018-b"
+    ],
+    "pair_id": "psw-dev-018",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-019-a",
+      "psw-dev-019-b"
+    ],
+    "pair_id": "psw-dev-019",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-020-a",
+      "psw-dev-020-b"
+    ],
+    "pair_id": "psw-dev-020",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-021-a",
+      "psw-dev-021-b"
+    ],
+    "pair_id": "psw-dev-021",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-022-a",
+      "psw-dev-022-b"
+    ],
+    "pair_id": "psw-dev-022",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-023-a",
+      "psw-dev-023-b"
+    ],
+    "pair_id": "psw-dev-023",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-dev-024-a",
+      "psw-dev-024-b"
+    ],
+    "pair_id": "psw-dev-024",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-025-a",
+      "psw-dev-025-b"
+    ],
+    "pair_id": "psw-dev-025",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-026-a",
+      "psw-dev-026-b"
+    ],
+    "pair_id": "psw-dev-026",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-027-a",
+      "psw-dev-027-b"
+    ],
+    "pair_id": "psw-dev-027",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-028-a",
+      "psw-dev-028-b"
+    ],
+    "pair_id": "psw-dev-028",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-029-a",
+      "psw-dev-029-b"
+    ],
+    "pair_id": "psw-dev-029",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-030-a",
+      "psw-dev-030-b"
+    ],
+    "pair_id": "psw-dev-030",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-031-a",
+      "psw-dev-031-b"
+    ],
+    "pair_id": "psw-dev-031",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-032-a",
+      "psw-dev-032-b"
+    ],
+    "pair_id": "psw-dev-032",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-033-a",
+      "psw-dev-033-b"
+    ],
+    "pair_id": "psw-dev-033",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-034-a",
+      "psw-dev-034-b"
+    ],
+    "pair_id": "psw-dev-034",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-035-a",
+      "psw-dev-035-b"
+    ],
+    "pair_id": "psw-dev-035",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-dev-036-a",
+      "psw-dev-036-b"
+    ],
+    "pair_id": "psw-dev-036",
+    "split": "development"
+  }
+]

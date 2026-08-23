@@ -1,0 +1,135 @@
+{
+  "base_policy_sha256": "sha256:52adedd71d9a0d54dd8cdc0c67471c2b898619194940512c4e82bc3015731af7",
+  "data_file_sha256": {
+    "development-gold.jsonl": "sha256:90d820a209cc349df18c485665afc30e1516ca5e0148900b7126c97c9c256237",
+    "development-items.jsonl": "sha256:fb10f617a0f034fc4c204164ad6664d527b353a14fa887021ee4442530380910",
+    "development-pairs.json": "sha256:896bbfdda2c655ae2d69e64785e7d2a1a4d42718c3d3152f694be5b145a41ae8",
+    "evaluation-gold.jsonl": "sha256:6d00cd3476b56f7a7e70afc21fc04d3af321a92fa5a3d8d54ea2a7ab7638d45e",
+    "evaluation-items.jsonl": "sha256:21dc59c12f6954d550b194670f7f8f276fdd6a3ed9b3740eab93bf57a63f9833",
+    "evaluation-pairs.json": "sha256:c6cc8488a9183357caf10faaaf8ee0fbeda424cb8eb165cc9b2f2f2f33606b24"
+  },
+  "dataset_fingerprint": "sha256:fe675a81fb959d122aa751a6b49c5c5e8e67f39e6382c346fd38f4cc6225bbaf",
+  "decision_schema_sha256": "sha256:654db2a57694a0754a248a506df29934da7282d01946044067233fee64e22dcc",
+  "development": {
+    "action_counts": {
+      "ALLOW": 36,
+      "DEMOTE": 12,
+      "ESCALATE": 12,
+      "HOLD": 12
+    },
+    "factors": 12,
+    "items": 72,
+    "pairs": 36
+  },
+  "evaluation": {
+    "action_counts": {
+      "ALLOW": 60,
+      "DEMOTE": 20,
+      "ESCALATE": 20,
+      "HOLD": 20
+    },
+    "factors": 12,
+    "items": 120,
+    "pairs": 60,
+    "profile_counts": {
+      "POLICY_AMBER": 60,
+      "POLICY_BLUE": 60
+    }
+  },
+  "factor_inventory": [
+    {
+      "binding_profile": "POLICY_BLUE",
+      "factor_id": "candidate_provenance_profile",
+      "family": "candidate_admission",
+      "isolated_evidence_feature": "provenance_present",
+      "non_allow_action": "HOLD"
+    },
+    {
+      "binding_profile": "POLICY_AMBER",
+      "factor_id": "candidate_signature_profile",
+      "family": "candidate_admission",
+      "isolated_evidence_feature": "envelope_signature_verified",
+      "non_allow_action": "HOLD"
+    },
+    {
+      "binding_profile": "POLICY_BLUE",
+      "factor_id": "candidate_subject_profile",
+      "family": "candidate_admission",
+      "isolated_evidence_feature": "subject_digest_matches",
+      "non_allow_action": "HOLD"
+    },
+    {
+      "binding_profile": "POLICY_AMBER",
+      "factor_id": "candidate_attester_profile",
+      "family": "candidate_admission",
+      "isolated_evidence_feature": "attester_recognized",
+      "non_allow_action": "HOLD"
+    },
+    {
+      "binding_profile": "POLICY_BLUE",
+      "factor_id": "current_builder_profile",
+      "family": "current_basis",
+      "isolated_evidence_feature": "builder_id_matches_policy",
+      "non_allow_action": "DEMOTE"
+    },
+    {
+      "binding_profile": "POLICY_AMBER",
+      "factor_id": "current_source_uri_profile",
+      "family": "current_basis",
+      "isolated_evidence_feature": "source_uri_matches",
+      "non_allow_action": "DEMOTE"
+    },
+    {
+      "binding_profile": "POLICY_BLUE",
+      "factor_id": "current_source_ref_profile",
+      "family": "current_basis",
+      "isolated_evidence_feature": "source_ref_matches",
+      "non_allow_action": "DEMOTE"
+    },
+    {
+      "binding_profile": "POLICY_AMBER",
+      "factor_id": "current_policy_digest_profile",
+      "family": "current_basis",
+      "isolated_evidence_feature": "policy_digest_matches",
+      "non_allow_action": "DEMOTE"
+    },
+    {
+      "binding_profile": "POLICY_BLUE",
+      "factor_id": "source_revision_conflict_profile",
+      "family": "authenticated_conflict",
+      "isolated_evidence_feature": "authenticated_conflicts",
+      "non_allow_action": "ESCALATE"
+    },
+    {
+      "binding_profile": "POLICY_AMBER",
+      "factor_id": "build_parameters_conflict_profile",
+      "family": "authenticated_conflict",
+      "isolated_evidence_feature": "authenticated_conflicts",
+      "non_allow_action": "ESCALATE"
+    },
+    {
+      "binding_profile": "POLICY_BLUE",
+      "factor_id": "vsa_policy_conflict_profile",
+      "family": "authenticated_conflict",
+      "isolated_evidence_feature": "authenticated_conflicts",
+      "non_allow_action": "ESCALATE"
+    },
+    {
+      "binding_profile": "POLICY_AMBER",
+      "factor_id": "verification_result_conflict_profile",
+      "family": "authenticated_conflict",
+      "isolated_evidence_feature": "authenticated_conflicts",
+      "non_allow_action": "ESCALATE"
+    }
+  ],
+  "interpretation_boundary": "SLSA 1.2 and in-toto Attestation 1.2 ground the evidence fields. The authors define both counterfactual profiles, their transition rules, and every label. Neither profile is a SLSA certification or deployment recommendation.",
+  "packet_file_sha256": "sha256:99ecf2e6e2bd3c75d6d086376a33cbdf06112c916bfd8b01dddb4f5d296effc3",
+  "packet_sha256": "sha256:4756f02d8ba30b2038a7c0d3dc1317dd1129bb15c1fe517d9d5dfbe03766c66a",
+  "pair_contract": "Both members contain byte-identical evidence and states. Only active_policy_profile changes, and the definitional action must change.",
+  "schema_version": "1.0.0",
+  "shortcut_hypothesis": "A classifier that cannot observe the active profile receives identical features for both members and therefore cannot answer any action-changing pair completely.",
+  "source_registry_sha256": "sha256:22e1b3f0ae76d11826cb57fcc7899d6dee1f052496ae21a456054ae0d494edee",
+  "status": "SYNTHETIC_COUNTERFACTUAL_POLICY_SWITCH_DATASET",
+  "study_id": "claimpromotebench-policy-profile-switch-2026-08-v1",
+  "switch_policy_sha256": "sha256:f8c045667715238e9717bf6cec75aa87dc750191b617a3b414e77a5c40981f3c"
+}

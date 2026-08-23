@@ -56,6 +56,8 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/analyze_balanced_public_challenge.py",
     "scripts/analyze_public_model_breadth_study.py",
     "scripts/analyze_slsa_portability_study.py",
+    "scripts/analyze_policy_switch_study.py",
+    "scripts/build_policy_switch_study.py",
     "scripts/build_slsa_portability_study.py",
     "scripts/build_local_release_kit.py",
     "scripts/build_public_model_breadth_study.py",
@@ -63,14 +65,19 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_r6_reporting_addendum.py",
     "scripts/finalize_public_model_breadth_study.py",
     "scripts/freeze_slsa_portability_study.py",
+    "scripts/freeze_policy_switch_study.py",
+    "scripts/policy_switch.py",
     "scripts/run_public_model_breadth_study.py",
     "scripts/run_slsa_portability_study.py",
+    "scripts/run_policy_switch_study.py",
     "scripts/slsa_policy.py",
     "scripts/snapshot_slsa_portability_catalog.py",
     "scripts/train_slsa_structured_baseline.py",
+    "scripts/train_policy_switch_baselines.py",
     "scripts/validate_public_model_breadth_study.py",
     "scripts/validate_slsa_portability_freeze.py",
     "scripts/validate_slsa_portability_study.py",
+    "scripts/validate_policy_switch_study.py",
 }
 
 
