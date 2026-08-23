@@ -402,6 +402,10 @@ def test_hosted_transition_graph_exclusion_contains_no_model_rows(tmp_path: Path
     assert receipt["model_configuration_labels_included"] is False
     assert receipt["source_bindings_included"] is False
 
+    projected_validator = builder.paper_empirical_validator()
+    assert "def validate_hosted_exclusion_receipts" in projected_validator
+    compile(projected_validator, "validate_anonymous_empirical_evidence.py", "exec")
+
 
 def test_policy_difference_coverage_derivation_is_replayable_in_review_bundle() -> None:
     builder = load_builder()

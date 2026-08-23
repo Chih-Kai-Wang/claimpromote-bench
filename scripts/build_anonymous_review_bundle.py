@@ -3196,6 +3196,7 @@ def paper_empirical_validator() -> str:
             "validate_balanced_public_challenge",
             "validate_slsa_portability",
             "validate_local_model_replications",
+            "validate_hosted_exclusion_receipts",
         },
         "Recompute the paper-facing studies from anonymous item-level records.",
     ).rstrip()
@@ -3208,6 +3209,7 @@ def main() -> int:
         "balanced_public_challenge": validate_balanced_public_challenge(),
         "slsa_portability": validate_slsa_portability(),
         "local_model_replications": validate_local_model_replications(),
+        "hosted_exclusions": validate_hosted_exclusion_receipts(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0

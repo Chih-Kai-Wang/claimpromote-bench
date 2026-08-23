@@ -1773,9 +1773,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
             "base_policy_sha256": sha256_file(root / "base-policy-contract.json"),
             "switch_policy_sha256": sha256_file(root / "policy-contract.json"),
         }
-        expected_profile_support = Counter(
-            {"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18}
-        )
+        expected_profile_support = Counter({"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18})
         if (
             transition_counts != Counter({transition: 6 for transition in expected_transitions})
             or coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
@@ -1800,8 +1798,7 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
             fail(f"{study_kind}: design-decision receipt is malformed")
         validate_self_digest(decision, "self_digest", f"{study_kind} design decision")
         if (
-            decision.get("status")
-            != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
+            decision.get("status") != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
             or decision.get("outcomes_used_to_choose_edges_or_contexts") is not False
             or decision.get("transition_graph_model_calls_before_freeze") != 0
             or decision.get("evaluation_gold_used_to_train_comparators") is not False
@@ -2254,6 +2251,74 @@ def validate_local_model_replications() -> Json:
     }
 
 
+def validate_hosted_exclusion_receipts() -> Json:
+    paths = {
+        "initial_policy_switch": EVIDENCE / "hosted-policy-switch-exclusion.json",
+        "policy_switch_replacement": EVIDENCE / "hosted-policy-switch-replacement-exclusion.json",
+        "policy_transition_graph": EVIDENCE / "hosted-policy-transition-graph-exclusion.json",
+    }
+    receipts = {name: load_json(path) for name, path in paths.items()}
+    if any(not isinstance(receipt, dict) for receipt in receipts.values()):
+        fail("hosted exclusion receipt is malformed")
+    for name, receipt in receipts.items():
+        validate_self_digest(receipt, "self_digest", f"hosted exclusion {name}")
+        if (
+            receipt.get("source_identity") != "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+            or receipt.get("source_bindings_included") is not False
+            or receipt.get("raw_terminal_records_included") is not False
+            or receipt.get("valid_output_subset_included") is not False
+            or receipt.get("new_model_calls_performed_for_receipt") != 0
+        ):
+            fail(f"hosted exclusion privacy or selection boundary changed: {name}")
+
+    initial = receipts["initial_policy_switch"]
+    if (
+        initial.get("status") != "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION"
+        or initial.get("decision", {}).get("hosted_model_rows_enter_manuscript") is not False
+        or initial.get("decision", {}).get("successful_row_subset_selected") is not False
+    ):
+        fail("initial hosted policy-switch exclusion changed")
+
+    expected_status = {
+        "policy_switch_replacement": (
+            "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        ),
+        "policy_transition_graph": (
+            "HOSTED_TRANSITION_GRAPH_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        ),
+    }
+    for name in ("policy_switch_replacement", "policy_transition_graph"):
+        receipt = receipts[name]
+        classification = receipt.get("classification", {})
+        decision = receipt.get("decision", {})
+        if (
+            receipt.get("status") != expected_status[name]
+            or receipt.get("free_form_error_text_included") is not False
+            or classification.get("eligible_for_model_efficacy_reporting") is not False
+            or classification.get("explicit_resource_exhaustion_errors") != 240
+            or classification.get("persistent_exhaustion_trigger_sequence") != 0
+            or classification.get("transport_status_counts") != {"ERROR": 240}
+            or classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 240}
+            or decision.get("all_240_terminal_outcomes_considered") is not True
+            or decision.get("hosted_model_rows_enter_manuscript") is not False
+            or decision.get("conditional_success_subset_selected") is not False
+        ):
+            fail(f"complete hosted exclusion changed: {name}")
+    graph = receipts["policy_transition_graph"]
+    if (
+        graph.get("study_scope") != "REACHABLE_POLICY_TRANSITION_GRAPH"
+        or graph.get("model_configuration_labels_included") is not False
+    ):
+        fail("hosted transition-graph exclusion scope changed")
+    return {
+        "status": "HOSTED_EXCLUSION_RECEIPTS_PASS",
+        "receipt_count": len(receipts),
+        "raw_terminal_records_included": False,
+        "model_rows_included": False,
+        "successful_subsets_selected": False,
+    }
+
+
 def validate_public_model_breadth() -> Json:
     root = EVIDENCE / "public-model-breadth"
     manifest = load_json(root / "MANIFEST.json")
@@ -2549,6 +2614,7 @@ def main() -> int:
         "slsa_portability": validate_slsa_portability(),
         "policy_switch": validate_policy_switch(),
         "local_model_replications": validate_local_model_replications(),
+        "hosted_exclusions": validate_hosted_exclusion_receipts(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0
