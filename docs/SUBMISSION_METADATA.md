@@ -16,7 +16,7 @@ ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transit
 ## ICLR 2027 abstract
 
 ```text
-Model-mediated workflows increasingly apply versioned policies to structured evidence and emit tool-facing state changes. Fixed-policy accuracy cannot establish that a route used the active policy, and conditional accuracy can conceal interface failure. We introduce ClaimPromoteBench, a synthetic relational conformance protocol. Evidence pairs change one registered prerequisite under a fixed policy; policy pairs hold the complete decision context fixed and change only the active profile. We formalize policy-migration adequacy along two coordinates: changed-rule coverage and reachable action-transition coverage. A rule-complete suite kills only 6/10 registered edge-local stale-policy mutants; a graph-complete suite kills all ten and certifies two impossible directions. The graph also yields a provably minimum 10-pair, 20-call structural smoke gate covering all 12 changed rules and ten edges. Five frozen evaluations contain 420 pairs across research-evidence and software-artifact ontologies. Every scheduled service, syntax, schema, and semantic failure remains in the end-to-end denominator. On the fixed software policy, four model-route configurations achieved 23/60--49/60 pair accuracy, while a structured Random Forest achieved 60/60. POLICY RESULT TBD. The deterministic executor is the label definition and policy ceiling, not a learned baseline. These results support regression testing of policy-conditioned decision routes; they do not estimate naturalistic validity or causal model effects.
+Model-mediated workflows can apply versioned policies to structured evidence before emitting state changes. Fixed-policy accuracy cannot show that a route used the active version, and scoring only valid outputs hides interface failure. We introduce ClaimPromoteBench, a synthetic conformance-testing protocol that compiles evidence changes and executable policy differences into action-changing pairs. Migration adequacy separates changed-rule from reachable action-transition coverage; exact dynamic programs then select a minimum joint suite. In one authored migration, a rule-complete suite covers 6/10 reachable edges, whereas a graph-complete suite covers all ten, certifies two impossible directions, and yields a 10-pair gate covering 12 changed rules. Five frozen evaluations contain 420 pairs across two ontologies. Every scheduled service, syntax, schema, and semantic failure remains incorrect end to end. In hidden r6, Qwen returns 272/300 valid and 258/300 correct decisions, with 113/150 correct pairs. On an action-balanced public challenge, Qwen scores 48/90 pairs end to end and 48/64 conditionally; Flash scores 13/90 and 13/61, with DEMOTE recalls of 4/30 and 0/30. On the policy graph, local Mistral and Phi-4 score 10/60 and 2/60 pairs; both fail the minimum gate. The deterministic executor defines labels rather than serving as a learned baseline. These results support regression testing of finite typed decision surfaces, not naturalistic policy validity or causal model comparisons.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -107,6 +107,16 @@ Compiles behavioral differences between executable policy versions into minimum 
   preclude a strict causal model ablation;
 - service labels are configuration labels. Model, serving implementation, and adapter differ, so
   the old/new Flash routes do not support a strict causal ablation or model-family ranking;
+- the 60-pair policy-transition graph covers all ten reachable directed action edges and all 12
+  changed rules; the rule-stratified suite covers only 6/10 edges;
+- graph Mistral: 71 / 120 valid decisions, 40 / 120 correct items, 10 / 60 correct pairs, and
+  10 / 31 conditional pair accuracy; graph Phi-4: 43 / 120, 27 / 120, 2 / 60, and 2 / 8;
+- both graph routes have 0 / 24 end-to-end `DEMOTE` recall;
+- the prospectively selected minimum gate uses 10 pairs / 20 items while retaining all ten edges
+  and all 12 changed rules; Mistral scores 14 / 20 valid, 9 / 20 items, and 2 / 10 pairs, while
+  Phi-4 scores 6 / 20, 5 / 20, and 0 / 10; both fail the fixed strict gate;
+- the minimum-gate analysis makes zero additional calls, reuses the full graph records, and is not
+  an independent replication or a replacement for the 60-pair diagnostic;
 - permanent reviewer evidence uses dynamically counted manifests and reasoning-free derivatives;
 - deterministic policy execution is a definitional policy ceiling, not a learned baseline; the
   public-development text Naive Bayes comparator remains weak.
@@ -128,7 +138,7 @@ Code, public benchmark and challenge data, reviewer-release hidden datasets, ite
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, label generation, pair contracts, shortcuts, metamorphic invariance, executable artifacts, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. Reviewer derivatives remove credentials, provider and account identifiers, author provenance, hidden reasoning, raw final-response text, and free-form errors while preserving structured decisions, parse and failure classes, and all scheduled denominators. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
+The public benchmark is deterministically rebuildable and checked for schema, label generation, pair contracts, shortcuts, metamorphic invariance, executable artifacts, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. The local policy-transition graph seals 240 zero-retry terminal records, and its prospectively selected minimum-gate analysis makes no additional calls. Reviewer derivatives remove credentials, provider and account identifiers, author provenance, hidden reasoning, raw final-response text, and free-form errors while preserving structured decisions, parse and failure classes, and all scheduled denominators. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
 ```
 
 ## AI-use disclosure summary

@@ -114,24 +114,27 @@ AI-detector evasion method.
 
 ## Application to ClaimPromoteBench
 
-The paper-facing two-study audit measures 2,410 prose words and 139 usable sentences after
-excluding LaTeX tables, figures, and display math. Median sentence length is 16 words, the 90th
-percentile is 26.2, and the 95th percentile is 29.0. The submission lint counts 154 abstract
-tokens. This measurement revision is not used to restate the historical reduction percentage
-because the manuscript's scope and evidence tables changed. The revision:
+The release-candidate audit measures 4,579 prose words and 289 usable sentences after excluding
+LaTeX tables, figures, and display math. Median sentence length is 14 words, the 90th percentile is
+24, the 95th percentile is 27, and 0.346% of sentences exceed 40 words. The submission lint counts
+220 abstract tokens. These values describe the current five-suite policy-migration paper; they are
+not compared with earlier drafts whose scientific scope differed. The revision:
 
-- removes the v1 formatting-control and adaptive-pilot chronology from the main narrative;
-- removes the historical Macro-F1 correction ledger while retaining the corrected value and
-  four-class zero-division convention;
-- moves the zero-case naturalistic-candidate decision to limitations, where it constrains
-  external validity;
-- states hidden, public-challenge, conditional, and end-to-end estimands beside their results;
-- excludes the quota-confounded seven-route study rather than selecting its valid rows, while
-  retaining the complete frozen record in the private audit repository;
-- shortens the reproducibility and AI-disclosure wrappers while preserving privacy and author
-  responsibility;
-- retains every r6 and public-challenge confusion cell, action recall, factor summary, service
-  failure, and interpretation boundary.
+- makes executable policy revision, rather than broad research-agent capability, the unit of
+  study;
+- separates semantic policy differencing, migration adequacy, minimum-suite compilation, and
+  model-route evaluation so that inherited and new technical elements are explicit;
+- reports hidden, public-challenge, fixed-policy, policy-switch, and full-transition-graph results
+  with end-to-end denominators beside conditional scores;
+- keeps malformed-response counts in every scheduled denominator while omitting their contents
+  from the paper and anonymous release;
+- identifies the deterministic executor as the label definition, the profile-blind models as
+  shortcut controls, and the text Naive Bayes comparator as weak;
+- excludes quota-confounded hosted studies in full instead of selecting successful cells;
+- moves the zero-case naturalistic-candidate decision to limitations and makes clear that there
+  were no human annotators or agreement statistic; and
+- compresses execution chronology into reader-relevant protocol, scope, and reproducibility
+  statements.
 
 The final negative-pattern scan finds zero instances of the configured throat-clearing, vague
 importance, pompous-copula, AI-lexicon, formulaic-pivot, superficial-participle,

@@ -1054,6 +1054,23 @@ def confusion_counts(metrics: dict[str, Any]) -> dict[str, dict[str, int]]:
     return counts
 
 
+def conditional_action_recall(metrics: dict[str, Any], action: str) -> float | None:
+    """Derive conditional recall from the complete confusion row.
+
+    Some historical aggregates encode zero when an action has no valid decisions.  The paper uses
+    N/E for that empty denominator, so the confusion matrix is the authoritative representation.
+    """
+
+    per_action = metrics.get("per_action")
+    if not isinstance(per_action, dict) or not isinstance(per_action.get(action), dict):
+        fail(f"paper configuration lacks action metrics: {action}")
+    counts = confusion_counts(metrics)[action]
+    parseable = sum(int(counts.get(predicted, 0)) for predicted in ACTIONS)
+    if parseable == 0:
+        return None
+    return int(counts.get(action, 0)) / parseable
+
+
 def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
     for label in (
         "tab:core-results",
@@ -1092,7 +1109,7 @@ def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
         if action not in tex:
             fail(f"paper action-recall row is missing or stale: {label}")
         conditional_action = f"{label} & " + " & ".join(
-            paper_rate(per_action[name]["conditional_recall"]) for name in ACTIONS
+            paper_rate(conditional_action_recall(metrics, name)) for name in ACTIONS
         )
         if conditional_action not in tex:
             fail(f"paper conditional-action-recall row is missing or stale: {label}")
@@ -1393,7 +1410,7 @@ def validate_new_study_claims(tex: str) -> None:
         (r"all 12 authored.*five contexts each", "policy-difference factor coverage"),
         (r"six admission-centered transitions.*ten pairs each", "policy transition balance"),
         (r"10/10 reachable non-self edges", "reachable transition-graph coverage"),
-        (r"six contexts for each.*reachable directed edge", "transition-graph balance"),
+        (r"six contexts for each.*reachable\s+directed edge", "transition-graph balance"),
         (r"HOLD.*DEMOTE.*structurally", "unreachable transition certificate"),
         (r"18/12/12/18", "transition-graph per-profile action balance"),
         (r"kills 6/10[\s\S]{0,120}kills 10/10", "edge-local migration mutation audit"),
@@ -1408,10 +1425,10 @@ def validate_new_study_claims(tex: str) -> None:
         (r"different service stack", "old and new Flash stack boundary"),
         (r"neither model improvement nor an ablation effect", "Flash causal boundary"),
         (r"invalid response contents are omitted", "invalid-content publication boundary"),
-        (r"hosted policy-switch.*excluded in full", "hosted full-study exclusion"),
+        (r"hosted policy-switch.*excluded\s+in full", "hosted full-study exclusion"),
         (r"no successful hosted row", "no valid-subset selection"),
         (
-            r"40-cell hosted smoke.*excluded in full.*no.*model rows",
+            r"40-cell hosted smoke.*excluded\s+in full.*no.*model rows",
             "minimum-suite hosted full-study exclusion",
         ),
     )

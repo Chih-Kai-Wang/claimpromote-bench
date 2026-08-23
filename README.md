@@ -81,6 +81,13 @@ This division supports two reproducible release operations. A policy change rege
 difference set, adequacy certificates, and minimum gate; a model, prompt, decoder, adapter, or
 provider change replays the already frozen pairs.
 
+On the 60-pair graph, pinned local Mistral produced 71/120 valid decisions, 40/120 correct items,
+and 10/60 correct pairs; Phi-4 produced 43/120, 27/120, and 2/60. Conditional pair accuracy was
+10/31 and 2/8, and both routes had 0/24 end-to-end `DEMOTE` recall. On the prospectively selected
+minimum gate, Mistral produced 14/20 valid decisions, 9/20 correct items, and 2/10 correct pairs;
+Phi-4 produced 6/20, 5/20, and 0/10. Both failed the fixed strict gate. The subset reuses the full
+graph records and is not an independent replication.
+
 A separately frozen 40-cell hosted execution of this minimum suite was excluded in full after all
 cells returned explicit shared-quota exhaustion. It supplies no model-efficacy row and was not
 retried; the public-safe artifact retains only a redacted all-or-nothing exclusion receipt.
