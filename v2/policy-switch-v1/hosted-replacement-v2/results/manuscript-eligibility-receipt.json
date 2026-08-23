@@ -1,0 +1,33 @@
+{
+  "classification": {
+    "eligible_for_model_efficacy_reporting": false,
+    "explicit_resource_exhaustion_errors": 240,
+    "minimum_persistent_tail_cells": 20,
+    "parse_status_counts": {
+      "TRANSPORT_ERROR": 240
+    },
+    "persistent_exhaustion_trigger_sequence": 0,
+    "transport_status_counts": {
+      "ERROR": 240
+    }
+  },
+  "decision": {
+    "all_240_terminal_outcomes_considered": true,
+    "conditional_success_subset_selected": false,
+    "hosted_model_rows_enter_manuscript": false,
+    "predecessor_outputs_enter_manuscript": false
+  },
+  "free_form_error_text_included": false,
+  "new_model_calls_performed_for_receipt": 0,
+  "rule_frozen_before_inference": "Ordinary service, syntax, schema, semantic, adapter, and rate-limit failures remain incorrect in the complete end-to-end denominator. If a terminal provider error explicitly states that the shared subscription quota or usage allowance is exhausted, at least 20 scheduled cells remain, and every later cell is a transport failure, the complete hosted replacement is ineligible for model-efficacy reporting. In that case, retain only a redacted full-study exclusion receipt; never select a successful subset.",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:0a330379f75a427582858e8c66c1c3458848a3b6cd35acb64a2480a78c49c7ef",
+  "source_bindings": {
+    "execution_receipt_sha256": "sha256:3070c8dc2cf2cbb1cec1daba5f945e4d9d6dce5cd20cafc864cfd815d3335b80",
+    "plan_sha256": "sha256:3f9ec6b448b9adec20d3856ae719769cd98071e6a83e0074a778d17d651fa5ba",
+    "schedule_sha256": "sha256:f4376f4c7a88f361e1576e7f1767d1048658b0407193e0f8651b0891e5a0dec5",
+    "terminal_journal_sha256": "sha256:ccd3ee932699cc3f71608d89c7cc62cd9d75e8da4c0968f79e59c77b303129fd"
+  },
+  "status": "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION",
+  "study_id": "claimpromotebench-policy-profile-switch-hosted-replacement-2026-08-v2"
+}

@@ -1,0 +1,38 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-23T12:42:06.716225Z",
+  "credentials_retained": false,
+  "durable_request_intents": 240,
+  "durable_terminal_records": 240,
+  "frozen_plan_commit": "3cc76854219a4bef0d58570c840374b948a63104",
+  "hidden_reasoning_blocks_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-deepseek-v4-flash-policy-switch-hosted-replacement-v2.jsonl": "sha256:80a8e2804a5f4eb62900ce01d8c62f97768dc7f82f4d090cc5ce4a80e43682ca",
+    "opencode-go-qwen3.7-max-policy-switch-hosted-replacement-v2.jsonl": "sha256:901c5ff271e984baa59b8b3c0f378cd8e74516b9f90f5e53865db716fc872538"
+  },
+  "lanes": [
+    {
+      "lane_id": "opencode-go-qwen3.7-max-policy-switch-hosted-replacement-v2",
+      "records": 120,
+      "transport_errors": 120,
+      "valid_decisions": 0
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-flash-policy-switch-hosted-replacement-v2",
+      "records": 120,
+      "transport_errors": 120,
+      "valid_decisions": 0
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 240,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": "sha256:1185b45befabc8b75a98d84828a64adcc120cbe5d7261c7fced76c55769111e7",
+  "schedule_sha256": "sha256:7c2261986deaf27f96c87bfc24ccd2f5ed7ace61d660b6017c719db1d7cba79c",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T12:39:05.863484Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-policy-profile-switch-hosted-replacement-2026-08-v2",
+  "terminal_journal_sha256": "sha256:ccd3ee932699cc3f71608d89c7cc62cd9d75e8da4c0968f79e59c77b303129fd"
+}
