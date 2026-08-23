@@ -30,25 +30,15 @@ Model-mediated workflows increasingly apply versioned policies to structured evi
 
 \section{Introduction}
 
-A state transition can depend on both evidence and policy. The same artifact may be admitted under one release profile and held under another, even when its provenance record is unchanged. Conversely, one failed verifier field may change the prescribed action while the policy stays fixed. A model-mediated route can therefore fail by reading the evidence incorrectly, ignoring the active policy, or returning no valid structured decision.
+A state transition can depend on both evidence and policy. The same artifact may be admitted under one release profile and held under another, while one failed verifier field may change the action under a fixed policy. A model-mediated route can therefore misread evidence, ignore the active policy, or return no valid structured decision.
 
-Most aggregate evaluations do not separate these cases. A fixed-policy dataset can be solved by learning a stable field-to-label map. Conditional accuracy can also hide requests that fail at the service, syntax, schema, or semantic layer. Both shortcuts matter when a model emits decisions consumed by a workflow.
+Aggregate accuracy does not separate these failures. A fixed-policy dataset may admit a stable field-to-label shortcut, and conditional accuracy may hide service, syntax, schema, or semantic failures. We ask whether a route emits the action prescribed by a published policy for a typed ledger, current state, and requested state. The target is conformance to an author-defined executable specification, not scientific truth, software security, policy legitimacy, or general agent competence.
 
-We study the following bounded question:
-\begin{quote}
-\emph{Given a published policy, a typed evidence ledger, a current state, and a requested state, does a model-mediated route emit the action prescribed by that policy?}
-\end{quote}
-The target is conformance to an author-defined executable specification. It is not scientific truth, software security, policy legitimacy, or general agent competence.
-
-\cpb makes two interventions explicit. An \emph{evidence contrast} changes one policy-relevant evidence field and holds the active policy fixed. A \emph{policy contrast} changes only the active policy profile and reuses the same evidence, states, artifact, and request. Pair correctness requires both members to be valid and correct. End-to-end item and pair estimates retain all scheduled failures.
-
-The primary test unit is a two-execution relation: the prescribed action must change under one registered intervention. Evidence contrasts test sensitivity to an admissibility fact; policy contrasts test sensitivity to the active rule set. A route can pass one relation while failing the other. Together they test the route's response to the intervention; marginal label accuracy does not.
+\cpb uses two-execution relations. An \emph{evidence contrast} changes one policy-relevant field under a fixed policy; a \emph{policy contrast} changes only the active profile while reusing the evidence, states, artifact, and request. The prescribed action changes in every pair. Correctness requires two valid, correct members, and end-to-end estimates retain every scheduled failure. The two relations test evidence and policy sensitivity that marginal label accuracy cannot identify.
 
 We apply this protocol to two synthetic ontologies. The first governs research-evidence states. The second maps SLSA and in-toto attestation fields to an authored software-artifact admission state machine \cite{slsa2026v12,intoto2026attestation}. The source standards ground the field vocabulary; the authors define every transition rule and label.
 
-The same construction yields a release gate for policy migrations. Given old and new executable policies, a test author can enumerate contexts on which their prescribed actions differ, select a suite against declared coverage targets, freeze it, and run the unchanged model-service route. Failures then identify uncovered policy behavior, route invalidity, or action error without assuming a natural input distribution.
-
-The object being tested is the policy migration, not a particular model. Compilation occurs before route execution, so one frozen suite can regression-test a model, prompt, decoder, adapter, or provider change against the same behavioral contract.
+The same construction yields a policy-migration gate. A test author enumerates contexts on which old and new executable policies disagree, selects against declared coverage targets, and freezes the suite before route execution. One suite can then regression-test a model, prompt, decoder, adapter, or provider change against the same behavioral contract without assuming a natural input distribution.
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
@@ -274,7 +264,7 @@ Graph profile-blind RF & 120/120 & 57/120 & 57/120 & 60/60 & 0/60 & 0/60 \\
 
 \subsection{Action-level diagnostics}
 
-R6 contains only eight \demote{} and eight \escalate{} items, and the weak text baseline recovers neither class. The public challenge raises each non-\allow{} support to 30: Qwen recovers 4/30 \demote{} cases and Flash recovers 0/30. On the SLSA contrast, Qwen recovers 1/20 \demote{} and 7/20 \escalate{} cases; Flash recovers 15/20 and 17/20. Both local configurations recover 0/20 \demote{} cases. Mistral recovers 19/20 \hold{} and 12/20 \escalate{} cases, whereas Phi-4 recovers 4/20 and 19/20. Appendix~\ref{app:complete-results} reports every action recall and confusion cell, including no-valid-decision counts.
+R6 contains only eight \demote{} and eight \escalate{} items, and the weak text baseline recovers neither class. The public challenge raises each non-\allow{} support to 30: Qwen recovers 4/30 \demote{} cases and Flash recovers 0/30. On the SLSA contrast, Qwen recovers 1/20 \demote{} and 7/20 \escalate{} cases; Flash recovers 15/20 and 17/20. Both local configurations recover 0/20 \demote{} cases on the fixed policy and on the policy switch. For the switch, Mistral recovers 12/20 \hold{} and 10/20 \escalate{} cases; Phi-4 recovers 6/20 and 2/20. Appendix~\ref{app:complete-results} reports every action recall and confusion cell, including no-valid-decision counts.
 
 \subsection{Factor diagnostics}
 
@@ -288,28 +278,18 @@ On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor 
 The fixed SLSA Random Forest is perfect on held-out templates, so the structured fixed-policy mapping is learnable. That result does not establish policy conditioning. On both policy suites, removing the active profile forces the same feature vector to carry two different labels and yields 0/60 pair accuracy. The policy-aware comparators and model routes therefore answer a sharper question: whether the action changes with the published policy while all evidence remains fixed.
 
 \paragraph{Policy revisions yield regression tests.}
-For executable profiles $P_{\mathrm{old}}$ and $P_{\mathrm{new}}$, a test author can enumerate
-their difference set over a typed context grammar before changing the tested route. Each selected
-context becomes a two-member regression test. The rule-stratified suite shows that covering every
-authored difference can still leave behavioral consequences untested: it covers 12/12 rules but
-only 6/10 reachable edges. The transition-graph suite covers all ten, including four edges between
-non-\allow{} actions, and records why the other two directions cannot occur. This distinction gives
-policy migration tests two explicit adequacy targets rather than one aggregate accuracy score.
-The edge-local audit gives the gap a release-testing interpretation: the first suite detects 6/10
-registered stale-policy faults, while the graph-complete suite detects all ten. Because these faults
-are defined from the edge inventory, the audit validates adequacy rather than estimating field
-failure rates.
+The rule-stratified suite covers 12/12 authored changes but only 6/10 reachable edges; the graph
+suite covers all ten, including four between non-\allow{} actions, and certifies the other two as
+structurally impossible. Their registered stale-policy detection is therefore 6/10 versus 10/10.
+Because the mutants are defined from this edge inventory, the audit validates adequacy rather than
+estimating field failure rates. The minimum 10-pair, 20-call suite is a structural smoke gate; it
+does not replace the balanced 60-pair diagnostic for repeated contexts, factor localization, or
+route stochasticity.
 
-For routine changes, the minimum joint-adequacy suite supplies a 10-pair, 20-call structural smoke
-gate. The balanced 60-pair graph suite remains the diagnostic tier: it repeats every edge across six
-contexts and supports edge-level inspection. The smoke suite does not replace that 60-pair
-diagnostic when route stochasticity, factor localization, or repeated-context evidence matters.
-
-This procedure can sit in continuous integration for a versioned policy or model-service route. A
-policy change regenerates the difference set and its adequacy receipt; a route change reruns the
-same frozen pairs. The gate can then reject missing edge coverage, invalid output, or incorrect
-actions separately. The present experiments validate that mechanism on two authored ontologies;
-they do not establish its performance in other policy domains.
+In continuous integration, a policy change regenerates the difference set and adequacy receipt; a
+route change reruns the frozen pairs. Missing edge coverage, invalid output, and incorrect actions
+then fail separately. The experiments validate this mechanism on two authored ontologies, not its
+performance in other policy domains.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
 The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either.
