@@ -29,6 +29,7 @@ DEFAULT_ROOT = ROOT / "v2" / "slsa-portability-v1" / "dataset"
 POLICY_PATH = ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json"
 SOURCE_REGISTRY = ROOT / "v2" / "slsa-portability-v1" / "source-registry.json"
 DECISION_SCHEMA = ROOT / "v2" / "schemas" / "slsa-agent-decision.schema.json"
+V1_DATASET = ROOT / "v2" / "slsa-portability-v1" / "dataset"
 
 
 def fail(message: str) -> None:
@@ -93,6 +94,10 @@ def validate_dataset(dataset_root: Path, *, verify_upstream: bool) -> Json:
         fail("manifest source-registry hash differs")
     if manifest.get("decision_schema_sha256") != sha256_file(DECISION_SCHEMA):
         fail("manifest decision-schema hash differs")
+    if packet.get("study_id") != manifest.get("study_id"):
+        fail("prompt packet study ID differs from the manifest")
+    if packet.get("protocol_version") != manifest.get("protocol_version"):
+        fail("prompt packet protocol version differs from the manifest")
 
     loaded: dict[str, list[Json]] = {}
     for split in ("development", "evaluation"):
@@ -189,6 +194,8 @@ def validate_dataset(dataset_root: Path, *, verify_upstream: bool) -> Json:
     packet_records = packet.get("records")
     if not isinstance(packet_records, list) or len(packet_records) != 120:
         fail("evaluation packet must contain 120 records")
+    decision_schema_text = canonical_json(load_json(DECISION_SCHEMA))
+    protocol_version = manifest.get("protocol_version")
     for record in packet_records:
         item_id = str(record["item_id"])
         if item_id not in eval_items:
@@ -202,6 +209,27 @@ def validate_dataset(dataset_root: Path, *, verify_upstream: bool) -> Json:
             fail(f"packet leaks evaluation metadata for {item_id}")
         if canonical_json(public_contract(policy)) not in prompt:
             fail(f"packet omits the complete public policy for {item_id}")
+        if protocol_version == "v2":
+            if "DECISION_JSON_SCHEMA\n" not in prompt or decision_schema_text not in prompt:
+                fail(f"v2 packet omits the complete decision schema for {item_id}")
+            if "p_admissible must be a JSON number in [0,1], never true or false." not in prompt:
+                fail(f"v2 packet omits the numeric p_admissible contract for {item_id}")
+
+    if protocol_version == "v2":
+        if manifest.get("prompt_contract") != {
+            "complete_decision_schema_visible": True,
+            "fresh_relative_to_v1": True,
+            "same_prompt_bytes_for_every_lane": True,
+        }:
+            fail("v2 manifest prompt contract differs")
+        v1_packet = load_json(V1_DATASET / "evaluation-prompt-packet.json")
+        v1_prompt_hashes = {str(row["prompt_sha256"]) for row in v1_packet["records"]}
+        v2_prompt_hashes = {str(row["prompt_sha256"]) for row in packet_records}
+        if v1_prompt_hashes & v2_prompt_hashes:
+            fail("v2 reissues one or more v1 model prompts")
+        v1_item_ids = {str(row["item_id"]) for row in v1_packet["records"]}
+        if v1_item_ids & set(eval_items):
+            fail("v2 reuses one or more v1 evaluation item IDs")
 
     return {
         "status": "SLSA_PORTABILITY_FREEZE_VALID",

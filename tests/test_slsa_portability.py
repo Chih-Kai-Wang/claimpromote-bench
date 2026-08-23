@@ -23,12 +23,13 @@ from validate_slsa_portability_study import validate_dataset  # noqa: E402
 from claimpromotebench.dataset import load_json, load_jsonl  # noqa: E402
 from claimpromotebench.hashing import canonical_json, sha256_file  # noqa: E402
 
-STUDY_ROOT = ROOT / "v2" / "slsa-portability-v1"
+SLSA_ROOT = ROOT / "v2" / "slsa-portability-v1"
+STUDY_ROOT = SLSA_ROOT / "replacement-v2"
 DATASET = STUDY_ROOT / "dataset"
 BASELINE = STUDY_ROOT / "baseline"
 PLAN = STUDY_ROOT / "study-plan.json"
 SCHEDULE = STUDY_ROOT / "request-schedule.json"
-POLICY_PATH = STUDY_ROOT / "policy-contract.json"
+POLICY_PATH = SLSA_ROOT / "policy-contract.json"
 SCHEMA = ROOT / "v2" / "schemas" / "slsa-agent-decision.schema.json"
 
 
@@ -78,12 +79,39 @@ def test_slsa_prompt_contains_policy_but_not_pair_or_factor_metadata() -> None:
     packet = load_json(DATASET / "evaluation-prompt-packet.json")
     assert len(packet["records"]) == 120
     public_policy = canonical_json(public_contract(policy))
+    decision_schema = canonical_json(load_json(SCHEMA))
     for record in packet["records"]:
         prompt = record["prompt"]
         assert public_policy in prompt
+        assert decision_schema in prompt
+        assert "DECISION_JSON_SCHEMA\n" in prompt
+        assert "p_admissible must be a JSON number in [0,1], never true or false." in prompt
         assert record["item_id"] not in prompt
         assert record["pair_id"] not in prompt
         assert "factor_id" not in prompt
+
+
+def test_slsa_replacement_uses_fresh_prompts_and_item_ids() -> None:
+    v1_packet = load_json(SLSA_ROOT / "dataset" / "evaluation-prompt-packet.json")
+    v2_packet = load_json(DATASET / "evaluation-prompt-packet.json")
+    assert v2_packet["study_id"] == "claimpromotebench-slsa-policy-portability-2026-08-v2"
+    assert v2_packet["protocol_version"] == "v2"
+    assert {row["prompt_sha256"] for row in v1_packet["records"]}.isdisjoint(
+        {row["prompt_sha256"] for row in v2_packet["records"]}
+    )
+    assert {row["item_id"] for row in v1_packet["records"]}.isdisjoint(
+        {row["item_id"] for row in v2_packet["records"]}
+    )
+
+
+def test_slsa_predecessor_attempt_is_void_and_ineligible() -> None:
+    receipt = load_json(SLSA_ROOT / "void-attempt-v1" / "void-receipt.json")
+    assert receipt["status"] == "VOID_INCOMPLETE_PROTOCOL_DEFECT"
+    boundary = receipt["future_study_boundary"]
+    assert boundary["v1_records_eligible_for_manuscript_metrics"] is False
+    assert boundary["v1_records_eligible_for_model_or_item_selection"] is False
+    assert boundary["resume_authorized"] is False
+    assert boundary["reissue_v1_prompts_authorized"] is False
 
 
 def test_slsa_gold_decisions_are_schema_and_semantically_valid() -> None:

@@ -54,6 +54,16 @@ def validate_freeze(
         fail("plan status is not frozen")
     if plan.get("truth_status") != "SEALED_UNTIL_ALL_TERMINAL_RECORDS_EXIST":
         fail("plan truth status is invalid")
+    if plan.get("study_id") != manifest.get("study_id"):
+        fail("plan and dataset study IDs differ")
+    if packet.get("study_id") != plan.get("study_id"):
+        fail("plan and prompt-packet study IDs differ")
+    if plan["prompt"].get("protocol_version") != "v2":
+        fail("replacement prompt protocol is not v2")
+    if plan["prompt"].get("complete_decision_schema_visible_to_every_lane") is not True:
+        fail("complete decision schema is not declared visible to every lane")
+    if plan["prompt"].get("numeric_probability_type_visible_to_every_lane") is not True:
+        fail("numeric probability type is not declared visible to every lane")
     if plan["dataset"]["dataset_fingerprint"] != manifest["dataset_fingerprint"]:
         fail("plan dataset fingerprint differs")
     if plan["dataset"]["manifest_file_sha256"] != sha256_file(dataset_root / "manifest.json"):
@@ -71,6 +81,21 @@ def validate_freeze(
         fail("plan source-validation receipt hash differs")
     if load_object(source_receipt).get("upstream_sources_verified") is not True:
         fail("source-validation receipt did not verify upstream bytes")
+    replacement = plan.get("replacement_boundary")
+    if not isinstance(replacement, dict):
+        fail("replacement boundary is absent")
+    void_receipt_path = ROOT / str(replacement["predecessor_void_receipt_path"])
+    void_receipt = load_object(void_receipt_path)
+    if replacement.get("predecessor_void_receipt_sha256") != sha256_file(void_receipt_path):
+        fail("predecessor void-receipt hash differs")
+    if void_receipt.get("status") != "VOID_INCOMPLETE_PROTOCOL_DEFECT":
+        fail("predecessor attempt is not void")
+    if replacement.get("predecessor_records_eligible_for_manuscript_metrics") is not False:
+        fail("predecessor records are not excluded from manuscript metrics")
+    if replacement.get("predecessor_records_eligible_for_model_or_item_selection") is not False:
+        fail("predecessor records are not excluded from selection")
+    if replacement.get("v1_prompts_reissued") is not False:
+        fail("replacement permits v1 prompt reissue")
     if catalog.get("selected_model_ids") != ["qwen3.7-max", "deepseek-v4-flash"]:
         fail("catalog selected models differ")
     if catalog.get("credentials_retained") is not False:
@@ -104,6 +129,8 @@ def validate_freeze(
         fail("formal model configurations differ")
     if schedule.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE":
         fail("schedule status is invalid")
+    if schedule.get("study_id") != plan.get("study_id"):
+        fail("schedule and plan study IDs differ")
     schedule_without_hash = {
         key: value for key, value in schedule.items() if key != "schedule_sha256"
     }

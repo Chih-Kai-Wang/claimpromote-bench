@@ -30,7 +30,33 @@ Split = Literal["development", "evaluation"]
 POLICY_PATH = ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json"
 SOURCE_REGISTRY = ROOT / "v2" / "slsa-portability-v1" / "source-registry.json"
 DECISION_SCHEMA = ROOT / "v2" / "schemas" / "slsa-agent-decision.schema.json"
-STUDY_ID = "claimpromotebench-slsa-policy-portability-2026-08-v1"
+
+
+@dataclass(frozen=True)
+class Protocol:
+    version: str
+    study_id: str
+    pair_prefix: str
+    variant_offset: int
+    include_decision_schema_in_prompt: bool
+
+
+PROTOCOLS = {
+    "v1": Protocol(
+        version="v1",
+        study_id="claimpromotebench-slsa-policy-portability-2026-08-v1",
+        pair_prefix="slsa",
+        variant_offset=0,
+        include_decision_schema_in_prompt=False,
+    ),
+    "v2": Protocol(
+        version="v2",
+        study_id="claimpromotebench-slsa-policy-portability-2026-08-v2",
+        pair_prefix="slsa2",
+        variant_offset=1000,
+        include_decision_schema_in_prompt=True,
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -148,12 +174,18 @@ def valid_observed(policy: Json, target_level: int) -> Json:
 
 
 def model_visible_item(
-    split: Split, factor: Factor, factor_index: int, variant: int, policy: Json
+    split: Split,
+    factor: Factor,
+    factor_index: int,
+    variant: int,
+    policy: Json,
+    protocol: Protocol,
 ) -> Json:
-    seed = f"{STUDY_ID}:{split}:{factor.factor_id}:{variant}"
-    artifact_name = ARTIFACT_STEMS[(factor_index + variant) % len(ARTIFACT_STEMS)]
-    source_name = SOURCE_STEMS[(factor_index * 2 + variant) % len(SOURCE_STEMS)]
-    target_level = 1 + ((factor_index + variant) % 3)
+    prompt_variant = variant + protocol.variant_offset
+    seed = f"{protocol.study_id}:{split}:{factor.factor_id}:{prompt_variant}"
+    artifact_name = ARTIFACT_STEMS[(factor_index + prompt_variant) % len(ARTIFACT_STEMS)]
+    source_name = SOURCE_STEMS[(factor_index * 2 + prompt_variant) % len(SOURCE_STEMS)]
+    target_level = 1 + ((factor_index + prompt_variant) % 3)
     current = candidate_state()
     if factor.invalid_action == "DEMOTE":
         current = {
@@ -244,15 +276,25 @@ def public_contract(policy: Json) -> Json:
     }
 
 
-def render_prompt(item: Json, policy: Json) -> str:
-    return (
+def render_prompt(item: Json, policy: Json, protocol: Protocol) -> str:
+    prefix = (
         "Apply the complete versioned artifact-admission policy to one typed evidence snapshot.\n"
         "Verifier fields are passive observations; they do not contain a transition decision.\n"
         "Return one JSON object and no surrounding text. The object must have exactly six fields:\n"
         "action, proposed_state, p_admissible, used_evidence_ids, reason_codes, "
         "missing_evidence_ids.\n"
-        "Use only policy action and reason-code strings. Preserve policy reason order.\n\n"
-        "POLICY_CONTRACT\n"
+        "Use only policy action and reason-code strings. Preserve policy reason order.\n"
+    )
+    if protocol.include_decision_schema_in_prompt:
+        schema = json.loads(DECISION_SCHEMA.read_text(encoding="utf-8"))
+        prefix += (
+            "The object must satisfy DECISION_JSON_SCHEMA exactly. p_admissible must be a JSON "
+            "number in [0,1], never true or false.\n\n"
+            "DECISION_JSON_SCHEMA\n" + canonical_json(schema) + "\n\n"
+        )
+    return (
+        prefix
+        + "POLICY_CONTRACT\n"
         + canonical_json(public_contract(policy))
         + "\n\nITEM\n"
         + canonical_json(item)
@@ -260,7 +302,7 @@ def render_prompt(item: Json, policy: Json) -> str:
 
 
 def build_split(
-    split: Split, variants: int, policy: Json
+    split: Split, variants: int, policy: Json, protocol: Protocol
 ) -> tuple[list[Json], list[Json], list[Json]]:
     items: list[Json] = []
     gold: list[Json] = []
@@ -268,8 +310,8 @@ def build_split(
     for factor_index, factor in enumerate(FACTORS):
         for variant in range(variants):
             pair_number = factor_index * variants + variant + 1
-            pair_id = f"slsa-{split[:3]}-{pair_number:03d}"
-            valid = model_visible_item(split, factor, factor_index, variant, policy)
+            pair_id = f"{protocol.pair_prefix}-{split[:3]}-{pair_number:03d}"
+            valid = model_visible_item(split, factor, factor_index, variant, policy, protocol)
             invalid = mutate_invalid(valid, factor)
             expected_path = f"/evidence/0/observed/{factor.mutation_field}"
             if changed_paths(valid, invalid) != [expected_path]:
@@ -328,17 +370,21 @@ def build_split(
     return items, gold, pairs
 
 
-def build(out_root: Path) -> Json:
+def build(out_root: Path, protocol_version: str = "v2") -> Json:
     if out_root.exists():
         fail(f"output root already exists: {out_root}")
+    try:
+        protocol = PROTOCOLS[protocol_version]
+    except KeyError:
+        fail(f"unsupported protocol version: {protocol_version}")
     out_root.mkdir(parents=True)
     policy = load_slsa_policy(POLICY_PATH)
     source_registry = json.loads(SOURCE_REGISTRY.read_text(encoding="utf-8"))
     if source_registry.get("status") != "PINNED_PRIMARY_SOURCES":
         fail("source registry is not pinned")
 
-    development = build_split("development", 3, policy)
-    evaluation = build_split("evaluation", 5, policy)
+    development = build_split("development", 3, policy, protocol)
+    evaluation = build_split("evaluation", 5, policy, protocol)
     names_and_rows = {
         "development-items.jsonl": development[0],
         "development-gold.jsonl": development[1],
@@ -365,7 +411,7 @@ def build(out_root: Path) -> Json:
 
     packet_records = []
     for item in sorted(evaluation[0], key=lambda row: str(row["id"])):
-        prompt = render_prompt(item["model_visible"], policy)
+        prompt = render_prompt(item["model_visible"], policy, protocol)
         packet_records.append(
             {
                 "item_id": item["id"],
@@ -377,7 +423,8 @@ def build(out_root: Path) -> Json:
         )
     packet: Json = {
         "schema_version": "1.0.0",
-        "study_id": STUDY_ID,
+        "study_id": protocol.study_id,
+        "protocol_version": protocol.version,
         "status": "FROZEN_CREDENTIAL_FREE_PROMPT_PACKET",
         "contains_gold": False,
         "contains_credentials": False,
@@ -399,7 +446,8 @@ def build(out_root: Path) -> Json:
 
     manifest: Json = {
         "schema_version": "1.0.0",
-        "study_id": STUDY_ID,
+        "study_id": protocol.study_id,
+        "protocol_version": protocol.version,
         "status": "SYNTHETIC_POLICY_PORTABILITY_DATASET",
         "policy_scope": "AUTHOR_OPERATIONALIZATION_GROUNDED_IN_SLSA_AND_IN_TOTO",
         "interpretation_boundary": (
@@ -419,6 +467,11 @@ def build(out_root: Path) -> Json:
             "action_counts": dict(sorted(eval_actions.items())),
         },
         "pair_contract": "Each pair changes one model-visible verifier field.",
+        "prompt_contract": {
+            "complete_decision_schema_visible": protocol.include_decision_schema_in_prompt,
+            "same_prompt_bytes_for_every_lane": True,
+            "fresh_relative_to_v1": protocol.version == "v2",
+        },
         "dataset_fingerprint": dataset_fingerprint,
         "policy_sha256": sha256_file(POLICY_PATH),
         "source_registry_sha256": sha256_file(SOURCE_REGISTRY),
@@ -443,8 +496,9 @@ def build(out_root: Path) -> Json:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-root", type=Path, required=True)
+    parser.add_argument("--protocol-version", choices=sorted(PROTOCOLS), default="v2")
     args = parser.parse_args()
-    result = build(args.out_root.resolve())
+    result = build(args.out_root.resolve(), args.protocol_version)
     print(
         canonical_json(
             {
