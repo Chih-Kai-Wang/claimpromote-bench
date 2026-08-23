@@ -1,58 +1,54 @@
 {
   "anonymous_bundle": {
-    "manifest_file_count": 756,
-    "manifest_plus_self_file_count": 757,
-    "manifest_sha256": "3d48b904fbacfaa111cf4b448c270cf37db10c9036e2ad4cff1e60752b8f6032",
+    "manifest_file_count": 392,
+    "manifest_plus_self_file_count": 393,
+    "manifest_sha256": "7a63ca0d4611f94680cfd5582336bbc653869fd04901393e766c3c223d662287",
     "privacy_scope": {
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
       "balanced_public_challenge_summary_included": true,
-      "capable_hidden_all_executed_attempts_included": true,
-      "capable_hidden_item_level_records_included": true,
-      "capable_hidden_summary_included": true,
+      "capable_hidden_evidence_included": false,
       "fresh_confirmatory_hidden_reasoning_included": false,
       "fresh_confirmatory_item_level_records_included": true,
       "fresh_confirmatory_summary_included": true,
-      "gpt54_public_development_item_level_records_included": true,
-      "gpt54_public_development_summary_included": true,
+      "gpt54_public_development_evidence_included": false,
       "human_subject_study_records_included": false,
       "item_level_empirical_records_included": true,
+      "legacy_v1_evidence_included": false,
       "private_construction_seed_included": false,
       "provider_response_identifiers_included": false,
       "public_alpha_included": true,
       "public_model_breadth_hidden_reasoning_included": false,
-      "public_model_breadth_item_level_records_included": true,
+      "public_model_breadth_item_level_records_included": false,
       "public_model_breadth_raw_final_response_text_included": false,
-      "public_model_breadth_summary_included": true,
+      "public_model_breadth_summary_included": false,
+      "public_pilot_evidence_included": false,
       "public_repository_identity_included": false,
-      "reviewer_release_hidden_data_included": true,
-      "v1_compact_result_summary_included": true,
-      "v2_public_pilot_item_level_records_included": true,
-      "v2_public_pilot_summary_included": true
+      "reviewer_release_hidden_data_included": true
     },
     "verification": "PASS",
-    "zip_file_entries": 757
+    "zip_file_entries": 393
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 338323,
-      "sha256": "2a5107ea8a3be341870a16a79bfd03299ac8561025812dcda4d34baa497466d4"
+      "bytes": 324724,
+      "sha256": "b8edea1f0b7e555a90aa7fdf3435953d3b90ef3f666b0219ca8232f7d1ba0ec7"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 3190674,
-      "sha256": "da7d0382ee2b76ee683365fc91554ef6fad34200d2ed6194227af6b2fe7767d3"
+      "bytes": 934328,
+      "sha256": "bb39cd9a77cc4b688f04de887d60eb9ee646ae0dc90818f6cf1e724d82823a85"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 16536,
-      "sha256": "fa3c0bdb04a90010e6255d11e516de398525a5c14ef7e2cd64141ee116b5564b"
+      "bytes": 14452,
+      "sha256": "8a85e27c3ed3fd39356f23ff5b2511c8ee7af12e1238e727d9800c1a6b2420d0"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 25614,
-      "sha256": "58f75c9249cb6ee5b228835e69eb9ced23dacb2b1507e55b4cc3c91ac99ffe71"
+      "bytes": 23522,
+      "sha256": "b159e4484b6dd87e062302443a5d3d6874a3e658ecd51743989258a65c0a64fd"
     },
     "iclr2027.pdf": {
-      "bytes": 183102,
-      "sha256": "33867a523aa9f6dada375c833bcb9ea413c097aa46b43217f266974577da6af3"
+      "bytes": 172355,
+      "sha256": "9bbb3a052b737902f9b7dd671ccdb0051d41ee02f135ed4c578e94b02f67167b"
     }
   },
   "checks": {
@@ -93,31 +89,31 @@
           "/BAVVNA+CMSY10",
           "/BPMBND+CMSY8",
           "/BSTKNX+MSBM10",
+          "/DYSWRQ+CMR9",
           "/EGAPYX+CMTT8",
+          "/ELWDLY+CMBX12",
           "/EUWOLL+CMBX9",
           "/FDZZRC+CMTI10",
-          "/GNNILP+CMR10",
+          "/GHFYHN+CMBX10",
           "/HQDLYU+CMTI8",
           "/ICTROM+CMR17",
           "/JYAWND+CMTT10",
           "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
+          "/LHSDLK+CMR10",
           "/LQBNTO+CMR12",
           "/MNATLR+CMCSC10",
-          "/NFZUAS+CMR9",
-          "/NJRGSC+CMR7",
           "/QTAPRA+CMTT9",
-          "/RGNMAG+CMBX12",
-          "/YZCYSG+CMTI9",
-          "/ZGNWPC+CMBX10",
-          "/ZKFGNS+CMBX8"
+          "/UCGLTV+CMR7",
+          "/ZKFGNS+CMBX8",
+          "/ZMTNRJ+CMTI9"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 11,
+      "pages": 8,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 11
+      "visual_pages_inspected": 8
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -130,22 +126,26 @@
           "/ALVSVR+NimbusSanL-Bold",
           "/BAVVNA+CMSY10",
           "/BSTKNX+MSBM10",
-          "/FHSKJP+NimbusMonL-Regu",
+          "/FLWCXO+NimbusRomNo9L-Regu",
           "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
-          "/MFBNTM+NimbusRomNo9L-Medi",
-          "/OKEGRF+NimbusRomNo9L-ReguItal",
+          "/KVIPFD+NimbusRomNo9L-ReguItal",
+          "/ORZIXX+NimbusMonL-Regu",
+          "/PPPEYC+NimbusRomNo9L-Medi",
           "/SPQDLC+CMR10",
           "/SSDDAS+CMR7",
-          "/URVXZM+CMSY9",
-          "/VPNJFL+NimbusRomNo9L-Regu"
+          "/URVXZM+CMSY9"
         ]
       },
-      "main_text_pages": 9,
+      "main_text_page_limit": 9,
+      "main_text_pages": 7,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 11,
+      "pages": 9,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 11
+      "references_start_page": 8,
+      "style_receipt": "iclr-style-receipt.json",
+      "style_template": "ICLR 2027 official style archive",
+      "visual_pages_inspected": 9
     }
   }
 }

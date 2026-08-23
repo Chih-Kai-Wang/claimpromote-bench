@@ -259,6 +259,27 @@ def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None
     readme = builder.review_readme()
     assert "validate the public alpha benchmark" in readme
     assert "rebuild and validate" not in readme
+    assert "1,260" not in readme
+    assert "quota" not in readme
+    assert "seven-route" not in readme
+
+
+def test_paper_empirical_projection_contains_only_retained_studies() -> None:
+    builder = load_builder()
+
+    validator = builder.paper_empirical_validator()
+    balanced = builder.paper_balanced_analyzer()
+    compile(validator, "validate_anonymous_empirical_evidence.py", "exec")
+    compile(balanced, "analyze_balanced_public_challenge.py", "exec")
+
+    assert "def validate_fresh_confirmatory" in validator
+    assert "def validate_balanced_public_challenge" in validator
+    assert "def validate_capable_hidden" not in validator
+    assert "def validate_public_model_breadth" not in validator
+    assert "def validate_v1_" not in validator
+    assert "aggregate_capable_hidden_study" not in validator
+    assert "analyze_stronger_model_study" not in validator + balanced
+    assert "def derive_reporting_metrics" in balanced
 
 
 def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> None:
@@ -445,6 +466,8 @@ def test_public_model_breadth_projection_drops_private_text_and_rebinds_rows(
         {
             "external_commitment": {"frozen_plan_commit": frozen_commit},
             "lanes": aggregate_lanes,
+            "scope_limits": {},
+            "service_comparison": {},
         },
     )
     builder.write_json(
@@ -457,10 +480,30 @@ def test_public_model_breadth_projection_drops_private_text_and_rebinds_rows(
             "terminal_journal_sha256": "sha256:private-terminals",
         },
     )
+    builder.write_json(
+        results / "failure-cause-addendum.json",
+        {
+            "status": "POST_RUN_FROZEN_LOG_AUDIT_COMPLETE",
+            "transport_failures": 630,
+            "transport_failure_categories": {
+                "AUTHORIZATION": 76,
+                "CONNECTION": 1,
+                "QUOTA_RATE_LIMIT": 547,
+                "SERVER": 5,
+                "TIMEOUT": 1,
+            },
+            "quota_cutoff": {"cells": 547, "contiguous_schedule_tail": True},
+            "privacy": {"raw_error_text_included": False},
+            "interpretation_boundary": {
+                "route_reliability_comparison_supported": False,
+                "model_family_ranking_supported": False,
+            },
+        },
+    )
     source_files = {
         path.relative_to(results).as_posix(): builder.sha256_file(path)
         for path in sorted(results.rglob("*"))
-        if path.is_file()
+        if path.is_file() and path.name != "failure-cause-addendum.json"
     }
     builder.write_json(
         results / "privacy-receipt.json",

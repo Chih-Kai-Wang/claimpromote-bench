@@ -50,24 +50,6 @@ committed result artifacts. The challenge was public before inference, and the t
 different service stacks. Their difference is descriptive; it is neither hidden-test
 generalization nor a causal ablation.
 
-A prospectively frozen supplement applied seven service configurations to the same known public
-challenge, for 1,260 terminal cells with one POST per cell and zero client retries.
-
-| Configuration | Valid | E2E item / pair | Conditional item / pair | Pair coverage |
-|---|---:|---:|---:|---:|
-| Qwen3.8-Max | 1 / 180 | 0.006 / 0.000 | 1.000 / N/E | 0.000 |
-| DeepSeek-V4-Pro | 0 / 180 | 0.000 / 0.000 | N/E | 0.000 |
-| GLM-5.3 | 0 / 180 | 0.000 / 0.000 | N/E | 0.000 |
-| Kimi-K3 | 12 / 180 | 0.067 / 0.044 | 1.000 / 1.000 | 0.044 |
-| MiMo-V2.5-Pro | 0 / 180 | 0.000 / 0.000 | N/E | 0.000 |
-| MiniMax-M3 | 65 / 180 | 0.217 / 0.033 | 0.600 / 0.143 | 0.233 |
-| Hunyuan-HY3 | 0 / 180 | 0.000 / 0.000 | N/E | 0.000 |
-
-Only 78/1,260 decisions were valid, and no route returned a correct `DEMOTE` decision. The labels
-denote complete service configurations; model identity, serving implementation, and adapter are not
-causally isolated. These results do not rank model families. Public-safe row records and complete
-per-configuration matrices are replayable from the committed artifact.
-
 ## Install and run checks
 
 Python 3.11 or newer is required.
@@ -120,8 +102,6 @@ from committed records and must not be rerun as part of paper construction.
 - The hidden r6 study tests a fresh realization of the same ontology and mostly the same template
   family.
 - The balanced challenge is a known public robustness construction.
-- The breadth supplement reuses that known challenge; it adds configuration breadth, not hidden or
-  naturalistic generalization.
 - One call per item and zero client retries define the service-level estimand.
 - No naturalistic cases were scored because the frozen candidates lacked sufficient source evidence
   for a defensible policy mapping. No human labels or agreement statistic are claimed.
@@ -133,7 +113,6 @@ from committed records and must not be rerun as part of paper construction.
 - Canonical manuscript: [`technical-report/main.tex`](technical-report/main.tex)
 - Scientific and packaging gate: [`technical-report/SUBMISSION_GATE_V2.md`](technical-report/SUBMISSION_GATE_V2.md)
 - Balanced challenge evidence: [`v2/balanced-public-challenge/results/`](v2/balanced-public-challenge/results/)
-- Public-safe breadth evidence: [`v2/public-model-breadth-v1/results/`](v2/public-model-breadth-v1/results/)
 - Fresh r6 reviewer evidence: [`release/reviewer-evidence-source/fresh-confirmatory/`](release/reviewer-evidence-source/fresh-confirmatory/)
 - Data licensing: [`DATA_LICENSE.md`](DATA_LICENSE.md)
 - Third-party notices: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
@@ -142,3 +121,6 @@ from committed records and must not be rerun as part of paper construction.
 This development repository remains private. A future public repository must be a new,
 history-free export containing the minimum replay core. It must pass dynamic manifest, privacy,
 licensing, metric-replay, and standalone-install gates before publication.
+
+The private development history also retains completed studies that are not part of the paper or
+anonymous reviewer package. Their presence must not be interpreted as submission evidence.

@@ -87,6 +87,17 @@ def canonical_body() -> str:
     return body
 
 
+def canonical_appendix() -> str:
+    source = (REPORT / "main.tex").read_text(encoding="utf-8")
+    bibliography = r"\bibliography{references}"
+    bibliography_end = source.rindex(bibliography) + len(bibliography)
+    document_end = source.rindex(r"\end{document}")
+    appendix = source[bibliography_end:document_end].strip()
+    if appendix and not appendix.startswith(r"\appendix"):
+        raise ValueError("canonical post-bibliography content must begin with \\appendix")
+    return appendix + ("\n" if appendix else "")
+
+
 def anonymous_iclr_body(body: str) -> str:
     """Remove public repository provenance that could reveal the author during review."""
 
@@ -137,7 +148,7 @@ def without_reproducibility_or_ai(body: str) -> str:
     return without_ai_disclosure(without_reproducibility(body))
 
 
-def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
+def iclr_tex(body: str, appendix: str = "", *, main_text_probe: bool = False) -> str:
     # ICLR excludes both the mandatory AI-use statement and the reproducibility statement from
     # the main-text page limit. The diagnostic probe removes exactly those sections and omits the
     # bibliography; it otherwise keeps the full scientific text, including limitations and the
@@ -181,13 +192,13 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
             if main_text_probe
             else (
                 "\n\\clearpage\n{\\small\n\\bibliographystyle{iclr2027_conference}\n"
-                "\\bibliography{references}\n}\n\n\\end{document}\n"
+                "\\bibliography{references}\n}\n\n" + appendix + "\n\\end{document}\n"
             )
         )
     )
 
 
-def arxiv_tex(body: str) -> str:
+def arxiv_tex(body: str, appendix: str = "") -> str:
     return (
         r"""\documentclass[10pt]{article}
 \usepackage[margin=1in]{geometry}
@@ -225,7 +236,7 @@ def arxiv_tex(body: str) -> str:
         + body
         + (
             "\n{\\small\n\\bibliographystyle{plain}\n"
-            "\\bibliography{references}\n}\n\n\\end{document}\n"
+            "\\bibliography{references}\n}\n\n" + appendix + "\n\\end{document}\n"
         )
     )
 
@@ -238,12 +249,13 @@ def main() -> int:
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     body = canonical_body()
+    appendix = canonical_appendix()
 
-    (out / "iclr2027.tex").write_text(iclr_tex(body), encoding="utf-8")
+    (out / "iclr2027.tex").write_text(iclr_tex(body, appendix), encoding="utf-8")
     (out / "iclr2027-maintext-probe.tex").write_text(
         iclr_tex(body, main_text_probe=True), encoding="utf-8"
     )
-    (out / "arxiv.tex").write_text(arxiv_tex(body), encoding="utf-8")
+    (out / "arxiv.tex").write_text(arxiv_tex(body, appendix), encoding="utf-8")
     (out / "references.bib").write_bytes((REPORT / "references.bib").read_bytes())
     print(f"generated submission sources in {out}")
     return 0

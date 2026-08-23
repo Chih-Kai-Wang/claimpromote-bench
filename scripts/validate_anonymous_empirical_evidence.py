@@ -1559,12 +1559,13 @@ def validate_public_model_breadth() -> Json:
         fail("public model-breadth manifest differs from the generated tree")
     scope = manifest.get("scope", {})
     if scope != {
-        "breadth_dimension_added": "MODEL_FAMILY_ONLY",
+        "breadth_dimension_added": "SERVICE_ROUTE_FAILURE_ONLY",
         "hidden_generalization_claimed": False,
         "hidden_reasoning_included": False,
         "naturalistic_cases": 0,
         "provider_response_identifiers_included": False,
         "public_known_challenge": True,
+        "shared_quota_confound_present": True,
         "source_row_hashes_included": False,
     }:
         fail("public model-breadth anonymous scope changed")
@@ -1601,10 +1602,43 @@ def validate_public_model_breadth() -> Json:
     catalog = load_json(root / "catalog-snapshot.json")
     aggregate = load_json(root / "reported-aggregate.json")
     execution = load_json(root / "execution-receipt-review.json")
+    failure_addendum = load_json(root / "failure-cause-addendum.json")
     if not all(
-        isinstance(value, dict) for value in (plan, schedule, catalog, aggregate, execution)
+        isinstance(value, dict)
+        for value in (plan, schedule, catalog, aggregate, execution, failure_addendum)
     ):
         fail("public model-breadth metadata is malformed")
+    if (
+        failure_addendum.get("status") != "POST_RUN_FROZEN_LOG_AUDIT_COMPLETE"
+        or failure_addendum.get("transport_failures") != 630
+        or failure_addendum.get("transport_failure_categories")
+        != {
+            "AUTHORIZATION": 76,
+            "CONNECTION": 1,
+            "QUOTA_RATE_LIMIT": 547,
+            "SERVER": 5,
+            "TIMEOUT": 1,
+        }
+        or failure_addendum.get("quota_cutoff")
+        != {
+            "cells": 547,
+            "contiguous_schedule_tail": True,
+            "first_zero_based_sequence": 713,
+            "last_zero_based_sequence": 1259,
+        }
+        or failure_addendum.get("privacy", {}).get("raw_error_text_included") is not False
+        or failure_addendum.get("privacy", {}).get("provider_response_identifiers_included")
+        is not False
+        or failure_addendum.get("interpretation_boundary", {}).get(
+            "model_family_comparison_supported"
+        )
+        is not False
+        or failure_addendum.get("interpretation_boundary", {}).get(
+            "route_reliability_comparison_supported"
+        )
+        is not False
+    ):
+        fail("public model-breadth frozen-log failure audit changed")
     lane_order = plan.get("execution", {}).get("base_lane_order")
     expected_lanes = {str(value) for value in lane_order} if isinstance(lane_order, list) else set()
     if (
@@ -1753,15 +1787,24 @@ def validate_public_model_breadth() -> Json:
         aggregate.get("design") != "PUBLIC_PRECOMMITTED_MODEL_BREADTH_SUPPLEMENT"
         or aggregate.get("source_identity") != "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
         or aggregate.get("service_comparison", {}).get("causal_model_ablation_claimed") is not False
+        or aggregate.get("service_comparison", {}).get("model_family_comparison_supported")
+        is not False
+        or aggregate.get("service_comparison", {}).get("route_reliability_comparison_supported")
+        is not False
+        or aggregate.get("service_comparison", {}).get("scope")
+        != "QUOTA_CONFOUNDED_OPERATIONAL_RECORD"
         or aggregate.get("scope_limits")
         != {
-            "breadth_dimension_added": "MODEL_FAMILY_ONLY",
+            "breadth_dimension_added": "SERVICE_ROUTE_FAILURE_ONLY",
             "hidden_generalization_claimed": False,
             "naturalistic_cases": 0,
             "ontology_count": 1,
             "policy_count": 1,
             "public_known_challenge": True,
+            "shared_quota_confound_present": True,
         }
+        or aggregate.get("post_run_interpretation")
+        != failure_addendum.get("interpretation_boundary")
         or aggregate.get("deterministic_policy_executor", {}).get("label")
         != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
     ):
@@ -1773,23 +1816,16 @@ def validate_public_model_breadth() -> Json:
         "pairs_per_lane": 90,
         "terminal_records": 1260,
         "parseable_records": parseable_total,
+        "quota_rate_limit_tail_records": failure_addendum["quota_cutoff"]["cells"],
         "privacy_receipt_sha256": observed_receipt_sha,
     }
 
 
 def main() -> int:
-    breadth_root = EVIDENCE / "public-model-breadth"
     result = {
         "status": "PASS",
-        "v1_hidden_recovery": validate_v1_recovery(),
-        "v2_public_pilot": validate_v2_public_pilot(),
-        "gpt54_public_development": validate_gpt54_followup(),
-        "capable_hidden": validate_capable_hidden(),
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
-        "public_model_breadth": (
-            validate_public_model_breadth() if breadth_root.is_dir() else {"status": "NOT_INCLUDED"}
-        ),
     }
     print(json.dumps(result, sort_keys=True))
     return 0

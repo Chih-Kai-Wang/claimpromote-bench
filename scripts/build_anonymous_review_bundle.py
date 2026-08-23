@@ -10,6 +10,7 @@ survives staging.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -1065,7 +1066,8 @@ def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
     source_files = {
         path.relative_to(results).as_posix(): sha256_file(path)
         for path in sorted(results.rglob("*"))
-        if path.is_file() and path.name != "privacy-receipt.json"
+        if path.is_file()
+        and path.name not in {"failure-cause-addendum.json", "privacy-receipt.json"}
     }
     if (
         source_receipt.get("status") != "POST_EXECUTION_PUBLIC_SAFE_DERIVATIVE"
@@ -1083,6 +1085,24 @@ def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
     for name in ("study-plan.json", "request-schedule.json", "catalog-snapshot.json"):
         value = anonymize_provenance(load_object(source / name))
         write_json(destination / name, value)
+    failure_addendum = load_object(results / "failure-cause-addendum.json")
+    if (
+        failure_addendum.get("status") != "POST_RUN_FROZEN_LOG_AUDIT_COMPLETE"
+        or failure_addendum.get("transport_failures") != 630
+        or failure_addendum.get("transport_failure_categories")
+        != {
+            "AUTHORIZATION": 76,
+            "CONNECTION": 1,
+            "QUOTA_RATE_LIMIT": 547,
+            "SERVER": 5,
+            "TIMEOUT": 1,
+        }
+        or failure_addendum.get("quota_cutoff", {}).get("cells") != 547
+        or failure_addendum.get("quota_cutoff", {}).get("contiguous_schedule_tail") is not True
+        or failure_addendum.get("privacy", {}).get("raw_error_text_included") is not False
+    ):
+        fail("public model-breadth failure addendum changed")
+    write_json(destination / "failure-cause-addendum.json", failure_addendum)
 
     plan = load_object(destination / "study-plan.json")
     lane_order = plan.get("execution", {}).get("base_lane_order")
@@ -1167,6 +1187,20 @@ def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
     external["workflow_run_url"] = None
     external["workflow_run_attempt"] = None
     aggregate["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    scope_limits = aggregate.get("scope_limits")
+    service_comparison = aggregate.get("service_comparison")
+    if not isinstance(scope_limits, dict) or not isinstance(service_comparison, dict):
+        fail("public model-breadth aggregate interpretation fields are malformed")
+    scope_limits["breadth_dimension_added"] = "SERVICE_ROUTE_FAILURE_ONLY"
+    scope_limits["shared_quota_confound_present"] = True
+    service_comparison.update(
+        {
+            "model_family_comparison_supported": False,
+            "route_reliability_comparison_supported": False,
+            "scope": "QUOTA_CONFOUNDED_OPERATIONAL_RECORD",
+        }
+    )
+    aggregate["post_run_interpretation"] = deepcopy(failure_addendum["interpretation_boundary"])
     write_json(destination / "reported-aggregate.json", aggregate)
 
     execution = anonymize_provenance(load_object(results / "execution-receipt.json"))
@@ -1186,17 +1220,18 @@ def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
     execution["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
     write_json(destination / "execution-receipt-review.json", execution)
 
-    readme = """# Public model-breadth reviewer evidence
+    readme = """# Frozen service-route reviewer evidence
 
-This directory contains a prospectively frozen seven-configuration supplement on the known
-180-item balanced public challenge. Each scheduled cell has one terminal outcome and zero
-client retries. Every unusable outcome remains incorrect in end-to-end metrics.
+This directory contains seven frozen service configurations on the known 180-item pair-balanced
+public challenge. Each scheduled cell has one terminal outcome and zero client retries. Every
+unusable outcome remains incorrect in end-to-end metrics.
 
 The runs retain scoring fields and final-response digests but exclude final-response text,
 free-form error detail, provider response identifiers, account identifiers, credentials, and
-hidden reasoning. The comparison expands model-family and configuration coverage only; model,
-serving implementation, and API adapter are not causally isolated. The shared dataset and prompt
-packet are in the sibling `balanced-public-challenge` evidence directory.
+hidden reasoning. `failure-cause-addendum.json` records a post-run audit of the sealed private
+errors: a shared quota/rate-limit condition occupies the final 547 schedule cells. The supplement
+therefore supports neither route-reliability comparison nor model-family ranking. The shared
+dataset and prompt packet are in the sibling `balanced-public-challenge` evidence directory.
 """
     (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
 
@@ -1243,12 +1278,13 @@ packet are in the sibling `balanced-public-challenge` evidence directory.
         "files": files,
         "lane_files": review_lane_files,
         "scope": {
-            "breadth_dimension_added": "MODEL_FAMILY_ONLY",
+            "breadth_dimension_added": "SERVICE_ROUTE_FAILURE_ONLY",
             "hidden_generalization_claimed": False,
             "hidden_reasoning_included": False,
             "naturalistic_cases": 0,
             "provider_response_identifiers_included": False,
             "public_known_challenge": True,
+            "shared_quota_confound_present": True,
             "source_row_hashes_included": False,
         },
     }
@@ -1351,69 +1387,46 @@ def anonymous_license() -> str:
 def review_readme() -> str:
     return """# ClaimPromoteBench anonymous reviewer bundle
 
-This bundle contains the public controlled benchmark, executable fixtures, public Lean package,
-selected validation code, the reviewer-release hidden dataset, item-level empirical records,
-and compact paper-result summaries. It contains no Git history,
-author metadata, public repository link, private construction seed, human-subject record, or public
-workflow/provenance identifier.
+This focused bundle contains the material needed to replay the paper: the public controlled
+benchmark, executable and Lean fixtures, the reviewer-release r6 data, the pair-balanced public
+challenge, and item-level scoring records. It
+contains no Git history, author metadata, public repository link, private construction seed,
+human-subject record, or public workflow identifier.
 
-## What can be checked
+## Reproduce the review environment
 
 ```bash
-python -m pip install -e ".[test]"
+python -m pip install --require-hashes -r requirements-review.lock
+python -m pip install --no-deps -e .
 python scripts/run_review_checks.py
 ```
 
-The checks validate the public alpha benchmark, run shortcut/invariance/executable
-checks, validate the compact paper-result summaries, verify the frozen naturalistic-candidate
-pool and its pre-model-call zero-case decision, and run selected v2 tests. The evidence
-directory retains the available v1
-source and normalized item records, all four public-interface pilot runs, the public-development
-follow-up records, and all 14 executed capable-extension pilot attempts plus both fresh full
-passes. It also contains the r6 preregistered 300-item fresh confirmatory dataset, projected C2
-records, frozen baseline, and complete scientific analysis. The balanced public challenge adds
-90 pairs / 180 items, both one-pass service runs, full confusion matrices, conditional and
-end-to-end metrics, and a privacy receipt. When present, the prospectively frozen model-breadth
-supplement adds seven one-pass configurations over the same 180 public items. Its reviewer runs
-retain scoring fields and response digests but omit final-response text and free-form errors.
-Public repository identities are replaced by anonymous role labels; empirical prompts, parser
-outcomes, gold labels, and model identities are retained.
+The default command uses the staged files to validate the public alpha benchmark, verify all 20
+controlled-pair contracts, run shortcut, invariance, executable, empirical-evidence,
+naturalistic-freeze, and selected pytest checks, then build and check the Lean fixtures. It fails
+if `lake` is missing.
+Use `--python-only` for an explicitly partial replay when Lean is unavailable.
 
-For the public formal artifacts:
-
-```bash
-cd data/alpha
-lake build
-lake env leanchecker ClaimPromoteFormal
-cd ../..
-python -m claimpromotebench.formal \
-  --dataset data/alpha \
-  --fixtures fixtures/formal/cases.json \
-  --out work/formal-fixtures.json
-```
+The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
+records, and analysis, together with the 180-item public challenge and both service routes. The
+balanced-challenge records retain the model's final JSON text and sanitized error text for parser
+audit. Provider account and response identifiers, credentials, author provenance, and hidden
+reasoning are excluded.
 
 ## Scope limitation
 
-Original free-form text was not retained for v1 records classified as format failures, so no later
-bundle can recover it. The included source and normalized records preserve every field that was
-archived. The capable hidden extension and public-development follow-up retain their item-level raw
-response text. The private deterministic-construction seed remains excluded because the released
-dataset bytes, prompt packet, labels, records, and commitments suffice for result recomputation.
-The public manifest's `model_experiments: PENDING` value is its pre-inference freeze status; the
-result files carry the completed study states.
-
-The r6 construction manifest likewise remains byte-frozen. Its stale `CFM_R5` namespace label and
+The private deterministic-construction seed remains excluded because the released dataset bytes,
+prompt packet, labels, records, and commitments suffice for result recomputation. The r6
+construction manifest remains byte-frozen. Its stale `CFM_R5` namespace label and
 three construction-time `PENDING` values are corrected by a bound overlay; all released r6 item
 and pair IDs use the `v1-test-cfo-*` namespace. The original manifest is not rewritten because its
 digest is bound by C1 and C2. Provider hidden-thinking blocks are excluded from the r6 derivative,
 and a redaction receipt records the post-C2 publication boundary and score-equivalence check.
 
-The balanced challenge is public precommitted robustness evidence, not a hidden-test estimate.
-Its service stacks differ, so their outcomes are descriptive rather than a causal model ablation.
-All unusable responses remain incorrect. Provider response identifiers and hidden-reasoning
-content are excluded from the bundle. The breadth comparison adds model-family/configuration
-coverage only and does not isolate model, serving stack, or adapter effects. The top-level
-manifest records the generated tree's actual file count, which verification recomputes from disk.
+The challenge is pair-balanced and non-ALLOW-balanced, with gold support 90/30/30/30; it is not a
+four-class-balanced hidden test. Its service stacks differ, so their outcomes do not form a causal
+model ablation. Every unusable r6 or challenge response remains in the registered denominator. The
+top-level manifest records the generated tree's actual file count.
 
 The frozen naturalistic-candidate pool contains 12 source pointers. Source-level review created
 zero benchmark cases and made zero model calls because the records lacked the time-stamped
@@ -1630,14 +1643,24 @@ def review_runner() -> str:
 
 from __future__ import annotations
 
+import argparse
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-COMMANDS = [
+PYTHON_COMMANDS = [
     [sys.executable, "-m", "claimpromotebench", "validate", "data/alpha"],
+    [
+        sys.executable,
+        "scripts/audit_public_pair_contracts.py",
+        "--dataset",
+        "data/alpha",
+        "--out",
+        "work/public-pair-contract-audit.json",
+    ],
     [
         sys.executable,
         "-m",
@@ -1665,7 +1688,6 @@ COMMANDS = [
         "--out",
         "work/executable-fixtures.json",
     ],
-    [sys.executable, "scripts/validate_review_results.py"],
     [sys.executable, "scripts/validate_anonymous_empirical_evidence.py"],
     [
         sys.executable,
@@ -1689,6 +1711,13 @@ COMMANDS = [
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--python-only",
+        action="store_true",
+        help="run a partial replay without the pinned Lean checks",
+    )
+    args = parser.parse_args()
     (ROOT / "work").mkdir(exist_ok=True)
     env = os.environ.copy()
     package_root = str(ROOT / "src")
@@ -1698,10 +1727,40 @@ def main() -> int:
         if existing_pythonpath
         else package_root
     )
-    for command in COMMANDS:
+    for command in PYTHON_COMMANDS:
         print("+", " ".join(command), flush=True)
         subprocess.run(command, cwd=ROOT, check=True, env=env)
-    print("anonymous-review-checks: PASS")
+    if args.python_only:
+        print("anonymous-review-checks: PARTIAL_PASS (Python only; Lean explicitly skipped)")
+        return 0
+
+    lake = shutil.which("lake")
+    if lake is None:
+        raise SystemExit(
+            "anonymous-review-checks: lake is required for full replay; "
+            "install Lean or pass --python-only for a partial replay"
+        )
+    formal_root = ROOT / "data" / "alpha"
+    formal_commands = [
+        [lake, "build"],
+        [lake, "env", "leanchecker", "ClaimPromoteFormal"],
+        [
+            sys.executable,
+            "-m",
+            "claimpromotebench.formal",
+            "--dataset",
+            "data/alpha",
+            "--fixtures",
+            "fixtures/formal/cases.json",
+            "--out",
+            "work/formal-fixtures.json",
+        ],
+    ]
+    for command in formal_commands:
+        print("+", " ".join(command), flush=True)
+        cwd = formal_root if command[0] == lake else ROOT
+        subprocess.run(command, cwd=cwd, check=True, env=env)
+    print("anonymous-review-checks: PASS (Python and Lean)")
     return 0
 
 
@@ -1813,11 +1872,9 @@ def verify_bundle(bundle: Path) -> None:
         "LICENSE",
         "README.md",
         "THIRD_PARTY_NOTICES.md",
+        "docs/PUBLIC_RELEASE_BOUNDARY.md",
         "pyproject.toml",
-        "evidence/capable-hidden/attempt-protocol-snapshots/manifest.json",
-        "evidence/capable-hidden/attempt-protocol-snapshots/stage-1-initial/scripts/run_stronger_model_study.py",
-        "evidence/capable-hidden/attempt-protocol-snapshots/stage-2-transport-amended/scripts/run_stronger_model_study.py",
-        "evidence/capable-hidden/attempt-protocol-snapshots/stage-3-final-adapter/scripts/run_stronger_model_study.py",
+        "requirements-review.lock",
         "evidence/fresh-confirmatory/MANIFEST.json",
         "evidence/fresh-confirmatory/frozen-manifest-metadata-correction.json",
         "evidence/fresh-confirmatory/redaction-receipt-review.json",
@@ -1833,24 +1890,21 @@ def verify_bundle(bundle: Path) -> None:
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
     }
-    if (bundle / "evidence" / "public-model-breadth").is_dir():
-        required.update(
-            {
-                "evidence/public-model-breadth/MANIFEST.json",
-                "evidence/public-model-breadth/execution-receipt-review.json",
-                "evidence/public-model-breadth/privacy-receipt-review.json",
-                "evidence/public-model-breadth/reported-aggregate.json",
-                "evidence/public-model-breadth/review-row-hashes.jsonl",
-                "evidence/public-model-breadth/study-plan.json",
-            }
-        )
+    if (bundle / "evidence" / "public-model-breadth").exists():
+        fail("excluded seven-route evidence survived anonymous staging")
     absent = sorted(required - set(actual_paths))
     if absent:
         fail(f"required reviewer-bundle files are missing: {absent}")
 
     excluded = {
+        "configs/decoding-v1.json",
+        "scripts/aggregate_capable_hidden_study.py",
+        "scripts/analyze_stronger_model_study.py",
+        "scripts/build_v1_dataset.py",
         "src/claimpromotebench/review.py",
         "src/claimpromotebench/review_analysis.py",
+        "scripts/validate_v1_plan.py",
+        "scripts/validate_v1_public_dev_freeze.py",
     }
     survived = sorted(excluded & set(actual_paths))
     if survived:
@@ -1865,10 +1919,8 @@ def write_manifest(bundle: Path) -> None:
         for path in sorted(bundle.rglob("*"))
         if path.is_file() and path != bundle / "MANIFEST.json"
     }
-    capable_hidden_included = (bundle / "evidence" / "capable-hidden").is_dir()
     fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
     balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
-    model_breadth_included = (bundle / "evidence" / "public-model-breadth").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -1880,22 +1932,18 @@ def write_manifest(bundle: Path) -> None:
             "human_subject_study_records_included": False,
             "public_repository_identity_included": False,
             "item_level_empirical_records_included": True,
-            "v1_compact_result_summary_included": True,
-            "v2_public_pilot_summary_included": True,
-            "v2_public_pilot_item_level_records_included": True,
-            "gpt54_public_development_summary_included": True,
-            "gpt54_public_development_item_level_records_included": True,
-            "capable_hidden_summary_included": capable_hidden_included,
-            "capable_hidden_item_level_records_included": capable_hidden_included,
-            "capable_hidden_all_executed_attempts_included": capable_hidden_included,
+            "legacy_v1_evidence_included": False,
+            "public_pilot_evidence_included": False,
+            "gpt54_public_development_evidence_included": False,
+            "capable_hidden_evidence_included": False,
             "fresh_confirmatory_summary_included": fresh_confirmatory_included,
             "fresh_confirmatory_item_level_records_included": fresh_confirmatory_included,
             "fresh_confirmatory_hidden_reasoning_included": False,
             "balanced_public_challenge_summary_included": balanced_challenge_included,
             "balanced_public_challenge_item_level_records_included": (balanced_challenge_included),
             "balanced_public_challenge_hidden_reasoning_included": False,
-            "public_model_breadth_summary_included": model_breadth_included,
-            "public_model_breadth_item_level_records_included": model_breadth_included,
+            "public_model_breadth_summary_included": False,
+            "public_model_breadth_item_level_records_included": False,
             "public_model_breadth_raw_final_response_text_included": False,
             "public_model_breadth_hidden_reasoning_included": False,
             "provider_response_identifiers_included": False,
@@ -1906,6 +1954,141 @@ def write_manifest(bundle: Path) -> None:
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+
+
+def project_python_module(source_path: Path, roots: set[str], description: str) -> str:
+    """Return the transitive function closure needed by ``roots``.
+
+    Reviewer code should not carry archived study implementations merely because the private
+    validator imports them. The projection retains only referenced imports, constants, and local
+    helpers, and deliberately omits CLI entry points and unrelated module-level side effects.
+    """
+
+    source = source_path.read_text(encoding="utf-8")
+    tree = ast.parse(source, filename=str(source_path))
+    functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    missing = roots - set(functions)
+    if missing:
+        fail(f"Python projection roots are missing from {source_path}: {sorted(missing)}")
+
+    selected_functions: set[str] = set()
+    pending = list(roots)
+    while pending:
+        name = pending.pop()
+        if name in selected_functions:
+            continue
+        selected_functions.add(name)
+        loaded = {
+            node.id
+            for node in ast.walk(functions[name])
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+        }
+        pending.extend(sorted((loaded & set(functions)) - selected_functions))
+
+    selected_nodes: list[ast.stmt] = [functions[name] for name in selected_functions]
+    loaded_names = {
+        node.id
+        for selected in selected_nodes
+        for node in ast.walk(selected)
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+    }
+
+    assignments: list[ast.Assign | ast.AnnAssign] = []
+    for node in tree.body:
+        target: ast.expr | None = None
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+        elif isinstance(node, ast.AnnAssign):
+            target = node.target
+        if isinstance(target, ast.Name) and target.id in loaded_names:
+            assignments.append(node)
+    loaded_names.update(
+        node.id
+        for assignment in assignments
+        for node in ast.walk(assignment)
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+    )
+
+    imports: list[ast.stmt] = []
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            aliases = [
+                alias
+                for alias in node.names
+                if (alias.asname or alias.name.split(".")[0]) in loaded_names
+            ]
+            if aliases:
+                imports.append(ast.Import(names=aliases))
+        elif isinstance(node, ast.ImportFrom):
+            if node.module == "__future__":
+                imports.append(node)
+                continue
+            aliases = [
+                alias for alias in node.names if (alias.asname or alias.name) in loaded_names
+            ]
+            if aliases:
+                imports.append(ast.ImportFrom(module=node.module, names=aliases, level=node.level))
+
+    body: list[ast.stmt] = [
+        ast.Expr(value=ast.Constant(value=description)),
+        *imports,
+        *assignments,
+        *sorted(selected_nodes, key=lambda node: node.lineno),
+    ]
+    projected = ast.unparse(ast.fix_missing_locations(ast.Module(body=body, type_ignores=[])))
+    return "#!/usr/bin/env python3\n" + projected.rstrip() + "\n"
+
+
+def paper_balanced_analyzer() -> str:
+    return project_python_module(
+        ROOT / "scripts" / "analyze_balanced_public_challenge.py",
+        {"derive_reporting_metrics"},
+        "Minimal balanced-challenge metrics used by the anonymous reviewer replay.",
+    )
+
+
+def paper_empirical_validator() -> str:
+    """Project the shared validator onto the two paper-facing empirical studies."""
+
+    projected = project_python_module(
+        ROOT / "scripts" / "validate_anonymous_empirical_evidence.py",
+        {"validate_fresh_confirmatory", "validate_balanced_public_challenge"},
+        "Recompute the two paper-facing studies from anonymous item-level records.",
+    ).rstrip()
+    main = """
+
+def main() -> int:
+    result = {
+        "status": "PASS",
+        "fresh_confirmatory": validate_fresh_confirmatory(),
+        "balanced_public_challenge": validate_balanced_public_challenge(),
+    }
+    print(json.dumps(result, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+"""
+    projected += main
+    forbidden = (
+        "aggregate_capable_hidden_study",
+        "analyze_stronger_model_study",
+        "def validate_capable_hidden",
+        "def validate_public_model_breadth",
+        "def validate_v1_",
+        "public-model-breadth",
+        "quota/rate-limit",
+        "1,260",
+        "78/1,260",
+    )
+    if any(token in projected for token in forbidden):
+        fail("excluded study code leaked into projected empirical validator")
+    return projected
 
 
 def build(destination: Path) -> None:
@@ -1920,18 +2103,11 @@ def build(destination: Path) -> None:
         "DATA_LICENSE.md",
         "LICENSE",
         "THIRD_PARTY_NOTICES.md",
-        "configs/decoding-v1.json",
-        "scripts/aggregate_capable_hidden_study.py",
-        "scripts/analyze_stronger_model_study.py",
+        "docs/PUBLIC_RELEASE_BOUNDARY.md",
         "scripts/analyze_confirmatory_hidden_study.py",
-        "scripts/analyze_balanced_public_challenge.py",
-        "scripts/analyze_public_model_breadth_study.py",
+        "scripts/audit_public_pair_contracts.py",
         "scripts/build_alpha.py",
-        "scripts/build_v1_dataset.py",
         "scripts/build_v2_naturalistic_candidates.py",
-        "scripts/validate_anonymous_empirical_evidence.py",
-        "scripts/validate_v1_plan.py",
-        "scripts/validate_v1_public_dev_freeze.py",
         "scripts/validate_v2_naturalistic_candidates.py",
         "tests/test_v2.py",
         "tests/test_v2_naturalistic.py",
@@ -1943,18 +2119,22 @@ def build(destination: Path) -> None:
     )
     for relative in selected_files:
         copy_file(ROOT / relative, destination / relative)
+    validator_path = destination / "scripts" / "validate_anonymous_empirical_evidence.py"
+    validator_path.parent.mkdir(parents=True, exist_ok=True)
+    validator_path.write_text(paper_empirical_validator(), encoding="utf-8", newline="\n")
+    (destination / "scripts" / "analyze_balanced_public_challenge.py").write_text(
+        paper_balanced_analyzer(), encoding="utf-8", newline="\n"
+    )
+    copy_file(
+        ROOT / "release" / "requirements-review.lock",
+        destination / "requirements-review.lock",
+    )
 
     (destination / "LICENSE").write_text(anonymous_license(), encoding="utf-8", newline="\n")
 
     rewrite_alpha_manifest(destination)
 
     empirical_sources = {
-        "v1-hidden-recovery": (
-            ROOT / "release" / "reviewer-evidence-source" / "v1-hidden-recovery"
-        ),
-        "v2-public-pilot": (ROOT / "release" / "reviewer-evidence-source" / "v2-public-pilot"),
-        "gpt54-public-dev": (ROOT / "release" / "reviewer-evidence-source" / "gpt54-public-dev"),
-        "capable-hidden": (ROOT / "release" / "reviewer-evidence-source" / "capable-hidden"),
         "fresh-confirmatory": (
             ROOT / "release" / "reviewer-evidence-source" / "fresh-confirmatory"
         ),
@@ -1965,46 +2145,9 @@ def build(destination: Path) -> None:
             build_fresh_confirmatory_anonymous_evidence(source, evidence_destination)
         else:
             copy_anonymized_tree(source, evidence_destination)
-        if name == "capable-hidden":
-            repair_capable_anonymous_evidence(evidence_destination)
-        elif name == "v2-public-pilot":
-            repair_v2_public_anonymous_evidence(evidence_destination)
-
     build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
-    breadth_results = ROOT / "v2" / "public-model-breadth-v1" / "results"
-    if breadth_results.is_dir():
-        build_public_model_breadth_anonymous_evidence(
-            destination / "evidence" / "public-model-breadth"
-        )
-
-    (destination / "results").mkdir()
-    v1 = anonymize_v1_results(load_object(ROOT / "release" / "v1-paper-results.json"))
-    v2 = anonymize_v2_results(
-        load_object(ROOT / "v2" / "pilot-results" / "v2-public-pilot-study.json")
-    )
-    v3 = anonymize_stronger_results(
-        load_object(
-            ROOT / "v2" / "stronger-model-results" / "openrouter-openai-gpt-5.4-v2-study.json"
-        )
-    )
-    (destination / "results" / "v1-paper-results.json").write_text(
-        json.dumps(v1, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    (destination / "results" / "v2-public-pilot-study.json").write_text(
-        json.dumps(v2, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    (destination / "results" / "v2-gpt54-public-dev-followup.json").write_text(
-        json.dumps(v3, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-
     (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
     (destination / "README.md").write_text(review_readme(), encoding="utf-8")
-    (destination / "scripts" / "validate_review_results.py").write_text(
-        review_validator(), encoding="utf-8"
-    )
     (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")
 
     scan_identity(destination)

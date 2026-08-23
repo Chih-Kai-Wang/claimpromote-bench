@@ -4,17 +4,15 @@
 an authored, machine-checkable policy. The experiments are synthetic and configuration-specific;
 they do not measure general research-agent ability or natural-distribution performance.
 
-The paper reports three evidence regimes:
+The paper reports two evidence regimes:
 
-- a fresh hidden r6 diagnostic with 300 items and 150 controlled pairs;
-- a precommitted, action-balanced public challenge with 180 items and 90 pairs; and
-- a prospectively frozen seven-configuration breadth supplement on the same known public challenge,
-  comprising 1,260 terminal cells.
+- a fresh hidden r6 diagnostic with 300 items and 150 controlled pairs; and
+- a precommitted, pair-balanced public challenge with 180 items and 90 pairs.
 
 Every scheduled service, syntax, schema, and semantic failure remains incorrect in end-to-end
 metrics. Conditional accuracy is reported only alongside decision or pair coverage. The
-deterministic policy executor defines the labels and is therefore a definitional policy ceiling,
-not a learned baseline.
+deterministic policy executor generates the labels and is therefore a definitional policy ceiling,
+not a learned baseline. The Naive Bayes reference remains a weak learned comparator.
 
 ## Build and validate
 

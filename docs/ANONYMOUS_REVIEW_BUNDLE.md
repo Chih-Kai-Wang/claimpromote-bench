@@ -17,19 +17,12 @@ The staged bundle contains:
 
 - the public 20-pair / 40-instance alpha benchmark, policy, schemas, exact-rational fixtures,
   executable checks, and pinned Lean package;
-- anonymized v1 source and normalized records plus the compact 24-run result summary;
-- all four public-interface pilot runs and the GPT-5.4 public-development follow-up records;
-- all 14 executed capable-extension pilot attempts, both fresh full passes, protocol snapshots,
-  analyses, and aggregate evidence;
 - the preregistered r6 reviewer-release dataset, study plan, prompt packet, frozen baseline,
   projected C2 records, item-level final outputs, gold, analysis, redaction/equivalence receipt,
   and frozen-manifest correction overlay;
 - the balanced public challenge's 90 pairs / 180 items, two one-pass lane records, analyses,
   corrected reporting aggregate, bound Macro-F1 correction receipt, full confusion matrices,
   action-level metrics, and privacy receipt;
-- the prospectively frozen model-breadth supplement's seven one-pass configurations and 1,260
-  terminal records, with scoring fields, complete per-configuration confusion matrices, action
-  metrics, row bindings, and a privacy-minimized aggregate;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
   zero created cases, zero model calls, zero human annotators, and no agreement statistic;
 - selected validation code and tests, an anonymous MIT license, a one-command review runner, and a
@@ -44,15 +37,17 @@ The builder excludes:
 - source workflow, artifact, commit, and searchable released-digest identifiers;
 - credentials, provider account identifiers, provider response/request identifiers, and
   machine-readable hidden-reasoning fields or content blocks;
-- breadth-study final-response text, free-form transport or parse errors, private source-row
-  hashes, and source journal digests;
+- the quota-confounded seven-route study in full, including its records, aggregates, and private
+  audit journal;
 - private construction seeds or salts, raw human-subject records, unused human-review workflow
   modules, manuscript source, and identity-bearing status documents;
-- caches, bytecode, logs, generated work products, and unrelated build artifacts.
+- caches, bytecode, logs, generated work products, and unrelated build artifacts;
+- earlier v1 recovery, public-interface pilot, GPT-5.4 development, and adaptive capable-extension
+  evidence that is not needed to replay the paper's reported results.
 
-The original v1 archive did not retain free-form text for records classified as format failures,
-so no reviewer derivative can reconstruct those bytes. The bundle preserves every archived field
-used by the released analysis and states this boundary in its generated README.
+The balanced-challenge derivative retains model-visible final JSON text and sanitized transport or
+parse-error text so reviewers can audit parser outcomes. Fail-closed scans reject credentials,
+account identifiers, provider response identifiers, hidden reasoning, and author provenance.
 
 ## Fail-closed privacy and identity scan
 
@@ -69,9 +64,8 @@ Validation runs inside the staged artifact:
 1. install the staged Python package;
 2. validate the public alpha dataset, oracle labels, pair contracts, shortcut resistance,
    metamorphic invariance, and executable fixtures;
-3. recompute the v1, public-pilot, GPT-5.4, capable-extension, r6, balanced-challenge, and
-   model-breadth results from included item-level evidence, including fixed-four-class Macro-F1
-   with zero division set to zero;
+3. recompute the r6 and balanced-challenge results from included item-level evidence, including
+   fixed-four-class Macro-F1 with zero division set to zero;
 4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
 5. run the selected v2 tests;
 6. build and replay the public Lean package and execute formal fixtures;
@@ -84,11 +78,13 @@ Validation runs inside the staged artifact:
 After extraction:
 
 ```bash
-python -m pip install -e ".[test]"
+python -m pip install --require-hashes -r requirements-review.lock
+python -m pip install --no-deps -e .
 python scripts/run_review_checks.py
 ```
 
-The generated README documents the separate Lean replay commands.
+The default command includes Lean build, import, and formal-fixture checks. It fails when `lake` is
+unavailable; `--python-only` is an explicitly partial replay.
 
 ## Artifact identity
 

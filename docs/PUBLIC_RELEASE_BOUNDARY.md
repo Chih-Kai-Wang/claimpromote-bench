@@ -14,7 +14,7 @@ establish redistribution rights.
   executable or formal fixtures;
 - dataset builders and scoring, audit, validation, and replay scripts used by the paper;
 - selected tests that exercise the public replay path;
-- the clean r6, balanced-challenge, and public model-breadth derivatives needed to recompute every
+- the clean r6 and balanced-challenge derivatives needed to recompute every
   scheduled denominator, confusion cell, action recall, coverage value, and conditional or
   end-to-end metric;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
@@ -44,6 +44,8 @@ minimum replay path.
   environment files;
 - provider response or request identifiers, hidden reasoning or thinking blocks, and unredacted
   source envelopes under `release/reviewer-evidence-source/fresh-confirmatory/collected/`;
+- the quota-confounded seven-route study, its service-specific execution records, and its private
+  failure journal, which are not needed to reproduce the paper;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
 - the private repository's Git history.
 

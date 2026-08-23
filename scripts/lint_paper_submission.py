@@ -47,6 +47,16 @@ CHALLENGE_CORRECTION = (
 BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
 BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
 BREADTH_RESULT = BREADTH_RESULT_ROOT / "reported-aggregate.json"
+BREADTH_FAILURE_ADDENDUM = BREADTH_RESULT_ROOT / "failure-cause-addendum.json"
+BREADTH_FAILURE_DERIVER = ROOT / "scripts" / "derive_public_model_breadth_failure_addendum.py"
+BREADTH_PRIVATE_JOURNAL = (
+    ROOT
+    / "v2"
+    / "public-model-breadth-v1"
+    / "private-results"
+    / "journal"
+    / "terminal-records.jsonl"
+)
 BREADTH_PACKET = ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json"
 BREADTH_DATASET = ROOT / "v2" / "balanced-public-challenge" / "dataset"
 BREADTH_VERIFIER = ROOT / "release" / "tools" / "verify_public_model_breadth_public_evidence.py"
@@ -224,22 +234,32 @@ def validate_no_stale_file_counts() -> None:
 def validate_submission_builder(tex: str) -> None:
     namespace = runpy.run_path(str(SUBMISSION_BUILDER))
     canonical_body = namespace["canonical_body"]()
+    canonical_appendix = namespace["canonical_appendix"]()
     body_start = tex.index(r"\begin{abstract}")
     bib_start = tex.rindex(r"\bibliographystyle")
     expected_body = tex[body_start:bib_start].rstrip() + "\n\n"
     if canonical_body != expected_body:
         fail("submission builder changes the canonical manuscript body")
+    bibliography = r"\bibliography{references}"
+    bibliography_end = tex.rindex(bibliography) + len(bibliography)
+    document_end = tex.rindex(r"\end{document}")
+    appendix = tex[bibliography_end:document_end].strip()
+    expected_appendix = appendix + ("\n" if appendix else "")
+    if canonical_appendix != expected_appendix:
+        fail("submission builder changes the canonical appendix")
 
     reproducibility_start = expected_body.index(r"\section{Reproducibility and Artifact Policy}")
     conclusion_start = expected_body.index(r"\section{Conclusion}", reproducibility_start)
     canonical_tail = expected_body[reproducibility_start:conclusion_start]
     rendered = {
-        "ICLR": namespace["iclr_tex"](canonical_body),
-        "arXiv": namespace["arxiv_tex"](canonical_body),
+        "ICLR": namespace["iclr_tex"](canonical_body, canonical_appendix),
+        "arXiv": namespace["arxiv_tex"](canonical_body, canonical_appendix),
     }
     for label, wrapper in rendered.items():
         if canonical_tail not in wrapper:
             fail(f"{label} wrapper changes reproducibility or AI-disclosure prose")
+        if canonical_appendix not in wrapper:
+            fail(f"{label} wrapper drops the canonical appendix")
     for stale in (
         "same 7,200-record aggregate",
         "all 14 pilot attempts",
@@ -397,15 +417,15 @@ def validate_r6_evidence(tex: str) -> None:
     required = (
         (r"272/300\s+valid decisions", "r6 valid-decision count"),
         (r"123/150\s+complete pairs", "r6 complete-pair count"),
-        (r"\.9485", "r6 conditional item accuracy"),
-        (r"\.9187", "r6 conditional pair accuracy"),
-        (r"\.9067", "r6 decision coverage"),
-        (r"\.8200", "r6 pair coverage"),
-        (r"300\s+HTTP 401", "r6 Flash HTTP 401 count"),
-        (r"old frozen service interface", "old Flash interface boundary"),
+        (r"258/272", "r6 conditional item accuracy"),
+        (r"113/123", "r6 conditional pair accuracy"),
+        (r"272/300", "r6 decision coverage"),
+        (r"123/150", "r6 pair coverage"),
+        (r"(?:300\s+HTTP 401|HTTP 401[^.]{0,40}300 requests)", "r6 Flash HTTP 401 count"),
+        (r"old r6 Flash service interface", "old Flash interface boundary"),
         (r"dependency.statement.*0/7", "r6 dependency-statement factor result"),
         (r"current.binding.*0/8", "r6 current-binding factor result"),
-        (r"weak baseline", "Naive Bayes weakness"),
+        (r"Naive Bayes.*weak|weak.*Naive Bayes", "Naive Bayes weakness"),
         (r"definitional policy ceiling", "deterministic ceiling role"),
     )
     for pattern, description in required:
@@ -629,17 +649,18 @@ def validate_balanced_challenge(tex: str) -> None:
         fail("balanced challenge receipt changed")
 
     required = (
-        (r"90\s+pairs and 15 factors", "challenge size"),
-        (r"148/180\s+valid decisions", "challenge Qwen coverage count"),
-        (r"146/180\s+valid decisions", "challenge Flash coverage count"),
+        (r"90\s+pairs", "challenge pair count"),
+        (r"15\s+factors", "challenge factor count"),
+        (r"148/180", "challenge Qwen coverage count"),
+        (r"146/180", "challenge Flash coverage count"),
         (r"\.7333/\.5333", "challenge Qwen end-to-end metrics"),
         (r"\.8919/\.7500", "challenge Qwen conditional metrics"),
         (r"\.5000/\.1444", "challenge Flash end-to-end metrics"),
         (r"\.6164/\.2131", "challenge Flash conditional metrics"),
         (r"\.3928", "corrected challenge Flash fixed-four-class Macro-F1"),
         (r"zero division", "fixed-four-class zero-division convention"),
-        (r"public, preregistered robustness challenge", "public challenge boundary"),
-        (r"strict causal", "cross-service causal boundary"),
+        (r"pair-balanced public robustness challenge", "public challenge boundary"),
+        (r"causal (?:comparison|ablation)", "cross-service causal boundary"),
         (r"factor-level pair", "factor-level pair reporting"),
     )
     for pattern, description in required:
@@ -674,6 +695,14 @@ def validate_public_model_breadth(tex: str) -> bool:
 
     plan = load_object(BREADTH_PLAN, "public model-breadth plan")
     aggregate = load_object(BREADTH_RESULT, "public model-breadth aggregate")
+    failure_addendum = load_object(BREADTH_FAILURE_ADDENDUM, "breadth failure addendum")
+    failure_deriver = runpy.run_path(str(BREADTH_FAILURE_DERIVER))
+    derive_failure_addendum = failure_deriver.get("derive")
+    if not callable(derive_failure_addendum):
+        fail("breadth failure-addendum derivation entry point is missing")
+    _, expected_public_addendum = derive_failure_addendum(BREADTH_PRIVATE_JOURNAL)
+    if failure_addendum != expected_public_addendum:
+        fail("breadth failure addendum differs from the frozen private journal")
     lane_order = plan.get("execution", {}).get("base_lane_order")
     if not isinstance(lane_order, list) or len(lane_order) != 7:
         fail("public model-breadth plan does not retain seven lanes")
@@ -733,13 +762,21 @@ def validate_public_model_breadth(tex: str) -> bool:
             or set(per_action) != set(ACTIONS)
         ):
             fail(f"public model-breadth class reporting is incomplete: {lane_id}")
+        conditional_items = (
+            "N/E"
+            if metrics["parseable_items"] == 0
+            else f"{metrics['correct_items']}/{metrics['parseable_items']}"
+        )
+        conditional_pairs = (
+            "N/E"
+            if metrics["covered_pairs"] == 0
+            else f"{metrics['correct_pairs']}/{metrics['covered_pairs']}"
+        )
         core_row = (
             f"{labels[str(lane_id)]} & {metrics['parseable_items']}/180 & "
-            f"{paper_rate(metrics['end_to_end_item_accuracy'])} & "
-            f"{paper_rate(metrics['conditional_item_accuracy'])} & "
-            f"{paper_rate(metrics['pair_coverage'])} & "
-            f"{paper_rate(metrics['end_to_end_pair_accuracy'])} & "
-            f"{paper_rate(metrics['conditional_pair_accuracy'])}"
+            f"{metrics['correct_items']}/180 & {conditional_items} & "
+            f"{metrics['covered_pairs']}/90 & {metrics['correct_pairs']}/90 & "
+            f"{conditional_pairs}"
         )
         if core_row not in tex:
             fail(f"public model-breadth result row is missing or changed: {lane_id}")
@@ -766,13 +803,17 @@ def validate_public_model_breadth(tex: str) -> bool:
         if rf"\label{{{label}}}" not in tex:
             fail(f"required public model-breadth table missing: {label}")
     required = (
-        (r"prospectively frozen.*model-family breadth", "prospective breadth freeze"),
-        (r"seven.*configurations", "seven breadth configurations"),
+        (r"frozen service-route stress test", "frozen route stress test"),
+        (r"seven.*service configurations", "seven route configurations"),
         (r"1\{?,?\}?260.*terminal", "breadth terminal-cell count"),
         (r"known public.*challenge", "known-public interpretation"),
-        (r"five additional model families", "incremental family breadth"),
-        (r"complete per-configuration confusion matrices", "breadth class artifact"),
-        (r"model.*serving.*adapter.*not causally", "breadth causal boundary"),
+        (r"final 547.*quota/rate-limit", "shared quota confound"),
+        (
+            r"547 quota/rate-limit, 76 authorization, five server, one timeout, and one connection",
+            "transport failure categories",
+        ),
+        (r"complete route confusion matrices", "route class artifact"),
+        (r"model identity.*serving implementation.*API adapter", "route causal boundary"),
     )
     for pattern, description in required:
         require_regex(tex, pattern, description)
@@ -821,6 +862,10 @@ def validate_manuscript_tables(tex: str) -> None:
         ("r6 Qwen", "HOLD"): (4, 110, 0, 2, 18),
         ("r6 Qwen", "DEMOTE"): (8, 0, 0, 0, 0),
         ("r6 Qwen", "ESCALATE"): (0, 0, 0, 5, 3),
+        ("r6 text NB", "ALLOW"): (75, 75, 0, 0, 0),
+        ("r6 text NB", "HOLD"): (25, 109, 0, 0, 0),
+        ("r6 text NB", "DEMOTE"): (8, 0, 0, 0, 0),
+        ("r6 text NB", "ESCALATE"): (8, 0, 0, 0, 0),
         ("Challenge Qwen", "ALLOW"): (79, 0, 0, 0, 11),
         ("Challenge Qwen", "HOLD"): (0, 26, 0, 0, 4),
         ("Challenge Qwen", "DEMOTE"): (8, 4, 4, 4, 10),
@@ -844,20 +889,24 @@ def validate_manuscript_tables(tex: str) -> None:
             fail(f"required result table missing: {label}")
     core_rows = (
         (
-            r"r6 Qwen3\.7-Max\s*&\s*272/300\s*&\s*\.8600\s*&\s*\.9485"
-            r"\s*&\s*\.8200\s*&\s*\.7533\s*&\s*\.9187"
+            r"r6 Qwen3\.7-Max\s*&\s*272/300\s*&\s*258/300\s*&\s*258/272"
+            r"\s*&\s*123/150\s*&\s*113/150\s*&\s*113/123"
         ),
         (
-            r"Public challenge Qwen\s*&\s*148/180\s*&\s*\.7333\s*&\s*\.8919"
-            r"\s*&\s*\.7111\s*&\s*\.5333\s*&\s*\.7500"
+            r"r6 public-dev text NB\s*&\s*300/300\s*&\s*184/300\s*&\s*184/300"
+            r"\s*&\s*150/150\s*&\s*34/150\s*&\s*34/150"
         ),
         (
-            r"Public challenge Flash\s*&\s*146/180\s*&\s*\.5000\s*&\s*\.6164"
-            r"\s*&\s*\.6778\s*&\s*\.1444\s*&\s*\.2131"
+            r"Public challenge Qwen\s*&\s*148/180\s*&\s*132/180\s*&\s*132/148"
+            r"\s*&\s*64/90\s*&\s*48/90\s*&\s*48/64"
         ),
         (
-            r"r6 old Flash interface\s*&\s*0/300\s*&\s*\.0000\s*&\s*N/E"
-            r"\s*&\s*\.0000\s*&\s*\.0000\s*&\s*N/E"
+            r"Public challenge Flash\s*&\s*146/180\s*&\s*90/180\s*&\s*90/146"
+            r"\s*&\s*61/90\s*&\s*13/90\s*&\s*13/61"
+        ),
+        (
+            r"Old Flash service-interface failure\s*&\s*0/300\s*&\s*0/300\s*&\s*N/E"
+            r"\s*&\s*0/150\s*&\s*0/150\s*&\s*N/E"
         ),
     )
     for pattern in core_rows:
@@ -866,6 +915,10 @@ def validate_manuscript_tables(tex: str) -> None:
         (
             r"r6 Qwen3\.7-Max\s*&\s*\.9533\s*&\s*\.8209\s*&\s*\.0000"
             r"\s*&\s*\.6250\s*&\s*\.5998\s*&\s*\.6265"
+        ),
+        (
+            r"r6 public-dev text NB\s*&\s*\.5000\s*&\s*\.8134\s*&\s*\.0000"
+            r"\s*&\s*\.0000\s*&\s*\.3284\s*&\s*\.3124"
         ),
         (
             r"Public challenge Qwen\s*&\s*\.8778\s*&\s*\.8667\s*&\s*\.1333"
@@ -912,10 +965,10 @@ def validate_naturalistic_decision(tex: str) -> None:
     }:
         fail("naturalistic pre-model decision changed")
     required = (
-        (r"zero naturalistic benchmark cases", "zero naturalistic cases"),
+        (r"created zero cases", "zero naturalistic cases"),
         (r"zero model calls", "zero naturalistic model calls"),
         (r"No human annotators", "no fabricated human annotation"),
-        (r"Naturalistic transfer remains open", "naturalistic limitation"),
+        (r"Naturalistic validity therefore remains untested", "naturalistic limitation"),
     )
     for pattern, description in required:
         require_regex(tex, pattern, description)
@@ -976,15 +1029,30 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
     for pattern in overclaims:
         if re.search(pattern, tex, flags=re.IGNORECASE):
             fail(f"unsupported novelty or capability claim found: {pattern}")
+    excluded_study_markers = (
+        "1,260",
+        "78/1,260",
+        "quota/rate-limit",
+        "Qwen3.8-Max",
+        "DeepSeek-V4-Pro",
+        "Kimi-K3",
+        "MiniMax-M3",
+        "tab:breadth-results",
+        "tab:breadth-action-recall",
+        "tab:breadth-confusion",
+    )
+    for marker in excluded_study_markers:
+        if marker in tex:
+            fail(f"excluded seven-route study leaked into manuscript: {marker}")
     for phrase in (
         "synthetic policy conformance",
-        "author-defined policy",
-        "Every transport, syntax, schema, and semantic failure",
-        "public robustness challenge",
-        "not a causal ablation",
-        "No human annotation study",
-        "artifact demonstrates a failure-aware evaluation protocol",
-        "rather than establish broad benchmark validity",
+        "author-defined evidence-transition policy",
+        "service, syntax, schema, and semantic failures",
+        "pair-balanced public robustness challenge",
+        "preclude a causal ablation",
+        "No human annotators or agreement statistic are claimed",
+        "replayable conformance test",
+        "Naturalistic validity therefore remains untested",
     ):
         if phrase.lower() not in lower:
             fail(f"required interpretation boundary missing: {phrase!r}")
@@ -1002,6 +1070,10 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "chan1998metamorphic",
         "scholak2021picard",
         "geng2023grammar",
+        "omg2024dmn",
+        "tretmans1996conformance",
+        "geng2025jsonschemabench",
+        "yan2025bfcl",
         "geifman2017selective",
         "geifman2019selectivenet",
         "zhou2025rulearena",
@@ -1074,7 +1146,6 @@ def main() -> int:
     validate_submission_builder(tex)
     validate_r6_evidence(tex)
     validate_balanced_challenge(tex)
-    breadth_bound = validate_public_model_breadth(tex)
     validate_manuscript_tables(tex)
     validate_naturalistic_decision(tex)
     validate_v1_diagnostic(tex)
@@ -1082,8 +1153,8 @@ def main() -> int:
     print(
         "paper-lint: PASS "
         f"({citation_count} citation keys, {label_count} labels, "
-        f"{abstract_words} abstract words; r6 addendum, balanced challenge"
-        f"{', and model breadth' if breadth_bound else ''} bound)"
+        f"{abstract_words} abstract words; r6 addendum and balanced challenge bound; "
+        "seven-route study excluded)"
     )
     return 0
 

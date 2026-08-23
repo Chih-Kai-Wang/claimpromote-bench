@@ -23,7 +23,6 @@ ROOT = Path(__file__).resolve().parents[1]
 ANONYMOUS_BUILDER = ROOT / "scripts" / "build_anonymous_review_bundle.py"
 SUBMISSION_BUILDER = ROOT / "scripts" / "build_submission_tex.py"
 STYLE_LOCK = ROOT / "technical-report" / "iclr2027-style-lock.json"
-BREADTH_RESULTS = ROOT / "v2" / "public-model-breadth-v1" / "results"
 OFFICIAL_STYLE_URL = "https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 LOG_FAILURE_RE = re.compile(
@@ -127,6 +126,14 @@ def extracted_pdf_text(path: Path) -> str:
     return "\n".join(page.extract_text() or "" for page in PdfReader(path).pages)
 
 
+def first_heading_page(path: Path, heading: str) -> int:
+    for page_number, page in enumerate(PdfReader(path).pages, start=1):
+        lines = {line.strip().upper() for line in (page.extract_text() or "").splitlines()}
+        if heading.upper() in lines:
+            return page_number
+    fail(f"could not locate PDF heading {heading!r} in {path}")
+
+
 def embedded_fonts(path: Path) -> Json:
     fonts: dict[str, bool] = {}
     for page in PdfReader(path).pages:
@@ -216,16 +223,13 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "public_repository_identity_included",
         "fresh_confirmatory_hidden_reasoning_included",
         "balanced_public_challenge_hidden_reasoning_included",
+        "public_model_breadth_summary_included",
+        "public_model_breadth_item_level_records_included",
         "public_model_breadth_hidden_reasoning_included",
         "public_model_breadth_raw_final_response_text_included",
     )
     if any(scope.get(key) is not False for key in false_guards):
         fail("anonymous manifest privacy scope changed")
-    if BREADTH_RESULTS.is_dir() and (
-        scope.get("public_model_breadth_summary_included") is not True
-        or scope.get("public_model_breadth_item_level_records_included") is not True
-    ):
-        fail("anonymous manifest omits completed public model-breadth evidence")
     return manifest, actual
 
 
@@ -252,7 +256,8 @@ def write_readme(path: Path, receipt: Json) -> None:
         "anonymous ICLR PDF and source, the named arXiv PDF and source, and the anonymous reviewer "
         "bundle. No OpenReview or arXiv upload was performed.\n\n"
         f"- ICLR PDF: {submission['iclr2027']['pages']} pages; main-text probe "
-        f"{submission['iclr2027']['main_text_pages']} pages.\n"
+        f"{submission['iclr2027']['main_text_pages']} pages; references start on physical page "
+        f"{submission['iclr2027']['references_start_page']}.\n"
         f"- arXiv PDF: {submission['arxiv']['pages']} pages.\n"
         f"- Anonymous manifest: {bundle['manifest_file_count']} listed files plus the manifest; "
         f"ZIP entries {bundle['zip_file_entries']}.\n\n"
@@ -296,6 +301,7 @@ def build(args: argparse.Namespace) -> Json:
     iclr_info = pdf_info(submission / "iclr2027.pdf")
     probe_info = pdf_info(submission / "iclr2027-maintext-probe.pdf")
     arxiv_info = pdf_info(submission / "arxiv.pdf")
+    iclr_references_start = first_heading_page(submission / "iclr2027.pdf", "REFERENCES")
     if probe_info["pages"] > 9:
         fail(f"ICLR main text exceeds nine pages: {probe_info['pages']}")
     if not args.visual_qa_complete:
@@ -393,6 +399,10 @@ def build(args: argparse.Namespace) -> Json:
                 "iclr2027": {
                     **iclr_info,
                     "main_text_pages": probe_info["pages"],
+                    "main_text_page_limit": 9,
+                    "references_start_page": iclr_references_start,
+                    "style_template": "ICLR 2027 official style archive",
+                    "style_receipt": "iclr-style-receipt.json",
                     "anonymous_source_and_pdf_scan": "PASS",
                     "fonts": embedded_fonts(submission / "iclr2027.pdf"),
                     "visual_pages_inspected": iclr_info["pages"],

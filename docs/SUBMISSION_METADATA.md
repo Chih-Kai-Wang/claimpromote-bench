@@ -16,7 +16,7 @@ ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Tr
 ## ICLR 2027 abstract
 
 ```text
-Producing evidence does not determine which claim-state transition it licenses. We study this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return ALLOW, HOLD, DEMOTE, or ESCALATE. ClaimPromoteBench uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, a Qwen configuration returned 272/300 valid decisions; end-to-end item/pair accuracy was .8600/.7533 versus .9485/.9187 conditional accuracy at .9067/.8200 decision/pair coverage. A public, preregistered robustness challenge of 180 items and 90 pairs gave Qwen/Flash end-to-end accuracies of .7333/.5333 and .5000/.1444; conditional values were .8919/.7500 and .6164/.2131. Complete confusion matrices show DEMOTE recall of 4/30 and 0/30. A prospectively frozen model-family breadth supplement ran seven service configurations on the same known public challenge: 1,260 terminal cells, zero retries, and 78 valid responses. Route-level end-to-end item/pair accuracy ranged from .0000--.2167/.0000--.0444; conditional metrics were undefined for four routes and used at most 65 valid outputs elsewhere. The old r6 Flash lane records 300 HTTP 401 failures on its old frozen service interface. Because model, serving stack, and adapter differ, these outcomes are descriptive rather than causal or model rankings. The deterministic executor is a definitional policy ceiling; Naive Bayes remains a weak baseline.
+Evidence-producing systems must also decide whether recorded evidence permits a claim-state change. We introduce ClaimPromoteBench, a synthetic conformance test for one author-defined evidence-transition policy. Each controlled pair changes one policy-relevant field; scoring retains service, syntax, schema, and semantic failures in the scheduled denominator. In a frozen 300-item hidden realization, one Qwen service configuration returned 272 valid decisions and achieved 258/300 item and 113/150 pair correctness end to end (conditional: 258/272 and 113/123). A separately frozen 180-item public challenge balances its 90 non-ALLOW members across HOLD, DEMOTE, and ESCALATE (30 each). Qwen and Flash configurations achieved end-to-end item correctness of 132/180 and 90/180; pair correctness was 48/90 and 13/90. DEMOTE recall was 4/30 and 0/30. The deterministic executor generates the labels and defines the policy ceiling; the learned Naive Bayes comparator is weak. The artifact supports reproducible diagnosis of policy conformance, not naturalistic scientific validity or a causal model comparison.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-A hidden diagnostic, an action-balanced public challenge, and a frozen seven-configuration breadth supplement evaluate a synthetic evidence-transition policy while retaining every unusable response; cross-stack outcomes are descriptive, not causal model rankings.
+A hidden diagnostic and pair-balanced public challenge test one synthetic evidence-transition policy with failure-aware item, pair, and action metrics.
 ```
 
 ## Main empirical findings
@@ -91,7 +91,7 @@ A hidden diagnostic, an action-balanced public challenge, and a frozen seven-con
 - registered Flash lane: 300 HTTP 401 responses and no model output; scheduled service-configuration
   E2E scores are 0 / 300 items and 0 / 150 pairs, while conditional correctness and model efficacy
   are non-evaluable and dual-model confirmation is unsupported;
-- balanced public challenge: 90 pairs / 180 items / 15 factors, with 90 `ALLOW` and 30 each of
+- pair-balanced public challenge: 90 pairs / 180 items / 15 factors, with 90 `ALLOW` and 30 each of
   `HOLD`, `DEMOTE`, and `ESCALATE`;
 - challenge Qwen: 148 / 180 valid decisions, 0.733 / 0.533 E2E item / pair accuracy, and
   0.892 / 0.750 conditional item / pair accuracy;
@@ -103,19 +103,8 @@ A hidden diagnostic, an action-balanced public challenge, and a frozen seven-con
   0.878 / 0.867 / 0.133 / 0.767; Flash: 0.756 / 0.300 / 0.000 / 0.433;
 - the later Flash route establishes service-path executability only; differing service stacks
   preclude a strict causal model ablation;
-- model-family breadth supplement: seven frozen configurations, 180 calls each, 1,260 terminal
-  cells, one POST per cell, and zero client retries;
-- breadth coverage: 78 / 1,260 valid decisions and 25 / 630 covered pairs; four routes return no
-  valid decision;
-- breadth end-to-end item / pair ranges: 0.000--0.217 / 0.000--0.044; conditional metrics are
-  undefined for four routes and use at most 65 valid items and 21 covered pairs elsewhere;
-- breadth action results: every route has zero `DEMOTE` recall; complete per-configuration confusion
-  matrices are included in the manuscript and replayable evidence;
-- breadth failures: 630 transport, 312 JSON-syntax, 203 schema, and 37 semantic failures, all
-  retained in the denominator;
 - service labels are configuration labels. Model, serving implementation, and adapter differ, so
-  neither the breadth supplement nor the old/new Flash routes form a strict causal ablation or a
-  model-family ranking;
+  the old/new Flash routes do not support a strict causal ablation or model-family ranking;
 - permanent reviewer evidence uses dynamically counted manifests and reasoning-free derivatives;
 - deterministic policy execution is a definitional policy ceiling, not a learned baseline; the
   public-development text Naive Bayes comparator remains weak.
@@ -125,19 +114,19 @@ A hidden diagnostic, an action-balanced public challenge, and a frozen seven-con
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, balanced public challenge, public-safe model-breadth records, reviewer-release hidden datasets and oracle labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, privacy/redaction/correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, raw provider text, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Public repository and archival identifiers will be released when double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, pair-balanced public challenge, reviewer-release hidden datasets and policy labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, privacy and correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Model-visible final JSON and sanitized error text retained for parser audit pass the same fail-closed identity and credential scans. Public repository and archival identifiers will be released when double-blind review permits disclosure.
 ```
 
 ### Public preprint version
 
 ```text
-Code, public benchmark and balanced-challenge data, public-safe model-breadth records, reviewer-release hidden datasets, item-level empirical records, validation workflows, privacy/redaction/scientific-equivalence receipts, and executable and formal replay inputs are available in the project repository. Private construction seeds, raw provider text, and provider hidden-thinking content are not released. Exact workflow and artifact identities are recorded in repository evidence manifests. A long-term archival identifier will be added only after it exists.
+Code, public benchmark and challenge data, reviewer-release hidden datasets, item-level empirical records, validation workflows, privacy receipts, and executable and formal replay inputs will be released through a history-free public export after licensing review. Private construction seeds, raw provider text, and provider hidden-thinking content will remain excluded. A long-term archival identifier will be added only after it exists.
 ```
 
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public balanced challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. The model-breadth supplement freezes seven configurations and all 1,260 cells before any call on the same known public challenge. Public derivatives remove raw response text, free-form error detail, provider identifiers, credentials, and hidden reasoning while preserving every scoring field. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
+The public benchmark is deterministically rebuildable and checked for schema, label generation, pair contracts, shortcuts, metamorphic invariance, executable artifacts, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. Reviewer derivatives remove credentials, provider and account identifiers, author provenance, and hidden reasoning while preserving scoring fields. The balanced-challenge derivative retains model-visible final JSON and sanitized error text for parser audit. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
 ```
 
 ## AI-use disclosure summary

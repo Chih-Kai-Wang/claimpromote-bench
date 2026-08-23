@@ -53,6 +53,18 @@ def test_release_readme_gives_an_exact_checksum_command() -> None:
     assert "cd release/submission-kit && shasum -a 256 -c SHA256SUMS.txt" in readme
 
 
+def test_release_receipt_records_the_iclr_page_boundary() -> None:
+    receipt = json.loads((RELEASE / "validation-receipt.json").read_text(encoding="utf-8"))
+    iclr = receipt["submission"]["iclr2027"]
+
+    assert iclr["pages"] == 9
+    assert iclr["main_text_pages"] == 7
+    assert iclr["main_text_page_limit"] == 9
+    assert iclr["references_start_page"] == 8
+    assert iclr["style_template"] == "ICLR 2027 official style archive"
+    assert iclr["style_receipt"] == "iclr-style-receipt.json"
+
+
 def test_durable_root_readme_omits_private_execution_diary() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "PR #20" not in readme

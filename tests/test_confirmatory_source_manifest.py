@@ -47,6 +47,7 @@ def test_runtime_manifest_is_preserved_at_the_recorded_source_commit() -> None:
     assert "scripts/analyze_public_model_breadth_study.py" not in files
     assert "scripts/build_local_release_kit.py" not in files
     assert "scripts/build_public_model_breadth_study.py" not in files
+    assert "scripts/derive_public_model_breadth_failure_addendum.py" not in files
     assert "scripts/derive_r6_reporting_addendum.py" not in files
     assert "scripts/finalize_public_model_breadth_study.py" not in files
     assert "scripts/run_public_model_breadth_study.py" not in files

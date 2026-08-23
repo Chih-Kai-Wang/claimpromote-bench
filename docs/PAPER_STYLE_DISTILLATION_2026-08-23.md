@@ -114,12 +114,11 @@ AI-detector evasion method.
 
 ## Application to ClaimPromoteBench
 
-The breadth-integrated, commit-bound audit measures 3,505 prose tokens and 202 usable sentences
-after excluding LaTeX tables, figures, and display math. Median sentence length is 17 words, the
-90th percentile is 25.9, and the 95th percentile is 28.0, within the central ranges of the selected
-corpus. The submission lint counts 220 abstract tokens. This measurement revision is not used to
-restate the historical reduction percentage because the manuscript now contains a new frozen
-experiment and three evidence tables. The revision:
+The paper-facing two-study audit measures 2,410 prose words and 139 usable sentences after
+excluding LaTeX tables, figures, and display math. Median sentence length is 16 words, the 90th
+percentile is 26.2, and the 95th percentile is 29.0. The submission lint counts 154 abstract
+tokens. This measurement revision is not used to restate the historical reduction percentage
+because the manuscript's scope and evidence tables changed. The revision:
 
 - removes the v1 formatting-control and adaptive-pilot chronology from the main narrative;
 - removes the historical Macro-F1 correction ledger while retaining the corrected value and
@@ -127,12 +126,12 @@ experiment and three evidence tables. The revision:
 - moves the zero-case naturalistic-candidate decision to limitations, where it constrains
   external validity;
 - states hidden, public-challenge, conditional, and end-to-end estimands beside their results;
-- reports all seven breadth configurations, their action recalls, and compact complete confusion
-  matrices without presenting them as model rankings;
+- excludes the quota-confounded seven-route study rather than selecting its valid rows, while
+  retaining the complete frozen record in the private audit repository;
 - shortens the reproducibility and AI-disclosure wrappers while preserving privacy and author
   responsibility;
-- retains all confusion cells, action recalls, factor summaries, service failures, and
-  interpretation boundaries.
+- retains every r6 and public-challenge confusion cell, action recall, factor summary, service
+  failure, and interpretation boundary.
 
 The final negative-pattern scan finds zero instances of the configured throat-clearing, vague
 importance, pompous-copula, AI-lexicon, formulaic-pivot, superficial-participle,

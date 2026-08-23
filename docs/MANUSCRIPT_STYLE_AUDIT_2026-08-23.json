@@ -12,7 +12,7 @@
     "use": "negative editorial pattern filter, not detector evasion"
   },
   "method": {
-    "measurement_revision": "breadth-integration-v2",
+    "measurement_revision": "paper-facing-two-study-v4",
     "latex_tables_figures_and_display_math_excluded": true,
     "sentence_filter_alphanumeric_tokens_min_max": [5, 100],
     "paragraph_min_alpha_words": 8,
@@ -45,15 +45,15 @@
     }
   },
   "after": {
-    "manuscript_sha256": "ec010ceed57b9ad71965587f87d7ac97e00fce8f5ef4b4f707d14d856b08e4d7",
-    "prose_words": 3505,
-    "sentences": 202,
-    "sentence_words_mean": 17.33,
-    "sentence_words_median": 17.0,
-    "sentence_words_p90": 25.9,
-    "sentence_words_p95": 28.0,
-    "sentence_words_over_40_percent": 0.495,
-    "abstract_submission_lint_tokens": 220,
+    "manuscript_sha256": "2111933a19b4936e8e4994e32bae25f52983de90fa1decc4ace6bdd7ad66c689",
+    "prose_words": 2410,
+    "sentences": 139,
+    "sentence_words_mean": 17.32,
+    "sentence_words_median": 16.0,
+    "sentence_words_p90": 26.2,
+    "sentence_words_p95": 29.0,
+    "sentence_words_over_40_percent": 1.4388,
+    "abstract_submission_lint_tokens": 154,
     "historical_reduction_not_recomputed": true,
     "configured_pattern_findings": {
       "throat_clearing": 0,
