@@ -31,6 +31,10 @@ verifier-governed updates.
 
 | Work | What it directly evaluates/builds | Boundary with ClaimPromoteBench |
 |---|---|---|
+| Margrave (ICSE 2005) | Semantic differencing and verification for evolving access-control policies | Establishes policy differencing; ClaimPromoteBench uses difference witnesses as paired executions against a model-service route and scores output-contract failure |
+| Cirg (SESS 2007) | Change-impact generation and structural reduction of XACML policy tests | Direct test-generation precedent; ClaimPromoteBench adds four-action transition adequacy, exact joint minimum search, and a failure-aware structured-output target |
+| Access-policy mutation testing (WWW 2007) | Fault model, mutation operators, coverage, and mutant killing for XACML policies | Establishes mutation testing for policies; ClaimPromoteBench's edge-local mutants audit only the behavioral-transition criterion |
+| Semantic differencing for combinatorial test models (ICSE 2017) | Canonical differences between evolving combinatorial test-space models | Establishes semantic differencing for evolving test designs; ClaimPromoteBench differences executable decision policies over a fixed finite context grammar |
 | AbstentionBench (2025 preprint; NeurIPS 2025 D&B) | Answer versus abstain across unanswerable QA settings | Static QA abstention, not a typed research-claim transition with explicit evidence prerequisites |
 | CLAIM-BENCH (IJCNLP-AACL 2025) | Scientific claim–evidence extraction and validation | Whether evidence supports a claim, not whether the current typed evidence licenses a requested status transition |
 | DeepFact (ACL 2026) | Deep-research report factuality with audit-then-score benchmark revision | Claim-level factuality and benchmark adjudication, not a frozen transition-admissibility oracle |
@@ -78,7 +82,8 @@ Its distinctive evaluation choices are the combination of:
    validation;
 7. learned comparators that expose both fixed-policy learnability and the registered
    profile-oblivious shortcut boundary; and
-8. a two-coordinate policy-migration adequacy criterion that separates changed-rule coverage from
+8. an adaptation of established semantic policy differencing to paired model-route executions,
+   with a two-coordinate migration adequacy criterion that separates changed-rule coverage from
    reachable oracle-action edge coverage and records structurally impossible edges; and
 9. a release-gate interpretation in which a policy revision regenerates the difference suite,
    while a route revision reruns the same frozen suite, separating coverage, output validity, and

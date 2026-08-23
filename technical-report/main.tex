@@ -43,7 +43,7 @@ We instantiate the protocol in two synthetic ontologies. One governs research-ev
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a paired conformance protocol that isolates evidence and active-policy interventions, retains route failure end to end, and certifies the failure of intervention-blind shortcuts;
-  \item a domain-independent policy-difference compiler with separate changed-rule and reachable-transition adequacy, impossible-edge certificates, and registered stale-policy mutants;
+  \item an adaptation of semantic policy differencing to model-route tests, with separate changed-rule and observable action-transition adequacy, impossible-edge certificates, and registered stale-policy mutants;
   \item an exact minimum-suite formulation, an NP-hardness result, and dynamic programs that produce a checkable optimum or an edge-count optimality witness; and
   \item five frozen evaluations spanning 420 pairs and two authored ontologies, with complete item, pair, action, confusion, and learned-shortcut diagnostics for hosted and pinned local routes.
 \end{enumerate}
@@ -52,6 +52,8 @@ Our contributions are:
 
 \paragraph{Behavioral and conformance testing.}
 CheckList and contrast sets probe local decision boundaries by changing inputs under a fixed target \cite{ribeiro2020checklist,gardner2020contrastsets}. Metamorphic testing scores relations among transformed executions, often when a direct oracle is unavailable \cite{chan1998metamorphic}. Finite-state and ioco testing derive tests from transition specifications, and transition coverage is a standard adequacy criterion \cite{chow1978fsm,tretmans1996conformance}; DMN represents executable decision tables \cite{omg2024dmn}. \cpb combines these ideas for a narrower setting: an exact oracle exists, the specification itself changes, and the test object is the behavioral difference between two policy versions. A survey of model-mediated software identifies regression and continuous-integration testing as under-supported in part because stable automated oracles are scarce \cite{gonzalez2026aiware}.
+
+Semantic policy differencing is established software-engineering work. Margrave computes witnesses on which two access-control policies disagree; Cirg uses change-impact analysis to generate and reduce policy tests; mutation testing measures access-policy fault detection \cite{fisler2005policychange,martin2007policytests,martin2007policymutation}. Semantic differencing has also been applied to evolving combinatorial test models \cite{tzorefbrill2017semantic}. Our contribution is not the differencing operation. We turn each witness into two scored model-service executions, retain output-contract failure, and distinguish changed-rule coverage from coverage of the observable four-action changes induced by a revision. The latter includes transitions between non-\allow{} actions that a rule-complete suite can miss.
 
 \paragraph{Policy and rule reasoning.}
 Rule-following benchmarks test conversational constraints, unusual instructions, long rule sets, policy comprehension, and request classification \cite{mu2024rules,zhang2026inverseifeval,zhou2025rulearena,bao2026policyllm,cisneros2026policycompliance}. Other systems extract rule flows or internalize policy documents \cite{yang2026rulesual,liu2026policyinternalization}. GuideBench varies domain guidelines, and augmented policy training studies unseen guardrail policies \cite{diao2025guidebench,liu2026augmentedpolicy}. These works establish policy variation as prior art. They do not compile paired regression tests from the semantic difference of two executable policies or certify coverage of the induced action graph.
@@ -294,10 +296,7 @@ route change reruns the frozen pairs. Missing edge coverage, invalid output, and
 then fail separately. The experiments validate this mechanism on two authored ontologies, not its
 performance in other policy domains.
 
-The reusable boundary is any finite typed decision surface with two deterministic policy versions.
-The compiler has no ontology, prompt, model, or provider dependency, so the same release pattern can
-target admission, escalation, or authorization actions after a domain author supplies policies,
-rule witnesses, and a context grammar. These are prospective uses, not evaluated domains.
+The compiler applies to any finite typed decision surface with two deterministic policy versions and has no ontology, prompt, model, or provider dependency. Admission, escalation, and authorization are prospective uses, not evaluated domains.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
 The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either.
@@ -333,7 +332,7 @@ Generative AI tools assisted literature search, planning, code and benchmark dra
 
 \section{Conclusion}
 
-\cpb evaluates policy-conditioned state transitions with matched evidence and policy contrasts. Fixed-policy success can coexist with a profile-oblivious shortcut, while rule-complete policy tests can omit reachable behavioral transitions. The protocol turns these gaps into replayable regression criteria, provides minimum and diagnostic gate tiers, and keeps interface failure in the measured contract. Natural policies, evidence extraction, and controlled model comparisons remain open tests.
+\cpb compiles policy revisions into paired, failure-aware state-transition tests. It exposes profile-oblivious shortcuts and rule-complete suites that miss reachable action changes, while providing minimum and diagnostic release gates. Natural policies, evidence extraction, and controlled model comparisons remain open tests.
 
 \bibliographystyle{plain}
 \bibliography{references}
