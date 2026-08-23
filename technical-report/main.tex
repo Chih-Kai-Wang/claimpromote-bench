@@ -185,6 +185,8 @@ The software policy uses release status, accepted build level, and incident-revi
 
 The policy studies publish two counterfactual profiles. \texttt{POLICY\_BLUE} enforces provenance, subject, builder, and source-ref checks and escalates source-revision or VSA-policy conflicts. \texttt{POLICY\_AMBER} enforces signature, attester, source-URI, and policy-digest checks and escalates build-parameter or verification-result conflicts. Both suites give the profiles identical action marginals, so a profile name alone does not predict the action. The profiles and labels are author choices; SLSA and in-toto do not endorse either one.
 
+For example, one pair holds an admitted artifact, its evidence, and its requested state fixed while recording an unrecognized attester. \texttt{BLUE} does not bind that field and prescribes \allow; \texttt{AMBER} treats the current admission basis as invalid and prescribes \demote. Only the profile changes.
+
 \section{Evaluation Design}
 
 Table~\ref{tab:design} summarizes the five datasets. The first four suites pair one \allow{} member with a changed action. R6 is a frozen hidden realization with rare \demote{} and \escalate{} support. The public challenge balances its 90 non-\allow{} members across the other three actions. The transition graph also includes pairs between non-\allow{} actions.
