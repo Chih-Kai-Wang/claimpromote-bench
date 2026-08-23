@@ -129,7 +129,9 @@ the oracle side and cannot be chosen from model errors.
 The released compiler is independent of either ontology. Its interface accepts two deterministic
 policy evaluators, a finite context sequence, stable context identifiers, and authored rule
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
-difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. An exact subset dynamic
+difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. Finding a smallest joint-
+complete suite is NP-hard even when every candidate has the same required edge: let required rules
+be a Set Cover universe and let each context witness one available subset. An exact subset dynamic
 program over $r$ required rules and $k$ required edges returns a cardinality-minimum complete suite
 in $O(n2^{r+k})$ state updates for $n$ candidate contexts, with a stable lexical tie break. A
 specialized search keeps at most $2^r$ rule masks while selecting one context per edge; if it finds

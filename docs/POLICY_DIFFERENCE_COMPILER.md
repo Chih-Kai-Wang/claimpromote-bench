@@ -24,6 +24,11 @@ problem: when the lower bound is unattainable, it can select additional contexts
 smallest complete suite with a stable lexical tie break. It returns `None` only when the candidate
 pool cannot satisfy the declared joint target.
 
+The cardinality-minimum problem is NP-hard even when every candidate induces the same required
+edge. Given a Set Cover instance, use its universe as the required-rule inventory and create one
+context per available subset, with that subset as its rule witnesses. A suite covers all required
+rules exactly when the corresponding subsets form a set cover; the common edge adds no constraint.
+
 For $n$ candidates, $r$ required rules, and $k$ required edges, the exact search performs
 $O(n2^{r+k})$ state updates. After each candidate, it retains a shortest selected-ID tuple for every
 reachable joint coverage mask. This invariant proves that the tuple stored at the full mask has
