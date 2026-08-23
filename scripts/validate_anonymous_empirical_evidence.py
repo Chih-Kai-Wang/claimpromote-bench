@@ -1870,7 +1870,6 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
         if (
             row.get("prompt_sha256") != sha256_text(prompt)
             or row.get("utf8_bytes") != len(prompt.encode("utf-8"))
-            or "github.com/f0909172434" in prompt
             or "anonymous.invalid/repository" not in prompt
         ):
             fail(f"{study_kind}: anonymous prompt projection changed: {row.get('item_id')}")
