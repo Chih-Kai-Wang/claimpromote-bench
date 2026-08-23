@@ -85,7 +85,11 @@ Its distinctive evaluation choices are the combination of:
    action-conformance failures; and
 10. an executable edge-local stale-policy audit showing that rule-complete coverage detects 6/10
     registered migration mutants while graph-complete coverage detects 10/10. The mutant family
-    operationalizes the adequacy definition; it is not a claimed distribution of production bugs.
+    operationalizes the adequacy definition; it is not a claimed distribution of production bugs;
+    and
+11. a provably minimum joint-adequacy smoke suite: ten pairs cover all ten reachable edges and all
+    12 changed rules, reducing the structural route gate from 120 to 20 calls. The balanced 60-pair
+    suite remains necessary for repeated-context diagnostics.
 
 This is not a truth benchmark. A transition can be admissible under the public policy while the underlying research claim remains scientifically wrong, unimportant, or semantically misstated; conversely, a true claim may correctly remain unpromoted because required evidence is absent.
 

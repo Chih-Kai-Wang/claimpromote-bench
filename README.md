@@ -50,6 +50,21 @@ committed result artifacts. The challenge was public before inference, and the t
 different service stacks. Their difference is descriptive; it is neither hidden-test
 generalization nor a causal ablation.
 
+## Policy-migration release gate
+
+For two executable policy profiles, ClaimPromoteBench enumerates contexts on which their prescribed
+actions differ. It reports changed-rule coverage separately from reachable directed action-edge
+coverage. In the frozen software-policy instrument, a 60-pair rule-stratified suite covers all 12
+changed rules but only 6/10 reachable edges and detects 6/10 registered edge-local stale-policy
+mutants. The balanced graph suite covers and detects all ten edges; two other directions are
+structurally impossible because pair members share their current state.
+
+A deterministic selection over the frozen graph yields a provably minimum joint-adequacy smoke
+suite: ten pairs, 20 route calls, all 12 rules, and all ten reachable edges. This cuts the structural
+gate by 83.3% relative to the 60-pair graph suite. The full suite remains the diagnostic tier for
+six-context-per-edge evidence, factor localization, and stochastic-route assessment. Neither the
+mutation family nor the minimum suite estimates production fault prevalence.
+
 ## Install and run checks
 
 Python 3.11 or newer is required.

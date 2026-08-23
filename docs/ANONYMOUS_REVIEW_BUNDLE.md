@@ -26,7 +26,7 @@ The staged bundle contains:
 - the hosted SLSA portability study and three zero-retry local studies on the fixed policy,
   rule-stratified policy switch, and complete reachable policy-transition graph, with item-level
   records, learned comparators, freeze receipts, recomputable coverage certificates, and the
-  zero-call edge-local migration-mutant audit;
+  zero-call edge-local migration-mutant audit and minimum 10-pair smoke-suite receipt;
 - redacted all-or-nothing exclusion receipts for three hosted policy studies that exhausted shared
   subscription quota, without their item records, route labels, free-form errors, or model rows;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
@@ -73,12 +73,13 @@ Validation runs inside the staged artifact:
 3. recompute the r6, balanced-challenge, SLSA portability, and three local-study results from
    included item-level evidence, including fixed-four-class Macro-F1 with zero division set to
    zero, then reproduce the 6/10 versus 10/10 migration-mutant audit;
-4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
-5. run the selected v2 tests;
-6. build and replay the public Lean package and execute formal fixtures;
-7. rebuild a fresh clean bundle and require a byte-identical manifest;
-8. verify that every manifested path and digest matches disk and that no excluded file survives;
-9. package the clean tree as a ZIP and produce a SHA-256 sidecar.
+4. reproduce the graph-and-rule-complete 10-pair, 20-item minimum-suite certificate;
+5. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
+6. run the selected v2 tests;
+7. build and replay the public Lean package and execute formal fixtures;
+8. rebuild a fresh clean bundle and require a byte-identical manifest;
+9. verify that every manifested path and digest matches disk and that no excluded file survives;
+10. package the clean tree as a ZIP and produce a SHA-256 sidecar.
 
 ## Reviewer command
 

@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-Model-mediated workflows increasingly apply versioned policies to structured evidence and emit tool-facing state changes. Fixed-policy accuracy cannot establish that a route used the active policy, and conditional accuracy can conceal interface failure. We introduce \cpb, a synthetic relational conformance protocol. Evidence pairs change one registered prerequisite under a fixed policy; policy pairs hold the complete decision context fixed and change only the active profile. We formalize policy-migration adequacy along two coordinates: changed-rule coverage and reachable action-transition coverage. A rule-complete suite kills only 6/10 registered edge-local stale-policy mutants; a graph-complete suite kills all ten and certifies two impossible directions. Five frozen evaluations contain 420 pairs across research-evidence and software-artifact ontologies. Every scheduled service, syntax, schema, and semantic failure remains in the end-to-end denominator. On the fixed software policy, four model-route configurations achieved 23/60--49/60 pair accuracy, while a structured Random Forest achieved 60/60. POLICY RESULT TBD. The deterministic executor is the label definition and policy ceiling, not a learned baseline. These results support regression testing of policy-conditioned decision routes; they do not estimate naturalistic validity or causal model effects.
+Model-mediated workflows increasingly apply versioned policies to structured evidence and emit tool-facing state changes. Fixed-policy accuracy cannot establish that a route used the active policy, and conditional accuracy can conceal interface failure. We introduce \cpb, a synthetic relational conformance protocol. Evidence pairs change one registered prerequisite under a fixed policy; policy pairs hold the complete decision context fixed and change only the active profile. We formalize policy-migration adequacy along two coordinates: changed-rule coverage and reachable action-transition coverage. A rule-complete suite kills only 6/10 registered edge-local stale-policy mutants; a graph-complete suite kills all ten and certifies two impossible directions. The graph also yields a provably minimum 10-pair, 20-call structural smoke gate covering all 12 changed rules and ten edges. Five frozen evaluations contain 420 pairs across research-evidence and software-artifact ontologies. Every scheduled service, syntax, schema, and semantic failure remains in the end-to-end denominator. On the fixed software policy, four model-route configurations achieved 23/60--49/60 pair accuracy, while a structured Random Forest achieved 60/60. POLICY RESULT TBD. The deterministic executor is the label definition and policy ceiling, not a learned baseline. These results support regression testing of policy-conditioned decision routes; they do not estimate naturalistic validity or causal model effects.
 \end{abstract}
 
 \section{Introduction}
@@ -51,7 +51,7 @@ The same construction yields a release gate for policy migrations. Given old and
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a relational conformance protocol with matched evidence and policy interventions, an exact transition oracle, and an intervention-blind shortcut certificate;
-  \item a policy-difference test compiler with separate adequacy targets for changed rules and reachable action transitions, including edge-local stale-policy mutants and certificates for impossible edges;
+  \item a policy-difference test compiler with separate adequacy targets for changed rules and reachable action transitions, including edge-local stale-policy mutants, impossible-edge certificates, and a minimum smoke suite;
   \item five frozen evaluations spanning 420 pairs, two authored ontologies, and both intervention axes; and
   \item failure-aware item, pair, action, and confusion reporting for hosted and pinned local routes, with learned controls for fixed-map shortcuts.
 \end{enumerate}
@@ -142,6 +142,13 @@ We also register one stale-policy mutant $m_e$ for each reachable edge $e=(a,b)$
 The rule-stratified suite therefore kills 6/10 registered edge mutants, whereas the graph suite
 kills 10/10. This oracle-side audit explains the coverage criterion; it is not a model of fault
 prevalence.
+
+The same graph gives a lower bound on a graph-complete suite: one pair realizes exactly one edge,
+so ten reachable edges require at least ten pairs. A deterministic search over the six frozen
+contexts per edge finds a ten-pair witness that also covers all 12 rules. This suite is therefore
+provably minimum for the joint $(1,1)$ adequacy target on the published candidate pool. It requires
+20 route calls instead of 120, an 83.3\% reduction. The selected pair and item identifiers are
+published in a digest-bound receipt; no model output enters the selection.
 
 \begin{figure}[H]
 \centering
@@ -274,6 +281,11 @@ registered stale-policy faults, while the graph-complete suite detects all ten. 
 are defined from the edge inventory, the audit validates adequacy rather than estimating field
 failure rates.
 
+For routine changes, the minimum joint-adequacy suite supplies a 10-pair, 20-call structural smoke
+gate. The balanced 60-pair graph suite remains the diagnostic tier: it repeats every edge across six
+contexts and supports edge-level inspection. The smoke suite does not replace that 60-pair
+diagnostic when route stochasticity, factor localization, or repeated-context evidence matters.
+
 This procedure can sit in continuous integration for a versioned policy or model-service route. A
 policy change regenerates the difference set and its adequacy receipt; a route change reruns the
 same frozen pairs. The gate can then reject missing edge coverage, invalid output, or incorrect
@@ -306,6 +318,10 @@ The edge-local stale-policy mutants are defined from the reachable action graph.
 rates certify coverage only for that registered family; they neither estimate the prevalence of
 production regressions nor exhaust other implementation faults.
 
+The minimum smoke suite was derived without model outputs but after the candidate graph existed.
+Its proof is structural and candidate-pool-relative; the study did not prospectively evaluate it as
+a deployment gate. Its 20 calls provide no repeated-context reliability estimate.
+
 Conditional metrics describe a selected valid-output subset. They must be read beside end-to-end denominators. Invalid response contents are omitted from the paper and anonymous release, but their failure types and counts remain auditable.
 
 \section{Reproducibility Statement}
@@ -318,7 +334,7 @@ Generative AI tools assisted literature search, planning, code and benchmark dra
 
 \section{Conclusion}
 
-\cpb evaluates policy-conditioned state transitions with matched evidence and policy contrasts. Fixed-policy success can coexist with a profile-oblivious shortcut, while rule-complete policy tests can omit reachable behavioral transitions. The protocol turns these gaps into replayable regression criteria and keeps interface failure in the measured contract. Natural policies, evidence extraction, and controlled model comparisons remain open tests.
+\cpb evaluates policy-conditioned state transitions with matched evidence and policy contrasts. Fixed-policy success can coexist with a profile-oblivious shortcut, while rule-complete policy tests can omit reachable behavioral transitions. The protocol turns these gaps into replayable regression criteria, provides minimum and diagnostic gate tiers, and keeps interface failure in the measured contract. Natural policies, evidence extraction, and controlled model comparisons remain open tests.
 
 \bibliographystyle{plain}
 \bibliography{references}

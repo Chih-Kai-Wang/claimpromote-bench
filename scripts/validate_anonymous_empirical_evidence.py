@@ -2261,6 +2261,49 @@ def validate_local_model_replications() -> Json:
         or graph_mutants.get("edge_local_mutants_missed") != []
     ):
         fail("policy-migration mutation audit changed")
+    minimal_suite = load_json(root / "policy-transition-graph" / "minimal-release-suite.json")
+    if not isinstance(minimal_suite, dict):
+        fail("minimum policy-migration suite is malformed")
+    validate_self_digest(minimal_suite, "self_digest", "minimum policy-migration suite")
+    if (
+        minimal_suite.get("status") != "PROVABLY_MINIMUM_GRAPH_AND_RULE_COMPLETE_SUITE"
+        or minimal_suite.get("model_or_client_calls_to_derive") != 0
+        or minimal_suite.get("source_bindings")
+        != {
+            "evaluation_pairs_sha256": sha256_file(
+                root / "policy-transition-graph" / "dataset" / "evaluation-pairs.json"
+            ),
+            "transition_coverage_sha256": sha256_file(
+                root / "policy-transition-graph" / "transition-coverage.json"
+            ),
+        }
+        or minimal_suite.get("optimality_certificate")
+        != {
+            "lower_bound_pairs": 10,
+            "lower_bound_reason": (
+                "Each controlled pair realizes exactly one directed action edge, so covering ten "
+                "distinct reachable edges requires at least ten pairs."
+            ),
+            "witness_pairs": 10,
+            "bound_met": True,
+        }
+        or minimal_suite.get("coverage")
+        != {
+            "reachable_edges": {"covered": 10, "total": 10},
+            "changed_rules": {"covered": 12, "total": 12},
+        }
+        or minimal_suite.get("execution_budget")
+        != {
+            "minimum_smoke_pairs": 10,
+            "minimum_smoke_items": 20,
+            "balanced_diagnostic_pairs": 60,
+            "balanced_diagnostic_items": 120,
+            "item_call_reduction_fraction": 5 / 6,
+        }
+        or len(minimal_suite.get("selected_pair_ids", [])) != 10
+        or len(minimal_suite.get("selected_item_ids", [])) != 20
+    ):
+        fail("minimum policy-migration suite changed")
     expected_bindings = {
         "catalog_sha256": catalog_hash,
         "requirements_sha256": sha256_file(root / "requirements.txt"),
@@ -2293,6 +2336,12 @@ def validate_local_model_replications() -> Json:
         "policy_migration_edge_mutants": {
             "rule_stratified": "6/10",
             "transition_graph": "10/10",
+        },
+        "minimum_policy_migration_smoke_suite": {
+            "pairs": 10,
+            "items": 20,
+            "changed_rules": "12/12",
+            "reachable_edges": "10/10",
         },
     }
 

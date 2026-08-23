@@ -52,6 +52,9 @@ POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-differen
 POLICY_TRANSITION_GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1" / "frozen"
 POLICY_TRANSITION_GRAPH_COVERAGE = POLICY_TRANSITION_GRAPH_ROOT / "transition-coverage.json"
 POLICY_MIGRATION_MUTATION_AUDIT = ROOT / "v2" / "policy-transition-graph-v1" / "mutation-audit.json"
+MINIMAL_POLICY_MIGRATION_SUITE = (
+    ROOT / "v2" / "policy-transition-graph-v1" / "minimal-release-suite.json"
+)
 HOSTED_POLICY_REPLACEMENT_RECEIPT = (
     ROOT
     / "v2"
@@ -1223,6 +1226,31 @@ def validate_new_study_claims(tex: str) -> None:
         != {"numerator": 10, "denominator": 10, "value": 1.0}
     ):
         fail("policy-migration mutation audit changed")
+    minimal_suite = load_object(MINIMAL_POLICY_MIGRATION_SUITE, "minimum policy-migration suite")
+    if (
+        minimal_suite.get("status") != "PROVABLY_MINIMUM_GRAPH_AND_RULE_COMPLETE_SUITE"
+        or minimal_suite.get("self_digest") != self_digest(minimal_suite, "self_digest")
+        or minimal_suite.get("model_or_client_calls_to_derive") != 0
+        or minimal_suite.get("source_bindings")
+        != {
+            "evaluation_pairs_sha256": sha256_file(
+                POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
+            ),
+            "transition_coverage_sha256": sha256_file(POLICY_TRANSITION_GRAPH_COVERAGE),
+        }
+        or minimal_suite.get("optimality_certificate", {}).get("lower_bound_pairs") != 10
+        or minimal_suite.get("optimality_certificate", {}).get("witness_pairs") != 10
+        or minimal_suite.get("optimality_certificate", {}).get("bound_met") is not True
+        or minimal_suite.get("coverage")
+        != {
+            "reachable_edges": {"covered": 10, "total": 10},
+            "changed_rules": {"covered": 12, "total": 12},
+        }
+        or minimal_suite.get("execution_budget", {}).get("minimum_smoke_items") != 20
+        or minimal_suite.get("execution_budget", {}).get("balanced_diagnostic_items") != 120
+        or minimal_suite.get("execution_budget", {}).get("item_call_reduction_fraction") != 5 / 6
+    ):
+        fail("minimum policy-migration suite changed")
     graph_aggregate = load_object(
         LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
         "local policy-transition graph aggregate",
@@ -1263,6 +1291,8 @@ def validate_new_study_claims(tex: str) -> None:
         (r"18/12/12/18", "transition-graph per-profile action balance"),
         (r"kills 6/10[\s\S]{0,120}kills 10/10", "edge-local migration mutation audit"),
         (r"not a model of fault.*prevalence", "migration-mutant interpretation boundary"),
+        (r"provably minimum.*10-pair.*20-call", "minimum migration smoke suite"),
+        (r"does not replace.*60-pair.*diagnostic", "minimum-suite interpretation boundary"),
         (r"30.*\\allow.*ten.*other action", "per-profile action balance"),
         (r"Mistral Small 3\.2 24B", "pinned Mistral route"),
         (r"Phi-4", "pinned Phi route"),

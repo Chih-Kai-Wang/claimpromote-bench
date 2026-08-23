@@ -1838,6 +1838,27 @@ def derive_policy_migration_mutation_audit(
     return value
 
 
+def derive_minimal_policy_migration_suite(graph_root: Path) -> Json:
+    script = ROOT / "scripts" / "derive_minimal_policy_migration_suite.py"
+    spec = importlib.util.spec_from_file_location(
+        "anonymous_minimal_policy_migration_suite", script
+    )
+    if spec is None or spec.loader is None:
+        fail("could not load the minimum policy-migration suite derivation")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    derive = getattr(module, "derive", None)
+    if not callable(derive):
+        fail("minimum policy-migration suite derivation lacks derive()")
+    value = derive(
+        graph_root / "dataset" / "evaluation-pairs.json",
+        graph_root / "transition-coverage.json",
+    )
+    if not isinstance(value, dict):
+        fail("minimum policy-migration suite derivation returned a non-object")
+    return value
+
+
 def build_transition_graph_review_receipts(
     source_root: Path,
     destination: Path,
@@ -2059,6 +2080,10 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
                     destination / "policy-switch",
                     study_destination,
                 ),
+            )
+            write_json(
+                study_destination / "minimal-release-suite.json",
+                derive_minimal_policy_migration_suite(study_destination),
             )
         (study_destination / "README.md").write_text(
             (
@@ -2801,6 +2826,18 @@ PYTHON_COMMANDS = [
     ],
     [
         sys.executable,
+        "scripts/derive_minimal_policy_migration_suite.py",
+        "--pairs",
+        "evidence/local-model-replications/policy-transition-graph/dataset/evaluation-pairs.json",
+        "--coverage",
+        "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
+        "--expect",
+        "evidence/local-model-replications/policy-transition-graph/minimal-release-suite.json",
+        "--out",
+        "work/minimal-policy-migration-suite.json",
+    ],
+    [
+        sys.executable,
         "scripts/validate_v2_naturalistic_candidates.py",
         "--registry",
         "v2/naturalistic-sources.json",
@@ -2988,6 +3025,7 @@ def verify_bundle(bundle: Path) -> None:
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
+        "scripts/derive_minimal_policy_migration_suite.py",
         "scripts/derive_policy_migration_mutation_audit.py",
         "scripts/policy_transition_graph_local.py",
         "scripts/run_policy_transition_graph_local_study.py",
@@ -3023,6 +3061,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/local-model-replications/policy-switch/reported-aggregate.json",
         "evidence/local-model-replications/policy-transition-graph/MANIFEST.json",
         "evidence/local-model-replications/policy-transition-graph/design-decision-receipt.json",
+        "evidence/local-model-replications/policy-transition-graph/minimal-release-suite.json",
         "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
         "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
         "evidence/local-model-replications/policy-transition-graph/reported-aggregate.json",
@@ -3309,6 +3348,7 @@ def build(destination: Path) -> None:
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
         "scripts/build_v2_naturalistic_candidates.py",
+        "scripts/derive_minimal_policy_migration_suite.py",
         "scripts/derive_policy_difference_coverage.py",
         "scripts/derive_policy_migration_mutation_audit.py",
         "scripts/finalize_synthetic_policy_results.py",
