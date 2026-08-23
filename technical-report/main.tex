@@ -65,6 +65,9 @@ Policy-to-Tests translates governance prose into executable rules, while TDAD ge
 \paragraph{Structured output and selective prediction.}
 Grammar-constrained decoding and incremental parsing restrict output form \cite{scholak2021picard,geng2023grammar}; JSONSchemaBench and BFCL evaluate schemas, function selection, and arguments \cite{geng2025jsonschemabench,patil2025bfcl}. Selective prediction studies risk as a model abstains \cite{geifman2017selective,geifman2019selectivenet}. We distinguish a valid \hold{} action from route failure. Malformed or absent output is never treated as abstention and remains incorrect end to end.
 
+\paragraph{Claim--evidence systems.}
+ClaimBench evaluates claim--evidence reasoning in AI papers, while Evidence-Ledger Adjudication, LEDGER, and ClaimLedger organize traceable evidence or claim maintenance \cite{javaji2025claimbench,chen2026evidenceledger,kim2026ledger,elliman2026claimledger}. \cpb assumes that typed verifier facts are already registered and tests the subsequent policy-conditioned transition; it neither extracts claim--evidence links nor verifies source truth.
+
 \paragraph{Research agents.}
 ScienceAgentBench, CORE-Bench, and POPPER evaluate data analysis, computational reproduction, and sequential falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. \cpb tests a smaller component that may appear inside such systems: the transition decision after evidence has already been registered. It does not evaluate evidence discovery or an end-to-end research workflow.
 
