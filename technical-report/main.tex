@@ -130,11 +130,11 @@ $1/2$ and its pair accuracy is zero. The policy case specializes to a classifier
 cannot observe $P$; the evidence case covers a route insensitive to the mutated verifier field.
 \emph{Proof.} The gold actions differ while an invariant route's outputs are equal, so at most one output matches. The certificate depends on the pair construction, not model quality or training procedure.
 \paragraph{Policy-difference compilation.}
-For two policies and an authored context grammar $\mathcal{X}$, define
-$\Delta(P_a,P_b;\mathcal{X})=\{c\in\mathcal{X}:\pi_{P_a}(c)\neq\pi_{P_b}(c)\}$, where
-$c=(z,s,\tau)$. Duplicating a context from $\Delta$ and changing only the active profile creates
-a policy-regression pair. Rule coverage records which policy differences bind in at least one
-pair. Behavioral coverage instead records directed edges
+For two policies and an authored context grammar $\mathcal{X}$, let
+$\Delta(P_a,P_b;\mathcal{X})$ contain exactly the contexts $c=(z,s,\tau)$ for which
+$\pi_{P_a}(c)\neq\pi_{P_b}(c)$. Duplicating a context from $\Delta$ and changing only the active
+profile creates a policy-regression pair. Rule coverage records which policy differences bind in
+at least one pair. Behavioral coverage instead records directed edges
 \[
 E(P_a,P_b;\mathcal{X})=
 \{(\pi_{P_a}(c),\pi_{P_b}(c)):c\in\Delta(P_a,P_b;\mathcal{X})\}.
