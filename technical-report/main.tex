@@ -130,9 +130,9 @@ The released compiler is independent of either ontology. Its interface accepts t
 policy evaluators, a finite context sequence, stable context identifiers, and authored rule
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
 difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$.
-\textbf{Proposition 2.} Finding a cardinality-minimum joint rule- and edge-complete suite is NP-hard, even when every candidate has the same required edge. \emph{Proof.} Map a Set Cover universe to required rules and each available subset to one context's rule witnesses; the common edge adds no constraint. For $n$ candidates, $r$ required rules,
+\textbf{Proposition 2.} Finding a cardinality-minimum joint rule- and edge-complete suite is NP-hard, even when every candidate has the same required edge. The reduction is given in Appendix~\ref{app:compiler-guarantees}. For $n$ candidates, $r$ required rules,
 and $k$ required edges, our exact subset dynamic program takes $O(n2^{r+k})$ state updates. Each
-state retains the shortest, then lexicographically first, subset for a coverage mask. The usual
+state retains the shortest, then lexicographically first, subset for a coverage mask. An
 include-or-exclude induction proves optimality at the full mask. A specialized search selects one
 context per edge while retaining at most $2^r$ rule masks. If it finds a complete witness, the
 $k$-context edge lower bound proves global minimality. Both implementations independently
@@ -335,6 +335,33 @@ Generative AI tools assisted literature search, planning, code and benchmark dra
 \bibliography{references}
 
 \appendix
+\section{Compiler Guarantees}
+\label{app:compiler-guarantees}
+
+\paragraph{Proof of Proposition 2.}
+Take a Set Cover instance with universe $U$ and subsets $S_1,\ldots,S_n$. Create one required rule
+for each element of $U$ and one candidate context for each $S_i$ whose rule-witness set is $S_i$.
+Give every candidate the same required action edge. Any nonempty selection covers that edge, and it
+covers all required rules exactly when the corresponding subsets cover $U$. A minimum
+joint-adequacy suite therefore gives a minimum set cover. The construction is polynomial.
+
+\paragraph{Exact dynamic program.}
+Index the $r+k$ required rules and edges and encode coverage as a bit mask. After processing the
+first $j$ candidates, the table stores, for every reachable mask, the shortest subset that realizes
+that mask, breaking ties by context identifier. This invariant holds initially for the empty mask.
+For candidate $j+1$, the exclude transition preserves every prior state and the include transition
+unions its coverage mask with each prior mask. Keeping the shorter, then lexicographically first,
+representative preserves the invariant. At $j=n$, the representative for the full mask is therefore
+a cardinality-minimum joint-complete suite. The algorithm performs $O(n2^{r+k})$ state updates and
+stores at most $2^{r+k}$ states.
+
+\paragraph{Edge lower-bound certificate.}
+Each policy-contrast pair realizes one directed action edge. Covering $k$ distinct required edges
+therefore needs at least $k$ pairs. The specialized search chooses one candidate from each edge
+group while tracking rule masks. If its full-rule state exists, the returned $k$-pair suite meets
+the lower bound and is globally minimum. The released generic and specialized implementations both
+reconstruct the frozen ten-pair witness.
+
 \section{Complete Action-Level Results}
 \label{app:complete-results}
 
