@@ -17,6 +17,12 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import mlx.core as mx  # noqa: E402
+from frozen_run_io import (  # noqa: E402
+    append_durable,
+    atomic_output_directory,
+    verify_frozen_plan,
+    write_durable_json,
+)
 from huggingface_hub import snapshot_download  # noqa: E402
 from local_model_replication import (  # noqa: E402
     CATALOG_PATH,
@@ -28,14 +34,8 @@ from local_model_replication import (  # noqa: E402
 )
 from mlx_lm import load, stream_generate  # noqa: E402
 from mlx_lm.sample_utils import make_sampler  # noqa: E402
-from run_public_model_breadth_study import (  # noqa: E402
-    append_durable,
-    atomic_output_directory,
-    verify_frozen_plan,
-    write_durable_json,
-)
-from run_slsa_portability_study import diagnose_content, utc_now  # noqa: E402
 from slsa_policy import load_slsa_policy  # noqa: E402
+from synthetic_policy_output import diagnose_content, utc_now  # noqa: E402
 from validate_local_model_replications import validate_all  # noqa: E402
 
 from claimpromotebench.dataset import (  # noqa: E402
@@ -221,7 +221,7 @@ def main() -> int:
                 raw_decision = None
             else:
                 parse_status, raw_decision, parse_detail = diagnose_content(
-                    content, items[item_id], base_policy
+                    content, items[item_id], base_policy, schema_path=DECISION_SCHEMA
                 )
                 if parse_detail is not None:
                     parse_detail = parse_detail.replace(str(ROOT), "<LOCAL_PATH>").replace(

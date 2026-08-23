@@ -64,6 +64,14 @@ def validate_receipts(catalog_path: Path, snapshot_path: Path, qualification_pat
         or qualification.get("credentials_used_or_retained") is not False
     ):
         fail("local environment qualification receipt changed")
+    models = qualification.get("models")
+    if (
+        not isinstance(models, list)
+        or len(models) != 2
+        or any(row.get("load_and_generation_succeeded") is not True for row in models)
+        or any(row.get("stream_generation_api_succeeded") is not True for row in models)
+    ):
+        fail("local environment stream-generation smoke coverage changed")
 
 
 def validate_study(

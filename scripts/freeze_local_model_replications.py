@@ -31,13 +31,15 @@ from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file 
 
 Json = dict[str, Any]
 RUNTIME_PATHS = (
+    "scripts/frozen_run_io.py",
     "scripts/local_model_replication.py",
+    "scripts/slsa_policy.py",
+    "scripts/synthetic_policy_output.py",
     "scripts/run_local_model_replication.py",
     "scripts/analyze_local_model_replication.py",
     "scripts/validate_local_model_replications.py",
     "scripts/finalize_synthetic_policy_results.py",
     "scripts/analyze_balanced_public_challenge.py",
-    "scripts/run_slsa_portability_study.py",
     "src/claimpromotebench/dataset.py",
     "src/claimpromotebench/hashing.py",
     "v2/schemas/stronger-model-run-record.schema.json",
@@ -83,6 +85,7 @@ def validate_receipts(catalog_path: Path, snapshot_path: Path, qualification_pat
         not isinstance(models, list)
         or len(models) != 2
         or any(row.get("load_and_generation_succeeded") is not True for row in models)
+        or any(row.get("stream_generation_api_succeeded") is not True for row in models)
     ):
         fail("not every preselected local model passed the non-benchmark smoke test")
 

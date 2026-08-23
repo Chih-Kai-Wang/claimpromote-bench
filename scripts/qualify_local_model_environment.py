@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import mlx.core as mx  # noqa: E402
 from huggingface_hub import snapshot_download  # noqa: E402
 from local_model_replication import CATALOG_PATH, load_catalog  # noqa: E402
-from mlx_lm import generate, load  # noqa: E402
+from mlx_lm import load, stream_generate  # noqa: E402
 from mlx_lm.sample_utils import make_sampler  # noqa: E402
 
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
@@ -131,24 +131,35 @@ def qualify(catalog_path: Path) -> tuple[Json, Json]:
                 add_generation_prompt=True,
                 tokenize=False,
             )
-            response = generate(
+            chunks: list[str] = []
+            last_response: Any = None
+            for generation in stream_generate(
                 model,
                 tokenizer,
                 prompt=formatted,
                 max_tokens=16,
                 sampler=sampler,
-                verbose=False,
-            )
+            ):
+                chunks.append(generation.text)
+                last_response = generation
+            response = "".join(chunks)
         except Exception as exc:  # pragma: no cover - hardware/runtime boundary
             fail(f"model failed the non-benchmark smoke test ({repo}): {type(exc).__name__}")
         elapsed = time.perf_counter() - started
-        if not isinstance(response, str) or not response.strip():
+        if (
+            not isinstance(response, str)
+            or not response.strip()
+            or last_response is None
+            or not isinstance(last_response.prompt_tokens, int)
+            or not isinstance(last_response.generation_tokens, int)
+        ):
             fail(f"model returned no smoke-test text: {repo}")
         qualifications.append(
             {
                 "model_repo": repo,
                 "model_revision": revision,
                 "load_and_generation_succeeded": True,
+                "stream_generation_api_succeeded": True,
                 "benchmark_prompt_or_label_used": False,
                 "smoke_response_retained": False,
                 "smoke_response_sha256": sha256_bytes(response.encode("utf-8")),

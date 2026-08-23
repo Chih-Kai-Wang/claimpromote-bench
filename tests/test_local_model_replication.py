@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -7,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from frozen_run_io import append_durable, atomic_output_directory, write_durable_json  # noqa: E402
 from local_model_replication import (  # noqa: E402
     CATALOG_PATH,
     DATASETS,
@@ -15,6 +17,7 @@ from local_model_replication import (  # noqa: E402
     lane_id,
     load_catalog,
 )
+from synthetic_policy_output import extract_single_json_object  # noqa: E402
 
 from claimpromotebench.hashing import canonical_json, sha256_bytes  # noqa: E402
 
@@ -71,8 +74,44 @@ def test_local_replication_source_datasets_are_fixed_and_disjoint_studies() -> N
 
 def test_local_runner_forbids_resume_and_records_every_cell() -> None:
     source = (ROOT / "scripts" / "run_local_model_replication.py").read_text(encoding="utf-8")
+    assert "from frozen_run_io import" in source
+    assert "run_public_model_breadth_study" not in source
+    assert "run_slsa_portability_study" not in source
     assert "resume and overwrite are forbidden" in source
     assert '"client_retries_authorized": 0' in source
     assert '"application_posts_authorized_for_cell": 1' in source
     assert "if len(completed) != 240" in source
     assert "--resume" not in source
+
+
+def test_environment_qualification_uses_the_scored_stream_api_without_benchmark_content() -> None:
+    source = (ROOT / "scripts" / "qualify_local_model_environment.py").read_text(
+        encoding="utf-8"
+    )
+    assert "stream_generate(" in source
+    assert '"benchmark_inference_calls": 0' in source
+    assert '"smoke_prompt_contains_benchmark_content": False' in source
+
+
+def test_frozen_run_io_publishes_only_complete_outputs(tmp_path: Path) -> None:
+    journal = tmp_path / "journal.jsonl"
+    append_durable(journal, {"sequence": 0})
+    append_durable(journal, {"sequence": 1})
+    assert journal.read_text(encoding="utf-8").splitlines() == [
+        '{"sequence":0}',
+        '{"sequence":1}',
+    ]
+
+    output = tmp_path / "results"
+    with atomic_output_directory(output) as staging:
+        write_durable_json(staging / "receipt.json", {"status": "COMPLETE"})
+        assert not output.exists()
+    assert json.loads((output / "receipt.json").read_text(encoding="utf-8")) == {
+        "status": "COMPLETE"
+    }
+
+
+def test_local_output_extraction_requires_exactly_one_balanced_object() -> None:
+    assert extract_single_json_object('prefix {"value":"}"} suffix') == '{"value":"}"}'
+    assert extract_single_json_object('{"a":1} {"b":2}') is None
+    assert extract_single_json_object('prefix {"a":1') is None
