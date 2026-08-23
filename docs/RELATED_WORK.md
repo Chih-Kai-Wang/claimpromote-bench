@@ -4,7 +4,7 @@ This is a living comparison, not a claim of exhaustive priority. Publication sta
 
 ## Fresh search record
 
-A paper-preparation search was refreshed on **2026-08-23** after the r6 addendum and balanced public challenge had stabilized. Queries included:
+A paper-preparation search was refreshed through **2026-08-24** after the r6 addendum and balanced public challenge had stabilized. Queries included:
 
 - `research claim evidence state transition benchmark agent`;
 - `policy governed claim promotion evidence benchmark`;
@@ -22,12 +22,17 @@ A paper-preparation search was refreshed on **2026-08-23** after the r6 addendum
 - `regression testing evolving LLM APIs policy update`.
 - `behavioral specification agent test compilation policy evolution mutation testing`;
 - `natural-language governance policy to executable tests`.
+- `semantic differencing policy rules regression test generation`;
+- `automated test generation access control policy change-impact analysis`;
+- `decision table regression testing rule changes`; and
+- `semantic differencing combinatorial test design model evolution`.
 
-The refresh identified closer conceptual neighbors than the earlier survey: SeekBench, Omni-Decision,
-EviGraph, the contemporaneous ClaimLedger technical report, and three 2026 policy-reasoning
-benchmarks. Their existence materially narrows the novelty language. ClaimPromoteBench should
-**not** claim to have invented evidence-state maintenance, claim ledgers, policy reasoning, or
-verifier-governed updates.
+The refresh identified closer conceptual neighbors than the earlier survey: established semantic
+policy differencing and policy-test generation, SeekBench, Omni-Decision, EviGraph, the
+contemporaneous ClaimLedger technical report, and three 2026 policy-reasoning benchmarks. Their
+existence materially narrows the novelty language. ClaimPromoteBench should **not** claim to have
+invented policy differencing, policy test generation, evidence-state maintenance, claim ledgers,
+policy reasoning, or verifier-governed updates.
 
 | Work | What it directly evaluates/builds | Boundary with ClaimPromoteBench |
 |---|---|---|
