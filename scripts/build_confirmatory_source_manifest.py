@@ -54,6 +54,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     # These scripts were introduced only after the immutable r6 scored run. They read or
     # aggregate already terminal evidence and cannot influence C1 or scored inference.
     "scripts/analyze_balanced_public_challenge.py",
+    "scripts/audit_manuscript_style.py",
     "scripts/analyze_public_model_breadth_study.py",
     "scripts/analyze_slsa_portability_study.py",
     "scripts/analyze_policy_switch_study.py",
@@ -64,6 +65,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_public_model_breadth_failure_addendum.py",
     "scripts/derive_r6_reporting_addendum.py",
     "scripts/finalize_public_model_breadth_study.py",
+    "scripts/finalize_synthetic_policy_results.py",
     "scripts/freeze_slsa_portability_study.py",
     "scripts/freeze_policy_switch_study.py",
     "scripts/policy_switch.py",
