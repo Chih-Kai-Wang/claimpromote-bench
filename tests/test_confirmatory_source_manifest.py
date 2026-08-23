@@ -50,7 +50,9 @@ def test_runtime_manifest_is_preserved_at_the_recorded_source_commit() -> None:
     assert "scripts/derive_public_model_breadth_failure_addendum.py" not in files
     assert "scripts/derive_r6_reporting_addendum.py" not in files
     assert "scripts/finalize_public_model_breadth_study.py" not in files
+    assert "scripts/frozen_run_io.py" not in files
     assert "scripts/run_public_model_breadth_study.py" not in files
+    assert "scripts/synthetic_policy_output.py" not in files
     assert "scripts/validate_public_model_breadth_study.py" not in files
     # Publication and anonymous-review tooling changed after the scored run. The immutable
     # manifest must keep matching its recorded Git source while refusing to describe HEAD.
