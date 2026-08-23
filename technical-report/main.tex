@@ -66,7 +66,7 @@ RuLES couples conversational scenarios with programs that detect rule violations
 
 COMPASS generates routine and adversarial queries for organization-specific allow and deny lists, then judges free-form responses for policy alignment \cite{choi2026compass}. Regression testing for evolving LLM APIs asks whether a provider update breaks application behavior \cite{ma2024promptregression}. These studies establish policy variation and model-service regression as prior art. Our test changes the application policy while holding the route and complete typed context fixed; an exact executable oracle scores both executions jointly and retains interface failures. The policy-pair construction also measures whether a migration suite covers the rules that changed and the distinct action transitions those changes induce.
 
-Policy-to-Tests translates governance prose into executable rules, while TDAD compiles behavioral specifications into agent tests and evaluates specification evolution with semantic mutants \cite{datla2025policytotests,rehan2026tdad}. \cpb assumes that two executable policies already exist. It compiles their behavioral difference into matched tests and audits adequacy over both changed rules and induced action edges.
+Policy-to-Tests translates governance prose into executable rules, while TDAD generates agent tests, optimizes prompts, and evaluates specification evolution with semantic mutants \cite{datla2025policytotests,rehan2026tdad}. \cpb assumes that two executable policies already exist and performs no prompt optimization. It exhaustively executes a finite context grammar, compiles the policies' behavioral difference into matched tests, and audits both changed-rule and induced-action-edge adequacy.
 
 \paragraph{Structured output and selective prediction.}
 Grammar-constrained decoding and incremental parsing restrict output form \cite{scholak2021picard,geng2023grammar}; JSONSchemaBench and BFCL evaluate schemas, function selection, and arguments \cite{geng2025jsonschemabench,patil2025bfcl}. Selective prediction studies risk as a model abstains \cite{geifman2017selective,geifman2019selectivenet}. We distinguish a valid \hold{} action from route failure. Malformed or absent output is never treated as abstention and remains incorrect end to end.
@@ -301,6 +301,10 @@ Inputs are canonical structured ledgers with passive verifier facts. The study d
 Each configuration receives one call per item with zero retries. Exact frozen-corpus results do not estimate sampling variance, temporal stability, retry policies, or a model population. The local routes add replayability but use four-bit snapshots on one Apple Silicon software stack. Hosted-route and local-route differences are not causal.
 
 The research ontology still has only a weak Naive Bayes learned comparator. The structured Random Forest is perfect on the fixed software policy, which reveals how directly the synthetic fields encode its labels. The policy-aware comparator drops to 107/120 items on the transition graph. The profile ablations close one fixed-map shortcut, but neither suite establishes robust rule following under paraphrase, long policies, adversarial evidence, or unseen profile composition.
+
+The edge-local stale-policy mutants are defined from the reachable action graph. Their detection
+rates certify coverage only for that registered family; they neither estimate the prevalence of
+production regressions nor exhaust other implementation faults.
 
 Conditional metrics describe a selected valid-output subset. They must be read beside end-to-end denominators. Invalid response contents are omitted from the paper and anonymous release, but their failure types and counts remain auditable.
 
