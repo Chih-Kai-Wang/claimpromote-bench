@@ -14,11 +14,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions"
+TITLE = r"\cpb: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions"
 ICLR_TITLE = (
-    r"\mbox{\textsc{ClaimPromoteBench}: Synthetic}\protect\\"
-    r"\mbox{Policy-Constrained Evaluation of}\protect\\"
-    r"\mbox{Evidence-State Transitions}"
+    r"\mbox{\textsc{ClaimPromoteBench}: Failure-Aware}\protect\\"
+    r"\mbox{Conformance Testing for Policy-Conditioned}\protect\\"
+    r"\mbox{State Transitions}"
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (
@@ -139,7 +139,7 @@ def without_ai_disclosure(body: str) -> str:
 
 
 def without_reproducibility(body: str) -> str:
-    reproducibility_start = body.index(r"\section{Reproducibility and Artifact Policy}")
+    reproducibility_start = body.index(r"\section{Reproducibility Statement}")
     ai_start = body.index(r"\section{AI Assistance Disclosure}", reproducibility_start)
     return body[:reproducibility_start] + body[ai_start:]
 

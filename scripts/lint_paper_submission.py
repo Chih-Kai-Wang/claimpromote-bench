@@ -44,6 +44,11 @@ CHALLENGE_RECEIPT = (
 CHALLENGE_CORRECTION = (
     ROOT / "v2" / "balanced-public-challenge" / "results" / "reporting-correction-v1.json"
 )
+SLSA_ROOT = ROOT / "v2" / "slsa-portability-v1" / "replacement-v2"
+SLSA_RESULT = SLSA_ROOT / "results" / "aggregate.json"
+POLICY_SWITCH_ROOT = ROOT / "v2" / "policy-switch-v1" / "frozen"
+POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
+LOCAL_REPLICATION_ROOT = ROOT / "v2" / "local-model-replication-v1" / "replacement-v2" / "frozen"
 BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
 BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
 BREADTH_RESULT = BREADTH_RESULT_ROOT / "reported-aggregate.json"
@@ -64,7 +69,7 @@ NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
 NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions"
+    "ClaimPromoteBench: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions"
 )
 ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
 
@@ -144,7 +149,7 @@ def validate_submission_metadata(tex: str) -> None:
     if metadata.count(CANONICAL_TITLE) < 2:
         fail("ICLR and arXiv metadata titles must match canonical title")
     expected_tex_title = (
-        r"\title{\cpb: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions}"
+        r"\title{\cpb: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions}"
     )
     if expected_tex_title not in tex:
         fail("manuscript title differs from canonical title")
@@ -211,10 +216,14 @@ def validate_manuscript_style_audit() -> None:
     ):
         fail("manuscript style audit retains a configured negative-pattern finding")
     if (
-        boundary.get("metrics_changed") is not False
-        or boundary.get("terminal_records_changed") is not False
-        or boundary.get("model_calls_performed") != 0
+        boundary.get("metrics_changed") is not True
+        or boundary.get("existing_terminal_records_changed") is not False
+        or boundary.get("new_scored_terminal_records_added") != 720
+        or boundary.get("scored_model_calls_performed") != 720
+        or boundary.get("void_protocol_application_posts") != 1
+        or boundary.get("total_application_posts_during_revision") != 721
         or boundary.get("completed_singleton_workflows_rerun") is not False
+        or boundary.get("balanced_public_v1_rerun") is not False
         or boundary.get("paper_binding_validator") != "scripts/lint_paper_submission.py"
     ):
         fail("manuscript style audit scientific-content boundary changed")
@@ -248,7 +257,7 @@ def validate_submission_builder(tex: str) -> None:
     if canonical_appendix != expected_appendix:
         fail("submission builder changes the canonical appendix")
 
-    reproducibility_start = expected_body.index(r"\section{Reproducibility and Artifact Policy}")
+    reproducibility_start = expected_body.index(r"\section{Reproducibility Statement}")
     conclusion_start = expected_body.index(r"\section{Conclusion}", reproducibility_start)
     canonical_tail = expected_body[reproducibility_start:conclusion_start]
     rendered = {
@@ -416,15 +425,21 @@ def validate_r6_evidence(tex: str) -> None:
 
     required = (
         (r"272/300\s+valid decisions", "r6 valid-decision count"),
-        (r"123/150\s+complete pairs", "r6 complete-pair count"),
+        (r"123/150", "r6 complete-pair count"),
         (r"258/272", "r6 conditional item accuracy"),
         (r"113/123", "r6 conditional pair accuracy"),
         (r"272/300", "r6 decision coverage"),
         (r"123/150", "r6 pair coverage"),
         (r"(?:300\s+HTTP 401|HTTP 401[^.]{0,40}300 requests)", "r6 Flash HTTP 401 count"),
-        (r"old r6 Flash service interface", "old Flash interface boundary"),
-        (r"dependency.statement.*0/7", "r6 dependency-statement factor result"),
-        (r"current.binding.*0/8", "r6 current-binding factor result"),
+        (r"old (?:r6 )?Flash interface", "old Flash interface boundary"),
+        (
+            r"dependency.statement changes.*0/7|0/7.*dependency.statement",
+            "r6 dependency-statement factor result",
+        ),
+        (
+            r"current.state binding.*0/8|0/8.*current.state binding",
+            "r6 current-binding factor result",
+        ),
         (r"Naive Bayes.*weak|weak.*Naive Bayes", "Naive Bayes weakness"),
         (r"definitional policy ceiling", "deterministic ceiling role"),
     )
@@ -653,15 +668,13 @@ def validate_balanced_challenge(tex: str) -> None:
         (r"15\s+factors", "challenge factor count"),
         (r"148/180", "challenge Qwen coverage count"),
         (r"146/180", "challenge Flash coverage count"),
-        (r"\.7333/\.5333", "challenge Qwen end-to-end metrics"),
-        (r"\.8919/\.7500", "challenge Qwen conditional metrics"),
-        (r"\.5000/\.1444", "challenge Flash end-to-end metrics"),
-        (r"\.6164/\.2131", "challenge Flash conditional metrics"),
-        (r"\.3928", "corrected challenge Flash fixed-four-class Macro-F1"),
-        (r"zero division", "fixed-four-class zero-division convention"),
-        (r"pair-balanced public robustness challenge", "public challenge boundary"),
+        (r"132/180.*48/90", "challenge Qwen end-to-end metrics"),
+        (r"132/148.*48/64", "challenge Qwen conditional metrics"),
+        (r"90/180.*13/90", "challenge Flash end-to-end metrics"),
+        (r"90/146.*13/61", "challenge Flash conditional metrics"),
+        (r"public challenge", "public challenge boundary"),
         (r"causal (?:comparison|ablation)", "cross-service causal boundary"),
-        (r"factor-level pair", "factor-level pair reporting"),
+        (r"factor.*pair", "factor-level pair reporting"),
     )
     for pattern, description in required:
         require_regex(tex, pattern, description)
@@ -673,6 +686,416 @@ def paper_rate(value: Any) -> str:
     if not isinstance(value, (int, float)):
         fail(f"paper rate is not numeric: {value!r}")
     return f"{float(value):.4f}".removeprefix("0")
+
+
+def load_jsonl(path: Path, label: str) -> list[dict[str, Any]]:
+    rows = [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
+    if any(not isinstance(row, dict) for row in rows):
+        fail(f"{label} contains a non-object JSONL row")
+    return rows
+
+
+def recompute_synthetic_lanes(
+    *,
+    study_root: Path,
+    dataset_root: Path,
+    aggregate_path: Path,
+    expected_design: str,
+) -> dict[str, dict[str, Any]]:
+    aggregate = load_object(aggregate_path, f"{study_root.name} aggregate")
+    execution = load_object(study_root / "results" / "execution-receipt.json", "execution receipt")
+    result_receipt = load_object(
+        study_root / "results" / "result-receipt.json", "synthetic-policy result receipt"
+    )
+    if (
+        aggregate.get("status") != "COMPLETE"
+        or aggregate.get("design") != expected_design
+        or execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
+        or execution.get("planned_cells") != 240
+        or execution.get("durable_terminal_records") != 240
+        or execution.get("client_retry_count") != 0
+        or result_receipt.get("status") != "SYNTHETIC_POLICY_RESULTS_SEALED"
+        or result_receipt.get("planned_and_terminal_cells") != 240
+        or result_receipt.get("all_failures_retained_in_end_to_end_denominator") is not True
+    ):
+        fail(f"completed synthetic-policy boundary changed: {study_root}")
+    if aggregate.get("deterministic_policy_executor", {}).get("label") != (
+        "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE"
+    ):
+        fail(f"deterministic ceiling role changed: {study_root}")
+
+    analyzer = runpy.run_path(str(ROOT / "scripts" / "analyze_balanced_public_challenge.py"))
+    derive = analyzer.get("derive_reporting_metrics")
+    if not callable(derive):
+        fail("balanced metrics recomputation entry point is missing")
+    gold = load_jsonl(dataset_root / "evaluation-gold.jsonl", "synthetic-policy gold")
+    pairs = json.loads((dataset_root / "evaluation-pairs.json").read_text(encoding="utf-8"))
+    if not isinstance(pairs, list):
+        fail("synthetic-policy pair index is malformed")
+    lanes = {
+        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
+    }
+    if len(lanes) != 2:
+        fail(f"synthetic-policy lane count changed: {study_root}")
+    for lane_id, lane in lanes.items():
+        run_path = study_root / "results" / f"{lane_id}.jsonl"
+        rows = load_jsonl(run_path, f"{lane_id} run")
+        recomputed = derive(gold, pairs, rows)
+        if recomputed != lane.get("metrics"):
+            fail(f"paper aggregate differs from item records: {lane_id}")
+        if lane.get("run_sha256") != sha256_file(run_path):
+            fail(f"paper aggregate run binding changed: {lane_id}")
+    return lanes
+
+
+def legacy_configs() -> list[dict[str, Any]]:
+    qwen = {
+        "items": 300,
+        "parseable_items": 272,
+        "correct_items": 258,
+        "pairs": 150,
+        "covered_pairs": 123,
+        "correct_pairs": 113,
+        "balanced_action_recall": 0.599807213930348,
+        "per_action": {
+            "ALLOW": {"end_to_end_recall": 143 / 150},
+            "HOLD": {"end_to_end_recall": 110 / 134},
+            "DEMOTE": {"end_to_end_recall": 0.0},
+            "ESCALATE": {"end_to_end_recall": 5 / 8},
+        },
+        "confusion_matrix": {
+            "counts": {
+                "ALLOW": {
+                    "ALLOW": 143,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 7,
+                },
+                "HOLD": {
+                    "ALLOW": 4,
+                    "HOLD": 110,
+                    "DEMOTE": 0,
+                    "ESCALATE": 2,
+                    "NO_VALID_DECISION": 18,
+                },
+                "DEMOTE": {
+                    "ALLOW": 8,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 0,
+                },
+                "ESCALATE": {
+                    "ALLOW": 0,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 5,
+                    "NO_VALID_DECISION": 3,
+                },
+            }
+        },
+    }
+    nb = {
+        "items": 300,
+        "parseable_items": 300,
+        "correct_items": 184,
+        "pairs": 150,
+        "covered_pairs": 150,
+        "correct_pairs": 34,
+        "balanced_action_recall": 0.3283582089552239,
+        "per_action": {
+            "ALLOW": {"end_to_end_recall": 0.5},
+            "HOLD": {"end_to_end_recall": 109 / 134},
+            "DEMOTE": {"end_to_end_recall": 0.0},
+            "ESCALATE": {"end_to_end_recall": 0.0},
+        },
+        "confusion_matrix": {
+            "counts": {
+                "ALLOW": {
+                    "ALLOW": 75,
+                    "HOLD": 75,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 0,
+                },
+                "HOLD": {
+                    "ALLOW": 25,
+                    "HOLD": 109,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 0,
+                },
+                "DEMOTE": {
+                    "ALLOW": 8,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 0,
+                },
+                "ESCALATE": {
+                    "ALLOW": 8,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 0,
+                },
+            }
+        },
+    }
+    old_flash = {
+        "items": 300,
+        "parseable_items": 0,
+        "correct_items": 0,
+        "pairs": 150,
+        "covered_pairs": 0,
+        "correct_pairs": 0,
+        "balanced_action_recall": 0.0,
+        "per_action": {action: {"end_to_end_recall": 0.0} for action in ACTIONS},
+        "confusion_matrix": {
+            "counts": {
+                "ALLOW": {
+                    "ALLOW": 0,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 150,
+                },
+                "HOLD": {
+                    "ALLOW": 0,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 134,
+                },
+                "DEMOTE": {
+                    "ALLOW": 0,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 8,
+                },
+                "ESCALATE": {
+                    "ALLOW": 0,
+                    "HOLD": 0,
+                    "DEMOTE": 0,
+                    "ESCALATE": 0,
+                    "NO_VALID_DECISION": 8,
+                },
+            }
+        },
+    }
+    return [
+        {"label": "r6 Qwen", "metrics": qwen},
+        {"label": "r6 text NB", "metrics": nb},
+        {"label": "Old r6 Flash interface", "metrics": old_flash},
+    ]
+
+
+def challenge_configs() -> list[dict[str, Any]]:
+    aggregate = load_object(CHALLENGE_RESULT, "balanced challenge aggregate")
+    labels = {
+        "opencode-go-qwen3.7-max": "Challenge Qwen",
+        "opencode-go-deepseek-v4-flash-matched": "Challenge Flash",
+    }
+    lanes = {
+        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
+    }
+    if set(lanes) != set(labels):
+        fail("balanced challenge paper lane set changed")
+    return [{"label": labels[lane_id], "metrics": lanes[lane_id]["metrics"]} for lane_id in labels]
+
+
+def synthetic_configs() -> list[dict[str, Any]]:
+    slsa = recompute_synthetic_lanes(
+        study_root=SLSA_ROOT,
+        dataset_root=SLSA_ROOT / "dataset",
+        aggregate_path=SLSA_RESULT,
+        expected_design="PROSPECTIVELY_FROZEN_SECOND_POLICY_PORTABILITY_STUDY",
+    )
+    labels = {
+        "opencode-go-qwen3.7-max-slsa-v2": "SLSA Qwen",
+        "opencode-go-deepseek-v4-flash-slsa-v2": "SLSA Flash",
+    }
+    if set(slsa) != set(labels):
+        fail("hosted SLSA paper lane set changed")
+    result = [
+        {"label": labels[lane_id], "metrics": lane["metrics"]} for lane_id, lane in slsa.items()
+    ]
+    slsa_aggregate = load_object(SLSA_RESULT, "SLSA aggregate")
+    result.append(
+        {
+            "label": "SLSA structured RF",
+            "metrics": slsa_aggregate["structured_random_forest_action_baseline"]["metrics"],
+        }
+    )
+    return result
+
+
+def local_configs() -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for dataset_key, prefix, source_root in (
+        ("slsa", "SLSA", SLSA_ROOT / "dataset"),
+        ("policy-switch", "Switch", POLICY_SWITCH_ROOT / "dataset"),
+    ):
+        study_root = LOCAL_REPLICATION_ROOT / dataset_key
+        lanes = recompute_synthetic_lanes(
+            study_root=study_root,
+            dataset_root=source_root,
+            aggregate_path=study_root / "results" / "aggregate.json",
+            expected_design=(
+                "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY"
+                if dataset_key == "slsa"
+                else "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_POLICY_SWITCH_STUDY"
+            ),
+        )
+        families = {
+            str(row.get("model_family")): row for row in lanes.values() if isinstance(row, dict)
+        }
+        if set(families) != {"Mistral", "Phi"}:
+            fail(f"local replication family set changed: {dataset_key}")
+        for family, label in (("Mistral", "Mistral local"), ("Phi", "Phi-4 local")):
+            result.append({"label": f"{prefix} {label}", "metrics": families[family]["metrics"]})
+        if dataset_key == "policy-switch":
+            aggregate = load_object(
+                study_root / "results" / "aggregate.json", "local policy-switch aggregate"
+            )
+            comparators = aggregate.get("structured_random_forest_comparators", {})
+            for comparator_id, label in (
+                ("policy_aware", "Switch policy-aware RF"),
+                ("profile_blind", "Switch profile-blind RF"),
+            ):
+                result.append(
+                    {
+                        "label": label,
+                        "metrics": comparators[comparator_id]["metrics"],
+                    }
+                )
+    return result
+
+
+def metric_configs() -> list[dict[str, Any]]:
+    configs = [*legacy_configs(), *challenge_configs(), *synthetic_configs(), *local_configs()]
+    labels = [str(row["label"]) for row in configs]
+    if len(labels) != len(set(labels)):
+        fail("paper configuration labels are not unique")
+    return configs
+
+
+def confusion_counts(metrics: dict[str, Any]) -> dict[str, dict[str, int]]:
+    matrix = metrics.get("confusion_matrix", {})
+    counts = matrix.get("counts") if isinstance(matrix, dict) else None
+    if not isinstance(counts, dict) or set(counts) != set(ACTIONS):
+        fail("paper configuration lacks a four-row confusion matrix")
+    return counts
+
+
+def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
+    for label in ("tab:core-results", "tab:action-recall", "tab:confusion"):
+        if rf"\label{{{label}}}" not in tex:
+            fail(f"required paper table is missing: {label}")
+    for config in configs:
+        label = str(config["label"])
+        metrics = config["metrics"]
+        items = int(metrics["items"])
+        pairs = int(metrics["pairs"])
+        valid = int(metrics["parseable_items"])
+        correct_items = int(metrics["correct_items"])
+        complete = int(metrics["covered_pairs"])
+        correct_pairs = int(metrics["correct_pairs"])
+        conditional_item = "N/E" if valid == 0 else f"{correct_items}/{valid}"
+        conditional_pair = "N/E" if complete == 0 else f"{correct_pairs}/{complete}"
+        core = (
+            f"{label} & {valid}/{items} & {correct_items}/{items} & {conditional_item} & "
+            f"{complete}/{pairs} & {correct_pairs}/{pairs} & {conditional_pair}"
+        )
+        if core not in tex:
+            fail(f"paper core-result row is missing or stale: {label}")
+        per_action = metrics.get("per_action")
+        if not isinstance(per_action, dict) or set(per_action) != set(ACTIONS):
+            fail(f"paper action metrics are malformed: {label}")
+        action = f"{label} & " + " & ".join(
+            [
+                *(paper_rate(per_action[name]["end_to_end_recall"]) for name in ACTIONS),
+                paper_rate(metrics["balanced_action_recall"]),
+            ]
+        )
+        if action not in tex:
+            fail(f"paper action-recall row is missing or stale: {label}")
+        counts = confusion_counts(metrics)
+        confusion = f"{label} & " + " & ".join(
+            "/".join(
+                str(counts[gold].get(predicted, counts[gold].get("NO_DECISION", -1)))
+                for predicted in (*ACTIONS, "NO_VALID_DECISION")
+            )
+            for gold in ACTIONS
+        )
+        if "-1" in confusion or confusion not in tex:
+            fail(f"paper confusion row is missing or stale: {label}")
+
+
+def validate_new_study_claims(tex: str) -> None:
+    if "TBD" in tex or "TODO" in tex:
+        fail("manuscript contains an unresolved result placeholder")
+    for excluded_row in ("Switch Qwen &", "Switch Flash &"):
+        if excluded_row in tex:
+            fail(f"quota-confounded hosted policy row entered the paper: {excluded_row}")
+    exclusion = load_object(
+        POLICY_SWITCH_ROOT / "results" / "manuscript-exclusion-receipt.json",
+        "hosted policy-switch exclusion receipt",
+    )
+    if (
+        exclusion.get("status") != "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION"
+        or exclusion.get("decision", {}).get("hosted_model_rows_enter_manuscript") is not False
+        or exclusion.get("decision", {}).get("successful_row_subset_selected") is not False
+    ):
+        fail("hosted policy-switch exclusion boundary changed")
+    policy_aggregate = load_object(
+        LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
+        "local policy-switch aggregate",
+    )
+    comparators = policy_aggregate.get("structured_random_forest_comparators", {})
+    aware = comparators.get("policy_aware", {}).get("metrics", {})
+    blind = comparators.get("profile_blind", {}).get("metrics", {})
+    if (
+        aware.get("correct_items") != 120
+        or aware.get("correct_pairs") != 60
+        or blind.get("correct_items") != 60
+        or blind.get("correct_pairs") != 0
+    ):
+        fail("registered policy-switch shortcut result changed")
+    for aggregate_path in (
+        LOCAL_REPLICATION_ROOT / "slsa" / "results" / "aggregate.json",
+        LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
+    ):
+        aggregate = load_object(aggregate_path, "local replication aggregate")
+        lanes = aggregate.get("lanes")
+        if (
+            aggregate.get("status") != "COMPLETE"
+            or not isinstance(lanes, list)
+            or len(lanes) != 2
+            or {str(row.get("model_family")) for row in lanes} != {"Mistral", "Phi"}
+        ):
+            fail("local replication model-family boundary changed")
+    required = (
+        (r"intervention-blind certificate", "intervention-blind shortcut certificate"),
+        (r"same action for both members", "policy-blind proof premise"),
+        (r"0/60 pair accuracy", "profile-blind shortcut result"),
+        (r"30.*\\allow.*ten.*other action", "per-profile action balance"),
+        (r"Mistral Small 3\.2 24B", "pinned Mistral route"),
+        (r"Phi-4", "pinned Phi route"),
+        (r"four-bit", "local quantization boundary"),
+        (r"SLSA.*in-toto.*do not endorse", "source-standard interpretation boundary"),
+        (r"different service stack", "old and new Flash stack boundary"),
+        (r"neither model improvement nor an ablation effect", "Flash causal boundary"),
+        (r"invalid response contents are omitted", "invalid-content publication boundary"),
+        (r"hosted policy-switch.*excluded in full", "hosted full-study exclusion"),
+        (r"no successful hosted row", "no valid-subset selection"),
+    )
+    for pattern, description in required:
+        require_regex(tex, pattern, description)
 
 
 def validate_public_model_breadth(tex: str) -> bool:
@@ -992,11 +1415,13 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
     for section in (
         "Introduction",
         "Related Work",
-        "Task and Evidence Flow",
-        "Benchmark and Evaluation Design",
+        "Task and Protocol",
+        "Evaluation Design",
         "Results",
         "Discussion",
         "Limitations",
+        "Reproducibility Statement",
+        "AI Assistance Disclosure",
         "Conclusion",
     ):
         if rf"\section{{{section}}}" not in tex:
@@ -1006,13 +1431,10 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
     for phrase in (
         "complete versioned policy contract",
         "exactly six fields",
-        "first matching row fixes both the action and proposed state",
-        "A currently elevated axis has an absent, broken, stale, mismatched",
-        "airline baggage fees, NBA transactions, and tax regulations",
-        r"DEPENDENCY\_NOT\_VERIFIED",
-        r"POLICY\_SATISFIED",
-        r"verifier\_result=FAIL",
-        r"verifier\_result=PASS",
+        "first matching row fixes the action, proposed state, and ordered reason codes",
+        "Every scheduled service, syntax, schema, and semantic failure",
+        "intervention-blind certificate",
+        "definitional policy ceiling",
     ):
         if phrase not in tex:
             fail(f"self-contained task description is missing: {phrase!r}")
@@ -1023,7 +1445,6 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         r"\bfirst framework\b",
         r"\bstate[- ]of[- ]the[- ]art\b",
         r"\bguarantees? safety\b",
-        r"\bdiagnos(?:e|es|ed)\b",
         r"general research-agent competence is established",
     )
     for pattern in overclaims:
@@ -1045,14 +1466,12 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         if marker in tex:
             fail(f"excluded seven-route study leaked into manuscript: {marker}")
     for phrase in (
-        "synthetic policy conformance",
-        "author-defined evidence-transition policy",
-        "service, syntax, schema, and semantic failures",
-        "pair-balanced public robustness challenge",
-        "preclude a causal ablation",
+        "synthetic conformance-testing protocol",
+        "author-defined executable specification",
+        "service, syntax, schema, and semantic failure",
         "No human annotators or agreement statistic are claimed",
-        "replayable conformance test",
         "Naturalistic validity therefore remains untested",
+        "between-route comparisons are descriptive",
     ):
         if phrase.lower() not in lower:
             fail(f"required interpretation boundary missing: {phrase!r}")
@@ -1077,20 +1496,20 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "geifman2017selective",
         "geifman2019selectivenet",
         "zhou2025rulearena",
-        "li2026osvbench",
+        "mu2024rules",
+        "zhang2026inverseifeval",
+        "cisneros2026policycompliance",
+        "bao2026policyllm",
+        "liu2026policyinternalization",
+        "yang2026rulesual",
         "chen2025scienceagentbench",
         "siegel2025corebench",
         "huang2025popper",
-        "chen2026evidenceledger",
-        "kim2026ledger",
+        "slsa2026v12",
+        "intoto2026attestation",
     }
     if not required_citations <= cite_keys:
         fail(f"required primary-source citations missing: {sorted(required_citations - cite_keys)}")
-    if "10.5281/zenodo.21468895" in bib:
-        fail("ClaimLedger software-release DOI must not identify the cited technical report")
-    if "https://neusym.ai/papers/claimledger.pdf" not in bib:
-        fail("ClaimLedger technical-report URL is missing")
-
     labels = re.findall(r"\\label\{([^}]+)\}", tex)
     duplicates = sorted({label for label in labels if labels.count(label) > 1})
     if duplicates:
@@ -1146,14 +1565,16 @@ def main() -> int:
     validate_submission_builder(tex)
     validate_r6_evidence(tex)
     validate_balanced_challenge(tex)
-    validate_manuscript_tables(tex)
+    configs = metric_configs()
+    validate_metric_rows(tex, configs)
+    validate_new_study_claims(tex)
     validate_naturalistic_decision(tex)
     validate_v1_diagnostic(tex)
     citation_count, label_count, abstract_words = validate_structure_and_citations(tex, bib)
     print(
         "paper-lint: PASS "
         f"({citation_count} citation keys, {label_count} labels, "
-        f"{abstract_words} abstract words; r6 addendum and balanced challenge bound; "
+        f"{abstract_words} abstract words; {len(configs)} configurations bound; "
         "seven-route study excluded)"
     )
     return 0

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "claimpromote-bench"
 version = "0.1.0a0"
-description = "Synthetic, policy-constrained evaluation of evidence-state transitions"
+description = "Failure-aware conformance testing for policy-conditioned state transitions"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }

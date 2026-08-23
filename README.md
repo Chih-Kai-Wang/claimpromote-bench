@@ -1,8 +1,8 @@
-# ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Transitions
+# ClaimPromoteBench: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions
 
-ClaimPromoteBench evaluates whether typed evidence licenses a requested claim-state transition
-under a fixed, author-defined policy. It is a synthetic policy-conformance benchmark, not an
-evaluation of general research-agent ability or naturalistic scientific judgment.
+ClaimPromoteBench evaluates whether typed evidence and an active executable policy license a
+requested state transition. It is a synthetic relational conformance benchmark, not an evaluation
+of general research-agent ability or naturalistic scientific judgment.
 
 ## Task
 
@@ -12,9 +12,9 @@ evaluation time. The policy returns one of four actions:
 `ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
 
 Research status, computational support, formal certification, and independent review remain
-separate state axes. Controlled pairs change one registered prerequisite and test whether the
-decision changes as specified by the policy. A response counts as valid only if it satisfies the
-JSON contract and all cross-field semantics.
+separate state axes. Evidence pairs change one registered prerequisite under a fixed policy;
+policy pairs change only the active profile while reusing the evidence and states. A response
+counts as valid only if it satisfies the JSON contract and all cross-field semantics.
 
 Service, syntax, schema, and semantic failures remain incorrect in end-to-end metrics. Conditional
 accuracy is reported only beside decision or pair coverage. The deterministic policy executor
