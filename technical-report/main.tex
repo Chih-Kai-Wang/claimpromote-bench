@@ -93,6 +93,15 @@ and has $C_{\mathrm{pair}}(i)=0$. The policy case specializes to a classifier $h
 cannot observe $P$; the evidence case covers a route insensitive to the mutated verifier field.
 The certificate depends on the pair construction, not model quality or training procedure.
 
+For two policies and an authored candidate set $\mathcal{X}$, define the policy difference set
+$\Delta(P_a,P_b;\mathcal{X})=\{x\in\mathcal{X}:\pi_{P_a}(x)\neq\pi_{P_b}(x)\}$. A policy
+regression suite duplicates contexts from $\Delta$ and changes only the active profile. Test authors
+can stratify the suite by the rule that distinguishes the policies and by the resulting action
+transition. The frozen \texttt{BLUE}$\rightarrow$\texttt{AMBER} suite covers all 12 authored
+profile-difference factors with five contexts each. It balances six admission-centered transitions at
+ten pairs each: \allow$\leftrightarrow$\hold, \allow$\leftrightarrow$\demote, and
+\allow$\leftrightarrow$\escalate. It does not cover transitions between two non-\allow{} actions.
+
 \begin{figure}[H]
 \centering
 \footnotesize
@@ -206,11 +215,11 @@ The fixed SLSA Random Forest is perfect on held-out templates, so the structured
 
 \paragraph{Policy revisions yield regression tests.}
 For executable profiles $P_{\mathrm{old}}$ and $P_{\mathrm{new}}$, a test author can enumerate
-typed contexts where $\pi_{P_{\mathrm{old}}}(x)\neq\pi_{P_{\mathrm{new}}}(x)$ and retain the
-context as a policy pair. The resulting suite checks whether a model-mediated route tracks the
-revision; the intervention-blind certificate identifies one class of shortcut without assuming a model
-architecture. The present experiments instantiate this construction for two profiles rather than
-claiming coverage of policy revisions in practice.
+typed contexts in their policy difference set and retain them as regression pairs. The resulting suite
+checks whether a model-mediated route tracks the revision; the intervention-blind certificate
+identifies one class of shortcut without assuming a model architecture. The present experiments
+instantiate this construction for two profiles rather than claiming coverage of policy revisions in
+practice.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
 The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The public challenge shows the complementary case: valid outputs can still choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these failure layers without discarding either.

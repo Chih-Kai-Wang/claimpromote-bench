@@ -48,6 +48,7 @@ SLSA_ROOT = ROOT / "v2" / "slsa-portability-v1" / "replacement-v2"
 SLSA_RESULT = SLSA_ROOT / "results" / "aggregate.json"
 POLICY_SWITCH_ROOT = ROOT / "v2" / "policy-switch-v1" / "frozen"
 POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
+POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
 LOCAL_REPLICATION_ROOT = ROOT / "v2" / "local-model-replication-v1" / "replacement-v2" / "frozen"
 BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
 BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
@@ -1052,6 +1053,40 @@ def validate_new_study_claims(tex: str) -> None:
         or exclusion.get("decision", {}).get("successful_row_subset_selected") is not False
     ):
         fail("hosted policy-switch exclusion boundary changed")
+    difference_coverage = load_object(
+        POLICY_DIFFERENCE_COVERAGE, "policy-difference coverage receipt"
+    )
+    coverage = difference_coverage.get("coverage", {})
+    source_bindings = difference_coverage.get("source_bindings", {})
+    expected_bindings = {
+        "evaluation_items_sha256": sha256_file(
+            POLICY_SWITCH_ROOT / "dataset" / "evaluation-items.jsonl"
+        ),
+        "evaluation_gold_sha256": sha256_file(
+            POLICY_SWITCH_ROOT / "dataset" / "evaluation-gold.jsonl"
+        ),
+        "evaluation_pairs_sha256": sha256_file(
+            POLICY_SWITCH_ROOT / "dataset" / "evaluation-pairs.json"
+        ),
+        "dataset_manifest_sha256": sha256_file(POLICY_SWITCH_ROOT / "dataset" / "manifest.json"),
+        "policy_contract_sha256": sha256_file(
+            ROOT / "v2" / "policy-switch-v1" / "policy-contract.json"
+        ),
+    }
+    if (
+        difference_coverage.get("status") != "POLICY_DIFFERENCE_COVERAGE_COMPLETE"
+        or difference_coverage.get("record_sha256")
+        != self_digest(difference_coverage, "record_sha256")
+        or source_bindings != expected_bindings
+        or coverage.get("authored_profile_difference_factors_covered") != 12
+        or coverage.get("authored_profile_difference_factors_total") != 12
+        or coverage.get("contexts_per_factor") != 5
+        or coverage.get("directed_nonself_action_transitions_covered") != 6
+        or coverage.get("directed_nonself_action_transitions_possible_over_four_actions") != 12
+        or set(coverage.get("blue_to_amber_transition_counts", {}).values()) != {10}
+        or coverage.get("transition_scope") != "ADMISSION_CENTERED_STAR_NOT_COMPLETE_ACTION_GRAPH"
+    ):
+        fail("policy-difference coverage receipt changed")
     policy_aggregate = load_object(
         LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
         "local policy-switch aggregate",
@@ -1083,6 +1118,9 @@ def validate_new_study_claims(tex: str) -> None:
         (r"intervention-blind certificate", "intervention-blind shortcut certificate"),
         (r"same action for both members", "policy-blind proof premise"),
         (r"0/60 pair accuracy", "profile-blind shortcut result"),
+        (r"all 12 authored.*five contexts each", "policy-difference factor coverage"),
+        (r"six admission-centered transitions.*ten pairs each", "policy transition balance"),
+        (r"does not cover transitions between two non-.*actions", "transition-graph boundary"),
         (r"30.*\\allow.*ten.*other action", "per-profile action balance"),
         (r"Mistral Small 3\.2 24B", "pinned Mistral route"),
         (r"Phi-4", "pinned Phi route"),
