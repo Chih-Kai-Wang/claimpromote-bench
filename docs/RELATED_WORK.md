@@ -56,8 +56,8 @@ verifier-governed updates.
 
 The defensible claim is deliberately narrower:
 
-> **ClaimPromoteBench turns policy-conditioned state-transition conformance into a failure-aware,
-> controlled-pair evaluation problem.**
+> **ClaimPromoteBench compiles executable policy differences into failure-aware, controlled-pair
+> regression tests for model-mediated state-transition routes.**
 
 Its distinctive evaluation choices are the combination of:
 
@@ -71,11 +71,14 @@ Its distinctive evaluation choices are the combination of:
 5. item, pair, action, coverage, and conditional metrics that keep every scheduled route or output
    failure in the end-to-end denominator;
 6. frozen one-call, zero-retry execution with replayable item records and fail-closed artifact
-   validation; and
+   validation;
 7. learned comparators that expose both fixed-policy learnability and the registered
    profile-oblivious shortcut boundary; and
 8. a two-coordinate policy-migration adequacy criterion that separates changed-rule coverage from
-   reachable oracle-action edge coverage and records structurally impossible edges.
+   reachable oracle-action edge coverage and records structurally impossible edges; and
+9. a release-gate interpretation in which a policy revision regenerates the difference suite,
+   while a route revision reruns the same frozen suite, separating coverage, output validity, and
+   action-conformance failures.
 
 This is not a truth benchmark. A transition can be admissible under the public policy while the underlying research claim remains scientifically wrong, unimportant, or semantically misstated; conversely, a true claim may correctly remain unpromoted because required evidence is absent.
 
@@ -90,6 +93,11 @@ Safe language for the current manuscript is:
 > model-mediated route emits the action prescribed by a published transition policy. Matched pairs
 > isolate changes in either one evidence prerequisite or the active policy itself, while end-to-end
 > scoring retains all scheduled service and output failures.
+
+The impact claim should remain operational rather than population-level: the protocol supplies a
+replayable release gate for versioned executable policies and model-service routes. The present
+synthetic studies do not establish natural policy prevalence, deployment safety, or transfer to
+unseen policy domains.
 
 ## Remaining citation gate
 
