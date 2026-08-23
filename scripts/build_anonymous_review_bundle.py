@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import ast
 import hashlib
+import importlib.util
 import json
 import re
 import shutil
@@ -1743,6 +1744,22 @@ def build_local_void_exclusion_receipt(source_root: Path, destination: Path) -> 
     return review
 
 
+def derive_policy_difference_coverage(dataset_root: Path, policy_path: Path) -> Json:
+    script = ROOT / "scripts" / "derive_policy_difference_coverage.py"
+    spec = importlib.util.spec_from_file_location("anonymous_policy_difference_coverage", script)
+    if spec is None or spec.loader is None:
+        fail("could not load the policy-difference coverage derivation")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    derive = getattr(module, "derive", None)
+    if not callable(derive):
+        fail("policy-difference coverage derivation lacks derive()")
+    value = derive(dataset_root, policy_path)
+    if not isinstance(value, dict):
+        fail("policy-difference coverage derivation returned a non-object")
+    return value
+
+
 def build_local_model_replications_anonymous_evidence(destination: Path) -> None:
     source = ROOT / "v2" / "local-model-replication-v1"
     study_source = source / "replacement-v2" / "frozen"
@@ -1845,6 +1862,14 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
             baseline_report=study_destination / "baseline" / "report.json",
             lane_files=lane_files,
         )
+        if dataset_key == "policy-switch":
+            write_json(
+                study_destination / "policy-difference-coverage.json",
+                derive_policy_difference_coverage(
+                    study_destination / "dataset",
+                    study_destination / "policy-contract.json",
+                ),
+            )
         (study_destination / "README.md").write_text(
             (
                 f"# Pinned local-model {dataset_key} replication reviewer evidence\n\n"
@@ -2279,7 +2304,8 @@ study holds evidence and states fixed while changing only the applicable publish
 and in-toto ground the evidence vocabulary; all transition rules, profiles, and labels remain
 author-defined. These studies are not standards certification, naturalistic deployment estimates,
 or between-route causal comparisons. Every scheduled failure in a retained study remains in the
-end-to-end denominator.
+end-to-end denominator. A recomputable receipt verifies coverage of all 12 authored profile
+differences and six of the 12 possible directed non-self action transitions.
 
 Two frozen hosted policy-switch executions exhausted a shared subscription quota. Both are
 excluded in full, and the bundle retains only redacted exclusion receipts. No hosted row or
@@ -2553,6 +2579,18 @@ PYTHON_COMMANDS = [
     [sys.executable, "scripts/validate_anonymous_empirical_evidence.py"],
     [
         sys.executable,
+        "scripts/derive_policy_difference_coverage.py",
+        "--dataset-root",
+        "evidence/local-model-replications/policy-switch/dataset",
+        "--policy",
+        "evidence/local-model-replications/policy-switch/policy-contract.json",
+        "--expect",
+        "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
+        "--out",
+        "work/policy-difference-coverage.json",
+    ],
+    [
+        sys.executable,
         "scripts/validate_v2_naturalistic_candidates.py",
         "--registry",
         "v2/naturalistic-sources.json",
@@ -2761,6 +2799,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/local-model-replications/slsa/MANIFEST.json",
         "evidence/local-model-replications/slsa/reported-aggregate.json",
         "evidence/local-model-replications/policy-switch/MANIFEST.json",
+        "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
         "evidence/local-model-replications/policy-switch/reported-aggregate.json",
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
@@ -3021,6 +3060,7 @@ def build(destination: Path) -> None:
         "scripts/audit_public_pair_contracts.py",
         "scripts/build_alpha.py",
         "scripts/build_v2_naturalistic_candidates.py",
+        "scripts/derive_policy_difference_coverage.py",
         "scripts/finalize_synthetic_policy_results.py",
         "scripts/finalize_local_model_results.py",
         "scripts/freeze_local_model_replications.py",

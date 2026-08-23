@@ -348,6 +348,21 @@ def test_hosted_policy_switch_replacement_exclusion_contains_no_selected_rows(
     assert receipt["source_bindings_included"] is False
 
 
+def test_policy_difference_coverage_derivation_is_replayable_in_review_bundle() -> None:
+    builder = load_builder()
+    dataset = ROOT / "v2" / "policy-switch-v1" / "frozen" / "dataset"
+    policy = ROOT / "v2" / "policy-switch-v1" / "policy-contract.json"
+    expected = json.loads(
+        (ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert builder.derive_policy_difference_coverage(dataset, policy) == expected
+    runner = builder.review_runner()
+    assert "scripts/derive_policy_difference_coverage.py" in runner
+    assert "--expect" in runner
+
+
 def test_local_void_attempt_projects_only_a_redacted_exclusion_receipt(tmp_path: Path) -> None:
     builder = load_builder()
     destination = tmp_path / "initial-void-exclusion.json"

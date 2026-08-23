@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,3 +40,28 @@ def test_policy_difference_receipt_states_incomplete_action_graph() -> None:
         "ADMISSION_CENTERED_STAR_NOT_COMPLETE_ACTION_GRAPH"
     )
     assert "not the complete four-action transition graph" in value["interpretation_boundary"]
+
+
+def test_policy_difference_cli_checks_an_expected_receipt(tmp_path: Path) -> None:
+    out = tmp_path / "coverage.json"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--dataset-root",
+            str(DATASET),
+            "--policy",
+            str(POLICY),
+            "--expect",
+            str(RECEIPT),
+            "--out",
+            str(out),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(out.read_text(encoding="utf-8")) == json.loads(
+        RECEIPT.read_text(encoding="utf-8")
+    )

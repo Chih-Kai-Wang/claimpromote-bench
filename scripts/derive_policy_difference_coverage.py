@@ -203,8 +203,13 @@ def main() -> int:
     parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT)
     parser.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--expect", type=Path)
     args = parser.parse_args()
     record = derive(args.dataset_root.resolve(), args.policy.resolve())
+    if args.expect is not None:
+        expected = load_json(args.expect.resolve())
+        if canonical_json(record) != canonical_json(expected):
+            fail("recomputed policy-difference coverage differs from --expect")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
