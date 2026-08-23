@@ -51,6 +51,7 @@ POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
 POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
 POLICY_TRANSITION_GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1" / "frozen"
 POLICY_TRANSITION_GRAPH_COVERAGE = POLICY_TRANSITION_GRAPH_ROOT / "transition-coverage.json"
+POLICY_MIGRATION_MUTATION_AUDIT = ROOT / "v2" / "policy-transition-graph-v1" / "mutation-audit.json"
 HOSTED_POLICY_REPLACEMENT_RECEIPT = (
     ROOT
     / "v2"
@@ -1194,6 +1195,34 @@ def validate_new_study_claims(tex: str) -> None:
         }
     ):
         fail("reachable policy-transition graph coverage changed")
+    mutation_audit = load_object(POLICY_MIGRATION_MUTATION_AUDIT, "policy-migration mutation audit")
+    rule_mutants = mutation_audit.get("suites", {}).get("rule_stratified", {})
+    graph_mutants = mutation_audit.get("suites", {}).get("transition_graph", {})
+    expected_mutation_bindings = {
+        "rule_pairs_sha256": sha256_file(
+            ROOT / "v2" / "policy-switch-v1" / "frozen" / "dataset" / "evaluation-pairs.json"
+        ),
+        "rule_coverage_sha256": sha256_file(
+            ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
+        ),
+        "graph_pairs_sha256": sha256_file(
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
+        ),
+        "graph_coverage_sha256": sha256_file(POLICY_TRANSITION_GRAPH_COVERAGE),
+    }
+    if (
+        mutation_audit.get("status") != "EDGE_LOCAL_MIGRATION_MUTATION_AUDIT_COMPLETE"
+        or mutation_audit.get("self_digest") != self_digest(mutation_audit, "self_digest")
+        or mutation_audit.get("model_or_client_calls") != 0
+        or mutation_audit.get("source_bindings") != expected_mutation_bindings
+        or rule_mutants.get("changed_rule_coverage") != {"numerator": 12, "denominator": 12}
+        or rule_mutants.get("edge_local_mutant_detection")
+        != {"numerator": 6, "denominator": 10, "value": 0.6}
+        or graph_mutants.get("changed_rule_coverage") != {"numerator": 12, "denominator": 12}
+        or graph_mutants.get("edge_local_mutant_detection")
+        != {"numerator": 10, "denominator": 10, "value": 1.0}
+    ):
+        fail("policy-migration mutation audit changed")
     graph_aggregate = load_object(
         LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
         "local policy-transition graph aggregate",
@@ -1232,6 +1261,8 @@ def validate_new_study_claims(tex: str) -> None:
         (r"six contexts for each.*reachable directed edge", "transition-graph balance"),
         (r"HOLD.*DEMOTE.*structurally", "unreachable transition certificate"),
         (r"18/12/12/18", "transition-graph per-profile action balance"),
+        (r"kills 6/10[\s\S]{0,120}kills 10/10", "edge-local migration mutation audit"),
+        (r"not a model of fault.*prevalence", "migration-mutant interpretation boundary"),
         (r"30.*\\allow.*ten.*other action", "per-profile action balance"),
         (r"Mistral Small 3\.2 24B", "pinned Mistral route"),
         (r"Phi-4", "pinned Phi route"),

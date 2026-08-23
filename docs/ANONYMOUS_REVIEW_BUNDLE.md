@@ -25,7 +25,8 @@ The staged bundle contains:
   action-level metrics, and privacy receipt;
 - the hosted SLSA portability study and three zero-retry local studies on the fixed policy,
   rule-stratified policy switch, and complete reachable policy-transition graph, with item-level
-  records, learned comparators, freeze receipts, and recomputable coverage certificates;
+  records, learned comparators, freeze receipts, recomputable coverage certificates, and the
+  zero-call edge-local migration-mutant audit;
 - redacted all-or-nothing exclusion receipts for three hosted policy studies that exhausted shared
   subscription quota, without their item records, route labels, free-form errors, or model rows;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
@@ -71,7 +72,7 @@ Validation runs inside the staged artifact:
    metamorphic invariance, and executable fixtures;
 3. recompute the r6, balanced-challenge, SLSA portability, and three local-study results from
    included item-level evidence, including fixed-four-class Macro-F1 with zero division set to
-   zero;
+   zero, then reproduce the 6/10 versus 10/10 migration-mutant audit;
 4. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
 5. run the selected v2 tests;
 6. build and replay the public Lean package and execute formal fixtures;

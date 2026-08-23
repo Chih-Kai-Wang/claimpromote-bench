@@ -156,6 +156,7 @@ def main() -> int:
     parser.add_argument("--rule-coverage", type=Path, default=DEFAULT_RULE_COVERAGE)
     parser.add_argument("--graph-pairs", type=Path, default=DEFAULT_GRAPH_PAIRS)
     parser.add_argument("--graph-coverage", type=Path, default=DEFAULT_GRAPH_COVERAGE)
+    parser.add_argument("--expect", type=Path)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
     result = derive(
@@ -164,6 +165,8 @@ def main() -> int:
         args.graph_pairs,
         args.graph_coverage,
     )
+    if args.expect is not None and result != read_json(args.expect):
+        fail(f"derived audit differs from expected receipt: {args.expect}")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

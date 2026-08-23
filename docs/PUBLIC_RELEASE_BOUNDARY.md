@@ -22,6 +22,8 @@ establish redistribution rights.
 - the three local plans, model catalog, pinned revisions, snapshot and environment
   receipts, minimal MLX runner, redacted item records, and a redacted receipt for the excluded
   one-intent/zero-terminal v1 attempt; model weights remain upstream;
+- the deterministic policy-migration mutation audit that binds the rule-stratified and graph-complete
+  suites to their 6/10 and 10/10 registered edge-local fault-detection receipts;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
 - `LICENSE`, `DATA_LICENSE.md`, `THIRD_PARTY_NOTICES.md`, a concise README, and a dynamic manifest.

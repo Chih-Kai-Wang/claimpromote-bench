@@ -1812,6 +1812,32 @@ def derive_policy_difference_coverage(dataset_root: Path, policy_path: Path) -> 
     return value
 
 
+def derive_policy_migration_mutation_audit(
+    rule_root: Path,
+    graph_root: Path,
+) -> Json:
+    script = ROOT / "scripts" / "derive_policy_migration_mutation_audit.py"
+    spec = importlib.util.spec_from_file_location(
+        "anonymous_policy_migration_mutation_audit", script
+    )
+    if spec is None or spec.loader is None:
+        fail("could not load the policy-migration mutation audit")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    derive = getattr(module, "derive", None)
+    if not callable(derive):
+        fail("policy-migration mutation audit lacks derive()")
+    value = derive(
+        rule_root / "dataset" / "evaluation-pairs.json",
+        rule_root / "policy-difference-coverage.json",
+        graph_root / "dataset" / "evaluation-pairs.json",
+        graph_root / "transition-coverage.json",
+    )
+    if not isinstance(value, dict):
+        fail("policy-migration mutation audit returned a non-object")
+    return value
+
+
 def build_transition_graph_review_receipts(
     source_root: Path,
     destination: Path,
@@ -2024,6 +2050,14 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
                 derive_policy_difference_coverage(
                     study_destination / "dataset",
                     study_destination / "policy-contract.json",
+                ),
+            )
+        if dataset_key == "policy-transition-graph":
+            write_json(
+                study_destination / "mutation-audit.json",
+                derive_policy_migration_mutation_audit(
+                    destination / "policy-switch",
+                    study_destination,
                 ),
             )
         (study_destination / "README.md").write_text(
@@ -2751,6 +2785,22 @@ PYTHON_COMMANDS = [
     ],
     [
         sys.executable,
+        "scripts/derive_policy_migration_mutation_audit.py",
+        "--rule-pairs",
+        "evidence/local-model-replications/policy-switch/dataset/evaluation-pairs.json",
+        "--rule-coverage",
+        "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
+        "--graph-pairs",
+        "evidence/local-model-replications/policy-transition-graph/dataset/evaluation-pairs.json",
+        "--graph-coverage",
+        "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
+        "--expect",
+        "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
+        "--out",
+        "work/policy-migration-mutation-audit.json",
+    ],
+    [
+        sys.executable,
         "scripts/validate_v2_naturalistic_candidates.py",
         "--registry",
         "v2/naturalistic-sources.json",
@@ -2938,6 +2988,7 @@ def verify_bundle(bundle: Path) -> None:
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
+        "scripts/derive_policy_migration_mutation_audit.py",
         "scripts/policy_transition_graph_local.py",
         "scripts/run_policy_transition_graph_local_study.py",
         "scripts/train_policy_switch_baselines.py",
@@ -2972,6 +3023,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/local-model-replications/policy-switch/reported-aggregate.json",
         "evidence/local-model-replications/policy-transition-graph/MANIFEST.json",
         "evidence/local-model-replications/policy-transition-graph/design-decision-receipt.json",
+        "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
         "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
         "evidence/local-model-replications/policy-transition-graph/reported-aggregate.json",
         "v2/naturalistic-candidates.json",
@@ -3258,6 +3310,7 @@ def build(destination: Path) -> None:
         "scripts/build_slsa_portability_study.py",
         "scripts/build_v2_naturalistic_candidates.py",
         "scripts/derive_policy_difference_coverage.py",
+        "scripts/derive_policy_migration_mutation_audit.py",
         "scripts/finalize_synthetic_policy_results.py",
         "scripts/finalize_local_model_results.py",
         "scripts/freeze_local_model_replications.py",

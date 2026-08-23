@@ -2219,6 +2219,48 @@ def validate_local_model_replications() -> Json:
     transition_graph = validate_synthetic_policy_evidence(
         "LOCAL_MODEL_POLICY_TRANSITION_GRAPH_REPLICATION"
     )
+    mutation_audit_path = root / "policy-transition-graph" / "mutation-audit.json"
+    mutation_audit = load_json(mutation_audit_path)
+    if not isinstance(mutation_audit, dict):
+        fail("policy-migration mutation audit is malformed")
+    validate_self_digest(mutation_audit, "self_digest", "policy-migration mutation audit")
+    rule_mutants = mutation_audit.get("suites", {}).get("rule_stratified", {})
+    graph_mutants = mutation_audit.get("suites", {}).get("transition_graph", {})
+    expected_mutation_bindings = {
+        "rule_pairs_sha256": sha256_file(
+            root / "policy-switch" / "dataset" / "evaluation-pairs.json"
+        ),
+        "rule_coverage_sha256": sha256_file(
+            root / "policy-switch" / "policy-difference-coverage.json"
+        ),
+        "graph_pairs_sha256": sha256_file(
+            root / "policy-transition-graph" / "dataset" / "evaluation-pairs.json"
+        ),
+        "graph_coverage_sha256": sha256_file(
+            root / "policy-transition-graph" / "transition-coverage.json"
+        ),
+    }
+    if (
+        mutation_audit.get("status") != "EDGE_LOCAL_MIGRATION_MUTATION_AUDIT_COMPLETE"
+        or mutation_audit.get("model_or_client_calls") != 0
+        or mutation_audit.get("mutant_family", {}).get("name") != "SINGLE_EDGE_STALE_POLICY"
+        or mutation_audit.get("source_bindings") != expected_mutation_bindings
+        or rule_mutants.get("changed_rule_coverage") != {"numerator": 12, "denominator": 12}
+        or rule_mutants.get("edge_local_mutant_detection")
+        != {"numerator": 6, "denominator": 10, "value": 0.6}
+        or rule_mutants.get("edge_local_mutants_missed")
+        != [
+            "DEMOTE->ESCALATE",
+            "ESCALATE->DEMOTE",
+            "ESCALATE->HOLD",
+            "HOLD->ESCALATE",
+        ]
+        or graph_mutants.get("changed_rule_coverage") != {"numerator": 12, "denominator": 12}
+        or graph_mutants.get("edge_local_mutant_detection")
+        != {"numerator": 10, "denominator": 10, "value": 1.0}
+        or graph_mutants.get("edge_local_mutants_missed") != []
+    ):
+        fail("policy-migration mutation audit changed")
     expected_bindings = {
         "catalog_sha256": catalog_hash,
         "requirements_sha256": sha256_file(root / "requirements.txt"),
@@ -2248,6 +2290,10 @@ def validate_local_model_replications() -> Json:
         "slsa": slsa,
         "policy_switch": policy_switch,
         "policy_transition_graph": transition_graph,
+        "policy_migration_edge_mutants": {
+            "rule_stratified": "6/10",
+            "transition_graph": "10/10",
+        },
     }
 
 
