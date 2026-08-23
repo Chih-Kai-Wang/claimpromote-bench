@@ -1,0 +1,41 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-23T13:15:52.846239Z",
+  "credentials_retained": false,
+  "durable_request_intents": 240,
+  "durable_terminal_records": 240,
+  "frozen_plan_commit": "073fb0b4d1e5d505d5d4e46a045fd957e3618839",
+  "hidden_reasoning_blocks_retained": false,
+  "lane_output_sha256": {
+    "local-mlx-mistral-small-3.2-24b-slsa-v2.jsonl": "sha256:e87d544b0b60ee65abeef5ce5adcb3c635bfe637639f11beb59c55a09773f636",
+    "local-mlx-phi-4-slsa-v2.jsonl": "sha256:de8604c599a20a948ed58990e6c20dd23bc1f070876fd1eb0d532f9623fb956f"
+  },
+  "lanes": [
+    {
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "records": 120,
+      "runtime_errors": 0,
+      "valid_decisions": 94
+    },
+    {
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "records": 120,
+      "runtime_errors": 0,
+      "valid_decisions": 102
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 240,
+  "prior_ineligible_application_invocations": 1,
+  "provider_response_identifiers_retained": false,
+  "replacement_version": 2,
+  "request_intent_journal_sha256": "sha256:8dcc4d432ff22b8b2c43573766c049f74130774ff0640e315b21b6baec5717c6",
+  "schedule_sha256": "sha256:510e783e4e440980f1bb49e28863e026c2abef5bf4813f356e35ab1157a9721c",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T11:30:34.166877Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v2",
+  "terminal_journal_sha256": "sha256:19809b3501ea1a7e2c435d81cd3a768b8d0a325b8c8b427b08d448845d40aa6a",
+  "void_attempt_receipt_sha256": "sha256:fd03cbe9d85fce23a5d9412f5d488fbb414ab0b2dd79d358851c0948f29706ae"
+}

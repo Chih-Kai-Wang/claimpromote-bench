@@ -1,0 +1,26 @@
+{
+  "failure_rule": "Every local runtime, syntax, schema, and semantic failure remains incorrect in the scheduled end-to-end denominator.",
+  "free_form_error_text_included": false,
+  "lanes": {
+    "local-mlx-mistral-small-3.2-24b-slsa-v2": {
+      "parse_status_counts": {
+        "OK": 94,
+        "SEMANTIC_ERROR": 26
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {}
+    },
+    "local-mlx-phi-4-slsa-v2": {
+      "parse_status_counts": {
+        "OK": 102,
+        "SEMANTIC_ERROR": 18
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {}
+    }
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:43de09489580e1a4b3288eb44b2bd9702b395666ff83ed5cfb94cb5ee9549b4a",
+  "status": "COMPLETE_FROZEN_FAILURE_TAXONOMY",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v2"
+}

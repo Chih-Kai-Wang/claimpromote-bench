@@ -1,0 +1,22 @@
+{
+  "aggregate_sha256": "sha256:423ebd6328057e287d4fc92e966f94cd89c4ea2189cf5fcc44d321a289a44d38",
+  "all_failures_retained_in_end_to_end_denominator": true,
+  "application_posts_per_cell": 1,
+  "baseline_report_sha256": "sha256:df450053d032990fba95f53442523012a046333288ff8047a8d69ff48659084a",
+  "client_retry_count": 0,
+  "dataset_manifest_sha256": "sha256:975083349726771cbb61484ce161c1ab0e670e1b1b1baea662b3e8664eaaec98",
+  "execution_receipt_sha256": "sha256:5cbd7ef27d00ddae71b56f4b972d2a0ced9d27bb6811224d89847becef53af85",
+  "failure_taxonomy_sha256": "sha256:f35e708f4d6bedb620b4b952753523e857d7d46cc2be3486c62237b7d9c62226",
+  "plan_sha256": "sha256:b5fa0d2ea319f546f2b02e0d4555ebb1ea140ac73d0d1846793ace02f2f8ea9c",
+  "planned_and_terminal_cells": 240,
+  "privacy_receipt_sha256": "sha256:37a61bf33680ee2fdb6c43687e096cc53fd06af54c41f2edaa4f14388dcab727",
+  "run_sha256": {
+    "local-mlx-mistral-small-3.2-24b-slsa-v2.jsonl": "sha256:e87d544b0b60ee65abeef5ce5adcb3c635bfe637639f11beb59c55a09773f636",
+    "local-mlx-phi-4-slsa-v2.jsonl": "sha256:de8604c599a20a948ed58990e6c20dd23bc1f070876fd1eb0d532f9623fb956f"
+  },
+  "schedule_sha256": "sha256:b83fd975cfc3569719ff2f8488d309a0cedd3b7e112610b26899a69479d746a4",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:ee731e7cd1011a7491cc197d408f110730f24e29286bfdbd71b63a9bd01672cc",
+  "status": "SYNTHETIC_POLICY_RESULTS_SEALED",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v2"
+}
