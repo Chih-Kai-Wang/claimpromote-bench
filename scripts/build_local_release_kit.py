@@ -223,6 +223,9 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "public_repository_identity_included",
         "fresh_confirmatory_hidden_reasoning_included",
         "balanced_public_challenge_hidden_reasoning_included",
+        "slsa_portability_raw_response_text_included",
+        "slsa_portability_void_raw_records_included",
+        "policy_switch_raw_response_text_included",
         "public_model_breadth_summary_included",
         "public_model_breadth_item_level_records_included",
         "public_model_breadth_hidden_reasoning_included",
@@ -230,6 +233,16 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
     )
     if any(scope.get(key) is not False for key in false_guards):
         fail("anonymous manifest privacy scope changed")
+    true_guards = (
+        "slsa_portability_summary_included",
+        "slsa_portability_item_level_records_included",
+        "policy_switch_summary_included",
+        "policy_switch_item_level_records_included",
+    )
+    if any(scope.get(key) is not True for key in true_guards):
+        fail("anonymous manifest multi-policy evidence scope changed")
+    if scope.get("ontology_count") != 2 or scope.get("policy_instrument_count") != 4:
+        fail("anonymous manifest policy coverage changed")
     return manifest, actual
 
 
