@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one frozen local-model replication once, without retries or resume."""
+"""Run one frozen local-model replacement study once, without retries or resume."""
 
 from __future__ import annotations
 
@@ -27,6 +27,8 @@ from huggingface_hub import snapshot_download  # noqa: E402
 from local_model_replication import (  # noqa: E402
     CATALOG_PATH,
     DATASETS,
+    REPLACEMENT_VERSION,
+    VOID_RECEIPT_PATH,
     format_chat_prompt,
     generation_request,
     lane_id,
@@ -48,7 +50,7 @@ from claimpromotebench.dataset import (  # noqa: E402
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
 Json = dict[str, Any]
-RUN_SCHEMA = ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json"
+RUN_SCHEMA = ROOT / "v2" / "schemas" / "local-model-run-record.schema.json"
 DECISION_SCHEMA = ROOT / "v2" / "schemas" / "slsa-agent-decision.schema.json"
 BASE_POLICY_PATH = ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json"
 
@@ -71,6 +73,7 @@ def main() -> int:
     parser.add_argument("--catalog", type=Path, default=CATALOG_PATH)
     parser.add_argument("--snapshot-receipt", type=Path, required=True)
     parser.add_argument("--qualification-receipt", type=Path, required=True)
+    parser.add_argument("--void-receipt", type=Path, default=VOID_RECEIPT_PATH)
     parser.add_argument("--frozen-plan-commit", required=True)
     parser.add_argument("--journal-dir", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
@@ -85,10 +88,17 @@ def main() -> int:
     catalog_path = args.catalog.resolve()
     snapshot_receipt = args.snapshot_receipt.resolve()
     qualification_receipt = args.qualification_receipt.resolve()
+    void_receipt = args.void_receipt.resolve()
     frozen_commit = args.frozen_plan_commit.lower()
     verify_frozen_plan(plan_path, frozen_commit)
     verify_frozen_plan(schedule_path, frozen_commit)
-    validate_all(freeze_root, catalog_path, snapshot_receipt, qualification_receipt)
+    validate_all(
+        freeze_root,
+        catalog_path,
+        snapshot_receipt,
+        qualification_receipt,
+        void_receipt,
+    )
 
     plan = load_json(plan_path)
     schedule = load_json(schedule_path)
@@ -118,6 +128,8 @@ def main() -> int:
         {
             "schema_version": "1.0.0",
             "status": "EXECUTION_STARTED",
+            "replacement_version": REPLACEMENT_VERSION,
+            "prior_ineligible_application_invocations": 1,
             "study_id": plan["study_id"],
             "frozen_plan_commit": frozen_commit,
             "schedule_sha256": schedule["schedule_sha256"],
@@ -336,6 +348,9 @@ def main() -> int:
         receipt: Json = {
             "schema_version": "1.0.0",
             "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+            "replacement_version": REPLACEMENT_VERSION,
+            "prior_ineligible_application_invocations": 1,
+            "void_attempt_receipt_sha256": sha256_file(void_receipt),
             "study_id": plan["study_id"],
             "frozen_plan_commit": frozen_commit,
             "schedule_sha256": schedule["schedule_sha256"],

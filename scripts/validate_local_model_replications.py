@@ -16,10 +16,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from local_model_replication import (  # noqa: E402
     CATALOG_PATH,
     DATASETS,
+    REPLACEMENT_VERSION,
     REQUIREMENTS_PATH,
+    VOID_RECEIPT_PATH,
     lane_id,
     load_catalog,
     load_object,
+    validate_void_receipt,
 )
 
 from claimpromotebench.dataset import load_json  # noqa: E402
@@ -81,6 +84,7 @@ def validate_study(
     catalog_path: Path,
     snapshot_path: Path,
     qualification_path: Path,
+    void_receipt_path: Path,
 ) -> None:
     spec = DATASETS[dataset_key]
     plan_path = study_root / "study-plan.json"
@@ -94,7 +98,8 @@ def validate_study(
     expected_lanes = [lane_id(lane, dataset_key) for lane in catalog["lanes"]]
     formal_lanes = plan.get("formal_lanes")
     if (
-        plan.get("status") != "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION"
+        plan.get("status") != "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION_REPLACEMENT_V2"
+        or plan.get("replacement_version") != REPLACEMENT_VERSION
         or plan.get("study_id") != spec["study_id"]
         or plan.get("design") != spec["design"]
         or not isinstance(formal_lanes, list)
@@ -102,7 +107,11 @@ def validate_study(
         or plan.get("execution", {}).get("base_lane_order") != expected_lanes
         or plan.get("execution", {}).get("planned_application_posts") != 240
         or plan.get("execution", {}).get("client_retry_count") != 0
-        or plan.get("freeze", {}).get("benchmark_inference_calls_before_freeze") != 0
+        or plan.get("freeze", {}).get("benchmark_inference_calls_before_initial_freeze") != 0
+        or plan.get("freeze", {}).get("prior_ineligible_application_invocations") != 1
+        or plan.get("freeze", {}).get("prior_durable_terminal_records") != 0
+        or plan.get("freeze", {}).get("prior_retained_model_outputs") != 0
+        or plan.get("freeze", {}).get("eligible_replacement_inference_calls_before_freeze") != 0
     ):
         fail(f"local-model plan contract changed: {dataset_key}")
     dataset = plan.get("dataset", {})
@@ -119,6 +128,7 @@ def validate_study(
     freeze = plan.get("freeze", {})
     snapshot = load_object(snapshot_path)
     qualification = load_object(qualification_path)
+    void_receipt = validate_void_receipt(void_receipt_path)
     if (
         freeze.get("catalog_sha256") != sha256_file(catalog_path)
         or freeze.get("requirements_sha256") != sha256_file(REQUIREMENTS_PATH)
@@ -126,6 +136,8 @@ def validate_study(
         or freeze.get("snapshot_receipt_self_digest") != snapshot.get("self_digest")
         or freeze.get("qualification_receipt_sha256") != sha256_file(qualification_path)
         or freeze.get("qualification_receipt_self_digest") != qualification.get("self_digest")
+        or freeze.get("void_attempt_receipt_sha256") != sha256_file(void_receipt_path)
+        or freeze.get("void_attempt_receipt_self_digest") != void_receipt.get("self_digest")
     ):
         fail(f"local-model environment binding changed: {dataset_key}")
     runtime = freeze.get("runtime_source_sha256")
@@ -138,7 +150,7 @@ def validate_study(
 
     cells = schedule.get("cells")
     if (
-        schedule.get("status") != "FROZEN_LOCAL_MODEL_REQUEST_SCHEDULE"
+        schedule.get("status") != "FROZEN_LOCAL_MODEL_REQUEST_SCHEDULE_REPLACEMENT_V2"
         or schedule.get("study_id") != spec["study_id"]
         or schedule.get("planned_cells") != 240
         or schedule.get("application_posts_per_cell") != 1
@@ -178,6 +190,7 @@ def validate_all(
     catalog_path: Path,
     snapshot_path: Path,
     qualification_path: Path,
+    void_receipt_path: Path = VOID_RECEIPT_PATH,
 ) -> None:
     catalog = load_catalog(catalog_path)
     validate_receipts(catalog_path, snapshot_path, qualification_path)
@@ -189,6 +202,7 @@ def validate_all(
             catalog_path,
             snapshot_path,
             qualification_path,
+            void_receipt_path,
         )
 
 
@@ -198,12 +212,14 @@ def main() -> int:
     parser.add_argument("--catalog", type=Path, default=CATALOG_PATH)
     parser.add_argument("--snapshot-receipt", type=Path, required=True)
     parser.add_argument("--qualification-receipt", type=Path, required=True)
+    parser.add_argument("--void-receipt", type=Path, default=VOID_RECEIPT_PATH)
     args = parser.parse_args()
     validate_all(
         args.root.resolve(),
         args.catalog.resolve(),
         args.snapshot_receipt.resolve(),
         args.qualification_receipt.resolve(),
+        args.void_receipt.resolve(),
     )
     print("LOCAL_MODEL_REPLICATION_FREEZE_VALID")
     return 0

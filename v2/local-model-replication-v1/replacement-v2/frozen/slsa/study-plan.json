@@ -1,0 +1,146 @@
+{
+  "dataset": {
+    "dataset_fingerprint": "sha256:25297fbfb7aa80c77022568c51d336b53e6c05e97f1e51c661b5f59f7d1fdce9",
+    "evaluation_action_support": {
+      "ALLOW": 60,
+      "DEMOTE": 20,
+      "ESCALATE": 20,
+      "HOLD": 20
+    },
+    "evaluation_factors": 12,
+    "evaluation_items": 120,
+    "evaluation_pairs": 60,
+    "manifest_sha256": "sha256:975083349726771cbb61484ce161c1ab0e670e1b1b1baea662b3e8664eaaec98",
+    "packet_sha256": "sha256:4d10c2f7040fb47ff5da818eef8e4e8a31c56b26070f3b3d26fecef82fffd269",
+    "root": "v2/slsa-portability-v1/replacement-v2/dataset",
+    "source_study_id": "claimpromotebench-slsa-policy-portability-2026-08-v2"
+  },
+  "design": "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY",
+  "execution": {
+    "application_posts_per_cell": 1,
+    "base_lane_order": [
+      "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "local-mlx-phi-4-slsa-v2"
+    ],
+    "client_retry_count": 0,
+    "interruption_rule": "INCOMPLETE_STUDY_INELIGIBLE_FOR_MANUSCRIPT_NO_RESUME",
+    "partial_resume": "FORBIDDEN",
+    "planned_application_posts": 240,
+    "schedule_path": "v2/local-model-replication-v1/replacement-v2/frozen/slsa/request-schedule.json",
+    "schedule_sha256": "sha256:510e783e4e440980f1bb49e28863e026c2abef5bf4813f356e35ab1157a9721c"
+  },
+  "formal_lanes": [
+    {
+      "api_kind": "local_mlx",
+      "client_retry_count": 0,
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "max_output_tokens": 1536,
+      "model": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
+      "model_family": "Mistral",
+      "model_revision": "2a1d5eabfc504747bdc24178394821a1efc0edde",
+      "provider": "Local MLX",
+      "repeated_configuration": "local-mlx-mistral-small-3.2-24b",
+      "response_format": "prompt_only_json",
+      "sampler": "GREEDY",
+      "temperature": 0.0,
+      "tokenizer_config": {
+        "fix_mistral_regex": true,
+        "trust_remote_code": false
+      },
+      "top_p": 0.0
+    },
+    {
+      "api_kind": "local_mlx",
+      "client_retry_count": 0,
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "max_output_tokens": 1536,
+      "model": "mlx-community/phi-4-4bit",
+      "model_family": "Phi",
+      "model_revision": "fc0f8f23d369dc29b55cad1d65cb5bf0dcbee910",
+      "provider": "Local MLX",
+      "repeated_configuration": "local-mlx-phi-4",
+      "response_format": "prompt_only_json",
+      "sampler": "GREEDY",
+      "temperature": 0.0,
+      "tokenizer_config": {
+        "trust_remote_code": true
+      },
+      "top_p": 0.0
+    }
+  ],
+  "freeze": {
+    "benchmark_inference_calls_before_initial_freeze": 0,
+    "catalog_sha256": "sha256:127f20cb3740176480ddba8debbcc722c319edc58b1f96840ba0e68244664586",
+    "eligible_replacement_inference_calls_before_freeze": 0,
+    "prior_durable_terminal_records": 0,
+    "prior_ineligible_application_invocations": 1,
+    "prior_retained_model_outputs": 0,
+    "qualification_receipt_self_digest": "sha256:27f36fb5d4ed3fc789e08208c0ccab590229ae00db1fd9260092a22a7b860d70",
+    "qualification_receipt_sha256": "sha256:fcfb02071def2cf24987252f48b3fbe02749e6be9b52b2bff75d2a5414ad13f5",
+    "requirements_sha256": "sha256:7df6de05713ae9d6f670c911cde3f5593a77f571ff9790dc12b1d05d4d79e6fd",
+    "runtime_source_sha256": {
+      "scripts/analyze_balanced_public_challenge.py": "sha256:db3a05911735675d9e8138c2bf6d4272c9b15e5ecba758787aec47b74526a42f",
+      "scripts/analyze_local_model_replication.py": "sha256:dfbdc19ac43f2bef60059e8e3db819449dd5a3e081ad471bb951bd0d3ccfded3",
+      "scripts/finalize_synthetic_policy_results.py": "sha256:9dad7b72c5091c4ac58a843044cfc19d4d285a8f494ac849094352b7f0e18e73",
+      "scripts/frozen_run_io.py": "sha256:3cf34c355ed31eafd8ad856e93970dbf56234c3621ff3d3bbd22aeaabd290ebb",
+      "scripts/local_model_replication.py": "sha256:cccec38799b6ce1a53383d5e3153bbcca8fe0f562d5c390a4a2b4efd1c938f63",
+      "scripts/run_local_model_replication.py": "sha256:094cb398ee31bae9bb962c79ce1fd5d4cdfa87d94a817e8a21ff53599e9ecde1",
+      "scripts/slsa_policy.py": "sha256:565d2d5653daf69b4e80c6624e2e1e930496f6cf4350de19419b11fcba6570c3",
+      "scripts/synthetic_policy_output.py": "sha256:5bde7245b1e28d48e98d91634483deb58b78958f405ae082f15fefee54a7c0dd",
+      "scripts/validate_local_model_replications.py": "sha256:390a218597017a0268e07322702e35f6d393011d0010ad61f8ddfb5a0286a36e",
+      "src/claimpromotebench/dataset.py": "sha256:8b91fc03431ae266f6d8bf52c431793ba2c5f6bec8596fd58ad0b4fa7cb0eb23",
+      "src/claimpromotebench/hashing.py": "sha256:190d1d8a67cb1ee6a9631f7661ff22429e1f80cec0bd010c944d596021c063fb",
+      "v2/schemas/local-model-run-record.schema.json": "sha256:ad4878733e40fbc001787fbc16e395b3719f986e5f774d829cd6d1232f7deda3",
+      "v2/schemas/slsa-agent-decision.schema.json": "sha256:654db2a57694a0754a248a506df29934da7282d01946044067233fee64e22dcc"
+    },
+    "snapshot_receipt_self_digest": "sha256:6c01c7d5c66fdd9fc5359528d33b2cf528435656c0d27f2f18c9ab0b5d91dfc8",
+    "snapshot_receipt_sha256": "sha256:d537415320e41ce7dcc5964153b495a41cca1c821d9728435e4c7e251865ed81",
+    "void_attempt_receipt_self_digest": "sha256:0de530c5cfe1c95ae61bddb25bfb3ad8665cf1636e325f271d4959c7b63b7f5e",
+    "void_attempt_receipt_sha256": "sha256:fd03cbe9d85fce23a5d9412f5d488fbb414ab0b2dd79d358851c0948f29706ae"
+  },
+  "generation": {
+    "client_retries": 0,
+    "max_output_tokens": 1536,
+    "prompt_mode": "USER_ONLY_CHAT_TEMPLATE",
+    "sampler": "GREEDY",
+    "temperature": 0.0,
+    "top_p": 0.0
+  },
+  "interpretation_boundary": "The study tests conformance to an author-defined artifact-admission policy on one fixed synthetic corpus. It is not a SLSA certification, a natural-distribution estimate, or a causal comparison with hosted routes.",
+  "promotion_rule": "Only all 240 replacement-v2 sealed terminal outcomes may enter the manuscript; the bound v1 attempt remains excluded in full.",
+  "purpose": "Replicate the fixed SLSA-grounded evidence-contrast evaluation on two pinned local open-weight model routes.",
+  "replacement_version": 2,
+  "schema_version": "1.0.0",
+  "selection_boundary": {
+    "benchmark_accuracy_or_labels_consulted": false,
+    "criteria": [
+      "distinct model families",
+      "text-generation chat templates supported by one pinned MLX-LM backend",
+      "four-bit snapshots sized for sequential execution on the authorized 24 GB Apple Silicon host",
+      "licenses permit artifact documentation and reproducible download instructions"
+    ],
+    "models_selected_before_any_benchmark_inference": true,
+    "purpose": "Add locally replayable route breadth; not estimate a model population or identify model-family effects."
+  },
+  "statistics": {
+    "comparison_boundary": "Model architecture, quantization, chat template, and hosted-versus-local stack differ; configuration differences are descriptive.",
+    "failure_rule": "Every local runtime, syntax, schema, and semantic failure remains incorrect in the scheduled end-to-end denominator.",
+    "pair_rule": "A pair is correct only when both members are valid and action-correct.",
+    "primary_endpoints": [
+      "end_to_end_item_accuracy",
+      "end_to_end_pair_accuracy"
+    ],
+    "secondary_endpoints": [
+      "decision_coverage",
+      "pair_coverage",
+      "conditional_item_accuracy",
+      "conditional_pair_accuracy",
+      "per_action_recall",
+      "balanced_action_recall",
+      "macro_f1"
+    ]
+  },
+  "status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION_REPLACEMENT_V2",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v2",
+  "truth_status": "COMPUTATIONAL"
+}

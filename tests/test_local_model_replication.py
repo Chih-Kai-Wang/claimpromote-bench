@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -72,6 +74,7 @@ def test_local_model_request_hash_binds_template_model_and_generation() -> None:
 def test_local_replication_source_datasets_are_fixed_and_disjoint_studies() -> None:
     assert set(DATASETS) == {"slsa", "policy-switch"}
     assert len({row["study_id"] for row in DATASETS.values()}) == 2
+    assert all(str(row["study_id"]).endswith("-v2") for row in DATASETS.values())
     assert len({row["expected_dataset_fingerprint"] for row in DATASETS.values()}) == 2
     catalog = load_catalog(CATALOG_PATH)
     lane_ids = {lane_id(lane, dataset_key) for lane in catalog["lanes"] for dataset_key in DATASETS}
@@ -88,6 +91,7 @@ def test_local_runner_forbids_resume_and_records_every_cell() -> None:
     assert '"application_posts_authorized_for_cell": 1' in source
     assert "if len(completed) != 240" in source
     assert "--resume" not in source
+    assert 'RUN_SCHEMA = ROOT / "v2" / "schemas" / "local-model-run-record.schema.json"' in source
 
 
 def test_environment_qualification_uses_the_scored_stream_api_without_benchmark_content() -> None:
@@ -121,3 +125,14 @@ def test_local_output_extraction_requires_exactly_one_balanced_object() -> None:
     assert extract_single_json_object('prefix {"value":"}"} suffix') == '{"value":"}"}'
     assert extract_single_json_object('{"a":1} {"b":2}') is None
     assert extract_single_json_object('prefix {"a":1') is None
+
+
+def test_replacement_v2_uses_a_local_only_run_record_schema() -> None:
+    path = ROOT / "v2" / "schemas" / "local-model-run-record.schema.json"
+    schema = json.loads(path.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    properties = schema["properties"]
+    assert properties["model_family"]["enum"] == ["Mistral", "Phi"]
+    assert properties["provider"] == {"const": "Local MLX"}
+    assert properties["routed_provider"] == {"const": "LOCAL_MLX"}
+    assert properties["phase"] == {"const": "full"}

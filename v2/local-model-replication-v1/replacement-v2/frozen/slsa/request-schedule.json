@@ -1,0 +1,2412 @@
+{
+  "application_posts_per_cell": 1,
+  "cells": [
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-001-a",
+      "formatted_prompt_sha256": "sha256:6a4376fe42678737b4e3e3d853c943ce9e4c63fd7c7bf3af6e39a0fe0e80cffa",
+      "item_id": "slsa2-eva-001-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-001",
+      "prompt_sha256": "sha256:87280b7bf1b60c12457836220a10c5a805d3b434ec5cd007f40151b8037d4406",
+      "request_body_sha256": "sha256:b6e39154e7289429366c7929d6f07811cf63ba6a1c2b8abb392fbae7da792d7e",
+      "sequence": 0
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-001-b",
+      "formatted_prompt_sha256": "sha256:e12e3d84a1fce22ad7efea1a73b0720c8841977388bb786b53e55cd68e86bc10",
+      "item_id": "slsa2-eva-001-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-001",
+      "prompt_sha256": "sha256:940d0631f0559bc64c9598fa4d4d818fa91dd625aa929968b3a50ed0ce618821",
+      "request_body_sha256": "sha256:8af816ca76cfa789e4cc2ee20dfcc5da17a3b619e49df1551732c240f89fb5bb",
+      "sequence": 1
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-002-a",
+      "formatted_prompt_sha256": "sha256:9f26ca5f220c4202f2c5bd06af1ec2b08b706651b875f3aeb3d2c530a6f99baf",
+      "item_id": "slsa2-eva-002-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-002",
+      "prompt_sha256": "sha256:c8c78c2f62da6de446940c054a3a4b40efab1f2e7032ca2055e22c524f731c19",
+      "request_body_sha256": "sha256:6094fecd1fb6b5acefaf8333d66070341352fb1c0d08d3648ec373c51b67423e",
+      "sequence": 2
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-002-b",
+      "formatted_prompt_sha256": "sha256:408e5997ee714655fd1cd4f597cdd592adfb44b1a5131da7fbe867e354e7dcdb",
+      "item_id": "slsa2-eva-002-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-002",
+      "prompt_sha256": "sha256:3fe7dd999148986101eb8a6770869b945cda6759e30fcb3454422f0a056a246b",
+      "request_body_sha256": "sha256:0af0cb211de87b3b932fb77be0686cfbacaa963656726f65461f60c87395aa10",
+      "sequence": 3
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-003-a",
+      "formatted_prompt_sha256": "sha256:cc056ba8fd304a70b08c3408516ff1361ad5c6e0e6e85afe164730b29451bd17",
+      "item_id": "slsa2-eva-003-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-003",
+      "prompt_sha256": "sha256:d4435467df2cd2fc43bc7559485e3f09cf5c77973ff2b27f86807b0a23dc5f37",
+      "request_body_sha256": "sha256:221dcb277770727057505e5297b7619392bb22736d10109bd4ce2a8762aada0c",
+      "sequence": 4
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-003-b",
+      "formatted_prompt_sha256": "sha256:e8bdc26069080fd26bdf4595dfd63fbb3819b50e99a821bd6616bd606f80968b",
+      "item_id": "slsa2-eva-003-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-003",
+      "prompt_sha256": "sha256:2a566f840c60454ad4b5f19b33f7355e5d9eb7320c66795e7ee0f706f99f2555",
+      "request_body_sha256": "sha256:d3481c5526504c4f8b7d08ca03c355d8e4bcfe1872dce094ee67b009a38e3a96",
+      "sequence": 5
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-004-a",
+      "formatted_prompt_sha256": "sha256:59e384aacf7fd4e11c44362173e4c6b2e8a7df6da1275f597063a8d8db32e811",
+      "item_id": "slsa2-eva-004-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-004",
+      "prompt_sha256": "sha256:c52a7b47c242af9dbbe7e20bddb91e6dcd45e91f7f63e25c587ce292c7223d18",
+      "request_body_sha256": "sha256:063ce87deaa5d94245415c38fe7548e195113af57584ddc1fca24159920542bd",
+      "sequence": 6
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-004-b",
+      "formatted_prompt_sha256": "sha256:bd83c1bf40f231d72150aca9d74d94ea39906d753b31ab97de25081a72bd9277",
+      "item_id": "slsa2-eva-004-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-004",
+      "prompt_sha256": "sha256:ae66941ef1735b7f5f9f311f4037f2e7751bad6171f0230ae1dc224ddefb5f97",
+      "request_body_sha256": "sha256:151704ba5f0e7e4c34bb632ade249cfaf67a3b291318fc207b6a61084bf7dbe2",
+      "sequence": 7
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-005-a",
+      "formatted_prompt_sha256": "sha256:f6f475065db3452717036b9bd5bbb0037ff08e145a279e2cb8c7eaae069dc78d",
+      "item_id": "slsa2-eva-005-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-005",
+      "prompt_sha256": "sha256:656c8ab8862b89906a638ac8c45eb0c4d4d51fe1e3559718483c1c1c6f28c06a",
+      "request_body_sha256": "sha256:6ef5ae3ea6b017d766387cbc5d7e2259383883522738c815bd86c313c7eec8f4",
+      "sequence": 8
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-005-b",
+      "formatted_prompt_sha256": "sha256:56c8640d863c87e6d26fb70387377da3330c76f8e834a797d38ee108effd9d1c",
+      "item_id": "slsa2-eva-005-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-005",
+      "prompt_sha256": "sha256:60fc36c65df0740c2d9d5574e626c600febadc07b76f0d86d32b91a24bb92307",
+      "request_body_sha256": "sha256:b1090879a871e0ced5d9dbcaef09c5a1cc6b4e05422e6609f92f1eec8aad8caf",
+      "sequence": 9
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-006-a",
+      "formatted_prompt_sha256": "sha256:e7d4f051f76d0ba1e8d5db68d838003fbfec4feaf2ffd017f7e469b8ca74afa6",
+      "item_id": "slsa2-eva-006-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-006",
+      "prompt_sha256": "sha256:e3940ab568669aa478cda356cd27bee10404b850c4d70b5d79014b338154c8f7",
+      "request_body_sha256": "sha256:085817d09f5654f47e4659bdddd2f5258617fd3f6d4f67238cea793cdedd76ce",
+      "sequence": 10
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-006-b",
+      "formatted_prompt_sha256": "sha256:85f95a68f12c8a06da38f2135bf11416991bd032a9fb2893f863d38c765b44b1",
+      "item_id": "slsa2-eva-006-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-006",
+      "prompt_sha256": "sha256:2bf6bc2648f0cf09620aa762278477048854e4998ca2a9230f5feb33c62908d0",
+      "request_body_sha256": "sha256:0bd386acb200375e46bc862b96dc1eac69566a5e83abb2c24544b66ccdd1e1b7",
+      "sequence": 11
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-007-a",
+      "formatted_prompt_sha256": "sha256:0bfdaff8b7d319cfd778036efb871f5512de26a2a834461291d886d2e0bda960",
+      "item_id": "slsa2-eva-007-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-007",
+      "prompt_sha256": "sha256:9ec29718652fb521630404970e5b42267c1e7d8212298886974534203f038614",
+      "request_body_sha256": "sha256:538f6cec4a37304628e60ddd56b7164f7f907fc82221fdbf3bf1e13638c29786",
+      "sequence": 12
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-007-b",
+      "formatted_prompt_sha256": "sha256:d55308395c6a4daaadd509669ce168a9c8b668b863f8d725e5d97effefabd7c7",
+      "item_id": "slsa2-eva-007-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-007",
+      "prompt_sha256": "sha256:f223773201fd0bfefd9cf166375d4ecec1ba8b4be2d09f19214c8fa7104268c5",
+      "request_body_sha256": "sha256:ac1b34f491cf0a329f4cd2455b6da5db9225ec55d165c40c03be273bfc263294",
+      "sequence": 13
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-008-a",
+      "formatted_prompt_sha256": "sha256:4808732edf0617f2f79d3612156f8bb45bd4617027700ae191b6b63d972969c5",
+      "item_id": "slsa2-eva-008-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-008",
+      "prompt_sha256": "sha256:b4109e6fd25bb61390932d722af149ab0c65e188cc51e747bbf5e0e3703cc286",
+      "request_body_sha256": "sha256:67c15dd87070dfc3eb04678eaf276ced8eb5668e13760309986149bad7425d03",
+      "sequence": 14
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-008-b",
+      "formatted_prompt_sha256": "sha256:441ef321963ce2cd22fa354206c85c4738b12fbde7c148131be80728fe348b5a",
+      "item_id": "slsa2-eva-008-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-008",
+      "prompt_sha256": "sha256:d2d151857632c5f3d9b175f36467db58d4866b8021ec091a3fbad867b36e876c",
+      "request_body_sha256": "sha256:d89902d4709601b901f9b54a9f536fb5cbfaeee3da5ee6930c1de4a9bb079705",
+      "sequence": 15
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-009-a",
+      "formatted_prompt_sha256": "sha256:83ed42bb8d378cbde6e152fd6999df8add7874713bc6918b130f9546143d8153",
+      "item_id": "slsa2-eva-009-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-009",
+      "prompt_sha256": "sha256:3cd1c24f92bca7d688dddb1df17b63e545339a26692620a005d22156863a5449",
+      "request_body_sha256": "sha256:d00c471c05a7c5fd72c85fc8e26eb1b0b76375d12a05cde719bb593c7160ddc0",
+      "sequence": 16
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-009-b",
+      "formatted_prompt_sha256": "sha256:03b1e7dc27974d5dfb5d9f65222e8ed4904157391fd59b09a7fefbe065695ab0",
+      "item_id": "slsa2-eva-009-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-009",
+      "prompt_sha256": "sha256:cc2f8897ac59b842597a40b317b17c0ea7c9d20bfbf335bdf43e145ca627a530",
+      "request_body_sha256": "sha256:a72d6571e38f822f3a3006ae2a371d17131ab1d23d9adf6971de008a609afbe9",
+      "sequence": 17
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-010-a",
+      "formatted_prompt_sha256": "sha256:07b612954feafc32365371f669828def7c8b13a6fb704e9c3eb2081e98d8e1f0",
+      "item_id": "slsa2-eva-010-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-010",
+      "prompt_sha256": "sha256:496958fc689c7f8fbff218ace96c02847b2904832a31e08dbd7a16acee838b64",
+      "request_body_sha256": "sha256:081927031965546159c9ff94f3425fcb53d45ebcc135a8eb39f4fea965d08205",
+      "sequence": 18
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-010-b",
+      "formatted_prompt_sha256": "sha256:eed1eddfc0aafbf424a853b6ffa3961c2efa552e668907fa37b1e7cd58414593",
+      "item_id": "slsa2-eva-010-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-010",
+      "prompt_sha256": "sha256:8fad41000d7201eb171fc8c4bd4e108c38b1ee92176942a7c8a0c3b43928cab4",
+      "request_body_sha256": "sha256:43d0b04af615f45ec37277f40d59da2405d93815e787f8630f8764c9c39fa4d2",
+      "sequence": 19
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-011-a",
+      "formatted_prompt_sha256": "sha256:e7fcc13839caf524286ffe221fac1b04d1039839c1a3d549443808a8e502b6c5",
+      "item_id": "slsa2-eva-011-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-011",
+      "prompt_sha256": "sha256:e3ea6f16a5d9ab5107d44c105892afd744234b3fffe9015073b9c664a2ca5677",
+      "request_body_sha256": "sha256:9408f4297305a633789c2ca4fdba452a06c0baed9a3c2b72d7f12f19b03f4992",
+      "sequence": 20
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-011-b",
+      "formatted_prompt_sha256": "sha256:bc82d5cdae9223164fe9996b10f451b1995632e1ede5b135fa7aebcd525c28c1",
+      "item_id": "slsa2-eva-011-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-011",
+      "prompt_sha256": "sha256:e4bcbf1f2ad49b86769eb44ae447bca4bf22144d8d5eedc38f02a8bce742b23d",
+      "request_body_sha256": "sha256:303f1402f8f43ea7e826177b0d08d3e0c153a0c427dd14c6e417347e8e2de437",
+      "sequence": 21
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-012-a",
+      "formatted_prompt_sha256": "sha256:479b754be51b0e3c5afb5949d17e2dcf43c382340bd4f3d3cc4dda26fe23f270",
+      "item_id": "slsa2-eva-012-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-012",
+      "prompt_sha256": "sha256:5e3891507623e97dd43d8b8b41e3ee22546703fabecf60d4b8e1fb91245c6183",
+      "request_body_sha256": "sha256:33de62fcf7113ec7c9ed9a5281e455664905ee06007950e54bf70ffeb4ebb75e",
+      "sequence": 22
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-012-b",
+      "formatted_prompt_sha256": "sha256:96b5fd4002e70aaa527085692e5b989cf19d3ba15c65705f0894ca1c122149f2",
+      "item_id": "slsa2-eva-012-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-012",
+      "prompt_sha256": "sha256:b6c9ed04d294597056d8ced6ad7fa0f3fd96a71408d977a5877ba3743b04ea99",
+      "request_body_sha256": "sha256:324300b090226f9e3fabffa6231445e63429df1b491860ce3ef66f41ad606686",
+      "sequence": 23
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-013-a",
+      "formatted_prompt_sha256": "sha256:f5eacfc66a048029575f4e8a2888c4bef5249994616a935a57f4f93b33087816",
+      "item_id": "slsa2-eva-013-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-013",
+      "prompt_sha256": "sha256:aeb237638adb320b1ae60c42687998279de06ce1855e0e8dd83cd675e5dfad14",
+      "request_body_sha256": "sha256:5567db019eeb88f8709e767b0f0665b7b449bac6ff2261930ea994519c5826f0",
+      "sequence": 24
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-013-b",
+      "formatted_prompt_sha256": "sha256:1fe7d12d42c568cdddc4a87fb5552f481f3a26492b66a1363bd9c98d591683ef",
+      "item_id": "slsa2-eva-013-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-013",
+      "prompt_sha256": "sha256:80b4ab0af88809da04b62a440498be08fefdb5778cad7ae8aa08deaa0d7dc1f3",
+      "request_body_sha256": "sha256:29daa99db9630e2b5b1bfda49568ec57805d2ec1fc535822fc700c209aa4b017",
+      "sequence": 25
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-014-a",
+      "formatted_prompt_sha256": "sha256:ed8bbb1f3de8921e1a5ce9638e7f0107689b397f885ef6e3929cddfb788ab7f9",
+      "item_id": "slsa2-eva-014-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-014",
+      "prompt_sha256": "sha256:81f9c9cd9476fe77d2c96f6b31a5c5f0877c1b51f34cdaa4c75d6a7490c4cce3",
+      "request_body_sha256": "sha256:7d3b2c58277f9b66c5c6dd673d04f5dd383f9f5615c42300e962d8d3fad67765",
+      "sequence": 26
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-014-b",
+      "formatted_prompt_sha256": "sha256:eb7c3b69fad3ef8fd63a7f61d206aa237be3ae04c0c6fce962e910d02208e4dc",
+      "item_id": "slsa2-eva-014-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-014",
+      "prompt_sha256": "sha256:aeb048166cf4d36fbbe32b6eee91374638e38211e6f59e3f21de3bf0038a26eb",
+      "request_body_sha256": "sha256:8976beb592eda0c8f290035dab3af36ea9022ca4978d624f297ac0f0b296e786",
+      "sequence": 27
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-015-a",
+      "formatted_prompt_sha256": "sha256:9ea137cc751bc0dfe1a734b23b42c77d77d7eafb6d01fedf31955cbea9909043",
+      "item_id": "slsa2-eva-015-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-015",
+      "prompt_sha256": "sha256:9a648688dca94e13bbb3d7acdb7c2d4d23055a3d743cee5bcf56b51563cdd871",
+      "request_body_sha256": "sha256:4f506b04a664b7b28e7e4f9024d842fa07f6a7c339b80afdf6f2a35ef3187cd3",
+      "sequence": 28
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-015-b",
+      "formatted_prompt_sha256": "sha256:2cfebee60ade615045bd3b1ed1b34b66e34d2eb91cc233070416d8cd04464947",
+      "item_id": "slsa2-eva-015-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-015",
+      "prompt_sha256": "sha256:81a91db347c89a9a15462ff3f311df45094aefdc120c5a52952f63b398af8c59",
+      "request_body_sha256": "sha256:0dd9c9e4e47940efaef07d3d623cb1c2134960dadca67e243674243786e73f8b",
+      "sequence": 29
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-016-a",
+      "formatted_prompt_sha256": "sha256:aa0f9013fdb4ebe6b3af718836c0c8ba3d703408111ce3ca8326b29e8c418e7a",
+      "item_id": "slsa2-eva-016-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-016",
+      "prompt_sha256": "sha256:936b11b637534266a324b1dd46c7b97d37e73689c2bcae62a78869a0f4975534",
+      "request_body_sha256": "sha256:d92bcc73189fcb6163ab4ad16c45c65580a5b6760dda1c5e3ac50f540e4886d2",
+      "sequence": 30
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-016-b",
+      "formatted_prompt_sha256": "sha256:ebe294fc03d6b690bf325c76a7c82ae15b11b917dafaedabf82d608a62c7875d",
+      "item_id": "slsa2-eva-016-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-016",
+      "prompt_sha256": "sha256:3f6a2e9c96c0dc3562d4472402b8f06d2483a5f9a6c3c1fabcf5b5bf11420387",
+      "request_body_sha256": "sha256:8a531b2f6bd2295e79513e8958f8a722ed93d7cab1d3ea1053fda0e8118c2bb4",
+      "sequence": 31
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-017-a",
+      "formatted_prompt_sha256": "sha256:18e07854774c163b545fd703257c962326aa1255059ae5b23cf5a9b82988936d",
+      "item_id": "slsa2-eva-017-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-017",
+      "prompt_sha256": "sha256:3ec5c3dae8687ca7369f8f228af96ff9c14e84a05d83bc937bdc9c600c397d01",
+      "request_body_sha256": "sha256:ce4f27f8237043babfc2c88c52d11f14d3466784b15d6e2f85a1fa43fa008668",
+      "sequence": 32
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-017-b",
+      "formatted_prompt_sha256": "sha256:8a5d455816c8253d76a320cbaaa41c82f22ef89108907e54323a75ef4cb60277",
+      "item_id": "slsa2-eva-017-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-017",
+      "prompt_sha256": "sha256:396eb5d77e1adbc32394e3c4c18fe007a6e864be53cf006d4f2fe821c0c3cec3",
+      "request_body_sha256": "sha256:f0abe6b949dfbbabb4c8c8c75cb71f3bf887f4f29bdd4b67c2a42c10cda46147",
+      "sequence": 33
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-018-a",
+      "formatted_prompt_sha256": "sha256:dec1c8dc43e4a0e575a3e9f0151621fbd04122e729cd924890156422016acdd1",
+      "item_id": "slsa2-eva-018-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-018",
+      "prompt_sha256": "sha256:b5747e8affa32ac0048a794f7dcaa8d23e04b0924a518defbe02bd851a12dcde",
+      "request_body_sha256": "sha256:ce182ba2939650852676fb28eb958262bcf9dc16f88e67e2d5bd9a365923b538",
+      "sequence": 34
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-018-b",
+      "formatted_prompt_sha256": "sha256:5427b753517ec47013a1dc3a82ed6f061301ec171acc61efa4c0041d53f54220",
+      "item_id": "slsa2-eva-018-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-018",
+      "prompt_sha256": "sha256:c91c539cbf2667774c653f9d5202ff1cf585babe45b7474aa2047e9bfc497421",
+      "request_body_sha256": "sha256:9f90e18a147f16ac8f75a276ec7e76859f81172f79f9437cfea7d291af269480",
+      "sequence": 35
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-019-a",
+      "formatted_prompt_sha256": "sha256:db4c981855475bdd83a8ced0cd6229560dd3c4096540a1ed389c1309dcc4faf1",
+      "item_id": "slsa2-eva-019-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-019",
+      "prompt_sha256": "sha256:6ced7a960221c85260c238206ac835de808652f46c2fc2f1ceb625c5b28f3180",
+      "request_body_sha256": "sha256:8637cbcb4010fe7021e313214366de3beb7a89d50f668cd74fb4f8e0d074ea7f",
+      "sequence": 36
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-019-b",
+      "formatted_prompt_sha256": "sha256:472496591e642c76ab19512d016c8b8479687afeeaee2eba9ea0161b51924c6b",
+      "item_id": "slsa2-eva-019-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-019",
+      "prompt_sha256": "sha256:fb238b9711f4db61d7d70607b7f2486d9377de03b8cb70432e575405de097746",
+      "request_body_sha256": "sha256:f6911d5f43da2775d90cd3cae92b4148766266c5c60226456f8d640bdfba3083",
+      "sequence": 37
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-020-a",
+      "formatted_prompt_sha256": "sha256:4fc0f06099ff2bd360455bb0c564650c2189316710e28bec81da4ad699fea4b6",
+      "item_id": "slsa2-eva-020-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-020",
+      "prompt_sha256": "sha256:66b95ea91dedc79c3e8b727fac2c60c48047ce40eb85d3a0ef9ffbc93f245c6b",
+      "request_body_sha256": "sha256:121d0d66c9565a2525b3470f81d9de988799acb329934b5d074c04e6c63addcb",
+      "sequence": 38
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-020-b",
+      "formatted_prompt_sha256": "sha256:7c1004ca3ef9d345254bf8dc1ae6be8399a029daca66801e45ff1097104b5511",
+      "item_id": "slsa2-eva-020-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-020",
+      "prompt_sha256": "sha256:50afec68cd51afa9bb05b082fea8cba584f3c76592ad62f92f86eb898fce26ae",
+      "request_body_sha256": "sha256:bc92294409d6f31df4f75a4417693a877f0c040428ecbcf41cad758856869446",
+      "sequence": 39
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-021-a",
+      "formatted_prompt_sha256": "sha256:b31ff592ad271b87d2c0576a4e13d0fffb3dd491a07fa6a743dcf6c965bb8d52",
+      "item_id": "slsa2-eva-021-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-021",
+      "prompt_sha256": "sha256:7a61cb30c95b7452b21f4210872d9cc0d645b75069f70d75d8768c10c8f5feea",
+      "request_body_sha256": "sha256:9c29bec2e94a2e6fac35df296afc46709bb584443121850f080ab459b1f4483f",
+      "sequence": 40
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-021-b",
+      "formatted_prompt_sha256": "sha256:221324e0d2b73a392839c817c2d5327dc981e076e3ceca57d9c2728d317a2e50",
+      "item_id": "slsa2-eva-021-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-021",
+      "prompt_sha256": "sha256:5e0b0c2f4ef7b4f800a1d7664078988dc425b6857f8c416e333763c0b68dc784",
+      "request_body_sha256": "sha256:cee88b85a4fe6a2982b7bdb627af294e1bad2a2815703e047ee44792756ce8be",
+      "sequence": 41
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-022-a",
+      "formatted_prompt_sha256": "sha256:61e3496fe3b6af201f9892d9ec5a28c5abaa8871b2eaab6e09527eccc123d041",
+      "item_id": "slsa2-eva-022-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-022",
+      "prompt_sha256": "sha256:f81ce6274438a8e9a30ceddf9b12672857e8515f564423e5166b30eee4f7809c",
+      "request_body_sha256": "sha256:45245faabb325e42a43cdd9b7699e25bd0ae735e4082f151b0fd185672aca1aa",
+      "sequence": 42
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-022-b",
+      "formatted_prompt_sha256": "sha256:f5825cb07cccf6eec754e85ebc9d568d6a6d0546b66b3da029eb9723f8bb908a",
+      "item_id": "slsa2-eva-022-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-022",
+      "prompt_sha256": "sha256:5c3c9ba538d5081c3a1a33f3c56385b39e339a7dd1b13c6a4bc87f41bbf2c6ce",
+      "request_body_sha256": "sha256:f252124e7c253d481413a72550045399767f4e75ce30014adae6e9017aecdbc0",
+      "sequence": 43
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-023-a",
+      "formatted_prompt_sha256": "sha256:3cb1c59016e5addb14647df62c86268fcf4bb6097fb30fc949613391fe0dc14a",
+      "item_id": "slsa2-eva-023-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-023",
+      "prompt_sha256": "sha256:2ac982b486238c3003128786695b97b5c21185d800042c8170281fb70051b6a0",
+      "request_body_sha256": "sha256:d3bc8cb0c3df5b34d6d42210288d9146ff4a7bd9389fb7ba237a79a8c79d86b9",
+      "sequence": 44
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-023-b",
+      "formatted_prompt_sha256": "sha256:4aab10d64fdb185d43daa6c717a936ae25c8569c875116976f71a449abe7f34f",
+      "item_id": "slsa2-eva-023-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-023",
+      "prompt_sha256": "sha256:a265262172989d99e6f19b6d164f61ee595f973ef94e196322ec4de159a75d01",
+      "request_body_sha256": "sha256:46756d3201242a86d1205dc4cbcc8c6e7af8773233187f3d983821de60f335c2",
+      "sequence": 45
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-024-a",
+      "formatted_prompt_sha256": "sha256:40be276bb22e5c4e0dd3209d7e571c3080f57a29f0b59b03378751f300c55881",
+      "item_id": "slsa2-eva-024-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-024",
+      "prompt_sha256": "sha256:284a6886cc62aee7a6715c4ee1fd3080098cf58006609cbc2cddbe4b6fdc4ba5",
+      "request_body_sha256": "sha256:9b9418076f1160344b11f5c2fe71dc84374cad0a728e80d2c79266599e7651a2",
+      "sequence": 46
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-024-b",
+      "formatted_prompt_sha256": "sha256:b8186029419bc67e061fb89858356badf77e36032acb493d47618059afe543ea",
+      "item_id": "slsa2-eva-024-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-024",
+      "prompt_sha256": "sha256:f7702d374376e7d3a92580ce48c82748a2e9084f8ad8278aae9dea38f65ad701",
+      "request_body_sha256": "sha256:252cbda10f2f726728f4e9f5fe484c7eac39f68e2dedc3c731a71fd060f4bbc0",
+      "sequence": 47
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-025-a",
+      "formatted_prompt_sha256": "sha256:5439bf73769a1e9ef6115d80bd47e5b464cd0c967fb980cd5bc05429a4616408",
+      "item_id": "slsa2-eva-025-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-025",
+      "prompt_sha256": "sha256:a309055a346220c3844658590dd44a80280f8f213c198ee925bb6df57e4a9434",
+      "request_body_sha256": "sha256:d4af3593b73b759ebc76ad09205b283be8a3f6a72ad23a624d9d9821d9ffebc7",
+      "sequence": 48
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-025-b",
+      "formatted_prompt_sha256": "sha256:26cf66d048ac73ee409dc2378947099d7cbee6327e7e054ba7895e1303ae3373",
+      "item_id": "slsa2-eva-025-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-025",
+      "prompt_sha256": "sha256:12cb6c1dcd2ace3d65ecfe8417c9a9d1c3c5e10354632f25934b9ce26084b80f",
+      "request_body_sha256": "sha256:9d4b0d84a4cfe897e89219db2faf9026ad48a8d1b07bed95a9e3151797b0b8c8",
+      "sequence": 49
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-026-a",
+      "formatted_prompt_sha256": "sha256:36812aeeac680c560b7c607efcef7b8260f91ce1aa9cf436ccc8624df8140000",
+      "item_id": "slsa2-eva-026-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-026",
+      "prompt_sha256": "sha256:d1b3992fb3aef7fee9a24013cf18625098302f8bb39ed6257c08b5198e2cbeff",
+      "request_body_sha256": "sha256:4b0d9dfb6e4af9f5474523db9cb783a9e37191319ad622bc0331346735a280da",
+      "sequence": 50
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-026-b",
+      "formatted_prompt_sha256": "sha256:54870f3c469c6c0a7bff046cc4f11aece8ad7c2d1ac39d0b95b3babeeac75697",
+      "item_id": "slsa2-eva-026-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-026",
+      "prompt_sha256": "sha256:03134a2e0450b465c091255b97cb69d1aa7f1a7ae4b1a5e9d1bb0c3e72399a6c",
+      "request_body_sha256": "sha256:d143f0bbad5752d2675b2f33131d50b374925b8ca40bcc4fc7be521ac49e6b80",
+      "sequence": 51
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-027-a",
+      "formatted_prompt_sha256": "sha256:73cae9014289d812898a5385d24dcb967396f9ae8369d83dd6d4e87330db99e4",
+      "item_id": "slsa2-eva-027-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-027",
+      "prompt_sha256": "sha256:2479333ae484e238eac6a327bc72a24a887a97b49b0cfe4d0c49893054d92b85",
+      "request_body_sha256": "sha256:664ea981e7c04cf86c9f48eea0c4fbebc571d82bd6a465ef4b9bafecdcefc10f",
+      "sequence": 52
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-027-b",
+      "formatted_prompt_sha256": "sha256:3f33bd133730a1c203c51b71d3745604b516e9cb65c3459812f809ed1d0f9368",
+      "item_id": "slsa2-eva-027-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-027",
+      "prompt_sha256": "sha256:0b4d0b69dfb0869d0f0df075add4c5d0f555f42de498dcc25190a8d82d07328d",
+      "request_body_sha256": "sha256:98225ac18be2787c932f338060e6eb64af19a692da09431ad49e122ba7f9f397",
+      "sequence": 53
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-028-a",
+      "formatted_prompt_sha256": "sha256:b6a90a916cde7acb372190f72fda73a94b2ed5ed1a331c2db87f604af5d04523",
+      "item_id": "slsa2-eva-028-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-028",
+      "prompt_sha256": "sha256:4aed2f874bf19ab27757cbf95ded2fc9a0d4655b676b36df72936cf343bc5860",
+      "request_body_sha256": "sha256:acf3992ee972ea2aa6260325d5dd8bfcb63231a04acb4c6e22761d46bd816c8e",
+      "sequence": 54
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-028-b",
+      "formatted_prompt_sha256": "sha256:100b0c91e96c2f5e872e9ad8a079ec2e92fcea5294801d37723159773ff6e738",
+      "item_id": "slsa2-eva-028-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-028",
+      "prompt_sha256": "sha256:bd1252b871210c407a34999acc07b9adb7d80a76b42a2076a6b0e38e1490489b",
+      "request_body_sha256": "sha256:df95252b50c068dbf391fb94bddf0bd871b128d4b2a80958c61184473ca445cb",
+      "sequence": 55
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-029-a",
+      "formatted_prompt_sha256": "sha256:fa9ecc9c66d2d9e92fde27604d5d573fad51c228e88e078b29188efaa77d2599",
+      "item_id": "slsa2-eva-029-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-029",
+      "prompt_sha256": "sha256:eec7fbe3feb1d3a7db05c6059ab6315c29bc8c46954271f88051745efb4a9ea4",
+      "request_body_sha256": "sha256:f304fa3b986974988ee1059b36b63c6cddc7f444b780bcea0a6f085913df94ca",
+      "sequence": 56
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-029-b",
+      "formatted_prompt_sha256": "sha256:af577bbd9f4957503f71a0776f7a9a82435d94a34d5423e11daec5a285d02249",
+      "item_id": "slsa2-eva-029-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-029",
+      "prompt_sha256": "sha256:51b153eb2943b2e0af533659311dc160b06d6c4798c4a12412ce922b6077101d",
+      "request_body_sha256": "sha256:0c3e8c02e23f4eb1c5909b4e624502d3bdb5c938c710c49f9fdd123aa327d0f6",
+      "sequence": 57
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-030-a",
+      "formatted_prompt_sha256": "sha256:9d4f70b423c47df77566ad8ddc3c6d9ab4d311406d8eadb969346e359149778c",
+      "item_id": "slsa2-eva-030-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-030",
+      "prompt_sha256": "sha256:5f8af9b381d8d3dda1167b4aa3a9ee14dbe2b0b982768d29259d9f114e9cc575",
+      "request_body_sha256": "sha256:1e26d2ab3a1c085b84b9e5a02a221a69ae472bf476ffb14ec836f825a72b96c9",
+      "sequence": 58
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-030-b",
+      "formatted_prompt_sha256": "sha256:8de027fd71b2c7e0997a5cc57e4fbd983778e82feafaa85aef82285d28622e2a",
+      "item_id": "slsa2-eva-030-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-030",
+      "prompt_sha256": "sha256:b57dfe533fcb7c4a825d844fc0fc1650a6f65403a3e45e867b5d4e030d3e73cf",
+      "request_body_sha256": "sha256:d5f01aec2984840656c12e6a56c8596c03f0947142760b2f6e150577f1504712",
+      "sequence": 59
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-031-a",
+      "formatted_prompt_sha256": "sha256:23863a2f3426b2caa7f83178e92763e0d71670fedeca0fd9e4e1054e9c76d364",
+      "item_id": "slsa2-eva-031-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-031",
+      "prompt_sha256": "sha256:2b552975219aec4d5324126c44d4263379ce060e4b8ae2c60df14c5a94ffde09",
+      "request_body_sha256": "sha256:ac2375ba6d2eb3e31929ed280d59de28bb3af51c54a6d2a9e66cc952d2a96e23",
+      "sequence": 60
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-031-b",
+      "formatted_prompt_sha256": "sha256:fd90dfedc292df21be6dce8eaa0776095a4149651b623eac33b16c2f44b86057",
+      "item_id": "slsa2-eva-031-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-031",
+      "prompt_sha256": "sha256:38d2de6a81b708c8cfec9b15b9eade84b00eca26255c905e1c4cb605ae5d6ea7",
+      "request_body_sha256": "sha256:70eb751ba1bfae99b0b0ee1bc956d024b73287b948747185a030b4f796fa1823",
+      "sequence": 61
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-032-a",
+      "formatted_prompt_sha256": "sha256:885879ebf2d6b0bbea77418fbace723f5f433862e1bcb69d9fc11c95bfdbfecf",
+      "item_id": "slsa2-eva-032-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-032",
+      "prompt_sha256": "sha256:dd8f1e1b8aa5a8fa7179eaad601a366ce5d349e2711b50f90b3c32118b0435d6",
+      "request_body_sha256": "sha256:c7d8130dbf6961158132cab4c90d284b9452c44f2200b2538145ca44140f122d",
+      "sequence": 62
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-032-b",
+      "formatted_prompt_sha256": "sha256:87b1b3d3565120b43dfb4867e03ef67e5637dbb5b028bd8f31fd7dd575ff4688",
+      "item_id": "slsa2-eva-032-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-032",
+      "prompt_sha256": "sha256:2889461015815ca4e8dd9cb3b7ca254cde8e9aeea31e826a9502d2e3f94a453b",
+      "request_body_sha256": "sha256:e389a16ee31fc01f4d2f88d74f7a411ed3a5a4d066504196aac2abe610c6f44b",
+      "sequence": 63
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-033-a",
+      "formatted_prompt_sha256": "sha256:f03b4b0f8c03a2deb4deced097c316db795e9b06a0b8853fedc81f305bcd1050",
+      "item_id": "slsa2-eva-033-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-033",
+      "prompt_sha256": "sha256:98203349f4a4f1394af2d67c4053760904369bb10784f490995d62b6e0a9386a",
+      "request_body_sha256": "sha256:e9f35ff2832ea2342d376c484a2e69fa5211865fd72b69196ac28f0fa4f0bb21",
+      "sequence": 64
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-033-b",
+      "formatted_prompt_sha256": "sha256:b3e8389254b40cd33edac6696c3fae33b6eaaebe1af0a5add6f79372ce848b82",
+      "item_id": "slsa2-eva-033-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-033",
+      "prompt_sha256": "sha256:a13e85172b7891cf19f36e7b61345d26e43f5af24efada2fbe2791f5667c955d",
+      "request_body_sha256": "sha256:325216d6bf7211105eecce2c20859cec3f117e00cd9846818a4cc0d46be932e9",
+      "sequence": 65
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-034-a",
+      "formatted_prompt_sha256": "sha256:d51bea0bc775b77e77e948645d1a7d3a464ac2081f67129e219c381b7c51312b",
+      "item_id": "slsa2-eva-034-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-034",
+      "prompt_sha256": "sha256:f3c63a227b9d4419269cc09da8a3c0c8aa49d0520a58de8154653ad260d507ab",
+      "request_body_sha256": "sha256:73479d483059ddb982e31121026fc197e181a9978411f347109d123c789f47ba",
+      "sequence": 66
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-034-b",
+      "formatted_prompt_sha256": "sha256:64466bc0377ed219f330586a03338985dc1035d593fa5d2419b9deae94244854",
+      "item_id": "slsa2-eva-034-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-034",
+      "prompt_sha256": "sha256:8739057ecefaed304a1a40aadbc46ad7bbb8c95da7b710ba80e2abc28cd79ea7",
+      "request_body_sha256": "sha256:6fce487504ff9370d17c6718f3170bd5dda92533117ad5226bc9f6a443b9a537",
+      "sequence": 67
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-035-a",
+      "formatted_prompt_sha256": "sha256:9b7a754b7336fd1b4e1a0109c59334e0ff524db2346ff3b103356152fc381c63",
+      "item_id": "slsa2-eva-035-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-035",
+      "prompt_sha256": "sha256:8a7f621f9507f14c7045fde185c0073a84755c29d3aa44868631808b87443633",
+      "request_body_sha256": "sha256:cdf0ff534d381971104ee11db1f312c0dd9d9eeef51080d5d8774bc9e4a59ba2",
+      "sequence": 68
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-035-b",
+      "formatted_prompt_sha256": "sha256:8d103a6f32803d87d4bc8e8f64ea9a667c62c9fa9f5a857b457eacc154ec410c",
+      "item_id": "slsa2-eva-035-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-035",
+      "prompt_sha256": "sha256:2b300820827a674e0d689ed6c862a8c3e8e17d42696dbde5400d3a61726ef588",
+      "request_body_sha256": "sha256:635612c8b91f3be95eaab01bc40f162930f8be25d2e34c24613f9568be0cd1c1",
+      "sequence": 69
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-036-a",
+      "formatted_prompt_sha256": "sha256:46e1814ee42b63bbf7bd50d765087083d38fcf6f25a7e4984e3cf98e4d36e20b",
+      "item_id": "slsa2-eva-036-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-036",
+      "prompt_sha256": "sha256:93155f0ef4a1d69539c6937b8bf7cea429ab9e90987d7da33738bb369e24be4e",
+      "request_body_sha256": "sha256:f05be26b2a39e12bdc4ec1f5455062ef618fa25995e0a5a20e5e01908cae3915",
+      "sequence": 70
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-036-b",
+      "formatted_prompt_sha256": "sha256:1ce7ac7e5f4d52991d1d585d754b2c683d6e67ceabeb6d982b8c4a3f41961030",
+      "item_id": "slsa2-eva-036-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-036",
+      "prompt_sha256": "sha256:47c02473d28a7d8f744d26d734368fea3cbaf1a93d4d07d1363a100480bfa539",
+      "request_body_sha256": "sha256:f521fd64e704f36f02fa96b74df0c20b4bd0b444f34c5785e0b10c713954796a",
+      "sequence": 71
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-037-a",
+      "formatted_prompt_sha256": "sha256:e3ab54ce2734fcfb03d09b96a1e3a8f08dac789e69b5cbe3e9a0ec69a382a98a",
+      "item_id": "slsa2-eva-037-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-037",
+      "prompt_sha256": "sha256:df0b59d2d11c53d6c153b0e886a46d2639abb9e9310a296af8b7c66169b245d5",
+      "request_body_sha256": "sha256:8290f07e8596711d91811f5223a8b9ce6b731c733ef32e427552b79db6e026d7",
+      "sequence": 72
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-037-b",
+      "formatted_prompt_sha256": "sha256:70d77c458fbb5dd2f5d16468c913d0c3d93c2178a37d748588b9cc1c5b93e38b",
+      "item_id": "slsa2-eva-037-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-037",
+      "prompt_sha256": "sha256:836c911384eac912b8dec2e7009aa6a9097b71d69c04fe0c53e9594029c35c78",
+      "request_body_sha256": "sha256:b386cf771416833f17d748922ce80be72f6fbb0fdb9c2b6fa5cc0908b5041130",
+      "sequence": 73
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-038-a",
+      "formatted_prompt_sha256": "sha256:4b8fcb2170dcc033dfd25607a4df217c4579a1d063d449470c968800fbe6185b",
+      "item_id": "slsa2-eva-038-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-038",
+      "prompt_sha256": "sha256:1f8df03217dd7df02952fa716ec1dac025fdd7afe06cae674fe6fa2652b23416",
+      "request_body_sha256": "sha256:aa9f16cc7ff0865d4b3c67536ef3aa52547f8dbb3fffc6278a3e734ce9ed48d8",
+      "sequence": 74
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-038-b",
+      "formatted_prompt_sha256": "sha256:735bbfa569db94f8ad12b5ab844c879ca86219947937559804c048c9901d9d85",
+      "item_id": "slsa2-eva-038-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-038",
+      "prompt_sha256": "sha256:b1f70a599d8a852d8af4c00e4116d592aebec456faada7e47dcce1dd1831449b",
+      "request_body_sha256": "sha256:85657bf0af49b9ebf28fc11f4aa93ead71c672b9266e336499f471b912e3ed97",
+      "sequence": 75
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-039-a",
+      "formatted_prompt_sha256": "sha256:c8a0386d8794335a1e48c43f37e95c0246b89a8ac68a92fd6576ae9ecbfee158",
+      "item_id": "slsa2-eva-039-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-039",
+      "prompt_sha256": "sha256:fa313af655f46159f1df87b4db2bd87b920bb0bf323f8d047e8521f7f67cd4a1",
+      "request_body_sha256": "sha256:902b32643a6e3de23f4a941a89d1a1dbb485848852b92aabfe4d2aedaf1da8f4",
+      "sequence": 76
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-039-b",
+      "formatted_prompt_sha256": "sha256:4119550fa3336e289f996b2f612765f66627e330980180c2b48bd62e11c7b499",
+      "item_id": "slsa2-eva-039-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-039",
+      "prompt_sha256": "sha256:8d892d3743be32069e3f04b7ade2fbc9e4c408056bf4d94378b472fa04dd2524",
+      "request_body_sha256": "sha256:3f5b878442cfc4c5a1af784e8083baec03f8326eabae398da022dc69a0ad88cc",
+      "sequence": 77
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-040-a",
+      "formatted_prompt_sha256": "sha256:4cab614a7b2ea898aea16ee3c6ad035d9df59f5e19930d43da231e1c33326ca9",
+      "item_id": "slsa2-eva-040-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-040",
+      "prompt_sha256": "sha256:3aad7f3150e1a58accceebe2920866b6e44fa5252de98ad539e127e511a92c5d",
+      "request_body_sha256": "sha256:2832771ca8db3cae036b64944133ec2a574be140517d084e6cd0c05b97386b02",
+      "sequence": 78
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-040-b",
+      "formatted_prompt_sha256": "sha256:b8597c93dfac6f0f2c5a54c41c03dcb02bf98cfe4223094b739e7330a272131c",
+      "item_id": "slsa2-eva-040-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-040",
+      "prompt_sha256": "sha256:a2088d6abfe2ba24777323ccbea9661ae8c5ef09983c100ad4adb06f43977c8a",
+      "request_body_sha256": "sha256:a1b884990c96b487fce07a0d249de08eaa45a3c80e31951185f018f925c9132e",
+      "sequence": 79
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-041-a",
+      "formatted_prompt_sha256": "sha256:09259f79d82e174b0518751d7cb764857715cee0a65d69961a9f5fd5d12c578e",
+      "item_id": "slsa2-eva-041-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-041",
+      "prompt_sha256": "sha256:bd5453475f27fce6c7637dcc3b66348d4588c7117dc5bf3a88d9b6f4f2943bcb",
+      "request_body_sha256": "sha256:35ff5f2cf3b7cae2dd212e78c797446c90303e571fa121b716a4c3c3e56a1c6d",
+      "sequence": 80
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-041-b",
+      "formatted_prompt_sha256": "sha256:6e52d91995b8ff867027f01f3d324a7c8ff3ddd17feeed85acf731b0edbb9aee",
+      "item_id": "slsa2-eva-041-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-041",
+      "prompt_sha256": "sha256:479ef9710103a710315dd56650259d60a76edd5ddf814c7a0a9c08fdf49dd676",
+      "request_body_sha256": "sha256:103dbcb7b353398a971bf3151ba4897285bf9e8e4ca4615a56c91766f1f88538",
+      "sequence": 81
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-042-a",
+      "formatted_prompt_sha256": "sha256:7f43aebca2aa5432ed42855fa32768ab7832f4ddf8df75a36b4c31921c6b61db",
+      "item_id": "slsa2-eva-042-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-042",
+      "prompt_sha256": "sha256:0d2201564fd25137e550b2442e6b220c5cceb4ed236e495f0f5b28100a9e22f3",
+      "request_body_sha256": "sha256:2d2cbda91901eb2dcb23e4b3c50f21bfa74c650a397e4ce47c6385816031f430",
+      "sequence": 82
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-042-b",
+      "formatted_prompt_sha256": "sha256:200ab38ce138fd101d6faf0ce33d7c536670f423c2a7c3eaa4f432633df4e6c9",
+      "item_id": "slsa2-eva-042-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-042",
+      "prompt_sha256": "sha256:a596719f030a07bdfe47163012c80cfd0c03186dab8a1161ed4818631c5a985c",
+      "request_body_sha256": "sha256:9b0b592233eeea1f6ca5f6decb3699bc510362d29b31c3a66613b9503c780849",
+      "sequence": 83
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-043-a",
+      "formatted_prompt_sha256": "sha256:f1af108c20176ae0b061d075d37b1d2f0a90341de366e1f2a344c187b0ffc855",
+      "item_id": "slsa2-eva-043-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-043",
+      "prompt_sha256": "sha256:97306ca02d68579ad84b7bac6cbde248d08e97939ed0b9e39b072d307fb802b2",
+      "request_body_sha256": "sha256:23fe4f22b2845028f62899b153eb96d0d50ff6892e34e5a6576e0c1906e61962",
+      "sequence": 84
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-043-b",
+      "formatted_prompt_sha256": "sha256:6ea4bfcd4ffc495520b3cf094c02660d2d835fa6068f1085ab395ed454ed0766",
+      "item_id": "slsa2-eva-043-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-043",
+      "prompt_sha256": "sha256:00eea7d9203e9fdd4144f5bde219f6ad86798f3e038307cf975d328d3e6e03e5",
+      "request_body_sha256": "sha256:a5e964b50729049ea5e683b37d9aec5ab3f39034c5c1960729422412e1fd5583",
+      "sequence": 85
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-044-a",
+      "formatted_prompt_sha256": "sha256:da1ecb1869e9e5ce133c4a2563c62d76abc86dcbf62fef90b681f8544d62bff6",
+      "item_id": "slsa2-eva-044-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-044",
+      "prompt_sha256": "sha256:bc22b7f6096ff6b5f54f563fc957b76416391c739951ae9c2e4044f73a1c8980",
+      "request_body_sha256": "sha256:06923b06819fbf77538ae1b5c96f80b3758db12ec63e182bc5242f128a4e4b49",
+      "sequence": 86
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-044-b",
+      "formatted_prompt_sha256": "sha256:5403cc17f95811386dc17c28622b2858ff94240598f9f75d4253b859b28badbc",
+      "item_id": "slsa2-eva-044-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-044",
+      "prompt_sha256": "sha256:44f7bf7ed3046438b11a9028ba99d7ffa350545bb62eeb3fad18e81dd66065c8",
+      "request_body_sha256": "sha256:f108f9c5395a2f3ea32b26a15d4067d596bf8d2d220423cfeed7aa9e9cff5473",
+      "sequence": 87
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-045-a",
+      "formatted_prompt_sha256": "sha256:5bc2db9e2b205429744794486ffd0e103c12a67f9649b80c23a38fb254b08b47",
+      "item_id": "slsa2-eva-045-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-045",
+      "prompt_sha256": "sha256:e5f7d11aff5886f463a79b09fcd1e3e230a2955fc4702c21663a7de85001732d",
+      "request_body_sha256": "sha256:8a34a6b10cd1cdaebf42691cbfc1fd1ed6ba204308a6ced4df40fd934342b404",
+      "sequence": 88
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-045-b",
+      "formatted_prompt_sha256": "sha256:d493c325d3cf7245adfe6b75293f4e5fea87387536b40d4e15f5296e475dd74d",
+      "item_id": "slsa2-eva-045-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-045",
+      "prompt_sha256": "sha256:0552709e528ae6adcc89ac33a2be3184854967c096f40e3a8ca39c6a36449734",
+      "request_body_sha256": "sha256:cb69249fee900a1d3ffc2619862d1739f40cbbe707ecfdb69e319684632d319d",
+      "sequence": 89
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-046-a",
+      "formatted_prompt_sha256": "sha256:fd83443a3dd0ad392ab5f8c5f01601ec575b997a9c8a90f318f2ca527c0ca120",
+      "item_id": "slsa2-eva-046-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-046",
+      "prompt_sha256": "sha256:eb9aeb6d91dcd4ad3edb34146b525a0eceb21dc16a414510c4637cdb22e5cd3c",
+      "request_body_sha256": "sha256:bd509d487d79b63895cc895048a140620a16ed6096e1613fec6331ada32e1a33",
+      "sequence": 90
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-046-b",
+      "formatted_prompt_sha256": "sha256:49a760c40cfb2aaee8bb75d0d622d6601b471275678ffd629d01062d2f7ef95a",
+      "item_id": "slsa2-eva-046-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-046",
+      "prompt_sha256": "sha256:32530ef08e558e0c8a8428eca47140e72588006a224781dd1ea1c0cbdc59bbed",
+      "request_body_sha256": "sha256:1016ceee7955cb4d6371d1381dba6ffbee5197fe784f37e6756968c70d8231e3",
+      "sequence": 91
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-047-a",
+      "formatted_prompt_sha256": "sha256:0d24fe0b8fb5f57659517b777331de368861ebf854872a9dda554e43c4b0eed2",
+      "item_id": "slsa2-eva-047-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-047",
+      "prompt_sha256": "sha256:dc5fbc0b1b3fc31229687ade6e34846c8e7eed835f3f6c6659adbefc10b8f094",
+      "request_body_sha256": "sha256:0ef98dad9766664ec9273061588c25ca7613071330b31e655db53d3ff1f145d1",
+      "sequence": 92
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-047-b",
+      "formatted_prompt_sha256": "sha256:69e88ecae69c92a3db8bb9a53ca138e1bb357ae7ca1459a79cb5a70e6e49f461",
+      "item_id": "slsa2-eva-047-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-047",
+      "prompt_sha256": "sha256:051d44dc96c0c4e74f5f1356864f10ccf746332de565d0150a3db231a660e7d8",
+      "request_body_sha256": "sha256:92b5f909c8b58dadc1345533f6201605e19b8da3adff949b89d11736e6f2ab0d",
+      "sequence": 93
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-048-a",
+      "formatted_prompt_sha256": "sha256:f81a1bc3a094127dbfcb056440cf06b92b80a196353f2bdf896aeb8808a242d6",
+      "item_id": "slsa2-eva-048-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-048",
+      "prompt_sha256": "sha256:0aafc71597e43e24175431e5d3cbc151af1751471fb6c2be78a40e02d61f3a20",
+      "request_body_sha256": "sha256:a21dae636a31ae6472ea9d6158ac29ebda3c005e4bf94328b96a19c3b34d25a5",
+      "sequence": 94
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-048-b",
+      "formatted_prompt_sha256": "sha256:03fb464d2dfcdfb58522e0a74ce1ecea7c8a9cf5c78963ac16fef54995d188f7",
+      "item_id": "slsa2-eva-048-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-048",
+      "prompt_sha256": "sha256:d7d25412d2af9ac1acb266839affa630f060609cb65c39e547d9a6a44b3e5d2b",
+      "request_body_sha256": "sha256:20b3e1abc81cbd6df0aecf020c0f75378cb61613a3123ac7e1c475f812c6d103",
+      "sequence": 95
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-049-a",
+      "formatted_prompt_sha256": "sha256:8a296142dde9216f2f821e953df82935dcbfff696e19aac61e1987acb4ab34d4",
+      "item_id": "slsa2-eva-049-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-049",
+      "prompt_sha256": "sha256:e92f73070973ae5d00660ffae3a798211a4a082e0585fc12485f8e211a1b5a43",
+      "request_body_sha256": "sha256:3afae5d1f20164b886762320a9d34ad019e1e774e64f152ba010216540a9188e",
+      "sequence": 96
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-049-b",
+      "formatted_prompt_sha256": "sha256:9a9c3cd13686f66d8ca761a001caf189291c635e795c73ed578a8c624b539ae0",
+      "item_id": "slsa2-eva-049-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-049",
+      "prompt_sha256": "sha256:5aaa2f66051489b9fbb4d11abfef39f693bf37945257b86ac113682b191a0660",
+      "request_body_sha256": "sha256:c371e5c8171cc8fec1159b1d959c570996d2a38894c1151cea6ce4e26094eee2",
+      "sequence": 97
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-050-a",
+      "formatted_prompt_sha256": "sha256:24cff4dd1ba5aa21f6b2f9521c7d866f9cb2aa3e3f0ae71f04564165239a04f7",
+      "item_id": "slsa2-eva-050-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-050",
+      "prompt_sha256": "sha256:98bcc9e630ab12e35b2be654de1e5c32fcb15e45df0607dbe2e73675b2ee2528",
+      "request_body_sha256": "sha256:15fcc5510e0a567f118bb5291527791ebd5090bcec726fa99df6b138228bf584",
+      "sequence": 98
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-050-b",
+      "formatted_prompt_sha256": "sha256:ff20c424441a2ae1546d3111b85d7f4ad813cda6a5a60f94f7cfe5d43ebb460a",
+      "item_id": "slsa2-eva-050-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-050",
+      "prompt_sha256": "sha256:7a3abe91e385f4294c9194c4be29fdca79daa66406f6a26b16bf89a5565e5590",
+      "request_body_sha256": "sha256:be52404d9f7613d23c6c25a47c4cdaffb7bcb5da87a8da04f57df70a6989625b",
+      "sequence": 99
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-051-a",
+      "formatted_prompt_sha256": "sha256:e3b24ac3efdad95f6c88c3f0f2dd386db90b0233d5ade321b14e374ff0c3c00c",
+      "item_id": "slsa2-eva-051-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-051",
+      "prompt_sha256": "sha256:231e49b3682bcbb41e4052ee42aee1207c8683abf1d7accc42a186843da29f92",
+      "request_body_sha256": "sha256:0327fd4ff3ae3415a565dc0b51369169d432720c69abde5718d2cd67ad3e1797",
+      "sequence": 100
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-051-b",
+      "formatted_prompt_sha256": "sha256:dcb7800f3d998447ba11fd35489700f83839bb307fd426d58e8f1084a76df742",
+      "item_id": "slsa2-eva-051-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-051",
+      "prompt_sha256": "sha256:29e8bf211cf0dae5fa0712b229523e7c82ad095ebd0ed0e4ea07249734bdfa1d",
+      "request_body_sha256": "sha256:ed4ac16e0f0e0e44f3ad2c5ec4872a88be84a0554401d03164aa6e8bd8c2f395",
+      "sequence": 101
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-052-a",
+      "formatted_prompt_sha256": "sha256:cd5f7009ab50d3afdb73fca83d371cf3f92fccc47686601c116fbf4465638df6",
+      "item_id": "slsa2-eva-052-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-052",
+      "prompt_sha256": "sha256:57dc14e72279bf481c4d7ee219aa8a1fb07124f511dc8f0587ce3b60bd189ba8",
+      "request_body_sha256": "sha256:a3b3546d634633c3c12b3ad50595232a8356ac665495cc1a89686edd550d0ead",
+      "sequence": 102
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-052-b",
+      "formatted_prompt_sha256": "sha256:1087352b40005b8f424e5cdfc5333a7889af1369741afea8c4998f5887139398",
+      "item_id": "slsa2-eva-052-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-052",
+      "prompt_sha256": "sha256:3c96648506868cd2386d070987042b7ba5e1b14f7fdfdb194b1ed3a02c714193",
+      "request_body_sha256": "sha256:860c493d25cbdba3beffec4f4351a0fc7fa6c25bbeac1b003bfc17ed5c19f48a",
+      "sequence": 103
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-053-a",
+      "formatted_prompt_sha256": "sha256:0a393ea4b6b05abbfbb2fcb106bd0ea5f16ced879192b4671312c133e0c25883",
+      "item_id": "slsa2-eva-053-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-053",
+      "prompt_sha256": "sha256:3b5b22bb96656e6b7c6cd2bb68226139c57046aa4821af4be610efdf91eb6aea",
+      "request_body_sha256": "sha256:3bcf9cb9cd22ff839c79bd9ed4922d5e60a5e536f0858cd4fc005f9c452e854d",
+      "sequence": 104
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-053-b",
+      "formatted_prompt_sha256": "sha256:1b6d82912b982407a3cb4cf99a3bbcd2f49cf1cca7424d08ef8889b166307bda",
+      "item_id": "slsa2-eva-053-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-053",
+      "prompt_sha256": "sha256:1bfb0997505a2447a801fd3a2fc28376423448da36af078a44fd5af9adcf5ded",
+      "request_body_sha256": "sha256:44878f0f79824b0a070c94df1a63ee345813b9dca65044be9d3a68bb30384852",
+      "sequence": 105
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-054-a",
+      "formatted_prompt_sha256": "sha256:7a1ef3b210fadf52853b1925e879a9b1b195e65cc6f098e687c085e4fed42046",
+      "item_id": "slsa2-eva-054-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-054",
+      "prompt_sha256": "sha256:f6018a1821fa70169b5dcad94a2de65a07e5d2fb6718f84e2a51404384e82460",
+      "request_body_sha256": "sha256:c6659d3719fb79010586ba03048f211f7cf31ce02195a91f1f1afa3856c5f519",
+      "sequence": 106
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-054-b",
+      "formatted_prompt_sha256": "sha256:22ecec225f5f9dac71a7b5368140a93da6b086f97fea3dc66a1f94dd15fe27e6",
+      "item_id": "slsa2-eva-054-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-054",
+      "prompt_sha256": "sha256:50451f3d60add0d88665bd3c1351eb33f564a823ab54f3cd16658ccb9cef2b1e",
+      "request_body_sha256": "sha256:5f0a34bc885a6e2b0bcfac24b5adcde9b294e609e3f2cf4b2a4eaaefa56d25e3",
+      "sequence": 107
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-055-a",
+      "formatted_prompt_sha256": "sha256:5cbfc5e76621a08d23508a236ea99035bbc22c5410d016ea1678b12d22083f8c",
+      "item_id": "slsa2-eva-055-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-055",
+      "prompt_sha256": "sha256:01897c467b33c1eb96659cb4d57a7b1c1cda8493c70c0a191ec45ae9a6fc4716",
+      "request_body_sha256": "sha256:6df7f2c620640fe05162c91ffac92a568c2a0501d38f2832573e42801c4ac53f",
+      "sequence": 108
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-055-b",
+      "formatted_prompt_sha256": "sha256:e737a046db13a62d73a2f23d0298f5519a43f376bf9e08c00c05d2680367ab3c",
+      "item_id": "slsa2-eva-055-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-055",
+      "prompt_sha256": "sha256:3945dcea2103d32684ef21c8b3d0de2d6e4cd271166e77b8db4a7314b647933a",
+      "request_body_sha256": "sha256:fefbccd07fdaaf2569e3707b4fd7bab2d05a6ef552d86c823531337686984b4c",
+      "sequence": 109
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-056-a",
+      "formatted_prompt_sha256": "sha256:23abe3ff4cafcf59d5d3a11f04ff93f00c8bb1335091a0b9deeecae001bbd4a3",
+      "item_id": "slsa2-eva-056-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-056",
+      "prompt_sha256": "sha256:c1777d49869c091edceac3e7a7f46811b4314b2dcd87be8ebc9b3f76bd71f884",
+      "request_body_sha256": "sha256:38b0bf3f801ad8b3aa339a6333d0faf35f94be679fa93a4f984a15ec67b23189",
+      "sequence": 110
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-056-b",
+      "formatted_prompt_sha256": "sha256:504f623ba5deda1c8c5f208521a1864d96a14a9e261ca701ad5abceb8a113431",
+      "item_id": "slsa2-eva-056-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-056",
+      "prompt_sha256": "sha256:bb81e7c1c0824edfa71a9d20a287d4de48210fd48f20580bcbddb1cb66315b48",
+      "request_body_sha256": "sha256:cae2b2d5cbd650418ecf0e03f3d7ce0a9970e29a83c51057a1605be53fd1064d",
+      "sequence": 111
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-057-a",
+      "formatted_prompt_sha256": "sha256:1a3c6437e379ef98871aa45d9610601cbc5d10ae998fcd016d330756a6d791c5",
+      "item_id": "slsa2-eva-057-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-057",
+      "prompt_sha256": "sha256:2ed1c0f016728f813532c16dab8572abf9257237adcb4a39f14c361118ae6ad9",
+      "request_body_sha256": "sha256:2478d492b355dd28913439fe5492a69164f1716aa6f70ce70b3b35fb7a65cca0",
+      "sequence": 112
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-057-b",
+      "formatted_prompt_sha256": "sha256:f9520a75b492c9752da098d0030a1277f228580d4beb8f4a487cd0b0bd84e248",
+      "item_id": "slsa2-eva-057-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-057",
+      "prompt_sha256": "sha256:7addd7c859ed00bcae88dd90b2bd8efee4c79e99be0666bdfe097b80e1d6f04d",
+      "request_body_sha256": "sha256:ae74c2e9757fe3cf700290433cb6d14f8985eb6b173764d23fb743d05b2ab401",
+      "sequence": 113
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-058-a",
+      "formatted_prompt_sha256": "sha256:a7341d3ef6a2fdadc8dd627eb152d04228604eda9da7dd0284806dd9cc241b1f",
+      "item_id": "slsa2-eva-058-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-058",
+      "prompt_sha256": "sha256:38f3871671c6de2650ee82e5c8f58d1da86bf24475cc51c3735c12b725ee689f",
+      "request_body_sha256": "sha256:b3cdc19dc2c4f96023387f6017e8e390b9429b864ec5af2d53e0242b0a643378",
+      "sequence": 114
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-058-b",
+      "formatted_prompt_sha256": "sha256:b13480eb096ac0ba181027bda529c9c9b529a5d360ddc32b9d8cbaf395891910",
+      "item_id": "slsa2-eva-058-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-058",
+      "prompt_sha256": "sha256:62f77e3c1501f91640a3544c9b1f0fd98ba9a94553533582d4f014af5c15d15a",
+      "request_body_sha256": "sha256:523fc54c8126556e94f231fccf13602364f61d316e26485c39eda8f64b0609a8",
+      "sequence": 115
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-059-a",
+      "formatted_prompt_sha256": "sha256:2d57503a5fe459c589926b33f8f5edba795dde415323352cd799710935c49bc2",
+      "item_id": "slsa2-eva-059-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-059",
+      "prompt_sha256": "sha256:8a861b00a21e58edf3cd17b768e7c36e1bad33f8cbcc31e41592819082949164",
+      "request_body_sha256": "sha256:4cc7c03a527436c5f7868f9037799bf9c300c89303f4e4dfddafb507ed2b9eae",
+      "sequence": 116
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-059-b",
+      "formatted_prompt_sha256": "sha256:4b9dfb7dd55859a581e85839a697ef138c3f7ff17c97b604df198266d1c67b29",
+      "item_id": "slsa2-eva-059-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-059",
+      "prompt_sha256": "sha256:193b6c7c384c7cd5d21bef7ff636adefd00d51943df31dbe4b89eb8c00677fae",
+      "request_body_sha256": "sha256:4c7dfe2dd86338a520444a85ffb9ee25f4d3bd34c0f0cca7104d0bdd25fbbb58",
+      "sequence": 117
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-060-a",
+      "formatted_prompt_sha256": "sha256:6d4e1c0f41ada9fd7379fe40c022859aec0f8010a4122fe68080f1b0afe8b7f9",
+      "item_id": "slsa2-eva-060-a",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-060",
+      "prompt_sha256": "sha256:e87a0f7c72b8851251d17705aeae51eb9d11aaa3c2ae4ea33626702b681c425a",
+      "request_body_sha256": "sha256:0e145577ef9ca9a14028161866e60cefc6012748d0dd9e093ea9991b89913d70",
+      "sequence": 118
+    },
+    {
+      "cell_id": "local-mlx-mistral-small-3.2-24b-slsa-v2::slsa2-eva-060-b",
+      "formatted_prompt_sha256": "sha256:3a0c6342688e1cd468fc95f7554bf9990a94fbdca688c333a9b472107c07553a",
+      "item_id": "slsa2-eva-060-b",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "pair_id": "slsa2-eva-060",
+      "prompt_sha256": "sha256:06c2ac051598c981b94112b5de082d0e93a1558ba31f6ba448c355e9b926c13a",
+      "request_body_sha256": "sha256:02c2f29a75b35acf19047fe5e0f55b6fbdc16e8497f3a927df10d9bc0a359f41",
+      "sequence": 119
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-001-a",
+      "formatted_prompt_sha256": "sha256:46379d567eda579c2008bf82866f25ad739a3fd8bfe00d9da08c2ed4cc56f785",
+      "item_id": "slsa2-eva-001-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-001",
+      "prompt_sha256": "sha256:87280b7bf1b60c12457836220a10c5a805d3b434ec5cd007f40151b8037d4406",
+      "request_body_sha256": "sha256:7b6c344cb286a7bc7bd5e2b5720bf03e811db9db8b2ea98588dc72d2cf00911f",
+      "sequence": 120
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-001-b",
+      "formatted_prompt_sha256": "sha256:2c03fafdd20c06146aed8d8384444071bb4c7b786e6d4d9bec035cb410cbbad3",
+      "item_id": "slsa2-eva-001-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-001",
+      "prompt_sha256": "sha256:940d0631f0559bc64c9598fa4d4d818fa91dd625aa929968b3a50ed0ce618821",
+      "request_body_sha256": "sha256:ddf029f26a338cc6def947ff2bb7730027e17c96cd31a64cebd35e1198107000",
+      "sequence": 121
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-002-a",
+      "formatted_prompt_sha256": "sha256:2fcb86ca169705aa598ec2ea4a0361365dd5ed4615cc555a7b08510f73085d30",
+      "item_id": "slsa2-eva-002-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-002",
+      "prompt_sha256": "sha256:c8c78c2f62da6de446940c054a3a4b40efab1f2e7032ca2055e22c524f731c19",
+      "request_body_sha256": "sha256:8ead3a9854c3efe811845452dc5371b739f8d4fb2acd63b8d028d0952e6b1a1a",
+      "sequence": 122
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-002-b",
+      "formatted_prompt_sha256": "sha256:7fcf2fb6b95bd78117fa2cc23ecb2cc190bb1728d5533ff4649371a31f4bfc1b",
+      "item_id": "slsa2-eva-002-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-002",
+      "prompt_sha256": "sha256:3fe7dd999148986101eb8a6770869b945cda6759e30fcb3454422f0a056a246b",
+      "request_body_sha256": "sha256:93bc72b6422579eeb3f457544bd98dfef6a42d2aa3b68427485c4c00dc284cf1",
+      "sequence": 123
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-003-a",
+      "formatted_prompt_sha256": "sha256:5eaa70a69b77cb0f4a8c382ac057d3b59145be45acd7a179f6e8812e4137486a",
+      "item_id": "slsa2-eva-003-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-003",
+      "prompt_sha256": "sha256:d4435467df2cd2fc43bc7559485e3f09cf5c77973ff2b27f86807b0a23dc5f37",
+      "request_body_sha256": "sha256:19eeebf1ce70d6fbe06485a2c9b5e2ba0324c787d0e71ec91c1edd47cc8aa0c0",
+      "sequence": 124
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-003-b",
+      "formatted_prompt_sha256": "sha256:f14d4a187d8cc80365e6a51908ffc57dd4bd18d180b3e673de61bbc237536c9e",
+      "item_id": "slsa2-eva-003-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-003",
+      "prompt_sha256": "sha256:2a566f840c60454ad4b5f19b33f7355e5d9eb7320c66795e7ee0f706f99f2555",
+      "request_body_sha256": "sha256:1286ab57320744aac77331b03dde4c6fc0f402bfb49979c3255d515055ada4db",
+      "sequence": 125
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-004-a",
+      "formatted_prompt_sha256": "sha256:e0857b291996b6e106d35afe8ef7232ab2f7fc4a274e2b34a71386b4c47245f1",
+      "item_id": "slsa2-eva-004-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-004",
+      "prompt_sha256": "sha256:c52a7b47c242af9dbbe7e20bddb91e6dcd45e91f7f63e25c587ce292c7223d18",
+      "request_body_sha256": "sha256:6e5fb134a25fe5b60345db1d244964d3f73e8aa1748150ff3562a53c942c2054",
+      "sequence": 126
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-004-b",
+      "formatted_prompt_sha256": "sha256:8c364bca1425b84c9243d52591f426a266022d2c1ed1b4927e1ca2986e1f5f3e",
+      "item_id": "slsa2-eva-004-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-004",
+      "prompt_sha256": "sha256:ae66941ef1735b7f5f9f311f4037f2e7751bad6171f0230ae1dc224ddefb5f97",
+      "request_body_sha256": "sha256:8d75e5ed4c2cfff012539cf4d44b4f23c33efbb25f75d2f621ff15fc2ec69107",
+      "sequence": 127
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-005-a",
+      "formatted_prompt_sha256": "sha256:5be7ede2d221c2ac545201a051068628e2242f6e3c9d3342f31b97cdffa5b94c",
+      "item_id": "slsa2-eva-005-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-005",
+      "prompt_sha256": "sha256:656c8ab8862b89906a638ac8c45eb0c4d4d51fe1e3559718483c1c1c6f28c06a",
+      "request_body_sha256": "sha256:d195104984548315f0006dec8df951c7e054b66b09b1a1d89bbc6b7dfdce4d62",
+      "sequence": 128
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-005-b",
+      "formatted_prompt_sha256": "sha256:c9a2dfb31d32d68fab5c2b87407443422daf366bb2986d267b4c172596f85b20",
+      "item_id": "slsa2-eva-005-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-005",
+      "prompt_sha256": "sha256:60fc36c65df0740c2d9d5574e626c600febadc07b76f0d86d32b91a24bb92307",
+      "request_body_sha256": "sha256:a703c22998d8ae8bf404546081e6a42b510a7a8c7877a8b139d83a4c6c717de9",
+      "sequence": 129
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-006-a",
+      "formatted_prompt_sha256": "sha256:65d692deea89f34b09db4f3f027905e300bf9e294afab64cb015837e00b93a54",
+      "item_id": "slsa2-eva-006-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-006",
+      "prompt_sha256": "sha256:e3940ab568669aa478cda356cd27bee10404b850c4d70b5d79014b338154c8f7",
+      "request_body_sha256": "sha256:f6fdf3b97766b8f067ed427dc854d64a9680b605abe4fb8195c4814c73d7f779",
+      "sequence": 130
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-006-b",
+      "formatted_prompt_sha256": "sha256:bf9500dc6ccef3e92479979bb9db03efce1fd73cc3751f49f955d01be6044d5c",
+      "item_id": "slsa2-eva-006-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-006",
+      "prompt_sha256": "sha256:2bf6bc2648f0cf09620aa762278477048854e4998ca2a9230f5feb33c62908d0",
+      "request_body_sha256": "sha256:0fb51bed198a874f2306bc044f8f598f75ee7fa09cf4b0a66d41b9e2809e38bf",
+      "sequence": 131
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-007-a",
+      "formatted_prompt_sha256": "sha256:e7b885d0cb8e8c3e404bbc08d9ad7e1500c921c19cb45c9fffa142615fe9ae2e",
+      "item_id": "slsa2-eva-007-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-007",
+      "prompt_sha256": "sha256:9ec29718652fb521630404970e5b42267c1e7d8212298886974534203f038614",
+      "request_body_sha256": "sha256:3d9a08a8feb3ff287ba8f8d3694f5678070e566dbabaa941c1fccbe8090fcf32",
+      "sequence": 132
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-007-b",
+      "formatted_prompt_sha256": "sha256:8d0eb5c7fdca2f326a856a396851a7a2e9078d0fea79b1ee05167d9b83e9cb93",
+      "item_id": "slsa2-eva-007-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-007",
+      "prompt_sha256": "sha256:f223773201fd0bfefd9cf166375d4ecec1ba8b4be2d09f19214c8fa7104268c5",
+      "request_body_sha256": "sha256:f32f34e65901e69929fde90b61d260ac7aee00ac4304fe5d8444bd15f3ec69f9",
+      "sequence": 133
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-008-a",
+      "formatted_prompt_sha256": "sha256:5921f0c1affb217d65a300ca629cc7abc61defda103481ed1c223bb3ed4f4b11",
+      "item_id": "slsa2-eva-008-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-008",
+      "prompt_sha256": "sha256:b4109e6fd25bb61390932d722af149ab0c65e188cc51e747bbf5e0e3703cc286",
+      "request_body_sha256": "sha256:b771f900fa207cc5590c7d41786ef04021f3dfc55452397c01e56ff620cb921c",
+      "sequence": 134
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-008-b",
+      "formatted_prompt_sha256": "sha256:ef96a745128ab4113d14d6eca23c323aaa700c2608dd6bb788e484fd7b8100de",
+      "item_id": "slsa2-eva-008-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-008",
+      "prompt_sha256": "sha256:d2d151857632c5f3d9b175f36467db58d4866b8021ec091a3fbad867b36e876c",
+      "request_body_sha256": "sha256:54de40f1f0cb9fd903da895b18a0ec46207a85363b43fd1bd3a3ec3734e44ade",
+      "sequence": 135
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-009-a",
+      "formatted_prompt_sha256": "sha256:af72a863afa72b1db1af75f69a6bc937a25a74da0ccc72e381e866f8e51eb6de",
+      "item_id": "slsa2-eva-009-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-009",
+      "prompt_sha256": "sha256:3cd1c24f92bca7d688dddb1df17b63e545339a26692620a005d22156863a5449",
+      "request_body_sha256": "sha256:3e3bbba65034c0951f15f8ed5f5e00414a961a8238384b46e589afad0c819d33",
+      "sequence": 136
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-009-b",
+      "formatted_prompt_sha256": "sha256:dcac64740850c28736f0a140686782b9149b94cd67992f0f7e312e6e4f729932",
+      "item_id": "slsa2-eva-009-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-009",
+      "prompt_sha256": "sha256:cc2f8897ac59b842597a40b317b17c0ea7c9d20bfbf335bdf43e145ca627a530",
+      "request_body_sha256": "sha256:c764a6054927bcde4c9959407a3fbbcdc3c260ad75a0714640222a2012dcc642",
+      "sequence": 137
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-010-a",
+      "formatted_prompt_sha256": "sha256:8347f86269279b978b0b815961298cefec39d41ea035009fdad59bf69bc432c6",
+      "item_id": "slsa2-eva-010-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-010",
+      "prompt_sha256": "sha256:496958fc689c7f8fbff218ace96c02847b2904832a31e08dbd7a16acee838b64",
+      "request_body_sha256": "sha256:867a01da07a47964d0cbf66477e089531e83d5c389e8c1d1f901171548fafea9",
+      "sequence": 138
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-010-b",
+      "formatted_prompt_sha256": "sha256:e22405c17ae8b161ab67cc3dbf0bceceea5eb685477be185567688cce2e9a58d",
+      "item_id": "slsa2-eva-010-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-010",
+      "prompt_sha256": "sha256:8fad41000d7201eb171fc8c4bd4e108c38b1ee92176942a7c8a0c3b43928cab4",
+      "request_body_sha256": "sha256:a5bc955ab449327357a9ef306ce7972bda130f7da0640ca1f56c98cca2691ac3",
+      "sequence": 139
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-011-a",
+      "formatted_prompt_sha256": "sha256:b45b4f2567bd3515971eb55a85735dd8c1068ddd00ce383e2068b5f8f57212a3",
+      "item_id": "slsa2-eva-011-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-011",
+      "prompt_sha256": "sha256:e3ea6f16a5d9ab5107d44c105892afd744234b3fffe9015073b9c664a2ca5677",
+      "request_body_sha256": "sha256:08186c68d9d81be340eafee74ed2e53d844a0c878ebf164074a19ea264c6107b",
+      "sequence": 140
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-011-b",
+      "formatted_prompt_sha256": "sha256:0363b0b68fafdcfa4d63b95031486026227b0c6d22aeec1f08a6930db92822bc",
+      "item_id": "slsa2-eva-011-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-011",
+      "prompt_sha256": "sha256:e4bcbf1f2ad49b86769eb44ae447bca4bf22144d8d5eedc38f02a8bce742b23d",
+      "request_body_sha256": "sha256:38f48a546231ae3dbb0276050bf77acb1b301298d3fe85b59e43f81f7811c293",
+      "sequence": 141
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-012-a",
+      "formatted_prompt_sha256": "sha256:1fa896480110c0e3bf6ac526cbc8d0059f647b3308f8413dac7844a4d00661cf",
+      "item_id": "slsa2-eva-012-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-012",
+      "prompt_sha256": "sha256:5e3891507623e97dd43d8b8b41e3ee22546703fabecf60d4b8e1fb91245c6183",
+      "request_body_sha256": "sha256:aa6681e7568507e97b9dff2e6287037780c452182789decaf734e284a8c6ca6a",
+      "sequence": 142
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-012-b",
+      "formatted_prompt_sha256": "sha256:2abcb61c032b47f25fe4e3010f40de56877ffc92df48c0a6d66a4c32d504cecc",
+      "item_id": "slsa2-eva-012-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-012",
+      "prompt_sha256": "sha256:b6c9ed04d294597056d8ced6ad7fa0f3fd96a71408d977a5877ba3743b04ea99",
+      "request_body_sha256": "sha256:67aaa334a739b61c51f4f6a5d6633639645ace3cd8453d13b8ee3f2a5637a048",
+      "sequence": 143
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-013-a",
+      "formatted_prompt_sha256": "sha256:21015e5499590adeea78b3fbb6217de8a5ac02868aca44bab92c86fddbadb469",
+      "item_id": "slsa2-eva-013-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-013",
+      "prompt_sha256": "sha256:aeb237638adb320b1ae60c42687998279de06ce1855e0e8dd83cd675e5dfad14",
+      "request_body_sha256": "sha256:c5a3f41555c460faf99f95ac20999b18cba27a9191ff77b48095e6515e6c8fd7",
+      "sequence": 144
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-013-b",
+      "formatted_prompt_sha256": "sha256:af918f9575898e20a3bbfbb4e65aad4f416122b9e5ad332f66a546074a2c2aab",
+      "item_id": "slsa2-eva-013-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-013",
+      "prompt_sha256": "sha256:80b4ab0af88809da04b62a440498be08fefdb5778cad7ae8aa08deaa0d7dc1f3",
+      "request_body_sha256": "sha256:d09a5d0a45af18ce16f1f69ee17bc0d9e3ff3a65d65b87cb3979ad737b8e822d",
+      "sequence": 145
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-014-a",
+      "formatted_prompt_sha256": "sha256:20ee4c7bf68163006cf9341dc5de3083e41f08db4d576e38dba54f6ff5590885",
+      "item_id": "slsa2-eva-014-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-014",
+      "prompt_sha256": "sha256:81f9c9cd9476fe77d2c96f6b31a5c5f0877c1b51f34cdaa4c75d6a7490c4cce3",
+      "request_body_sha256": "sha256:37d87be09157c24cbdfed9c8a300b43c240c3d1cb1b2e19e61f545ea352ac5ea",
+      "sequence": 146
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-014-b",
+      "formatted_prompt_sha256": "sha256:eac7a1c309722a4af3538febcb60c31c3c877883f12d6296d7b955ec181ad382",
+      "item_id": "slsa2-eva-014-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-014",
+      "prompt_sha256": "sha256:aeb048166cf4d36fbbe32b6eee91374638e38211e6f59e3f21de3bf0038a26eb",
+      "request_body_sha256": "sha256:4f921419ce59131d60f4e899b3f3b8f1846895c3b80ebba50973b467f961e004",
+      "sequence": 147
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-015-a",
+      "formatted_prompt_sha256": "sha256:13cf47aad066efe5052f9297140c849a3124b14792605b227a00e436210b7480",
+      "item_id": "slsa2-eva-015-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-015",
+      "prompt_sha256": "sha256:9a648688dca94e13bbb3d7acdb7c2d4d23055a3d743cee5bcf56b51563cdd871",
+      "request_body_sha256": "sha256:6a6fafc63e3c61947e7de13434eb3b15a14d2f6b306d9673422b534b4e00cdb6",
+      "sequence": 148
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-015-b",
+      "formatted_prompt_sha256": "sha256:23fa5a53afcdc677c3b7dc3900d24c303f511c1ca043e1d52027a94a055dfbb7",
+      "item_id": "slsa2-eva-015-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-015",
+      "prompt_sha256": "sha256:81a91db347c89a9a15462ff3f311df45094aefdc120c5a52952f63b398af8c59",
+      "request_body_sha256": "sha256:2ab353270a83856c8bc9d17430c7c9fb563af644dbb7ea0f4271e64327582812",
+      "sequence": 149
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-016-a",
+      "formatted_prompt_sha256": "sha256:25dadf50a5641e27ff1924bc2750a43174f7c295373509d9278df8cbec27d5d3",
+      "item_id": "slsa2-eva-016-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-016",
+      "prompt_sha256": "sha256:936b11b637534266a324b1dd46c7b97d37e73689c2bcae62a78869a0f4975534",
+      "request_body_sha256": "sha256:18fcb7d9d4bb14d4120280c85df37315377eda8b7c946ab27e2ae47e4f2cf08a",
+      "sequence": 150
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-016-b",
+      "formatted_prompt_sha256": "sha256:92182753ca994a2440fd0e8d4d51292438af829ff5fd12c5f957a909b5f3261a",
+      "item_id": "slsa2-eva-016-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-016",
+      "prompt_sha256": "sha256:3f6a2e9c96c0dc3562d4472402b8f06d2483a5f9a6c3c1fabcf5b5bf11420387",
+      "request_body_sha256": "sha256:6a02e45168f7be8e4c3f16548a4d68d4e460d7e76a7bfaf3802117775d5a23b9",
+      "sequence": 151
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-017-a",
+      "formatted_prompt_sha256": "sha256:cca75431d60b10af43565501d02faa4a739910a6aab0853cffad8303cf05a036",
+      "item_id": "slsa2-eva-017-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-017",
+      "prompt_sha256": "sha256:3ec5c3dae8687ca7369f8f228af96ff9c14e84a05d83bc937bdc9c600c397d01",
+      "request_body_sha256": "sha256:3665987caaf3d7887389260974b2bb1e0bdbffa4aaeedf4c053789d0d58d566b",
+      "sequence": 152
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-017-b",
+      "formatted_prompt_sha256": "sha256:808751e145d0fb66ed387b32b6a44e5353d32f40decc63c3162f0a7e8b01c910",
+      "item_id": "slsa2-eva-017-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-017",
+      "prompt_sha256": "sha256:396eb5d77e1adbc32394e3c4c18fe007a6e864be53cf006d4f2fe821c0c3cec3",
+      "request_body_sha256": "sha256:11a6baeedbb09ba9678fe75b0af6c048c31919ea66e2ef6c10942b0995148710",
+      "sequence": 153
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-018-a",
+      "formatted_prompt_sha256": "sha256:585b08a10a8d9ee1af32be99511c1e40dcf2f6cfa11b27a26f7df04fda61d278",
+      "item_id": "slsa2-eva-018-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-018",
+      "prompt_sha256": "sha256:b5747e8affa32ac0048a794f7dcaa8d23e04b0924a518defbe02bd851a12dcde",
+      "request_body_sha256": "sha256:68a38b70d988956414e666c327eb3a6fb078ef9647b54dab598f6ae9192da779",
+      "sequence": 154
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-018-b",
+      "formatted_prompt_sha256": "sha256:133e8933261df7dbcfc42d0e6b8e3ed2482c3a9118da872af7309c699ddfa2f4",
+      "item_id": "slsa2-eva-018-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-018",
+      "prompt_sha256": "sha256:c91c539cbf2667774c653f9d5202ff1cf585babe45b7474aa2047e9bfc497421",
+      "request_body_sha256": "sha256:0b1176c950d576fb4d93d90493b7dffcd8ed04094bc5d971dccad9380faa36d7",
+      "sequence": 155
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-019-a",
+      "formatted_prompt_sha256": "sha256:1cbe957dbb991c376810ffdf7e5079fd681006b553013130af474257f3719eb6",
+      "item_id": "slsa2-eva-019-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-019",
+      "prompt_sha256": "sha256:6ced7a960221c85260c238206ac835de808652f46c2fc2f1ceb625c5b28f3180",
+      "request_body_sha256": "sha256:521bd917859afedd1a4d82def4dbad6f1bd2ee6bd6690c390dd85318c527d19b",
+      "sequence": 156
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-019-b",
+      "formatted_prompt_sha256": "sha256:bcee08bc9a2ce6911cfc3627459329cffd7e2f16d1b2f11a44de68fdb00247fe",
+      "item_id": "slsa2-eva-019-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-019",
+      "prompt_sha256": "sha256:fb238b9711f4db61d7d70607b7f2486d9377de03b8cb70432e575405de097746",
+      "request_body_sha256": "sha256:992793fc07e4fed970d3821ef9a28efeb6b6cebad7ec5c78280b53502be535bd",
+      "sequence": 157
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-020-a",
+      "formatted_prompt_sha256": "sha256:1b010c4a811040f5ba60ba2f04677c87de3c232963b06a166a920f7587f82ce9",
+      "item_id": "slsa2-eva-020-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-020",
+      "prompt_sha256": "sha256:66b95ea91dedc79c3e8b727fac2c60c48047ce40eb85d3a0ef9ffbc93f245c6b",
+      "request_body_sha256": "sha256:47bcfd30f0c41c3ecc34075b0069d842bd1906abfd00f65d6798f2554250ffca",
+      "sequence": 158
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-020-b",
+      "formatted_prompt_sha256": "sha256:b43becba91315295e185ac96ee8bee2a29bcd7400272c41c4e06a3255c823714",
+      "item_id": "slsa2-eva-020-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-020",
+      "prompt_sha256": "sha256:50afec68cd51afa9bb05b082fea8cba584f3c76592ad62f92f86eb898fce26ae",
+      "request_body_sha256": "sha256:ed8cd2a4bedc4526f78580af57f1c60311538bedead5bd9d50a06b1410b5c027",
+      "sequence": 159
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-021-a",
+      "formatted_prompt_sha256": "sha256:d8f9dff05d052fe2d6a129c1cab097f6440d40d0de5e79a8325f052345369e05",
+      "item_id": "slsa2-eva-021-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-021",
+      "prompt_sha256": "sha256:7a61cb30c95b7452b21f4210872d9cc0d645b75069f70d75d8768c10c8f5feea",
+      "request_body_sha256": "sha256:e4b117226b6266477bb804ce0dc032f5e3551acfe0ac467637743083c8f6f718",
+      "sequence": 160
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-021-b",
+      "formatted_prompt_sha256": "sha256:812bb75312676d819dcf952270da4bcc727b6edd0396767133efe7140f1bf6a9",
+      "item_id": "slsa2-eva-021-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-021",
+      "prompt_sha256": "sha256:5e0b0c2f4ef7b4f800a1d7664078988dc425b6857f8c416e333763c0b68dc784",
+      "request_body_sha256": "sha256:7d205e78a43a8a322fa8fbe9fabbe64c9fd62020fa50ad5ee7b067eccd142b77",
+      "sequence": 161
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-022-a",
+      "formatted_prompt_sha256": "sha256:2ac69c9e647d76e11c5f8a3452156c4a7e89f8649a2afa6821e47e6a47010ebc",
+      "item_id": "slsa2-eva-022-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-022",
+      "prompt_sha256": "sha256:f81ce6274438a8e9a30ceddf9b12672857e8515f564423e5166b30eee4f7809c",
+      "request_body_sha256": "sha256:c48ea0216566381e29545bcce0f1c029e6748c44bcafb8cb0a349a47df964d9d",
+      "sequence": 162
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-022-b",
+      "formatted_prompt_sha256": "sha256:4c52e7db73568d7a959ff70fc71e9a07201fb87d4c7c71aab607e24cd8e7d872",
+      "item_id": "slsa2-eva-022-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-022",
+      "prompt_sha256": "sha256:5c3c9ba538d5081c3a1a33f3c56385b39e339a7dd1b13c6a4bc87f41bbf2c6ce",
+      "request_body_sha256": "sha256:56be4cf9be2bad325d977e3fe1adbfd6fe6acf8bc095f31e0a52966826756748",
+      "sequence": 163
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-023-a",
+      "formatted_prompt_sha256": "sha256:39ff93dcb3ed75244561f6bd0bb5d4b4fcaeed8cff0046cc8cd912b11c1f26d6",
+      "item_id": "slsa2-eva-023-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-023",
+      "prompt_sha256": "sha256:2ac982b486238c3003128786695b97b5c21185d800042c8170281fb70051b6a0",
+      "request_body_sha256": "sha256:5c612e3730ba38b6c06edfdf9cedb909c597a553370372b848be5e68527ef360",
+      "sequence": 164
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-023-b",
+      "formatted_prompt_sha256": "sha256:263312ed6e0189f9d3c366d0614d4645ce57552a894ad437f75cfa7028ef5d4e",
+      "item_id": "slsa2-eva-023-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-023",
+      "prompt_sha256": "sha256:a265262172989d99e6f19b6d164f61ee595f973ef94e196322ec4de159a75d01",
+      "request_body_sha256": "sha256:b3a3dc36e53c16f3e0f647c4f21487399a4b62bb89ff881f73882e71ed81f595",
+      "sequence": 165
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-024-a",
+      "formatted_prompt_sha256": "sha256:711248289aa8fd268fe39ea5c1c994f6e9afebab39e3fb4e8668b54540e33fc4",
+      "item_id": "slsa2-eva-024-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-024",
+      "prompt_sha256": "sha256:284a6886cc62aee7a6715c4ee1fd3080098cf58006609cbc2cddbe4b6fdc4ba5",
+      "request_body_sha256": "sha256:ff1afdbf9a8945c86ff1449dec5584aef2f109001e9a433df78b5e468e8fb82f",
+      "sequence": 166
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-024-b",
+      "formatted_prompt_sha256": "sha256:36fff38fd4357fd8e1649f335c186ade1225f1d6b2656efbb72cb20949f6b054",
+      "item_id": "slsa2-eva-024-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-024",
+      "prompt_sha256": "sha256:f7702d374376e7d3a92580ce48c82748a2e9084f8ad8278aae9dea38f65ad701",
+      "request_body_sha256": "sha256:07c6b16e3ea57a68047deca385997a80bf06d7f9defceedc843bb7f4b18e24cc",
+      "sequence": 167
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-025-a",
+      "formatted_prompt_sha256": "sha256:046b800d1ee4e15f2169bd1f5d16e3afb69a292dca47987d315ddd3f0f4c66dc",
+      "item_id": "slsa2-eva-025-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-025",
+      "prompt_sha256": "sha256:a309055a346220c3844658590dd44a80280f8f213c198ee925bb6df57e4a9434",
+      "request_body_sha256": "sha256:99ac7c3f46d17572bd73baa9861dfdaa303d989a1bceb6732da04fc266cd8177",
+      "sequence": 168
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-025-b",
+      "formatted_prompt_sha256": "sha256:4a88c40c9e13caf6644d60746c77b912735723ae98107a67739caf873e43d665",
+      "item_id": "slsa2-eva-025-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-025",
+      "prompt_sha256": "sha256:12cb6c1dcd2ace3d65ecfe8417c9a9d1c3c5e10354632f25934b9ce26084b80f",
+      "request_body_sha256": "sha256:fb5f0c0b3eec14464885da53641c608364640e2aff1a9e902f427eee0ba064cb",
+      "sequence": 169
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-026-a",
+      "formatted_prompt_sha256": "sha256:fd284cb742c39840684085402f57578abb479005cfb83a5e6f9f91dc2a525d1b",
+      "item_id": "slsa2-eva-026-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-026",
+      "prompt_sha256": "sha256:d1b3992fb3aef7fee9a24013cf18625098302f8bb39ed6257c08b5198e2cbeff",
+      "request_body_sha256": "sha256:e81f28015fbc82c18eddd6f77c6c2f26b233255215ca795ffc5dacaea79220c4",
+      "sequence": 170
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-026-b",
+      "formatted_prompt_sha256": "sha256:83ec7e58cebe224e91689180b196a38d724d9cfeed4be4d0c5ac3d88580cc90b",
+      "item_id": "slsa2-eva-026-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-026",
+      "prompt_sha256": "sha256:03134a2e0450b465c091255b97cb69d1aa7f1a7ae4b1a5e9d1bb0c3e72399a6c",
+      "request_body_sha256": "sha256:9e71ece377f0d6e424f9927bd8e148c9002998619079b359bd223be43fc6a7b7",
+      "sequence": 171
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-027-a",
+      "formatted_prompt_sha256": "sha256:7b37d95030a2c48788677e58ee1ffe1a385bd606a8109a25dba65eedc5b68156",
+      "item_id": "slsa2-eva-027-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-027",
+      "prompt_sha256": "sha256:2479333ae484e238eac6a327bc72a24a887a97b49b0cfe4d0c49893054d92b85",
+      "request_body_sha256": "sha256:8ea775c7fa9ec138eb272050506cc69a6da3d714b4a5879916ae3bb49ff81eeb",
+      "sequence": 172
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-027-b",
+      "formatted_prompt_sha256": "sha256:98cb014a2e879a6ef0e878e54228df68ecba17b5027f5138f6dae7f3abd40bdc",
+      "item_id": "slsa2-eva-027-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-027",
+      "prompt_sha256": "sha256:0b4d0b69dfb0869d0f0df075add4c5d0f555f42de498dcc25190a8d82d07328d",
+      "request_body_sha256": "sha256:dcb6fc1b80178e8a9f14f839ea9bd944486749bb12f5779d90365a36e7bfe09a",
+      "sequence": 173
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-028-a",
+      "formatted_prompt_sha256": "sha256:5852f25c1180e0dd7ad1eccb7c6a32a88eda1574a0741153f9d233b134375a61",
+      "item_id": "slsa2-eva-028-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-028",
+      "prompt_sha256": "sha256:4aed2f874bf19ab27757cbf95ded2fc9a0d4655b676b36df72936cf343bc5860",
+      "request_body_sha256": "sha256:25cef033ad2a19c91c9a408336f0ef51423263d496cc892ec6b9f2229beac9ca",
+      "sequence": 174
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-028-b",
+      "formatted_prompt_sha256": "sha256:dbb68b802e91b9a16c541c0ac5c9a0e543908e9129305e78f59a0a5fbbcdceee",
+      "item_id": "slsa2-eva-028-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-028",
+      "prompt_sha256": "sha256:bd1252b871210c407a34999acc07b9adb7d80a76b42a2076a6b0e38e1490489b",
+      "request_body_sha256": "sha256:a548c23b5ec03384031a1f39d83e49fc6420794080118780960ea1bdebc53b07",
+      "sequence": 175
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-029-a",
+      "formatted_prompt_sha256": "sha256:d1a4b539702b2d832eaaacecdcf8c323313c04c526769f49a750f478ccd4e10d",
+      "item_id": "slsa2-eva-029-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-029",
+      "prompt_sha256": "sha256:eec7fbe3feb1d3a7db05c6059ab6315c29bc8c46954271f88051745efb4a9ea4",
+      "request_body_sha256": "sha256:a3aa613b5f66d389761e5cd699e080b3de285a4c1210560cbb59cc648b0b5bf6",
+      "sequence": 176
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-029-b",
+      "formatted_prompt_sha256": "sha256:4bfa7fe0707deecab5b44d616cf8b3be932027f5abbe9bceb0211aa86134902c",
+      "item_id": "slsa2-eva-029-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-029",
+      "prompt_sha256": "sha256:51b153eb2943b2e0af533659311dc160b06d6c4798c4a12412ce922b6077101d",
+      "request_body_sha256": "sha256:66b58aae9306b16b6787380d152b615cf2d6cde3ed74e766744e716535557041",
+      "sequence": 177
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-030-a",
+      "formatted_prompt_sha256": "sha256:55860111c3743f08ca2afaccc00c4ae6f30868fdbd216122674eb565adf3f6e4",
+      "item_id": "slsa2-eva-030-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-030",
+      "prompt_sha256": "sha256:5f8af9b381d8d3dda1167b4aa3a9ee14dbe2b0b982768d29259d9f114e9cc575",
+      "request_body_sha256": "sha256:682e745afd85313024cf5434625bdc4816998ace1ab30bf1e7f80f23149817e5",
+      "sequence": 178
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-030-b",
+      "formatted_prompt_sha256": "sha256:2a1e6b0a6e9852b76bc47f33c2d70268edc2e6d08bb05c679e401b65e06ea8e9",
+      "item_id": "slsa2-eva-030-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-030",
+      "prompt_sha256": "sha256:b57dfe533fcb7c4a825d844fc0fc1650a6f65403a3e45e867b5d4e030d3e73cf",
+      "request_body_sha256": "sha256:a0d2d23ae39f7620ab7581fff7379be7f39e0002280dc8898520cc7da00cc6de",
+      "sequence": 179
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-031-a",
+      "formatted_prompt_sha256": "sha256:06d85dfedd686ac7bb4a9418a00d905d3524aa03b0e078726f2ba48dfcca8f5e",
+      "item_id": "slsa2-eva-031-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-031",
+      "prompt_sha256": "sha256:2b552975219aec4d5324126c44d4263379ce060e4b8ae2c60df14c5a94ffde09",
+      "request_body_sha256": "sha256:627b0ef92adb157307eb362e7a2688d65b2f19b2cf50d83590c730c8e035072c",
+      "sequence": 180
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-031-b",
+      "formatted_prompt_sha256": "sha256:997b123b95c4b415999c397fabf9324baa7ac126a2677e589877b25880352aff",
+      "item_id": "slsa2-eva-031-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-031",
+      "prompt_sha256": "sha256:38d2de6a81b708c8cfec9b15b9eade84b00eca26255c905e1c4cb605ae5d6ea7",
+      "request_body_sha256": "sha256:67dc70f071f6b026282dd0245e1a2581839f926b356627f76e3f9b94ee307c4c",
+      "sequence": 181
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-032-a",
+      "formatted_prompt_sha256": "sha256:c713e3d7f579276b3e6e17bffdeace3f1dae0b90df330542a5c9d5a34a720e84",
+      "item_id": "slsa2-eva-032-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-032",
+      "prompt_sha256": "sha256:dd8f1e1b8aa5a8fa7179eaad601a366ce5d349e2711b50f90b3c32118b0435d6",
+      "request_body_sha256": "sha256:e1011d72179e01ddd6c1390ab4cf844923559749c76986db0c501f48b9ea3a84",
+      "sequence": 182
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-032-b",
+      "formatted_prompt_sha256": "sha256:646674ce5537ac302e2efe6ab509a1a031bc5a2b6935aa79548d353a48e4654a",
+      "item_id": "slsa2-eva-032-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-032",
+      "prompt_sha256": "sha256:2889461015815ca4e8dd9cb3b7ca254cde8e9aeea31e826a9502d2e3f94a453b",
+      "request_body_sha256": "sha256:f949074cc1189000714625009f67bd6400bf70623b718c3ec1e473cb50d1cfc9",
+      "sequence": 183
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-033-a",
+      "formatted_prompt_sha256": "sha256:83d7acbd6e747ec46250647ec6127c98338265f06374e50e8b755703c1e7197a",
+      "item_id": "slsa2-eva-033-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-033",
+      "prompt_sha256": "sha256:98203349f4a4f1394af2d67c4053760904369bb10784f490995d62b6e0a9386a",
+      "request_body_sha256": "sha256:699f113b3f766dfb53cc714ab8eb874d778c7f8bf3a6cb3b78517b3ac484b343",
+      "sequence": 184
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-033-b",
+      "formatted_prompt_sha256": "sha256:260ddc0893cd3cbac92086d67014e525a0417f8fd461f71d992c104f623575a3",
+      "item_id": "slsa2-eva-033-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-033",
+      "prompt_sha256": "sha256:a13e85172b7891cf19f36e7b61345d26e43f5af24efada2fbe2791f5667c955d",
+      "request_body_sha256": "sha256:4414520665012636500942fcb5655f80a1a806fae6bd805b00a8757111ead721",
+      "sequence": 185
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-034-a",
+      "formatted_prompt_sha256": "sha256:db0481274b0d4e93c9bd150895704d1ec5e15e3e423a876753f634b6b8f205e2",
+      "item_id": "slsa2-eva-034-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-034",
+      "prompt_sha256": "sha256:f3c63a227b9d4419269cc09da8a3c0c8aa49d0520a58de8154653ad260d507ab",
+      "request_body_sha256": "sha256:4862cffa3cd641b33b5941ba3112b586dc90347366120f7afd6613dda5c3658e",
+      "sequence": 186
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-034-b",
+      "formatted_prompt_sha256": "sha256:6a11c842cb7fb4a87be9372c6e4eeee6826f73f6b11a9f3d92854d6ddbd0d171",
+      "item_id": "slsa2-eva-034-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-034",
+      "prompt_sha256": "sha256:8739057ecefaed304a1a40aadbc46ad7bbb8c95da7b710ba80e2abc28cd79ea7",
+      "request_body_sha256": "sha256:ea4f78ba517259b9531b3e6d95fa0f010dfe479c146b09eeaf544a7295c85dc4",
+      "sequence": 187
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-035-a",
+      "formatted_prompt_sha256": "sha256:d25eb830e9876c7a46092f91392a0739261ac452ca229476cb30ff910eeb1380",
+      "item_id": "slsa2-eva-035-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-035",
+      "prompt_sha256": "sha256:8a7f621f9507f14c7045fde185c0073a84755c29d3aa44868631808b87443633",
+      "request_body_sha256": "sha256:5ac309231ba3bc3a7c954bdc735a6819ca8e1344a268f008fee66830d9fc2ad7",
+      "sequence": 188
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-035-b",
+      "formatted_prompt_sha256": "sha256:18794fa04948d8aaef2672e92ed809e0a37cbc103b3bfe8dc2540633b5d95fc4",
+      "item_id": "slsa2-eva-035-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-035",
+      "prompt_sha256": "sha256:2b300820827a674e0d689ed6c862a8c3e8e17d42696dbde5400d3a61726ef588",
+      "request_body_sha256": "sha256:a8dc5bd63c910002d19570aa9de0044e348e33c3dafb5624fbea665dbecc5e69",
+      "sequence": 189
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-036-a",
+      "formatted_prompt_sha256": "sha256:647951d644ca0f6af6d5dae390809cef1fa19d02f127dd860d90047d25cfa5c8",
+      "item_id": "slsa2-eva-036-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-036",
+      "prompt_sha256": "sha256:93155f0ef4a1d69539c6937b8bf7cea429ab9e90987d7da33738bb369e24be4e",
+      "request_body_sha256": "sha256:837c59e38656ba8d870fe230dc1e7fc158353a0a9b12c1845749efd8d1334ed5",
+      "sequence": 190
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-036-b",
+      "formatted_prompt_sha256": "sha256:9f1330d49cd5a8a31eafc51ff543443d7167aa77aa34fa8cefa1c316bd6fce7c",
+      "item_id": "slsa2-eva-036-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-036",
+      "prompt_sha256": "sha256:47c02473d28a7d8f744d26d734368fea3cbaf1a93d4d07d1363a100480bfa539",
+      "request_body_sha256": "sha256:c797c7fd9b4c75843293725b7c02a5160106be1af3220408c70cd44cef57ca5c",
+      "sequence": 191
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-037-a",
+      "formatted_prompt_sha256": "sha256:9d4a5b744547b08de86c4235561e71ea1b1ae0ee69a0900162e564a9ff5603ff",
+      "item_id": "slsa2-eva-037-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-037",
+      "prompt_sha256": "sha256:df0b59d2d11c53d6c153b0e886a46d2639abb9e9310a296af8b7c66169b245d5",
+      "request_body_sha256": "sha256:f618b7c02ecd167387c9b98ed801fc4ff24e6ed2eca84c8d8392a6739fbc9c40",
+      "sequence": 192
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-037-b",
+      "formatted_prompt_sha256": "sha256:d8de565c3371edbcb477f6a19d05ead62d04f8cf5e865d49d7ade2ae745ea1b0",
+      "item_id": "slsa2-eva-037-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-037",
+      "prompt_sha256": "sha256:836c911384eac912b8dec2e7009aa6a9097b71d69c04fe0c53e9594029c35c78",
+      "request_body_sha256": "sha256:9c5d7593a6a7e6220bdc96278aa0087012cf42ea40cd69ba7bd8933967ca696f",
+      "sequence": 193
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-038-a",
+      "formatted_prompt_sha256": "sha256:6e75b31977fc768f409f24634219f4fe4aa7f2f2e70126c339dc804497558fb5",
+      "item_id": "slsa2-eva-038-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-038",
+      "prompt_sha256": "sha256:1f8df03217dd7df02952fa716ec1dac025fdd7afe06cae674fe6fa2652b23416",
+      "request_body_sha256": "sha256:76c899246c3faf0ab541c8059f45e27199e42e3efcbe474f4ca4f7611b7934d3",
+      "sequence": 194
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-038-b",
+      "formatted_prompt_sha256": "sha256:f45c678bf68232886566a090b97f08203e86323678048a331ccc57340e541abd",
+      "item_id": "slsa2-eva-038-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-038",
+      "prompt_sha256": "sha256:b1f70a599d8a852d8af4c00e4116d592aebec456faada7e47dcce1dd1831449b",
+      "request_body_sha256": "sha256:95009b64b94d278fda6ac35da8f501cbbedccee0acb1fdd99b4a2b23069c4a3c",
+      "sequence": 195
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-039-a",
+      "formatted_prompt_sha256": "sha256:0b742ce89fbd0c70ef476beb010b0805180bb903394d1d53fac41f1df90b264d",
+      "item_id": "slsa2-eva-039-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-039",
+      "prompt_sha256": "sha256:fa313af655f46159f1df87b4db2bd87b920bb0bf323f8d047e8521f7f67cd4a1",
+      "request_body_sha256": "sha256:c657c92d88a2a89e5ca0b52f0fc575810703cf73fe648828561357216247fd99",
+      "sequence": 196
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-039-b",
+      "formatted_prompt_sha256": "sha256:4faff7e3fef107731c2451e49bedc5e025af673e0ce9c299eba2a37c279c7a53",
+      "item_id": "slsa2-eva-039-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-039",
+      "prompt_sha256": "sha256:8d892d3743be32069e3f04b7ade2fbc9e4c408056bf4d94378b472fa04dd2524",
+      "request_body_sha256": "sha256:3876db2fe8c7918e8d35aae3681169c5e14efbc5476ef276bc2b732f23fe753e",
+      "sequence": 197
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-040-a",
+      "formatted_prompt_sha256": "sha256:1ec75103cf6e7ef7c6ebdfb47d5ce27a75ca52b51b8985015cae705a9746becf",
+      "item_id": "slsa2-eva-040-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-040",
+      "prompt_sha256": "sha256:3aad7f3150e1a58accceebe2920866b6e44fa5252de98ad539e127e511a92c5d",
+      "request_body_sha256": "sha256:4b4a37feb12d8132ef60c579209cb2d03db46fdbb7545d954e6aa682a9a59684",
+      "sequence": 198
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-040-b",
+      "formatted_prompt_sha256": "sha256:f8ade203a924bf8ec848a9c8d111e053b2ca1441f3768148cbbc57dfeb609b19",
+      "item_id": "slsa2-eva-040-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-040",
+      "prompt_sha256": "sha256:a2088d6abfe2ba24777323ccbea9661ae8c5ef09983c100ad4adb06f43977c8a",
+      "request_body_sha256": "sha256:c95b96029d32090b0442e0c1d55c8bb739d1b6aad4bc544edeadec1a6df3cb6d",
+      "sequence": 199
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-041-a",
+      "formatted_prompt_sha256": "sha256:fe0bcc6c1181361c2d7fc6e0c3997beab3448247a49239f892120798e85f43e2",
+      "item_id": "slsa2-eva-041-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-041",
+      "prompt_sha256": "sha256:bd5453475f27fce6c7637dcc3b66348d4588c7117dc5bf3a88d9b6f4f2943bcb",
+      "request_body_sha256": "sha256:5bb5907e96d3c574aaa7d0265d6b83cb6424e9b234ee1e47860f0b6b590941e8",
+      "sequence": 200
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-041-b",
+      "formatted_prompt_sha256": "sha256:0792c127bea8c9837c7add1e8e394cbb4fc2e672242afc8b6c6b34c71f40ed3f",
+      "item_id": "slsa2-eva-041-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-041",
+      "prompt_sha256": "sha256:479ef9710103a710315dd56650259d60a76edd5ddf814c7a0a9c08fdf49dd676",
+      "request_body_sha256": "sha256:bd066cd6f83309041d8771039f7f4b1c1461bba0b0671993d5d2838f65d46fb8",
+      "sequence": 201
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-042-a",
+      "formatted_prompt_sha256": "sha256:1a1747bd82802909e288e2105a3cef0cd6a3b09142b4527caecaf62ce9ecd439",
+      "item_id": "slsa2-eva-042-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-042",
+      "prompt_sha256": "sha256:0d2201564fd25137e550b2442e6b220c5cceb4ed236e495f0f5b28100a9e22f3",
+      "request_body_sha256": "sha256:abe418312ec6ec422a46dcb35ba0b6d691a05b95c5822315b270b6c7887fc049",
+      "sequence": 202
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-042-b",
+      "formatted_prompt_sha256": "sha256:a740d1f174988650f30d6d919f8b7003660b310bd0af60f552e1d5cdc2a2365f",
+      "item_id": "slsa2-eva-042-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-042",
+      "prompt_sha256": "sha256:a596719f030a07bdfe47163012c80cfd0c03186dab8a1161ed4818631c5a985c",
+      "request_body_sha256": "sha256:0b8d93177733a018a6e6ce4ca8880a070bbd61c94e83dc1d6412f11960b7cbe0",
+      "sequence": 203
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-043-a",
+      "formatted_prompt_sha256": "sha256:ede316320bbdeca7490a516a610cb6cb468401ea0dbe77e2cb8859d9217f4888",
+      "item_id": "slsa2-eva-043-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-043",
+      "prompt_sha256": "sha256:97306ca02d68579ad84b7bac6cbde248d08e97939ed0b9e39b072d307fb802b2",
+      "request_body_sha256": "sha256:2170deee42b04258f479f9198c982160df938b6bdf382d6c12d6b1f4ab92f802",
+      "sequence": 204
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-043-b",
+      "formatted_prompt_sha256": "sha256:779a36733b90618a8377d4f9ca30b05aff523146cb01a153151166fb52a61d9d",
+      "item_id": "slsa2-eva-043-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-043",
+      "prompt_sha256": "sha256:00eea7d9203e9fdd4144f5bde219f6ad86798f3e038307cf975d328d3e6e03e5",
+      "request_body_sha256": "sha256:f75699d0f8d20f139874792a18345b8a7d2515373df68c615655cb5fdeeef2da",
+      "sequence": 205
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-044-a",
+      "formatted_prompt_sha256": "sha256:a5d34c4e977662f7828fda1a4172b28d66d20e1c37da1bb6d91cc038236b185f",
+      "item_id": "slsa2-eva-044-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-044",
+      "prompt_sha256": "sha256:bc22b7f6096ff6b5f54f563fc957b76416391c739951ae9c2e4044f73a1c8980",
+      "request_body_sha256": "sha256:b6b68575a86a3a41cfd97e32e06991a4498243b52eee1c53763d9c77911d3f01",
+      "sequence": 206
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-044-b",
+      "formatted_prompt_sha256": "sha256:9028ec4703c3eb1ef5c2f08486ebbfc31fb4571cfd022353b9c0741a21d387ee",
+      "item_id": "slsa2-eva-044-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-044",
+      "prompt_sha256": "sha256:44f7bf7ed3046438b11a9028ba99d7ffa350545bb62eeb3fad18e81dd66065c8",
+      "request_body_sha256": "sha256:091a158890737a2ebe5b129b810b34328b7ecc2409e3965c4446a46e1a52fe4a",
+      "sequence": 207
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-045-a",
+      "formatted_prompt_sha256": "sha256:0b4579d5c01e83cfc5f19cc1eda00858bc5278ac91cb26c32c242f61d9774889",
+      "item_id": "slsa2-eva-045-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-045",
+      "prompt_sha256": "sha256:e5f7d11aff5886f463a79b09fcd1e3e230a2955fc4702c21663a7de85001732d",
+      "request_body_sha256": "sha256:9b82715011301c3a5c7fcbf8f2cddeceba137053f7fe82620569e620851eca83",
+      "sequence": 208
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-045-b",
+      "formatted_prompt_sha256": "sha256:ca5211bb8522ae246c07ed765c48aab7316a8b58c91974a7cda369065b61926c",
+      "item_id": "slsa2-eva-045-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-045",
+      "prompt_sha256": "sha256:0552709e528ae6adcc89ac33a2be3184854967c096f40e3a8ca39c6a36449734",
+      "request_body_sha256": "sha256:6432467374cf57493ac93c1509523969e4a0525b3042322d5d2843e16d9fbe6a",
+      "sequence": 209
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-046-a",
+      "formatted_prompt_sha256": "sha256:4201e404357ade6bfd8d1eb5289aa7531a3faacb2ac69a305e1a25170c00dbd9",
+      "item_id": "slsa2-eva-046-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-046",
+      "prompt_sha256": "sha256:eb9aeb6d91dcd4ad3edb34146b525a0eceb21dc16a414510c4637cdb22e5cd3c",
+      "request_body_sha256": "sha256:de0093fa513c1a25b8f06fcf71f5d89c417456237398bbc9e4b420f630ad0602",
+      "sequence": 210
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-046-b",
+      "formatted_prompt_sha256": "sha256:a95b0d9d89ee3975f6f5a1986e44d1943f30aefbd80bc714826ceb15b2531430",
+      "item_id": "slsa2-eva-046-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-046",
+      "prompt_sha256": "sha256:32530ef08e558e0c8a8428eca47140e72588006a224781dd1ea1c0cbdc59bbed",
+      "request_body_sha256": "sha256:aa758c0b62c83422455431628bada35e24c28e4432e0e5b7cef95639208ebcb3",
+      "sequence": 211
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-047-a",
+      "formatted_prompt_sha256": "sha256:cc7e6a311b39c78ea0ca6f90a4a0ba57e110b8473db06ce868da629d04ab5dc5",
+      "item_id": "slsa2-eva-047-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-047",
+      "prompt_sha256": "sha256:dc5fbc0b1b3fc31229687ade6e34846c8e7eed835f3f6c6659adbefc10b8f094",
+      "request_body_sha256": "sha256:59f1b5e48b779954a621e07e7286b95a852107058d17c748c543c3f8725a7419",
+      "sequence": 212
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-047-b",
+      "formatted_prompt_sha256": "sha256:0a169bca151c4f068b6dbb80b6035c607ebda2092714c16eb62539e05aa3a3b6",
+      "item_id": "slsa2-eva-047-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-047",
+      "prompt_sha256": "sha256:051d44dc96c0c4e74f5f1356864f10ccf746332de565d0150a3db231a660e7d8",
+      "request_body_sha256": "sha256:98687cc3e7faf101bff2865c71e506aababb6241ca5083759ff67f8efd28fb80",
+      "sequence": 213
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-048-a",
+      "formatted_prompt_sha256": "sha256:cdd148276456374f93db2a6de8fbd141dbf1d986d77fc0baed84d95585fe2e85",
+      "item_id": "slsa2-eva-048-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-048",
+      "prompt_sha256": "sha256:0aafc71597e43e24175431e5d3cbc151af1751471fb6c2be78a40e02d61f3a20",
+      "request_body_sha256": "sha256:3fea762a0ba2ecd937cc37b8e7d48014068ddf965dca66b3b475d568bd4f5182",
+      "sequence": 214
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-048-b",
+      "formatted_prompt_sha256": "sha256:5c1ff7e26e8b09e45c5b9b2b4c916e99a71baac7a75d0e631e77a066afe521bd",
+      "item_id": "slsa2-eva-048-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-048",
+      "prompt_sha256": "sha256:d7d25412d2af9ac1acb266839affa630f060609cb65c39e547d9a6a44b3e5d2b",
+      "request_body_sha256": "sha256:f1a5a2d88209792e03bb983be58a32bac029ee029b79ba7d5aa88f8313350f3a",
+      "sequence": 215
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-049-a",
+      "formatted_prompt_sha256": "sha256:744aa75aca46030123c8cff334b3b14953e15e9d5047fc5be3d2bdf97207b17a",
+      "item_id": "slsa2-eva-049-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-049",
+      "prompt_sha256": "sha256:e92f73070973ae5d00660ffae3a798211a4a082e0585fc12485f8e211a1b5a43",
+      "request_body_sha256": "sha256:5eed175100ae4d1ad91e444ad7a6c8c05b05fd27c7a53e617722e8231c467213",
+      "sequence": 216
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-049-b",
+      "formatted_prompt_sha256": "sha256:77cc5618378b106b9564c042d5ddf70ca0bc222e2100ce40b8b91926f05f02d2",
+      "item_id": "slsa2-eva-049-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-049",
+      "prompt_sha256": "sha256:5aaa2f66051489b9fbb4d11abfef39f693bf37945257b86ac113682b191a0660",
+      "request_body_sha256": "sha256:89f6f411f7066804f8473a7298b529252627bc6d9d731f340ba83fb22075cfeb",
+      "sequence": 217
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-050-a",
+      "formatted_prompt_sha256": "sha256:25f8d7a5cc35a00f32ab4c29421f428a0247fc032bf245b8cef9fdc28cc282f3",
+      "item_id": "slsa2-eva-050-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-050",
+      "prompt_sha256": "sha256:98bcc9e630ab12e35b2be654de1e5c32fcb15e45df0607dbe2e73675b2ee2528",
+      "request_body_sha256": "sha256:2ea4a61318c7aed5da5d1f1b9cf0bf10f01895cd8d1bca41c2d90119992961fc",
+      "sequence": 218
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-050-b",
+      "formatted_prompt_sha256": "sha256:33866de65e214a5d5fa9b32179ea13d2ca9b5ede0a59f83c5abc864e035b220d",
+      "item_id": "slsa2-eva-050-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-050",
+      "prompt_sha256": "sha256:7a3abe91e385f4294c9194c4be29fdca79daa66406f6a26b16bf89a5565e5590",
+      "request_body_sha256": "sha256:ab770f34000c34e9ecbe90ef6202e9a554b42d458d19536769cf4de8d1b6134b",
+      "sequence": 219
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-051-a",
+      "formatted_prompt_sha256": "sha256:50ed03b2b26ed3357106ceaad738a34331c2d6fe9b01be9945feb52cd635ae9c",
+      "item_id": "slsa2-eva-051-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-051",
+      "prompt_sha256": "sha256:231e49b3682bcbb41e4052ee42aee1207c8683abf1d7accc42a186843da29f92",
+      "request_body_sha256": "sha256:7a6a25a0d461bb40d84db727c3b35689729074d2aee56fa36957f91c5b617e73",
+      "sequence": 220
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-051-b",
+      "formatted_prompt_sha256": "sha256:f5f9f354931cd1cafed49ccc63796adef0060d6a745b64d4d4cac94ce9adc538",
+      "item_id": "slsa2-eva-051-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-051",
+      "prompt_sha256": "sha256:29e8bf211cf0dae5fa0712b229523e7c82ad095ebd0ed0e4ea07249734bdfa1d",
+      "request_body_sha256": "sha256:1b819b16814c79c6bb5f43014a2934032f7d1fb8783ba91f949ed99cef158732",
+      "sequence": 221
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-052-a",
+      "formatted_prompt_sha256": "sha256:bf8308e3cdffd680bda598a7dc3243c014f4fd3926cd914c6077efeb7a63739c",
+      "item_id": "slsa2-eva-052-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-052",
+      "prompt_sha256": "sha256:57dc14e72279bf481c4d7ee219aa8a1fb07124f511dc8f0587ce3b60bd189ba8",
+      "request_body_sha256": "sha256:dc7477671d7ec91d842e61095f718684b7f344acab97638a934f97a4ca8de643",
+      "sequence": 222
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-052-b",
+      "formatted_prompt_sha256": "sha256:8b8ffa77f50c9b8d0bddd32e7cb2ac65b5dbd308aad78d950124746b3f9aa2d1",
+      "item_id": "slsa2-eva-052-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-052",
+      "prompt_sha256": "sha256:3c96648506868cd2386d070987042b7ba5e1b14f7fdfdb194b1ed3a02c714193",
+      "request_body_sha256": "sha256:f100d89c9f59ebfaa64421d004647e07c96fe4ec4d75389df2ed3bcdaaedac6a",
+      "sequence": 223
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-053-a",
+      "formatted_prompt_sha256": "sha256:bb4961f1cc56323512f316f350475fd59c21de9f0655ca9bdb3344e1dd817ad8",
+      "item_id": "slsa2-eva-053-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-053",
+      "prompt_sha256": "sha256:3b5b22bb96656e6b7c6cd2bb68226139c57046aa4821af4be610efdf91eb6aea",
+      "request_body_sha256": "sha256:21160454ac30b9611e2158a7051d94dde62e66ff1af18c2c6ead1e97e6d6cd5d",
+      "sequence": 224
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-053-b",
+      "formatted_prompt_sha256": "sha256:b64d3fa364d847dcabcaa106ce168ba8b96a5d1e5e5bfa38b81b14dd16d2e37d",
+      "item_id": "slsa2-eva-053-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-053",
+      "prompt_sha256": "sha256:1bfb0997505a2447a801fd3a2fc28376423448da36af078a44fd5af9adcf5ded",
+      "request_body_sha256": "sha256:2f8e07ebf9905e4522207ab07153a57909c81974fb7164a3e190137a81e318e2",
+      "sequence": 225
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-054-a",
+      "formatted_prompt_sha256": "sha256:a77c0b160fd0c9fac362ca6d9e29a0d4495d304c44ae13345dcd8367386f4fa7",
+      "item_id": "slsa2-eva-054-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-054",
+      "prompt_sha256": "sha256:f6018a1821fa70169b5dcad94a2de65a07e5d2fb6718f84e2a51404384e82460",
+      "request_body_sha256": "sha256:f4e2acb4aec99e74c9d06eae9287f0331102b53df1909aa3e3422aa4bbd19a98",
+      "sequence": 226
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-054-b",
+      "formatted_prompt_sha256": "sha256:1708fb8c524f3de7e0fbf327857c5b7afd365931b00cf772f8851c7d88642754",
+      "item_id": "slsa2-eva-054-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-054",
+      "prompt_sha256": "sha256:50451f3d60add0d88665bd3c1351eb33f564a823ab54f3cd16658ccb9cef2b1e",
+      "request_body_sha256": "sha256:dc2d450eaa76ea26825f631d86814d089d1db67e1e9a02952f044952054a4d69",
+      "sequence": 227
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-055-a",
+      "formatted_prompt_sha256": "sha256:80ab307615fe5007e42d4bdcbd2d7d929247c3132bb6c9639b41002c4e839c96",
+      "item_id": "slsa2-eva-055-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-055",
+      "prompt_sha256": "sha256:01897c467b33c1eb96659cb4d57a7b1c1cda8493c70c0a191ec45ae9a6fc4716",
+      "request_body_sha256": "sha256:52bc693ea9e1aae69e6d14c57de4e92b05ec374d2eb0ab48cc5982d59438efe5",
+      "sequence": 228
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-055-b",
+      "formatted_prompt_sha256": "sha256:3e46559526760c64076cb5425d3637d5e716a3d74400a3a2fc97f9132f8519ca",
+      "item_id": "slsa2-eva-055-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-055",
+      "prompt_sha256": "sha256:3945dcea2103d32684ef21c8b3d0de2d6e4cd271166e77b8db4a7314b647933a",
+      "request_body_sha256": "sha256:58ddbddd42dc7ccaa0498184291a5bb716b60c79565e6604c933f4fda13af8e5",
+      "sequence": 229
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-056-a",
+      "formatted_prompt_sha256": "sha256:035dac9d2ea7c905cf1ccc3845d55460ee9e36dccfd00b16804866f0992db07b",
+      "item_id": "slsa2-eva-056-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-056",
+      "prompt_sha256": "sha256:c1777d49869c091edceac3e7a7f46811b4314b2dcd87be8ebc9b3f76bd71f884",
+      "request_body_sha256": "sha256:bb9cb89e8c163ec2acef7758fe37f8347d86082509d42880f45c1f07919eecbd",
+      "sequence": 230
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-056-b",
+      "formatted_prompt_sha256": "sha256:3e47b5921d4b33b811dd7ee722a7f3c5c0ecd33c9bd93c974ecea84b0793b2d7",
+      "item_id": "slsa2-eva-056-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-056",
+      "prompt_sha256": "sha256:bb81e7c1c0824edfa71a9d20a287d4de48210fd48f20580bcbddb1cb66315b48",
+      "request_body_sha256": "sha256:818b1e23922b5af7c802209b69731df62d5b853707b3af51f2f0f8015659f709",
+      "sequence": 231
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-057-a",
+      "formatted_prompt_sha256": "sha256:11312c9d77060131434e2a434699259e4234be031be8b5cbfbcc947e737647eb",
+      "item_id": "slsa2-eva-057-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-057",
+      "prompt_sha256": "sha256:2ed1c0f016728f813532c16dab8572abf9257237adcb4a39f14c361118ae6ad9",
+      "request_body_sha256": "sha256:f5e4a45b6ec9a96133e001a1156467310f4eee3347c3ba6216be0b04e28af5fe",
+      "sequence": 232
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-057-b",
+      "formatted_prompt_sha256": "sha256:2eb354f023823cf3be474995404e319390655e752c797be4ba3315048e73ac8d",
+      "item_id": "slsa2-eva-057-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-057",
+      "prompt_sha256": "sha256:7addd7c859ed00bcae88dd90b2bd8efee4c79e99be0666bdfe097b80e1d6f04d",
+      "request_body_sha256": "sha256:af60ecfe06f676ea54156bf3a02f179ba7a87f3c48136d41cb220d2610c05355",
+      "sequence": 233
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-058-a",
+      "formatted_prompt_sha256": "sha256:ac1fb2ab4a6559dff2f6bf61452f92adfe0b42a30e11b4b7553688c253ca9684",
+      "item_id": "slsa2-eva-058-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-058",
+      "prompt_sha256": "sha256:38f3871671c6de2650ee82e5c8f58d1da86bf24475cc51c3735c12b725ee689f",
+      "request_body_sha256": "sha256:4420681de3c102f4aebf79cf7249038f5a929d27f6adcbb45f1379a5c28fe1dc",
+      "sequence": 234
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-058-b",
+      "formatted_prompt_sha256": "sha256:536ba21cc4358cfe649b63a4cc03dafa24d1c3ade4ee4d8d962225950b054e8b",
+      "item_id": "slsa2-eva-058-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-058",
+      "prompt_sha256": "sha256:62f77e3c1501f91640a3544c9b1f0fd98ba9a94553533582d4f014af5c15d15a",
+      "request_body_sha256": "sha256:851f1665de1779a172c37f5353982e13d54e095f664ea3bf35a6276e23158d59",
+      "sequence": 235
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-059-a",
+      "formatted_prompt_sha256": "sha256:1246eda7dea59acc8ff62b5531508a4ed968be72b060ff3960ceca0f283e8129",
+      "item_id": "slsa2-eva-059-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-059",
+      "prompt_sha256": "sha256:8a861b00a21e58edf3cd17b768e7c36e1bad33f8cbcc31e41592819082949164",
+      "request_body_sha256": "sha256:210078d813fe8411dd6ea4323b21ed590c70546591c37fc47bea530fa05a31fd",
+      "sequence": 236
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-059-b",
+      "formatted_prompt_sha256": "sha256:6d48a8d24ae6e2cfde4a9c89983ef69060128c1838a750b68e39dbb71aea0719",
+      "item_id": "slsa2-eva-059-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-059",
+      "prompt_sha256": "sha256:193b6c7c384c7cd5d21bef7ff636adefd00d51943df31dbe4b89eb8c00677fae",
+      "request_body_sha256": "sha256:ef6cd47febe5f4e5b700d7dfeb29c268c59ed17ae8fdc293122922d648152c97",
+      "sequence": 237
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-060-a",
+      "formatted_prompt_sha256": "sha256:afbe4c03a4dcebd1dbae562dc8f8e81e810ed2c5b4aed3d00ea7b6d2e9c1cf8c",
+      "item_id": "slsa2-eva-060-a",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-060",
+      "prompt_sha256": "sha256:e87a0f7c72b8851251d17705aeae51eb9d11aaa3c2ae4ea33626702b681c425a",
+      "request_body_sha256": "sha256:e9a2692e91a022299d4a1d2dac86a462e88dd37ddfdca676169b2c426afa7dc2",
+      "sequence": 238
+    },
+    {
+      "cell_id": "local-mlx-phi-4-slsa-v2::slsa2-eva-060-b",
+      "formatted_prompt_sha256": "sha256:97a4d60b73d5f74d5f595d05217a7a3d2bb29f085f3b3008b353bbc77e84ed0e",
+      "item_id": "slsa2-eva-060-b",
+      "lane_id": "local-mlx-phi-4-slsa-v2",
+      "pair_id": "slsa2-eva-060",
+      "prompt_sha256": "sha256:06c2ac051598c981b94112b5de082d0e93a1558ba31f6ba448c355e9b926c13a",
+      "request_body_sha256": "sha256:28414870d5c5af33adafcae0134bd2b14bd7dc616f0fb770bdc190d9c5e34f59",
+      "sequence": 239
+    }
+  ],
+  "client_retry_count": 0,
+  "order_rule": "MODEL_MAJOR_THEN_CANONICAL_ITEM_ID",
+  "planned_cells": 240,
+  "schedule_sha256": "sha256:510e783e4e440980f1bb49e28863e026c2abef5bf4813f356e35ab1157a9721c",
+  "schema_version": "1.0.0",
+  "status": "FROZEN_LOCAL_MODEL_REQUEST_SCHEDULE_REPLACEMENT_V2",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v2"
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Derive failure-aware metrics for one frozen local-model replication."""
+"""Derive failure-aware metrics for one frozen local-model replacement study."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from analyze_balanced_public_challenge import derive_reporting_metrics  # noqa: E402
-from local_model_replication import CATALOG_PATH, DATASETS  # noqa: E402
+from local_model_replication import CATALOG_PATH, DATASETS, VOID_RECEIPT_PATH  # noqa: E402
 from validate_local_model_replications import validate_all  # noqa: E402
 
 from claimpromotebench.dataset import load_json, load_jsonl  # noqa: E402
@@ -45,9 +45,16 @@ def analyze(
     catalog_path: Path,
     snapshot_path: Path,
     qualification_path: Path,
+    void_receipt_path: Path,
     results_root: Path,
 ) -> Json:
-    validate_all(freeze_root, catalog_path, snapshot_path, qualification_path)
+    validate_all(
+        freeze_root,
+        catalog_path,
+        snapshot_path,
+        qualification_path,
+        void_receipt_path,
+    )
     spec = DATASETS[dataset_key]
     study_root = freeze_root / dataset_key
     plan_path = study_root / "study-plan.json"
@@ -135,6 +142,7 @@ def analyze(
             "catalog_sha256": sha256_file(catalog_path),
             "snapshot_receipt_sha256": sha256_file(snapshot_path),
             "qualification_receipt_sha256": sha256_file(qualification_path),
+            "void_attempt_receipt_sha256": sha256_file(void_receipt_path),
             "execution_receipt_sha256": sha256_file(execution_path),
         },
         "lanes": sorted(lanes, key=lambda row: str(row["lane_id"])),
@@ -184,6 +192,7 @@ def main() -> int:
     parser.add_argument("--catalog", type=Path, default=CATALOG_PATH)
     parser.add_argument("--snapshot-receipt", type=Path, required=True)
     parser.add_argument("--qualification-receipt", type=Path, required=True)
+    parser.add_argument("--void-receipt", type=Path, default=VOID_RECEIPT_PATH)
     parser.add_argument("--results-root", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
@@ -193,6 +202,7 @@ def main() -> int:
         args.catalog.resolve(),
         args.snapshot_receipt.resolve(),
         args.qualification_receipt.resolve(),
+        args.void_receipt.resolve(),
         args.results_root.resolve(),
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)

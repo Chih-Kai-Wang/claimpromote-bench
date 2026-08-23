@@ -1,24 +1,33 @@
 #!/usr/bin/env python3
-"""Shared contracts for the prospectively frozen local-model replications."""
+"""Shared contracts for the prospectively frozen local-model replacement studies."""
 
 from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from claimpromotebench.hashing import canonical_json, sha256_bytes  # noqa: E402
+
 CATALOG_PATH = ROOT / "v2" / "local-model-replication-v1" / "model-catalog.json"
 REQUIREMENTS_PATH = ROOT / "v2" / "local-model-replication-v1" / "requirements.txt"
+VOID_RECEIPT_PATH = (
+    ROOT / "v2" / "local-model-replication-v1" / "frozen" / "slsa" / "void-exclusion-receipt.json"
+)
+REPLACEMENT_VERSION = 2
 
 Json = dict[str, Any]
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 
 DATASETS: dict[str, Json] = {
     "slsa": {
-        "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v1",
-        "design": "LOCAL_MODEL_REPLICATION_OF_PROSPECTIVELY_FROZEN_SLSA_POLICY_STUDY",
+        "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v2",
+        "design": "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY",
         "dataset_root": ROOT / "v2" / "slsa-portability-v1" / "replacement-v2" / "dataset",
         "baseline_root": ROOT / "v2" / "slsa-portability-v1" / "replacement-v2" / "baseline",
         "expected_dataset_fingerprint": (
@@ -35,8 +44,8 @@ DATASETS: dict[str, Json] = {
         ),
     },
     "policy-switch": {
-        "study_id": "claimpromotebench-policy-switch-local-model-replication-2026-08-v1",
-        "design": "LOCAL_MODEL_REPLICATION_OF_PROSPECTIVELY_FROZEN_POLICY_SWITCH_STUDY",
+        "study_id": "claimpromotebench-policy-switch-local-model-replication-2026-08-v2",
+        "design": "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_POLICY_SWITCH_STUDY",
         "dataset_root": ROOT / "v2" / "policy-switch-v1" / "frozen" / "dataset",
         "baseline_root": ROOT / "v2" / "policy-switch-v1" / "frozen" / "baseline",
         "expected_dataset_fingerprint": (
@@ -112,8 +121,28 @@ def load_catalog(path: Path = CATALOG_PATH) -> Json:
     return catalog
 
 
+def validate_void_receipt(path: Path = VOID_RECEIPT_PATH) -> Json:
+    receipt = load_object(path)
+    payload = {key: child for key, child in receipt.items() if key != "self_digest"}
+    observed = receipt.get("self_digest")
+    expected = sha256_bytes(canonical_json(payload).encode("utf-8"))
+    if (
+        receipt.get("status") != "INELIGIBLE_LOCAL_ATTEMPT_PRE_TERMINAL_SCHEMA_REJECTION"
+        or observed != expected
+        or receipt.get("observed_counts", {}).get("application_invocations") != 1
+        or receipt.get("observed_counts", {}).get("durable_terminal_records") != 0
+        or receipt.get("observed_counts", {}).get("retained_model_outputs") != 0
+        or receipt.get("failure_boundary", {}).get("benchmark_label_or_accuracy_consulted")
+        is not False
+        or receipt.get("decision", {}).get("resume_or_overwrite_used") is not False
+        or receipt.get("decision", {}).get("attempt_enters_manuscript") is not False
+    ):
+        raise ValueError("local-model void-attempt boundary changed")
+    return receipt
+
+
 def lane_id(lane: Json, dataset_key: str) -> str:
-    return f"{lane['lane_stem']}-{dataset_key}-v1"
+    return f"{lane['lane_stem']}-{dataset_key}-v{REPLACEMENT_VERSION}"
 
 
 def format_chat_prompt(tokenizer: Any, prompt: str) -> str:

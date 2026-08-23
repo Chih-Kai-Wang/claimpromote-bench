@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze two local-model replication plans before any benchmark inference."""
+"""Freeze two replacement-v2 local-model studies after sealing an ineligible attempt."""
 
 from __future__ import annotations
 
@@ -17,13 +17,16 @@ from huggingface_hub import snapshot_download  # noqa: E402
 from local_model_replication import (  # noqa: E402
     CATALOG_PATH,
     DATASETS,
+    REPLACEMENT_VERSION,
     REQUIREMENTS_PATH,
+    VOID_RECEIPT_PATH,
     format_chat_prompt,
     generation_request,
     lane_id,
     load_catalog,
     load_object,
     tokenizer_config,
+    validate_void_receipt,
 )
 from transformers import AutoTokenizer  # noqa: E402
 
@@ -43,7 +46,7 @@ RUNTIME_PATHS = (
     "scripts/analyze_balanced_public_challenge.py",
     "src/claimpromotebench/dataset.py",
     "src/claimpromotebench/hashing.py",
-    "v2/schemas/stronger-model-run-record.schema.json",
+    "v2/schemas/local-model-run-record.schema.json",
     "v2/schemas/slsa-agent-decision.schema.json",
 )
 
@@ -124,6 +127,7 @@ def build_study(
     catalog_path: Path,
     snapshot_path: Path,
     qualification_path: Path,
+    void_receipt_path: Path,
     out_root: Path,
 ) -> tuple[Json, Json]:
     spec = DATASETS[dataset_key]
@@ -189,7 +193,7 @@ def build_study(
         fail(f"local schedule does not contain 240 cells: {dataset_key}")
     schedule: Json = {
         "schema_version": "1.0.0",
-        "status": "FROZEN_LOCAL_MODEL_REQUEST_SCHEDULE",
+        "status": "FROZEN_LOCAL_MODEL_REQUEST_SCHEDULE_REPLACEMENT_V2",
         "study_id": spec["study_id"],
         "order_rule": "MODEL_MAJOR_THEN_CANONICAL_ITEM_ID",
         "planned_cells": 240,
@@ -203,7 +207,8 @@ def build_study(
     qualification = load_object(qualification_path)
     plan: Json = {
         "schema_version": "1.0.0",
-        "status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION",
+        "status": "PROSPECTIVELY_FROZEN_LOCAL_MODEL_REPLICATION_REPLACEMENT_V2",
+        "replacement_version": REPLACEMENT_VERSION,
         "truth_status": "COMPUTATIONAL",
         "study_id": spec["study_id"],
         "purpose": spec["purpose"],
@@ -262,11 +267,22 @@ def build_study(
             "snapshot_receipt_self_digest": snapshot["self_digest"],
             "qualification_receipt_sha256": sha256_file(qualification_path),
             "qualification_receipt_self_digest": qualification["self_digest"],
-            "benchmark_inference_calls_before_freeze": 0,
+            "void_attempt_receipt_sha256": sha256_file(void_receipt_path),
+            "void_attempt_receipt_self_digest": validate_void_receipt(void_receipt_path)[
+                "self_digest"
+            ],
+            "benchmark_inference_calls_before_initial_freeze": 0,
+            "prior_ineligible_application_invocations": 1,
+            "prior_durable_terminal_records": 0,
+            "prior_retained_model_outputs": 0,
+            "eligible_replacement_inference_calls_before_freeze": 0,
             "runtime_source_sha256": runtime_hashes(),
         },
         "selection_boundary": catalog["selection_boundary"],
-        "promotion_rule": "Only all 240 sealed terminal outcomes may enter the manuscript.",
+        "promotion_rule": (
+            "Only all 240 replacement-v2 sealed terminal outcomes may enter the manuscript; "
+            "the bound v1 attempt remains excluded in full."
+        ),
     }
     return plan, schedule
 
@@ -276,14 +292,17 @@ def main() -> int:
     parser.add_argument("--catalog", type=Path, default=CATALOG_PATH)
     parser.add_argument("--snapshot-receipt", type=Path, required=True)
     parser.add_argument("--qualification-receipt", type=Path, required=True)
+    parser.add_argument("--void-receipt", type=Path, default=VOID_RECEIPT_PATH)
     parser.add_argument("--out-root", type=Path, required=True)
     args = parser.parse_args()
     catalog_path = args.catalog.resolve()
     snapshot_path = args.snapshot_receipt.resolve()
     qualification_path = args.qualification_receipt.resolve()
+    void_receipt_path = args.void_receipt.resolve()
     out_root = args.out_root.resolve()
     catalog = load_catalog(catalog_path)
     validate_receipts(catalog_path, snapshot_path, qualification_path)
+    validate_void_receipt(void_receipt_path)
     tokenizers = load_tokenizers(catalog)
     for dataset_key in DATASETS:
         plan, schedule = build_study(
@@ -293,6 +312,7 @@ def main() -> int:
             catalog_path,
             snapshot_path,
             qualification_path,
+            void_receipt_path,
             out_root,
         )
         study_root = out_root / dataset_key
@@ -301,10 +321,11 @@ def main() -> int:
     print(
         canonical_json(
             {
-                "status": "LOCAL_MODEL_REPLICATIONS_FROZEN",
+                "status": "LOCAL_MODEL_REPLICATIONS_REPLACEMENT_V2_FROZEN",
                 "studies": len(DATASETS),
                 "planned_cells": 480,
-                "benchmark_inference_calls": 0,
+                "eligible_replacement_inference_calls": 0,
+                "prior_ineligible_application_invocations": 1,
             }
         )
     )
