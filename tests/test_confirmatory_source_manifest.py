@@ -65,6 +65,11 @@ def test_runtime_manifest_is_preserved_at_the_recorded_source_commit() -> None:
     assert "scripts/validate_policy_transition_graph_local_study.py" not in files
     assert "scripts/run_policy_transition_graph_local_study.py" not in files
     assert "scripts/analyze_policy_transition_graph_local_study.py" not in files
+    assert "scripts/analyze_policy_transition_graph_hosted_study.py" not in files
+    assert "scripts/derive_policy_transition_graph_hosted_eligibility.py" not in files
+    assert "scripts/freeze_policy_transition_graph_hosted_study.py" not in files
+    assert "scripts/run_policy_transition_graph_hosted_study.py" not in files
+    assert "scripts/validate_policy_transition_graph_hosted_study.py" not in files
     assert "scripts/frozen_run_io.py" not in files
     assert "scripts/run_public_model_breadth_study.py" not in files
     assert "scripts/seal_local_model_void_attempt.py" not in files

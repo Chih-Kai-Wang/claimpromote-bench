@@ -232,10 +232,14 @@ def validate_manuscript_style_audit() -> None:
     if (
         boundary.get("metrics_changed") is not True
         or boundary.get("existing_terminal_records_changed") is not False
-        or boundary.get("new_scored_terminal_records_added") != 720
-        or boundary.get("scored_model_calls_performed") != 720
+        or boundary.get("retained_scored_terminal_records_added") != 720
+        or boundary.get("retained_scored_model_calls_performed") != 720
+        or boundary.get("excluded_resource_failure_terminal_records_added") != 480
+        or boundary.get("excluded_resource_failure_model_calls_performed") != 480
+        or boundary.get("total_model_calls_performed") != 1200
+        or boundary.get("excluded_resource_failure_model_rows_entered_manuscript") is not False
         or boundary.get("void_protocol_application_posts") != 1
-        or boundary.get("total_application_posts_during_revision") != 721
+        or boundary.get("total_application_posts_during_revision") != 1201
         or boundary.get("completed_singleton_workflows_rerun") is not False
         or boundary.get("balanced_public_v1_rerun") is not False
         or boundary.get("paper_binding_validator") != "scripts/lint_paper_submission.py"
@@ -1169,14 +1173,11 @@ def validate_new_study_claims(tex: str) -> None:
         "evaluation_pairs_sha256": sha256_file(
             POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
         ),
-        "manifest_sha256": sha256_file(
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "manifest.json"
-        ),
+        "manifest_sha256": sha256_file(POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "manifest.json"),
     }
     if (
         transition_coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
-        or transition_coverage.get("self_digest")
-        != self_digest(transition_coverage, "self_digest")
+        or transition_coverage.get("self_digest") != self_digest(transition_coverage, "self_digest")
         or transition_source_bindings != expected_transition_bindings
         or transition_coverage.get("authored_profile_difference_rules_covered") != 12
         or transition_coverage.get("authored_profile_difference_rules_total") != 12
@@ -1194,10 +1195,7 @@ def validate_new_study_claims(tex: str) -> None:
     ):
         fail("reachable policy-transition graph coverage changed")
     graph_aggregate = load_object(
-        LOCAL_TRANSITION_GRAPH_ROOT
-        / "policy-transition-graph"
-        / "results"
-        / "aggregate.json",
+        LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
         "local policy-transition graph aggregate",
     )
     graph_comparators = graph_aggregate.get("structured_random_forest_comparators", {})
@@ -1213,10 +1211,7 @@ def validate_new_study_claims(tex: str) -> None:
     for aggregate_path in (
         LOCAL_REPLICATION_ROOT / "slsa" / "results" / "aggregate.json",
         LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
-        LOCAL_TRANSITION_GRAPH_ROOT
-        / "policy-transition-graph"
-        / "results"
-        / "aggregate.json",
+        LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
     ):
         aggregate = load_object(aggregate_path, "local replication aggregate")
         lanes = aggregate.get("lanes")

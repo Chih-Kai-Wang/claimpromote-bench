@@ -161,7 +161,8 @@ def build_audit(
     corpus_manifest_path: Path,
     corpus_statistics_path: Path,
     prior_path: Path | None,
-    scored_model_calls: int,
+    retained_scored_model_calls: int,
+    excluded_resource_model_calls: int,
     void_protocol_posts: int,
 ) -> dict[str, Any]:
     source = tex_path.read_text(encoding="utf-8")
@@ -177,7 +178,8 @@ def build_audit(
         loaded = json.loads(prior_path.read_text(encoding="utf-8"))
         if isinstance(loaded, dict) and isinstance(loaded.get("before"), dict):
             prior = loaded["before"]
-    total_posts = scored_model_calls + void_protocol_posts
+    model_calls = retained_scored_model_calls + excluded_resource_model_calls
+    total_posts = model_calls + void_protocol_posts
     audit: dict[str, Any] = {
         "schema_version": "1.1.0",
         "status": "PASS"
@@ -208,8 +210,12 @@ def build_audit(
         "scientific_content_boundary": {
             "metrics_changed": True,
             "existing_terminal_records_changed": False,
-            "new_scored_terminal_records_added": scored_model_calls,
-            "scored_model_calls_performed": scored_model_calls,
+            "retained_scored_terminal_records_added": retained_scored_model_calls,
+            "retained_scored_model_calls_performed": retained_scored_model_calls,
+            "excluded_resource_failure_terminal_records_added": excluded_resource_model_calls,
+            "excluded_resource_failure_model_calls_performed": excluded_resource_model_calls,
+            "total_model_calls_performed": model_calls,
+            "excluded_resource_failure_model_rows_entered_manuscript": False,
             "void_protocol_application_posts": void_protocol_posts,
             "total_application_posts_during_revision": total_posts,
             "completed_singleton_workflows_rerun": False,
@@ -226,7 +232,8 @@ def main() -> int:
     parser.add_argument("--corpus-manifest", type=Path, default=DEFAULT_CORPUS_MANIFEST)
     parser.add_argument("--corpus-statistics", type=Path, default=DEFAULT_CORPUS_STATISTICS)
     parser.add_argument("--prior-audit", type=Path)
-    parser.add_argument("--scored-model-calls", type=int, required=True)
+    parser.add_argument("--retained-scored-model-calls", type=int, required=True)
+    parser.add_argument("--excluded-resource-model-calls", type=int, required=True)
     parser.add_argument("--void-protocol-posts", type=int, required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
@@ -235,7 +242,8 @@ def main() -> int:
         args.corpus_manifest.resolve(),
         args.corpus_statistics.resolve(),
         args.prior_audit.resolve() if args.prior_audit is not None else None,
-        args.scored_model_calls,
+        args.retained_scored_model_calls,
+        args.excluded_resource_model_calls,
         args.void_protocol_posts,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
