@@ -1,0 +1,934 @@
+{
+  "adequacy": {
+    "authored_policy_difference_rules_covered": 12,
+    "item_call_reduction_fraction": 0.8333333333333334,
+    "reachable_edges_covered": 10,
+    "selected_items": 20,
+    "selected_pairs": 10,
+    "source_diagnostic_items": 120
+  },
+  "design": "PROSPECTIVELY_FROZEN_MINIMUM_GRAPH_AND_RULE_COMPLETE_SMOKE_STUDY",
+  "deterministic_policy_executor": {
+    "end_to_end_item_accuracy": 1.0,
+    "end_to_end_pair_accuracy": 1.0,
+    "items": 20,
+    "label": "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE",
+    "pairs": 10,
+    "strict_smoke_gate_pass": true
+  },
+  "failure_rule": "Every service, syntax, schema, semantic, quota, and adapter failure remains in the scheduled end-to-end denominator.",
+  "freeze": {
+    "dataset_fingerprint": "sha256:cf3ece1b05948214cfb60292cb655eb860c92276fd6f0c5c2a36c7618586fa13",
+    "execution_receipt_sha256": "sha256:97800f5a364681481595369bd257efc13a798529e6a829097763f4ae2ff4926d",
+    "frozen_plan_commit": "8ed87749fa64bc8cbcd1ddae871710e3a01d4607",
+    "minimum_suite_sha256": "sha256:911fedf5de57dbad9728a0b1725324416d5553c34cb9aa17864129b468fe996b",
+    "packet_sha256": "sha256:bd155db5ce07c80ecb667eec725bf0f4e2ebe53059a636626f47955721458845",
+    "plan_sha256": "sha256:4c152e5ce75e0289fe0876a5d9c456cb4c1b15bdce420cd7d23df4440d6713cd",
+    "schedule_sha256": "sha256:d08574cd8bf0f6d2337480f91ab8d7ea57e167ae59d33a3371616473f8abb8f2"
+  },
+  "interpretation": "The twenty selected items preserve all ten reachable action edges and all twelve authored policy-difference rules. One context per edge makes this an operational smoke gate, not an estimate of stochastic route reliability or generalization.",
+  "lanes": [
+    {
+      "host_usage_derived_quota_value_usd": null,
+      "lane_id": "opencode-go-deepseek-v4-flash-minimal-policy-migration-hosted-v1",
+      "metrics": {
+        "balanced_action_recall": 0.0,
+        "conditional_balanced_action_recall": 0.0,
+        "conditional_item_accuracy": null,
+        "conditional_macro_f1": 0.0,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 6
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 4
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 6
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 4
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 0,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "end_to_end_item_accuracy": 0.0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 20,
+        "macro_f1": 0.0,
+        "pair_coverage": 0.0,
+        "pairs": 10,
+        "parse_status_counts": {
+          "TRANSPORT_ERROR": 20
+        },
+        "parseable_items": 0,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "deepseek-v4-flash",
+      "provider": "OpenCode Go",
+      "repeated_configuration": "opencode-go-deepseek-v4-flash-matched",
+      "run_sha256": "sha256:080d8f67d9d390a56e5bb59a6817e765f3b9159472af21dcc32d36e2f913f059",
+      "strict_smoke_gate_pass": false
+    },
+    {
+      "host_usage_derived_quota_value_usd": null,
+      "lane_id": "opencode-go-qwen3.7-max-minimal-policy-migration-hosted-v1",
+      "metrics": {
+        "balanced_action_recall": 0.0,
+        "conditional_balanced_action_recall": 0.0,
+        "conditional_item_accuracy": null,
+        "conditional_macro_f1": 0.0,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 6
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 4
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 6
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 4
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 0,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "end_to_end_item_accuracy": 0.0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 20,
+        "macro_f1": 0.0,
+        "pair_coverage": 0.0,
+        "pairs": 10,
+        "parse_status_counts": {
+          "TRANSPORT_ERROR": 20
+        },
+        "parseable_items": 0,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "qwen3.7-max",
+      "provider": "OpenCode Go",
+      "repeated_configuration": "opencode-go-qwen3.7-max",
+      "run_sha256": "sha256:c22e793dde687b624bba74f0ad80f891b38277e1c8d87ae8e0ddcabbbc737b8a",
+      "strict_smoke_gate_pass": false
+    }
+  ],
+  "schema_version": "1.0.0",
+  "status": "COMPLETE",
+  "structured_random_forest_comparators": {
+    "policy_aware": {
+      "full_prediction_file_sha256": "sha256:3d9d5a4dcf87b2dc05eac05810db35b315d2b4150dc28f173332ce0c0315171f",
+      "metrics": {
+        "balanced_action_recall": 0.875,
+        "conditional_balanced_action_recall": 0.875,
+        "conditional_item_accuracy": 0.9,
+        "conditional_macro_f1": 0.8809523809523809,
+        "conditional_pair_accuracy": 0.8,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 6,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 4,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 6,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "HOLD": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 18,
+        "correct_pairs": 8,
+        "covered_pairs": 10,
+        "decision_coverage": 1.0,
+        "end_to_end_item_accuracy": 0.9,
+        "end_to_end_pair_accuracy": 0.8,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 20,
+        "macro_f1": 0.8809523809523809,
+        "pair_coverage": 1.0,
+        "pairs": 10,
+        "parse_status_counts": {
+          "OK": 20
+        },
+        "parseable_items": 20,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.8571428571428571,
+            "conditional_recall": 1.0,
+            "correct": 6,
+            "end_to_end_f1": 0.8571428571428571,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 6,
+            "precision": 0.75,
+            "predicted_instances": 8
+          },
+          "DEMOTE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 4,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 4,
+            "precision": 1.0,
+            "predicted_instances": 4
+          },
+          "ESCALATE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 6,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 6,
+            "precision": 1.0,
+            "predicted_instances": 6
+          },
+          "HOLD": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 0.5,
+            "correct": 2,
+            "end_to_end_f1": 0.6666666666666666,
+            "end_to_end_recall": 0.5,
+            "gold_instances": 4,
+            "parseable_gold_instances": 4,
+            "precision": 1.0,
+            "predicted_instances": 2
+          }
+        }
+      },
+      "scope": "STRUCTURED_CLASSIFIER_WITH_ACTIVE_PROFILE",
+      "strict_smoke_gate_pass": false
+    },
+    "profile_blind": {
+      "full_prediction_file_sha256": "sha256:494c959131739a35fadaaed4561555c5498147acae89a1a116aa5875658bc5ac",
+      "metrics": {
+        "balanced_action_recall": 0.4583333333333333,
+        "conditional_balanced_action_recall": 0.4583333333333333,
+        "conditional_item_accuracy": 0.4,
+        "conditional_macro_f1": 0.3958333333333333,
+        "conditional_pair_accuracy": 0.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 1,
+              "DEMOTE": 2,
+              "ESCALATE": 1,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 4,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 3,
+              "DEMOTE": 2,
+              "ESCALATE": 1,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "HOLD": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 8,
+        "correct_pairs": 0,
+        "covered_pairs": 10,
+        "decision_coverage": 1.0,
+        "end_to_end_item_accuracy": 0.4,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 20,
+        "macro_f1": 0.3958333333333333,
+        "pair_coverage": 1.0,
+        "pairs": 10,
+        "parse_status_counts": {
+          "OK": 20
+        },
+        "parseable_items": 20,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.16666666666666666,
+            "conditional_recall": 0.16666666666666666,
+            "correct": 1,
+            "end_to_end_f1": 0.16666666666666666,
+            "end_to_end_recall": 0.16666666666666666,
+            "gold_instances": 6,
+            "parseable_gold_instances": 6,
+            "precision": 0.16666666666666666,
+            "predicted_instances": 6
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 1.0,
+            "correct": 4,
+            "end_to_end_f1": 0.6666666666666666,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 4,
+            "precision": 0.5,
+            "predicted_instances": 8
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.25,
+            "conditional_recall": 0.16666666666666666,
+            "correct": 1,
+            "end_to_end_f1": 0.25,
+            "end_to_end_recall": 0.16666666666666666,
+            "gold_instances": 6,
+            "parseable_gold_instances": 6,
+            "precision": 0.5,
+            "predicted_instances": 2
+          },
+          "HOLD": {
+            "conditional_f1": 0.5,
+            "conditional_recall": 0.5,
+            "correct": 2,
+            "end_to_end_f1": 0.5,
+            "end_to_end_recall": 0.5,
+            "gold_instances": 4,
+            "parseable_gold_instances": 4,
+            "precision": 0.5,
+            "predicted_instances": 4
+          }
+        }
+      },
+      "scope": "FEATURE_ABLATED_CLASSIFIER_WITHOUT_ACTIVE_PROFILE",
+      "strict_smoke_gate_pass": false
+    }
+  },
+  "study_id": "claimpromotebench-minimal-policy-migration-hosted-2026-08-v1",
+  "truth_status": "COMPUTATIONAL"
+}
