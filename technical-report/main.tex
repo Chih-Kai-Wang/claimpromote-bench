@@ -308,7 +308,7 @@ The old r6 Flash interface produced 300 HTTP 401 responses. The later Flash conf
 
 \section{Limitations}
 
-All labels come from authored synthetic policies. SLSA and in-toto ground the software evidence fields but do not endorse our state machine, profiles, precedence, or actions. Two ontologies do not define a policy population, and the counterfactual profiles are fixed test instruments rather than unseen-policy synthesis.
+All labels come from authored synthetic policies. Compilation requires two deterministic policies, authored rule witnesses, and a finite context grammar; it neither extracts rules from prose nor proves that the grammar exhausts deployment behavior. SLSA and in-toto ground the software evidence fields but do not endorse our state machine, profiles, precedence, or actions. Two ontologies do not define a policy population, and the counterfactual profiles are fixed test instruments rather than unseen-policy synthesis.
 
 R6 and the public challenge share one research ontology and mostly the same template family; the challenge is public robustness evidence, not hidden-test generalization. Inputs are canonical ledgers with passive verifier facts, so evidence extraction, ambiguity, policy retrieval, and downstream outcomes remain untested. A source review of 12 traceable CORE-Bench candidates created zero cases and made zero model calls because they lacked the time-stamped artifacts and provenance needed for an author-policy mapping. Naturalistic validity therefore remains untested. No human annotators or agreement statistic are claimed.
 
