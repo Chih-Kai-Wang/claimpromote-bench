@@ -1,18 +1,22 @@
 # Technical report
 
-`main.tex` is the canonical scientific manuscript. It evaluates evidence-state transitions under
-an authored, machine-checkable policy. The experiments are synthetic and configuration-specific;
-they do not measure general research-agent ability or natural-distribution performance.
+`main.tex` is the canonical scientific manuscript. It evaluates policy-conditioned state transitions
+with matched evidence and policy contrasts. The experiments are synthetic and
+configuration-specific; they do not measure general research-agent ability or natural-distribution
+performance.
 
-The paper reports two evidence regimes:
+The paper reports four frozen datasets:
 
-- a fresh hidden r6 diagnostic with 300 items and 150 controlled pairs; and
-- a precommitted, pair-balanced public challenge with 180 items and 90 pairs.
+- a hidden research-evidence realization with 300 items and 150 evidence pairs;
+- a public action-balanced challenge with 180 items and 90 evidence pairs;
+- a software-artifact portability study with 120 items and 60 evidence pairs; and
+- a policy-switch study with 120 items and 60 pairs that change only the active profile.
 
 Every scheduled service, syntax, schema, and semantic failure remains incorrect in end-to-end
 metrics. Conditional accuracy is reported only alongside decision or pair coverage. The
 deterministic policy executor generates the labels and is therefore a definitional policy ceiling,
-not a learned baseline. The Naive Bayes reference remains a weak learned comparator.
+not a learned baseline. The Naive Bayes reference remains weak. Structured Random Forest
+comparators show fixed-policy learnability and the registered profile-oblivious shortcut.
 
 ## Build and validate
 
