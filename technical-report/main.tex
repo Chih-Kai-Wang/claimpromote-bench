@@ -49,9 +49,9 @@ We apply this protocol to two synthetic ontologies. The first governs research-e
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a relational conformance protocol with matched evidence and policy interventions, an executable transition oracle, and an intervention-blind shortcut certificate;
-  \item four frozen evaluations spanning 360 pairs, two ontologies, and four authored policy instruments;
-  \item item, pair, coverage, action, and full-confusion reporting that retains every scheduled failure; and
-  \item replayable hosted-route and pinned open-weight local evaluations, with learned comparators that expose fixed-policy learnability and the profile-oblivious shortcut.
+  \item a policy-migration construction that turns the difference set between two executable policies into a stratified regression suite with explicit rule and action-transition coverage;
+  \item four frozen evaluations spanning 360 pairs, two ontologies, and four authored policy instruments; and
+  \item failure-aware item, pair, action, and confusion reporting with replayable hosted and pinned local routes, plus learned comparators that expose fixed-map shortcuts.
 \end{enumerate}
 
 \section{Related Work}
@@ -218,11 +218,13 @@ The fixed SLSA Random Forest is perfect on held-out templates, so the structured
 
 \paragraph{Policy revisions yield regression tests.}
 For executable profiles $P_{\mathrm{old}}$ and $P_{\mathrm{new}}$, a test author can enumerate
-typed contexts in their policy difference set and retain them as regression pairs. The resulting suite
-checks whether a model-mediated route tracks the revision; the intervention-blind certificate
-identifies one class of shortcut without assuming a model architecture. The present experiments
-instantiate this construction for two profiles rather than claiming coverage of policy revisions in
-practice.
+their difference set over a typed context generator before changing the tested route. Each selected
+context becomes a two-member regression test, stratified by the changed rule and action transition.
+The suite can then be replayed after a policy, prompt, model, or service update. A failed pair
+identifies either an interface failure or a route that no longer tracks the active policy. Our
+\texttt{BLUE}/\texttt{AMBER} instance covers all 12 authored profile differences on five contexts
+each, but only 6/12 possible directed non-self action transitions. It demonstrates an
+admission-centered migration test, not complete policy-change coverage.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
 The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The public challenge shows the complementary case: valid outputs can still choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these failure layers without discarding either.
