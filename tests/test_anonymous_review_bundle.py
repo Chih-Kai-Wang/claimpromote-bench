@@ -261,7 +261,7 @@ def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None
     assert "rebuild and validate" not in readme
     assert "1,260" not in readme
     assert "subscription quota" in readme
-    assert "excluded in\nfull" in readme
+    assert "excluded in full" in readme
     assert "seven-route" not in readme
 
 
@@ -324,6 +324,26 @@ def test_hosted_policy_switch_exclusion_receipt_contains_no_selected_rows(tmp_pa
     assert receipt["decision"]["hosted_model_rows_enter_manuscript"] is False
     assert receipt["decision"]["successful_row_subset_selected"] is False
     assert receipt["raw_terminal_records_included"] is False
+    assert receipt["valid_output_subset_included"] is False
+    assert receipt["source_bindings_included"] is False
+
+
+def test_hosted_policy_switch_replacement_exclusion_contains_no_selected_rows(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    destination = tmp_path / "hosted-policy-switch-replacement-exclusion.json"
+    builder.build_hosted_policy_switch_replacement_exclusion_receipt(destination)
+    receipt = json.loads(destination.read_text(encoding="utf-8"))
+    assert receipt["status"] == (
+        "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+    )
+    assert receipt["classification"]["explicit_resource_exhaustion_errors"] == 240
+    assert receipt["decision"]["all_240_terminal_outcomes_considered"] is True
+    assert receipt["decision"]["hosted_model_rows_enter_manuscript"] is False
+    assert receipt["decision"]["conditional_success_subset_selected"] is False
+    assert receipt["raw_terminal_records_included"] is False
+    assert receipt["free_form_error_text_included"] is False
     assert receipt["valid_output_subset_included"] is False
     assert receipt["source_bindings_included"] is False
 

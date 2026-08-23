@@ -1663,6 +1663,50 @@ def build_hosted_policy_switch_exclusion_receipt(destination: Path) -> None:
     write_json(destination, review)
 
 
+def build_hosted_policy_switch_replacement_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-switch-v1"
+        / "hosted-replacement-v2"
+        / "results"
+        / "manuscript-eligibility-receipt.json"
+    )
+    decision = source.get("decision")
+    classification = source.get("classification")
+    if (
+        source.get("status")
+        != "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("all_240_terminal_outcomes_considered") is not True
+        or decision.get("hosted_model_rows_enter_manuscript") is not False
+        or decision.get("conditional_success_subset_selected") is not False
+        or not isinstance(classification, dict)
+        or classification.get("eligible_for_model_efficacy_reporting") is not False
+        or classification.get("explicit_resource_exhaustion_errors") != 240
+        or classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or classification.get("transport_status_counts") != {"ERROR": 240}
+        or classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 240}
+        or source.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted policy-switch replacement exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "classification": classification,
+        "decision": decision,
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "free_form_error_text_included": False,
+        "valid_output_subset_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
 def build_local_void_exclusion_receipt(source_root: Path, destination: Path) -> Json:
     source = load_object(source_root / "frozen" / "slsa" / "void-exclusion-receipt.json")
     counts = source.get("observed_counts")
@@ -2237,8 +2281,8 @@ author-defined. These studies are not standards certification, naturalistic depl
 or between-route causal comparisons. Every scheduled failure in a retained study remains in the
 end-to-end denominator.
 
-A frozen hosted policy-switch execution exhausted a shared subscription quota. It is excluded in
-full, and the bundle retains only a redacted exclusion receipt. No successful hosted row or
+Two frozen hosted policy-switch executions exhausted a shared subscription quota. Both are
+excluded in full, and the bundle retains only redacted exclusion receipts. No hosted row or
 conditional hosted metric enters the paper or reviewer evidence.
 
 Two open-weight model families were selected and revision-pinned before benchmark inference, then
@@ -2709,6 +2753,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/slsa-portability/reported-aggregate.json",
         "evidence/slsa-portability/void-exclusion-receipt.json",
         "evidence/hosted-policy-switch-exclusion.json",
+        "evidence/hosted-policy-switch-replacement-exclusion.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -2758,6 +2803,9 @@ def write_manifest(bundle: Path) -> None:
     hosted_policy_switch_exclusion_included = (
         bundle / "evidence" / "hosted-policy-switch-exclusion.json"
     ).is_file()
+    hosted_policy_switch_replacement_exclusion_included = (
+        bundle / "evidence" / "hosted-policy-switch-replacement-exclusion.json"
+    ).is_file()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
@@ -2789,6 +2837,9 @@ def write_manifest(bundle: Path) -> None:
             "policy_switch_raw_response_text_included": False,
             "hosted_policy_switch_exclusion_receipt_included": (
                 hosted_policy_switch_exclusion_included
+            ),
+            "hosted_policy_switch_replacement_exclusion_receipt_included": (
+                hosted_policy_switch_replacement_exclusion_included
             ),
             "local_model_replications_included": local_replications_included,
             "local_model_replication_item_level_records_included": local_replications_included,
@@ -3025,6 +3076,9 @@ def build(destination: Path) -> None:
     build_slsa_portability_anonymous_evidence(destination / "evidence" / "slsa-portability")
     build_hosted_policy_switch_exclusion_receipt(
         destination / "evidence" / "hosted-policy-switch-exclusion.json"
+    )
+    build_hosted_policy_switch_replacement_exclusion_receipt(
+        destination / "evidence" / "hosted-policy-switch-replacement-exclusion.json"
     )
     build_local_model_replications_anonymous_evidence(
         destination / "evidence" / "local-model-replications"
