@@ -1,0 +1,10 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "737e57293d2b61a56f62f4ba1c792bb740c8532c",
+  "planned_cells": 240,
+  "schedule_sha256": "sha256:c8fd020ec448f2c82be82b9f29abd162cdac64cc3a502cd4d587de0c33c14a32",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T08:06:12.891952Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-slsa-policy-portability-2026-08-v2"
+}

@@ -1,0 +1,38 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-23T10:03:52.613379Z",
+  "credentials_retained": false,
+  "durable_request_intents": 240,
+  "durable_terminal_records": 240,
+  "frozen_plan_commit": "737e57293d2b61a56f62f4ba1c792bb740c8532c",
+  "hidden_reasoning_blocks_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-deepseek-v4-flash-slsa-v2.jsonl": "sha256:d892d6d2ae788e0f3cd7d54522529c14271523b60c0674292ef121bd4d79b994",
+    "opencode-go-qwen3.7-max-slsa-v2.jsonl": "sha256:1232b0b1c33908eb4fc9996032dfd71469b8e885752141050f7c31af82436263"
+  },
+  "lanes": [
+    {
+      "lane_id": "opencode-go-qwen3.7-max-slsa-v2",
+      "records": 120,
+      "transport_errors": 0,
+      "valid_decisions": 88
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-flash-slsa-v2",
+      "records": 120,
+      "transport_errors": 10,
+      "valid_decisions": 108
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 240,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": "sha256:8b77116409492d9d11897cf38f6aa832290dea4bd2daae0e6fc8d31f8fe87ce1",
+  "schedule_sha256": "sha256:c8fd020ec448f2c82be82b9f29abd162cdac64cc3a502cd4d587de0c33c14a32",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T08:06:12.891952Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-slsa-policy-portability-2026-08-v2",
+  "terminal_journal_sha256": "sha256:5cab85c5c53723db9ca376e3ea2f148c7a412406e7d9594944a75bd4aeedde16"
+}

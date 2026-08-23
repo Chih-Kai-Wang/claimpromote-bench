@@ -1,0 +1,30 @@
+{
+  "failure_rule": "Every service, syntax, schema, semantic, quota, and adapter failure remains incorrect in the scheduled end-to-end denominator.",
+  "free_form_error_text_included": false,
+  "lanes": {
+    "opencode-go-deepseek-v4-flash-slsa-v2": {
+      "parse_status_counts": {
+        "OK": 108,
+        "SEMANTIC_ERROR": 2,
+        "TRANSPORT_ERROR": 10
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {
+        "OTHER_TRANSPORT": 2,
+        "SERVER": 8
+      }
+    },
+    "opencode-go-qwen3.7-max-slsa-v2": {
+      "parse_status_counts": {
+        "OK": 88,
+        "SEMANTIC_ERROR": 32
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {}
+    }
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:740e89ccf860c5b7d41dbd2e2dead93e81e5ee3581ed24d4dab40642eb894e77",
+  "status": "COMPLETE_FROZEN_FAILURE_TAXONOMY",
+  "study_id": "claimpromotebench-slsa-policy-portability-2026-08-v2"
+}
