@@ -37,8 +37,9 @@ lower-bound search uses at most $2^r$ rule masks while selecting one context fro
 
 The implementation has no SLSA, research-evidence, model, provider, or prompt dependency. A
 cross-check test loads the 60 frozen software-policy candidates and independently reproduces the
-published ten-pair witness. That witness covers all ten reachable edges and all 12 authored rule
-differences.
+published ten-pair witness. A second test compares the exact search with exhaustive enumeration on
+64 deterministic small candidate pools. The published witness covers all ten reachable edges and
+all 12 authored rule differences.
 
 ## Interpretation boundary
 

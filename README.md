@@ -1,13 +1,14 @@
 # ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
 
-ClaimPromoteBench evaluates whether typed evidence and an active executable policy license a
-requested state transition. It is a synthetic relational conformance benchmark, not an evaluation
-of general research-agent ability or naturalistic scientific judgment.
+ClaimPromoteBench compiles behavioral differences between executable policy versions into paired
+state-transition tests, then evaluates the complete model-service route against the resulting
+contract. It is a synthetic conformance-testing protocol, not an evaluation of general
+research-agent ability or naturalistic scientific judgment.
 
 ## Task
 
-Each item contains a claim, typed evidence ledger, current state, requested target state, and frozen
-evaluation time. The policy returns one of four actions:
+Each item contains a typed subject, evidence ledger, current state, requested target state, and
+frozen evaluation time. The policy returns one of four actions:
 
 `ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
 
