@@ -1,0 +1,186 @@
+{
+  "coverage": {
+    "changed_rules": {
+      "covered": 12,
+      "total": 12
+    },
+    "reachable_edges": {
+      "covered": 10,
+      "total": 10
+    }
+  },
+  "execution_budget": {
+    "balanced_diagnostic_items": 120,
+    "balanced_diagnostic_pairs": 60,
+    "item_call_reduction_fraction": 0.8333333333333334,
+    "minimum_smoke_items": 20,
+    "minimum_smoke_pairs": 10
+  },
+  "interpretation_boundary": "The minimum suite is a deterministic structural smoke gate. It preserves the two published adequacy coordinates but not six-context-per-edge balance, factor-level diagnostics, or repeated-context evidence for a stochastic route.",
+  "model_or_client_calls_to_derive": 0,
+  "objective": "Minimize controlled pairs while covering every reachable BLUE-to-AMBER oracle-action edge and all authored profile-difference rules in the frozen candidate pool.",
+  "optimality_certificate": {
+    "bound_met": true,
+    "lower_bound_pairs": 10,
+    "lower_bound_reason": "Each controlled pair realizes exactly one directed action edge, so covering ten distinct reachable edges requires at least ten pairs.",
+    "witness_pairs": 10
+  },
+  "schema_version": "1.0.0",
+  "selected_item_ids": [
+    "ptg-eva-007-a",
+    "ptg-eva-007-b",
+    "ptg-eva-013-a",
+    "ptg-eva-013-b",
+    "ptg-eva-001-a",
+    "ptg-eva-001-b",
+    "ptg-eva-031-a",
+    "ptg-eva-031-b",
+    "ptg-eva-037-a",
+    "ptg-eva-037-b",
+    "ptg-eva-043-a",
+    "ptg-eva-043-b",
+    "ptg-eva-056-a",
+    "ptg-eva-056-b",
+    "ptg-eva-052-a",
+    "ptg-eva-052-b",
+    "ptg-eva-020-a",
+    "ptg-eva-020-b",
+    "ptg-eva-028-a",
+    "ptg-eva-028-b"
+  ],
+  "selected_pair_ids": [
+    "ptg-eva-007",
+    "ptg-eva-013",
+    "ptg-eva-001",
+    "ptg-eva-031",
+    "ptg-eva-037",
+    "ptg-eva-043",
+    "ptg-eva-056",
+    "ptg-eva-052",
+    "ptg-eva-020",
+    "ptg-eva-028"
+  ],
+  "selected_pairs": [
+    {
+      "binding_rules": [
+        "attester_recognized"
+      ],
+      "blue_to_amber_transition": "ALLOW->DEMOTE",
+      "member_ids": [
+        "ptg-eva-007-a",
+        "ptg-eva-007-b"
+      ],
+      "pair_id": "ptg-eva-007"
+    },
+    {
+      "binding_rules": [
+        "BUILD_PARAMETERS_CONFLICT"
+      ],
+      "blue_to_amber_transition": "ALLOW->ESCALATE",
+      "member_ids": [
+        "ptg-eva-013-a",
+        "ptg-eva-013-b"
+      ],
+      "pair_id": "ptg-eva-013"
+    },
+    {
+      "binding_rules": [
+        "envelope_signature_verified"
+      ],
+      "blue_to_amber_transition": "ALLOW->HOLD",
+      "member_ids": [
+        "ptg-eva-001-a",
+        "ptg-eva-001-b"
+      ],
+      "pair_id": "ptg-eva-001"
+    },
+    {
+      "binding_rules": [
+        "subject_digest_matches"
+      ],
+      "blue_to_amber_transition": "DEMOTE->ALLOW",
+      "member_ids": [
+        "ptg-eva-031-a",
+        "ptg-eva-031-b"
+      ],
+      "pair_id": "ptg-eva-031"
+    },
+    {
+      "binding_rules": [
+        "BUILD_PARAMETERS_CONFLICT",
+        "builder_id_matches_policy"
+      ],
+      "blue_to_amber_transition": "DEMOTE->ESCALATE",
+      "member_ids": [
+        "ptg-eva-037-a",
+        "ptg-eva-037-b"
+      ],
+      "pair_id": "ptg-eva-037"
+    },
+    {
+      "binding_rules": [
+        "VSA_POLICY_CONFLICT"
+      ],
+      "blue_to_amber_transition": "ESCALATE->ALLOW",
+      "member_ids": [
+        "ptg-eva-043-a",
+        "ptg-eva-043-b"
+      ],
+      "pair_id": "ptg-eva-043"
+    },
+    {
+      "binding_rules": [
+        "SOURCE_REVISION_CONFLICT",
+        "source_uri_matches"
+      ],
+      "blue_to_amber_transition": "ESCALATE->DEMOTE",
+      "member_ids": [
+        "ptg-eva-056-a",
+        "ptg-eva-056-b"
+      ],
+      "pair_id": "ptg-eva-056"
+    },
+    {
+      "binding_rules": [
+        "VSA_POLICY_CONFLICT",
+        "policy_digest_matches"
+      ],
+      "blue_to_amber_transition": "ESCALATE->HOLD",
+      "member_ids": [
+        "ptg-eva-052-a",
+        "ptg-eva-052-b"
+      ],
+      "pair_id": "ptg-eva-052"
+    },
+    {
+      "binding_rules": [
+        "provenance_present"
+      ],
+      "blue_to_amber_transition": "HOLD->ALLOW",
+      "member_ids": [
+        "ptg-eva-020-a",
+        "ptg-eva-020-b"
+      ],
+      "pair_id": "ptg-eva-020"
+    },
+    {
+      "binding_rules": [
+        "VERIFICATION_RESULT_CONFLICT",
+        "source_ref_matches"
+      ],
+      "blue_to_amber_transition": "HOLD->ESCALATE",
+      "member_ids": [
+        "ptg-eva-028-a",
+        "ptg-eva-028-b"
+      ],
+      "pair_id": "ptg-eva-028"
+    }
+  ],
+  "self_digest": "sha256:3917f1d81cbb8f9bc1885de5f6f5f04d30da317b06179ca417af1412d0b3ce9e",
+  "source_bindings": {
+    "evaluation_pairs_sha256": "sha256:afe3959c0b6271d002b1e599ff6ea9be9de6029cb6c2c5323c242f458c763201",
+    "transition_coverage_sha256": "sha256:bb02a0165b3be0db63dc842442b93fa25d4bd37aa9a45bdeff1b502d6331df83"
+  },
+  "status": "PROVABLY_MINIMUM_GRAPH_AND_RULE_COMPLETE_SUITE",
+  "suite_id": "claimpromotebench-minimal-policy-migration-smoke-suite-2026-08-v1"
+}
