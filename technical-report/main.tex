@@ -30,13 +30,26 @@ Model-mediated workflows increasingly apply versioned policies to structured evi
 
 \section{Introduction}
 
-A state transition can depend on both evidence and policy. The same artifact may be admitted under one release profile and held under another; one failed verifier field may change the action under a fixed profile. A model-mediated route can therefore misread evidence, ignore the active policy, or fail to return a valid structured decision.
+Versioned policies create a specific regression risk at a model-mediated decision boundary. The
+same artifact may be admitted under one release profile and held under another; one failed verifier
+field may change the action under a fixed profile. After a policy revision, a route can preserve
+stale behavior, misread evidence, or fail before returning a valid structured action.
 
 Ordinary accuracy does not separate these cases. A fixed-policy dataset can reward a stable field-to-label shortcut. Evaluating only parseable responses can hide service, syntax, schema, and semantic failures. More fundamentally, a regression suite that covers every edited rule need not cover every behavioral transition induced by the policy revision. We study a bounded question: does a route emit the transition prescribed by a published executable policy for a typed ledger, current state, and requested state? This is conformance to an author-defined executable specification, not a test of scientific truth, software security, policy legitimacy, or general agent competence.
 
-\cpb is a synthetic conformance-testing protocol built around paired executions. An \emph{evidence contrast} changes one registered field under a fixed policy. A \emph{policy contrast} holds the complete decision context fixed and changes only the active profile. Every pair changes the prescribed action, so a route insensitive to the intervention cannot pass both members. Pair correctness requires two valid, correct decisions; end-to-end estimates retain every scheduled failure.
+\cpb treats the revision, rather than a static dataset, as the source of tests. An \emph{evidence
+contrast} changes one registered field under a fixed policy. A \emph{policy contrast} holds the
+complete decision context fixed and changes only the active profile. Every pair changes the
+prescribed action, so a route insensitive to the intervention cannot pass both members. Pair
+correctness requires two valid, correct decisions; end-to-end estimates retain every scheduled
+failure.
 
-The policy contrast also turns a policy revision into a test-generation problem. We execute both policies over a finite authored context grammar, retain their behavioral difference, and compile that set against two adequacy targets: the changed rules witnessed by the suite and the directed action transitions it induces. This distinction matters because rule-complete tests can omit reachable behavior. The compiler also identifies impossible transitions and selects a cardinality-minimum joint-adequacy suite before any route output is observed.
+The policy contrast turns a revision into a test-generation problem. We execute both policies over
+a finite authored context grammar, retain their behavioral difference, and compile that set against
+two adequacy targets: the changed rules witnessed by the suite and the directed action transitions
+it induces. Rule-complete tests can omit reachable behavior. The compiler also identifies impossible
+transitions and selects a cardinality-minimum joint-adequacy suite before any route output is
+observed.
 
 We instantiate the protocol in two synthetic ontologies. One governs research-evidence states. The other maps SLSA and in-toto attestation fields to an authored software-artifact admission state machine \cite{slsa2026v12,intoto2026attestation}. These standards ground the field vocabulary; the authors define the policies and labels. A frozen suite can regression-test a model, prompt, decoder, adapter, or provider against the same contract without assuming a natural input distribution.
 
@@ -126,7 +139,7 @@ contexts, and freezes them before the evaluated route is called. Thus adequacy i
 the oracle side and cannot be chosen from model errors.
 
 \paragraph{Minimum joint-adequacy suites.}
-The released compiler is independent of either ontology. Its interface accepts two deterministic
+The compiler is independent of either ontology. Its interface accepts two deterministic
 policy evaluators, a finite context sequence, stable context identifiers, and authored rule
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
 difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$.
@@ -359,8 +372,9 @@ stores at most $2^{r+k}$ states.
 Each policy-contrast pair realizes one directed action edge. Covering $k$ distinct required edges
 therefore needs at least $k$ pairs. The specialized search chooses one candidate from each edge
 group while tracking rule masks. If its full-rule state exists, the returned $k$-pair suite meets
-the lower bound and is globally minimum. The released generic and specialized implementations both
-reconstruct the frozen ten-pair witness.
+the lower bound and is globally minimum. The generic and specialized implementations both
+reconstruct the frozen ten-pair witness. The exact implementation also matches exhaustive subset
+enumeration on 64 deterministic small candidate pools.
 
 \section{Complete Action-Level Results}
 \label{app:complete-results}
