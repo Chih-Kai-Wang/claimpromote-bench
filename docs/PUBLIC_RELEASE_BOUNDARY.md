@@ -81,5 +81,7 @@ minimum replay path.
 4. Install and replay the package outside the private checkout without model credentials.
 5. Recompute the paper metrics from the exported records and compare them with the manuscript.
 6. Create a new public repository from the verified export with no inherited Git history.
-7. Keep the current repository private until the author explicitly approves the generated tree and
+7. Regenerate `CITATION.cff` and public links for that new repository; no private development URL
+   may survive the export.
+8. Keep the current repository private until the author explicitly approves the generated tree and
    the new repository's visibility.
