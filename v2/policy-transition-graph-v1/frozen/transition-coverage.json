@@ -1,0 +1,64 @@
+{
+  "authored_profile_difference_rules_covered": 12,
+  "authored_profile_difference_rules_total": 12,
+  "client_or_model_calls": 0,
+  "contexts_per_evaluation_transition": 6,
+  "development_transition_counts": {
+    "ALLOW->DEMOTE": 3,
+    "ALLOW->ESCALATE": 3,
+    "ALLOW->HOLD": 3,
+    "DEMOTE->ALLOW": 3,
+    "DEMOTE->ESCALATE": 3,
+    "ESCALATE->ALLOW": 3,
+    "ESCALATE->DEMOTE": 3,
+    "ESCALATE->HOLD": 3,
+    "HOLD->ALLOW": 3,
+    "HOLD->ESCALATE": 3
+  },
+  "directed_action_transitions_covered": 10,
+  "directed_action_transitions_semantically_reachable": 10,
+  "directed_nonself_action_transitions_possible": 12,
+  "evaluation_transition_counts": {
+    "ALLOW->DEMOTE": 6,
+    "ALLOW->ESCALATE": 6,
+    "ALLOW->HOLD": 6,
+    "DEMOTE->ALLOW": 6,
+    "DEMOTE->ESCALATE": 6,
+    "ESCALATE->ALLOW": 6,
+    "ESCALATE->DEMOTE": 6,
+    "ESCALATE->HOLD": 6,
+    "HOLD->ALLOW": 6,
+    "HOLD->ESCALATE": 6
+  },
+  "profile_action_support": {
+    "POLICY_AMBER": {
+      "ALLOW": 18,
+      "DEMOTE": 12,
+      "ESCALATE": 18,
+      "HOLD": 12
+    },
+    "POLICY_BLUE": {
+      "ALLOW": 18,
+      "DEMOTE": 12,
+      "ESCALATE": 18,
+      "HOLD": 12
+    }
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:140a36d8c7ce399c8d3af8e4888c38d0bde46f8052c4f5d836fc8aee17b9f63c",
+  "source_bindings": {
+    "base_policy_sha256": "sha256:52adedd71d9a0d54dd8cdc0c67471c2b898619194940512c4e82bc3015731af7",
+    "evaluation_gold_sha256": "sha256:a63587d8b10de4c4288d461e51e2d967f021ba8b54f36595903560c8a3192b9e",
+    "evaluation_items_sha256": "sha256:5bcc6cf2d47b8dc57e0a4d6e86573cc7ff79455767604151306d1fb9d344cc15",
+    "evaluation_pairs_sha256": "sha256:afe3959c0b6271d002b1e599ff6ea9be9de6029cb6c2c5323c242f458c763201",
+    "manifest_sha256": "sha256:74db5b754619a65a12f202c908de4467e0ec166d078693f0f07b42a942dc1c23",
+    "switch_policy_sha256": "sha256:f8c045667715238e9717bf6cec75aa87dc750191b617a3b414e77a5c40981f3c"
+  },
+  "status": "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE",
+  "structurally_unreachable_transitions": [
+    "HOLD->DEMOTE",
+    "DEMOTE->HOLD"
+  ],
+  "study_id": "claimpromotebench-policy-transition-graph-2026-08-v1",
+  "unreachability_certificate": "HOLD requires current_state.release_status=CANDIDATE; DEMOTE requires current_state.release_status=ADMITTED. Pair members share current_state, so neither HOLD->DEMOTE nor DEMOTE->HOLD is reachable under the published executor."
+}

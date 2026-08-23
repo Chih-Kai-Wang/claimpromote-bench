@@ -1,0 +1,82 @@
+{
+  "base_policy_sha256": "sha256:52adedd71d9a0d54dd8cdc0c67471c2b898619194940512c4e82bc3015731af7",
+  "client_or_model_calls": 0,
+  "data_file_sha256": {
+    "development-gold.jsonl": "sha256:b97b36a5d104edd0b373ed25ea8c64ed3067caaad7b16138f18d880d85123f9c",
+    "development-items.jsonl": "sha256:e8d79b08686d65b7a74f7a66b6df150b2182f04c409b1d7cec72a08520c951b0",
+    "development-pairs.json": "sha256:74e4612be8b9a1cd4b67d46ec31567e96c4608a0e3fa9ce0e6b8c4ae2232a821",
+    "evaluation-gold.jsonl": "sha256:a63587d8b10de4c4288d461e51e2d967f021ba8b54f36595903560c8a3192b9e",
+    "evaluation-items.jsonl": "sha256:5bcc6cf2d47b8dc57e0a4d6e86573cc7ff79455767604151306d1fb9d344cc15",
+    "evaluation-pairs.json": "sha256:afe3959c0b6271d002b1e599ff6ea9be9de6029cb6c2c5323c242f458c763201"
+  },
+  "dataset_fingerprint": "sha256:cf3ece1b05948214cfb60292cb655eb860c92276fd6f0c5c2a36c7618586fa13",
+  "decision_schema_sha256": "sha256:654db2a57694a0754a248a506df29934da7282d01946044067233fee64e22dcc",
+  "development": {
+    "action_counts": {
+      "ALLOW": 18,
+      "DEMOTE": 12,
+      "ESCALATE": 18,
+      "HOLD": 12
+    },
+    "factors": 10,
+    "items": 60,
+    "pairs": 30
+  },
+  "evaluation": {
+    "action_counts": {
+      "ALLOW": 36,
+      "DEMOTE": 24,
+      "ESCALATE": 36,
+      "HOLD": 24
+    },
+    "factors": 10,
+    "items": 120,
+    "pairs": 60,
+    "profile_action_counts": {
+      "POLICY_AMBER": {
+        "ALLOW": 18,
+        "DEMOTE": 12,
+        "ESCALATE": 18,
+        "HOLD": 12
+      },
+      "POLICY_BLUE": {
+        "ALLOW": 18,
+        "DEMOTE": 12,
+        "ESCALATE": 18,
+        "HOLD": 12
+      }
+    }
+  },
+  "interpretation_boundary": "SLSA 1.2 and in-toto Attestation 1.2 ground the evidence fields. The authors define both counterfactual profiles, their transition rules, and every label. Neither profile is a SLSA certification or deployment recommendation.",
+  "packet_file_sha256": "sha256:17f145ea91382e09eed0cc68f1e8846b5b5053c03768996201ab9188786cf268",
+  "packet_sha256": "sha256:bd155db5ce07c80ecb667eec725bf0f4e2ebe53059a636626f47955721458845",
+  "pair_contract": "Both members contain byte-identical evidence and states. Only active_policy_profile changes, and the definitional action must change.",
+  "schema_version": "1.0.0",
+  "shortcut_hypothesis": "A classifier that cannot observe the active profile receives identical features for both members and therefore cannot answer any action-changing pair completely.",
+  "source_registry_sha256": "sha256:22e1b3f0ae76d11826cb57fcc7899d6dee1f052496ae21a456054ae0d494edee",
+  "status": "SYNTHETIC_POLICY_TRANSITION_GRAPH_DATASET",
+  "study_id": "claimpromotebench-policy-transition-graph-2026-08-v1",
+  "switch_policy_sha256": "sha256:f8c045667715238e9717bf6cec75aa87dc750191b617a3b414e77a5c40981f3c",
+  "transition_graph": {
+    "contexts_per_evaluation_transition": 6,
+    "directed_nonself_transitions_possible": 12,
+    "directed_transitions_semantically_reachable": 10,
+    "reachable_transitions": [
+      "ALLOW->HOLD",
+      "ALLOW->DEMOTE",
+      "ALLOW->ESCALATE",
+      "HOLD->ALLOW",
+      "HOLD->ESCALATE",
+      "DEMOTE->ALLOW",
+      "DEMOTE->ESCALATE",
+      "ESCALATE->ALLOW",
+      "ESCALATE->HOLD",
+      "ESCALATE->DEMOTE"
+    ],
+    "structurally_unreachable_transitions": [
+      "HOLD->DEMOTE",
+      "DEMOTE->HOLD"
+    ],
+    "unreachability_reason": "HOLD requires a CANDIDATE current state, whereas DEMOTE requires an ADMITTED current state; pair members share one current state."
+  }
+}
