@@ -307,6 +307,21 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
     assert "def derive_reporting_metrics" in balanced
 
 
+def test_anonymous_builder_includes_policy_study_construction_and_replay_code() -> None:
+    source = BUILDER_PATH.read_text(encoding="utf-8")
+    for relative in (
+        "scripts/build_policy_switch_study.py",
+        "scripts/build_policy_transition_graph_study.py",
+        "scripts/build_slsa_portability_study.py",
+        "scripts/policy_transition_graph_local.py",
+        "scripts/run_policy_transition_graph_local_study.py",
+        "scripts/train_policy_switch_baselines.py",
+        "scripts/train_slsa_structured_baseline.py",
+        "scripts/validate_policy_transition_graph_study.py",
+    ):
+        assert f'"{relative}"' in source
+
+
 def test_slsa_anonymous_projection_redacts_schema_identity_and_rebinds_receipts(
     tmp_path: Path,
 ) -> None:
