@@ -1,0 +1,1005 @@
+{
+  "design": "PROSPECTIVELY_FROZEN_COUNTERFACTUAL_POLICY_PROFILE_STUDY",
+  "deterministic_policy_executor": {
+    "end_to_end_item_accuracy": 1.0,
+    "end_to_end_pair_accuracy": 1.0,
+    "items": 120,
+    "label": "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE",
+    "pairs": 60
+  },
+  "failure_rule": "Every service, syntax, schema, semantic, quota, and adapter failure remains in the scheduled end-to-end denominator.",
+  "freeze": {
+    "dataset_fingerprint": "sha256:fe675a81fb959d122aa751a6b49c5c5e8e67f39e6382c346fd38f4cc6225bbaf",
+    "execution_receipt_sha256": "sha256:46795c3993e461a1d3a3d886af30e9b388e23d2a764ff0a1e76bce6616f49efd",
+    "frozen_plan_commit": "b3e1397259ca7df478af33c83e653e95b77497f5",
+    "packet_sha256": "sha256:4756f02d8ba30b2038a7c0d3dc1317dd1129bb15c1fe517d9d5dfbe03766c66a",
+    "plan_sha256": "sha256:a0ed7bed42abd488b1cf7379195f59a2f83f4219d7757f2ccdfd582792cacf80",
+    "schedule_sha256": "sha256:86d164987095b49091fb722f5c7e3a0fb84a8370dcce1b9ee337cd0e42abb5cb"
+  },
+  "interpretation": "Within each lane, pair members hold evidence and states fixed and change only the published active policy profile. The profiles and labels are author-defined; the study is not a SLSA certification, deployment recommendation, natural-distribution estimate, or between-lane causal model comparison.",
+  "lanes": [
+    {
+      "host_usage_derived_quota_value_usd": null,
+      "lane_id": "opencode-go-deepseek-v4-flash-policy-switch-v1",
+      "metrics": {
+        "balanced_action_recall": 0.5166666666666667,
+        "conditional_balanced_action_recall": 0.75,
+        "conditional_item_accuracy": 1.0,
+        "conditional_macro_f1": 0.75,
+        "conditional_pair_accuracy": 1.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 31,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 29
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 11,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 9
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 20
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 62,
+        "correct_pairs": 30,
+        "covered_pairs": 30,
+        "decision_coverage": 0.5166666666666667,
+        "end_to_end_item_accuracy": 0.5166666666666667,
+        "end_to_end_pair_accuracy": 0.5,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "build_parameters_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_attester_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_provenance_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_signature_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_subject_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "current_builder_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_policy_digest_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.2,
+            "factor_id": "current_source_ref_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.2,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 4,
+            "covered_pairs": 4,
+            "end_to_end_pair_accuracy": 0.8,
+            "factor_id": "current_source_uri_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.8,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "source_revision_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "verification_result_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "vsa_policy_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.59774902516838,
+        "pair_coverage": 0.5,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 62,
+          "SEMANTIC_ERROR": 1,
+          "TRANSPORT_ERROR": 57
+        },
+        "parseable_items": 62,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 31,
+            "end_to_end_f1": 0.6813186813186815,
+            "end_to_end_recall": 0.5166666666666667,
+            "gold_instances": 60,
+            "parseable_gold_instances": 31,
+            "precision": 1.0,
+            "predicted_instances": 31
+          },
+          "DEMOTE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 11,
+            "end_to_end_f1": 0.7096774193548387,
+            "end_to_end_recall": 0.55,
+            "gold_instances": 20,
+            "parseable_gold_instances": 11,
+            "precision": 1.0,
+            "predicted_instances": 11
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 1.0,
+            "predicted_instances": 20
+          }
+        }
+      },
+      "model_requested": "deepseek-v4-flash",
+      "provider": "OpenCode Go",
+      "repeated_configuration": "opencode-go-deepseek-v4-flash-matched",
+      "run_sha256": "sha256:6a3756585150ce4cd215804c24c70e3f5a68dd5d626e1ca6340d6bd5cdf1ed9a"
+    },
+    {
+      "host_usage_derived_quota_value_usd": null,
+      "lane_id": "opencode-go-qwen3.7-max-policy-switch-v1",
+      "metrics": {
+        "balanced_action_recall": 0.37916666666666665,
+        "conditional_balanced_action_recall": 0.5,
+        "conditional_item_accuracy": 1.0,
+        "conditional_macro_f1": 0.5,
+        "conditional_pair_accuracy": 1.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 31,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 29
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 20
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 51,
+        "correct_pairs": 20,
+        "covered_pairs": 20,
+        "decision_coverage": 0.425,
+        "end_to_end_item_accuracy": 0.425,
+        "end_to_end_pair_accuracy": 0.3333333333333333,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "build_parameters_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_attester_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_provenance_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_signature_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_subject_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_builder_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_policy_digest_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_source_ref_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_source_uri_profile",
+            "family": "current_basis",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "source_revision_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "verification_result_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "vsa_policy_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 0.0,
+            "pairs": 5
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.4203296703296704,
+        "pair_coverage": 0.3333333333333333,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 51,
+          "SEMANTIC_ERROR": 11,
+          "TRANSPORT_ERROR": 58
+        },
+        "parseable_items": 51,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 31,
+            "end_to_end_f1": 0.6813186813186815,
+            "end_to_end_recall": 0.5166666666666667,
+            "gold_instances": 60,
+            "parseable_gold_instances": 31,
+            "precision": 1.0,
+            "predicted_instances": 31
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 1.0,
+            "predicted_instances": 20
+          }
+        }
+      },
+      "model_requested": "qwen3.7-max",
+      "provider": "OpenCode Go",
+      "repeated_configuration": "opencode-go-qwen3.7-max",
+      "run_sha256": "sha256:3e2173cc78d82c6bc16fd1a1759665c3ecc158c4a28955b7d2db0a6ea4b5d836"
+    }
+  ],
+  "registered_shortcut_result": "The profile-blind comparator receives identical features for both members. Its end-to-end pair accuracy tests the frozen shortcut boundary.",
+  "schema_version": "1.0.0",
+  "status": "COMPLETE",
+  "structured_random_forest_comparators": {
+    "policy_aware": {
+      "metrics": {
+        "balanced_action_recall": 1.0,
+        "conditional_balanced_action_recall": 1.0,
+        "conditional_item_accuracy": 1.0,
+        "conditional_macro_f1": 1.0,
+        "conditional_pair_accuracy": 1.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 20,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 20,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 120,
+        "correct_pairs": 60,
+        "covered_pairs": 60,
+        "decision_coverage": 1.0,
+        "end_to_end_item_accuracy": 1.0,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "build_parameters_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_attester_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_provenance_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_signature_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "candidate_subject_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "current_builder_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "current_policy_digest_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "current_source_ref_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "current_source_uri_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "source_revision_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "verification_result_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 5,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "vsa_policy_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 1.0,
+        "pair_coverage": 1.0,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 120
+        },
+        "parseable_items": 120,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 60,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 60,
+            "parseable_gold_instances": 60,
+            "precision": 1.0,
+            "predicted_instances": 60
+          },
+          "DEMOTE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 1.0,
+            "predicted_instances": 20
+          },
+          "ESCALATE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 1.0,
+            "predicted_instances": 20
+          },
+          "HOLD": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 1.0,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 1.0,
+            "predicted_instances": 20
+          }
+        }
+      },
+      "predictions_sha256": "sha256:c9df032a9913847f7b10557c9c9854631639b49fe5888d078cc70f25e76e62e9",
+      "scope": "STRUCTURED_CLASSIFIER_WITH_ACTIVE_PROFILE"
+    },
+    "profile_blind": {
+      "metrics": {
+        "balanced_action_recall": 0.75,
+        "conditional_balanced_action_recall": 0.75,
+        "conditional_item_accuracy": 0.5,
+        "conditional_macro_f1": 0.5,
+        "conditional_pair_accuracy": 0.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 20,
+              "ESCALATE": 20,
+              "HOLD": 20,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 20,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 20,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 60,
+        "correct_pairs": 0,
+        "covered_pairs": 60,
+        "decision_coverage": 1.0,
+        "end_to_end_item_accuracy": 0.5,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "build_parameters_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "candidate_attester_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "candidate_provenance_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "candidate_signature_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "candidate_subject_profile",
+            "family": "candidate_admission",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_builder_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_policy_digest_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_source_ref_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_source_uri_profile",
+            "family": "current_basis",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "source_revision_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "verification_result_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "vsa_policy_conflict_profile",
+            "family": "authenticated_conflict",
+            "pair_coverage": 1.0,
+            "pairs": 5
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.5,
+        "pair_coverage": 1.0,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 120
+        },
+        "parseable_items": 120,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 60,
+            "parseable_gold_instances": 60,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 0.6666666666666666,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 0.5,
+            "predicted_instances": 40
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 0.6666666666666666,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 0.5,
+            "predicted_instances": 40
+          },
+          "HOLD": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 1.0,
+            "correct": 20,
+            "end_to_end_f1": 0.6666666666666666,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 20,
+            "parseable_gold_instances": 20,
+            "precision": 0.5,
+            "predicted_instances": 40
+          }
+        }
+      },
+      "predictions_sha256": "sha256:e8494a4a9ac9b36b3d98f50dc86c0cacdf865bc66e42c28c165770a0102cf6f0",
+      "scope": "FEATURE_ABLATED_CLASSIFIER_WITHOUT_ACTIVE_PROFILE"
+    }
+  },
+  "study_id": "claimpromotebench-policy-profile-switch-2026-08-v1",
+  "truth_status": "COMPUTATIONAL"
+}

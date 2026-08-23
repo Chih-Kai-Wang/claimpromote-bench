@@ -1,0 +1,36 @@
+{
+  "decision": {
+    "conditional_model_efficacy_interpreted": false,
+    "dataset_policy_and_preinference_comparators_retained": true,
+    "hosted_model_rows_enter_manuscript": false,
+    "hosted_study_resumed_or_retried": false,
+    "private_terminal_evidence_retained": true,
+    "replacement_kind": "PROSPECTIVELY_SELECTED_PINNED_LOCAL_MODEL_REPLICATION",
+    "successful_row_subset_selected": false
+  },
+  "interpretation": "Shared subscription-quota exhaustion persisted through the end of the frozen schedule and confounds route coverage with request order. The hosted study is excluded in full; neither its valid subset nor its conditional metrics support model or policy-conditioning claims.",
+  "new_model_calls_performed_for_receipt": 0,
+  "observed_terminal_counts": {
+    "first_quota_or_rate_limit_sequence": 126,
+    "last_quota_or_rate_limit_sequence": 239,
+    "quota_or_rate_limit_errors": 114,
+    "scheduled_and_terminal": 240,
+    "semantic_errors": 12,
+    "server_errors": 1,
+    "valid_decisions": 113
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:2c5dc20723358035890f3b1e8e9fc9af48b774eb611a4062be779580923cd722",
+  "source_bindings": {
+    "aggregate_sha256": "sha256:44610d4f39c00a83aabcf7d5c0aba22c31da021334ae07e4c705dff046429ca2",
+    "execution_receipt_sha256": "sha256:46795c3993e461a1d3a3d886af30e9b388e23d2a764ff0a1e76bce6616f49efd",
+    "failure_taxonomy_sha256": "sha256:87fa99aa26ff5e891a546499058c1e8c4e80e5c47833f5eb39127878b9537eb9",
+    "local_model_catalog_sha256": "sha256:7f334fc35afb69561f173e8f340c3c0dd6b587fe8878368e5cbef1b7eb20bbb0",
+    "plan_sha256": "sha256:a0ed7bed42abd488b1cf7379195f59a2f83f4219d7757f2ccdfd582792cacf80",
+    "privacy_receipt_sha256": "sha256:f7d7952d6b9d303574e8affc0eccffcf0b1aea25d8d79d0921cfa32b95a1beb6",
+    "result_receipt_sha256": "sha256:d4d54feb07febcbd6963e29ccda4fe0a7b76531f66ead4a5bfc8ad231a8b0f95",
+    "terminal_journal_sha256": "sha256:555841c757a5714a699fd316d278478329954fbee53cf7d66091a20ca334a739"
+  },
+  "status": "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION",
+  "study_id": "claimpromotebench-policy-profile-switch-2026-08-v1"
+}

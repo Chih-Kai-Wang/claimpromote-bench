@@ -1,0 +1,22 @@
+{
+  "aggregate_sha256": "sha256:44610d4f39c00a83aabcf7d5c0aba22c31da021334ae07e4c705dff046429ca2",
+  "all_failures_retained_in_end_to_end_denominator": true,
+  "application_posts_per_cell": 1,
+  "baseline_report_sha256": "sha256:63aa91bba0168c6cbd0ba7eb33b9be3b154f6b6960ef663b09932afeed2a5254",
+  "client_retry_count": 0,
+  "dataset_manifest_sha256": "sha256:e9e857557ae244e85a7cf686d8ff0adf1d6a74f86ea833a7b4c27dbbd59986dd",
+  "execution_receipt_sha256": "sha256:46795c3993e461a1d3a3d886af30e9b388e23d2a764ff0a1e76bce6616f49efd",
+  "failure_taxonomy_sha256": "sha256:87fa99aa26ff5e891a546499058c1e8c4e80e5c47833f5eb39127878b9537eb9",
+  "plan_sha256": "sha256:a0ed7bed42abd488b1cf7379195f59a2f83f4219d7757f2ccdfd582792cacf80",
+  "planned_and_terminal_cells": 240,
+  "privacy_receipt_sha256": "sha256:f7d7952d6b9d303574e8affc0eccffcf0b1aea25d8d79d0921cfa32b95a1beb6",
+  "run_sha256": {
+    "opencode-go-deepseek-v4-flash-policy-switch-v1.jsonl": "sha256:6a3756585150ce4cd215804c24c70e3f5a68dd5d626e1ca6340d6bd5cdf1ed9a",
+    "opencode-go-qwen3.7-max-policy-switch-v1.jsonl": "sha256:3e2173cc78d82c6bc16fd1a1759665c3ecc158c4a28955b7d2db0a6ea4b5d836"
+  },
+  "schedule_sha256": "sha256:baf8626bdd24571e04b4dbb88821dfae9a308ec20353d5311409ad82257ba9c0",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:db34b11096c48e9d6e6da489aa7adb8ab46c653bbcf24ccf169a6d7ec318ffd7",
+  "status": "SYNTHETIC_POLICY_RESULTS_SEALED",
+  "study_id": "claimpromotebench-policy-profile-switch-2026-08-v1"
+}

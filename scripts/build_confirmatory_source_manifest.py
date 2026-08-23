@@ -64,6 +64,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/build_local_release_kit.py",
     "scripts/build_public_model_breadth_study.py",
     "scripts/derive_public_model_breadth_failure_addendum.py",
+    "scripts/derive_policy_switch_hosted_exclusion.py",
     "scripts/derive_r6_reporting_addendum.py",
     "scripts/finalize_public_model_breadth_study.py",
     "scripts/finalize_synthetic_policy_results.py",
