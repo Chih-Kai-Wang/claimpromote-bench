@@ -20,6 +20,8 @@ counts as valid only if it satisfies the JSON contract and all cross-field seman
 Service, syntax, schema, and semantic failures remain incorrect in end-to-end metrics. Conditional
 accuracy is reported only beside decision or pair coverage. The deterministic policy executor
 defines the labels and is therefore a definitional policy ceiling, not a learned baseline.
+Primary correctness is action-level after gold-free schema and cross-field validation; it is not
+an exact-match score over every field in the decision object.
 
 ## Principal evidence
 
