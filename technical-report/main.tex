@@ -44,7 +44,7 @@ Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a paired conformance protocol that isolates evidence and active-policy interventions, retains route failure end to end, and certifies the failure of intervention-blind shortcuts;
   \item an adaptation of semantic policy differencing to model-route tests, with separate changed-rule and observable action-transition adequacy, impossible-edge certificates, and registered stale-policy mutants;
-  \item an exact minimum-suite formulation, an NP-hardness result, and dynamic programs that produce a checkable optimum or an edge-count optimality witness; and
+  \item a joint-adequacy minimum-suite formulation and exact dynamic programs that produce a checkable optimum or an edge-count optimality witness; and
   \item five frozen evaluations spanning 420 pairs and two authored ontologies, with complete item, pair, action, confusion, and learned-shortcut diagnostics for hosted and pinned local routes.
 \end{enumerate}
 
@@ -52,6 +52,10 @@ Our contributions are:
 
 \paragraph{Behavioral and conformance testing.}
 CheckList and contrast sets probe local decision boundaries by changing inputs under a fixed target \cite{ribeiro2020checklist,gardner2020contrastsets}. Metamorphic testing scores relations among transformed executions, often when a direct oracle is unavailable \cite{chan1998metamorphic}. Finite-state and ioco testing derive tests from transition specifications, and transition coverage is a standard adequacy criterion \cite{chow1978fsm,tretmans1996conformance}; DMN represents executable decision tables \cite{omg2024dmn}. \cpb combines these ideas for a narrower setting: an exact oracle exists, the specification itself changes, and the test object is the behavioral difference between two policy versions. A survey of model-mediated software identifies regression and continuous-integration testing as under-supported in part because stable automated oracles are scarce \cite{gonzalez2026aiware}.
+
+Coverage-preserving test-suite reduction also predates our work \cite{harrold1993testsuite}. We use
+that optimization view only after policy differencing has produced paired model-service tests; the
+adequacy target jointly covers changed rules and observable action transitions.
 
 Semantic policy differencing is established software-engineering work. Margrave computes witnesses on which two access-control policies disagree; Cirg uses change-impact analysis to generate and reduce policy tests; mutation testing measures access-policy fault detection \cite{fisler2005policychange,martin2007policytests,martin2007policymutation}. Semantic differencing has also been applied to evolving combinatorial test models \cite{tzorefbrill2017semantic}. Our contribution is not the differencing operation. We turn each witness into two scored model-service executions, retain output-contract failure, and distinguish changed-rule coverage from coverage of the observable four-action changes induced by a revision. The latter includes transitions between non-\allow{} actions that a rule-complete suite can miss.
 

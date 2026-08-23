@@ -1809,6 +1809,7 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "gardner2020contrastsets",
         "chan1998metamorphic",
         "chow1978fsm",
+        "harrold1993testsuite",
         "fisler2005policychange",
         "martin2007policytests",
         "martin2007policymutation",

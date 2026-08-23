@@ -25,7 +25,9 @@ A paper-preparation search was refreshed through **2026-08-24** after the r6 add
 - `semantic differencing policy rules regression test generation`;
 - `automated test generation access control policy change-impact analysis`;
 - `decision table regression testing rule changes`; and
-- `semantic differencing combinatorial test design model evolution`.
+- `semantic differencing combinatorial test design model evolution`;
+- `coverage preserving test suite reduction minimum set cover`; and
+- `test suite minimization regression testing requirements`.
 
 The refresh identified closer conceptual neighbors than the earlier survey: established semantic
 policy differencing and policy-test generation, SeekBench, Omni-Decision, EviGraph, the
@@ -40,6 +42,7 @@ policy reasoning, or verifier-governed updates.
 | Cirg (SESS 2007) | Change-impact generation and structural reduction of XACML policy tests | Direct test-generation precedent; ClaimPromoteBench adds four-action transition adequacy, exact joint minimum search, and a failure-aware structured-output target |
 | Access-policy mutation testing (WWW 2007) | Fault model, mutation operators, coverage, and mutant killing for XACML policies | Establishes mutation testing for policies; ClaimPromoteBench's edge-local mutants audit only the behavioral-transition criterion |
 | Semantic differencing for combinatorial test models (ICSE 2017) | Canonical differences between evolving combinatorial test-space models | Establishes semantic differencing for evolving test designs; ClaimPromoteBench differences executable decision policies over a fixed finite context grammar |
+| Harrold, Gupta, and Soffa (ACM TOSEM 1993) | Coverage-preserving selection of a smaller representative test suite | Establishes requirement-based test-suite reduction; ClaimPromoteBench supplies a different paired test object and jointly covers changed rules and induced action transitions |
 | AbstentionBench (2025 preprint; NeurIPS 2025 D&B) | Answer versus abstain across unanswerable QA settings | Static QA abstention, not a typed research-claim transition with explicit evidence prerequisites |
 | CLAIM-BENCH (IJCNLP-AACL 2025) | Scientific claim–evidence extraction and validation | Whether evidence supports a claim, not whether the current typed evidence licenses a requested status transition |
 | DeepFact (ACL 2026) | Deep-research report factuality with audit-then-score benchmark revision | Claim-level factuality and benchmark adjudication, not a frozen transition-admissibility oracle |
@@ -97,9 +100,10 @@ Its distinctive evaluation choices are the combination of:
     registered migration mutants while graph-complete coverage detects 10/10. The mutant family
     operationalizes the adequacy definition; it is not a claimed distribution of production bugs;
     and
-11. a provably minimum joint-adequacy smoke suite: ten pairs cover all ten reachable edges and all
-    12 changed rules, reducing the structural route gate from 120 to 20 calls. The balanced 60-pair
-    suite remains necessary for repeated-context diagnostics; and
+11. an application of established coverage-preserving test-suite reduction to a new joint-adequacy
+    target: ten pairs cover all ten reachable edges and all 12 changed rules, reducing the structural
+    route gate from 120 to 20 calls. The balanced 60-pair suite remains necessary for
+    repeated-context diagnostics; and
 12. a domain-independent compiler interface that accepts two deterministic policies and a finite
     context grammar, with an independent cross-check that reconstructs the frozen 10-pair witness.
 
