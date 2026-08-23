@@ -55,13 +55,22 @@ _POST_R6_NON_RUNTIME_PATHS = {
     # aggregate already terminal evidence and cannot influence C1 or scored inference.
     "scripts/analyze_balanced_public_challenge.py",
     "scripts/analyze_public_model_breadth_study.py",
+    "scripts/analyze_slsa_portability_study.py",
+    "scripts/build_slsa_portability_study.py",
     "scripts/build_local_release_kit.py",
     "scripts/build_public_model_breadth_study.py",
     "scripts/derive_public_model_breadth_failure_addendum.py",
     "scripts/derive_r6_reporting_addendum.py",
     "scripts/finalize_public_model_breadth_study.py",
+    "scripts/freeze_slsa_portability_study.py",
     "scripts/run_public_model_breadth_study.py",
+    "scripts/run_slsa_portability_study.py",
+    "scripts/slsa_policy.py",
+    "scripts/snapshot_slsa_portability_catalog.py",
+    "scripts/train_slsa_structured_baseline.py",
     "scripts/validate_public_model_breadth_study.py",
+    "scripts/validate_slsa_portability_freeze.py",
+    "scripts/validate_slsa_portability_study.py",
 }
 
 

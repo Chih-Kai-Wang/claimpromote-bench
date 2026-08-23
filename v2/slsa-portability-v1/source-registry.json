@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PINNED_PRIMARY_SOURCES",
+  "interpretation_boundary": "The pinned sources define attestation and verification semantics. ClaimPromoteBench authors define the transition states, action precedence, and synthetic labels.",
+  "sources": [
+    {
+      "source_id": "slsa-v1.2-verifying-artifacts",
+      "repository": "slsa-framework/slsa",
+      "commit": "19e4e2f005f871270c4f555fc47afecfb37f3efe",
+      "tag": "v1.2",
+      "path": "docs/spec/v1.2/verifying-artifacts.md",
+      "sha256": "sha256:acdfe8f67f1f6ebc66094304491dde776fde01e9f5c14568e1f71e199de2c263",
+      "url": "https://github.com/slsa-framework/slsa/blob/19e4e2f005f871270c4f555fc47afecfb37f3efe/docs/spec/v1.2/verifying-artifacts.md"
+    },
+    {
+      "source_id": "slsa-v1.2-build-provenance",
+      "repository": "slsa-framework/slsa",
+      "commit": "19e4e2f005f871270c4f555fc47afecfb37f3efe",
+      "tag": "v1.2",
+      "path": "docs/spec/v1.2/build-provenance.md",
+      "sha256": "sha256:182ab5cf823c374874136371466ba43f99f0a9ba87a8046757d26a2ed74854a0",
+      "url": "https://github.com/slsa-framework/slsa/blob/19e4e2f005f871270c4f555fc47afecfb37f3efe/docs/spec/v1.2/build-provenance.md"
+    },
+    {
+      "source_id": "slsa-v1.2-verification-summary",
+      "repository": "slsa-framework/slsa",
+      "commit": "19e4e2f005f871270c4f555fc47afecfb37f3efe",
+      "tag": "v1.2",
+      "path": "docs/spec/v1.2/verification_summary.md",
+      "sha256": "sha256:0932d6e73748ea83c37cfe534ed60040187affc2d5936f9741132cc64329c5f2",
+      "url": "https://github.com/slsa-framework/slsa/blob/19e4e2f005f871270c4f555fc47afecfb37f3efe/docs/spec/v1.2/verification_summary.md"
+    },
+    {
+      "source_id": "in-toto-attestation-v1.2-validation",
+      "repository": "in-toto/attestation",
+      "commit": "df02077bf97218a8860a5c534eff1f1381f56984",
+      "tag": "v1.2.0",
+      "path": "docs/validation.md",
+      "sha256": "sha256:dfd52035ca5e08557c113465237b723c24f52c7258516a68b73515cf9bdfbab4",
+      "url": "https://github.com/in-toto/attestation/blob/df02077bf97218a8860a5c534eff1f1381f56984/docs/validation.md"
+    },
+    {
+      "source_id": "in-toto-attestation-v1.2-envelope",
+      "repository": "in-toto/attestation",
+      "commit": "df02077bf97218a8860a5c534eff1f1381f56984",
+      "tag": "v1.2.0",
+      "path": "spec/v1/envelope.md",
+      "sha256": "sha256:c02c65880ccc117bbdecc6c916d5108541c1a864de67f8f9082efbaf15265d11",
+      "url": "https://github.com/in-toto/attestation/blob/df02077bf97218a8860a5c534eff1f1381f56984/spec/v1/envelope.md"
+    }
+  ]
+}

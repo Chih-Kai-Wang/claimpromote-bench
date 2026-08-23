@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/v2/schemas/slsa-agent-decision.schema.json",
+  "title": "SlsaPortabilityAgentDecision",
+  "$defs": {
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["release_status", "accepted_build_level", "incident_review_required"],
+      "properties": {
+        "release_status": {"enum": ["CANDIDATE", "ADMITTED", "QUARANTINED"]},
+        "accepted_build_level": {"type": "integer", "minimum": 0, "maximum": 3},
+        "incident_review_required": {"type": "boolean"}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action",
+    "proposed_state",
+    "p_admissible",
+    "used_evidence_ids",
+    "reason_codes",
+    "missing_evidence_ids"
+  ],
+  "properties": {
+    "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+    "proposed_state": {"$ref": "#/$defs/state"},
+    "p_admissible": {"type": "number", "minimum": 0, "maximum": 1},
+    "used_evidence_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"}
+    },
+    "missing_evidence_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
