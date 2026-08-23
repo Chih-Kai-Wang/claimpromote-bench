@@ -26,8 +26,8 @@ establish redistribution rights.
   suites to their 6/10 and 10/10 registered edge-local fault-detection receipts;
 - the minimum joint-adequacy smoke-suite derivation and receipt, including its 10-pair lower-bound
   certificate and the exact 20 selected items;
-- the domain-independent policy-difference compiler and its cross-check that reconstructs the
-  frozen 10-pair witness from the 60-pair candidate graph;
+- the domain-independent policy-difference compiler, its exact minimum-complete and edge-lower-bound
+  searches, and the cross-check that reconstructs the frozen 10-pair witness from 60 candidates;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
 - `LICENSE`, `DATA_LICENSE.md`, `THIRD_PARTY_NOTICES.md`, a concise README, and a dynamic manifest.
