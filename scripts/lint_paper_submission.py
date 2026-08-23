@@ -1500,6 +1500,8 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "zhang2026inverseifeval",
         "cisneros2026policycompliance",
         "bao2026policyllm",
+        "diao2025guidebench",
+        "liu2026augmentedpolicy",
         "liu2026policyinternalization",
         "yang2026rulesual",
         "chen2025scienceagentbench",
