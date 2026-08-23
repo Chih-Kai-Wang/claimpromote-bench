@@ -1,4 +1,4 @@
-# ClaimPromoteBench: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions
+# ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
 
 ClaimPromoteBench evaluates whether typed evidence and an active executable policy license a
 requested state transition. It is a synthetic relational conformance benchmark, not an evaluation

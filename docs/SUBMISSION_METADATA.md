@@ -10,7 +10,7 @@ the corresponding service has issued it and the author has verified it.
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions
+ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
 ```
 
 ## ICLR 2027 abstract
@@ -26,7 +26,7 @@ out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions
+ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
 ```
 
 ## arXiv abstract

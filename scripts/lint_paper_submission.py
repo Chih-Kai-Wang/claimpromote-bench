@@ -84,7 +84,7 @@ NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
 NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions"
+    "ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests"
 )
 ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
 
@@ -164,7 +164,7 @@ def validate_submission_metadata(tex: str) -> None:
     if metadata.count(CANONICAL_TITLE) < 2:
         fail("ICLR and arXiv metadata titles must match canonical title")
     expected_tex_title = (
-        r"\title{\cpb: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions}"
+        r"\title{\cpb: Compiling Policy Differences into Failure-Aware State-Transition Tests}"
     )
     if expected_tex_title not in tex:
         fail("manuscript title differs from canonical title")

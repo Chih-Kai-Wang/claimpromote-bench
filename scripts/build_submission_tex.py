@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Failure-Aware Conformance Testing for Policy-Conditioned State Transitions"
+TITLE = r"\cpb: Compiling Policy Differences into Failure-Aware State-Transition Tests"
 ICLR_TITLE = (
     r"\mbox{\textsc{ClaimPromoteBench}: Failure-Aware}\protect\\"
     r"\mbox{Conformance Testing for Policy-Conditioned}\protect\\"
