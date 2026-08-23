@@ -156,14 +156,14 @@ edge groups in canonical order and retains the lexicographically first witness f
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}c@{\hspace{8pt}}c@{}}
-\fbox{\parbox[c][0.78in][c]{0.40\linewidth}{\centering\textbf{Evidence contrast}\\$(P,s,\tau)$ fixed\\one registered field $(z_a\rightarrow z_b)$}} &
-\fbox{\parbox[c][0.78in][c]{0.40\linewidth}{\centering\textbf{Policy contrast}\\$(z,s,\tau)$ fixed\\rule witness or reachable edge}}\\[6pt]
+\fbox{\parbox[c][0.82in][c]{0.40\linewidth}{\centering\textbf{Evidence-pair builder}\\$(P,s,\tau)$ fixed\\one registered field $(z_a\rightarrow z_b)$}} &
+\fbox{\parbox[c][0.82in][c]{0.40\linewidth}{\centering\textbf{Policy-difference compiler}\\two policies $+$ finite grammar\\rule, graph, or minimum suite}}\\[6pt]
 \multicolumn{2}{c}{\(\searrow\quad\) model, service, or local route \(\quad\swarrow\)}\\[4pt]
 \multicolumn{2}{c}{\fbox{\parbox[c][0.45in][c]{0.58\linewidth}{\centering exact six-field validation}}}\\[4pt]
 \multicolumn{2}{c}{\(\downarrow\)}\\[-1pt]
 \multicolumn{2}{c}{\fbox{\parbox[c][0.55in][c]{0.72\linewidth}{\centering coverage, end-to-end and conditional item/pair metrics, action recall, confusion}}}
 \end{tabular}
-\caption{Two controlled paths through one failure-aware evaluator. An evidence pair changes one registered field. A policy pair changes only the active profile and can be selected to cover a changed rule or a reachable action-transition edge.}
+\caption{Two controlled paths through one failure-aware evaluator. Policy differencing also emits rule- and edge-coverage certificates, impossible edges, registered mutants, and a minimum smoke suite before route execution.}
 \label{fig:evidence-flow}
 \end{figure}
 
