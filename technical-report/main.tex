@@ -134,34 +134,6 @@ context per edge while retaining at most $2^r$ rule masks. If it finds a complet
 $k$-context edge lower bound proves global minimality. Both implementations independently
 reconstruct the frozen witness from the published 60-pair candidate graph.
 
-The rule-stratified \texttt{BLUE}$\rightarrow$\texttt{AMBER} suite covers all 12 authored
-profile differences with five contexts each. It contains six admission-centered transitions with
-ten pairs each:
-\allow$\leftrightarrow$\hold, \allow$\leftrightarrow$\demote, and
-\allow$\leftrightarrow$\escalate. We therefore froze a second suite with six contexts for each
-reachable directed edge. It covers 10/10 reachable non-self edges and all 12 rules. The remaining
-directions, \hold$\rightarrow$\demote{} and \demote$\rightarrow$\hold, are impossible under the
-published executor: \hold{} requires a candidate current state, \demote{} requires an admitted
-current state, and pair members share that state. Each profile has the same action support
-(18/12/12/18 for \allow/\hold/\demote/\escalate), blocking a profile-only class prior. The two
-suites therefore have adequacy vectors $A(T_{\mathrm{rule}})=(1,.6)$ and
-$A(T_{\mathrm{graph}})=(1,1)$ on the published grammar.
-
-We also register one stale-policy mutant $m_e$ for each reachable edge $e=(a,b)$: on an
-\texttt{AMBER} execution whose correct profile transition is $e$, $m_e$ returns the stale
-\texttt{BLUE} action $a$. A controlled pair kills $m_e$ if and only if it covers $e$.
-The rule-stratified suite therefore kills 6/10 registered edge mutants, whereas the graph suite
-kills 10/10. This oracle-side audit explains the coverage criterion; it is not a model of fault
-prevalence.
-
-The same graph gives a lower bound on a graph-complete suite: one pair realizes exactly one edge,
-so ten reachable edges require at least ten pairs. A deterministic search over the six frozen
-contexts per edge finds a ten-pair witness that also covers all 12 rules. This suite is therefore
-provably minimum for the joint $(1,1)$ adequacy target on the published candidate pool. It requires
-20 route calls instead of 120, an 83.3\% reduction. The selected pair and item identifiers are
-published in a digest-bound receipt; no model output enters the selection. The search processes
-edge groups in canonical order and retains the lexicographically first witness for each rule-mask.
-
 \begin{figure}[t]
 \centering
 \footnotesize
@@ -216,7 +188,38 @@ The research comparator is a multinomial Naive Bayes text classifier trained on 
 
 The deterministic executor generates every label and reproduces all items by construction. We call this the \emph{definitional policy ceiling}. It is neither a learned baseline nor external validation of the authored policies.
 
+The evaluation asks whether rule coverage captures the induced action graph, whether a smaller
+joint-adequacy gate exists, and how model-service routes behave once output-contract failures remain
+in scope. The first two questions are oracle-side properties; the third is empirical.
+
 \section{Results}
+
+\subsection{Migration adequacy and minimum gate}
+
+The rule-stratified \texttt{BLUE}$\rightarrow$\texttt{AMBER} suite covers all 12 authored
+profile differences with five contexts each. It contains six admission-centered transitions with
+ten pairs each:
+\allow$\leftrightarrow$\hold, \allow$\leftrightarrow$\demote, and
+\allow$\leftrightarrow$\escalate. The graph suite instead contains six contexts for each reachable
+directed edge. It covers 10/10 reachable non-self edges and all 12 rules. The remaining directions,
+\hold$\rightarrow$\demote{} and \demote$\rightarrow$\hold, are impossible under the published
+executor: \hold{} requires a candidate current state, \demote{} requires an admitted current state,
+and pair members share that state. Each profile has the same action support (18/12/12/18 for
+\allow/\hold/\demote/\escalate), blocking a profile-only class prior. The adequacy vectors are
+$A(T_{\mathrm{rule}})=(1,.6)$ and $A(T_{\mathrm{graph}})=(1,1)$ on the published grammar.
+
+We register one stale-policy mutant $m_e$ for each reachable edge $e=(a,b)$. On an \texttt{AMBER}
+execution whose correct profile transition is $e$, $m_e$ returns the stale \texttt{BLUE} action
+$a$. A controlled pair kills $m_e$ if and only if it covers $e$. The rule-stratified suite therefore
+kills 6/10 registered edge mutants, whereas the graph suite kills 10/10. This oracle-side audit
+explains the coverage criterion; it does not estimate fault prevalence.
+
+One pair realizes one edge, so ten reachable edges require at least ten pairs. A deterministic
+search over the six frozen contexts per edge finds a ten-pair witness that also covers all 12 rules.
+It is therefore minimum for the joint $(1,1)$ target on the published candidate pool. The gate uses
+20 route calls instead of 120, an 83.3\% reduction. A digest-bound receipt publishes the selected
+identifiers; no model output enters selection. The search processes edge groups in canonical order
+and retains the lexicographically first witness for each rule mask.
 
 \subsection{Coverage and correctness}
 
@@ -280,29 +283,19 @@ On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor 
 \section{Discussion}
 
 \paragraph{Evidence and policy contrasts test different shortcuts.}
-The fixed SLSA Random Forest is perfect on held-out templates, so the structured fixed-policy mapping is learnable. That result does not establish policy conditioning. On both policy suites, removing the active profile forces the same feature vector to carry two different labels and yields 0/60 pair accuracy. The policy-aware comparators and model routes therefore answer a sharper question: whether the action changes with the published policy while all evidence remains fixed.
+The fixed SLSA Random Forest is perfect on held-out templates, but this does not establish policy conditioning. On both policy suites, removing the profile makes pair members feature-identical but label-different and yields 0/60 pair accuracy. Policy contrasts instead test whether the action changes with the published policy while evidence remains fixed.
 
 \paragraph{Policy revisions yield regression tests.}
-The rule-stratified suite covers 12/12 authored changes but only 6/10 reachable edges; the graph
-suite covers all ten, including four between non-\allow{} actions, and certifies the other two as
-structurally impossible. Their registered stale-policy detection is therefore 6/10 versus 10/10.
-Because the mutants are defined from this edge inventory, the audit validates adequacy rather than
-estimating field failure rates. The minimum 10-pair, 20-call suite is a structural smoke gate; it
-does not replace the balanced 60-pair diagnostic for repeated contexts, factor localization, or
-route stochasticity.
-
-In continuous integration, a policy change regenerates the difference set and adequacy receipt; a
-route change reruns the frozen pairs. Missing edge coverage, invalid output, and incorrect actions
-then fail separately. The experiments validate this mechanism on two authored ontologies, not its
-performance in other policy domains.
-
-The compiler applies to any finite typed decision surface with two deterministic policy versions and has no ontology, prompt, model, or provider dependency. Admission, escalation, and authorization are prospective uses, not evaluated domains.
+Rule coverage misses four reachable non-\allow{} edges; the graph covers all ten. The registered
+mutants mirror this distinction by construction, so they validate adequacy rather than estimate
+fault prevalence. The 20-call minimum gate supports structural screening; the 120-call suite retains
+repeated contexts and factor localization. A policy edit regenerates the difference set and receipt,
+whereas a route edit reruns frozen pairs. This separates missing coverage, invalid output, and wrong
+actions. The compiler applies to finite typed decision surfaces, but we validate it only on two
+authored ontologies; admission, escalation, and authorization remain prospective uses.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
 The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either.
-
-\paragraph{Action balance exposes asymmetric behavior.}
-R6 item accuracy is dominated by \allow{} and \hold. In the balanced challenge, Qwen recovers 4/30 \demote{} cases and Flash 0/30; in the software contrast, they recover 1/20 and 15/20. For Qwen, the latter deficit is semantic validity rather than action confusion. The full matrix distinguishes these cases.
 
 \paragraph{The protocol evaluates a model boundary; it does not advocate one.}
 When policy and evidence are fully structured, a deterministic executor should enforce the transition. The learned routes emulate systems that already place a model at this tool-facing boundary. \cpb tests that boundary; it does not show that a model is preferable to the executor.
@@ -314,13 +307,13 @@ The old r6 Flash interface produced 300 HTTP 401 responses; later Flash configur
 
 All labels come from authored synthetic policies. Compilation assumes two deterministic policies, authored rule witnesses, and a finite grammar; it neither extracts rules from prose nor exhausts deployment behavior. SLSA and in-toto ground the software fields but do not endorse our state machine. Two ontologies do not define a policy population, and the profiles are fixed instruments rather than unseen-policy synthesis.
 
-R6 and the public challenge share one research ontology and mostly the same templates; the challenge is public robustness evidence, not hidden-test generalization. Canonical ledgers leave extraction, ambiguity, policy retrieval, and downstream outcomes untested. Reviewing 12 traceable CORE-Bench candidates created zero cases and zero model calls because the required time-stamped artifacts and provenance were absent. Naturalistic validity therefore remains untested. No human annotators or agreement statistic are claimed.
+R6 and the public challenge share one ontology and mostly the same templates; the challenge is public robustness evidence, not hidden-test generalization. Canonical ledgers leave extraction, ambiguity, policy retrieval, and downstream outcomes untested. Twelve source-traceable CORE-Bench candidates yielded zero defensible cases because time-stamped artifacts and provenance were missing. Naturalistic validity remains untested; we claim no human labels or agreement.
 
 Each configuration receives one call per item with zero retries. The results do not estimate sampling variance, temporal stability, retry policies, or a model population. Primary conformance is action-level after structural validation, not six-field exact match. Local routes use four-bit snapshots on one Apple Silicon stack; route differences are not causal.
 
 The research ontology has only a weak Naive Bayes comparator. The Random Forest's fixed-policy result exposes direct label encoding, and its policy-aware graph result is 107/120. Profile ablations close one shortcut but do not establish rule following under paraphrase, long policies, adversarial evidence, or unseen profile composition.
 
-The edge-local mutants cover only their registered family; the minimum-suite proof is candidate-pool-relative. Quota-confounded hosted policy-switch studies were excluded in full; no successful hosted row or conditional subset was selected. A 40-cell hosted smoke was also excluded in full after explicit quota exhaustion; no hosted model rows enter the paper. Conditional metrics require end-to-end denominators. Invalid response contents are omitted from the paper and anonymous release, but their counts remain auditable.
+The edge-local mutants cover only their registered family, and minimum-suite optimality is candidate-pool-relative. Quota-confounded hosted policy-switch studies and a 40-cell hosted smoke are excluded in full; no hosted row or successful subset enters the paper. Invalid response contents are omitted from the paper and anonymous release, but their counts remain in end-to-end denominators and auditable records.
 
 \section{Reproducibility Statement}
 
