@@ -282,7 +282,7 @@ R6 contains only eight \demote{} and eight \escalate{} items, and the weak text 
 
 Pair outcomes localize different failure modes. R6 Qwen scores 0/7 pairs on dependency-statement changes and 0/8 on current-state binding; seven of 20 factors are perfect. Challenge Qwen has three zero-accuracy factors and two perfect factors, while challenge Flash has 11 zero-accuracy factors. Each factor has only six to eight pairs, so these are diagnostics rather than stable rankings.
 
-On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor in both hosted routes. The local routes add action errors after validation: Mistral reaches 31/34 conditional pair accuracy, while Phi-4 reaches 23/42. On the policy switch, Mistral obtains five of its six correct pairs from one authenticated-conflict factor; Phi-4's four correct pairs occur in three candidate-admission factors. The remaining factor cells are zero or uncovered. The artifact retains every factor numerator, denominator, failure category, and full item record.
+On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor in both hosted routes. The local routes add action errors after validation: Mistral reaches 31/34 conditional pair accuracy, while Phi-4 reaches 23/42. On the policy switch, Mistral obtains five of its six correct pairs from one authenticated-conflict factor; Phi-4's four correct pairs occur in three candidate-admission factors. The remaining factor cells are zero or uncovered. The artifact retains every factor numerator, denominator, failure category, and item-level scoring record.
 
 \section{Discussion}
 
@@ -299,7 +299,7 @@ actions. The compiler applies to finite typed decision surfaces, but we validate
 authored ontologies; admission, escalation, and authorization remain prospective uses.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
-The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either.
+The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either. The balanced challenge also exposes class asymmetry hidden by r6: Qwen and Flash recover only 4/30 and 0/30 \demote{} items.
 
 \paragraph{The protocol evaluates a model boundary; it does not advocate one.}
 When policy and evidence are fully structured, a deterministic executor should enforce the transition. The learned routes emulate systems that already place a model at this tool-facing boundary. \cpb tests that boundary; it does not show that a model is preferable to the executor.
