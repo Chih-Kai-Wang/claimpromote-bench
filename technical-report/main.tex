@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-Model-mediated workflows increasingly apply versioned policies to structured evidence and emit tool-facing state changes. Fixed-policy accuracy cannot establish that a route used the active policy, and conditional accuracy can conceal interface failure. We introduce \cpb, a synthetic relational conformance protocol. Evidence pairs change one registered prerequisite under a fixed policy; policy pairs hold the complete decision context fixed and change only the active profile. We formalize policy-migration adequacy along two coordinates: changed-rule coverage and reachable action-transition coverage. A suite covering all 12 authored policy differences exercises only 6/10 reachable directed action transitions; a graph-complete suite covers all ten and certifies two impossible directions. Five frozen evaluations contain 420 pairs across research-evidence and software-artifact ontologies. Every scheduled service, syntax, schema, and semantic failure remains in the end-to-end denominator. On the fixed software policy, four model-route configurations achieved 23/60--49/60 pair accuracy, while a structured Random Forest achieved 60/60. POLICY RESULT TBD. The deterministic executor is the label definition and policy ceiling, not a learned baseline. These results support regression testing of policy-conditioned decision routes; they do not estimate naturalistic validity or causal model effects.
+Model-mediated workflows increasingly apply versioned policies to structured evidence and emit tool-facing state changes. Fixed-policy accuracy cannot establish that a route used the active policy, and conditional accuracy can conceal interface failure. We introduce \cpb, a synthetic relational conformance protocol. Evidence pairs change one registered prerequisite under a fixed policy; policy pairs hold the complete decision context fixed and change only the active profile. We formalize policy-migration adequacy along two coordinates: changed-rule coverage and reachable action-transition coverage. A rule-complete suite kills only 6/10 registered edge-local stale-policy mutants; a graph-complete suite kills all ten and certifies two impossible directions. Five frozen evaluations contain 420 pairs across research-evidence and software-artifact ontologies. Every scheduled service, syntax, schema, and semantic failure remains in the end-to-end denominator. On the fixed software policy, four model-route configurations achieved 23/60--49/60 pair accuracy, while a structured Random Forest achieved 60/60. POLICY RESULT TBD. The deterministic executor is the label definition and policy ceiling, not a learned baseline. These results support regression testing of policy-conditioned decision routes; they do not estimate naturalistic validity or causal model effects.
 \end{abstract}
 
 \section{Introduction}
@@ -51,7 +51,7 @@ The same construction yields a release gate for policy migrations. Given old and
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a relational conformance protocol with matched evidence and policy interventions, an exact transition oracle, and an intervention-blind shortcut certificate;
-  \item a policy-difference test compiler with separate adequacy targets for changed rules and reachable action transitions, including certificates for impossible edges;
+  \item a policy-difference test compiler with separate adequacy targets for changed rules and reachable action transitions, including edge-local stale-policy mutants and certificates for impossible edges;
   \item five frozen evaluations spanning 420 pairs, two authored ontologies, and both intervention axes; and
   \item failure-aware item, pair, action, and confusion reporting for hosted and pinned local routes, with learned controls for fixed-map shortcuts.
 \end{enumerate}
@@ -66,8 +66,10 @@ RuLES couples conversational scenarios with programs that detect rule violations
 
 COMPASS generates routine and adversarial queries for organization-specific allow and deny lists, then judges free-form responses for policy alignment \cite{choi2026compass}. Regression testing for evolving LLM APIs asks whether a provider update breaks application behavior \cite{ma2024promptregression}. These studies establish policy variation and model-service regression as prior art. Our test changes the application policy while holding the route and complete typed context fixed; an exact executable oracle scores both executions jointly and retains interface failures. The policy-pair construction also measures whether a migration suite covers the rules that changed and the distinct action transitions those changes induce.
 
+Policy-to-Tests translates governance prose into executable rules, while TDAD compiles behavioral specifications into agent tests and evaluates specification evolution with semantic mutants \cite{datla2025policytotests,rehan2026tdad}. \cpb assumes that two executable policies already exist. It compiles their behavioral difference into matched tests and audits adequacy over both changed rules and induced action edges.
+
 \paragraph{Structured output and selective prediction.}
-Grammar-constrained decoding and incremental parsing restrict output form \cite{scholak2021picard,geng2023grammar}; JSONSchemaBench and BFCL evaluate schemas, function selection, and arguments \cite{geng2025jsonschemabench,yan2025bfcl}. Selective prediction studies risk as a model abstains \cite{geifman2017selective,geifman2019selectivenet}. We distinguish a valid \hold{} action from route failure. Malformed or absent output is never treated as abstention and remains incorrect end to end.
+Grammar-constrained decoding and incremental parsing restrict output form \cite{scholak2021picard,geng2023grammar}; JSONSchemaBench and BFCL evaluate schemas, function selection, and arguments \cite{geng2025jsonschemabench,patil2025bfcl}. Selective prediction studies risk as a model abstains \cite{geifman2017selective,geifman2019selectivenet}. We distinguish a valid \hold{} action from route failure. Malformed or absent output is never treated as abstention and remains incorrect end to end.
 
 \paragraph{Research agents.}
 ScienceAgentBench, CORE-Bench, and POPPER evaluate data analysis, computational reproduction, and sequential falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. \cpb tests a smaller component that may appear inside such systems: the transition decision after evidence has already been registered. It does not evaluate evidence discovery or an end-to-end research workflow.
@@ -133,6 +135,13 @@ current state, and pair members share that state. Each profile has the same acti
 (18/12/12/18 for \allow/\hold/\demote/\escalate), blocking a profile-only class prior. The two
 suites therefore have adequacy vectors $A(T_{\mathrm{rule}})=(1,.6)$ and
 $A(T_{\mathrm{graph}})=(1,1)$ on the published grammar.
+
+We also register one stale-policy mutant $m_e$ for each reachable edge $e=(a,b)$: on an
+\texttt{AMBER} execution whose correct profile transition is $e$, $m_e$ returns the stale
+\texttt{BLUE} action $a$. A controlled pair kills $m_e$ if and only if it covers $e$.
+The rule-stratified suite therefore kills 6/10 registered edge mutants, whereas the graph suite
+kills 10/10. This oracle-side audit explains the coverage criterion; it is not a model of fault
+prevalence.
 
 \begin{figure}[H]
 \centering
@@ -260,6 +269,10 @@ authored difference can still leave behavioral consequences untested: it covers 
 only 6/10 reachable edges. The transition-graph suite covers all ten, including four edges between
 non-\allow{} actions, and records why the other two directions cannot occur. This distinction gives
 policy migration tests two explicit adequacy targets rather than one aggregate accuracy score.
+The edge-local audit gives the gap a release-testing interpretation: the first suite detects 6/10
+registered stale-policy faults, while the graph-complete suite detects all ten. Because these faults
+are defined from the edge inventory, the audit validates adequacy rather than estimating field
+failure rates.
 
 This procedure can sit in continuous integration for a versioned policy or model-service route. A
 policy change regenerates the difference set and its adequacy receipt; a route change reruns the
