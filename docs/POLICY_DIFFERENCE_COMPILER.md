@@ -24,6 +24,12 @@ problem: when the lower bound is unattainable, it can select additional contexts
 smallest complete suite with a stable lexical tie break. It returns `None` only when the candidate
 pool cannot satisfy the declared joint target.
 
+For $n$ candidates, $r$ required rules, and $k$ required edges, the exact search performs
+$O(n2^{r+k})$ state updates. After each candidate, it retains a shortest selected-ID tuple for every
+reachable joint coverage mask. This invariant proves that the tuple stored at the full mask has
+minimum cardinality; lexical comparison makes equal-size solutions deterministic. The specialized
+lower-bound search uses at most $2^r$ rule masks while selecting one context from each edge group.
+
 The implementation has no SLSA, research-evidence, model, provider, or prompt dependency. A
 cross-check test loads the 60 frozen software-policy candidates and independently reproduces the
 published ten-pair witness. That witness covers all ten reachable edges and all 12 authored rule

@@ -1760,6 +1760,8 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "liu2026augmentedpolicy",
         "choi2026compass",
         "ma2024promptregression",
+        "ahmed2025speceval",
+        "gonzalez2026aiware",
         "liu2026policyinternalization",
         "yang2026rulesual",
         "chen2025scienceagentbench",

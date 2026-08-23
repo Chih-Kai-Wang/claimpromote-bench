@@ -51,7 +51,7 @@ The same construction yields a release gate for policy migrations. Given old and
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a relational conformance protocol with matched evidence and policy interventions, an exact transition oracle, and an intervention-blind shortcut certificate;
-  \item a policy-difference test compiler with separate adequacy targets for changed rules and reachable action transitions, including edge-local stale-policy mutants, impossible-edge certificates, and a minimum smoke suite;
+  \item a policy-difference test compiler with separate adequacy targets for changed rules and reachable action transitions, including exact minimum-suite search, edge-local stale-policy mutants, and impossible-edge certificates;
   \item five frozen evaluations spanning 420 pairs, two authored ontologies, and both intervention axes; and
   \item failure-aware item, pair, action, and confusion reporting for hosted and pinned local routes, with learned controls for fixed-map shortcuts.
 \end{enumerate}
@@ -59,10 +59,12 @@ Our contributions are:
 \section{Related Work}
 
 \paragraph{Behavioral and conformance testing.}
-CheckList and contrast sets probe local decision boundaries with targeted input changes \cite{ribeiro2020checklist,gardner2020contrastsets}. Metamorphic testing checks relations among transformed executions when a direct oracle is difficult to obtain \cite{chan1998metamorphic}. Finite-state and ioco testing derive conformance tests from transition specifications, and transition coverage is a longstanding adequacy criterion \cite{chow1978fsm,tretmans1996conformance}. Decision Model and Notation represents executable decision tables \cite{omg2024dmn}. \cpb does not introduce transition coverage. It applies the idea to a different graph: an edge is the ordered pair of oracle actions induced by changing the policy while the complete decision context stays fixed. The protocol also reports output validity and decision conformance jointly.
+CheckList and contrast sets probe local decision boundaries with targeted input changes \cite{ribeiro2020checklist,gardner2020contrastsets}. Metamorphic testing checks relations among transformed executions when a direct oracle is difficult to obtain \cite{chan1998metamorphic}. Finite-state and ioco testing derive conformance tests from transition specifications, and transition coverage is a longstanding adequacy criterion \cite{chow1978fsm,tretmans1996conformance}. Decision Model and Notation represents executable decision tables \cite{omg2024dmn}. A recent survey finds little operational support for regression and continuous-integration testing of model-mediated software, in part because stable automated oracles are scarce \cite{gonzalez2026aiware}. \cpb addresses this bounded case with an exact oracle. Its graph edges are ordered pairs of actions induced by a policy change under a fixed decision context, and its end-to-end score includes output validity.
 
 \paragraph{Policy and rule reasoning.}
 RuLES couples conversational scenarios with programs that detect rule violations, while Inverse IFEval tests whether models override learned conventions to follow unusual instructions \cite{mu2024rules,zhang2026inverseifeval}. RuleArena evaluates long-context rule application; PolicyLLM and policy-compliance datasets target policy comprehension or request classification \cite{zhou2025rulearena,bao2026policyllm,cisneros2026policycompliance}. Other work extracts rule flows or internalizes policy documents \cite{yang2026rulesual,liu2026policyinternalization}. GuideBench already tests robustness to modified domain guidelines, and augmented policy training targets generalization to unseen guardrail policies \cite{diao2025guidebench,liu2026augmentedpolicy}. Policy variation is established prior art. Our protocol fixes the complete decision context across two executable profiles, scores the resulting relation as a pair, and treats interface failure as an end-to-end outcome.
+
+SpecEval parses provider-authored behavioral statements, synthesizes prompts, and uses model judges to audit adherence \cite{ahmed2025speceval}. We start from two executable application policies, compute every changed action over a finite grammar, and retain the exact oracle for scoring. The protocol performs neither policy extraction nor judge-based labeling.
 
 COMPASS generates routine and adversarial queries for organization-specific allow and deny lists, then judges free-form responses for policy alignment \cite{choi2026compass}. Regression testing for evolving LLM APIs asks whether a provider update breaks application behavior \cite{ma2024promptregression}. These studies establish policy variation and model-service regression as prior art. Our test changes the application policy while holding the route and complete typed context fixed; an exact executable oracle scores both executions jointly and retains interface failures. The policy-pair construction also measures whether a migration suite covers the rules that changed and the distinct action transitions those changes induce.
 
@@ -127,11 +129,14 @@ the oracle side and cannot be chosen from model errors.
 The released compiler is independent of either ontology. Its interface accepts two deterministic
 policy evaluators, a finite context sequence, stable context identifiers, and authored rule
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
-difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. For $r$ changed rules and
-$k$ required edges, a dynamic program keeps at most $2^r$ rule masks while selecting one context
-per edge. If it returns a $k$-context joint-complete witness, the one-edge-per-context lower bound
-certifies global minimality. The implementation independently reconstructs the frozen witness from
-the published 60-pair candidate graph.
+difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. An exact subset dynamic
+program over $r$ required rules and $k$ required edges returns a cardinality-minimum complete suite
+in $O(n2^{r+k})$ state updates for $n$ candidate contexts, with a stable lexical tie break. A
+specialized search keeps at most $2^r$ rule masks while selecting one context per edge; if it finds
+a joint-complete witness, the $k$-context edge lower bound proves global minimality. After processing
+each candidate, the exact program stores a shortest subset for every reachable coverage mask, so
+induction gives optimality at the full mask. The implementation independently reconstructs the
+frozen witness from the published 60-pair candidate graph.
 
 The rule-stratified \texttt{BLUE}$\rightarrow$\texttt{AMBER} suite covers all 12 authored
 profile differences with five contexts each, but only six admission-centered edges:
