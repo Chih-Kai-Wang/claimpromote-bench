@@ -16,7 +16,7 @@ ClaimPromoteBench: Synthetic, Policy-Constrained Evaluation of Evidence-State Tr
 ## ICLR 2027 abstract
 
 ```text
-Producing evidence does not determine which claim-state transition it licenses. We evaluate this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return ALLOW, HOLD, DEMOTE, or ESCALATE. ClaimPromoteBench uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, the Qwen3.7-Max configuration returned 272/300 valid decisions and 123/150 complete pairs, yielding .8600/.7533 end-to-end item/pair accuracy versus .9485/.9187 conditional accuracy at .9067/.8200 coverage. End-to-end action recall was .9533/.8209/.0000/.6250 in the order above. A precommitted public challenge balanced 90 ALLOW members with 30 per other action across 15 factors. Qwen and Flash routes reached .7333/.5333 and .5000/.1444 end-to-end item/pair accuracy; conditional values were .8919/.7500 and .6164/.2131. Their full confusion matrices expose DEMOTE recall of 4/30 and 0/30; each configuration has a zero-accuracy factor. The old Flash lane records 300/300 HTTP 401 failures on its frozen interface and supplies no efficacy estimate; the later route establishes only execution under a different stack. The artifact demonstrates a failure-aware evaluation protocol on selected configurations; it is neither a causal ablation nor evidence of general research-agent ability. The deterministic executor is the definitional policy ceiling, and the Naive Bayes comparator remains a weak baseline.
+Producing evidence does not determine which claim-state transition it licenses. We study this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return ALLOW, HOLD, DEMOTE, or ESCALATE. ClaimPromoteBench uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, a Qwen configuration returned 272/300 valid decisions; end-to-end item/pair accuracy was .8600/.7533 versus .9485/.9187 conditional accuracy at .9067/.8200 decision/pair coverage. A public, preregistered robustness challenge of 180 items and 90 pairs gave Qwen/Flash end-to-end accuracies of .7333/.5333 and .5000/.1444; conditional values were .8919/.7500 and .6164/.2131. Complete confusion matrices show DEMOTE recall of 4/30 and 0/30. A prospectively frozen model-family breadth supplement ran seven service configurations on the same known public challenge: 1,260 terminal cells, zero retries, and 78 valid responses. Route-level end-to-end item/pair accuracy ranged from .0000--.2167/.0000--.0444; conditional metrics were undefined for four routes and used at most 65 valid outputs elsewhere. The old r6 Flash lane records 300 HTTP 401 failures on its old frozen service interface. Because model, serving stack, and adapter differ, these outcomes are descriptive rather than causal or model rankings. The deterministic executor is a definitional policy ceiling; Naive Bayes remains a weak baseline.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -71,7 +71,7 @@ decision making, AI for science, and formal or neuro-symbolic methods.
 ## Suggested TL;DR
 
 ```text
-A hidden 300-item diagnostic and a separately precommitted 180-item action-balanced public challenge expose coverage, factor, and DEMOTE failures under a fixed synthetic evidence-transition policy; all unusable responses remain incorrect, and cross-stack differences are descriptive.
+A hidden diagnostic, an action-balanced public challenge, and a frozen seven-configuration breadth supplement evaluate a synthetic evidence-transition policy while retaining every unusable response; cross-stack outcomes are descriptive, not causal model rankings.
 ```
 
 ## Main empirical findings
@@ -103,27 +103,20 @@ A hidden 300-item diagnostic and a separately precommitted 180-item action-balan
   0.878 / 0.867 / 0.133 / 0.767; Flash: 0.756 / 0.300 / 0.000 / 0.433;
 - the later Flash route establishes service-path executability only; differing service stacks
   preclude a strict causal model ablation;
-- permanent fresh-study reviewer evidence uses a dynamically counted manifest with a reasoning-free
-  post-C2 derivative and byte-identical scientific analysis payload;
-- frozen v1 hidden study: 24 runs and 7,200 decisions;
-- v1 format errors: 5,327 / 7,200 (73.99%);
-- v1 parseable raw decisions: 1,873, all `ALLOW`;
-- capable-model extension: 14 adaptive pilot attempts, two fresh 300-instance full passes, and a
-  post-hoc 288-instance / 144-pair pilot-excluded sensitivity;
-- Qwen3.7-Max pilot-excluded E2E action / pair accuracy: 270 / 288 and 126 / 144;
-- DeepSeek-V4-Flash pilot-excluded E2E action / pair accuracy: 181 / 288 and 37 / 144;
-- both completed lanes: 0 / 8 on pilot-excluded `DEMOTE` cases;
-- five capable-model lanes stopped after 0 / 12 valid pilot decisions and have no full score;
-- both completed lanes exceed the always-`ALLOW` 150 / 300 action baseline in paired exact tests;
-- post-v1 public pilot: 160 decisions, two models, one seed;
-- constrained parseable decisions: 78 / 80;
-- constrained complete pairs: 38 / 40;
-- constrained raw pair accuracy: 0;
-- constrained raw flip rate: 0;
-- post-protocol GPT-5.4 full pass: 99 / 100 parseable decisions and 49 / 50 complete pairs;
-- GPT-5.4 covered decision accuracy: 99 / 99;
-- GPT-5.4 covered pair accuracy and raw flip rate: 49 / 49 and 1.0;
-- GPT-5.4 raw false promotions: 0 / 49;
+- model-family breadth supplement: seven frozen configurations, 180 calls each, 1,260 terminal
+  cells, one POST per cell, and zero client retries;
+- breadth coverage: 78 / 1,260 valid decisions and 25 / 630 covered pairs; four routes return no
+  valid decision;
+- breadth end-to-end item / pair ranges: 0.000--0.217 / 0.000--0.044; conditional metrics are
+  undefined for four routes and use at most 65 valid items and 21 covered pairs elsewhere;
+- breadth action results: every route has zero `DEMOTE` recall; complete per-configuration confusion
+  matrices are included in the manuscript and replayable evidence;
+- breadth failures: 630 transport, 312 JSON-syntax, 203 schema, and 37 semantic failures, all
+  retained in the denominator;
+- service labels are configuration labels. Model, serving implementation, and adapter differ, so
+  neither the breadth supplement nor the old/new Flash routes form a strict causal ablation or a
+  model-family ranking;
+- permanent reviewer evidence uses dynamically counted manifests and reasoning-free derivatives;
 - deterministic policy execution is a definitional policy ceiling, not a learned baseline; the
   public-development text Naive Bayes comparator remains weak.
 
@@ -132,19 +125,19 @@ A hidden 300-item diagnostic and a separately precommitted 180-item action-balan
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, balanced public challenge, reviewer-release hidden datasets and oracle labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, privacy/redaction/correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, provider hidden-thinking content, provider response identifiers, author-identifying provenance, generated caches, and unused human-review workflow files. Public repository and archival identifiers will be released when double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, balanced public challenge, public-safe model-breadth records, reviewer-release hidden datasets and oracle labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, privacy/redaction/correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, raw provider text, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Public repository and archival identifiers will be released when double-blind review permits disclosure.
 ```
 
 ### Public preprint version
 
 ```text
-Code, public benchmark and balanced-challenge data, reviewer-release hidden datasets, item-level empirical records, validation workflows, privacy/redaction/scientific-equivalence receipts, and executable and formal replay inputs are available in the project repository. Private construction seeds and provider hidden-thinking content are not released. Exact workflow and artifact identities are recorded in repository evidence manifests. A long-term archival identifier will be added only after it exists.
+Code, public benchmark and balanced-challenge data, public-safe model-breadth records, reviewer-release hidden datasets, item-level empirical records, validation workflows, privacy/redaction/scientific-equivalence receipts, and executable and formal replay inputs are available in the project repository. Private construction seeds, raw provider text, and provider hidden-thinking content are not released. Exact workflow and artifact identities are recorded in repository evidence manifests. A long-term archival identifier will be added only after it exists.
 ```
 
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The v1 hidden set and exact prompts were committed before scored inference. V1 recovery reused the original 24 source artifacts without re-querying the models and reclassified only 27 cross-field-invalid structured outputs as FORMAT_ERROR. The fresh study binds public C0 and salt commitments, a future randomness beacon, C1 construction, a frozen request schedule, and all 600 pre-gold C2 terminal cells. A post-C2 text-only allowlist derivative removes provider hidden-thinking blocks and verifies source-to-derived row hashes and byte-identical scientific analysis. The public balanced challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference; its receipt validates 360 records and privacy scans. Paper-facing values are recomputed from released item records and checked against machine-readable summaries in CI.
+The public benchmark is deterministically rebuildable and checked for schema, oracle, pair-contract, shortcut, metamorphic-invariance, executable-artifact, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public balanced challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. The model-breadth supplement freezes seven configurations and all 1,260 cells before any call on the same known public challenge. Public derivatives remove raw response text, free-form error detail, provider identifiers, credentials, and hidden reasoning while preserving every scoring field. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
 ```
 
 ## AI-use disclosure summary

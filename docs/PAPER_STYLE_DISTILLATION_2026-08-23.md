@@ -114,12 +114,12 @@ AI-detector evasion method.
 
 ## Application to ClaimPromoteBench
 
-The first manuscript audit measured 3,234 prose words and a 231-word extracted abstract. The
-commit-bound revised audit measures 2,853 prose words and a 205-word extracted abstract, an 11.8%
-reduction in main prose. The submission lint counts 220 abstract tokens under its TeX-aware rule.
-Median sentence length changed from 16 to 15.5 words; the 95th percentile changed from 29.9 to
-26.55.
-The revision:
+The breadth-integrated, commit-bound audit measures 3,505 prose tokens and 202 usable sentences
+after excluding LaTeX tables, figures, and display math. Median sentence length is 17 words, the
+90th percentile is 25.9, and the 95th percentile is 28.0, within the central ranges of the selected
+corpus. The submission lint counts 220 abstract tokens. This measurement revision is not used to
+restate the historical reduction percentage because the manuscript now contains a new frozen
+experiment and three evidence tables. The revision:
 
 - removes the v1 formatting-control and adaptive-pilot chronology from the main narrative;
 - removes the historical Macro-F1 correction ledger while retaining the corrected value and
@@ -127,6 +127,8 @@ The revision:
 - moves the zero-case naturalistic-candidate decision to limitations, where it constrains
   external validity;
 - states hidden, public-challenge, conditional, and end-to-end estimands beside their results;
+- reports all seven breadth configurations, their action recalls, and compact complete confusion
+  matrices without presenting them as model rankings;
 - shortens the reproducibility and AI-disclosure wrappers while preserving privacy and author
   responsibility;
 - retains all confusion cells, action recalls, factor summaries, service failures, and

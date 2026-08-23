@@ -494,6 +494,7 @@ def test_public_model_breadth_projection_drops_private_text_and_rebinds_rows(
         (destination / "execution-receipt-review.json").read_text(encoding="utf-8")
     )
     manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    catalog = json.loads((destination / "catalog-snapshot.json").read_text(encoding="utf-8"))
 
     assert frozen_commit not in rendered
     assert "0000000000000000000000000000000000000009" in rendered
@@ -502,5 +503,8 @@ def test_public_model_breadth_projection_drops_private_text_and_rebinds_rows(
     assert execution["source_journal_digests_included"] is False
     assert "request_intent_journal_sha256" not in execution
     assert manifest["file_count"] == len(manifest["files"])
+    assert catalog["model_count"] == len(catalog["model_ids"]) == 29
+    assert len(catalog["selected_model_ids"]) == 7
+    assert set(catalog["selected_model_ids"]) <= set(catalog["model_ids"])
     builder.scan_identity(destination)
     builder.scan_sensitive_payloads(destination)

@@ -751,8 +751,18 @@ def validate_public_model_breadth(tex: str) -> bool:
         )
         if action_row not in tex:
             fail(f"public model-breadth action row is missing or changed: {lane_id}")
+        confusion_row = f"{labels[str(lane_id)]} & " + " & ".join(
+            "/".join(str(counts[gold][predicted]) for predicted in (*ACTIONS, "NO_VALID_DECISION"))
+            for gold in ACTIONS
+        )
+        if confusion_row not in tex:
+            fail(f"public model-breadth confusion row is missing or changed: {lane_id}")
 
-    for label in ("tab:breadth-results", "tab:breadth-action-recall"):
+    for label in (
+        "tab:breadth-results",
+        "tab:breadth-action-recall",
+        "tab:breadth-confusion",
+    ):
         if rf"\label{{{label}}}" not in tex:
             fail(f"required public model-breadth table missing: {label}")
     required = (
@@ -869,31 +879,9 @@ def validate_manuscript_tables(tex: str) -> None:
     for pattern in action_rows:
         require_regex(tex, pattern, "action-recall table row")
     factor_rows = (
-        "Age (8) & 7/7 & Claim identity (8) & 7/7",
-        "Cold start (8) & 7/7 & Contradiction (8) & 5/5",
-        "Current binding (8) & 6/0 & Dependency statement (7) & 2/0",
-        "Dependency verifier (7) & 7/7 & Direct dependency (7) & 6/5",
-        "Domain (7) & 5/5 & Precision (7) & 7/7",
-        "Preregistration (7) & 7/7 & Repetitions (7) & 7/7",
-        "Review environment (8) & 7/7 & Reviewer identity (8) & 5/5",
-        "Run completion (8) & 7/7 & Statement identity (8) & 4/3",
-        "Tool exit (7) & 7/7 & Transitive dependency (7) & 7/7",
-        "Trust base (8) & 6/6 & Verifier execution (7) & 7/7",
-        "Age & 5/5 & 6/0",
-        "Contradiction claim identity & 5/5 & 0/0",
-        "Contradiction freshness & 3/3 & 4/0",
-        "Contradiction reviewer identity & 3/3 & 2/0",
-        "Contradiction status & 6/6 & 4/4",
-        "Contradiction verifier execution & 3/3 & 1/0",
-        "Current computation binding & 4/0 & 6/0",
-        "Current computation stale & 5/0 & 6/0",
-        "Current computation verifier & 4/2 & 4/0",
-        "Current review environment & 3/0 & 6/0",
-        "Current review identity & 3/1 & 6/0",
-        "Dependency verifier & 5/5 & 5/5",
-        "Repetitions & 5/5 & 4/1",
-        "Reviewer identity & 4/4 & 4/0",
-        "Tool exit & 6/6 & 3/3",
+        "r6 Qwen & 20 & .2857--1.0000 & .0000--1.0000 & 2 / 7",
+        "Challenge Qwen & 15 & .5000--1.0000 & .0000--1.0000 & 3 / 2",
+        "Challenge Flash & 15 & .0000--1.0000 & .0000--.8333 & 11 / 0",
     )
     for row in factor_rows:
         if row not in tex:

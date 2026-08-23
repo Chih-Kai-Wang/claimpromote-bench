@@ -4,10 +4,12 @@
 an authored, machine-checkable policy. The experiments are synthetic and configuration-specific;
 they do not measure general research-agent ability or natural-distribution performance.
 
-The paper reports two principal evaluations:
+The paper reports three evidence regimes:
 
-- a fresh hidden r6 diagnostic with 300 items and 150 controlled pairs; and
-- a precommitted, action-balanced public challenge with 180 items and 90 pairs.
+- a fresh hidden r6 diagnostic with 300 items and 150 controlled pairs;
+- a precommitted, action-balanced public challenge with 180 items and 90 pairs; and
+- a prospectively frozen seven-configuration breadth supplement on the same known public challenge,
+  comprising 1,260 terminal cells.
 
 Every scheduled service, syntax, schema, and semantic failure remains incorrect in end-to-end
 metrics. Conditional accuracy is reported only alongside decision or pair coverage. The

@@ -1627,9 +1627,18 @@ def validate_public_model_breadth() -> Json:
         or schedule.get("contains_prompts") is not False
     ):
         fail("public model-breadth request schedule changed")
+    catalog_model_ids = catalog.get("model_ids")
+    selected_model_ids = catalog.get("selected_model_ids")
     if (
-        catalog.get("model_count") != 7
-        or len(catalog.get("selected_model_ids", [])) != 7
+        catalog.get("status") != "CREDENTIAL_AUTHENTICATED_MODEL_CATALOG_SNAPSHOT"
+        or not isinstance(catalog_model_ids, list)
+        or catalog.get("model_count") != len(catalog_model_ids)
+        or catalog.get("model_count") != 29
+        or len(set(catalog_model_ids)) != 29
+        or not isinstance(selected_model_ids, list)
+        or len(selected_model_ids) != 7
+        or len(set(selected_model_ids)) != 7
+        or not set(selected_model_ids) <= set(catalog_model_ids)
         or catalog.get("account_identifiers_retained") is not False
         or catalog.get("credentials_retained") is not False
         or catalog.get("provider_response_identifiers_retained") is not False

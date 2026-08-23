@@ -12,8 +12,9 @@
     "use": "negative editorial pattern filter, not detector evasion"
   },
   "method": {
+    "measurement_revision": "breadth-integration-v2",
     "latex_tables_figures_and_display_math_excluded": true,
-    "sentence_filter_alpha_words_min_max": [5, 100],
+    "sentence_filter_alphanumeric_tokens_min_max": [5, 100],
     "paragraph_min_alpha_words": 8,
     "pattern_scan": "case-insensitive regular expressions",
     "limitations": [
@@ -44,17 +45,16 @@
     }
   },
   "after": {
-    "manuscript_sha256": "712a0494363be358403fd2e44c55008ec27e4619bb1f27de8d42ce574715192e",
-    "prose_words": 2853,
-    "prose_reduction_percent": 11.7811,
-    "sentences": 170,
-    "sentence_words_mean": 16.37,
-    "sentence_words_median": 15.5,
-    "sentence_words_p90": 24.0,
-    "sentence_words_p95": 26.55,
-    "sentence_words_over_40_percent": 0.5882,
-    "abstract_extracted_words": 205,
+    "manuscript_sha256": "ec010ceed57b9ad71965587f87d7ac97e00fce8f5ef4b4f707d14d856b08e4d7",
+    "prose_words": 3505,
+    "sentences": 202,
+    "sentence_words_mean": 17.33,
+    "sentence_words_median": 17.0,
+    "sentence_words_p90": 25.9,
+    "sentence_words_p95": 28.0,
+    "sentence_words_over_40_percent": 0.495,
     "abstract_submission_lint_tokens": 220,
+    "historical_reduction_not_recomputed": true,
     "configured_pattern_findings": {
       "throat_clearing": 0,
       "vague_importance": 0,

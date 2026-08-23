@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-Producing evidence does not determine which claim-state transition it licenses. We evaluate this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return \allow, \hold, \demote, or \escalate. \cpb uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, the Qwen3.7-Max configuration returned 272/300 valid decisions and 123/150 complete pairs, yielding .8600/.7533 end-to-end item/pair accuracy versus .9485/.9187 conditional accuracy at .9067/.8200 coverage. End-to-end action recall was .9533/.8209/.0000/.6250 in the order above. A precommitted public challenge balanced 90 \allow{} members with 30 per other action across 15 factors. Qwen and Flash routes reached .7333/.5333 and .5000/.1444 end-to-end item/pair accuracy; conditional values were .8919/.7500 and .6164/.2131. Their full confusion matrices expose \demote{} recall of 4/30 and 0/30; each configuration has a zero-accuracy factor. The old Flash lane records 300/300 HTTP 401 failures on its frozen interface and supplies no efficacy estimate; the later route establishes only execution under a different stack. The artifact demonstrates a failure-aware evaluation protocol on selected configurations; it is neither a causal ablation nor evidence of general research-agent ability. The deterministic executor is the definitional policy ceiling, and the Naive Bayes comparator remains a weak baseline.
+Producing evidence does not determine which claim-state transition it licenses. We study this intervening decision as synthetic policy conformance: given a claim, typed evidence, current state, target, and fixed author-defined policy, return \allow, \hold, \demote, or \escalate. \cpb uses controlled pairs and counts every service or output failure as incorrect. In a preregistered hidden study of 300 items and 150 pairs, a Qwen configuration returned 272/300 valid decisions; end-to-end item/pair accuracy was .8600/.7533 versus .9485/.9187 conditional accuracy at .9067/.8200 decision/pair coverage. A public, preregistered robustness challenge of 180 items and 90 pairs gave Qwen/Flash end-to-end accuracies of .7333/.5333 and .5000/.1444; conditional values were .8919/.7500 and .6164/.2131. Complete confusion matrices show \demote{} recall of 4/30 and 0/30. A prospectively frozen model-family breadth supplement ran seven service configurations on the same known public challenge: 1,260 terminal cells, zero retries, and 78 valid responses. Route-level end-to-end item/pair accuracy ranged from .0000--.2167/.0000--.0444; conditional metrics were undefined for four routes and used at most 65 valid outputs elsewhere. The old r6 Flash lane records 300 HTTP 401 failures on its old frozen service interface. Because model, serving stack, and adapter differ, these outcomes are descriptive rather than causal or model rankings. The deterministic executor is a definitional policy ceiling; Naive Bayes remains a weak baseline.
 \end{abstract}
 
 \section{Introduction}
@@ -43,7 +43,7 @@ The benchmark treats this question as synthetic policy conformance under an auth
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item an executable controlled-pair protocol that maps typed evidence and requested state transitions to four actions under a fixed authored policy;
-  \item failure-aware item and pair estimands, applied in a preregistered hidden diagnostic and a precommitted action-balanced public challenge; and
+  \item failure-aware item and pair estimands, applied in a preregistered hidden diagnostic, a precommitted action-balanced public challenge, and a prospectively frozen model-family breadth supplement; and
   \item a replayable evidence artifact that separates service output from a definitional policy ceiling and produces privacy-filtered reviewer derivatives.
 \end{enumerate}
 \end{samepage}
@@ -161,6 +161,12 @@ The separately precommitted public challenge tests action asymmetry over the 15 
 
 The two routes differ in model and service stack, including output-constraining behavior. We report descriptive service-configuration outcomes because the design cannot identify the effect of model weights, provider, schema mode, or any single component.
 
+\subsection{Prospectively frozen public model-family breadth}
+
+We subsequently froze seven service configurations on the same known public 180-item challenge: new Qwen and DeepSeek configurations and five additional model families. The 1,260 terminal cells use identical prompt bytes, a 1,536-token prompt-only JSON contract, item-major cyclic lane rotation, one application POST per cell, and zero client retries. The schedule, adapters, and analysis were committed before any call, and no output selected a model or item.
+
+This supplement adds model-family and configuration breadth while holding one policy, ontology, and public challenge fixed. Model identity, serving implementation, and API adapter are not causally isolated. The observed configuration outcomes therefore cannot estimate the effect of any one component or hidden generalization.
+
 \section{Results}
 
 \subsection{Coverage, conditional accuracy, and end-to-end accuracy}
@@ -190,54 +196,93 @@ The r6 Flash lane returned 300/300 HTTP 401 authorization failures on the old fr
 
 On the balanced challenge, Qwen returned 148/180 valid decisions and 64/90 complete pairs; Flash returned 146/180 valid decisions and 61/90 complete pairs. Their end-to-end item/pair accuracies were .7333/.5333 and .5000/.1444, while conditional accuracies were .8919/.7500 and .6164/.2131. Qwen recorded 31 transport failures and one semantic failure; Flash recorded 34 semantic failures. The larger pair-level gaps show why conditional correctness cannot replace coverage or the end-to-end estimand.
 
-\subsection{Factor-level pair outcomes}
+\subsection{Model-family breadth on the known public challenge}
 
-Factor-level pair results vary sharply (Table~\ref{tab:factor-results}). For r6 Qwen, dependency statement scores 0/7 and current binding scores 0/8, with pair coverage of 2/7 and 6/8; seven factors are perfect. Challenge Qwen has three zero-accuracy factors and two perfect factors. Challenge Flash has 11 zero-accuracy factors and none that are perfect. Supports of six to eight pairs make these descriptive breakdowns, not separate confirmatory tests.
+The seven frozen configurations returned 78/1,260 valid decisions and 52 correct decisions. Only 25/630 pairs had two valid members, of which seven were correct. Table~\ref{tab:breadth-results} reports each route separately: four routes returned no valid decision, Qwen3.8-Max returned one, Kimi-K3 returned 12, and MiniMax-M3 returned 65. Conditional values of 1.0000 for Qwen3.8-Max and Kimi-K3 rest on one and 12 valid items, respectively. MiniMax-M3 reached .2167/.0333 end-to-end item/pair accuracy; its .6000/.1429 conditional values use 65 valid items and 21 covered pairs.
 
 \begin{table}[H]
 \centering
 \scriptsize
-\caption{Factor-level pair coverage and correctness. Each entry is complete/correct pairs; E2E accuracy is correct/all pairs. Parentheses give r6 support; every challenge factor has six pairs.}
-\label{tab:factor-results}
-\begin{tabular}{@{}lclc@{}}
+\caption{Prospectively frozen model-family breadth results. Each provider-catalog label denotes one complete service configuration. N/E denotes an empty conditional denominator.}
+\label{tab:breadth-results}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-\multicolumn{4}{c}{r6 Qwen: 20 factors} \\
-Factor (pairs) & Complete/correct & Factor (pairs) & Complete/correct \\
+Configuration & Valid & E2E item & Cond. item & Pair cov. & E2E pair & Cond. pair \\
 \midrule
-Age (8) & 7/7 & Claim identity (8) & 7/7 \\
-Cold start (8) & 7/7 & Contradiction (8) & 5/5 \\
-Current binding (8) & 6/0 & Dependency statement (7) & 2/0 \\
-Dependency verifier (7) & 7/7 & Direct dependency (7) & 6/5 \\
-Domain (7) & 5/5 & Precision (7) & 7/7 \\
-Preregistration (7) & 7/7 & Repetitions (7) & 7/7 \\
-Review environment (8) & 7/7 & Reviewer identity (8) & 5/5 \\
-Run completion (8) & 7/7 & Statement identity (8) & 4/3 \\
-Tool exit (7) & 7/7 & Transitive dependency (7) & 7/7 \\
-Trust base (8) & 6/6 & Verifier execution (7) & 7/7 \\
+Qwen3.8-Max & 1/180 & .0056 & 1.0000 & .0000 & .0000 & N/E \\
+DeepSeek-V4-Pro & 0/180 & .0000 & N/E & .0000 & .0000 & N/E \\
+GLM-5.3 & 0/180 & .0000 & N/E & .0000 & .0000 & N/E \\
+Kimi-K3 & 12/180 & .0667 & 1.0000 & .0444 & .0444 & 1.0000 \\
+MiMo-V2.5-Pro & 0/180 & .0000 & N/E & .0000 & .0000 & N/E \\
+MiniMax-M3 & 65/180 & .2167 & .6000 & .2333 & .0333 & .1429 \\
+Hunyuan-HY3 & 0/180 & .0000 & N/E & .0000 & .0000 & N/E \\
 \bottomrule
 \end{tabular}
+\end{table}
 
-\vspace{4pt}
-\begin{tabular}{@{}lcc@{}}
+The 1,182 invalid cells comprise 630 transport, 312 JSON-syntax, 203 schema, and 37 semantic failures. Their timing and status fields do not identify a cause, so we do not attribute them to model weights, serving infrastructure, subscription state, or adapters. All remain in the end-to-end denominator.
+
+No breadth route returned a correct \demote{} decision (Table~\ref{tab:breadth-action-recall}). Kimi-K3 recovered 8/90 \allow{}, 2/30 \hold{}, and 2/30 \escalate{} cases. MiniMax-M3 recovered 32/90, 3/30, and 4/30, respectively. These supports rule out a useful route ranking: most scheduled cells were invalid, and the conditional estimands select very different subsets.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Breadth end-to-end action recall. No-valid cells are misses; Macro-F1 uses all four actions with zero division set to zero.}
+\label{tab:breadth-action-recall}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-\multicolumn{3}{c}{Public challenge: 15 factors} \\
-Factor & Qwen complete/correct & Flash complete/correct \\
+Configuration & \allow{} & \hold{} & \demote{} & \escalate{} & Bal. recall & Macro-F1 \\
 \midrule
-Age & 5/5 & 6/0 \\
-Contradiction claim identity & 5/5 & 0/0 \\
-Contradiction freshness & 3/3 & 4/0 \\
-Contradiction reviewer identity & 3/3 & 2/0 \\
-Contradiction status & 6/6 & 4/4 \\
-Contradiction verifier execution & 3/3 & 1/0 \\
-Current computation binding & 4/0 & 6/0 \\
-Current computation stale & 5/0 & 6/0 \\
-Current computation verifier & 4/2 & 4/0 \\
-Current review environment & 3/0 & 6/0 \\
-Current review identity & 3/1 & 6/0 \\
-Dependency verifier & 5/5 & 5/5 \\
-Repetitions & 5/5 & 4/1 \\
-Reviewer identity & 4/4 & 4/0 \\
-Tool exit & 6/6 & 3/3 \\
+Qwen3.8-Max & .0111 & .0000 & .0000 & .0000 & .0028 & .0055 \\
+DeepSeek-V4-Pro & .0000 & .0000 & .0000 & .0000 & .0000 & .0000 \\
+GLM-5.3 & .0000 & .0000 & .0000 & .0000 & .0000 & .0000 \\
+Kimi-K3 & .0889 & .0667 & .0000 & .0667 & .0556 & .1033 \\
+MiMo-V2.5-Pro & .0000 & .0000 & .0000 & .0000 & .0000 & .0000 \\
+MiniMax-M3 & .3556 & .1000 & .0000 & .1333 & .1472 & .2072 \\
+Hunyuan-HY3 & .0000 & .0000 & .0000 & .0000 & .0000 & .0000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:breadth-confusion} gives the complete per-configuration confusion matrices in a compact form. No route predicts \demote. MiniMax-M3 instead maps 15/30 gold-\demote{} items to \allow{} and one to \hold; the other 14 have no valid decision. This mirrors the action asymmetry found in r6 and the balanced challenge, but under substantially lower route coverage.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Complete breadth confusion matrices. Each gold-action cell is predicted \allow/\hold/\demote/\escalate/no-valid; gold supports are 90/30/30/30.}
+\label{tab:breadth-confusion}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Configuration & Gold \allow{} & Gold \hold{} & Gold \demote{} & Gold \escalate{} \\
+\midrule
+Qwen3.8-Max & 1/0/0/0/89 & 0/0/0/0/30 & 0/0/0/0/30 & 0/0/0/0/30 \\
+DeepSeek-V4-Pro & 0/0/0/0/90 & 0/0/0/0/30 & 0/0/0/0/30 & 0/0/0/0/30 \\
+GLM-5.3 & 0/0/0/0/90 & 0/0/0/0/30 & 0/0/0/0/30 & 0/0/0/0/30 \\
+Kimi-K3 & 8/0/0/0/82 & 0/2/0/0/28 & 0/0/0/0/30 & 0/0/0/2/28 \\
+MiMo-V2.5-Pro & 0/0/0/0/90 & 0/0/0/0/30 & 0/0/0/0/30 & 0/0/0/0/30 \\
+MiniMax-M3 & 32/2/0/4/52 & 2/3/0/0/25 & 15/1/0/0/14 & 0/2/0/4/24 \\
+Hunyuan-HY3 & 0/0/0/0/90 & 0/0/0/0/30 & 0/0/0/0/30 & 0/0/0/0/30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Factor-level pair outcomes}
+
+Factor-level pair results vary sharply (Table~\ref{tab:factor-results}). R6 Qwen has two zero-accuracy factors and seven perfect factors; its weakest cases are dependency statement (0/7 correct, 2/7 complete) and current binding (0/8 correct, 6/8 complete). Challenge Qwen has three zero-accuracy factors and two perfect factors, while challenge Flash has 11 zero-accuracy factors and no perfect factor. Supports of six to eight pairs make these descriptive breakdowns, not separate confirmatory tests. The reviewer artifact retains every factor-level complete/correct count.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Factor-level pair diagnostics. Coverage and E2E ranges are minima--maxima across factors; zero/perfect counts use E2E pair accuracy. The reviewer artifact contains every factor row.}
+\label{tab:factor-results}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Configuration & Factors & Pair coverage range & E2E pair range & Zero / perfect \\
+\midrule
+r6 Qwen & 20 & .2857--1.0000 & .0000--1.0000 & 2 / 7 \\
+Challenge Qwen & 15 & .5000--1.0000 & .0000--1.0000 & 3 / 2 \\
+Challenge Flash & 15 & .0000--1.0000 & .0000--.8333 & 11 / 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -293,7 +338,7 @@ Challenge Flash & \allow{} & 68 & 4 & 0 & 8 & 10 \\
 
 \subsection{Definitional policy ceiling}
 
-The deterministic policy executor reads the same model-visible item and public policy that define the labels. It reproduces 300/300 r6 items and 150/150 pairs, and all 360 scheduled public-challenge item cells and 180 pair cells. This perfect agreement is true by definition of the evaluation target. We call it a \emph{definitional policy ceiling}; it is neither a learned baseline nor independent evidence that the authored policy is scientifically correct. Post-generation gates driven by the same executor are implementation checks and provide no evidence of learned model competence.
+The deterministic policy executor reads the same model-visible item and public policy that define the labels. It reproduces 300/300 r6 items and 150/150 pairs, all 360 original public-challenge item cells and 180 pair cells, and all 1,260 breadth cells and 630 pairs. This perfect agreement is true by definition of the evaluation target. We call it a \emph{definitional policy ceiling}; it is neither a learned baseline nor independent evidence that the authored policy is scientifically correct. Post-generation gates driven by the same executor are implementation checks and provide no evidence of learned model competence.
 
 \section{Discussion}
 
@@ -303,8 +348,11 @@ The preregistered r6 diagnostic supports one time-stamped Qwen service configura
 \paragraph{Action balance changes the picture.}
 R6 is dominated by \allow{} and \hold, and its 0/8 \demote{} recall precludes a uniform four-action claim. The balanced challenge gives 30 cases to each non-\allow{} action; Qwen recovers 4/30 \demote{} cases and Flash recovers none. Every configuration also has a zero-accuracy factor. The confusion matrices distinguish the remaining errors: Qwen mixes valid demotions across all four actions, while Flash often substitutes \allow{} for \hold{} or \demote. Action recall, factor breakdowns, and pair accuracy expose failures that aggregate item accuracy hides.
 
+\paragraph{Breadth exposes route failure rather than a model ranking.}
+The prospectively frozen supplement returns only 78/1,260 valid decisions across seven configurations. Four routes have undefined conditional accuracy; Qwen3.8-Max and Kimi-K3 have conditional item accuracy of 1.0000 on one and 12 valid responses. MiniMax-M3 has the largest valid subset, yet reaches only .2167/.0333 end-to-end item/pair accuracy and .6000/.1429 conditionally. Its complete matrix includes 15 gold-\demote{} items mapped to \allow{} and none mapped correctly. Across all seven routes, \demote{} recall is zero and balanced recall ranges from .0000 to .1472. These values characterize frozen service configurations on one known public challenge; they do not order the underlying model families.
+
 \paragraph{Service reliability is part of end-to-end behavior.}
-Every transport, syntax, schema, and semantic failure is a failed scheduled decision. Conditional reporting separates response validity from policy correctness, but it cannot replace the end-to-end estimand. The old r6 Flash lane documents 300/300 authorization failures on its frozen service interface and no model output. The later Flash route shows only that a different path executed. Because both the service stack and model configuration changed, the Qwen--Flash gap is descriptive and is not a causal ablation.
+Every transport, syntax, schema, and semantic failure is a failed scheduled decision. Conditional reporting separates response validity from policy correctness, but it cannot replace the end-to-end estimand. The breadth run records 630 transport failures and 552 output failures; neither status nor timing identifies their cause. The old r6 Flash lane documents 300/300 authorization failures on its old frozen service interface and no model output. The later Flash route shows only that a different path executed. Because the model, service stack, and adapter changed, the Qwen--Flash gap is descriptive and is not a causal ablation.
 
 \paragraph{Comparators and enforcement.}
 The public-development Naive Bayes model gives a reproducible low-cost reference, but its .6133 item accuracy, .2267 pair accuracy, .3284 balanced recall, and .3124 macro-F1 make it a weak baseline. Stronger learned comparators remain needed. The deterministic executor reaches perfect agreement because it defines the gold actions. It is a definitional policy ceiling, and treating it as learned model evidence would be circular.
@@ -315,13 +363,15 @@ The benchmark is synthetic and policy-constrained, and the experiments demonstra
 
 Coverage remains a material limitation. R6 loses 28/300 decisions and 27/150 complete pairs; the public challenge loses 32/180 Qwen decisions and 34/180 Flash decisions. Conditional accuracies of .9485/.9187, .8919/.7500, and .6164/.2131 must therefore be read beside their end-to-end counterparts. Thirty challenge cases per non-\allow{} action still support only coarse recall estimates, including the observed 4/30 and 0/30 \demote{} results.
 
-The evidence covers a few time-stamped service configurations and one call per item. Zero retries define the estimand but do not characterize retry policies, sampling variance, fixed model weights, or alternate providers. The old and new Flash routes differ enough that later executability cannot identify why the former returned 401 or what its r6 model accuracy would have been. No strict causal provider, model, or structured-output comparison follows.
+The breadth supplement is more severely coverage-limited: 1,182/1,260 cells are invalid, four routes have no valid output, and only 25/630 pairs are covered. Its route-level end-to-end item/pair ranges of .0000--.2167/.0000--.0444 are well-defined, but most conditional cells are undefined or use at most 65 items and 21 pairs. The complete per-configuration confusion matrices preserve all failures and show zero \demote{} recall throughout. They do not support precise action comparisons, stable family rankings, or an inference that a zero-valid route lacks the underlying policy skill.
+
+The evidence covers a few time-stamped service configurations and one call per item. Zero retries define the estimand but do not characterize retry policies, sampling variance, or fixed model weights. The breadth supplement increases the configuration count but keeps one public challenge, policy, ontology, prompt contract, and subscription endpoint. Its adapters and serving implementations can differ, so a route that returns no valid decision under the frozen contract does not estimate model-family competence. The old and new Flash routes likewise cannot identify why the former returned 401 or what its r6 model accuracy would have been. No strict causal provider, model, or structured-output comparison follows.
 
 The policy and labels are authored operational definitions. There is no human annotation study, external policy consensus, agreement measure, or validation against downstream scientific outcomes. Before any \cpb call, we froze and reviewed 12 pointer-only CORE-Bench candidates; none contained the time-stamped artifacts, dependency chain, runtime status, and provenance needed for a transition. We therefore created zero naturalistic benchmark cases and made zero model calls. No human annotators or agreement statistic are claimed. Naturalistic transfer remains open, as do stronger learned baselines, independent policy assessment, and downstream utility.
 
 \section{Reproducibility and Artifact Policy}
 
-The repository binds policies, generators, datasets, prompts, terminal records, gold-loading order, analyses, and receipts. R6 freezes its construction and 600-request schedule before inference and seals every terminal record before gold loading. The public challenge freezes its dataset, action balance, prompt packet, adapters, and analysis before inference. Paper construction does not rerun either completed singleton study.
+The repository binds policies, generators, datasets, prompts, terminal records, gold-loading order, analyses, and receipts. R6 freezes its construction and 600-request schedule before inference and seals every terminal record before gold loading. The public challenge freezes its dataset, action balance, prompt packet, adapters, and analysis before inference. The breadth supplement freezes seven configurations and all 1,260 cells before inference on that known public challenge. Paper construction does not rerun any completed singleton study.
 
 A post-r6 audit found provider hidden-thinking blocks in 275 source envelopes; scoring had used only final response text and parsed decisions. The reviewer derivative excludes those envelopes through a text-only allowlist and verifies source-to-derived hashes and scientific-payload equivalence. The anonymous bundle contains replayable item records, policy and prompt bindings, executable checks, formal checks, and privacy receipts. Its manifest derives the current file count from the generated tree. Fail-closed scans reject author identity, repository or workflow identifiers, provider response identifiers, hidden reasoning, and unknown record fields.
 
@@ -331,9 +381,9 @@ Generative AI tools assisted literature search, planning, code and benchmark dra
 
 \section{Conclusion}
 
-\cpb provides an evaluation protocol and replayable artifact for policy-constrained evidence-state transitions. The hidden r6 Qwen configuration reached .8600/.7533 end-to-end item/pair accuracy at .9067/.8200 coverage; conditional accuracy was .9485/.9187. On the action-balanced public challenge, Qwen and Flash reached .7333/.5333 and .5000/.1444 end to end, with conditional values of .8919/.7500 and .6164/.2131. Their full confusion matrices show \demote{} recall of only 4/30 and 0/30, and every configuration has a zero-accuracy factor. These results support a configuration-specific diagnostic under an authored synthetic policy, not uniform policy competence or general research ability.
+\cpb provides a replayable evaluation protocol for policy-constrained evidence-state transitions. The hidden r6 Qwen configuration reaches .8600/.7533 end-to-end item/pair accuracy at .9067/.8200 coverage, versus .9485/.9187 conditionally. On the action-balanced public challenge, Qwen and Flash reach .7333/.5333 and .5000/.1444 end to end, with conditional values of .8919/.7500 and .6164/.2131. Their full matrices show \demote{} recall of 4/30 and 0/30. The artifact demonstrates a failure-aware evaluation protocol; it does not establish broad benchmark validity or general research ability.
 
-All unusable responses remain in the denominator. The old Flash lane documents 300/300 authorization failures on its frozen service interface and no model output; the later route establishes only executability under a different stack. Their outcomes do not form a causal ablation. The deterministic executor is a definitional policy ceiling, and the Naive Bayes comparator remains weak. Source-grounded naturalistic cases, stronger learned baselines, repeated configurations, and independent policy assessment are the next tests.
+The seven-configuration breadth supplement retains all 1,260 terminal cells but obtains only 78 valid decisions. End-to-end item/pair accuracy ranges from .0000--.2167/.0000--.0444; four routes have undefined conditional metrics, and the others use no more than 65 valid items. Complete matrices and action recalls show zero \demote{} recall for every route. These are service-configuration outcomes on a known public challenge, not a causal ablation or model-family ranking. The old Flash 401 lane remains a failure of its old frozen service interface; a later executable route cannot recover its efficacy estimate. The deterministic executor is a definitional policy ceiling, while Naive Bayes remains a weak baseline. Naturalistic cases, stronger learned baselines, repeated configurations, and independent policy assessment are the next discriminating tests.
 
 \bibliographystyle{plain}
 \bibliography{references}
