@@ -79,6 +79,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/run_slsa_portability_study.py",
     "scripts/run_policy_switch_study.py",
     "scripts/run_local_model_replication.py",
+    "scripts/seal_local_model_void_attempt.py",
     "scripts/slsa_policy.py",
     "scripts/snapshot_slsa_portability_catalog.py",
     "scripts/synthetic_policy_output.py",

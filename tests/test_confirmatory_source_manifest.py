@@ -53,6 +53,7 @@ def test_runtime_manifest_is_preserved_at_the_recorded_source_commit() -> None:
     assert "scripts/finalize_public_model_breadth_study.py" not in files
     assert "scripts/frozen_run_io.py" not in files
     assert "scripts/run_public_model_breadth_study.py" not in files
+    assert "scripts/seal_local_model_void_attempt.py" not in files
     assert "scripts/synthetic_policy_output.py" not in files
     assert "scripts/validate_public_model_breadth_study.py" not in files
     # Publication and anonymous-review tooling changed after the scored run. The immutable

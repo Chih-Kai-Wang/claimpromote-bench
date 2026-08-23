@@ -1,0 +1,37 @@
+{
+  "decision": {
+    "attempt_enters_anonymous_item_evidence": false,
+    "attempt_enters_manuscript": false,
+    "model_performance_interpreted": false,
+    "replacement_requires_new_study_ids_and_schedule": true,
+    "resume_or_overwrite_used": false
+  },
+  "failure_boundary": {
+    "benchmark_label_or_accuracy_consulted": false,
+    "class": "LOCAL_RECORD_SCHEMA_REJECTION",
+    "model_outcome_unknown_and_unretained": true,
+    "raw_generation_text_retained": false,
+    "rejected_value": "Mistral",
+    "schema_location": "model_family"
+  },
+  "frozen_plan_commit": "41b99b36de1346b8693d084ec83228749197cd35",
+  "interpretation": "The first application invocation reached a legacy run-record schema whose model-family enum omitted the pinned local families. No terminal record or model output was retained, and no outcome or benchmark label was consulted. The attempt is ineligible in full and cannot be resumed or selected into the manuscript.",
+  "observed_counts": {
+    "application_invocations": 1,
+    "durable_request_intents": 1,
+    "durable_terminal_records": 0,
+    "retained_model_outputs": 0,
+    "scheduled_cells": 240
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:0de530c5cfe1c95ae61bddb25bfb3ad8665cf1636e325f271d4959c7b63b7f5e",
+  "source_bindings": {
+    "legacy_run_schema_sha256": "sha256:846bd3242fb06602ce8e5358f82788c653c6806cc05a0ec11b0a1125c773662c",
+    "plan_sha256": "sha256:d0ee45384880b2b87654798ce484ec738dfb2eac5e7719420d2c234ec28abdf6",
+    "request_intents_sha256": "sha256:c385b4d99eb590636612c730a90f94c492d91766a9f957a3b2a62cc2a56b8106",
+    "run_start_sha256": "sha256:28b6059526a3b658a65eb9c010fad6d08dffa728adee2ccae3c05f08900c0c2a",
+    "schedule_sha256": "sha256:41c7711747a11263b34c99308112d63c7ee9c6f70efe95371f4b9c0f083c7c33"
+  },
+  "status": "INELIGIBLE_LOCAL_ATTEMPT_PRE_TERMINAL_SCHEMA_REJECTION",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v1"
+}
