@@ -1037,6 +1037,14 @@ def validate_fresh_confirmatory() -> Json:
     }
     if manifest["files"] != actual_files or manifest.get("file_count") != len(actual_files):
         fail("fresh confirmatory evidence manifest coverage changed")
+    scope = manifest.get("scope", {})
+    if (
+        scope.get("hidden_reasoning_included") is not False
+        or scope.get("raw_final_response_text_included") is not False
+        or scope.get("free_form_error_text_included") is not False
+        or scope.get("all_scheduled_terminal_failures_included") is not True
+    ):
+        fail("fresh confirmatory anonymous scope changed")
 
     dataset = root / "dataset"
     dataset_manifest = load_json(dataset / "manifest.json")
@@ -1115,6 +1123,16 @@ def validate_fresh_confirmatory() -> Json:
                 fail(f"fresh confirmatory request accounting changed: {lane_id}")
             if row.get("redirect_followed") is not False:
                 fail(f"fresh confirmatory redirect boundary changed: {lane_id}")
+            if any(
+                row.get(field) is not None
+                for field in (
+                    "raw_final_text",
+                    "raw_final_text_sha256",
+                    "parse_detail",
+                    "network_error",
+                )
+            ):
+                fail(f"fresh confirmatory retained raw or free-form response content: {lane_id}")
             raw_text = row.get("raw_final_text")
             raw_sha = row.get("raw_final_text_sha256")
             if raw_text is None:
@@ -1349,6 +1367,9 @@ def validate_balanced_public_challenge() -> Json:
         scope.get("hidden_reasoning_included") is not False
         or scope.get("provider_response_identifiers_included") is not False
         or scope.get("source_artifact_or_workflow_ids_included") is not False
+        or scope.get("raw_final_response_text_included") is not False
+        or scope.get("free_form_error_text_included") is not False
+        or scope.get("all_scheduled_terminal_failures_included") is not True
     ):
         fail("balanced challenge anonymous scope changed")
 
@@ -1435,6 +1456,16 @@ def validate_balanced_public_challenge() -> Json:
             reject_hidden_reasoning(row, f"balanced challenge {lane_id}")
             if row.get("provider_response_id") is not None:
                 fail(f"balanced challenge retained a provider response ID: {item_id}")
+            if any(
+                row.get(field) is not None
+                for field in (
+                    "raw_response_text",
+                    "raw_response_sha256",
+                    "parse_error_detail",
+                    "transport_error",
+                )
+            ):
+                fail(f"balanced challenge retained raw or free-form response content: {item_id}")
         metrics = derive_balanced_metrics(gold, pairs, rows)
         if not equivalent_json(metrics, aggregate_lanes[lane_id].get("metrics")):
             fail(f"balanced challenge aggregate differs from item-level records: {lane_id}")
@@ -1514,6 +1545,9 @@ def validate_balanced_public_challenge() -> Json:
     validation = receipt.get("validation", {})
     if (
         receipt.get("source_artifact_or_workflow_ids_included") is not False
+        or receipt.get("raw_final_response_text_included") is not False
+        or receipt.get("free_form_error_text_included") is not False
+        or receipt.get("all_scheduled_terminal_failures_included") is not True
         or validation.get("terminal_records_validated") != 360
         or validation.get("provider_account_identifier_findings") != 0
         or validation.get("retained_provider_response_ids") != 0

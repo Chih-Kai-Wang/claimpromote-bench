@@ -116,7 +116,7 @@ Compiles behavioral differences between executable policy versions into minimum 
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, pair-balanced public challenge, reviewer-release hidden datasets and policy labels, exact prompt packets, projected C2 records, item-level empirical records, recomputation code, privacy and correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Model-visible final JSON and sanitized error text retained for parser audit pass the same fail-closed identity and credential scans. Public repository and archival identifiers will be released when double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, pair-balanced public challenge, reviewer-release hidden datasets and policy labels, exact prompt packets, projected C2 records, item-level empirical scoring records, recomputation code, privacy and correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, raw final-response text, free-form errors, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Structured decisions plus parse and failure classes preserve every scheduled denominator. Public repository and archival identifiers will be released when double-blind review permits disclosure.
 ```
 
 ### Public preprint version
@@ -128,7 +128,7 @@ Code, public benchmark and challenge data, reviewer-release hidden datasets, ite
 ## Reproducibility statement
 
 ```text
-The public benchmark is deterministically rebuildable and checked for schema, label generation, pair contracts, shortcuts, metamorphic invariance, executable artifacts, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. Reviewer derivatives remove credentials, provider and account identifiers, author provenance, and hidden reasoning while preserving scoring fields. The balanced-challenge derivative retains model-visible final JSON and sanitized error text for parser audit. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
+The public benchmark is deterministically rebuildable and checked for schema, label generation, pair contracts, shortcuts, metamorphic invariance, executable artifacts, and pinned-Lean consistency. The fresh hidden study freezes its construction and 600-request schedule before inference and seals every terminal cell before gold loading. The public challenge freezes its data, prompts, adapters, statistics, and zero-retry schedule before inference. Reviewer derivatives remove credentials, provider and account identifiers, author provenance, hidden reasoning, raw final-response text, and free-form errors while preserving structured decisions, parse and failure classes, and all scheduled denominators. Paper-facing values are replayed from released item records and checked against machine-readable summaries.
 ```
 
 ## AI-use disclosure summary

@@ -776,6 +776,10 @@ def build_fresh_confirmatory_anonymous_evidence(source: Path, destination: Path)
                     fail("fresh-confirmatory null final text has a digest")
             elif raw_sha != sha256_text(str(raw_text)):
                 fail("fresh-confirmatory final-text digest changed")
+            projected["raw_final_text"] = None
+            projected["raw_final_text_sha256"] = None
+            projected["parse_detail"] = None
+            projected["network_error"] = None
             projected_rows.append(projected)
         target_name = f"{lane_id}.jsonl"
         target_path = runs_destination / target_name
@@ -866,6 +870,10 @@ post-C2 publication derivative; the original C2 seal and scores were not altered
 binds every file in this directory. Recompute the reported analysis with
 `scripts/validate_anonymous_empirical_evidence.py` from the bundle root.
 
+The item records retain structured decisions, HTTP and parse classes, and all 600 scheduled cells.
+Raw final-response text, malformed contents, parser detail, and free-form network errors are
+omitted from this reviewer derivative.
+
 The immutable dataset manifest retains one stale non-operative `CFM_R5` namespace label and three
 construction-time `PENDING` values. The released IDs are all `v1-test-cfo-*`; the bound correction
 overlay explains why the original manifest remains byte-identical and how current states are carried
@@ -885,7 +893,10 @@ by later receipts.
         "schema_version": "1.0.0-review",
         "scope": {
             "hidden_reasoning_included": False,
-            "item_level_final_outputs_included": True,
+            "item_level_structured_decisions_included": True,
+            "raw_final_response_text_included": False,
+            "free_form_error_text_included": False,
+            "all_scheduled_terminal_failures_included": True,
             "original_reasoning_bearing_records_included": False,
             "private_construction_salt_included": False,
             "public_repository_identity_included": False,
@@ -940,6 +951,10 @@ def build_balanced_public_anonymous_evidence(destination: Path) -> None:
                     fail("balanced challenge null response has a digest")
             elif raw_digest != sha256_text(str(raw_text)):
                 fail("balanced challenge response digest changed")
+            row["raw_response_text"] = None
+            row["raw_response_sha256"] = None
+            row["parse_error_detail"] = None
+            row["transport_error"] = None
         target = run_destination / source_run.name
         target.write_text(
             "".join(f"{canonical_json(row)}\n" for row in rows),
@@ -1008,6 +1023,9 @@ def build_balanced_public_anonymous_evidence(destination: Path) -> None:
         "truth_status": source_receipt.get("truth_status"),
         "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
         "source_artifact_or_workflow_ids_included": False,
+        "raw_final_response_text_included": False,
+        "free_form_error_text_included": False,
+        "all_scheduled_terminal_failures_included": True,
         "validation": deepcopy(validation),
         "interpretation": deepcopy(interpretation),
     }
@@ -1026,6 +1044,10 @@ hidden-test generalization estimate. `privacy-receipt-review.json` records the i
 360-record validation and zero findings for provider account identifiers, retained provider
 response IDs, and hidden reasoning. Source workflow, artifact, repository, and commit identities
 are withheld during double-blind review.
+
+The projected records retain structured decisions, parse and failure classes, and every scheduled
+denominator. Raw final-response text and free-form errors, including malformed contents, are
+omitted.
 
 Run `scripts/validate_anonymous_empirical_evidence.py` from the bundle root to recompute coverage,
 conditional and end-to-end accuracy, per-action recall, and the complete confusion matrices.
@@ -1048,7 +1070,10 @@ no model calls and changes no primary endpoint, confusion cell, recall, or item-
         "analysis_files": analysis_files,
         "scope": {
             "hidden_reasoning_included": False,
-            "item_level_final_outputs_included": True,
+            "item_level_structured_decisions_included": True,
+            "raw_final_response_text_included": False,
+            "free_form_error_text_included": False,
+            "all_scheduled_terminal_failures_included": True,
             "provider_response_identifiers_included": False,
             "public_repository_identity_included": False,
             "source_artifact_or_workflow_ids_included": False,
@@ -2634,10 +2659,10 @@ Use `--python-only` for an explicitly partial replay when Lean is unavailable.
 
 The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
 records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; and
-three local 120-item software-policy studies. The balanced-challenge records retain the model's
-final JSON text and sanitized error text for parser audit. The newer studies retain structured
-decisions but omit raw response text and free-form errors. Provider account and response
-identifiers, credentials, author provenance, and hidden reasoning are excluded.
+three local 120-item software-policy studies. Paper-facing records retain structured decisions,
+parse and failure classes, and every scheduled denominator while omitting raw response text and
+free-form errors. Provider account and response identifiers, credentials, author provenance, and
+hidden reasoning are excluded.
 
 ## Scope limitation
 
@@ -3285,9 +3310,11 @@ def write_manifest(bundle: Path) -> None:
             "fresh_confirmatory_summary_included": fresh_confirmatory_included,
             "fresh_confirmatory_item_level_records_included": fresh_confirmatory_included,
             "fresh_confirmatory_hidden_reasoning_included": False,
+            "fresh_confirmatory_raw_response_text_included": False,
             "balanced_public_challenge_summary_included": balanced_challenge_included,
             "balanced_public_challenge_item_level_records_included": (balanced_challenge_included),
             "balanced_public_challenge_hidden_reasoning_included": False,
+            "balanced_public_challenge_raw_response_text_included": False,
             "slsa_portability_summary_included": slsa_portability_included,
             "slsa_portability_item_level_records_included": slsa_portability_included,
             "slsa_portability_raw_response_text_included": False,

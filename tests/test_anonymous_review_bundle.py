@@ -544,6 +544,13 @@ def test_fresh_confirmatory_anonymous_projection_is_compact_and_identity_free(
     assert sum(row["parse_status"] == "OK" for row in qwen) == 272
     assert all("sanitized_provider_envelope" not in row for row in qwen)
     assert all("frozen_plan_commit" not in row for row in qwen)
+    assert all(
+        row[field] is None
+        for row in qwen
+        for field in ("raw_final_text", "raw_final_text_sha256", "parse_detail", "network_error")
+    )
+    assert manifest["scope"]["raw_final_response_text_included"] is False
+    assert manifest["scope"]["all_scheduled_terminal_failures_included"] is True
     assert addendum["qwen_service_configuration"]["complete_pairs"] == 123
     assert addendum["qwen_service_configuration"]["correct_pairs"] == 113
     assert len(addendum["qwen_service_configuration"]["factor_metrics"]) == 20
@@ -596,6 +603,18 @@ def test_balanced_public_anonymous_projection_is_replayable_and_identity_free(
     assert sum(row["parse_status"] == "OK" for row in qwen) == 148
     assert sum(row["parse_status"] == "OK" for row in flash) == 146
     assert all(row["provider_response_id"] is None for row in qwen + flash)
+    assert all(
+        row[field] is None
+        for row in qwen + flash
+        for field in (
+            "raw_response_text",
+            "raw_response_sha256",
+            "parse_error_detail",
+            "transport_error",
+        )
+    )
+    assert manifest["scope"]["raw_final_response_text_included"] is False
+    assert manifest["scope"]["all_scheduled_terminal_failures_included"] is True
     lane_metrics = {row["lane_id"]: row["metrics"] for row in aggregate["lanes"]}
     assert lane_metrics["opencode-go-qwen3.7-max"]["correct_pairs"] == 48
     flash_metrics = lane_metrics["opencode-go-deepseek-v4-flash-matched"]
@@ -615,6 +634,8 @@ def test_balanced_public_anonymous_projection_is_replayable_and_identity_free(
     }
     assert receipt["validation"]["terminal_records_validated"] == 360
     assert receipt["validation"]["retained_provider_response_ids"] == 0
+    assert receipt["raw_final_response_text_included"] is False
+    assert receipt["all_scheduled_terminal_failures_included"] is True
     assert "f0909172434" not in rendered
     assert "32509532820" not in rendered
     assert "9460301513" not in rendered
