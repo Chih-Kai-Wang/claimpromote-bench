@@ -36,6 +36,26 @@ def test_anonymous_license_replaces_named_notice() -> None:
     assert "Chih-Kai Wang" not in license_text
 
 
+def test_manifest_reports_each_local_study_without_hard_coded_file_count(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    local = tmp_path / "evidence" / "local-model-replications"
+    for name in ("slsa", "policy-switch", "policy-transition-graph"):
+        (local / name).mkdir(parents=True)
+        (local / name / "record.json").write_text("{}\n", encoding="utf-8")
+
+    builder.write_manifest(tmp_path)
+    manifest = json.loads((tmp_path / "MANIFEST.json").read_text(encoding="utf-8"))
+    scope = manifest["scope"]
+
+    assert manifest["file_count"] == len(manifest["files"]) == 3
+    assert scope["local_slsa_replication_summary_included"] is True
+    assert scope["local_policy_switch_summary_included"] is True
+    assert scope["local_policy_transition_graph_summary_included"] is True
+    assert scope["local_policy_transition_graph_item_level_records_included"] is True
+
+
 def test_identity_scan_checks_extensionless_license(tmp_path: Path) -> None:
     builder = load_builder()
     (tmp_path / "LICENSE").write_text(

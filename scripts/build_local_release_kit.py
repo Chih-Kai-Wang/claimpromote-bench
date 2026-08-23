@@ -226,6 +226,8 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "slsa_portability_raw_response_text_included",
         "slsa_portability_void_raw_records_included",
         "policy_switch_raw_response_text_included",
+        "local_model_replication_raw_generation_text_included",
+        "local_model_weights_included",
         "public_model_breadth_summary_included",
         "public_model_breadth_item_level_records_included",
         "public_model_breadth_hidden_reasoning_included",
@@ -236,8 +238,14 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
     true_guards = (
         "slsa_portability_summary_included",
         "slsa_portability_item_level_records_included",
-        "policy_switch_summary_included",
-        "policy_switch_item_level_records_included",
+        "local_model_replications_included",
+        "local_model_replication_item_level_records_included",
+        "local_slsa_replication_summary_included",
+        "local_slsa_replication_item_level_records_included",
+        "local_policy_switch_summary_included",
+        "local_policy_switch_item_level_records_included",
+        "local_policy_transition_graph_summary_included",
+        "local_policy_transition_graph_item_level_records_included",
     )
     if any(scope.get(key) is not True for key in true_guards):
         fail("anonymous manifest multi-policy evidence scope changed")

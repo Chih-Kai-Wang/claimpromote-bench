@@ -1776,8 +1776,7 @@ def build_transition_graph_review_receipts(
         or source_coverage.get("directed_action_transitions_semantically_reachable") != 10
         or source_coverage.get("directed_action_transitions_covered") != 10
         or source_coverage.get("authored_profile_difference_rules_covered") != 12
-        or source_coverage.get("self_digest")
-        != _digest_without(source_coverage, "self_digest")
+        or source_coverage.get("self_digest") != _digest_without(source_coverage, "self_digest")
     ):
         fail("policy-transition graph coverage receipt changed")
     dataset = destination / "dataset"
@@ -1812,26 +1811,21 @@ def build_transition_graph_review_receipts(
         )
     }
     if (
-        source_decision.get("status")
-        != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
+        source_decision.get("status") != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
         or source_decision.get("outcomes_used_to_choose_edges_or_contexts") is not False
         or source_decision.get("transition_graph_model_calls_before_freeze") != 0
         or source_decision.get("evaluation_gold_used_to_train_comparators") is not False
         or source_decision.get("baseline_report_sha256")
         != sha256_file(source_root / "baseline" / "report.json")
-        or source_decision.get("baseline_prediction_sha256")
-        != expected_source_baseline_predictions
-        or source_decision.get("self_digest")
-        != _digest_without(source_decision, "self_digest")
+        or source_decision.get("baseline_prediction_sha256") != expected_source_baseline_predictions
+        or source_decision.get("self_digest") != _digest_without(source_decision, "self_digest")
     ):
         fail("policy-transition graph design-decision receipt changed")
     decision = anonymize_provenance(source_decision)
     decision["schema_version"] = "1.0.0-review"
     decision["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
     decision["dataset_manifest_sha256"] = sha256_file(dataset / "manifest.json")
-    decision["transition_coverage_sha256"] = sha256_file(
-        destination / "transition-coverage.json"
-    )
+    decision["transition_coverage_sha256"] = sha256_file(destination / "transition-coverage.json")
     decision["baseline_report_sha256"] = sha256_file(destination / "baseline" / "report.json")
     decision["baseline_prediction_sha256"] = {
         name: sha256_file(destination / "baseline" / name)
@@ -1845,9 +1839,7 @@ def build_transition_graph_review_receipts(
     return {
         "dataset": {
             "baseline_report_sha256": sha256_file(destination / "baseline" / "report.json"),
-            "transition_coverage_sha256": sha256_file(
-                destination / "transition-coverage.json"
-            ),
+            "transition_coverage_sha256": sha256_file(destination / "transition-coverage.json"),
         },
         "freeze": {
             "design_decision_receipt_sha256": sha256_file(
@@ -1909,12 +1901,7 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
             "study_kind": "LOCAL_MODEL_POLICY_SWITCH_REPLICATION",
         },
         "policy-transition-graph": {
-            "source_study": (
-                source
-                / "transition-graph-v1"
-                / "frozen"
-                / "policy-transition-graph"
-            ),
+            "source_study": (source / "transition-graph-v1" / "frozen" / "policy-transition-graph"),
             "dataset": ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "dataset",
             "baseline": ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "baseline",
             "policy": ROOT / "v2" / "policy-switch-v1" / "policy-contract.json",
@@ -2976,6 +2963,10 @@ def write_manifest(bundle: Path) -> None:
         bundle / "evidence" / "hosted-policy-switch-replacement-exclusion.json"
     ).is_file()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
+    local_replication_root = bundle / "evidence" / "local-model-replications"
+    local_slsa_included = (local_replication_root / "slsa").is_dir()
+    local_policy_switch_included = (local_replication_root / "policy-switch").is_dir()
+    local_transition_graph_included = (local_replication_root / "policy-transition-graph").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -3014,6 +3005,14 @@ def write_manifest(bundle: Path) -> None:
             "local_model_replication_item_level_records_included": local_replications_included,
             "local_model_replication_raw_generation_text_included": False,
             "local_model_weights_included": False,
+            "local_slsa_replication_summary_included": local_slsa_included,
+            "local_slsa_replication_item_level_records_included": local_slsa_included,
+            "local_policy_switch_summary_included": local_policy_switch_included,
+            "local_policy_switch_item_level_records_included": local_policy_switch_included,
+            "local_policy_transition_graph_summary_included": local_transition_graph_included,
+            "local_policy_transition_graph_item_level_records_included": (
+                local_transition_graph_included
+            ),
             "ontology_count": 2,
             "policy_instrument_count": 4,
             "public_model_breadth_summary_included": False,
