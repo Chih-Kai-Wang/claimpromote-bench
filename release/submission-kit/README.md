@@ -2,9 +2,9 @@
 
 This directory is a verified build artifact, not evidence of submission. It contains the anonymous ICLR PDF and source, the named arXiv PDF and source, and the anonymous reviewer bundle. No OpenReview or arXiv upload was performed.
 
-- ICLR PDF: 10 pages; main-text probe 8 pages.
-- arXiv PDF: 9 pages.
-- Anonymous manifest: 739 listed files plus the manifest; ZIP entries 740.
+- ICLR PDF: 11 pages; main-text probe 9 pages.
+- arXiv PDF: 11 pages.
+- Anonymous manifest: 756 listed files plus the manifest; ZIP entries 757.
 
 Verify every release artifact from this directory with:
 

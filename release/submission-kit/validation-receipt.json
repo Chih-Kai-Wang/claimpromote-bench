@@ -1,8 +1,8 @@
 {
   "anonymous_bundle": {
-    "manifest_file_count": 739,
-    "manifest_plus_self_file_count": 740,
-    "manifest_sha256": "fe655b6c8d4fabebbb58a562a61ef75282825c4e2e29d625e9cddbf126e789c5",
+    "manifest_file_count": 756,
+    "manifest_plus_self_file_count": 757,
+    "manifest_sha256": "3d48b904fbacfaa111cf4b448c270cf37db10c9036e2ad4cff1e60752b8f6032",
     "privacy_scope": {
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
@@ -20,6 +20,10 @@
       "private_construction_seed_included": false,
       "provider_response_identifiers_included": false,
       "public_alpha_included": true,
+      "public_model_breadth_hidden_reasoning_included": false,
+      "public_model_breadth_item_level_records_included": true,
+      "public_model_breadth_raw_final_response_text_included": false,
+      "public_model_breadth_summary_included": true,
       "public_repository_identity_included": false,
       "reviewer_release_hidden_data_included": true,
       "v1_compact_result_summary_included": true,
@@ -27,28 +31,28 @@
       "v2_public_pilot_summary_included": true
     },
     "verification": "PASS",
-    "zip_file_entries": 740
+    "zip_file_entries": 757
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 330770,
-      "sha256": "54582427a420fb5a2b3a41cd2086cfd74b9560da68b1c52cfb96be4dc5144862"
+      "bytes": 338323,
+      "sha256": "2a5107ea8a3be341870a16a79bfd03299ac8561025812dcda4d34baa497466d4"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 2854143,
-      "sha256": "4f67b2735c5eac879c48f1ae9d55655eedc3c7fddc79206d3e3a9ea8612b162f"
+      "bytes": 3190674,
+      "sha256": "da7d0382ee2b76ee683365fc91554ef6fad34200d2ed6194227af6b2fe7767d3"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 14816,
-      "sha256": "6fffe475dcf002bf7789435fa707f4bc3229382d74f571c32ae23690fe093f11"
+      "bytes": 16536,
+      "sha256": "fa3c0bdb04a90010e6255d11e516de398525a5c14ef7e2cd64141ee116b5564b"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 23886,
-      "sha256": "36221d0d69b6e423caaaa297bc8ef10ddfba3da0c32fb6982a70541fa1b2c1e4"
+      "bytes": 25614,
+      "sha256": "58f75c9249cb6ee5b228835e69eb9ced23dacb2b1507e55b4cc3c91ac99ffe71"
     },
     "iclr2027.pdf": {
-      "bytes": 177284,
-      "sha256": "8925f3296b2bd5b24f6bc6181343e59da0c08cd53748796059923b0b216d3060"
+      "bytes": 183102,
+      "sha256": "33867a523aa9f6dada375c833bcb9ea413c097aa46b43217f266974577da6af3"
     }
   },
   "checks": {
@@ -87,33 +91,33 @@
         "fonts": [
           "/AMPTTW+CMR8",
           "/BAVVNA+CMSY10",
-          "/BIERUZ+CMBX10",
           "/BPMBND+CMSY8",
           "/BSTKNX+MSBM10",
           "/EGAPYX+CMTT8",
-          "/ELWDLY+CMBX12",
           "/EUWOLL+CMBX9",
           "/FDZZRC+CMTI10",
+          "/GNNILP+CMR10",
           "/HQDLYU+CMTI8",
           "/ICTROM+CMR17",
           "/JYAWND+CMTT10",
           "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
-          "/LKDQDP+CMR7",
           "/LQBNTO+CMR12",
           "/MNATLR+CMCSC10",
+          "/NFZUAS+CMR9",
+          "/NJRGSC+CMR7",
           "/QTAPRA+CMTT9",
-          "/VVMUIO+CMR9",
-          "/WOPLFA+CMR10",
+          "/RGNMAG+CMBX12",
           "/YZCYSG+CMTI9",
+          "/ZGNWPC+CMBX10",
           "/ZKFGNS+CMBX8"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 9,
+      "pages": 11,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 9
+      "visual_pages_inspected": 11
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -129,19 +133,19 @@
           "/FHSKJP+NimbusMonL-Regu",
           "/KKONKR+CMMI10",
           "/KOGKSS+CMMI7",
+          "/MFBNTM+NimbusRomNo9L-Medi",
           "/OKEGRF+NimbusRomNo9L-ReguItal",
           "/SPQDLC+CMR10",
           "/SSDDAS+CMR7",
           "/URVXZM+CMSY9",
-          "/VATACO+NimbusRomNo9L-Medi",
           "/VPNJFL+NimbusRomNo9L-Regu"
         ]
       },
-      "main_text_pages": 8,
+      "main_text_pages": 9,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 10,
+      "pages": 11,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 10
+      "visual_pages_inspected": 11
     }
   }
 }

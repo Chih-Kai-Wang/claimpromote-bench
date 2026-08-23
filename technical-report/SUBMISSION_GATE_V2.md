@@ -27,6 +27,13 @@ A post-analysis reporting correction assigns zero to Flash's zero-prediction `DE
 fixed-four-class Macro-F1, changing only that derived end-to-end value from .5237 to .3928 and its
 conditional counterpart from .6243 to .4682. The historical aggregate remains immutable.
 
+A prospectively frozen breadth supplement subsequently applied seven complete service
+configurations to the same known public challenge. It retains all 1,260 terminal cells and obtains
+78 valid decisions, 52 correct decisions, 25 covered pairs, and seven correct pairs. Four routes
+return no valid decision, and no route returns a correct `DEMOTE` decision. These are descriptive
+service-configuration outcomes, not a hidden-generalization estimate, causal ablation, or
+model-family ranking.
+
 ## Gate A — frozen v1 study remains intact
 
 - [x] Hidden v1 data, labels, policy, prompts, outputs, and recovery remain unchanged.
@@ -110,6 +117,33 @@ conditional counterpart from .6243 to .4682. The historical aggregate remains im
 - [x] Service labels are treated as time-stamped configurations; no fixed-weight, provider, tier,
   serving-stack, or causal ablation claim is made.
 
+### Post-r6 public robustness and breadth evidence
+
+- [x] The separately preregistered public challenge freezes 90 pairs, 180 items, 15 factors, action
+  balance, prompts, adapters, analysis, and a zero-retry schedule before inference.
+- [x] Each of its two service routes makes 180 calls. Qwen returns 148 valid decisions and reaches
+  .7333/.5333 end-to-end item/pair accuracy; Flash returns 146 and reaches .5000/.1444.
+- [x] Conditional item/pair accuracy is reported only beside coverage: .8919/.7500 for Qwen and
+  .6164/.2131 for Flash.
+- [x] Complete confusion matrices and action recalls retain every no-valid cell. `DEMOTE` recall is
+  4/30 for Qwen and 0/30 for Flash.
+- [x] The later Flash path establishes only that its different frozen route executed; it neither
+  repairs the old r6 401 lane nor identifies a causal model, provider, schema, or adapter effect.
+- [x] The breadth supplement freezes seven catalog-selected configurations and a 1,260-cell cyclic
+  schedule before any call. Every cell receives one POST and zero client retries.
+- [x] The breadth artifact contains 1,260 terminal records: 78 valid, 52 correct, 25/630 covered
+  pairs, and 7/630 correct pairs.
+- [x] Route-level end-to-end item/pair accuracy ranges from .0000--.2167/.0000--.0444. Four routes
+  have empty conditional denominators; the remaining conditional estimates use at most 65 valid
+  items and 21 covered pairs.
+- [x] The 1,182 invalid cells remain in the denominator: 630 transport, 312 JSON-syntax, 203 schema,
+  and 37 semantic failures.
+- [x] Per-route action recall and complete compact confusion matrices are paper-bound. Every route
+  has zero `DEMOTE` recall.
+- [x] Public-safe derivatives remove raw response text, free-form error detail, credentials,
+  provider identifiers, account identifiers, and hidden reasoning while preserving every scoring
+  field and row digest.
+
 ## Gate D — post-protocol GPT-5.4 public-development follow-up
 
 - [x] The extension is labeled post-protocol, public-development, one-model, and one-pass evidence.
@@ -133,10 +167,14 @@ conditional counterpart from .6243 to .4682. The historical aggregate remains im
 
 ## Gate E — manuscript claim integrity
 
-- [x] Abstract foregrounds the fresh preregistered result and keeps the adaptive extension and
-  original v1 result in diagnostic or exploratory roles.
-- [x] Abstract reports fresh-study valid decisions, item and pair accuracy, baseline difference,
-  exact and Holm values, service failures, 0/8 `DEMOTE`, and Flash non-evaluability.
+- [x] Abstract frames the task as synthetic, policy-constrained evidence-state transition
+  evaluation rather than broad research-agent capability.
+- [x] Abstract reports fresh-study coverage plus conditional and end-to-end item/pair accuracy,
+  balanced-challenge results, the complete-matrix `DEMOTE` finding, and the breadth supplement's
+  1,260 cells, 78 valid responses, route-level ranges, and empty conditional denominators.
+- [x] Abstract states that cross-route outcomes are descriptive rather than causal or model
+  rankings, calls the deterministic executor a definitional policy ceiling, and calls Naive Bayes a
+  weak baseline.
 - [x] Main text contains dedicated fresh protocol and results subsections plus a compact result
   table that reports the old Flash service-configuration E2E item/pair scores as zero while marking
   conditional correctness and model efficacy `N/E`.
@@ -157,9 +195,14 @@ conditional counterpart from .6243 to .4682. The historical aggregate remains im
 - [x] Balanced-challenge Macro-F1 is a fixed-four-class mean with zero division set to zero; a
   self-digested correction receipt binds the unchanged historical aggregate, analyzer, dataset, and
   360 terminal records.
-- [x] A factor-level table reports support, coverage range, E2E pair-accuracy range, and
-  zero/perfect-factor counts from existing frozen records; r6 factor values are included in the
-  self-digested reporting addendum and independently replayed in the anonymous bundle.
+- [x] Manuscript truth lint binds the breadth plan, 29-entry frozen catalog and seven-entry selected
+  subset, schedule, public derivative, route-level core metrics, action recalls, and every compact
+  confusion-matrix row.
+- [x] A compact factor-level table reports support, coverage range, E2E pair-accuracy range, and
+  zero/perfect-factor counts from frozen records; the anonymous artifact retains every factor row.
+- [x] Discussion, limitations, and conclusion preserve all service, syntax, schema, and semantic
+  failures in end-to-end denominators and reject causal, family-ranking, hidden-generalization, and
+  naturalistic-transfer interpretations of the breadth supplement.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
 
 ## Gate F — naturalistic evaluation boundary
@@ -182,9 +225,8 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Ruff lint passes.
 - [x] Ruff formatting passes.
 - [x] Mypy passes.
-- [x] Full tests and branch coverage pass: 196 tests and 83.24% branch coverage on scientific/release
-  checkpoint `4ce6680`; after the Lean-cache manifest regression and factor-level reporting guard
-  were added, the current branch passes 198 tests at the same 83.24% coverage.
+- [x] Full Mac tests and branch coverage pass on the final source tree: 222 tests and 83.24% branch
+  coverage under Python 3.12.13.
 - [x] Python 3.12 Mac gates pass in a fresh virtual environment.
 - [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
   failures have `steps=[]` and are recorded as an account billing/spending-limit condition, not a
@@ -203,23 +245,30 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Balanced public-challenge dataset, prompt packet, one-pass lane records, immutable historical
   aggregate, reporting-correction receipt, corrected reviewer aggregate, per-action/confusion
   diagnostics, workflow receipt, and privacy receipt guards pass.
+- [x] Public model-breadth freeze validation passes with seven lanes, 180 items, 1,260 cells, the
+  frozen schedule digest, and no credential loading. Direct-script and module entry points both
+  replay 1,260 terminal records and 78 parseable records from the public derivative.
+- [x] A regression test binds the 29-entry credential-authenticated catalog snapshot, its seven
+  unique selected entries, and the selected-subset relation.
 - [x] Anonymous empirical-evidence validation replays v1, v2, GPT-5.4, capable-study, fresh r6, and
-  the balanced public challenge
-  item-level records from inside the finalized reviewer bundle.
+  the balanced public challenge plus the seven-route breadth item-level records from inside the
+  finalized reviewer bundle.
 - [x] Naturalistic case validator and guard tests pass.
 - [x] v1 hidden freeze guard passes.
 - [x] v1 scored-study guard passes.
 - [x] v1 recovery guard passes.
 - [x] A fresh Python 3.12 environment reproduces the public build, validators, audits, and full
   branch-coverage test suite.
+- [x] All six pinned Lean packages and `leanchecker` replay successfully: public alpha, capable
+  hidden, fresh r6, GPT-5.4 public development, balanced challenge, and r4 reviewer evidence.
 - [x] README, manuscript, `CITATION.cff`, and submission metadata use the same canonical title.
 
 ## Gate H — final ICLR 2027 package
 
 - [x] Official ICLR 2027 style archive and file hashes are committed in a fail-closed lock.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 10 physical pages including references and required disclosures.
-- [x] Main-text page probe reports 8 pages, within the 9-page limit.
+- [x] ICLR PDF contains 11 physical pages including references and required disclosures.
+- [x] Main-text page probe reports 9 pages, within the 9-page limit.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
@@ -230,7 +279,15 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
   workflow module, author identity, or public workflow/provenance identifier.
 - [x] Anonymous reviewer ZIP contains the released item-level empirical evidence needed to replay
-  the paper-facing v1, v2, GPT-5.4, capable-study, fresh r6, and balanced-challenge aggregates.
+  the paper-facing v1, v2, GPT-5.4, capable-study, fresh r6, balanced-challenge, and breadth
+  aggregates.
+- [x] The anonymous manifest and release receipt derive payload and ZIP-entry counts from the
+  generated tree; no long-lived prose supplies a fixed expected count. Two empty-directory builds
+  and two release kits are byte-identical.
+- [x] Fail-closed scans reject author/repository/workflow identity, account identifiers, provider
+  response/request identifiers, hidden reasoning, credential patterns, and unknown protected
+  fields. An exact-byte Keychain credential scan traverses the current generated files and
+  decompressed ZIP entries with zero findings and does not print or retain the credential.
 - [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
   broken glyphs, unreadable tables, and figure/caption collisions.
 
@@ -241,7 +298,7 @@ conference-paper scale.
 ## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 9 physical pages.
+- [x] The arXiv PDF contains 11 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
@@ -276,6 +333,15 @@ show its own preview before submission.
 - [x] All three findings were resolved from frozen records without model calls, primary-endpoint
   changes, or causal/generalization overclaim; the resolutions are regression-guarded and recorded
   separately in `docs/reviews/2026-08-22-additional-isolated-review-disposition.md`.
+- [x] The third and explicitly final context-isolated strict review found no P0, metric corruption,
+  denominator exclusion, anonymity failure, or unsupported causal interpretation. Its weak-reject
+  recommendation concerned bounded novelty and experimental breadth; artifact score was 8/10.
+- [x] The final review's safely actionable issues were resolved through narrower positioning,
+  primary-source related work, licensing boundaries, a history-free minimum public-release plan,
+  official style locking, and removal of execution-diary prose. The disposition is recorded in
+  `docs/reviews/2026-08-23-last-isolated-review-disposition.md`.
+- [x] The review cycle is closed. The later authorized breadth supplement was prospectively frozen
+  and subjected to the deterministic gates above; no additional reviewer was started.
 
 ## Gate J — account-side submission
 
@@ -294,8 +360,8 @@ show its own preview before submission.
 - [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and
   current pre-submission status.
 - [x] Clean-environment public validation succeeds from the release candidate.
-- [x] The committed v1, public-pilot, GPT-5.4, capable-study, fresh r6, and balanced-challenge evidence reproduces every
-  paper-facing empirical result without model inference.
+- [x] The committed v1, public-pilot, GPT-5.4, capable-study, fresh r6, balanced-challenge, and
+  model-breadth evidence reproduces every paper-facing empirical result without model inference.
 - [ ] Release notes and the final package version agree with the future immutable tag.
 - [ ] Long-term citable archive is created if required by the venue or desired for the paper.
 - [ ] Archive identifiers are added only after they exist.
@@ -303,9 +369,10 @@ show its own preview before submission.
 ## Readiness rule
 
 `SCIENTIFIC_RC_READY` means the scoped Qwen hypothesis, manuscript, permanent public reviewer
-artifact, anonymous evidence package, and local submission package all pass their deterministic and
-visual gates. It does not turn the Flash operational failure into model evidence, establish
-dual-model confirmation, or complete account-side submission. Keep PR #20 Draft and unmerged, and
-do not claim “submitted” or create archival identifiers, until the author explicitly authorizes the
-corresponding action and Gate J is completed. Any later Gate K release must use the exact submitted
-release candidate and must not invent an arXiv ID, DOI, or archive identifier.
+artifact, breadth supplement, anonymous evidence package, and local submission package all pass
+their deterministic and visual gates. It does not turn the Flash operational failure into model
+evidence, rank model families, establish dual-model confirmation, or complete account-side
+submission. Keep PR #20 Draft and unmerged, and do not claim “submitted” or create archival
+identifiers, until the author explicitly authorizes the corresponding action and Gate J is
+completed. Any later Gate K release must use the exact submitted release candidate and must not
+invent an arXiv ID, DOI, or archive identifier.

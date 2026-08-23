@@ -61,3 +61,11 @@ glyphs, and table readability.
 No safely improvable major issue from this final review remains. The unresolved experimental-breadth
 concern is explicit in the paper and cannot be removed without a genuinely new preregistered study.
 This closes the requested review cycle; no additional reviewer is planned.
+
+## Post-review breadth update
+
+After this review closed, the author authorized one prospectively frozen seven-configuration
+supplement on the already public balanced challenge. The reviewer was not reopened and no new
+reviewer was created. The historical test counts, package counts, and PDF page counts above describe
+the review checkpoint; `technical-report/SUBMISSION_GATE_V2.md` records the later breadth evidence
+and the current deterministic, privacy, packaging, and visual gates.
