@@ -90,13 +90,13 @@ For pair $i=(x_i^a,x_i^b)$,
 Decision coverage is the fraction with $v=1$; pair coverage requires both members to be valid. Conditional accuracies divide correct items or pairs by these coverage denominators. End-to-end accuracies divide by every scheduled item or pair. Thus item accuracy equals decision coverage times conditional item accuracy, with the analogous identity for pairs. Tables encode failure as \texttt{N}, not as a fifth policy action. We do not reproduce malformed response contents in the manuscript.
 
 \paragraph{Intervention-blind certificate.}
-Let $q$ denote the controlled coordinate: the active policy $P$ or one registered field of $z$.
+\textbf{Proposition 1.} Let $q$ denote the controlled coordinate: the active policy $P$ or one registered field of $z$.
 For a pair that differs only in $q$ and satisfies $\pi(x_i^a)\neq\pi(x_i^b)$, any deterministic
 route invariant to $q$ returns the same action for both members. It can answer at most one member correctly
 and has $C_{\mathrm{pair}}(i)=0$. Across any such pair set, its end-to-end item accuracy is at most
 $1/2$ and its pair accuracy is zero. The policy case specializes to a classifier $h(z,s,\tau)$ that
 cannot observe $P$; the evidence case covers a route insensitive to the mutated verifier field.
-The certificate depends on the pair construction, not model quality or training procedure.
+\emph{Proof.} The gold actions differ while an invariant route's outputs are equal, so at most one output matches. The certificate depends on the pair construction, not model quality or training procedure.
 \paragraph{Policy-difference compilation.}
 For two policies and an authored context grammar $\mathcal{X}$, define
 $\Delta(P_a,P_b;\mathcal{X})=\{c\in\mathcal{X}:\pi_{P_a}(c)\neq\pi_{P_b}(c)\}$, where
@@ -125,9 +125,8 @@ the oracle side and cannot be chosen from model errors.
 The released compiler is independent of either ontology. Its interface accepts two deterministic
 policy evaluators, a finite context sequence, stable context identifiers, and authored rule
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
-difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. The minimum-suite problem is
-NP-hard even when every candidate has the same required edge: required rules form a Set Cover
-universe, and each context witnesses one available subset. For $n$ candidates, $r$ required rules,
+difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$.
+\textbf{Proposition 2.} Finding a cardinality-minimum joint rule- and edge-complete suite is NP-hard, even when every candidate has the same required edge. \emph{Proof.} Map a Set Cover universe to required rules and each available subset to one context's rule witnesses; the common edge adds no constraint. For $n$ candidates, $r$ required rules,
 and $k$ required edges, our exact subset dynamic program takes $O(n2^{r+k})$ state updates. Each
 state retains the shortest, then lexicographically first, subset for a coverage mask. The usual
 include-or-exclude induction proves optimality at the full mask. A specialized search selects one
