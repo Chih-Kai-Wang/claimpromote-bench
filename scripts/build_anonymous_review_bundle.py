@@ -1908,6 +1908,91 @@ def derive_minimal_policy_migration_suite(graph_root: Path) -> Json:
     return value
 
 
+def build_minimum_migration_subset_analysis(
+    *,
+    source_study: Path,
+    destination: Path,
+    lane_files: Json,
+) -> None:
+    """Project the prospectively frozen 20-item gate analysis onto reviewer records."""
+
+    source_result = load_object(source_study / "results" / "minimum-subset-analysis.json")
+    source_plan = (
+        ROOT
+        / "v2"
+        / "local-model-replication-v1"
+        / "transition-graph-v1"
+        / "minimum-subset-analysis-plan.json"
+    )
+    script = ROOT / "scripts" / "analyze_minimal_policy_migration_gate.py"
+    spec = importlib.util.spec_from_file_location("anonymous_minimum_migration_gate", script)
+    if spec is None or spec.loader is None:
+        fail("could not load the minimum migration gate analysis")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    analyze = getattr(module, "analyze", None)
+    if not callable(analyze):
+        fail("minimum migration gate analysis lacks analyze()")
+    recomputed = analyze(source_plan, source_study / "results")
+    if source_result != recomputed:
+        fail("minimum migration gate result differs from its frozen analysis")
+
+    selected_suite = load_object(destination / "minimal-release-suite.json")
+    execution = destination / "execution-receipt.json"
+    projected_lanes: list[Json] = []
+    for source_lane in source_result.get("lanes", []):
+        if not isinstance(source_lane, dict):
+            fail("minimum migration gate lane is malformed")
+        lane_id = str(source_lane.get("lane_id"))
+        relative = lane_files.get(lane_id)
+        if not isinstance(relative, str):
+            fail(f"minimum migration gate has an unknown lane: {lane_id}")
+        projected_lanes.append(
+            {
+                "lane_id": lane_id,
+                "model_family": source_lane.get("model_family"),
+                "run_sha256": sha256_file(destination / relative),
+                "metrics": deepcopy(source_lane.get("metrics")),
+                "strict_gate_pass": source_lane.get("strict_gate_pass"),
+            }
+        )
+
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "COMPLETE_PROSPECTIVE_MINIMUM_MIGRATION_SUBSET_ANALYSIS",
+        "truth_status": "COMPUTATIONAL",
+        "study_id": source_result.get("study_id"),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "provenance": {
+            "analysis_plan_frozen_before_route_execution": True,
+            "full_graph_terminal_records_before_analysis_freeze": 0,
+            "minimum_suite_derived_before_route_execution": True,
+            "model_outputs_consulted": False,
+            "additional_model_or_client_calls": 0,
+        },
+        "source_bindings": {
+            "minimum_suite_sha256": sha256_file(destination / "minimal-release-suite.json"),
+            "execution_receipt_sha256": sha256_file(execution),
+            "evaluation_gold_sha256": sha256_file(
+                destination / "dataset" / "evaluation-gold.jsonl"
+            ),
+            "evaluation_pairs_sha256": sha256_file(
+                destination / "dataset" / "evaluation-pairs.json"
+            ),
+        },
+        "selection": deepcopy(source_result.get("selection")),
+        "gate": deepcopy(source_result.get("gate")),
+        "lanes": sorted(projected_lanes, key=lambda row: str(row["lane_id"])),
+        "scope": deepcopy(source_result.get("scope")),
+    }
+    if review["selection"].get("selected_pair_ids") != selected_suite.get(
+        "selected_pair_ids"
+    ) or review["selection"].get("selected_item_ids") != selected_suite.get("selected_item_ids"):
+        fail("minimum migration gate selection differs from the minimum suite")
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination / "minimum-subset-analysis.json", review)
+
+
 def build_transition_graph_review_receipts(
     source_root: Path,
     destination: Path,
@@ -2133,6 +2218,11 @@ def build_local_model_replications_anonymous_evidence(destination: Path) -> None
             write_json(
                 study_destination / "minimal-release-suite.json",
                 derive_minimal_policy_migration_suite(study_destination),
+            )
+            build_minimum_migration_subset_analysis(
+                source_study=source_study,
+                destination=study_destination,
+                lane_files=lane_files,
             )
         (study_destination / "README.md").write_text(
             (
@@ -3115,6 +3205,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/local-model-replications/policy-transition-graph/MANIFEST.json",
         "evidence/local-model-replications/policy-transition-graph/design-decision-receipt.json",
         "evidence/local-model-replications/policy-transition-graph/minimal-release-suite.json",
+        "evidence/local-model-replications/policy-transition-graph/minimum-subset-analysis.json",
         "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
         "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
         "evidence/local-model-replications/policy-transition-graph/reported-aggregate.json",

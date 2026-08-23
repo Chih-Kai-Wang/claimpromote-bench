@@ -55,6 +55,23 @@ POLICY_MIGRATION_MUTATION_AUDIT = ROOT / "v2" / "policy-transition-graph-v1" / "
 MINIMAL_POLICY_MIGRATION_SUITE = (
     ROOT / "v2" / "policy-transition-graph-v1" / "minimal-release-suite.json"
 )
+MINIMUM_POLICY_MIGRATION_ANALYSIS_PLAN = (
+    ROOT
+    / "v2"
+    / "local-model-replication-v1"
+    / "transition-graph-v1"
+    / "minimum-subset-analysis-plan.json"
+)
+MINIMUM_POLICY_MIGRATION_ANALYSIS = (
+    ROOT
+    / "v2"
+    / "local-model-replication-v1"
+    / "transition-graph-v1"
+    / "frozen"
+    / "policy-transition-graph"
+    / "results"
+    / "minimum-subset-analysis.json"
+)
 HOSTED_POLICY_REPLACEMENT_RECEIPT = (
     ROOT
     / "v2"
@@ -1290,6 +1307,57 @@ def validate_new_study_claims(tex: str) -> None:
         or minimal_suite.get("execution_budget", {}).get("item_call_reduction_fraction") != 5 / 6
     ):
         fail("minimum policy-migration suite changed")
+    minimum_analysis = load_object(
+        MINIMUM_POLICY_MIGRATION_ANALYSIS,
+        "prospective minimum policy-migration subset analysis",
+    )
+    analysis_module = runpy.run_path(
+        str(ROOT / "scripts" / "analyze_minimal_policy_migration_gate.py")
+    )
+    analyze_minimum = analysis_module.get("analyze")
+    if not callable(analyze_minimum):
+        fail("minimum policy-migration analysis entry point is missing")
+    recomputed_minimum = analyze_minimum(
+        MINIMUM_POLICY_MIGRATION_ANALYSIS_PLAN,
+        MINIMUM_POLICY_MIGRATION_ANALYSIS.parent,
+    )
+    minimum_lanes = minimum_analysis.get("lanes")
+    if (
+        minimum_analysis != recomputed_minimum
+        or minimum_analysis.get("status")
+        != "COMPLETE_PROSPECTIVE_MINIMUM_MIGRATION_SUBSET_ANALYSIS"
+        or minimum_analysis.get("self_digest") != self_digest(minimum_analysis, "self_digest")
+        or minimum_analysis.get("selection", {}).get("selected_pair_ids")
+        != minimal_suite.get("selected_pair_ids")
+        or minimum_analysis.get("selection", {}).get("selected_item_ids")
+        != minimal_suite.get("selected_item_ids")
+        or minimum_analysis.get("selection", {}).get("selected_before_route_execution") is not True
+        or minimum_analysis.get("selection", {}).get("model_outputs_consulted") is not False
+        or minimum_analysis.get("scope", {}).get("additional_model_or_client_calls") != 0
+        or minimum_analysis.get("scope", {}).get("replaces_balanced_diagnostic_suite") is not False
+        or not isinstance(minimum_lanes, list)
+        or len(minimum_lanes) != 2
+        or {str(row.get("model_family")) for row in minimum_lanes} != {"Mistral", "Phi"}
+    ):
+        fail("prospective minimum policy-migration subset analysis changed")
+    for lane in minimum_lanes:
+        metrics = lane.get("metrics", {})
+        family = str(lane.get("model_family"))
+        label = "Phi-4" if family == "Phi" else family
+        if (
+            metrics.get("items") != 20
+            or metrics.get("pairs") != 10
+            or not isinstance(metrics.get("parseable_items"), int)
+            or not isinstance(metrics.get("correct_items"), int)
+            or not isinstance(metrics.get("correct_pairs"), int)
+        ):
+            fail(f"minimum policy-migration subset metrics are malformed: {family}")
+        require_regex(
+            tex,
+            rf"minimum[^.]*{re.escape(label)}[^.]*{metrics['parseable_items']}/20\s+valid"
+            rf"[^.]*{metrics['correct_items']}/20[^.]*{metrics['correct_pairs']}/10",
+            f"prospective minimum-gate result for {label}",
+        )
     graph_aggregate = load_object(
         LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
         "local policy-transition graph aggregate",

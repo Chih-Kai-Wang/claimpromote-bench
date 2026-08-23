@@ -25,7 +25,8 @@ establish redistribution rights.
 - the deterministic policy-migration mutation audit that binds the rule-stratified and graph-complete
   suites to their 6/10 and 10/10 registered edge-local fault-detection receipts;
 - the minimum joint-adequacy smoke-suite derivation and receipt, including its 10-pair lower-bound
-  certificate and the exact 20 selected items;
+  certificate and the exact 20 selected items, plus the prospectively frozen zero-call subset
+  analysis derived from the full transition-graph records;
 - the domain-independent policy-difference compiler, its exact minimum-complete and edge-lower-bound
   searches, and the cross-check that reconstructs the frozen 10-pair witness from 60 candidates;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;

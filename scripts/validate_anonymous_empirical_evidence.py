@@ -2304,6 +2304,114 @@ def validate_local_model_replications() -> Json:
         or len(minimal_suite.get("selected_item_ids", [])) != 20
     ):
         fail("minimum policy-migration suite changed")
+    minimum_analysis = load_json(root / "policy-transition-graph" / "minimum-subset-analysis.json")
+    if not isinstance(minimum_analysis, dict):
+        fail("minimum policy-migration subset analysis is malformed")
+    validate_self_digest(
+        minimum_analysis,
+        "self_digest",
+        "minimum policy-migration subset analysis",
+    )
+    graph_root = root / "policy-transition-graph"
+    graph_manifest = load_json(graph_root / "MANIFEST.json")
+    graph_plan = load_json(graph_root / "study-plan.json")
+    graph_gold = load_jsonl(graph_root / "dataset" / "evaluation-gold.jsonl")
+    graph_pairs = load_json(graph_root / "dataset" / "evaluation-pairs.json")
+    if (
+        not isinstance(graph_manifest, dict)
+        or not isinstance(graph_plan, dict)
+        or not isinstance(graph_pairs, list)
+    ):
+        fail("minimum policy-migration subset sources are malformed")
+    selected_item_ids = minimum_analysis.get("selection", {}).get("selected_item_ids")
+    selected_pair_ids = minimum_analysis.get("selection", {}).get("selected_pair_ids")
+    if not isinstance(selected_item_ids, list) or not isinstance(selected_pair_ids, list):
+        fail("minimum policy-migration subset selection is malformed")
+    selected_items = set(str(value) for value in selected_item_ids)
+    selected_pairs = set(str(value) for value in selected_pair_ids)
+    subset_gold = [row for row in graph_gold if str(row["id"]) in selected_items]
+    subset_pairs = [row for row in graph_pairs if str(row["pair_id"]) in selected_pairs]
+    expected_minimum_bindings = {
+        "minimum_suite_sha256": sha256_file(graph_root / "minimal-release-suite.json"),
+        "execution_receipt_sha256": sha256_file(graph_root / "execution-receipt.json"),
+        "evaluation_gold_sha256": sha256_file(graph_root / "dataset" / "evaluation-gold.jsonl"),
+        "evaluation_pairs_sha256": sha256_file(graph_root / "dataset" / "evaluation-pairs.json"),
+    }
+    expected_provenance = {
+        "analysis_plan_frozen_before_route_execution": True,
+        "full_graph_terminal_records_before_analysis_freeze": 0,
+        "minimum_suite_derived_before_route_execution": True,
+        "model_outputs_consulted": False,
+        "additional_model_or_client_calls": 0,
+    }
+    expected_scope = {
+        "additional_model_or_client_calls": 0,
+        "reuses_full_transition_graph_terminal_records": True,
+        "independent_model_sample": False,
+        "natural_input_distribution_claimed": False,
+        "deployment_reliability_claimed": False,
+        "replaces_balanced_diagnostic_suite": False,
+    }
+    if (
+        minimum_analysis.get("status") != "COMPLETE_PROSPECTIVE_MINIMUM_MIGRATION_SUBSET_ANALYSIS"
+        or minimum_analysis.get("truth_status") != "COMPUTATIONAL"
+        or minimum_analysis.get("source_identity") != "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+        or minimum_analysis.get("provenance") != expected_provenance
+        or minimum_analysis.get("source_bindings") != expected_minimum_bindings
+        or selected_item_ids != minimal_suite.get("selected_item_ids")
+        or selected_pair_ids != minimal_suite.get("selected_pair_ids")
+        or len(subset_gold) != 20
+        or len(subset_pairs) != 10
+        or minimum_analysis.get("selection", {}).get("pairs") != 10
+        or minimum_analysis.get("selection", {}).get("items") != 20
+        or minimum_analysis.get("selection", {}).get("changed_rules_covered") != 12
+        or minimum_analysis.get("selection", {}).get("reachable_edges_covered") != 10
+        or minimum_analysis.get("selection", {}).get("selected_before_route_execution") is not True
+        or minimum_analysis.get("selection", {}).get("model_outputs_consulted") is not False
+        or minimum_analysis.get("gate")
+        != {
+            "pass_rule": "ALL_20_ITEMS_VALID_AND_CORRECT_AND_ALL_10_PAIRS_CORRECT",
+            "failure_rule": "EVERY_SERVICE_SYNTAX_SCHEMA_OR_SEMANTIC_FAILURE_IS_INCORRECT",
+        }
+        or minimum_analysis.get("scope") != expected_scope
+    ):
+        fail("minimum policy-migration subset analysis boundary changed")
+    graph_lane_files = graph_manifest.get("lane_files")
+    graph_analysis_lanes = minimum_analysis.get("lanes")
+    graph_model_families = {
+        str(row["lane_id"]): str(row["model_family"]) for row in graph_plan.get("formal_lanes", [])
+    }
+    if (
+        not isinstance(graph_lane_files, dict)
+        or not isinstance(graph_analysis_lanes, list)
+        or {str(row.get("lane_id")) for row in graph_analysis_lanes} != set(graph_lane_files)
+    ):
+        fail("minimum policy-migration subset lane set changed")
+    minimum_lane_metrics: Json = {}
+    for lane in graph_analysis_lanes:
+        lane_id = str(lane["lane_id"])
+        run_path = graph_root / str(graph_lane_files[lane_id])
+        subset_records = [
+            row for row in load_jsonl(run_path) if str(row["item_id"]) in selected_items
+        ]
+        metrics = derive_balanced_metrics(subset_gold, subset_pairs, subset_records)
+        strict_pass = (
+            metrics.get("items") == 20
+            and metrics.get("pairs") == 10
+            and metrics.get("parseable_items") == 20
+            and metrics.get("correct_items") == 20
+            and metrics.get("covered_pairs") == 10
+            and metrics.get("correct_pairs") == 10
+        )
+        if (
+            len(subset_records) != 20
+            or lane.get("model_family") != graph_model_families.get(lane_id)
+            or lane.get("run_sha256") != sha256_file(run_path)
+            or not equivalent_json(lane.get("metrics"), metrics)
+            or lane.get("strict_gate_pass") is not strict_pass
+        ):
+            fail(f"minimum policy-migration subset metrics changed: {lane_id}")
+        minimum_lane_metrics[lane_id] = metrics
     expected_bindings = {
         "catalog_sha256": catalog_hash,
         "requirements_sha256": sha256_file(root / "requirements.txt"),
@@ -2342,6 +2450,7 @@ def validate_local_model_replications() -> Json:
             "items": 20,
             "changed_rules": "12/12",
             "reachable_edges": "10/10",
+            "lane_metrics": minimum_lane_metrics,
         },
     }
 

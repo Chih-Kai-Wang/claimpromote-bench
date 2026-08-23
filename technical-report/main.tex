@@ -48,6 +48,8 @@ We apply this protocol to two synthetic ontologies. The first governs research-e
 
 The same construction yields a release gate for policy migrations. Given old and new executable policies, a test author can enumerate contexts on which their prescribed actions differ, select a suite against declared coverage targets, freeze it, and run the unchanged model-service route. Failures then identify uncovered policy behavior, route invalidity, or action error without assuming a natural input distribution.
 
+The object being tested is the policy migration, not a particular model. Compilation occurs before route execution, so one frozen suite can regression-test a model, prompt, decoder, adapter, or provider change against the same behavioral contract.
+
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
   \item a relational conformance protocol with matched evidence and policy interventions, an exact transition oracle, and an intervention-blind shortcut certificate;
@@ -102,7 +104,7 @@ and has $C_{\mathrm{pair}}(i)=0$. Across any such pair set, its end-to-end item 
 $1/2$ and its pair accuracy is zero. The policy case specializes to a classifier $h(z,s,\tau)$ that
 cannot observe $P$; the evidence case covers a route insensitive to the mutated verifier field.
 The certificate depends on the pair construction, not model quality or training procedure.
-
+\paragraph{Policy-difference compilation.}
 For two policies and an authored context grammar $\mathcal{X}$, define
 $\Delta(P_a,P_b;\mathcal{X})=\{c\in\mathcal{X}:\pi_{P_a}(c)\neq\pi_{P_b}(c)\}$, where
 $c=(z,s,\tau)$. Duplicating a context from $\Delta$ and changing only the active profile creates
@@ -126,19 +128,19 @@ grammar, groups contexts by rule witness and ordered action pair, selects the re
 contexts, and freezes them before the evaluated route is called. Thus adequacy is established on
 the oracle side and cannot be chosen from model errors.
 
+\paragraph{Minimum joint-adequacy suites.}
 The released compiler is independent of either ontology. Its interface accepts two deterministic
 policy evaluators, a finite context sequence, stable context identifiers, and authored rule
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
-difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. Finding a smallest joint-
-complete suite is NP-hard even when every candidate has the same required edge: let required rules
-be a Set Cover universe and let each context witness one available subset. An exact subset dynamic
-program over $r$ required rules and $k$ required edges returns a cardinality-minimum complete suite
-in $O(n2^{r+k})$ state updates for $n$ candidate contexts, with a stable lexical tie break. A
-specialized search keeps at most $2^r$ rule masks while selecting one context per edge; if it finds
-a joint-complete witness, the $k$-context edge lower bound proves global minimality. After processing
-each candidate, the exact program stores a shortest subset for every reachable coverage mask, so
-induction gives optimality at the full mask. The implementation independently reconstructs the
-frozen witness from the published 60-pair candidate graph.
+difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$. The minimum-suite problem is
+NP-hard even when every candidate has the same required edge: required rules form a Set Cover
+universe, and each context witnesses one available subset. For $n$ candidates, $r$ required rules,
+and $k$ required edges, our exact subset dynamic program takes $O(n2^{r+k})$ state updates. Each
+state retains the shortest, then lexicographically first, subset for a coverage mask. The usual
+include-or-exclude induction proves optimality at the full mask. A specialized search selects one
+context per edge while retaining at most $2^r$ rule masks. If it finds a complete witness, the
+$k$-context edge lower bound proves global minimality. Both implementations independently
+reconstruct the frozen witness from the published 60-pair candidate graph.
 
 The rule-stratified \texttt{BLUE}$\rightarrow$\texttt{AMBER} suite covers all 12 authored
 profile differences with five contexts each, but only six admission-centered edges:
@@ -229,7 +231,7 @@ The public challenge exposes action errors among valid outputs. Qwen and Flash a
 
 The fixed software policy gives a different decomposition. Flash produced 108/120 valid decisions and 49/60 complete pairs; Qwen produced 88/120 and 28/60. Every valid decision was correct for both hosted routes. Local Mistral produced 94/120 valid and 91/120 correct decisions, yielding 31/60 correct pairs; local Phi-4 produced 102/120 valid and 83/120 correct decisions, yielding 23/60 pairs. The Random Forest reached 120/120 items and 60/60 pairs. The fixed mapping is learnable from the published fields, but route performance still reflects both decision and output-contract errors.
 
-On the rule-stratified policy contrast, TBD. Its policy-aware Random Forest achieved 120/120 items and 60/60 pairs, while its profile-blind counterpart achieved 60/120 items and 0/60 pairs. On the transition graph, the same comparators achieved 107/120 and 57/120 items; pair accuracy was 47/60 and 0/60. The profile-blind models are registered shortcut controls, not competitive baselines.
+On the rule-stratified policy contrast, local Mistral and Phi-4 produced 77/120 and 59/120 valid decisions, achieved 38/120 and 46/120 item accuracy, and completed 6/60 and 4/60 pairs correctly. Its policy-aware Random Forest achieved 120/120 items and 60/60 pairs, while its profile-blind counterpart achieved 60/120 items and 0/60 pairs. On the transition graph, the same comparators achieved 107/120 and 57/120 items; pair accuracy was 47/60 and 0/60. The profile-blind models are registered shortcut controls, not competitive baselines.
 
 \begin{table}[t]
 \centering
@@ -256,8 +258,8 @@ SLSA Phi-4 local & 102/120 & 83/120 & 83/102 & 42/60 & 23/60 & 23/42 \\
 SLSA structured RF & 120/120 & 120/120 & 120/120 & 60/60 & 60/60 & 60/60 \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Counterfactual active-policy switch}}\\
-Switch Mistral local & TBD & TBD & TBD & TBD & TBD & TBD \\
-Switch Phi-4 local & TBD & TBD & TBD & TBD & TBD & TBD \\
+Switch Mistral local & 77/120 & 38/120 & 38/77 & 33/60 & 6/60 & 6/33 \\
+Switch Phi-4 local & 59/120 & 46/120 & 46/59 & 14/60 & 4/60 & 4/14 \\
 Switch policy-aware RF & 120/120 & 120/120 & 120/120 & 60/60 & 60/60 & 60/60 \\
 Switch profile-blind RF & 120/120 & 60/120 & 60/120 & 60/60 & 0/60 & 0/60 \\
 \midrule
@@ -278,7 +280,7 @@ R6 contains only eight \demote{} and eight \escalate{} items, and the weak text 
 
 Pair outcomes localize different failure modes. R6 Qwen scores 0/7 pairs on dependency-statement changes and 0/8 on current-state binding; seven of 20 factors are perfect. Challenge Qwen has three zero-accuracy factors and two perfect factors, while challenge Flash has 11 zero-accuracy factors. Each factor has only six to eight pairs, so these are diagnostics rather than stable rankings.
 
-On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor in both hosted routes. The local routes add action errors after validation: Mistral reaches 31/34 conditional pair accuracy, while Phi-4 reaches 23/42. TBD POLICY-SWITCH FACTOR RESULT. The artifact retains every factor numerator, denominator, failure category, and full item record.
+On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor in both hosted routes. The local routes add action errors after validation: Mistral reaches 31/34 conditional pair accuracy, while Phi-4 reaches 23/42. On the policy switch, Mistral obtains five of its six correct pairs from one authenticated-conflict factor; Phi-4's four correct pairs occur in three candidate-admission factors. The remaining factor cells are zero or uncovered. The artifact retains every factor numerator, denominator, failure category, and full item record.
 
 \section{Discussion}
 
@@ -385,8 +387,8 @@ SLSA Mistral local & 1.0000 & .9500 & .0000 & .6000 & .6375 \\
 SLSA Phi-4 local & 1.0000 & .2000 & .0000 & .9500 & .5375 \\
 SLSA structured RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \midrule
-Switch Mistral local & TBD & TBD & TBD & TBD & TBD \\
-Switch Phi-4 local & TBD & TBD & TBD & TBD & TBD \\
+Switch Mistral local & .2667 & .6000 & .0000 & .5000 & .3417 \\
+Switch Phi-4 local & .6333 & .3000 & .0000 & .1000 & .2583 \\
 Switch policy-aware RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 Switch profile-blind RF & .0000 & 1.0000 & 1.0000 & 1.0000 & .7500 \\
 \midrule
@@ -420,8 +422,8 @@ SLSA Mistral local & 1.0000 & .9500 & .0000 & 1.0000 \\
 SLSA Phi-4 local & 1.0000 & .2222 & .0000 & .9500 \\
 SLSA structured RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \midrule
-Switch Mistral local & TBD & TBD & TBD & TBD \\
-Switch Phi-4 local & TBD & TBD & TBD & TBD \\
+Switch Mistral local & .3636 & .6000 & N/E & .7692 \\
+Switch Phi-4 local & 1.0000 & 1.0000 & .0000 & 1.0000 \\
 Switch policy-aware RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 Switch profile-blind RF & .0000 & 1.0000 & 1.0000 & 1.0000 \\
 \midrule
@@ -457,8 +459,8 @@ SLSA Mistral local & 60/0/0/0/0 & 1/19/0/0/0 & 0/2/0/0/18 & 0/0/0/12/8 \\
 SLSA Phi-4 local & 60/0/0/0/0 & 14/4/0/0/2 & 4/0/0/0/16 & 1/0/0/19/0 \\
 SLSA structured RF & 60/0/0/0/0 & 0/20/0/0/0 & 0/0/20/0/0 & 0/0/0/20/0 \\
 \midrule
-Switch Mistral local & TBD & TBD & TBD & TBD \\
-Switch Phi-4 local & TBD & TBD & TBD & TBD \\
+Switch Mistral local & 16/13/0/15/16 & 8/12/0/0/0 & 0/0/0/0/20 & 3/0/0/10/7 \\
+Switch Phi-4 local & 38/0/0/0/22 & 0/6/0/0/14 & 4/9/0/0/7 & 0/0/0/2/18 \\
 Switch policy-aware RF & 60/0/0/0/0 & 0/20/0/0/0 & 0/0/20/0/0 & 0/0/0/20/0 \\
 Switch profile-blind RF & 0/20/20/20/0 & 0/20/0/0/0 & 0/0/20/0/0 & 0/0/0/20/0 \\
 \midrule

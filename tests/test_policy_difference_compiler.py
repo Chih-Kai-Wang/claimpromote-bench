@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+from itertools import combinations
 from pathlib import Path
+from random import Random
 from typing import Any
 
 from claimpromotebench.policy_difference import (
@@ -132,3 +134,48 @@ def test_exact_minimum_suite_can_exceed_the_edge_lower_bound() -> None:
         required_rules=required_rules,
         required_edges=required_edges,
     ).complete
+
+
+def test_exact_minimum_suite_matches_brute_force_on_small_candidate_pools() -> None:
+    rng = Random(20260824)
+    required_edges = {("A", "B"), ("B", "A")}
+    required_rules = {"r1", "r2", "r3"}
+    for trial in range(64):
+        candidates = tuple(
+            PolicyDifference(
+                context_id=f"trial-{trial:02d}-candidate-{index:02d}",
+                left_action=edge[0],
+                right_action=edge[1],
+                witnessed_rules=frozenset(
+                    rule for rule in sorted(required_rules) if rng.random() < 0.45
+                ),
+            )
+            for index, edge in enumerate(
+                [
+                    ("A", "B"),
+                    ("B", "A"),
+                    *(rng.choice(sorted(required_edges)) for _ in range(rng.randint(1, 5))),
+                ]
+            )
+        )
+        complete_subsets = [
+            subset
+            for size in range(len(candidates) + 1)
+            for subset in combinations(candidates, size)
+            if adequacy(
+                subset,
+                required_rules=required_rules,
+                required_edges=required_edges,
+            ).complete
+        ]
+        expected = min(
+            complete_subsets,
+            key=lambda subset: (len(subset), tuple(row.context_id for row in subset)),
+            default=None,
+        )
+        observed = minimum_complete_suite(
+            candidates,
+            required_rules=required_rules,
+            required_edges=required_edges,
+        )
+        assert observed == expected
