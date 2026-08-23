@@ -1,0 +1,62 @@
+{
+  "credentials_included": false,
+  "derived_files_sha256": {
+    "execution-receipt.json": "sha256:3e4a0d639037fbe3d0737b40cedf92fb2f0e5c754814f486b267e90c94ea4de0",
+    "reported-aggregate.json": "sha256:76128458639bd043b088aefdeb6147a16df6625e5bc1037b06e20295f58df47e",
+    "runs/opencode-go-deepseek-v4-pro-breadth.jsonl": "sha256:95e3e6202e25ce600e3476c4b39472cb5ba42a01f9c8e2aafcd9fd109370211b",
+    "runs/opencode-go-glm-5.3-breadth.jsonl": "sha256:8eb083956d2d959183b4f0af7818df6444c0c877da3a049544d3c22f5082854a",
+    "runs/opencode-go-hy3-breadth.jsonl": "sha256:4991a721cb530e2729454052849a9c9f24024243ef37d63cd1d6c833f12e24ea",
+    "runs/opencode-go-kimi-k3-breadth.jsonl": "sha256:e3276e8e3dbd75c02bd34a6b07aab1f9c1d6a33f7479c2a712c8379ab0ad4fc8",
+    "runs/opencode-go-mimo-v2.5-pro-breadth.jsonl": "sha256:91f25875c2d3ce649ebf3c77cd088ad9d9c553b2f2ea18e71e9b036d024aff79",
+    "runs/opencode-go-minimax-m3-breadth.jsonl": "sha256:cbc41aaa4a8442b90f5d9e0053793c31117f33835db257e191304de84bb37844",
+    "runs/opencode-go-qwen3.8-max-breadth.jsonl": "sha256:39341bccc9b5b5c7ab93498680eb6c0f96ef4403edd388c0cb05b1a0c81113f5",
+    "source-to-public-row-hashes.jsonl": "sha256:0cdc5ebd51c595c18724d50d91b16c4887bbba2a55effe47a4c84a4997900852"
+  },
+  "free_form_error_detail_included": false,
+  "hidden_reasoning_fields_included": false,
+  "model_calls_performed": 0,
+  "privacy_receipt_sha256": "sha256:96c9542b72bfcf89e5b7bf023bf8b423bf798f2989703e02951bcdb64a1da11a",
+  "private_text_fields_removed": 2244,
+  "provider_response_identifiers_included": false,
+  "public_lane_files": {
+    "opencode-go-deepseek-v4-pro-breadth": "runs/opencode-go-deepseek-v4-pro-breadth.jsonl",
+    "opencode-go-glm-5.3-breadth": "runs/opencode-go-glm-5.3-breadth.jsonl",
+    "opencode-go-hy3-breadth": "runs/opencode-go-hy3-breadth.jsonl",
+    "opencode-go-kimi-k3-breadth": "runs/opencode-go-kimi-k3-breadth.jsonl",
+    "opencode-go-mimo-v2.5-pro-breadth": "runs/opencode-go-mimo-v2.5-pro-breadth.jsonl",
+    "opencode-go-minimax-m3-breadth": "runs/opencode-go-minimax-m3-breadth.jsonl",
+    "opencode-go-qwen3.8-max-breadth": "runs/opencode-go-qwen3.8-max-breadth.jsonl"
+  },
+  "public_lane_files_sha256": {
+    "opencode-go-deepseek-v4-pro-breadth": "sha256:95e3e6202e25ce600e3476c4b39472cb5ba42a01f9c8e2aafcd9fd109370211b",
+    "opencode-go-glm-5.3-breadth": "sha256:8eb083956d2d959183b4f0af7818df6444c0c877da3a049544d3c22f5082854a",
+    "opencode-go-hy3-breadth": "sha256:4991a721cb530e2729454052849a9c9f24024243ef37d63cd1d6c833f12e24ea",
+    "opencode-go-kimi-k3-breadth": "sha256:e3276e8e3dbd75c02bd34a6b07aab1f9c1d6a33f7479c2a712c8379ab0ad4fc8",
+    "opencode-go-mimo-v2.5-pro-breadth": "sha256:91f25875c2d3ce649ebf3c77cd088ad9d9c553b2f2ea18e71e9b036d024aff79",
+    "opencode-go-minimax-m3-breadth": "sha256:cbc41aaa4a8442b90f5d9e0053793c31117f33835db257e191304de84bb37844",
+    "opencode-go-qwen3.8-max-breadth": "sha256:39341bccc9b5b5c7ab93498680eb6c0f96ef4403edd388c0cb05b1a0c81113f5"
+  },
+  "raw_final_response_text_included": false,
+  "schema_version": "1.0.0",
+  "scientific_fields_unchanged": true,
+  "source_aggregate_sha256": "sha256:22cf488f31d479aa000a2cf68615f8f88fe3684169a74b52faaf4dc6dae25176",
+  "source_execution_receipt_sha256": "sha256:3e4a0d639037fbe3d0737b40cedf92fb2f0e5c754814f486b267e90c94ea4de0",
+  "source_lane_files_sha256": {
+    "opencode-go-deepseek-v4-pro-breadth.jsonl": "sha256:0caee36f654faf89af23bee8b30092172159dc75299c2c03c66edc4fdf9c4a33",
+    "opencode-go-glm-5.3-breadth.jsonl": "sha256:dfcd5fe3c9db5a4b01052a45c9966fb366198b93fb7d05f12c4685f096865885",
+    "opencode-go-hy3-breadth.jsonl": "sha256:f20bf21c7462ccb59e1c58fd8b51eabad0f11fb7658a2610a8119bba2884e07f",
+    "opencode-go-kimi-k3-breadth.jsonl": "sha256:435507981a66450c23e92a0962ef601782400c50d2ee669cda0bf50cbfc51eda",
+    "opencode-go-mimo-v2.5-pro-breadth.jsonl": "sha256:9239dd58015ff6e374d7319339dd20a5cee84e8fc8f45b1d85ada24f025214fa",
+    "opencode-go-minimax-m3-breadth.jsonl": "sha256:218fb2b96733fd5f5ffe60cf8bc54e1966509e9190d438269fc5c965e40cac06",
+    "opencode-go-qwen3.8-max-breadth.jsonl": "sha256:62c296a5deecb67b7f2f480df04b66555cc42829b70d533817c55d215ee84624"
+  },
+  "source_to_public_row_hashes": {
+    "path": "source-to-public-row-hashes.jsonl",
+    "rows": 1260,
+    "sha256": "sha256:0cdc5ebd51c595c18724d50d91b16c4887bbba2a55effe47a4c84a4997900852"
+  },
+  "status": "POST_EXECUTION_PUBLIC_SAFE_DERIVATIVE",
+  "study_id": "claimpromotebench-v2-public-model-breadth-2026-08-v1",
+  "system_fingerprints_included": false,
+  "terminal_records_validated": 1260
+}

@@ -1,0 +1,10 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
+  "planned_cells": 1260,
+  "schedule_sha256": "sha256:dc7edcd3d310973a2113152d6a84c55a2a73ae25d65dcba671ee197a723ebed0",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-22T21:01:50.859292Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-v2-public-model-breadth-2026-08-v1"
+}

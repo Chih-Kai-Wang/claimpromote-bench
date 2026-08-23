@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from copy import deepcopy
 from pathlib import Path
 
@@ -20,6 +22,22 @@ SOURCE_RUN = (
     / "runs"
     / "opencode-go-qwen3.7-max-full.jsonl"
 )
+
+
+def test_verifier_script_is_directly_executable() -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            "release/tools/verify_public_model_breadth_public_evidence.py",
+            "--help",
+        ],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--evidence" in result.stdout
 
 
 def source_record() -> dict[str, object]:
