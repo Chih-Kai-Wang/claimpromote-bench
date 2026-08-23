@@ -1,0 +1,25 @@
+{
+  "baseline_report_sha256": "sha256:6b96c979cbafa3ff337904f28b01197ee2bdbacadc53d571cfc99d5865d2243a",
+  "catalog_selected_model_ids": [
+    "qwen3.7-max",
+    "deepseek-v4-flash"
+  ],
+  "dataset_fingerprint": "sha256:cf3ece1b05948214cfb60292cb655eb860c92276fd6f0c5c2a36c7618586fa13",
+  "dataset_manifest_sha256": "sha256:74db5b754619a65a12f202c908de4467e0ec166d078693f0f07b42a942dc1c23",
+  "evaluation_gold_used_to_train_comparators": false,
+  "graph_selection_basis": "Static reachability of the already published author-defined policy executor: all ten reachable directed nonself action transitions, six contexts per transition.",
+  "hosted_transition_graph_terminal_records_before_freeze": 0,
+  "known_prior_result_boundary": "Earlier balanced-challenge coverage and a fully excluded quota-confounded hosted policy-switch run were known. They selected service configurations, not graph edges, contexts, labels, prompts, endpoints, or reporting rules.",
+  "local_transition_graph_terminal_records_before_freeze": 0,
+  "new_model_calls_for_selection": 0,
+  "outcomes_used_to_choose_graph_edges_or_contexts": false,
+  "packet_sha256": "sha256:bd155db5ce07c80ecb667eec725bf0f4e2ebe53059a636626f47955721458845",
+  "recorded_at_utc": "2026-08-23T14:01:00.580498Z",
+  "resource_exhaustion_rule": "Ordinary service, syntax, schema, semantic, adapter, and rate-limit failures remain incorrect in the complete end-to-end denominator. If a terminal provider error explicitly states that the shared subscription quota or usage allowance is exhausted, at least 20 scheduled cells remain, and every later cell is a transport failure, the complete hosted transition-graph study is ineligible for model-efficacy reporting. In that case, retain only a redacted full-study exclusion receipt; never select a successful subset.",
+  "route_selection_basis": "Reuse the two hosted configurations that produced usable decision coverage in the earlier balanced public challenge. No transition-graph output was available.",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:011507bc4aae06f618ffb3a484d8d3050306a4a1151da9cd290df45490255aec",
+  "status": "PREINFERENCE_HOSTED_POLICY_TRANSITION_GRAPH_SELECTION",
+  "study_id": "claimpromotebench-policy-transition-graph-hosted-2026-08-v1",
+  "transition_coverage_sha256": "sha256:bb02a0165b3be0db63dc842442b93fa25d4bd37aa9a45bdeff1b502d6331df83"
+}
