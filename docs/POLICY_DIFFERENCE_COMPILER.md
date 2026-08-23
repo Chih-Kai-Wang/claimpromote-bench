@@ -16,10 +16,13 @@ The compiler executes both policies on every context and retains the behavioral 
 
 Each retained context has one directed action edge and one or more rule witnesses. The reusable
 interface in `src/claimpromotebench/policy_difference.py` reports rule and edge coverage, identifies
-action directions absent from the supplied grammar, and searches for a joint-complete suite that
-attains the one-context-per-edge lower bound. If that search returns a suite for (k) required
-edges, the suite is globally minimum because no context can realize more than one directed edge.
-If it returns no witness, only the lower bound is unattainable; a larger complete suite may exist.
+action directions absent from the supplied grammar, and exposes two deterministic suite searches.
+`minimum_lower_bound_witness` asks whether one context per edge can also cover every rule. If it
+returns a suite for $k$ required edges, the suite is globally minimum because no context can realize
+more than one directed edge. `minimum_complete_suite` solves the general finite candidate-pool
+problem: when the lower bound is unattainable, it can select additional contexts and returns a
+smallest complete suite with a stable lexical tie break. It returns `None` only when the candidate
+pool cannot satisfy the declared joint target.
 
 The implementation has no SLSA, research-evidence, model, provider, or prompt dependency. A
 cross-check test loads the 60 frozen software-policy candidates and independently reproduces the

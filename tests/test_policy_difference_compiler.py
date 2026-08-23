@@ -9,6 +9,7 @@ from claimpromotebench.policy_difference import (
     absent_edges,
     adequacy,
     compile_policy_differences,
+    minimum_complete_suite,
     minimum_lower_bound_witness,
 )
 
@@ -80,6 +81,52 @@ def test_generic_minimum_witness_reproduces_frozen_policy_migration_suite() -> N
     )
     assert selected is not None
     assert [row.context_id for row in selected] == expected["selected_pair_ids"]
+    assert adequacy(
+        selected,
+        required_rules=required_rules,
+        required_edges=required_edges,
+    ).complete
+    exact = minimum_complete_suite(
+        candidates,
+        required_rules=required_rules,
+        required_edges=required_edges,
+    )
+    assert exact is not None
+    assert len(exact) == len(required_edges)
+    assert adequacy(
+        exact,
+        required_rules=required_rules,
+        required_edges=required_edges,
+    ).complete
+
+
+def test_exact_minimum_suite_can_exceed_the_edge_lower_bound() -> None:
+    candidates = (
+        PolicyDifference("a-edge-rule-1", "A", "B", frozenset({"r1"})),
+        PolicyDifference("a-edge-rule-2", "A", "B", frozenset({"r2"})),
+        PolicyDifference("b-edge", "B", "A", frozenset({"r3"})),
+    )
+    required_rules = {"r1", "r2", "r3"}
+    required_edges = {("A", "B"), ("B", "A")}
+    assert (
+        minimum_lower_bound_witness(
+            candidates,
+            required_rules=required_rules,
+            required_edges=required_edges,
+        )
+        is None
+    )
+    selected = minimum_complete_suite(
+        candidates,
+        required_rules=required_rules,
+        required_edges=required_edges,
+    )
+    assert selected is not None
+    assert [row.context_id for row in selected] == [
+        "a-edge-rule-1",
+        "a-edge-rule-2",
+        "b-edge",
+    ]
     assert adequacy(
         selected,
         required_rules=required_rules,

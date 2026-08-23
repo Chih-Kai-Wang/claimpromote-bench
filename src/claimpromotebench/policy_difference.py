@@ -195,6 +195,81 @@ def minimum_lower_bound_witness(
     return selected
 
 
+def minimum_complete_suite(
+    candidates: Sequence[PolicyDifference],
+    *,
+    required_rules: Iterable[str],
+    required_edges: Iterable[tuple[str, str]],
+) -> tuple[PolicyDifference, ...] | None:
+    """Find a smallest suite that covers every declared rule and edge.
+
+    Unlike :func:`minimum_lower_bound_witness`, this exact dynamic program can return more than
+    one context for an edge when no one-context-per-edge selection covers all required rules.  It
+    minimizes suite cardinality and then chooses the lexicographically smallest context-ID tuple.
+    ``None`` means that the candidate pool cannot satisfy the declared adequacy target.
+    """
+
+    rules = tuple(sorted(set(str(rule) for rule in required_rules)))
+    edges = tuple(sorted(set((str(left), str(right)) for left, right in required_edges)))
+    if not edges:
+        raise PolicyDifferenceError("at least one required edge is needed")
+
+    identifiers: set[str] = set()
+    ordered_candidates = tuple(sorted(candidates, key=lambda row: row.context_id))
+    for row in ordered_candidates:
+        if not row.context_id or row.context_id in identifiers:
+            raise PolicyDifferenceError(
+                f"candidate identifier is empty or repeats: {row.context_id}"
+            )
+        identifiers.add(row.context_id)
+
+    edge_bits = {edge: 1 << index for index, edge in enumerate(edges)}
+    rule_offset = len(edges)
+    rule_bits = {rule: 1 << (rule_offset + index) for index, rule in enumerate(rules)}
+    full_mask = (1 << (len(edges) + len(rules))) - 1
+    candidate_masks: list[tuple[PolicyDifference, int]] = []
+    observed_edges: set[tuple[str, str]] = set()
+    observed_rules: set[str] = set()
+    for row in ordered_candidates:
+        mask = edge_bits.get(row.edge, 0)
+        if mask:
+            observed_edges.add(row.edge)
+        for rule in row.witnessed_rules:
+            bit = rule_bits.get(rule)
+            if bit is not None:
+                mask |= bit
+                observed_rules.add(rule)
+        if mask:
+            candidate_masks.append((row, mask))
+
+    missing_edges = sorted(set(edges) - observed_edges)
+    if missing_edges:
+        raise PolicyDifferenceError(f"required edges have no candidates: {missing_edges}")
+    if set(rules) - observed_rules:
+        return None
+
+    states: dict[int, tuple[str, ...]] = {0: ()}
+    by_id = {row.context_id: row for row in ordered_candidates}
+    for row, row_mask in candidate_masks:
+        next_states = dict(states)
+        for prior_mask, prior_ids in states.items():
+            mask = prior_mask | row_mask
+            candidate_ids = (*prior_ids, row.context_id)
+            current = next_states.get(mask)
+            if current is None or (len(candidate_ids), candidate_ids) < (len(current), current):
+                next_states[mask] = candidate_ids
+        states = next_states
+
+    selected_ids = states.get(full_mask)
+    if selected_ids is None:
+        return None
+    selected = tuple(by_id[identifier] for identifier in selected_ids)
+    report = adequacy(selected, required_rules=rules, required_edges=edges)
+    if not report.complete:
+        raise PolicyDifferenceError("internal minimum-suite certificate failed")
+    return selected
+
+
 def differences_from_records(
     rows: Iterable[Mapping[str, object]],
     *,
