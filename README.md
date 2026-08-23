@@ -68,6 +68,8 @@ witnesses. It has no dependency on the two study ontologies, prompts, models, or
 exact search returns a smallest jointly rule- and edge-complete suite even when one context per edge
 is insufficient; a specialized lower-bound search certifies minimum witnesses that use one context
 per edge. A cross-check reconstructs the published witness from the frozen 60-pair candidate graph.
+Test-suite reduction is established software-engineering practice; the contribution here is the
+paired model-service test object and the joint changed-rule/action-transition adequacy target.
 
 A deterministic selection over the frozen graph yields a provably minimum joint-adequacy smoke
 suite: ten pairs, 20 route calls, all 12 rules, and all ten reachable edges. This cuts the structural
@@ -128,6 +130,8 @@ from committed records and must not be rerun as part of paper construction.
 
 - The policy and labels are authored operational definitions; oracle agreement does not establish
   scientific truth or community consensus.
+- Rule-coverage certificates trust authored witness mappings; action edges are recomputed, but an
+  incorrect witness inventory would invalidate rule adequacy.
 - The hidden r6 study tests a fresh realization of the same ontology and mostly the same template
   family.
 - The balanced challenge is a known public robustness construction.
