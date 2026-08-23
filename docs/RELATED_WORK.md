@@ -18,6 +18,8 @@ A paper-preparation search was refreshed on **2026-08-23** after the r6 addendum
 - `policy conditioned agent benchmark active policy switch`;
 - `business rule flow benchmark language model`;
 - `policy document internalization LLM agent benchmark`.
+- `organization-specific policy alignment benchmark allowlist denylist`;
+- `regression testing evolving LLM APIs policy update`.
 
 The refresh identified closer conceptual neighbors than the earlier survey: SeekBench, Omni-Decision,
 EviGraph, the contemporaneous ClaimLedger technical report, and three 2026 policy-reasoning
@@ -38,6 +40,8 @@ verifier-governed updates.
 | RuLES (2024 preprint) | Programmatically checked conversational rule following under ordinary and adversarial interactions | Executable checks are close prior art; the target is conversational rule violation, not matched evidence and active-policy mutations over typed state transitions |
 | Inverse IFEval (ICLR 2026) | Following counter-intuitive instructions that conflict with learned response conventions | Tests instruction adaptability, not whether identical evidence produces the transition prescribed by a switched executable policy |
 | Policy Compliance of User Requests (ACL Industry 2026) | Classification of natural-language user requests against organizational policies | Policy compliance classification, not relational state-transition conformance with item, pair, and route-failure accounting |
+| COMPASS (ACL 2026) | Base and adversarial queries for organization-specific allow and deny lists, evaluated with an LLM judge | Organization-policy alignment is close prior art; ClaimPromoteBench instead uses the same typed state under two executable profiles, exact oracle scoring, and pair-level failure accounting |
+| (Why) Is My Prompt Getting Worse? (CAIN 2024) | Regression testing for behavioral changes across evolving hosted LLM APIs | Changes the model-service dependency while preserving an application task; ClaimPromoteBench changes the application policy while holding the tested route and typed context fixed |
 | PolicyLLM / PolicyBench (ACL Findings 2026) | Bilingual public-policy memorization, understanding, and application over 21K cases | Broad policy comprehension, not matched evidence and policy interventions with an executable transition oracle |
 | Analyzing and Internalizing Complex Policy Documents for LLM Agents (ACL 2026) | A controllable-complexity generator and methods for internalizing in-context business policies | Policy complexity and internalization, not whether the same evidence induces the prescribed action after only the active policy changes |
 | Business as Rulesual / BREX (ACL 2026) | Extraction of rules, operators, and dependencies from real business documents | Rule-flow reconstruction from unstructured text, not conformance of a structured decision route to an already published executable policy |
