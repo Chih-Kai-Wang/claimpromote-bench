@@ -379,6 +379,41 @@ Graph profile-blind RF & .2500 & .5833 & 1.0000 & .2778 & .5278 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{Conditional recall by gold action among valid decisions. N/E denotes no valid decision for that gold action. This table must be read with the end-to-end recalls above.}
+\label{tab:conditional-action-recall}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Configuration & \allow{} & \hold{} & \demote{} & \escalate{} \\
+\midrule
+r6 Qwen & 1.0000 & .9483 & .0000 & 1.0000 \\
+r6 text NB & .5000 & .8134 & .0000 & .0000 \\
+Old r6 Flash interface & N/E & N/E & N/E & N/E \\
+Challenge Qwen & 1.0000 & 1.0000 & .2000 & 1.0000 \\
+Challenge Flash & .8500 & .4091 & .0000 & .8125 \\
+\midrule
+SLSA Qwen & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+SLSA Flash & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+SLSA Mistral local & 1.0000 & .9500 & .0000 & 1.0000 \\
+SLSA Phi-4 local & 1.0000 & .2222 & .0000 & .9500 \\
+SLSA structured RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+\midrule
+Switch Mistral local & TBD & TBD & TBD & TBD \\
+Switch Phi-4 local & TBD & TBD & TBD & TBD \\
+Switch policy-aware RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Switch profile-blind RF & .0000 & 1.0000 & 1.0000 & 1.0000 \\
+\midrule
+Graph Mistral local & TBD & TBD & TBD & TBD \\
+Graph Phi-4 local & TBD & TBD & TBD & TBD \\
+Graph policy-aware RF & .8889 & .7917 & 1.0000 & .8889 \\
+Graph profile-blind RF & .2500 & .5833 & 1.0000 & .2778 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Each confusion entry follows predicted-column order \([\allow,\hold,\demote,\escalate,\texttt{N}]\), where \texttt{N} means no valid decision.
 
 \begin{table}[H]
