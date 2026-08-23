@@ -14,8 +14,8 @@ establish redistribution rights.
   executable or formal fixtures;
 - dataset builders and scoring, audit, validation, and replay scripts used by the paper;
 - selected tests that exercise the public replay path;
-- the clean r6 and balanced-challenge derivatives needed to recompute every
-  scheduled denominator, confusion cell, action recall, coverage value, and conditional or
+- the clean r6, balanced-challenge, and SLSA-derived portability derivatives needed to recompute
+  every scheduled denominator, confusion cell, action recall, coverage value, and conditional or
   end-to-end metric;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
@@ -46,6 +46,8 @@ minimum replay path.
   source envelopes under `release/reviewer-evidence-source/fresh-confirmatory/collected/`;
 - the quota-confounded seven-route study, its service-specific execution records, and its private
   failure journal, which are not needed to reproduce the paper;
+- the void SLSA v1 attempt's raw records; retain only a public-safe exclusion receipt if needed to
+  document why those records never entered model selection or manuscript metrics;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
 - the private repository's Git history.
 

@@ -18,6 +18,14 @@ The naturalistic-candidate files contain source pointers and metadata for CORE-B
 source evidence bytes and create no naturalistic benchmark cases. Any later use of upstream content
 must follow the upstream license and attribution requirements.
 
+## Software-supply-chain specifications
+
+The SLSA-derived portability study pins public SLSA 1.2 and in-toto Attestation 1.2 specification
+files by repository commit, path, and SHA-256. The study's states, four actions, precedence, and
+labels are new author policy rather than copied certification decisions. A public export should
+retain the source registry and upstream attribution while continuing to describe the policy as an
+author operationalization.
+
 ## Venue and software dependencies
 
 ICLR style files come from the official ICLR 2027 style archive and are not relicensed by this
