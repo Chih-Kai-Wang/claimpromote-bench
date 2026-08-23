@@ -23,6 +23,7 @@ from local_model_replication import (  # noqa: E402
     lane_id,
     load_catalog,
     load_object,
+    tokenizer_config,
 )
 from transformers import AutoTokenizer  # noqa: E402
 
@@ -101,7 +102,7 @@ def load_tokenizers(catalog: Json) -> dict[str, Any]:
         tokenizers[lane["lane_stem"]] = AutoTokenizer.from_pretrained(
             snapshot,
             local_files_only=True,
-            trust_remote_code=bool(lane["trust_remote_code"]),
+            **tokenizer_config(lane),
         )
     return tokenizers
 
@@ -161,6 +162,7 @@ def build_study(
                 "max_output_tokens": shared["max_output_tokens"],
                 "sampler": shared["sampler"],
                 "temperature": shared["temperature"],
+                "tokenizer_config": tokenizer_config(lane),
                 "top_p": shared["top_p"],
                 "client_retry_count": 0,
             }

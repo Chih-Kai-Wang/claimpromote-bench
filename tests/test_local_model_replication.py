@@ -39,6 +39,11 @@ def test_local_model_catalog_is_preinference_and_family_distinct() -> None:
     catalog = load_catalog(CATALOG_PATH)
     assert [row["model_family"] for row in catalog["lanes"]] == ["Mistral", "Phi"]
     assert all(len(row["model_revision"]) == 40 for row in catalog["lanes"])
+    assert catalog["lanes"][0]["tokenizer_config"] == {
+        "fix_mistral_regex": True,
+        "trust_remote_code": False,
+    }
+    assert catalog["lanes"][1]["tokenizer_config"] == {"trust_remote_code": True}
     boundary = catalog["selection_boundary"]
     assert boundary["models_selected_before_any_benchmark_inference"] is True
     assert boundary["benchmark_accuracy_or_labels_consulted"] is False
@@ -60,6 +65,7 @@ def test_local_model_request_hash_binds_template_model_and_generation() -> None:
     assert request["formatted_prompt"] == "<user>policy prompt</user><assistant>"
     assert request["model_revision"] == lane["model_revision"]
     assert request["sampler"] == "GREEDY"
+    assert request["tokenizer_config"] == lane["tokenizer_config"]
     assert sha256_bytes(canonical_json(request).encode("utf-8")).startswith("sha256:")
 
 
@@ -85,12 +91,12 @@ def test_local_runner_forbids_resume_and_records_every_cell() -> None:
 
 
 def test_environment_qualification_uses_the_scored_stream_api_without_benchmark_content() -> None:
-    source = (ROOT / "scripts" / "qualify_local_model_environment.py").read_text(
-        encoding="utf-8"
-    )
+    source = (ROOT / "scripts" / "qualify_local_model_environment.py").read_text(encoding="utf-8")
     assert "stream_generate(" in source
     assert '"benchmark_inference_calls": 0' in source
     assert '"smoke_prompt_contains_benchmark_content": False' in source
+    assert "relative = path.relative_to(snapshot)" in source
+    assert '".cache" in relative.parts' in source
 
 
 def test_frozen_run_io_publishes_only_complete_outputs(tmp_path: Path) -> None:

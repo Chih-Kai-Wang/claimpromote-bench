@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import mlx.core as mx  # noqa: E402
 from huggingface_hub import snapshot_download  # noqa: E402
-from local_model_replication import CATALOG_PATH, load_catalog  # noqa: E402
+from local_model_replication import CATALOG_PATH, load_catalog, tokenizer_config  # noqa: E402
 from mlx_lm import load, stream_generate  # noqa: E402
 from mlx_lm.sample_utils import make_sampler  # noqa: E402
 
@@ -60,37 +60,26 @@ def sysctl_value(name: str) -> str | None:
 
 
 def package_versions() -> Json:
-    names = (
-        "mlx-lm",
-        "mlx",
-        "mlx-metal",
-        "transformers",
-        "tokenizers",
-        "huggingface-hub",
-        "hf-xet",
-        "safetensors",
-        "numpy",
-    )
-    versions: Json = {}
-    for name in names:
-        try:
-            versions[name] = importlib.metadata.version(name)
-        except importlib.metadata.PackageNotFoundError:
-            versions[name] = None
-    return versions
+    versions: dict[str, str] = {}
+    for distribution in importlib.metadata.distributions():
+        name = distribution.metadata.get("Name")
+        if isinstance(name, str) and name:
+            versions[name.lower()] = distribution.version
+    return dict(sorted(versions.items()))
 
 
 def snapshot_files(snapshot: Path) -> tuple[list[Json], int]:
     records: list[Json] = []
     total_bytes = 0
     for path in sorted(snapshot.rglob("*")):
-        if not path.is_file() or ".cache" in path.parts:
+        relative = path.relative_to(snapshot)
+        if not path.is_file() or ".cache" in relative.parts:
             continue
         size = path.stat().st_size
         total_bytes += size
         records.append(
             {
-                "path": path.relative_to(snapshot).as_posix(),
+                "path": relative.as_posix(),
                 "sha256": sha256_file(path),
                 "size_bytes": size,
             }
@@ -125,7 +114,8 @@ def qualify(catalog_path: Path) -> tuple[Json, Json]:
 
         started = time.perf_counter()
         try:
-            model, tokenizer = load(str(snapshot), lazy=False)
+            options = tokenizer_config(lane)
+            model, tokenizer = load(str(snapshot), tokenizer_config=options, lazy=False)
             formatted = tokenizer.apply_chat_template(
                 [{"role": "user", "content": smoke_prompt}],
                 add_generation_prompt=True,
@@ -158,6 +148,7 @@ def qualify(catalog_path: Path) -> tuple[Json, Json]:
             {
                 "model_repo": repo,
                 "model_revision": revision,
+                "tokenizer_config": options,
                 "load_and_generation_succeeded": True,
                 "stream_generation_api_succeeded": True,
                 "benchmark_prompt_or_label_used": False,
@@ -193,6 +184,7 @@ def qualify(catalog_path: Path) -> tuple[Json, Json]:
             "macos_version": platform.mac_ver()[0],
             "hardware_model": sysctl_value("hw.model"),
             "memory_bytes": int(sysctl_value("hw.memsize") or 0),
+            "package_inventory_complete": True,
             "packages": package_versions(),
         },
         "credentials_used_or_retained": False,

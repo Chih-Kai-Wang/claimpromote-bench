@@ -1,0 +1,91 @@
+{
+  "benchmark_inference_calls": 0,
+  "catalog_sha256": "sha256:127f20cb3740176480ddba8debbcc722c319edc58b1f96840ba0e68244664586",
+  "credentials_used_or_retained": false,
+  "environment": {
+    "hardware_model": "Mac17,2",
+    "macos_version": "26.5.1",
+    "memory_bytes": 25769803776,
+    "package_inventory_complete": true,
+    "packages": {
+      "annotated-doc": "0.0.5",
+      "anyio": "4.14.2",
+      "attrs": "26.1.0",
+      "certifi": "2026.7.22",
+      "claimpromote-bench": "0.1.0a0",
+      "click": "8.4.2",
+      "filelock": "3.32.3",
+      "fsspec": "2026.7.0",
+      "h11": "0.16.0",
+      "hf-xet": "1.6.0",
+      "httpcore": "1.0.9",
+      "httpx": "0.28.1",
+      "huggingface_hub": "1.28.0",
+      "idna": "3.19",
+      "jinja2": "3.1.6",
+      "jsonschema": "4.25.1",
+      "jsonschema-specifications": "2025.9.1",
+      "markdown-it-py": "4.2.0",
+      "markupsafe": "3.0.3",
+      "mdurl": "0.1.2",
+      "mlx": "0.32.1",
+      "mlx-lm": "0.31.3",
+      "mlx-metal": "0.32.1",
+      "numpy": "2.5.2",
+      "packaging": "26.3",
+      "protobuf": "7.36.0",
+      "pygments": "2.21.0",
+      "pyyaml": "6.0.3",
+      "referencing": "0.37.0",
+      "regex": "2026.7.19",
+      "rich": "15.0.0",
+      "rpds-py": "2026.6.3",
+      "safetensors": "0.8.0",
+      "sentencepiece": "0.2.2",
+      "shellingham": "1.5.4",
+      "tokenizers": "0.22.2",
+      "tqdm": "4.70.0",
+      "transformers": "5.15.1",
+      "typer": "0.27.1",
+      "typing_extensions": "4.16.0"
+    },
+    "platform_machine": "arm64",
+    "python": "3.12.13"
+  },
+  "models": [
+    {
+      "benchmark_prompt_or_label_used": false,
+      "elapsed_seconds": 8.059782,
+      "load_and_generation_succeeded": true,
+      "model_repo": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
+      "model_revision": "2a1d5eabfc504747bdc24178394821a1efc0edde",
+      "smoke_response_retained": false,
+      "smoke_response_sha256": "sha256:565339bc4d33d72817b583024112eb7f5cdf3e5eef0252d6ec1b9c9a94e12bb3",
+      "stream_generation_api_succeeded": true,
+      "tokenizer_config": {
+        "fix_mistral_regex": true,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "benchmark_prompt_or_label_used": false,
+      "elapsed_seconds": 4.284368,
+      "load_and_generation_succeeded": true,
+      "model_repo": "mlx-community/phi-4-4bit",
+      "model_revision": "fc0f8f23d369dc29b55cad1d65cb5bf0dcbee910",
+      "smoke_response_retained": false,
+      "smoke_response_sha256": "sha256:37ba48784bfaef95035f2dafd3de9bf8c35365602832fb9490ccca3001f098e1",
+      "stream_generation_api_succeeded": true,
+      "tokenizer_config": {
+        "trust_remote_code": true
+      }
+    }
+  ],
+  "qualified_at_utc": "2026-08-23T11:18:01Z",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:27f36fb5d4ed3fc789e08208c0ccab590229ae00db1fd9260092a22a7b860d70",
+  "smoke_calls": 2,
+  "smoke_prompt_contains_benchmark_content": false,
+  "snapshot_receipt_self_digest": "sha256:6c01c7d5c66fdd9fc5359528d33b2cf528435656c0d27f2f18c9ab0b5d91dfc8",
+  "status": "LOCAL_MODEL_ENVIRONMENT_QUALIFIED_BEFORE_BENCHMARK_INFERENCE"
+}

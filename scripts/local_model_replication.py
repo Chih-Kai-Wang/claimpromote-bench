@@ -91,6 +91,15 @@ def load_catalog(path: Path = CATALOG_PATH) -> Json:
             raise ValueError(f"local-model revision is not a full commit: {stem}")
         if not str(lane.get("model_repo", "")).startswith("mlx-community/"):
             raise ValueError(f"unexpected local-model repository: {stem}")
+        tokenizer_options = lane.get("tokenizer_config")
+        if (
+            not isinstance(tokenizer_options, dict)
+            or set(tokenizer_options) - {"fix_mistral_regex", "trust_remote_code"}
+            or not isinstance(lane.get("trust_remote_code"), bool)
+            or tokenizer_options.get("trust_remote_code") is not lane["trust_remote_code"]
+            or (family == "Mistral" and tokenizer_options.get("fix_mistral_regex") is not True)
+        ):
+            raise ValueError(f"local-model tokenizer configuration changed: {stem}")
         lane_stems.add(stem)
         families.add(family)
     boundary = catalog.get("selection_boundary")
@@ -118,6 +127,13 @@ def format_chat_prompt(tokenizer: Any, prompt: str) -> str:
     return formatted
 
 
+def tokenizer_config(lane: Json) -> Json:
+    value = lane.get("tokenizer_config")
+    if not isinstance(value, dict):
+        raise ValueError("local-model tokenizer configuration is absent")
+    return dict(value)
+
+
 def generation_request(lane: Json, formatted_prompt: str, shared: Json) -> Json:
     return {
         "backend": "mlx-lm",
@@ -128,5 +144,6 @@ def generation_request(lane: Json, formatted_prompt: str, shared: Json) -> Json:
         "model_revision": lane["model_revision"],
         "sampler": shared["sampler"],
         "temperature": shared["temperature"],
+        "tokenizer_config": tokenizer_config(lane),
         "top_p": shared["top_p"],
     }

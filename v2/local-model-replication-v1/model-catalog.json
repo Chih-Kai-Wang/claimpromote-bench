@@ -11,6 +11,10 @@
       "model_family": "Mistral",
       "model_repo": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
       "model_revision": "2a1d5eabfc504747bdc24178394821a1efc0edde",
+      "tokenizer_config": {
+        "fix_mistral_regex": true,
+        "trust_remote_code": false
+      },
       "trust_remote_code": false
     },
     {
@@ -20,6 +24,9 @@
       "model_family": "Phi",
       "model_repo": "mlx-community/phi-4-4bit",
       "model_revision": "fc0f8f23d369dc29b55cad1d65cb5bf0dcbee910",
+      "tokenizer_config": {
+        "trust_remote_code": true
+      },
       "trust_remote_code": true
     }
   ],

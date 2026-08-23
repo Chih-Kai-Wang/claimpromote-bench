@@ -31,6 +31,7 @@ from local_model_replication import (  # noqa: E402
     generation_request,
     lane_id,
     load_catalog,
+    tokenizer_config,
 )
 from mlx_lm import load, stream_generate  # noqa: E402
 from mlx_lm.sample_utils import make_sampler  # noqa: E402
@@ -144,7 +145,11 @@ def main() -> int:
             local_files_only=True,
         )
         try:
-            model, tokenizer = load(snapshot, lazy=False)
+            model, tokenizer = load(
+                snapshot,
+                tokenizer_config=tokenizer_config(lane),
+                lazy=False,
+            )
         except Exception as exc:  # pragma: no cover - hardware/runtime boundary
             fail(f"frozen model failed to load; study is ineligible: {sanitized_exception(exc)}")
         for cell in schedule_by_lane[str(current_lane_id)]:
