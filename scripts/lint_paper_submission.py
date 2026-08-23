@@ -49,6 +49,14 @@ SLSA_RESULT = SLSA_ROOT / "results" / "aggregate.json"
 POLICY_SWITCH_ROOT = ROOT / "v2" / "policy-switch-v1" / "frozen"
 POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
 POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
+HOSTED_POLICY_REPLACEMENT_RECEIPT = (
+    ROOT
+    / "v2"
+    / "policy-switch-v1"
+    / "hosted-replacement-v2"
+    / "results"
+    / "manuscript-eligibility-receipt.json"
+)
 LOCAL_REPLICATION_ROOT = ROOT / "v2" / "local-model-replication-v1" / "replacement-v2" / "frozen"
 BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
 BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
@@ -1053,6 +1061,26 @@ def validate_new_study_claims(tex: str) -> None:
         or exclusion.get("decision", {}).get("successful_row_subset_selected") is not False
     ):
         fail("hosted policy-switch exclusion boundary changed")
+    replacement_exclusion = load_object(
+        HOSTED_POLICY_REPLACEMENT_RECEIPT,
+        "hosted policy-switch replacement exclusion receipt",
+    )
+    replacement_classification = replacement_exclusion.get("classification", {})
+    replacement_decision = replacement_exclusion.get("decision", {})
+    if (
+        replacement_exclusion.get("status")
+        != "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or replacement_exclusion.get("self_digest")
+        != self_digest(replacement_exclusion, "self_digest")
+        or replacement_classification.get("eligible_for_model_efficacy_reporting") is not False
+        or replacement_classification.get("explicit_resource_exhaustion_errors") != 240
+        or replacement_classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or replacement_decision.get("all_240_terminal_outcomes_considered") is not True
+        or replacement_decision.get("hosted_model_rows_enter_manuscript") is not False
+        or replacement_decision.get("conditional_success_subset_selected") is not False
+        or replacement_exclusion.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted policy-switch replacement exclusion boundary changed")
     difference_coverage = load_object(
         POLICY_DIFFERENCE_COVERAGE, "policy-difference coverage receipt"
     )
@@ -1540,6 +1568,8 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         "bao2026policyllm",
         "diao2025guidebench",
         "liu2026augmentedpolicy",
+        "choi2026compass",
+        "ma2024promptregression",
         "liu2026policyinternalization",
         "yang2026rulesual",
         "chen2025scienceagentbench",
