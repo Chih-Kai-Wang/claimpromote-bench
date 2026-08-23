@@ -16,9 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
 TITLE = r"\cpb: Compiling Policy Differences into Failure-Aware State-Transition Tests"
 ICLR_TITLE = (
-    r"\mbox{\textsc{ClaimPromoteBench}: Failure-Aware}\protect\\"
-    r"\mbox{Conformance Testing for Policy-Conditioned}\protect\\"
-    r"\mbox{State Transitions}"
+    r"\mbox{\textsc{ClaimPromoteBench}: Compiling Policy Differences}\protect\\"
+    r"\mbox{into Failure-Aware State-Transition Tests}"
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (
