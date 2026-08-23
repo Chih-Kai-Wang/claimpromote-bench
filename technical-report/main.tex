@@ -148,7 +148,8 @@ so ten reachable edges require at least ten pairs. A deterministic search over t
 contexts per edge finds a ten-pair witness that also covers all 12 rules. This suite is therefore
 provably minimum for the joint $(1,1)$ adequacy target on the published candidate pool. It requires
 20 route calls instead of 120, an 83.3\% reduction. The selected pair and item identifiers are
-published in a digest-bound receipt; no model output enters the selection.
+published in a digest-bound receipt; no model output enters the selection. The search processes
+edge groups in canonical order and retains the lexicographically first witness for each rule-mask.
 
 \begin{figure}[H]
 \centering
