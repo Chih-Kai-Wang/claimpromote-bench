@@ -56,3 +56,23 @@ def test_hosted_transition_graph_reuses_exact_hosted_route_protocols() -> None:
         assert {key: value for key, value in lane.items() if key != "lane_id"} == {
             key: value for key, value in source_lane.items() if key != "lane_id"
         }
+
+
+def test_hosted_transition_graph_is_excluded_as_one_complete_resource_failure() -> None:
+    eligibility = json.loads(
+        (STUDY / "results" / "manuscript-eligibility-receipt.json").read_text(encoding="utf-8")
+    )
+    privacy = json.loads((STUDY / "results" / "privacy-receipt.json").read_text(encoding="utf-8"))
+    assert (
+        eligibility["status"]
+        == "HOSTED_TRANSITION_GRAPH_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+    )
+    assert eligibility["classification"]["explicit_resource_exhaustion_errors"] == 240
+    assert eligibility["decision"]["all_240_terminal_outcomes_considered"] is True
+    assert eligibility["decision"]["conditional_success_subset_selected"] is False
+    assert eligibility["decision"]["hosted_model_rows_enter_manuscript"] is False
+    assert privacy["terminal_records_validated"] == 240
+    assert privacy["credentials_included"] is False
+    assert privacy["provider_response_identifiers_included"] is False
+    assert privacy["hidden_reasoning_fields_included"] is False
+    assert all(value == 0 for value in privacy["secret_pattern_findings"].values())
