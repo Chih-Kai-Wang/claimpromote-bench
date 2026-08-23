@@ -1,0 +1,34 @@
+{
+  "catalog_selected_model_ids": [
+    "qwen3.7-max",
+    "deepseek-v4-flash"
+  ],
+  "changes_forbidden": [
+    "dataset items, gold labels, pairs, or prompts",
+    "models, adapters, output contracts, decoding, or request limit",
+    "primary or secondary endpoints",
+    "zero-retry and end-to-end denominator rules",
+    "adaptive stopping or successful-subset selection"
+  ],
+  "changes_permitted": [
+    "new study and lane identifiers",
+    "new freeze timestamp and Git commit",
+    "new request schedule hashes induced only by new lane identifiers",
+    "fresh authenticated model-catalog snapshot"
+  ],
+  "local_policy_switch_terminal_records_before_freeze": 0,
+  "new_model_calls_for_selection": 0,
+  "new_replacement_terminal_records_before_freeze": 0,
+  "predecessor_exclusion_status": "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION",
+  "predecessor_outputs_available_and_inspected": true,
+  "predecessor_study_id": "claimpromotebench-policy-profile-switch-2026-08-v1",
+  "recorded_at_utc": "2026-08-23T12:37:09.353982Z",
+  "replacement_study_id": "claimpromotebench-policy-profile-switch-hosted-replacement-2026-08-v2",
+  "resource_exhaustion_rule": "Ordinary service, syntax, schema, semantic, adapter, and rate-limit failures remain incorrect in the complete end-to-end denominator. If a terminal provider error explicitly states that the shared subscription quota or usage allowance is exhausted, at least 20 scheduled cells remain, and every later cell is a transport failure, the complete hosted replacement is ineligible for model-efficacy reporting. In that case, retain only a redacted full-study exclusion receipt; never select a successful subset.",
+  "schema_version": "1.0.0",
+  "selection_reason": "Repeat the unchanged complete hosted protocol after the user replenished the shared subscription allowance; the predecessor was excluded in full because quota failures persisted through the end of its frozen schedule.",
+  "self_digest": "sha256:716261a7f5899108c05fffeeb8eb5a732ff89821613797cd944cc32ab9421326",
+  "source_dataset_fingerprint": "sha256:fe675a81fb959d122aa751a6b49c5c5e8e67f39e6382c346fd38f4cc6225bbaf",
+  "source_packet_sha256": "sha256:4756f02d8ba30b2038a7c0d3dc1317dd1129bb15c1fe517d9d5dfbe03766c66a",
+  "status": "HOSTED_RESOURCE_FAILURE_REPLACEMENT_SELECTED_BEFORE_NEW_OUTCOMES"
+}
