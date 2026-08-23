@@ -246,6 +246,7 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "local_policy_switch_item_level_records_included",
         "local_policy_transition_graph_summary_included",
         "local_policy_transition_graph_item_level_records_included",
+        "local_minimum_policy_migration_gate_included",
     )
     if any(scope.get(key) is not True for key in true_guards):
         fail("anonymous manifest multi-policy evidence scope changed")

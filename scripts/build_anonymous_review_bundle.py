@@ -3264,6 +3264,9 @@ def write_manifest(bundle: Path) -> None:
     local_slsa_included = (local_replication_root / "slsa").is_dir()
     local_policy_switch_included = (local_replication_root / "policy-switch").is_dir()
     local_transition_graph_included = (local_replication_root / "policy-transition-graph").is_dir()
+    local_minimum_gate_included = (
+        local_replication_root / "policy-transition-graph" / "minimum-subset-analysis.json"
+    ).is_file()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -3316,6 +3319,7 @@ def write_manifest(bundle: Path) -> None:
             "local_policy_transition_graph_item_level_records_included": (
                 local_transition_graph_included
             ),
+            "local_minimum_policy_migration_gate_included": local_minimum_gate_included,
             "ontology_count": 2,
             "policy_instrument_count": 4,
             "public_model_breadth_summary_included": False,

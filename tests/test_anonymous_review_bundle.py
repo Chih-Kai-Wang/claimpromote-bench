@@ -54,6 +54,7 @@ def test_manifest_reports_each_local_study_without_hard_coded_file_count(
     assert scope["local_policy_switch_summary_included"] is True
     assert scope["local_policy_transition_graph_summary_included"] is True
     assert scope["local_policy_transition_graph_item_level_records_included"] is True
+    assert scope["local_minimum_policy_migration_gate_included"] is False
 
 
 def test_identity_scan_checks_extensionless_license(tmp_path: Path) -> None:
