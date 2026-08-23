@@ -47,8 +47,8 @@ not.
 
 ## arXiv categories
 
-- Suggested primary category: `cs.AI`
-- Possible cross-list: `cs.LG`
+- Suggested primary category: `cs.SE`
+- Possible cross-list: `cs.AI`
 
 The author must choose the final category and cross-list in arXiv after inspecting the available
 account-side choices and any endorsement requirement.
@@ -60,18 +60,20 @@ account-side choices and any endorsement requirement.
 - policy conformance
 - evidence-state transitions
 - behavioral testing
+- software testing
+- policy migration
 - structured decision making
 - trustworthy AI
 - formal verification / verification-aware systems
 
 Choose only topics actually offered by OpenReview. Likely higher-level matches are evaluation and
-benchmarks, language-model agents, trustworthy or reliable machine learning, reasoning and
-decision making, AI for science, and formal or neuro-symbolic methods.
+benchmarks, trustworthy or reliable machine learning, reasoning and decision making,
+language-model systems, and formal or neuro-symbolic methods.
 
 ## Suggested TL;DR
 
 ```text
-A hidden diagnostic and pair-balanced public challenge test one synthetic evidence-transition policy with failure-aware item, pair, and action metrics.
+Compiles behavioral differences between executable policy versions into minimum rule- and action-transition-complete regression tests, then scores model-service routes with failures end to end.
 ```
 
 ## Main empirical findings
