@@ -294,6 +294,11 @@ route change reruns the frozen pairs. Missing edge coverage, invalid output, and
 then fail separately. The experiments validate this mechanism on two authored ontologies, not its
 performance in other policy domains.
 
+The reusable boundary is any finite typed decision surface with two deterministic policy versions.
+The compiler has no ontology, prompt, model, or provider dependency, so the same release pattern can
+target admission, escalation, or authorization actions after a domain author supplies policies,
+rule witnesses, and a context grammar. These are prospective uses, not evaluated domains.
+
 \paragraph{Failure-aware scoring changes the diagnosis.}
 The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either.
 
