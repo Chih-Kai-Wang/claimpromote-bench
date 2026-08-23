@@ -1,0 +1,516 @@
+{
+  "analysis_plan_sha256": "sha256:a404966e5743243a2541db188fc913cd9a9334fed671fa42d083e0c9390571d5",
+  "execution_receipt_sha256": "sha256:6db82612f2f917e4fcd3b26e8641ccd27375a54ee7f24962e5de2ed533b45253",
+  "gate": {
+    "failure_rule": "EVERY_SERVICE_SYNTAX_SCHEMA_OR_SEMANTIC_FAILURE_IS_INCORRECT",
+    "pass_rule": "ALL_20_ITEMS_VALID_AND_CORRECT_AND_ALL_10_PAIRS_CORRECT"
+  },
+  "lanes": [
+    {
+      "full_run_sha256": "sha256:44b4b40aebdc55fce0a88ac3b469d2cef974ce92d184e00c7001e28a364cea80",
+      "lane_id": "local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2",
+      "metrics": {
+        "balanced_action_recall": 0.4583333333333333,
+        "conditional_balanced_action_recall": 0.625,
+        "conditional_item_accuracy": 0.6428571428571429,
+        "conditional_macro_f1": 0.5363636363636364,
+        "conditional_pair_accuracy": 0.3333333333333333,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 1,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 2
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 2,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 4
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 4,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 9,
+        "correct_pairs": 2,
+        "covered_pairs": 6,
+        "decision_coverage": 0.7,
+        "end_to_end_item_accuracy": 0.45,
+        "end_to_end_pair_accuracy": 0.2,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 20,
+        "macro_f1": 0.44747474747474747,
+        "pair_coverage": 0.6,
+        "pairs": 10,
+        "parse_status_counts": {
+          "OK": 14,
+          "SEMANTIC_ERROR": 6
+        },
+        "parseable_items": 14,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.5454545454545454,
+            "conditional_recall": 0.5,
+            "correct": 3,
+            "end_to_end_f1": 0.5454545454545454,
+            "end_to_end_recall": 0.5,
+            "gold_instances": 6,
+            "parseable_gold_instances": 6,
+            "precision": 0.6,
+            "predicted_instances": 5
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 2,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.8,
+            "conditional_recall": 1.0,
+            "correct": 2,
+            "end_to_end_f1": 0.4444444444444444,
+            "end_to_end_recall": 0.3333333333333333,
+            "gold_instances": 6,
+            "parseable_gold_instances": 2,
+            "precision": 0.6666666666666666,
+            "predicted_instances": 3
+          },
+          "HOLD": {
+            "conditional_f1": 0.8,
+            "conditional_recall": 1.0,
+            "correct": 4,
+            "end_to_end_f1": 0.8,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 4,
+            "precision": 0.6666666666666666,
+            "predicted_instances": 6
+          }
+        }
+      },
+      "model_family": "Mistral",
+      "strict_gate_pass": false
+    },
+    {
+      "full_run_sha256": "sha256:cb530c1379d72efed6b102e800e39accc4d4dccfef6bdb1512d61235598cd781",
+      "lane_id": "local-mlx-phi-4-policy-transition-graph-v2",
+      "metrics": {
+        "balanced_action_recall": 0.22916666666666666,
+        "conditional_balanced_action_recall": 0.5,
+        "conditional_item_accuracy": 0.8333333333333334,
+        "conditional_macro_f1": 0.41666666666666663,
+        "conditional_pair_accuracy": 0.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 4,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 2
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 1,
+              "NO_VALID_DECISION": 3
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 6
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 1,
+              "NO_VALID_DECISION": 3
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 5,
+        "correct_pairs": 0,
+        "covered_pairs": 1,
+        "decision_coverage": 0.3,
+        "end_to_end_item_accuracy": 0.25,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 1
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 20,
+        "macro_f1": 0.2833333333333333,
+        "pair_coverage": 0.1,
+        "pairs": 10,
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 4,
+          "OK": 6,
+          "SEMANTIC_ERROR": 8,
+          "TRANSPORT_ERROR": 2
+        },
+        "parseable_items": 6,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 4,
+            "end_to_end_f1": 0.8,
+            "end_to_end_recall": 0.6666666666666666,
+            "gold_instances": 6,
+            "parseable_gold_instances": 4,
+            "precision": 1.0,
+            "predicted_instances": 4
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 4,
+            "parseable_gold_instances": 1,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 6,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 1.0,
+            "correct": 1,
+            "end_to_end_f1": 0.3333333333333333,
+            "end_to_end_recall": 0.25,
+            "gold_instances": 4,
+            "parseable_gold_instances": 1,
+            "precision": 0.5,
+            "predicted_instances": 2
+          }
+        }
+      },
+      "model_family": "Phi",
+      "strict_gate_pass": false
+    }
+  ],
+  "minimum_suite_sha256": "sha256:911fedf5de57dbad9728a0b1725324416d5553c34cb9aa17864129b468fe996b",
+  "schema_version": "1.0.0",
+  "scope": {
+    "additional_model_or_client_calls": 0,
+    "deployment_reliability_claimed": false,
+    "independent_model_sample": false,
+    "natural_input_distribution_claimed": false,
+    "replaces_balanced_diagnostic_suite": false,
+    "reuses_full_transition_graph_terminal_records": true
+  },
+  "selection": {
+    "changed_rules_covered": 12,
+    "items": 20,
+    "model_outputs_consulted": false,
+    "pairs": 10,
+    "reachable_edges_covered": 10,
+    "selected_before_route_execution": true,
+    "selected_item_ids": [
+      "ptg-eva-007-a",
+      "ptg-eva-007-b",
+      "ptg-eva-013-a",
+      "ptg-eva-013-b",
+      "ptg-eva-001-a",
+      "ptg-eva-001-b",
+      "ptg-eva-031-a",
+      "ptg-eva-031-b",
+      "ptg-eva-037-a",
+      "ptg-eva-037-b",
+      "ptg-eva-043-a",
+      "ptg-eva-043-b",
+      "ptg-eva-056-a",
+      "ptg-eva-056-b",
+      "ptg-eva-052-a",
+      "ptg-eva-052-b",
+      "ptg-eva-020-a",
+      "ptg-eva-020-b",
+      "ptg-eva-028-a",
+      "ptg-eva-028-b"
+    ],
+    "selected_pair_ids": [
+      "ptg-eva-007",
+      "ptg-eva-013",
+      "ptg-eva-001",
+      "ptg-eva-031",
+      "ptg-eva-037",
+      "ptg-eva-043",
+      "ptg-eva-056",
+      "ptg-eva-052",
+      "ptg-eva-020",
+      "ptg-eva-028"
+    ]
+  },
+  "self_digest": "sha256:cb8d009d696cd8671eeb09e44d48dd5f0f2f846054dc252df8d1291d998696a8",
+  "status": "COMPLETE_PROSPECTIVE_MINIMUM_MIGRATION_SUBSET_ANALYSIS",
+  "study_id": "claimpromotebench-policy-transition-graph-local-model-replication-2026-08-v2",
+  "truth_status": "COMPUTATIONAL"
+}

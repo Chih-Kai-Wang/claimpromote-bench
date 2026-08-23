@@ -1,0 +1,944 @@
+{
+  "design": "LOCAL_MODEL_EVALUATION_OF_FROZEN_REACHABLE_POLICY_TRANSITION_GRAPH",
+  "deterministic_policy_executor": {
+    "end_to_end_item_accuracy": 1.0,
+    "end_to_end_pair_accuracy": 1.0,
+    "items": 120,
+    "label": "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE",
+    "pairs": 60
+  },
+  "failure_rule": "Every local runtime, syntax, schema, and semantic failure remains incorrect in the scheduled end-to-end denominator.",
+  "freeze": {
+    "catalog_sha256": "sha256:127f20cb3740176480ddba8debbcc722c319edc58b1f96840ba0e68244664586",
+    "dataset_fingerprint": "sha256:cf3ece1b05948214cfb60292cb655eb860c92276fd6f0c5c2a36c7618586fa13",
+    "execution_receipt_sha256": "sha256:6db82612f2f917e4fcd3b26e8641ccd27375a54ee7f24962e5de2ed533b45253",
+    "frozen_plan_commit": "e3231de232c3864728d63d9a38c7dff3fd47f726",
+    "packet_sha256": "sha256:bd155db5ce07c80ecb667eec725bf0f4e2ebe53059a636626f47955721458845",
+    "plan_sha256": "sha256:fb513469695e0bda68810b499a0a36d9e9405c189e0c9fae3cef012ecfb6760d",
+    "qualification_receipt_sha256": "sha256:fcfb02071def2cf24987252f48b3fbe02749e6be9b52b2bff75d2a5414ad13f5",
+    "schedule_sha256": "sha256:bbae8a8395228a2b84d95b3449e559572d1c86127c863dd9b729066ef39a7294",
+    "snapshot_receipt_sha256": "sha256:d537415320e41ce7dcc5964153b495a41cca1c821d9728435e4c7e251865ed81",
+    "void_attempt_receipt_sha256": "sha256:fd03cbe9d85fce23a5d9412f5d488fbb414ab0b2dd79d358851c0948f29706ae"
+  },
+  "interpretation": "The graph is derived from one author-defined executable policy over synthetic SLSA-shaped records. Results test conformance on this graph, not unseen-policy generalization, natural prevalence, deployment fitness, or model-family effects.",
+  "lanes": [
+    {
+      "generation": {
+        "max_output_tokens": 1536,
+        "sampler": "GREEDY",
+        "temperature": 0.0,
+        "top_p": 0.0
+      },
+      "lane_id": "local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2",
+      "metrics": {
+        "balanced_action_recall": 0.3402777777777778,
+        "conditional_balanced_action_recall": 0.4545940170940171,
+        "conditional_item_accuracy": 0.5633802816901409,
+        "conditional_macro_f1": 0.42468145062484686,
+        "conditional_pair_accuracy": 0.3225806451612903,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 9,
+              "DEMOTE": 0,
+              "ESCALATE": 9,
+              "HOLD": 8,
+              "NO_VALID_DECISION": 10
+            },
+            "DEMOTE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 21
+            },
+            "ESCALATE": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 13,
+              "HOLD": 3,
+              "NO_VALID_DECISION": 18
+            },
+            "HOLD": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 4,
+              "HOLD": 18,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 40,
+        "correct_pairs": 10,
+        "covered_pairs": 31,
+        "decision_coverage": 0.5916666666666667,
+        "end_to_end_item_accuracy": 0.3333333333333333,
+        "end_to_end_pair_accuracy": 0.16666666666666666,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.5,
+            "correct_pairs": 3,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.5,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.2,
+            "correct_pairs": 1,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.16666666666666666,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.8333333333333334,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 5,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.8333333333333334,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 6,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.3611884919705979,
+        "pair_coverage": 0.5166666666666667,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 71,
+          "SEMANTIC_ERROR": 49
+        },
+        "parseable_items": 71,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.4285714285714286,
+            "conditional_recall": 0.34615384615384615,
+            "correct": 9,
+            "end_to_end_f1": 0.34615384615384615,
+            "end_to_end_recall": 0.25,
+            "gold_instances": 36,
+            "parseable_gold_instances": 26,
+            "precision": 0.5625,
+            "predicted_instances": 16
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 24,
+            "parseable_gold_instances": 3,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.5909090909090908,
+            "conditional_recall": 0.7222222222222222,
+            "correct": 13,
+            "end_to_end_f1": 0.4193548387096774,
+            "end_to_end_recall": 0.3611111111111111,
+            "gold_instances": 36,
+            "parseable_gold_instances": 18,
+            "precision": 0.5,
+            "predicted_instances": 26
+          },
+          "HOLD": {
+            "conditional_f1": 0.679245283018868,
+            "conditional_recall": 0.75,
+            "correct": 18,
+            "end_to_end_f1": 0.679245283018868,
+            "end_to_end_recall": 0.75,
+            "gold_instances": 24,
+            "parseable_gold_instances": 24,
+            "precision": 0.6206896551724138,
+            "predicted_instances": 29
+          }
+        }
+      },
+      "model_family": "Mistral",
+      "model_requested": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
+      "model_revision": "2a1d5eabfc504747bdc24178394821a1efc0edde",
+      "provider": "Local MLX",
+      "quantization": "4-bit MLX community snapshot",
+      "run_sha256": "sha256:44b4b40aebdc55fce0a88ac3b469d2cef974ce92d184e00c7001e28a364cea80"
+    },
+    {
+      "generation": {
+        "max_output_tokens": 1536,
+        "sampler": "GREEDY",
+        "temperature": 0.0,
+        "top_p": 0.0
+      },
+      "lane_id": "local-mlx-phi-4-policy-transition-graph-v2",
+      "metrics": {
+        "balanced_action_recall": 0.20486111111111113,
+        "conditional_balanced_action_recall": 0.7083333333333334,
+        "conditional_item_accuracy": 0.627906976744186,
+        "conditional_macro_f1": 0.5869565217391305,
+        "conditional_pair_accuracy": 0.25,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 21,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 15
+            },
+            "DEMOTE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 12,
+              "NO_VALID_DECISION": 9
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 1,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 35
+            },
+            "HOLD": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 5,
+              "NO_VALID_DECISION": 18
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 27,
+        "correct_pairs": 2,
+        "covered_pairs": 8,
+        "decision_coverage": 0.35833333333333334,
+        "end_to_end_item_accuracy": 0.225,
+        "end_to_end_pair_accuracy": 0.03333333333333333,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 4,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.6666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 2,
+            "covered_pairs": 2,
+            "end_to_end_pair_accuracy": 0.3333333333333333,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.3333333333333333,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 2,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.3333333333333333,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.24662027081059468,
+        "pair_coverage": 0.13333333333333333,
+        "pairs": 60,
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 23,
+          "OK": 43,
+          "SCHEMA_ERROR": 2,
+          "SEMANTIC_ERROR": 49,
+          "TRANSPORT_ERROR": 3
+        },
+        "parseable_items": 43,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.9130434782608696,
+            "conditional_recall": 1.0,
+            "correct": 21,
+            "end_to_end_f1": 0.6885245901639344,
+            "end_to_end_recall": 0.5833333333333334,
+            "gold_instances": 36,
+            "parseable_gold_instances": 21,
+            "precision": 0.84,
+            "predicted_instances": 25
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 24,
+            "parseable_gold_instances": 15,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 1,
+            "end_to_end_f1": 0.05405405405405406,
+            "end_to_end_recall": 0.027777777777777776,
+            "gold_instances": 36,
+            "parseable_gold_instances": 1,
+            "precision": 1.0,
+            "predicted_instances": 1
+          },
+          "HOLD": {
+            "conditional_f1": 0.4347826086956522,
+            "conditional_recall": 0.8333333333333334,
+            "correct": 5,
+            "end_to_end_f1": 0.24390243902439027,
+            "end_to_end_recall": 0.20833333333333334,
+            "gold_instances": 24,
+            "parseable_gold_instances": 6,
+            "precision": 0.29411764705882354,
+            "predicted_instances": 17
+          }
+        }
+      },
+      "model_family": "Phi",
+      "model_requested": "mlx-community/phi-4-4bit",
+      "model_revision": "fc0f8f23d369dc29b55cad1d65cb5bf0dcbee910",
+      "provider": "Local MLX",
+      "quantization": "4-bit MLX community snapshot",
+      "run_sha256": "sha256:cb530c1379d72efed6b102e800e39accc4d4dccfef6bdb1512d61235598cd781"
+    }
+  ],
+  "registered_shortcut_result": "The profile-blind comparator receives identical features for both members. Its end-to-end pair accuracy tests the frozen shortcut boundary.",
+  "schema_version": "1.0.0",
+  "status": "COMPLETE",
+  "structured_random_forest_comparators": {
+    "policy_aware": {
+      "metrics": {
+        "balanced_action_recall": 0.892361111111111,
+        "conditional_balanced_action_recall": 0.892361111111111,
+        "conditional_item_accuracy": 0.8916666666666667,
+        "conditional_macro_f1": 0.8941098370878585,
+        "conditional_pair_accuracy": 0.7833333333333333,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 32,
+              "DEMOTE": 3,
+              "ESCALATE": 1,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 24,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 3,
+              "DEMOTE": 1,
+              "ESCALATE": 32,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "HOLD": {
+              "ALLOW": 5,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 19,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 107,
+        "correct_pairs": 47,
+        "covered_pairs": 60,
+        "decision_coverage": 1.0,
+        "end_to_end_item_accuracy": 0.8916666666666667,
+        "end_to_end_pair_accuracy": 0.7833333333333333,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.6666666666666666,
+            "correct_pairs": 4,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.6666666666666666,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 6,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.8333333333333334,
+            "correct_pairs": 5,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.8333333333333334,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.8333333333333334,
+            "correct_pairs": 5,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.8333333333333334,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.8333333333333334,
+            "correct_pairs": 5,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.8333333333333334,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 6,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 1.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.6666666666666666,
+            "correct_pairs": 4,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.6666666666666666,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.6666666666666666,
+            "correct_pairs": 4,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.6666666666666666,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.8333333333333334,
+            "correct_pairs": 5,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.8333333333333334,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.5,
+            "correct_pairs": 3,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.5,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.8941098370878585,
+        "pair_coverage": 1.0,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 120
+        },
+        "parseable_items": 120,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.8421052631578948,
+            "conditional_recall": 0.8888888888888888,
+            "correct": 32,
+            "end_to_end_f1": 0.8421052631578948,
+            "end_to_end_recall": 0.8888888888888888,
+            "gold_instances": 36,
+            "parseable_gold_instances": 36,
+            "precision": 0.8,
+            "predicted_instances": 40
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.923076923076923,
+            "conditional_recall": 1.0,
+            "correct": 24,
+            "end_to_end_f1": 0.923076923076923,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 24,
+            "parseable_gold_instances": 24,
+            "precision": 0.8571428571428571,
+            "predicted_instances": 28
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.927536231884058,
+            "conditional_recall": 0.8888888888888888,
+            "correct": 32,
+            "end_to_end_f1": 0.927536231884058,
+            "end_to_end_recall": 0.8888888888888888,
+            "gold_instances": 36,
+            "parseable_gold_instances": 36,
+            "precision": 0.9696969696969697,
+            "predicted_instances": 33
+          },
+          "HOLD": {
+            "conditional_f1": 0.8837209302325582,
+            "conditional_recall": 0.7916666666666666,
+            "correct": 19,
+            "end_to_end_f1": 0.8837209302325582,
+            "end_to_end_recall": 0.7916666666666666,
+            "gold_instances": 24,
+            "parseable_gold_instances": 24,
+            "precision": 1.0,
+            "predicted_instances": 19
+          }
+        }
+      },
+      "predictions_sha256": "sha256:3d9d5a4dcf87b2dc05eac05810db35b315d2b4150dc28f173332ce0c0315171f",
+      "scope": "STRUCTURED_CLASSIFIER_WITH_ACTIVE_PROFILE"
+    },
+    "profile_blind": {
+      "metrics": {
+        "balanced_action_recall": 0.5277777777777778,
+        "conditional_balanced_action_recall": 0.5277777777777778,
+        "conditional_item_accuracy": 0.475,
+        "conditional_macro_f1": 0.4655677655677656,
+        "conditional_pair_accuracy": 0.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 9,
+              "DEMOTE": 12,
+              "ESCALATE": 7,
+              "HOLD": 8,
+              "NO_VALID_DECISION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 24,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 8,
+              "DEMOTE": 12,
+              "ESCALATE": 10,
+              "HOLD": 6,
+              "NO_VALID_DECISION": 0
+            },
+            "HOLD": {
+              "ALLOW": 7,
+              "DEMOTE": 0,
+              "ESCALATE": 3,
+              "HOLD": 14,
+              "NO_VALID_DECISION": 0
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 57,
+        "correct_pairs": 0,
+        "covered_pairs": 60,
+        "decision_coverage": 1.0,
+        "end_to_end_item_accuracy": 0.475,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "allow_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "demote_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_demote",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "escalate_to_hold",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_allow",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 6,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "hold_to_escalate",
+            "family": "directed_policy_action_transition",
+            "pair_coverage": 1.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 120,
+        "macro_f1": 0.4655677655677656,
+        "pair_coverage": 1.0,
+        "pairs": 60,
+        "parse_status_counts": {
+          "OK": 120
+        },
+        "parseable_items": 120,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.3,
+            "conditional_recall": 0.25,
+            "correct": 9,
+            "end_to_end_f1": 0.3,
+            "end_to_end_recall": 0.25,
+            "gold_instances": 36,
+            "parseable_gold_instances": 36,
+            "precision": 0.375,
+            "predicted_instances": 24
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.6666666666666666,
+            "conditional_recall": 1.0,
+            "correct": 24,
+            "end_to_end_f1": 0.6666666666666666,
+            "end_to_end_recall": 1.0,
+            "gold_instances": 24,
+            "parseable_gold_instances": 24,
+            "precision": 0.5,
+            "predicted_instances": 48
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.35714285714285715,
+            "conditional_recall": 0.2777777777777778,
+            "correct": 10,
+            "end_to_end_f1": 0.35714285714285715,
+            "end_to_end_recall": 0.2777777777777778,
+            "gold_instances": 36,
+            "parseable_gold_instances": 36,
+            "precision": 0.5,
+            "predicted_instances": 20
+          },
+          "HOLD": {
+            "conditional_f1": 0.5384615384615384,
+            "conditional_recall": 0.5833333333333334,
+            "correct": 14,
+            "end_to_end_f1": 0.5384615384615384,
+            "end_to_end_recall": 0.5833333333333334,
+            "gold_instances": 24,
+            "parseable_gold_instances": 24,
+            "precision": 0.5,
+            "predicted_instances": 28
+          }
+        }
+      },
+      "predictions_sha256": "sha256:494c959131739a35fadaaed4561555c5498147acae89a1a116aa5875658bc5ac",
+      "scope": "FEATURE_ABLATED_CLASSIFIER_WITHOUT_ACTIVE_PROFILE"
+    }
+  },
+  "study_id": "claimpromotebench-policy-transition-graph-local-model-replication-2026-08-v2",
+  "truth_status": "COMPUTATIONAL"
+}
