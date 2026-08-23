@@ -1,0 +1,47 @@
+{
+  "inference_backend": {
+    "package": "mlx-lm",
+    "version": "0.31.3"
+  },
+  "lanes": [
+    {
+      "lane_stem": "local-mlx-mistral-small-3.2-24b",
+      "license": "Apache-2.0",
+      "license_url": "https://huggingface.co/mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
+      "model_family": "Mistral",
+      "model_repo": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
+      "model_revision": "2a1d5eabfc504747bdc24178394821a1efc0edde",
+      "trust_remote_code": false
+    },
+    {
+      "lane_stem": "local-mlx-phi-4",
+      "license": "MIT",
+      "license_url": "https://huggingface.co/mlx-community/phi-4-4bit",
+      "model_family": "Phi",
+      "model_repo": "mlx-community/phi-4-4bit",
+      "model_revision": "fc0f8f23d369dc29b55cad1d65cb5bf0dcbee910",
+      "trust_remote_code": true
+    }
+  ],
+  "schema_version": "1.0.0",
+  "selection_boundary": {
+    "benchmark_accuracy_or_labels_consulted": false,
+    "criteria": [
+      "distinct model families",
+      "text-generation chat templates supported by one pinned MLX-LM backend",
+      "four-bit snapshots sized for sequential execution on the authorized 24 GB Apple Silicon host",
+      "licenses permit artifact documentation and reproducible download instructions"
+    ],
+    "models_selected_before_any_benchmark_inference": true,
+    "purpose": "Add locally replayable route breadth; not estimate a model population or identify model-family effects."
+  },
+  "shared_generation": {
+    "client_retries": 0,
+    "max_output_tokens": 1536,
+    "prompt_mode": "USER_ONLY_CHAT_TEMPLATE",
+    "sampler": "GREEDY",
+    "temperature": 0.0,
+    "top_p": 0.0
+  },
+  "status": "PREINFERENCE_LOCAL_MODEL_CATALOG"
+}

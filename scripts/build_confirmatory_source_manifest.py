@@ -58,6 +58,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/analyze_public_model_breadth_study.py",
     "scripts/analyze_slsa_portability_study.py",
     "scripts/analyze_policy_switch_study.py",
+    "scripts/analyze_local_model_replication.py",
     "scripts/build_policy_switch_study.py",
     "scripts/build_slsa_portability_study.py",
     "scripts/build_local_release_kit.py",
@@ -66,12 +67,16 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_r6_reporting_addendum.py",
     "scripts/finalize_public_model_breadth_study.py",
     "scripts/finalize_synthetic_policy_results.py",
+    "scripts/freeze_local_model_replications.py",
     "scripts/freeze_slsa_portability_study.py",
     "scripts/freeze_policy_switch_study.py",
     "scripts/policy_switch.py",
+    "scripts/local_model_replication.py",
+    "scripts/qualify_local_model_environment.py",
     "scripts/run_public_model_breadth_study.py",
     "scripts/run_slsa_portability_study.py",
     "scripts/run_policy_switch_study.py",
+    "scripts/run_local_model_replication.py",
     "scripts/slsa_policy.py",
     "scripts/snapshot_slsa_portability_catalog.py",
     "scripts/train_slsa_structured_baseline.py",
@@ -80,6 +85,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/validate_slsa_portability_freeze.py",
     "scripts/validate_slsa_portability_study.py",
     "scripts/validate_policy_switch_study.py",
+    "scripts/validate_local_model_replications.py",
 }
 
 

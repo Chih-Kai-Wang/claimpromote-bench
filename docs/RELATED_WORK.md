@@ -15,8 +15,15 @@ A paper-preparation search was refreshed on **2026-08-23** after the r6 addendum
 - `evidence state agent benchmark`;
 - `verifier governed claim state research agent`.
 - `rule following benchmark explicit policy language model`.
+- `policy conditioned agent benchmark active policy switch`;
+- `business rule flow benchmark language model`;
+- `policy document internalization LLM agent benchmark`.
 
-The refresh identified several closer conceptual neighbors than the earlier survey: SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report. Their existence materially narrows the novelty language. ClaimPromoteBench should **not** claim to have invented evidence-state maintenance, claim ledgers, or verifier-governed claim updates.
+The refresh identified closer conceptual neighbors than the earlier survey: SeekBench, Omni-Decision,
+EviGraph, the contemporaneous ClaimLedger technical report, and three 2026 policy-reasoning
+benchmarks. Their existence materially narrows the novelty language. ClaimPromoteBench should
+**not** claim to have invented evidence-state maintenance, claim ledgers, policy reasoning, or
+verifier-governed updates.
 
 | Work | What it directly evaluates/builds | Boundary with ClaimPromoteBench |
 |---|---|---|
@@ -28,6 +35,9 @@ The refresh identified several closer conceptual neighbors than the earlier surv
 | CORE-Bench (TMLR 2025) | Computational reproduction of published work | Reproduction correctness, not transitions across orthogonal evidence states |
 | POPPER (ICML 2025) | Sequential falsification with statistical error control | Hypothesis testing, not versioned state-transition governance |
 | RuleArena (ACL 2025) | Long-context natural-language rule application in airline, basketball, and tax scenarios | Domain rule-guided answers, not four-way transitions over a typed evidence ledger under a machine-readable policy |
+| PolicyLLM / PolicyBench (ACL Findings 2026) | Bilingual public-policy memorization, understanding, and application over 21K cases | Broad policy comprehension, not matched evidence and policy interventions with an executable transition oracle |
+| Analyzing and Internalizing Complex Policy Documents for LLM Agents (ACL 2026) | A controllable-complexity generator and methods for internalizing in-context business policies | Policy complexity and internalization, not whether the same evidence induces the prescribed action after only the active policy changes |
+| Business as Rulesual / BREX (ACL 2026) | Extraction of rules, operators, and dependencies from real business documents | Rule-flow reconstruction from unstructured text, not conformance of a structured decision route to an already published executable policy |
 | OSVBench (AAAI 2026) | Formal specification generation for operating-system verification | Specification synthesis, not whether heterogeneous evidence licenses a state change |
 | SeekBench (2025 preprint) | Grounding, recovery, and readiness/calibration as evidence quality changes during information seeking | Evidence sufficiency affects answer readiness, but the benchmark target is not a four-way research-claim state-transition oracle |
 | Omni-Decision (2026 preprint) | Progressive query-scoped evidence state with deterministic updates for multimodal QA | Explicit evidence-state maintenance is prior art; ClaimPromoteBench instead evaluates admissibility under a frozen research-transition policy |
@@ -38,17 +48,24 @@ The refresh identified several closer conceptual neighbors than the earlier surv
 
 The defensible claim is deliberately narrower:
 
-> **ClaimPromoteBench turns versioned policy-governed research-claim transition admissibility into a controlled, artifact-bound evaluation problem.**
+> **ClaimPromoteBench turns policy-conditioned state-transition conformance into a failure-aware,
+> controlled-pair evaluation problem.**
 
 Its distinctive evaluation choices are the combination of:
 
 1. an explicit four-action oracle (`ALLOW`, `HOLD`, `DEMOTE`, `ESCALATE`);
-2. orthogonal evidence-state axes rather than a scalar confidence ladder;
-3. controlled pairs that hold the claim and requested transition fixed while perturbing registered policy prerequisites;
-4. executable numerical and pinned-formal evidence bindings;
-5. raw-intent versus deterministic-enforcement evaluation;
-6. preregistered public-dev/private-hidden construction and pre-inference commitment;
-7. fail-closed artifact and run validation.
+2. evidence-contrast pairs that hold policy and requested transition fixed while changing one
+   registered prerequisite;
+3. policy-contrast pairs that hold evidence, state, artifact, and request fixed while changing only
+   the published active policy profile;
+4. the same protocol exercised over authored research-evidence and software-artifact-admission
+   ontologies;
+5. item, pair, action, coverage, and conditional metrics that keep every scheduled route or output
+   failure in the end-to-end denominator;
+6. frozen one-call, zero-retry execution with replayable item records and fail-closed artifact
+   validation; and
+7. learned comparators that expose both fixed-policy learnability and the registered
+   profile-oblivious shortcut boundary.
 
 This is not a truth benchmark. A transition can be admissible under the public policy while the underlying research claim remains scientifically wrong, unimportant, or semantically misstated; conversely, a true claim may correctly remain unpromoted because required evidence is absent.
 
@@ -58,7 +75,11 @@ Do **not** use “first benchmark,” “first system,” “first claim ledger,
 
 Safe language for the current manuscript is:
 
-> Existing work studies claim verification, evidence-state maintenance, abstention, reproducibility, and verifier-governed claim workflows. ClaimPromoteBench focuses on a narrower evaluation target: whether a requested research-claim evidence-state transition is admissible under a frozen versioned policy, using matched prerequisite interventions and artifact-bound evidence.
+> Existing work studies policy comprehension, rule extraction, claim verification, abstention, and
+> verifier-governed workflows. ClaimPromoteBench evaluates a narrower boundary: whether a
+> model-mediated route emits the action prescribed by a published transition policy. Matched pairs
+> isolate changes in either one evidence prerequisite or the active policy itself, while end-to-end
+> scoring retains all scheduled service and output failures.
 
 ## Remaining citation gate
 
