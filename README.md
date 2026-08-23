@@ -77,6 +77,10 @@ gate by 83.3% relative to the 60-pair graph suite. The full suite remains the di
 six-context-per-edge evidence, factor localization, and stochastic-route assessment. Neither the
 mutation family nor the minimum suite estimates production fault prevalence.
 
+This division supports two reproducible release operations. A policy change regenerates the
+difference set, adequacy certificates, and minimum gate; a model, prompt, decoder, adapter, or
+provider change replays the already frozen pairs.
+
 A separately frozen 40-cell hosted execution of this minimum suite was excluded in full after all
 cells returned explicit shared-quota exhaustion. It supplies no model-efficacy row and was not
 retried; the public-safe artifact retains only a redacted all-or-nothing exclusion receipt.

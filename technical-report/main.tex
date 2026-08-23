@@ -312,7 +312,13 @@ actions. The compiler applies to finite typed decision surfaces, but we validate
 authored ontologies; admission, escalation, and authorization remain prospective uses.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
-The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete pairs across the two routes. The local routes show the complementary case on the same frozen corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness, and end-to-end correctness distinguishes these layers without discarding either. The balanced challenge also exposes class asymmetry hidden by r6: Qwen and Flash recover only 4/30 and 0/30 \demote{} items.
+The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair
+accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete
+pairs across the two routes. The local routes show the complementary case on the same frozen
+corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness,
+and end-to-end correctness distinguishes these layers. On the balanced challenge, Qwen's 48/64
+conditional pair score becomes 48/90 end to end; Flash's 13/61 becomes 13/90. Their 4/30 and 0/30
+\demote{} recalls expose a class asymmetry hidden by r6.
 
 \paragraph{The protocol evaluates a model boundary; it does not advocate one.}
 When policy and evidence are fully structured, a deterministic executor should enforce the transition. The learned routes emulate systems that already place a model at this tool-facing boundary. \cpb tests that boundary; it does not show that a model is preferable to the executor.
@@ -342,7 +348,12 @@ Generative AI tools assisted literature search, planning, code and benchmark dra
 
 \section{Conclusion}
 
-\cpb compiles policy revisions into paired, failure-aware state-transition tests. It exposes profile-oblivious shortcuts and rule-complete suites that miss reachable action changes, while providing minimum and diagnostic release gates. Natural policies, evidence extraction, and controlled model comparisons remain open tests.
+\cpb turns executable policy revisions into paired route tests with two oracle-side adequacy axes.
+On the authored migration, rule coverage misses four of ten reachable action edges; the exact
+minimum joint gate retains all 12 changed rules in 20 calls. Across five frozen studies, gaps
+between end-to-end and conditional scores and low \demote{} recall separate route validity from
+action conformance. These results support regression testing of finite typed policy surfaces, not
+naturalistic policy validity or causal model comparisons.
 
 \bibliographystyle{plain}
 \bibliography{references}
