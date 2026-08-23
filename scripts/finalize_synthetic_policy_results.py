@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import Counter
@@ -122,6 +123,7 @@ def finalize(
     privacy_path: Path,
     failure_path: Path,
     receipt_path: Path,
+    credential_env: str | None,
 ) -> Json:
     plan = load_json(plan_path)
     schedule = load_json(schedule_path)
@@ -223,8 +225,14 @@ def finalize(
             "hidden_reasoning_blocks": 0,
             "hidden_reasoning_text_keys": 0,
             "provider_response_identifiers": 0,
+            "exact_supplied_credential": 0,
         }
     )
+    supplied_credential: str | None = None
+    if credential_env is not None:
+        supplied_credential = os.environ.get(credential_env)
+        if not supplied_credential or supplied_credential != supplied_credential.strip():
+            fail(f"credential environment variable is absent or malformed: {credential_env}")
     for path in (
         plan_path,
         schedule_path,
@@ -237,6 +245,8 @@ def finalize(
         text = path.read_text(encoding="utf-8", errors="replace")
         for name, pattern in {**SECRET_PATTERNS, **PROVIDER_RESPONSE_PATTERNS}.items():
             findings[name] += len(pattern.findall(text))
+        if supplied_credential is not None:
+            findings["exact_supplied_credential"] += text.count(supplied_credential)
     inspect_sensitive(all_records, "terminal records", findings)
     if any(findings.values()):
         fail(f"sensitive-field scan found nonzero counts: {dict(sorted(findings.items()))}")
@@ -324,6 +334,7 @@ def main() -> int:
     parser.add_argument("--privacy-out", type=Path, required=True)
     parser.add_argument("--failure-out", type=Path, required=True)
     parser.add_argument("--receipt-out", type=Path, required=True)
+    parser.add_argument("--credential-env")
     args = parser.parse_args()
     receipt = finalize(
         args.plan.resolve(),
@@ -336,6 +347,7 @@ def main() -> int:
         args.privacy_out.resolve(),
         args.failure_out.resolve(),
         args.receipt_out.resolve(),
+        args.credential_env,
     )
     print(canonical_json({"status": receipt["status"], "study_id": receipt["study_id"]}))
     return 0

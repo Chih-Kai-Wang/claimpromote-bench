@@ -274,6 +274,9 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
 
     assert "def validate_fresh_confirmatory" in validator
     assert "def validate_balanced_public_challenge" in validator
+    assert "def validate_slsa_portability" in validator
+    assert "def validate_policy_switch" in validator
+    assert "def validate_synthetic_policy_evidence" in validator
     assert "def validate_capable_hidden" not in validator
     assert "def validate_public_model_breadth" not in validator
     assert "def validate_v1_" not in validator
