@@ -1057,6 +1057,263 @@ no model calls and changes no primary endpoint, confusion cell, recall, or item-
     write_json(destination / "MANIFEST.json", manifest)
 
 
+SYNTHETIC_POLICY_ROW_FIELDS = (
+    "actual_cost_usd",
+    "cost_status",
+    "dataset_manifest_sha256",
+    "evidence_ceiling",
+    "finish_reason",
+    "frozen_plan_commit",
+    "item_id",
+    "lane_id",
+    "latency_ms",
+    "model_family",
+    "model_requested",
+    "model_returned",
+    "packet_sha256",
+    "pair_id",
+    "parse_error_detail",
+    "parse_status",
+    "phase",
+    "postgate_decision",
+    "prompt_sha256",
+    "provider",
+    "provider_response_id",
+    "raw_decision",
+    "raw_response_sha256",
+    "raw_response_text",
+    "request_sha256",
+    "request_started_at_utc",
+    "response_format_sha256",
+    "response_received_at_utc",
+    "routed_provider",
+    "schema_version",
+    "study_id",
+    "system_fingerprint",
+    "transport_error",
+    "transport_status",
+    "usage",
+)
+
+
+def _synthetic_policy_manifest(destination: Path, *, study_kind: str, lane_files: Json) -> None:
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_SYNTHETIC_POLICY_EVIDENCE",
+        "study_kind": study_kind,
+        "file_count": len(files),
+        "files": files,
+        "lane_files": lane_files,
+        "scope": {
+            "credentials_included": False,
+            "hidden_reasoning_included": False,
+            "provider_response_identifiers_included": False,
+            "source_repository_or_commit_identity_included": False,
+            "raw_final_response_text_included": False,
+            "item_level_structured_decisions_included": True,
+            "all_scheduled_terminal_failures_included": True,
+        },
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def _project_synthetic_policy_runs(
+    source_results: Path,
+    destination: Path,
+    *,
+    expected_lane_ids: set[str],
+) -> Json:
+    lane_files: Json = {}
+    run_root = destination / "runs"
+    for source_run in sorted(source_results.glob("*.jsonl")):
+        rows = [
+            json.loads(line)
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        lane_ids = {str(row.get("lane_id")) for row in rows}
+        if len(rows) != 120 or len(lane_ids) != 1:
+            fail(f"synthetic-policy run has invalid coverage: {source_run.name}")
+        lane_id = next(iter(lane_ids))
+        if lane_id not in expected_lane_ids or lane_id in lane_files:
+            fail(f"synthetic-policy run has an unknown or duplicate lane: {lane_id}")
+        projected_rows: list[Json] = []
+        for row in rows:
+            _reject_hidden_reasoning(row, f"synthetic-policy row {row.get('item_id')}")
+            if row.get("provider_response_id") not in (None, ""):
+                fail(f"synthetic-policy run retained a provider response ID: {row.get('item_id')}")
+            projected: Json = {key: deepcopy(row.get(key)) for key in SYNTHETIC_POLICY_ROW_FIELDS}
+            projected["raw_response_text"] = None
+            projected["raw_response_sha256"] = None
+            projected["parse_error_detail"] = None
+            projected["transport_error"] = None
+            projected["provider_response_id"] = None
+            projected["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
+            projected_rows.append(anonymize_provenance(projected))
+        target = run_root / source_run.name
+        write_jsonl(target, projected_rows)
+        lane_files[lane_id] = f"runs/{source_run.name}"
+    if set(lane_files) != expected_lane_ids:
+        fail("synthetic-policy result lane set differs from the frozen plan")
+    return lane_files
+
+
+def _project_synthetic_policy_aggregate(
+    source: Json,
+    destination: Path,
+    lane_files: Json,
+    *,
+    execution_receipt_sha256: str | None = None,
+) -> Json:
+    aggregate = anonymize_provenance(source)
+    freeze = aggregate.get("freeze")
+    if isinstance(freeze, dict):
+        freeze["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
+        if execution_receipt_sha256 is not None:
+            freeze["execution_receipt_sha256"] = execution_receipt_sha256
+    lanes = aggregate.get("lanes")
+    if not isinstance(lanes, list):
+        fail("synthetic-policy aggregate lacks lanes")
+    for lane in lanes:
+        if not isinstance(lane, dict):
+            fail("synthetic-policy aggregate lane is malformed")
+        lane_id = str(lane.get("lane_id"))
+        relative = lane_files.get(lane_id)
+        if not isinstance(relative, str):
+            fail(f"synthetic-policy aggregate has an unknown lane: {lane_id}")
+        lane["run_sha256"] = sha256_file(destination / relative)
+    return aggregate
+
+
+def _project_synthetic_policy_execution_receipt(
+    source: Json, destination: Path, lane_files: Json
+) -> Json:
+    receipt = anonymize_provenance(source)
+    receipt["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
+    receipt["request_intent_journal_sha256"] = None
+    receipt["terminal_journal_sha256"] = None
+    receipt["source_journal_digests_included"] = False
+    receipt["lane_output_sha256"] = {
+        Path(str(relative)).name: sha256_file(destination / str(relative))
+        for relative in lane_files.values()
+    }
+    return receipt
+
+
+def build_slsa_portability_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "slsa-portability-v1"
+    replacement = source / "replacement-v2"
+    plan = load_object(replacement / "study-plan.json")
+    aggregate = load_object(replacement / "results" / "aggregate.json")
+    expected_lanes = {str(row["lane_id"]) for row in plan["formal_lanes"]}
+    if aggregate.get("status") != "COMPLETE":
+        fail("SLSA portability aggregate is not complete")
+
+    copy_tree(replacement / "dataset", destination / "dataset")
+    copy_tree(replacement / "baseline", destination / "baseline")
+    copy_file(source / "policy-contract.json", destination / "policy-contract.json")
+    copy_file(source / "source-registry.json", destination / "source-registry.json")
+    copy_file(
+        replacement / "source-validation-receipt.json",
+        destination / "source-validation-receipt.json",
+    )
+    void_receipt = anonymize_provenance(
+        load_object(source / "void-attempt-v1" / "void-receipt.json")
+    )
+    void_receipt["frozen_plan_commit"] = "0000000000000000000000000000000000000011"
+    void_receipt["journal_sha256"] = None
+    void_receipt["source_journal_digest_included"] = False
+    write_json(destination / "void-exclusion-receipt.json", void_receipt)
+    for name in ("study-plan.json", "request-schedule.json"):
+        write_json(destination / name, anonymize_provenance(load_object(replacement / name)))
+    lane_files = _project_synthetic_policy_runs(
+        replacement / "results", destination, expected_lane_ids=expected_lanes
+    )
+    execution_receipt = _project_synthetic_policy_execution_receipt(
+        load_object(replacement / "results" / "execution-receipt.json"),
+        destination,
+        lane_files,
+    )
+    write_json(destination / "execution-receipt.json", execution_receipt)
+    write_json(
+        destination / "reported-aggregate.json",
+        _project_synthetic_policy_aggregate(aggregate, destination, lane_files),
+    )
+    (destination / "README.md").write_text(
+        """# SLSA-derived portability reviewer evidence
+
+This directory contains the complete 120-item, 60-pair second-policy study. SLSA and in-toto
+ground the evidence fields; the transition policy and labels are author-defined. Every scheduled
+service or output failure remains in the end-to-end denominator. The incomplete predecessor is
+excluded by `void-exclusion-receipt.json`; its raw records are omitted.
+
+Raw response text, free-form provider errors, credentials, provider response IDs, hidden reasoning,
+and source repository or commit identity are excluded. Structured decisions, parser classes,
+usage, timings, hashes, gold labels, pair membership, and complete failure cells remain.
+""",
+        encoding="utf-8",
+    )
+    _synthetic_policy_manifest(
+        destination, study_kind="SLSA_DERIVED_POLICY_PORTABILITY", lane_files=lane_files
+    )
+
+
+def build_policy_switch_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "policy-switch-v1"
+    frozen = source / "frozen"
+    plan = load_object(frozen / "study-plan.json")
+    aggregate = load_object(frozen / "results" / "aggregate.json")
+    expected_lanes = {str(row["lane_id"]) for row in plan["formal_lanes"]}
+    if aggregate.get("status") != "COMPLETE":
+        fail("policy-switch aggregate is not complete")
+
+    copy_tree(frozen / "dataset", destination / "dataset")
+    copy_tree(frozen / "baseline", destination / "baseline")
+    copy_file(source / "policy-contract.json", destination / "policy-contract.json")
+    for name in ("study-plan.json", "request-schedule.json"):
+        write_json(destination / name, anonymize_provenance(load_object(frozen / name)))
+    lane_files = _project_synthetic_policy_runs(
+        frozen / "results", destination, expected_lane_ids=expected_lanes
+    )
+    execution_receipt = _project_synthetic_policy_execution_receipt(
+        load_object(frozen / "results" / "execution-receipt.json"), destination, lane_files
+    )
+    write_json(destination / "execution-receipt.json", execution_receipt)
+    write_json(
+        destination / "reported-aggregate.json",
+        _project_synthetic_policy_aggregate(
+            aggregate,
+            destination,
+            lane_files,
+            execution_receipt_sha256=sha256_file(destination / "execution-receipt.json"),
+        ),
+    )
+    (destination / "README.md").write_text(
+        """# Counterfactual policy-switch reviewer evidence
+
+Each of the 60 pairs holds the artifact, evidence, current state, and requested state fixed while
+changing only the published active policy profile. Both profiles and all labels are author-defined
+test instruments. The policy-aware and profile-blind Random Forest comparators were trained on the
+development split before scored inference.
+
+Every scheduled service or output failure remains in the end-to-end denominator. Raw response
+text, free-form provider errors, credentials, provider response IDs, hidden reasoning, and source
+repository or commit identity are excluded; structured decisions and all metric-bearing fields
+remain.
+""",
+        encoding="utf-8",
+    )
+    _synthetic_policy_manifest(
+        destination, study_kind="COUNTERFACTUAL_POLICY_PROFILE_SWITCH", lane_files=lane_files
+    )
+
+
 def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
     """Create a replayable anonymous projection of the seven-lane breadth supplement."""
 
@@ -1389,7 +1646,8 @@ def review_readme() -> str:
 
 This focused bundle contains the material needed to replay the paper: the public controlled
 benchmark, executable and Lean fixtures, the reviewer-release r6 data, the pair-balanced public
-challenge, and item-level scoring records. It
+challenge, the SLSA-derived portability study, the counterfactual policy-switch study, and
+item-level scoring records. It
 contains no Git history, author metadata, public repository link, private construction seed,
 human-subject record, or public workflow identifier.
 
@@ -1408,10 +1666,11 @@ if `lake` is missing.
 Use `--python-only` for an explicitly partial replay when Lean is unavailable.
 
 The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
-records, and analysis, together with the 180-item public challenge and both service routes. The
-balanced-challenge records retain the model's final JSON text and sanitized error text for parser
-audit. Provider account and response identifiers, credentials, author provenance, and hidden
-reasoning are excluded.
+records, and analysis; the 180-item public challenge; and both 120-item software-supply-chain
+studies. The balanced-challenge records retain the model's final JSON text and sanitized error text
+for parser audit. The newer studies retain structured decisions but omit raw response text and
+free-form provider errors. Provider account and response identifiers, credentials, author
+provenance, and hidden reasoning are excluded.
 
 ## Scope limitation
 
@@ -1427,6 +1686,13 @@ The challenge is pair-balanced and non-ALLOW-balanced, with gold support 90/30/3
 four-class-balanced hidden test. Its service stacks differ, so their outcomes do not form a causal
 model ablation. Every unusable r6 or challenge response remains in the registered denominator. The
 top-level manifest records the generated tree's actual file count.
+
+The SLSA-derived study tests protocol portability to a second authored policy ontology. The
+policy-switch study then holds evidence and states fixed while changing only the applicable
+published policy profile. SLSA and in-toto ground the evidence vocabulary; all transition rules,
+profiles, and labels remain author-defined. These studies are not standards certification,
+naturalistic deployment estimates, or between-route causal comparisons. Every scheduled failure
+remains in the end-to-end denominator.
 
 The frozen naturalistic-candidate pool contains 12 source pointers. Source-level review created
 zero benchmark cases and made zero model calls because the records lacked the time-stamped
@@ -1886,6 +2152,13 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/balanced-public-challenge/reported-aggregate.json",
         "evidence/balanced-public-challenge/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl",
         "evidence/balanced-public-challenge/runs/opencode-go-qwen3.7-max-full.jsonl",
+        "evidence/slsa-portability/MANIFEST.json",
+        "evidence/slsa-portability/execution-receipt.json",
+        "evidence/slsa-portability/reported-aggregate.json",
+        "evidence/slsa-portability/void-exclusion-receipt.json",
+        "evidence/policy-switch/MANIFEST.json",
+        "evidence/policy-switch/execution-receipt.json",
+        "evidence/policy-switch/reported-aggregate.json",
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
@@ -1921,6 +2194,8 @@ def write_manifest(bundle: Path) -> None:
     }
     fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
     balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
+    slsa_portability_included = (bundle / "evidence" / "slsa-portability").is_dir()
+    policy_switch_included = (bundle / "evidence" / "policy-switch").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -1942,6 +2217,15 @@ def write_manifest(bundle: Path) -> None:
             "balanced_public_challenge_summary_included": balanced_challenge_included,
             "balanced_public_challenge_item_level_records_included": (balanced_challenge_included),
             "balanced_public_challenge_hidden_reasoning_included": False,
+            "slsa_portability_summary_included": slsa_portability_included,
+            "slsa_portability_item_level_records_included": slsa_portability_included,
+            "slsa_portability_raw_response_text_included": False,
+            "slsa_portability_void_raw_records_included": False,
+            "policy_switch_summary_included": policy_switch_included,
+            "policy_switch_item_level_records_included": policy_switch_included,
+            "policy_switch_raw_response_text_included": False,
+            "ontology_count": 2,
+            "policy_instrument_count": 4,
             "public_model_breadth_summary_included": False,
             "public_model_breadth_item_level_records_included": False,
             "public_model_breadth_raw_final_response_text_included": False,
@@ -2052,12 +2336,17 @@ def paper_balanced_analyzer() -> str:
 
 
 def paper_empirical_validator() -> str:
-    """Project the shared validator onto the two paper-facing empirical studies."""
+    """Project the shared validator onto the four paper-facing empirical studies."""
 
     projected = project_python_module(
         ROOT / "scripts" / "validate_anonymous_empirical_evidence.py",
-        {"validate_fresh_confirmatory", "validate_balanced_public_challenge"},
-        "Recompute the two paper-facing studies from anonymous item-level records.",
+        {
+            "validate_fresh_confirmatory",
+            "validate_balanced_public_challenge",
+            "validate_slsa_portability",
+            "validate_policy_switch",
+        },
+        "Recompute the four paper-facing studies from anonymous item-level records.",
     ).rstrip()
     main = """
 
@@ -2066,6 +2355,8 @@ def main() -> int:
         "status": "PASS",
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
+        "slsa_portability": validate_slsa_portability(),
+        "policy_switch": validate_policy_switch(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0
@@ -2114,6 +2405,7 @@ def build(destination: Path) -> None:
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
+        "v2/schemas/slsa-agent-decision.schema.json",
         "v2/schemas/run-record-v2.schema.json",
         "v2/schemas/stronger-model-run-record.schema.json",
     )
@@ -2146,6 +2438,8 @@ def build(destination: Path) -> None:
         else:
             copy_anonymized_tree(source, evidence_destination)
     build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
+    build_slsa_portability_anonymous_evidence(destination / "evidence" / "slsa-portability")
+    build_policy_switch_anonymous_evidence(destination / "evidence" / "policy-switch")
     (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
     (destination / "README.md").write_text(review_readme(), encoding="utf-8")
     (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")

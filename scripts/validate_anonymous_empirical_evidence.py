@@ -1534,6 +1534,279 @@ def validate_balanced_public_challenge() -> Json:
     }
 
 
+def changed_paths(left: Any, right: Any, prefix: str = "") -> list[str]:
+    if type(left) is not type(right):
+        return [prefix or "/"]
+    if isinstance(left, dict):
+        if set(left) != set(right):
+            return [prefix or "/"]
+        paths: list[str] = []
+        for key in left:
+            paths.extend(changed_paths(left[key], right[key], f"{prefix}/{key}"))
+        return paths
+    if isinstance(left, list):
+        if len(left) != len(right):
+            return [prefix or "/"]
+        paths = []
+        for index, (left_value, right_value) in enumerate(zip(left, right, strict=True)):
+            paths.extend(changed_paths(left_value, right_value, f"{prefix}/{index}"))
+        return paths
+    return [] if left == right else [prefix or "/"]
+
+
+def baseline_records(predictions: list[Json]) -> list[Json]:
+    return [
+        {
+            "item_id": row["item_id"],
+            "pair_id": row["pair_id"],
+            "parse_status": "OK",
+            "raw_decision": {"action": row["predicted_action"]},
+        }
+        for row in predictions
+    ]
+
+
+def validate_synthetic_policy_evidence(study_kind: str) -> Json:
+    specifications = {
+        "SLSA_DERIVED_POLICY_PORTABILITY": {
+            "directory": "slsa-portability",
+            "aggregate_design": "PROSPECTIVELY_FROZEN_SECOND_POLICY_PORTABILITY_STUDY",
+            "baseline_files": {"structured": "predictions.jsonl"},
+            "aggregate_baseline_key": "structured_random_forest_action_baseline",
+            "controlled_path": "evidence_field",
+        },
+        "COUNTERFACTUAL_POLICY_PROFILE_SWITCH": {
+            "directory": "policy-switch",
+            "aggregate_design": "PROSPECTIVELY_FROZEN_COUNTERFACTUAL_POLICY_PROFILE_STUDY",
+            "baseline_files": {
+                "policy_aware": "policy_aware-predictions.jsonl",
+                "profile_blind": "profile_blind-predictions.jsonl",
+            },
+            "aggregate_baseline_key": "structured_random_forest_comparators",
+            "controlled_path": "active_profile",
+        },
+    }
+    specification = specifications[study_kind]
+    root = EVIDENCE / str(specification["directory"])
+    manifest = load_json(root / "MANIFEST.json")
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        fail(f"{study_kind}: manifest is malformed")
+    manifest_payload = deepcopy(manifest)
+    observed_manifest_sha = manifest_payload.pop("manifest_sha256", None)
+    if observed_manifest_sha != sha256_text(canonical_json(manifest_payload)):
+        fail(f"{study_kind}: manifest self-digest changed")
+    actual_files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    if manifest.get("file_count") != len(actual_files) or manifest.get("files") != actual_files:
+        fail(f"{study_kind}: manifest differs from the generated tree")
+    if manifest.get("study_kind") != study_kind or manifest.get("status") != (
+        "ANONYMOUS_SYNTHETIC_POLICY_EVIDENCE"
+    ):
+        fail(f"{study_kind}: manifest identity changed")
+    expected_scope = {
+        "credentials_included": False,
+        "hidden_reasoning_included": False,
+        "provider_response_identifiers_included": False,
+        "source_repository_or_commit_identity_included": False,
+        "raw_final_response_text_included": False,
+        "item_level_structured_decisions_included": True,
+        "all_scheduled_terminal_failures_included": True,
+    }
+    if manifest.get("scope") != expected_scope:
+        fail(f"{study_kind}: anonymous scope changed")
+
+    dataset = root / "dataset"
+    items = load_jsonl(dataset / "evaluation-items.jsonl")
+    gold = load_jsonl(dataset / "evaluation-gold.jsonl")
+    pairs = load_json(dataset / "evaluation-pairs.json")
+    packet = load_json(dataset / "evaluation-prompt-packet.json")
+    plan = load_json(root / "study-plan.json")
+    schedule = load_json(root / "request-schedule.json")
+    aggregate = load_json(root / "reported-aggregate.json")
+    receipt = load_json(root / "execution-receipt.json")
+    if not all(isinstance(value, dict) for value in (packet, plan, schedule, aggregate, receipt)):
+        fail(f"{study_kind}: plan, packet, schedule, aggregate, or receipt is malformed")
+    if not isinstance(pairs, list):
+        fail(f"{study_kind}: evaluation pairs are malformed")
+    item_by_id = {str(row["id"]): row for row in items}
+    gold_by_id = {str(row["id"]): row for row in gold}
+    if len(items) != 120 or len(item_by_id) != 120 or set(item_by_id) != set(gold_by_id):
+        fail(f"{study_kind}: evaluation item coverage changed")
+    if Counter(str(row["decision"]["action"]) for row in gold) != Counter(
+        {"ALLOW": 60, "HOLD": 20, "DEMOTE": 20, "ESCALATE": 20}
+    ):
+        fail(f"{study_kind}: gold action support changed")
+    seen_member_ids: set[str] = set()
+    factor_ids: set[str] = set()
+    for pair in pairs:
+        ids = [str(value) for value in pair.get("member_ids", [])]
+        if len(ids) != 2 or len(set(ids)) != 2 or set(ids) - set(item_by_id):
+            fail(f"{study_kind}: pair membership changed")
+        if seen_member_ids & set(ids):
+            fail(f"{study_kind}: an item appears in multiple pairs")
+        seen_member_ids.update(ids)
+        factor_ids.add(str(pair.get("factor_id")))
+        left = item_by_id[ids[0]]["model_visible"]
+        right = item_by_id[ids[1]]["model_visible"]
+        paths = changed_paths(left, right)
+        if specification["controlled_path"] == "active_profile":
+            if paths != ["/active_policy_profile"]:
+                fail(f"{study_kind}: a pair changes more than the active policy profile")
+        elif len(paths) != 1 or not paths[0].startswith("/evidence/0/observed/"):
+            fail(f"{study_kind}: a pair changes more than one verifier field")
+        pair_actions = {str(gold_by_id[item_id]["decision"]["action"]) for item_id in ids}
+        if "ALLOW" not in pair_actions or len(pair_actions) != 2:
+            fail(f"{study_kind}: pair actions no longer define an action-changing contrast")
+    if len(pairs) != 60 or seen_member_ids != set(item_by_id) or len(factor_ids) != 12:
+        fail(f"{study_kind}: pair or factor coverage changed")
+    if specification["controlled_path"] == "active_profile" and Counter(
+        str(row["model_visible"]["active_policy_profile"]) for row in items
+    ) != Counter({"POLICY_BLUE": 60, "POLICY_AMBER": 60}):
+        fail(f"{study_kind}: policy-profile support changed")
+
+    packet_rows = packet.get("records")
+    if not isinstance(packet_rows, list) or {str(row.get("item_id")) for row in packet_rows} != set(
+        item_by_id
+    ):
+        fail(f"{study_kind}: prompt-packet coverage changed")
+    lane_files = manifest.get("lane_files")
+    expected_lanes = {str(row["lane_id"]) for row in plan.get("formal_lanes", [])}
+    if (
+        not isinstance(lane_files, dict)
+        or set(lane_files) != expected_lanes
+        or len(expected_lanes) != 2
+    ):
+        fail(f"{study_kind}: lane manifest changed")
+    cells = schedule.get("cells")
+    if (
+        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or plan.get("execution", {}).get("client_retry_count") != 0
+        or not isinstance(cells, list)
+        or len(cells) != 240
+        or len({str(cell["cell_id"]) for cell in cells}) != 240
+    ):
+        fail(f"{study_kind}: frozen execution boundary changed")
+    if (
+        receipt.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
+        or receipt.get("planned_cells") != 240
+        or receipt.get("durable_request_intents") != 240
+        or receipt.get("durable_terminal_records") != 240
+        or receipt.get("application_posts_per_cell") != 1
+        or receipt.get("client_retry_count") != 0
+        or receipt.get("partial_resume_used") is not False
+        or receipt.get("credentials_retained") is not False
+        or receipt.get("provider_response_identifiers_retained") is not False
+        or receipt.get("hidden_reasoning_blocks_retained") is not False
+        or receipt.get("source_journal_digests_included") is not False
+    ):
+        fail(f"{study_kind}: execution receipt changed")
+
+    aggregate_lanes = {
+        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
+    }
+    if (
+        aggregate.get("status") != "COMPLETE"
+        or aggregate.get("design") != specification["aggregate_design"]
+        or set(aggregate_lanes) != expected_lanes
+        or aggregate.get("deterministic_policy_executor", {}).get("label")
+        != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE"
+    ):
+        fail(f"{study_kind}: aggregate interpretation boundary changed")
+    lane_metrics: Json = {}
+    for lane_id in sorted(expected_lanes):
+        run_path = root / str(lane_files[lane_id])
+        rows = load_jsonl(run_path)
+        if (
+            len(rows) != 120
+            or {str(row.get("item_id")) for row in rows} != set(item_by_id)
+            or {str(row.get("lane_id")) for row in rows} != {lane_id}
+        ):
+            fail(f"{study_kind}: run coverage changed for {lane_id}")
+        validate_raw_response_hashes(rows, f"{study_kind} {lane_id}")
+        validate_prompt_binding(
+            rows, dataset / "evaluation-prompt-packet.json", f"{study_kind} {lane_id}"
+        )
+        for row in rows:
+            validate_with_schema(
+                row,
+                ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json",
+                str(row.get("item_id")),
+            )
+            reject_hidden_reasoning(row, f"{study_kind} {lane_id}")
+            if (
+                row.get("provider_response_id") is not None
+                or row.get("raw_response_text") is not None
+                or row.get("raw_response_sha256") is not None
+                or row.get("parse_error_detail") is not None
+                or row.get("transport_error") is not None
+                or row.get("frozen_plan_commit") != "0000000000000000000000000000000000000010"
+            ):
+                fail(f"{study_kind}: private response or provenance fields survived")
+        metrics = derive_balanced_metrics(gold, pairs, rows)
+        if not equivalent_json(metrics, aggregate_lanes[lane_id].get("metrics")):
+            fail(f"{study_kind}: aggregate differs from item-level records for {lane_id}")
+        if aggregate_lanes[lane_id].get("run_sha256") != sha256_file(run_path):
+            fail(f"{study_kind}: aggregate run digest changed for {lane_id}")
+        if receipt.get("lane_output_sha256", {}).get(run_path.name) != sha256_file(run_path):
+            fail(f"{study_kind}: execution receipt run digest changed for {lane_id}")
+        lane_metrics[lane_id] = metrics
+
+    baseline_report = load_json(root / "baseline" / "report.json")
+    if (
+        not isinstance(baseline_report, dict)
+        or baseline_report.get("evaluation_gold_loaded") is not False
+        or baseline_report.get("model_outputs_loaded") is not False
+    ):
+        fail(f"{study_kind}: baseline data-access boundary changed")
+    baseline_key = str(specification["aggregate_baseline_key"])
+    aggregate_baselines = aggregate.get(baseline_key)
+    baseline_files = specification["baseline_files"]
+    if not isinstance(baseline_files, dict):
+        fail(f"{study_kind}: internal baseline specification is malformed")
+    if baseline_key == "structured_random_forest_action_baseline":
+        aggregate_baselines = {"structured": aggregate_baselines}
+    if not isinstance(aggregate_baselines, dict) or set(aggregate_baselines) != set(baseline_files):
+        fail(f"{study_kind}: aggregate baseline set changed")
+    baseline_metrics: Json = {}
+    for comparator_id, filename in baseline_files.items():
+        predictions = load_jsonl(root / "baseline" / str(filename))
+        metrics = derive_balanced_metrics(gold, pairs, baseline_records(predictions))
+        entry = aggregate_baselines[comparator_id]
+        if not isinstance(entry, dict) or not equivalent_json(metrics, entry.get("metrics")):
+            fail(f"{study_kind}: baseline aggregate changed for {comparator_id}")
+        baseline_metrics[comparator_id] = metrics
+    if specification["controlled_path"] == "active_profile":
+        aware = baseline_metrics["policy_aware"]
+        blind = baseline_metrics["profile_blind"]
+        if (
+            aware.get("correct_items") != 120
+            or aware.get("correct_pairs") != 60
+            or blind.get("correct_items") != 60
+            or blind.get("correct_pairs") != 0
+        ):
+            fail(f"{study_kind}: registered shortcut comparator result changed")
+
+    return {
+        "study_kind": study_kind,
+        "items_per_lane": 120,
+        "pairs_per_lane": 60,
+        "terminal_records": 240,
+        "lane_metrics": lane_metrics,
+        "baseline_metrics": baseline_metrics,
+    }
+
+
+def validate_slsa_portability() -> Json:
+    return validate_synthetic_policy_evidence("SLSA_DERIVED_POLICY_PORTABILITY")
+
+
+def validate_policy_switch() -> Json:
+    return validate_synthetic_policy_evidence("COUNTERFACTUAL_POLICY_PROFILE_SWITCH")
+
+
 def validate_public_model_breadth() -> Json:
     root = EVIDENCE / "public-model-breadth"
     manifest = load_json(root / "MANIFEST.json")
@@ -1826,6 +2099,8 @@ def main() -> int:
         "status": "PASS",
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
+        "slsa_portability": validate_slsa_portability(),
+        "policy_switch": validate_policy_switch(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0
