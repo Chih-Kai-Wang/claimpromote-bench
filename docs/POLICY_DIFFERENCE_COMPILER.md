@@ -1,0 +1,35 @@
+# Policy-difference compiler
+
+ClaimPromoteBench exposes a domain-independent core for compiling two deterministic policies into
+controlled regression tests. A caller provides:
+
+- two executable policies with a shared finite action vocabulary;
+- a finite, typed context grammar;
+- a stable identifier for each context; and
+- the authored policy-difference rules witnessed by each context.
+
+The compiler executes both policies on every context and retains the behavioral difference set
+
+\[
+\Delta(P_a,P_b;\mathcal X)=\{c\in\mathcal X:\pi_{P_a}(c)\ne\pi_{P_b}(c)\}.
+\]
+
+Each retained context has one directed action edge and one or more rule witnesses. The reusable
+interface in `src/claimpromotebench/policy_difference.py` reports rule and edge coverage, identifies
+action directions absent from the supplied grammar, and searches for a joint-complete suite that
+attains the one-context-per-edge lower bound. If that search returns a suite for (k) required
+edges, the suite is globally minimum because no context can realize more than one directed edge.
+If it returns no witness, only the lower bound is unattainable; a larger complete suite may exist.
+
+The implementation has no SLSA, research-evidence, model, provider, or prompt dependency. A
+cross-check test loads the 60 frozen software-policy candidates and independently reproduces the
+published ten-pair witness. That witness covers all ten reachable edges and all 12 authored rule
+differences.
+
+## Interpretation boundary
+
+Compilation is exhaustive only over the supplied finite grammar. An absent edge is not globally
+impossible unless the policy author also supplies a semantic unreachability argument. The compiler
+does not infer policy legitimacy, natural input prevalence, fault prevalence, or deployment safety.
+Its output is a regression-test specification; evaluated routes remain subject to the paper's
+failure-aware end-to-end scoring.
