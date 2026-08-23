@@ -1,6 +1,6 @@
 # ICLR 2027 and arXiv: page and cost rules
 
-Verified against the live official pages on 2026-08-21. When any cached page or earlier note disagrees, use the live ICLR 2027 Author Guidelines as the source of truth.
+Verified against the live official pages on 2026-08-23. When any cached page or earlier note disagrees, use the live ICLR 2027 Author Guidelines as the source of truth.
 
 ## ICLR 2027 deadlines
 
@@ -24,9 +24,10 @@ Official source: `https://iclr.cc/Conferences/2027/AuthorGuidelines`
 
 There is **no paid overlength option** in the author rules. The guide states that excess main-text pages are desk-rejected. This is a hard compliance rule, not a page charge that can be paid.
 
-The repository therefore keeps an automated ICLR main-text probe at `<= 9` pages. The verified
-release candidate has an **8-page main-text probe** and a **9-page physical PDF**, with references
-continuing after the main text. Reference pages do not consume the main-text allowance.
+The repository therefore keeps an automated ICLR main-text probe at `<= 9` pages. The current
+working draft has an **8-page main-text probe** and an **11-page physical PDF** because references
+and the appendix continue after the main text. The physical total is not the conference limit.
+Final counts must be regenerated from the release candidate.
 
 ## Human-subject scope
 
@@ -57,6 +58,6 @@ Official sources:
 ## Zero-cost plan
 
 1. Post the prepared source package to arXiv: no author fee.
-2. Submit the anonymous ICLR version whose main-text probe is 8 pages: no current submission or page fee is listed.
+2. Submit only an anonymous ICLR version whose final main-text probe is at most 9 pages: no current submission or page fee is listed.
 3. Do not pay for editing, extra pages, or third-party submission services.
 4. If accepted, treat registration and travel as a new funding decision and investigate student support or grants then; acceptance cannot presently be guaranteed to remain cost-free.
