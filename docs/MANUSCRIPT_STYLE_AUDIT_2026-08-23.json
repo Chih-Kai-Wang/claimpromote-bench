@@ -1,76 +1,84 @@
 {
-  "schema_version": "1.0.0",
-  "status": "PASS",
+  "after": {
+    "abstract_submission_lint_tokens": 200,
+    "configured_pattern_findings": {
+      "ai_lexicon": 0,
+      "formulaic_pivot": 0,
+      "grandiose": 0,
+      "pompous_copula": 0,
+      "signposted_summary": 0,
+      "superficial_participle": 0,
+      "throat_clearing": 0,
+      "vague_importance": 0
+    },
+    "manuscript_sha256": "46c931e1d6001e74db49ae2b4719669ab46930eceb068420db58fbe1d3b81423",
+    "prose_words": 4275,
+    "sentence_words_mean": 15.31,
+    "sentence_words_median": 14,
+    "sentence_words_over_40_percent": 0.3663,
+    "sentence_words_p90": 23.0,
+    "sentence_words_p95": 26.0,
+    "sentences": 273
+  },
+  "before": {
+    "abstract_extracted_words": 231,
+    "configured_pattern_findings": {
+      "ai_lexicon": 0,
+      "formulaic_pivot": 0,
+      "grandiose": 0,
+      "pompous_copula": 1,
+      "signposted_summary": 0,
+      "superficial_participle": 0,
+      "throat_clearing": 0,
+      "vague_importance": 0
+    },
+    "git_blob_sha256": "5e247fb5d0423e0521dde0dfb44b617039487e0483500930a3862b3c3c85be4c",
+    "prose_words": 3234,
+    "sentence_words_mean": 17.32,
+    "sentence_words_median": 16,
+    "sentence_words_over_40_percent": 1.0929,
+    "sentence_words_p90": 27.0,
+    "sentence_words_p95": 29.9,
+    "sentences": 183
+  },
   "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",
   "corpus_manifest_sha256": "4e279705710d18f163ef621132874364e814a3a7db82cee758d1688cdb0eb923",
   "corpus_statistics_sha256": "e1f55b661794d50c824d85e89f164699b58b6b9e6b01f2549557e76472c91940",
   "installed_skill": {
-    "name": "deslop",
-    "repository": "https://github.com/stephenturner/skill-deslop",
     "commit": "a906154bef375d9d49ed2ad7da13b2db16f0d3d2",
     "license": "MIT",
+    "name": "deslop",
+    "repository": "https://github.com/stephenturner/skill-deslop",
     "use": "negative editorial pattern filter, not detector evasion"
   },
   "method": {
-    "measurement_revision": "paper-facing-two-study-v4",
     "latex_tables_figures_and_display_math_excluded": true,
-    "sentence_filter_alphanumeric_tokens_min_max": [5, 100],
-    "paragraph_min_alpha_words": 8,
-    "pattern_scan": "case-insensitive regular expressions",
     "limitations": [
-      "LaTeX stripping and PDF text blocks are approximate",
-      "the passive-voice corpus measure is a regular-expression heuristic",
+      "LaTeX stripping and sentence segmentation are approximate",
       "metrics guide editing ranges and do not determine scientific quality"
+    ],
+    "measurement_revision": "paper-facing-five-study-transition-graph-v1",
+    "pattern_scan": "case-insensitive regular expressions",
+    "sentence_filter_alphanumeric_tokens_min_max": [
+      5,
+      100
     ]
   },
-  "before": {
-    "git_blob_sha256": "5e247fb5d0423e0521dde0dfb44b617039487e0483500930a3862b3c3c85be4c",
-    "prose_words": 3234,
-    "sentences": 183,
-    "sentence_words_mean": 17.32,
-    "sentence_words_median": 16,
-    "sentence_words_p90": 27.0,
-    "sentence_words_p95": 29.9,
-    "sentence_words_over_40_percent": 1.0929,
-    "abstract_extracted_words": 231,
-    "configured_pattern_findings": {
-      "throat_clearing": 0,
-      "vague_importance": 0,
-      "pompous_copula": 1,
-      "ai_lexicon": 0,
-      "formulaic_pivot": 0,
-      "superficial_participle": 0,
-      "signposted_summary": 0,
-      "grandiose": 0
-    }
-  },
-  "after": {
-    "manuscript_sha256": "2111933a19b4936e8e4994e32bae25f52983de90fa1decc4ace6bdd7ad66c689",
-    "prose_words": 2410,
-    "sentences": 139,
-    "sentence_words_mean": 17.32,
-    "sentence_words_median": 16.0,
-    "sentence_words_p90": 26.2,
-    "sentence_words_p95": 29.0,
-    "sentence_words_over_40_percent": 1.4388,
-    "abstract_submission_lint_tokens": 154,
-    "historical_reduction_not_recomputed": true,
-    "configured_pattern_findings": {
-      "throat_clearing": 0,
-      "vague_importance": 0,
-      "pompous_copula": 0,
-      "ai_lexicon": 0,
-      "formulaic_pivot": 0,
-      "superficial_participle": 0,
-      "signposted_summary": 0,
-      "grandiose": 0
-    }
-  },
+  "schema_version": "1.1.0",
   "scientific_content_boundary": {
-    "metrics_changed": false,
-    "terminal_records_changed": false,
-    "model_calls_performed": 0,
+    "balanced_public_v1_rerun": false,
     "completed_singleton_workflows_rerun": false,
-    "paper_binding_validator": "scripts/lint_paper_submission.py"
-  }
+    "excluded_resource_failure_model_calls_performed": 520,
+    "excluded_resource_failure_model_rows_entered_manuscript": false,
+    "excluded_resource_failure_terminal_records_added": 520,
+    "existing_terminal_records_changed": false,
+    "metrics_changed": true,
+    "paper_binding_validator": "scripts/lint_paper_submission.py",
+    "retained_scored_model_calls_performed": 720,
+    "retained_scored_terminal_records_added": 720,
+    "total_application_posts_during_revision": 1241,
+    "total_model_calls_performed": 1240,
+    "void_protocol_application_posts": 1
+  },
+  "status": "PASS"
 }
