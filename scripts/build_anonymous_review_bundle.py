@@ -1760,6 +1760,55 @@ def build_hosted_transition_graph_exclusion_receipt(destination: Path) -> None:
     write_json(destination, review)
 
 
+def build_hosted_minimum_migration_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-transition-graph-v1"
+        / "hosted-minimal-v1"
+        / "results"
+        / "manuscript-eligibility-receipt.json"
+    )
+    decision = source.get("decision")
+    classification = source.get("classification")
+    if (
+        source.get("status")
+        != "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("all_40_terminal_outcomes_considered") is not True
+        or decision.get("hosted_route_rows_enter_manuscript") is not False
+        or decision.get("conditional_success_subset_selected") is not False
+        or not isinstance(classification, dict)
+        or classification.get("eligible_for_route_conformance_reporting") is not False
+        or classification.get("explicit_resource_exhaustion_errors") != 40
+        or classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or classification.get("transport_status_counts") != {"ERROR": 40}
+        or classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 40}
+        or source.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted minimum migration exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "study_scope": "MINIMUM_GRAPH_AND_RULE_COMPLETE_POLICY_MIGRATION_GATE",
+        "selected_pairs": 10,
+        "selected_items": 20,
+        "planned_route_cells": 40,
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "classification": classification,
+        "decision": decision,
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "free_form_error_text_included": False,
+        "valid_output_subset_included": False,
+        "model_configuration_labels_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
 def build_local_void_exclusion_receipt(source_root: Path, destination: Path) -> Json:
     source = load_object(source_root / "frozen" / "slsa" / "void-exclusion-receipt.json")
     counts = source.get("observed_counts")
@@ -2525,10 +2574,10 @@ differences from behavioral coverage: the rule-stratified suite covers 6/10 reac
 non-self action transitions, while the transition graph covers 10/10 and certifies two impossible
 directions.
 
-Two frozen hosted policy-switch executions and one hosted transition-graph execution exhausted a
-shared subscription quota. All three are excluded in full, and the bundle retains only redacted
-exclusion receipts. No hosted row, item record, or conditional hosted metric enters the paper or
-reviewer evidence.
+Two frozen hosted policy-switch executions, one hosted transition-graph execution, and one 40-cell
+minimum-suite execution exhausted a shared subscription quota. All four are excluded in full, and
+the bundle retains only redacted exclusion receipts. No excluded hosted row, item record, or
+conditional hosted metric enters the paper or reviewer evidence.
 
 Two open-weight model families were selected and revision-pinned before benchmark inference, then
 run locally on all three software-policy datasets with greedy decoding and zero retries. Exact model
@@ -3050,6 +3099,7 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/hosted-policy-switch-exclusion.json",
         "evidence/hosted-policy-switch-replacement-exclusion.json",
         "evidence/hosted-policy-transition-graph-exclusion.json",
+        "evidence/hosted-minimum-policy-migration-exclusion.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -3112,6 +3162,9 @@ def write_manifest(bundle: Path) -> None:
     hosted_policy_transition_graph_exclusion_included = (
         bundle / "evidence" / "hosted-policy-transition-graph-exclusion.json"
     ).is_file()
+    hosted_minimum_policy_migration_exclusion_included = (
+        bundle / "evidence" / "hosted-minimum-policy-migration-exclusion.json"
+    ).is_file()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
     local_replication_root = bundle / "evidence" / "local-model-replications"
     local_slsa_included = (local_replication_root / "slsa").is_dir()
@@ -3153,6 +3206,9 @@ def write_manifest(bundle: Path) -> None:
             ),
             "hosted_policy_transition_graph_exclusion_receipt_included": (
                 hosted_policy_transition_graph_exclusion_included
+            ),
+            "hosted_minimum_policy_migration_exclusion_receipt_included": (
+                hosted_minimum_policy_migration_exclusion_included
             ),
             "local_model_replications_included": local_replications_included,
             "local_model_replication_item_level_records_included": local_replications_included,
@@ -3339,6 +3395,7 @@ def build(destination: Path) -> None:
         "LICENSE",
         "THIRD_PARTY_NOTICES.md",
         "docs/PUBLIC_RELEASE_BOUNDARY.md",
+        "docs/POLICY_DIFFERENCE_COMPILER.md",
         "scripts/analyze_confirmatory_hidden_study.py",
         "scripts/analyze_local_model_replication.py",
         "scripts/analyze_policy_transition_graph_local_study.py",
@@ -3377,6 +3434,7 @@ def build(destination: Path) -> None:
         "tests/test_policy_switch_study.py",
         "tests/test_policy_transition_graph_local_study.py",
         "tests/test_policy_transition_graph_study.py",
+        "tests/test_policy_difference_compiler.py",
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
@@ -3425,6 +3483,9 @@ def build(destination: Path) -> None:
     )
     build_hosted_transition_graph_exclusion_receipt(
         destination / "evidence" / "hosted-policy-transition-graph-exclusion.json"
+    )
+    build_hosted_minimum_migration_exclusion_receipt(
+        destination / "evidence" / "hosted-minimum-policy-migration-exclusion.json"
     )
     build_local_model_replications_anonymous_evidence(
         destination / "evidence" / "local-model-replications"

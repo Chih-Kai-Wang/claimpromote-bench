@@ -27,7 +27,7 @@ The staged bundle contains:
   rule-stratified policy switch, and complete reachable policy-transition graph, with item-level
   records, learned comparators, freeze receipts, recomputable coverage certificates, and the
   zero-call edge-local migration-mutant audit and minimum 10-pair smoke-suite receipt;
-- redacted all-or-nothing exclusion receipts for three hosted policy studies that exhausted shared
+- redacted all-or-nothing exclusion receipts for four hosted policy studies that exhausted shared
   subscription quota, without their item records, route labels, free-form errors, or model rows;
 - the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
   zero created cases, zero model calls, zero human annotators, and no agreement statistic;

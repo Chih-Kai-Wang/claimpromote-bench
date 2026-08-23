@@ -395,6 +395,22 @@ def test_hosted_transition_graph_exclusion_contains_no_model_rows(tmp_path: Path
     assert receipt["classification"]["explicit_resource_exhaustion_errors"] == 240
     assert receipt["decision"]["all_240_terminal_outcomes_considered"] is True
     assert receipt["decision"]["hosted_model_rows_enter_manuscript"] is False
+
+
+def test_hosted_minimum_migration_exclusion_contains_no_model_rows(tmp_path: Path) -> None:
+    builder = load_builder()
+    destination = tmp_path / "hosted-minimum-policy-migration-exclusion.json"
+    builder.build_hosted_minimum_migration_exclusion_receipt(destination)
+    receipt = json.loads(destination.read_text(encoding="utf-8"))
+    assert receipt["status"] == (
+        "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+    )
+    assert receipt["classification"]["explicit_resource_exhaustion_errors"] == 40
+    assert receipt["decision"]["all_40_terminal_outcomes_considered"] is True
+    assert receipt["decision"]["conditional_success_subset_selected"] is False
+    assert receipt["decision"]["hosted_route_rows_enter_manuscript"] is False
+    assert receipt["raw_terminal_records_included"] is False
+    assert receipt["model_configuration_labels_included"] is False
     assert receipt["decision"]["conditional_success_subset_selected"] is False
     assert receipt["raw_terminal_records_included"] is False
     assert receipt["free_form_error_text_included"] is False

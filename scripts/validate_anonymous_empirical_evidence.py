@@ -2351,6 +2351,7 @@ def validate_hosted_exclusion_receipts() -> Json:
         "initial_policy_switch": EVIDENCE / "hosted-policy-switch-exclusion.json",
         "policy_switch_replacement": EVIDENCE / "hosted-policy-switch-replacement-exclusion.json",
         "policy_transition_graph": EVIDENCE / "hosted-policy-transition-graph-exclusion.json",
+        "minimum_policy_migration": EVIDENCE / "hosted-minimum-policy-migration-exclusion.json",
     }
     receipts = {name: load_json(path) for name, path in paths.items()}
     if any(not isinstance(receipt, dict) for receipt in receipts.values()):
@@ -2405,6 +2406,28 @@ def validate_hosted_exclusion_receipts() -> Json:
         or graph.get("model_configuration_labels_included") is not False
     ):
         fail("hosted transition-graph exclusion scope changed")
+    minimum = receipts["minimum_policy_migration"]
+    minimum_classification = minimum.get("classification", {})
+    minimum_decision = minimum.get("decision", {})
+    if (
+        minimum.get("status")
+        != "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or minimum.get("study_scope") != "MINIMUM_GRAPH_AND_RULE_COMPLETE_POLICY_MIGRATION_GATE"
+        or minimum.get("selected_pairs") != 10
+        or minimum.get("selected_items") != 20
+        or minimum.get("planned_route_cells") != 40
+        or minimum.get("free_form_error_text_included") is not False
+        or minimum.get("model_configuration_labels_included") is not False
+        or minimum_classification.get("eligible_for_route_conformance_reporting") is not False
+        or minimum_classification.get("explicit_resource_exhaustion_errors") != 40
+        or minimum_classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or minimum_classification.get("transport_status_counts") != {"ERROR": 40}
+        or minimum_classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 40}
+        or minimum_decision.get("all_40_terminal_outcomes_considered") is not True
+        or minimum_decision.get("hosted_route_rows_enter_manuscript") is not False
+        or minimum_decision.get("conditional_success_subset_selected") is not False
+    ):
+        fail("hosted minimum policy-migration exclusion changed")
     return {
         "status": "HOSTED_EXCLUSION_RECEIPTS_PASS",
         "receipt_count": len(receipts),

@@ -26,6 +26,8 @@ establish redistribution rights.
   suites to their 6/10 and 10/10 registered edge-local fault-detection receipts;
 - the minimum joint-adequacy smoke-suite derivation and receipt, including its 10-pair lower-bound
   certificate and the exact 20 selected items;
+- the domain-independent policy-difference compiler and its cross-check that reconstructs the
+  frozen 10-pair witness from the 60-pair candidate graph;
 - naturalistic source pointers, frozen candidates, and the pre-model-call zero-case decision;
 - the manuscript source and references when the public repository is also the paper artifact; and
 - `LICENSE`, `DATA_LICENSE.md`, `THIRD_PARTY_NOTICES.md`, a concise README, and a dynamic manifest.
@@ -62,6 +64,8 @@ minimum replay path.
 - the quota-confounded hosted policy-switch run's raw records, valid-output subset, conditional
   metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
 - the quota-confounded hosted transition-graph run's raw records, route labels, model rows,
+  conditional metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
+- the quota-confounded 40-cell hosted minimum-suite run's raw records, route labels, model rows,
   conditional metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
 - downloaded model weights and Hugging Face caches;
