@@ -1,0 +1,12 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "073fb0b4d1e5d505d5d4e46a045fd957e3618839",
+  "planned_cells": 240,
+  "prior_ineligible_application_invocations": 1,
+  "replacement_version": 2,
+  "schedule_sha256": "sha256:f67c1a5b9d16a2e2422a2befa5bb341b10abe82efe9d39621e75d3b4bec97c61",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T13:18:18.767618Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-policy-switch-local-model-replication-2026-08-v2"
+}
