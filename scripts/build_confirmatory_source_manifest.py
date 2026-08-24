@@ -62,6 +62,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/analyze_local_model_replication.py",
     "scripts/analyze_minimal_policy_migration_gate.py",
     "scripts/analyze_minimal_policy_migration_hosted_study.py",
+    "scripts/analyze_ox_alpha_minimal_route_study.py",
     "scripts/build_policy_switch_study.py",
     "scripts/build_slsa_portability_study.py",
     "scripts/build_local_release_kit.py",
@@ -96,6 +97,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/validate_policy_transition_graph_hosted_study.py",
     "scripts/freeze_local_model_replications.py",
     "scripts/freeze_minimal_policy_migration_hosted_study.py",
+    "scripts/freeze_ox_alpha_minimal_route_study.py",
     "scripts/frozen_run_io.py",
     "scripts/freeze_slsa_portability_study.py",
     "scripts/freeze_policy_switch_study.py",
@@ -107,6 +109,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/run_policy_switch_study.py",
     "scripts/run_local_model_replication.py",
     "scripts/run_minimal_policy_migration_hosted_study.py",
+    "scripts/run_ox_alpha_minimal_route_study.py",
     "scripts/seal_local_model_void_attempt.py",
     "scripts/slsa_policy.py",
     "scripts/snapshot_slsa_portability_catalog.py",
@@ -119,6 +122,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/validate_policy_switch_study.py",
     "scripts/validate_local_model_replications.py",
     "scripts/validate_minimal_policy_migration_hosted_study.py",
+    "scripts/validate_ox_alpha_minimal_route_study.py",
 }
 
 

@@ -1,0 +1,19 @@
+{
+  "catalog_response_sha256": "sha256:b4e2e0f2c11bbaece4626086355f4e7b493da0a81e99305ce55e792cd4428906",
+  "catalog_url": "https://opencode.ai/zen/go/v1/models",
+  "contains_credentials": false,
+  "contains_model_outputs": false,
+  "identity_boundary": "Ox Alpha is a stealth label. This study makes no claim about its developer, weights, architecture, or model family.",
+  "official_docs_observation": "OpenCode lists Ox Alpha Free as a limited-time free OpenCode Go route and reports that its data are not used for training and retained for zero days.",
+  "official_docs_url": "https://opencode.ai/docs/go/",
+  "retrieved_at_utc": "2026-08-24T07:09:54.159944Z",
+  "schema_version": "1.0.0",
+  "selected_model_entry": {
+    "created": 1787555394,
+    "id": "ox-alpha-free",
+    "object": "model",
+    "owned_by": "opencode"
+  },
+  "self_digest": "sha256:f14d1e9b23125b234f1e9f146729c7e293469e1dcc828783073326949e8634e6",
+  "status": "PREINFERENCE_PUBLIC_CATALOG_SNAPSHOT"
+}
