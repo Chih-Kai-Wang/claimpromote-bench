@@ -1,0 +1,39 @@
+{
+  "aws_calls": 0,
+  "change_commit": "82ab009fbb5996716e72a1fd5e5c4d4a13fa30eb",
+  "change_url": "https://github.com/agentgateway/agentgateway/commit/82ab009fbb5996716e72a1fd5e5c4d4a13fa30eb",
+  "credentials_accessed": false,
+  "formal_search_query": "bedrock guardrail in:name,description,readme",
+  "formal_search_rank": 3,
+  "license": "Apache-2.0",
+  "license_sha256": "sha256:3b1ee5b1e14fda40515c18ec2f0796d632e65a20b2aca8f017c654bc26ca77bd",
+  "model_calls": 0,
+  "new_sources": {
+    "crates/agentgateway/src/llm/policy/bedrock_guardrails.rs": "sha256:b1cb2005c20d2426da4ec5b3e48fe05bd153a25bd42acf19f2d3e63be9aa0c82",
+    "crates/agentgateway/src/llm/policy/mod.rs": "sha256:7bb4c3b69b17349e2133ce6bf6f4a6ce43e2b8912b772b6c67bc9df650276d10",
+    "crates/agentgateway/src/llm/policy/tests.rs": "sha256:2b4b7343f06a7ed661c1810f9253e370c257e34c0ba1be3b0653af90f914cffb"
+  },
+  "old_commit": "68365fc2c4f6ac9134c563f75f4142952c295c91",
+  "old_sources": {
+    "crates/agentgateway/src/llm/policy/bedrock_guardrails.rs": "sha256:c6ee823232ac78292457f78eba95f0c94526171d9fb85d20065749379e69eb18",
+    "crates/agentgateway/src/llm/policy/mod.rs": "sha256:5be4cb63665ed9d20c491b9a216b80b6f858bb690a767a59b2bddda14314bef7"
+  },
+  "repository": "https://github.com/agentgateway/agentgateway",
+  "schema_version": "1.0.0",
+  "source_audit": {
+    "new_behavior": "An intervention is maskable only when an assessment explicitly carries ANONYMIZED; blocked, unrecognized, or cardinality-mismatched interventions reject.",
+    "old_behavior": "Every GUARDRAIL_INTERVENED response without a BLOCKED assessment was classified as anonymized, and request masking rebuilt message content instead of preserving the original multipart structure.",
+    "versioned_boundary": "The source constructs /guardrail/{guardrail_identifier}/version/{guardrail_version}/apply and maps the result to none, mask, or reject behavior."
+  },
+  "status": "EXACT_CHANGE_COMMIT_OFFLINE_REGRESSION_TESTS_PASS",
+  "test_run": {
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "command": "cargo test -p agentgateway bedrock_ --lib --no-fail-fast",
+    "failed": 0,
+    "filtered_out": 1891,
+    "passed": 33,
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "selected_commit": "82ab009fbb5996716e72a1fd5e5c4d4a13fa30eb"
+  },
+  "validation_boundary": "The exact change commit and its offline unit fixtures were compiled and tested. No Bedrock request was sent. The old behavior was independently audited from exact parent bytes but was not rebuilt with the post-fix test module."
+}

@@ -1,0 +1,42 @@
+{
+  "action_mapping_is_author_mapping": true,
+  "architecture_boundary": "The upstream deterministic ACS policy point surrounds agent model/tool lifecycle events; this reproduction contains no model inference.",
+  "change_commit": "e87b74530e1cbae54d5e90bc1b45ecf5c8911b28",
+  "change_url": "https://github.com/microsoft/agent-governance-toolkit/commit/e87b74530e1cbae54d5e90bc1b45ecf5c8911b28",
+  "credentials_retained": false,
+  "formal_search_query": "openai opa in:name,description,readme",
+  "formal_search_rank": 7,
+  "model_calls": 0,
+  "new_source_sha256": "sha256:f5fabe6f1c44c6a77fb6eb71975c4f66a8ee4c3fef56383a16d03bbef1efd9fe",
+  "old_commit": "577627921d1615af6a8f40db551106ee5a1c8759",
+  "old_source_sha256": "sha256:9f5a668d0b5212e81055cd7270ed3176094b60b2ff464122084ff70fc457dd6e",
+  "opa_runtime": {
+    "binary_sha256": "sha256:805ce3f336154150bef73bafa2dab8806631851bccc7cae95bef46ffabdf8fc3",
+    "build_commit": "54896f9f28515d14b31a93e6ef5737bb85866e30",
+    "platform": "darwin/arm64",
+    "rego_version": "v1",
+    "version": "1.19.1"
+  },
+  "repository": "https://github.com/microsoft/agent-governance-toolkit",
+  "schema_version": "1.0.0",
+  "source_bytes_match_registry": true,
+  "status": "HISTORICAL_AGENT_GOVERNANCE_POLICY_INTERFACE_FAULT_REPRODUCED",
+  "test_source_sha256": "sha256:e73da38aeb53bbc035953cbca0105e3fc5528dae6ce6062b9a19e9a964796589",
+  "upstream_test_results": {
+    "new": {
+      "failed": [],
+      "passed": 15,
+      "total": 15
+    },
+    "old": {
+      "failed": [
+        "test_empty_text_with_zero_width_pattern_denies",
+        "test_match_start_of_empty_match_is_zero",
+        "test_zero_length_leftmost_match_still_denies",
+        "test_zero_width_match_reports_placeholder_offset"
+      ],
+      "passed": 11,
+      "total": 15
+    }
+  }
+}

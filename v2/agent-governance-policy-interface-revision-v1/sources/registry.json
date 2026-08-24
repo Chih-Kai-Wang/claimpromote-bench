@@ -1,0 +1,31 @@
+{
+  "all_new_regression_test_names": [
+    "test_zero_length_leftmost_match_still_denies",
+    "test_empty_text_with_zero_width_pattern_denies",
+    "test_match_start_of_empty_match_is_zero",
+    "test_zero_width_match_reports_placeholder_offset"
+  ],
+  "architecture_document_url": "https://github.com/microsoft/agent-governance-toolkit/blob/e87b74530e1cbae54d5e90bc1b45ecf5c8911b28/policy-engine/README.md",
+  "change_commit": "e87b74530e1cbae54d5e90bc1b45ecf5c8911b28",
+  "change_url": "https://github.com/microsoft/agent-governance-toolkit/commit/e87b74530e1cbae54d5e90bc1b45ecf5c8911b28",
+  "decision_regression_test_names": [
+    "test_zero_length_leftmost_match_still_denies",
+    "test_empty_text_with_zero_width_pattern_denies"
+  ],
+  "formal_search_query": "openai opa in:name,description,readme",
+  "formal_search_rank": 7,
+  "license": "MIT",
+  "license_path": "v2/agent-governance-policy-interface-revision-v1/sources/LICENSE",
+  "license_sha256": "sha256:7df20dcdf9197e9945c14858d41c60f11b52b93e5b69e2b63416b874d598d322",
+  "new_sha256": "sha256:f5fabe6f1c44c6a77fb6eb71975c4f66a8ee4c3fef56383a16d03bbef1efd9fe",
+  "new_source": "v2/agent-governance-policy-interface-revision-v1/sources/new.rego",
+  "old_commit": "577627921d1615af6a8f40db551106ee5a1c8759",
+  "old_sha256": "sha256:9f5a668d0b5212e81055cd7270ed3176094b60b2ff464122084ff70fc457dd6e",
+  "old_source": "v2/agent-governance-policy-interface-revision-v1/sources/old.rego",
+  "repository": "https://github.com/microsoft/agent-governance-toolkit",
+  "schema_version": "1.0.0",
+  "source_path": "policy-engine/policy/lib/patterns.rego",
+  "test_path": "policy-engine/policy/lib/patterns_test.rego",
+  "test_sha256": "sha256:e73da38aeb53bbc035953cbca0105e3fc5528dae6ce6062b9a19e9a964796589",
+  "test_source": "v2/agent-governance-policy-interface-revision-v1/sources/patterns_test.rego"
+}

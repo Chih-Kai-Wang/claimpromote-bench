@@ -1,0 +1,25 @@
+{
+  "action_mapping": "Author mapping of the upstream commit's documented caller fallback: undefined deny verdict to ALLOW; deny verdict to HOLD.",
+  "cases": [
+    {
+      "case_id": "agt-zero-leftmost",
+      "patterns": [
+        "[0-9]*"
+      ],
+      "text": "card 4111",
+      "upstream_test_name": "test_zero_length_leftmost_match_still_denies"
+    },
+    {
+      "case_id": "agt-empty-zero-width",
+      "patterns": [
+        "x*"
+      ],
+      "text": "",
+      "upstream_test_name": "test_empty_text_with_zero_width_pattern_denies"
+    }
+  ],
+  "human_annotators": 0,
+  "model_calls": 0,
+  "schema_version": "1.0.0",
+  "status": "FROZEN_UPSTREAM_DECISION_REGRESSION_CASES"
+}

@@ -49,6 +49,19 @@ sources, an upstream regression-test file, and an upstream helper library from A
 These files remain under the upstream MIT license. A separately labeled six-line compatibility
 module is original study code under this repository's root license.
 
+## Microsoft Agent Governance Toolkit policy-interface revision
+
+The external boundary-fault addendum includes unmodified parent and fixed copies of Microsoft
+Agent Governance Toolkit's stock Rego pattern helper, its post-fix upstream regression tests, and
+the upstream MIT license. The registry pins the public repository, exact commits, original paths,
+and SHA-256 digests. The action mapping from an undefined deny verdict to the commit-documented
+caller fallback is explicitly an author mapping. The copied files remain under the upstream MIT
+license.
+
+The external-evidence audit also records immutable source coordinates and hashes for an
+agentgateway Bedrock guardrail revision. It redistributes no agentgateway source bytes; those
+sources remain under the upstream Apache-2.0 license.
+
 ## Pinned local model snapshots
 
 The local replication downloads, but does not redistribute, two MLX Community snapshots. The

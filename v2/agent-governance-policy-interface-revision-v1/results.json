@@ -1,0 +1,46 @@
+{
+  "fault_mode": "ZERO_LENGTH_MATCH_VERDICT_GAP",
+  "new_upstream_tests": {
+    "failed": [],
+    "passed": 15,
+    "total": 15
+  },
+  "old_upstream_tests": {
+    "failed": [
+      "test_empty_text_with_zero_width_pattern_denies",
+      "test_match_start_of_empty_match_is_zero",
+      "test_zero_length_leftmost_match_still_denies",
+      "test_zero_width_match_reports_placeholder_offset"
+    ],
+    "passed": 11,
+    "total": 15
+  },
+  "results": [
+    {
+      "case_id": "agt-zero-leftmost",
+      "new_action": "HOLD",
+      "new_deny_decision": "deny",
+      "new_matches_any": true,
+      "old_action": "ALLOW",
+      "old_deny_decision": null,
+      "old_matches_any": true,
+      "transition": "ALLOW->HOLD",
+      "upstream_test_name": "test_zero_length_leftmost_match_still_denies"
+    },
+    {
+      "case_id": "agt-empty-zero-width",
+      "new_action": "HOLD",
+      "new_deny_decision": "deny",
+      "new_matches_any": true,
+      "old_action": "ALLOW",
+      "old_deny_decision": null,
+      "old_matches_any": true,
+      "transition": "ALLOW->HOLD",
+      "upstream_test_name": "test_empty_text_with_zero_width_pattern_denies"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "transition_support": {
+    "ALLOW->HOLD": 2
+  }
+}
