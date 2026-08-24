@@ -16,6 +16,12 @@ from analyze_upstream_policy_route_repetition import (  # noqa: E402
     sanitized_rows,
     summarize_slice,
 )
+from derive_upstream_route_repetition_failure_modes import (  # noqa: E402
+    OUT_ROOT as FAILURE_MODE_ROOT,
+)
+from derive_upstream_route_repetition_failure_modes import (  # noqa: E402
+    validate as validate_failure_modes,
+)
 from freeze_upstream_policy_route_repetition import build_schedule  # noqa: E402
 from upstream_route_repetition import diagnose_response, lanes, request_body  # noqa: E402
 from validate_upstream_policy_route_repetition import validate_freeze  # noqa: E402
@@ -208,5 +214,14 @@ def test_committed_results_recompute_without_credentials() -> None:
         pytest.skip("route-repetition results have not been generated yet")
     report = validate_results()
     assert report["status"] == "UPSTREAM_ROUTE_REPETITION_RESULTS_VALID"
+    assert report["scheduled_cells"] == 144
+    assert report["credentials_loaded"] is False
+
+
+def test_content_free_failure_modes_recompute_without_credentials() -> None:
+    if not (FAILURE_MODE_ROOT / "manifest.json").exists():
+        pytest.skip("content-free failure-mode diagnostic has not been generated yet")
+    report = validate_failure_modes()
+    assert report["status"] == "UPSTREAM_ROUTE_REPETITION_FAILURE_MODES_VALID"
     assert report["scheduled_cells"] == 144
     assert report["credentials_loaded"] is False

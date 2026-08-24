@@ -75,6 +75,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_policy_switch_hosted_exclusion.py",
     "scripts/derive_policy_switch_hosted_replacement_eligibility.py",
     "scripts/derive_policy_difference_coverage.py",
+    "scripts/derive_upstream_route_repetition_failure_modes.py",
     "scripts/derive_minimal_policy_migration_hosted_eligibility.py",
     "scripts/derive_minimal_policy_migration_suite.py",
     "scripts/derive_policy_migration_mutation_audit.py",
