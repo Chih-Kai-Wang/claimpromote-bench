@@ -239,6 +239,9 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "public_model_breadth_item_level_records_included",
         "public_model_breadth_hidden_reasoning_included",
         "public_model_breadth_raw_final_response_text_included",
+        "ox_alpha_minimum_route_raw_response_text_included",
+        "ox_alpha_minimum_route_full_structured_decisions_included",
+        "ox_alpha_minimum_route_hidden_reasoning_included",
     )
     if any(scope.get(key) is not False for key in false_guards):
         fail("anonymous manifest privacy scope changed")
@@ -254,6 +257,8 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "local_policy_transition_graph_summary_included",
         "local_policy_transition_graph_item_level_records_included",
         "local_minimum_policy_migration_gate_included",
+        "ox_alpha_minimum_route_summary_included",
+        "ox_alpha_minimum_route_item_level_records_included",
     )
     if any(scope.get(key) is not True for key in true_guards):
         fail("anonymous manifest multi-policy evidence scope changed")

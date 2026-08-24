@@ -1587,6 +1587,269 @@ usage, timings, hashes, gold labels, pair membership, and complete failure cells
     )
 
 
+def build_ox_alpha_minimal_route_anonymous_evidence(destination: Path) -> None:
+    """Project the 20-cell Ox route smoke replay without retaining private response text."""
+
+    source = ROOT / "v2" / "ox-alpha-minimal-route-v1"
+    plan = load_object(source / "study-plan.json")
+    selection = load_object(source / "selection-receipt.json")
+    schedule = load_object(source / "request-schedule.json")
+    aggregate = load_object(source / "results" / "aggregate.json")
+    source_privacy = load_object(source / "results" / "privacy-receipt.json")
+    execution = load_object(source / "private-results" / "execution-receipt.json")
+    source_run = source / "private-results" / "opencode-go-ox-alpha-free-minimal-route-v1.jsonl"
+    rows = [
+        json.loads(line)
+        for line in source_run.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    cells = schedule.get("cells")
+    if (
+        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or plan.get("research_role") != "POSTHOC_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
+        or selection.get("status") != "PREINFERENCE_ROUTE_AND_SUITE_SELECTION"
+        or selection.get("outcomes_used_for_selection") is not False
+        or selection.get("conditional_success_subset_allowed") is not False
+        or execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
+        or execution.get("planned_cells") != 20
+        or execution.get("durable_terminal_records") != 20
+        or execution.get("application_posts") != 20
+        or execution.get("client_retry_count") != 0
+        or execution.get("partial_resume_used") is not False
+        or aggregate.get("status") != "COMPLETE"
+        or aggregate.get("classification") != "COMPLETE_ROUTE_SMOKE_GATE_FAIL"
+        or aggregate.get("strict_smoke_gate_pass") is not False
+        or source_privacy.get("status") != "OX_ALPHA_ROUTE_PUBLIC_AGGREGATE_PRIVACY_PASS"
+        or source_privacy.get("private_route_records_eligible_for_anonymous_release") is not False
+        or not isinstance(cells, list)
+        or len(cells) != 20
+        or len(rows) != 20
+    ):
+        fail("Ox Alpha minimum-route source boundary changed")
+
+    projected_rows: list[Json] = []
+    for sequence, (cell, row) in enumerate(zip(cells, rows, strict=True)):
+        item_id = str(cell.get("item_id"))
+        pair_id = str(cell.get("pair_id"))
+        if (
+            cell.get("sequence") != sequence
+            or row.get("item_id") != item_id
+            or row.get("pair_id") != pair_id
+            or row.get("lane_id") != "opencode-go-ox-alpha-free-minimal-route-v1"
+        ):
+            fail(f"Ox Alpha route order or identity changed: {item_id}")
+        _reject_hidden_reasoning(row, f"Ox Alpha route row {item_id}")
+        if row.get("provider_response_id") not in (None, ""):
+            fail(f"Ox Alpha route retained a provider response ID: {item_id}")
+
+        parse_status = str(row.get("parse_status"))
+        raw_decision = row.get("raw_decision")
+        if parse_status == "OK":
+            if not isinstance(raw_decision, dict) or raw_decision.get("action") not in (
+                "ALLOW",
+                "HOLD",
+                "DEMOTE",
+                "ESCALATE",
+            ):
+                fail(f"Ox Alpha valid row lacks a supported action: {item_id}")
+            projected_decision: Json | None = {"action": str(raw_decision["action"])}
+            failure_class = None
+        elif parse_status == "TRANSPORT_ERROR":
+            if "503" not in str(row.get("transport_error")):
+                fail(f"Ox Alpha transport failure is not the sealed HTTP 503 class: {item_id}")
+            projected_decision = None
+            failure_class = "HTTP_503_ENDPOINT_UNAVAILABLE"
+        elif parse_status == "SEMANTIC_ERROR":
+            if "proposed_state is inconsistent with the declared action" not in str(
+                row.get("parse_error_detail")
+            ):
+                fail(f"Ox Alpha semantic failure class changed: {item_id}")
+            projected_decision = None
+            failure_class = "CROSS_FIELD_STATE_ACTION_INCONSISTENCY"
+        elif parse_status == "JSON_SYNTAX_ERROR":
+            if row.get("finish_reason") != "length":
+                fail(f"Ox Alpha syntax failure is not length-terminated: {item_id}")
+            projected_decision = None
+            failure_class = "LENGTH_TERMINATED_JSON"
+        else:
+            fail(f"Ox Alpha route has an unregistered failure class: {item_id}/{parse_status}")
+
+        projected_rows.append(
+            {
+                "schema_version": "1.0.0-review",
+                "sequence": sequence,
+                "item_id": item_id,
+                "pair_id": pair_id,
+                "parse_status": parse_status,
+                "raw_decision": projected_decision,
+                "failure_class": failure_class,
+            }
+        )
+
+    plan_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+        "study_id": plan["study_id"],
+        "research_role": plan["research_role"],
+        "identity_boundary": plan["identity_boundary"],
+        "reporting_boundary": plan["reporting_boundary"],
+        "route": {
+            "provider": plan["route"]["provider"],
+            "model": plan["route"]["model"],
+            "model_identity_status": plan["route"]["model_identity_status"],
+            "response_format": plan["route"]["response_format"],
+            "sampling_parameters_sent": plan["route"]["sampling_parameters_sent"],
+            "official_route_price_at_freeze": plan["budget"]["official_route_price"],
+        },
+        "execution": {
+            "planned_application_posts": 20,
+            "application_posts_per_cell": 1,
+            "client_retry_count": 0,
+            "partial_resume": "FORBIDDEN",
+            "failure_rule": plan["execution"]["failure_rule"],
+        },
+        "minimum_suite": {
+            "selected_pairs": 10,
+            "selected_items": 20,
+            "changed_rules_covered": 12,
+            "reachable_edges_covered": 10,
+            "contexts_per_edge": 1,
+        },
+        "strict_smoke_pass_rule": plan["statistics"]["strict_smoke_pass_rule"],
+        "private_source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
+    selection_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": selection["status"],
+        "study_id": selection["study_id"],
+        "known_result_boundary": selection["known_result_boundary"],
+        "suite_selection_basis": selection["suite_selection_basis"],
+        "route_selected_because": selection["route_selected_because"],
+        "selected_pair_ids": selection["selected_pair_ids"],
+        "selected_item_ids": selection["selected_item_ids"],
+        "outcomes_used_for_selection": False,
+        "conditional_success_subset_allowed": False,
+        "new_model_calls_for_selection": 0,
+        "private_source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
+    schedule_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+        "study_id": plan["study_id"],
+        "planned_cells": 20,
+        "application_posts_per_cell": 1,
+        "client_retry_count": 0,
+        "contains_credentials": False,
+        "contains_gold": False,
+        "cells": [
+            {
+                "sequence": row["sequence"],
+                "item_id": row["item_id"],
+                "pair_id": row["pair_id"],
+            }
+            for row in projected_rows
+        ],
+    }
+    write_json(destination / "study-plan.json", plan_review)
+    write_json(destination / "selection-receipt.json", selection_review)
+    write_json(destination / "request-schedule.json", schedule_review)
+    write_jsonl(destination / "runs" / "ox-alpha-free-minimum-route.jsonl", projected_rows)
+
+    aggregate_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": aggregate["status"],
+        "classification": aggregate["classification"],
+        "study_id": aggregate["study_id"],
+        "design": aggregate["design"],
+        "route_label": aggregate["route_label"],
+        "model_identity_status": aggregate["model_identity_status"],
+        "identity_boundary": aggregate["identity_boundary"],
+        "interpretation": aggregate["interpretation"],
+        "evidence_ceiling": aggregate["evidence_ceiling"],
+        "failure_rule": aggregate["failure_rule"],
+        "execution": aggregate["execution"],
+        "adequacy": aggregate["adequacy"],
+        "metrics": aggregate["metrics"],
+        "strict_smoke_gate_pass": aggregate["strict_smoke_gate_pass"],
+        "raw_model_outputs_in_anonymous_derivative": False,
+        "private_source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "anonymous_bindings": {
+            "study_plan_sha256": sha256_file(destination / "study-plan.json"),
+            "selection_receipt_sha256": sha256_file(destination / "selection-receipt.json"),
+            "request_schedule_sha256": sha256_file(destination / "request-schedule.json"),
+            "run_sha256": sha256_file(destination / "runs" / "ox-alpha-free-minimum-route.jsonl"),
+        },
+    }
+    write_json(destination / "reported-aggregate.json", aggregate_review)
+
+    (destination / "README.md").write_text(
+        """# Ox Alpha minimum-route smoke replay
+
+This directory retains all 20 scheduled outcomes from a one-pass, zero-retry replay of the
+previously derived ten-pair minimum policy-migration suite. The route was selected after other
+results were known, but its route, schedule, failure rule, and strict 20/20-item plus 10/10-pair
+gate were committed before the first call. Ox Alpha is a time-stamped stealth route label, not a
+model-family identity. The replay is an auxiliary route smoke test, not an independent policy
+replication, reliability estimate, provider ranking, or causal ablation.
+
+Each projected row retains the item, pair, parse class, action when valid, and a finite failure
+class. Raw response text, full structured decisions, free-form errors, provider identifiers,
+credentials, hidden reasoning, private paths, and commit identity are excluded. Every failed cell
+remains in the end-to-end denominator.
+""",
+        encoding="utf-8",
+        newline="\n",
+    )
+    review_files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file()
+    }
+    privacy: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_OX_ALPHA_ROUTE_DERIVATIVE_VALIDATED",
+        "terminal_records_validated": 20,
+        "all_scheduled_terminal_failures_included": True,
+        "raw_final_response_text_included": False,
+        "full_structured_decisions_included": False,
+        "free_form_error_text_included": False,
+        "provider_response_identifiers_included": False,
+        "hidden_reasoning_fields_included": False,
+        "credentials_included": False,
+        "private_repository_or_commit_identity_included": False,
+        "review_file_sha256": dict(sorted(review_files.items())),
+    }
+    privacy["self_digest"] = _digest_without(privacy, "self_digest")
+    write_json(destination / "privacy-receipt-review.json", privacy)
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_OX_ALPHA_MINIMUM_ROUTE_EVIDENCE",
+        "file_count": len(files),
+        "files": files,
+        "run_file": "runs/ox-alpha-free-minimum-route.jsonl",
+        "scope": {
+            "terminal_records": 20,
+            "all_scheduled_terminal_failures_included": True,
+            "item_level_action_records_included": True,
+            "raw_final_response_text_included": False,
+            "full_structured_decisions_included": False,
+            "free_form_error_text_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+            "credentials_included": False,
+            "private_repository_or_commit_identity_included": False,
+        },
+    }
+    manifest["manifest_sha256"] = _digest_without(manifest, "manifest_sha256")
+    write_json(destination / "MANIFEST.json", manifest)
+
+
 def build_policy_switch_anonymous_evidence(destination: Path) -> None:
     source = ROOT / "v2" / "policy-switch-v1"
     frozen = source / "frozen"
@@ -2654,8 +2917,8 @@ def review_readme() -> str:
 
 This focused bundle contains the material needed to replay the paper: the public controlled
 benchmark, executable and Lean fixtures, the reviewer-release r6 data, the pair-balanced public
-challenge, the SLSA-derived evidence study, and three pinned open-weight local replications on the
-fixed-policy, rule-stratified, and transition-graph datasets. It
+challenge, the SLSA-derived evidence study, three pinned open-weight local replications, and the
+20-cell Ox Alpha minimum-route smoke replay. It
 contains no Git history, author metadata, public repository link, private construction seed,
 human-subject record, or public workflow identifier.
 
@@ -2674,11 +2937,11 @@ if `lake` is missing.
 Use `--python-only` for an explicitly partial replay when Lean is unavailable.
 
 The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
-records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; and
-three local 120-item software-policy studies. Paper-facing records retain structured decisions,
-parse and failure classes, and every scheduled denominator while omitting raw response text and
-free-form errors. Provider account and response identifiers, credentials, author provenance, and
-hidden reasoning are excluded.
+records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; three
+local 120-item software-policy studies; and the 20-cell Ox route replay. Paper-facing records retain
+the action needed for metric replay, parse and failure classes, and every scheduled denominator
+while omitting raw response text and free-form errors. Provider account and response identifiers,
+credentials, author provenance, and hidden reasoning are excluded.
 
 ## Scope limitation
 
@@ -2709,6 +2972,11 @@ Two frozen hosted policy-switch executions, one hosted transition-graph executio
 minimum-suite execution exhausted a shared subscription quota. All four are excluded in full, and
 the bundle retains only redacted exclusion receipts. No excluded hosted row, item record, or
 conditional hosted metric enters the paper or reviewer evidence.
+
+The later Ox Alpha replay is separate from that excluded 40-cell execution. Its route and minimum
+suite were selected after earlier results were known, then the 20-item schedule, zero-retry rule,
+failure denominator, and strict gate were committed before its first call. The stealth label does
+not identify a model family. This time-stamped replay supports only route-level smoke-test claims.
 
 Two open-weight model families were selected and revision-pinned before benchmark inference, then
 run locally on all three software-policy datasets with greedy decoding and zero retries. Exact model
@@ -3234,6 +3502,13 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/hosted-policy-switch-replacement-exclusion.json",
         "evidence/hosted-policy-transition-graph-exclusion.json",
         "evidence/hosted-minimum-policy-migration-exclusion.json",
+        "evidence/ox-alpha-minimal-route/MANIFEST.json",
+        "evidence/ox-alpha-minimal-route/privacy-receipt-review.json",
+        "evidence/ox-alpha-minimal-route/reported-aggregate.json",
+        "evidence/ox-alpha-minimal-route/request-schedule.json",
+        "evidence/ox-alpha-minimal-route/runs/ox-alpha-free-minimum-route.jsonl",
+        "evidence/ox-alpha-minimal-route/selection-receipt.json",
+        "evidence/ox-alpha-minimal-route/study-plan.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -3308,6 +3583,7 @@ def write_manifest(bundle: Path) -> None:
     local_minimum_gate_included = (
         local_replication_root / "policy-transition-graph" / "minimum-subset-analysis.json"
     ).is_file()
+    ox_alpha_route_included = (bundle / "evidence" / "ox-alpha-minimal-route").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -3363,6 +3639,11 @@ def write_manifest(bundle: Path) -> None:
                 local_transition_graph_included
             ),
             "local_minimum_policy_migration_gate_included": local_minimum_gate_included,
+            "ox_alpha_minimum_route_summary_included": ox_alpha_route_included,
+            "ox_alpha_minimum_route_item_level_records_included": ox_alpha_route_included,
+            "ox_alpha_minimum_route_raw_response_text_included": False,
+            "ox_alpha_minimum_route_full_structured_decisions_included": False,
+            "ox_alpha_minimum_route_hidden_reasoning_included": False,
             "ontology_count": 2,
             "policy_instrument_count": 4,
             "public_model_breadth_summary_included": False,
@@ -3485,6 +3766,7 @@ def paper_empirical_validator() -> str:
             "validate_slsa_portability",
             "validate_local_model_replications",
             "validate_hosted_exclusion_receipts",
+            "validate_ox_alpha_minimal_route",
         },
         "Recompute the paper-facing studies from anonymous item-level records.",
     ).rstrip()
@@ -3498,6 +3780,7 @@ def main() -> int:
         "slsa_portability": validate_slsa_portability(),
         "local_model_replications": validate_local_model_replications(),
         "hosted_exclusions": validate_hosted_exclusion_receipts(),
+        "ox_alpha_minimal_route": validate_ox_alpha_minimal_route(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0
@@ -3630,6 +3913,9 @@ def build(destination: Path) -> None:
     )
     build_local_model_replications_anonymous_evidence(
         destination / "evidence" / "local-model-replications"
+    )
+    build_ox_alpha_minimal_route_anonymous_evidence(
+        destination / "evidence" / "ox-alpha-minimal-route"
     )
     (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
     (destination / "README.md").write_text(review_readme(), encoding="utf-8")

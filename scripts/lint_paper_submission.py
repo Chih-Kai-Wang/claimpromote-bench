@@ -111,6 +111,11 @@ BREADTH_PRIVATE_JOURNAL = (
 BREADTH_PACKET = ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json"
 BREADTH_DATASET = ROOT / "v2" / "balanced-public-challenge" / "dataset"
 BREADTH_VERIFIER = ROOT / "release" / "tools" / "verify_public_model_breadth_public_evidence.py"
+OX_ALPHA_ROOT = ROOT / "v2" / "ox-alpha-minimal-route-v1"
+OX_ALPHA_RESULT = OX_ALPHA_ROOT / "results" / "aggregate.json"
+OX_ALPHA_RUN = (
+    OX_ALPHA_ROOT / "private-results" / "opencode-go-ox-alpha-free-minimal-route-v1.jsonl"
+)
 NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
 NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
@@ -266,14 +271,14 @@ def validate_manuscript_style_audit() -> None:
     if (
         boundary.get("metrics_changed") is not True
         or boundary.get("existing_terminal_records_changed") is not False
-        or boundary.get("retained_scored_terminal_records_added") != 720
-        or boundary.get("retained_scored_model_calls_performed") != 720
+        or boundary.get("retained_scored_terminal_records_added") != 740
+        or boundary.get("retained_scored_model_calls_performed") != 740
         or boundary.get("excluded_resource_failure_terminal_records_added") != 520
         or boundary.get("excluded_resource_failure_model_calls_performed") != 520
-        or boundary.get("total_model_calls_performed") != 1240
+        or boundary.get("total_model_calls_performed") != 1260
         or boundary.get("excluded_resource_failure_model_rows_entered_manuscript") is not False
         or boundary.get("void_protocol_application_posts") != 1
-        or boundary.get("total_application_posts_during_revision") != 1241
+        or boundary.get("total_application_posts_during_revision") != 1261
         or boundary.get("completed_singleton_workflows_rerun") is not False
         or boundary.get("balanced_public_v1_rerun") is not False
         or boundary.get("paper_binding_validator") != "scripts/lint_paper_submission.py"
@@ -923,6 +928,73 @@ def challenge_configs() -> list[dict[str, Any]]:
     return [{"label": labels[lane_id], "metrics": lanes[lane_id]["metrics"]} for lane_id in labels]
 
 
+def ox_alpha_configs() -> list[dict[str, Any]]:
+    aggregate = load_object(OX_ALPHA_RESULT, "Ox Alpha minimum-route aggregate")
+    plan = load_object(OX_ALPHA_ROOT / "study-plan.json", "Ox Alpha minimum-route plan")
+    selection = load_object(
+        OX_ALPHA_ROOT / "selection-receipt.json", "Ox Alpha minimum-route selection"
+    )
+    execution = load_object(
+        OX_ALPHA_ROOT / "private-results" / "execution-receipt.json",
+        "Ox Alpha minimum-route execution receipt",
+    )
+    rows = load_jsonl(OX_ALPHA_RUN, "Ox Alpha minimum-route run")
+    selected_items = {str(value) for value in selection.get("selected_item_ids", [])}
+    selected_pairs = {str(value) for value in selection.get("selected_pair_ids", [])}
+    gold = [
+        row
+        for row in load_jsonl(
+            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-gold.jsonl",
+            "policy-transition graph gold",
+        )
+        if str(row["id"]) in selected_items
+    ]
+    all_pairs = json.loads(
+        (POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    if not isinstance(all_pairs, list):
+        fail("policy-transition graph pair index is malformed")
+    pairs = [row for row in all_pairs if str(row["pair_id"]) in selected_pairs]
+    analyzer = runpy.run_path(str(ROOT / "scripts" / "analyze_balanced_public_challenge.py"))
+    derive = analyzer.get("derive_reporting_metrics")
+    if not callable(derive):
+        fail("balanced metrics recomputation entry point is missing")
+    recomputed = derive(gold, pairs, rows)
+    strict_pass = (
+        recomputed.get("parseable_items") == 20
+        and recomputed.get("correct_items") == 20
+        and recomputed.get("correct_pairs") == 10
+    )
+    if (
+        len(gold) != 20
+        or len(pairs) != 10
+        or len(rows) != 20
+        or plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or plan.get("research_role") != "POSTHOC_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
+        or plan.get("route", {}).get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
+        or plan.get("execution", {}).get("planned_application_posts") != 20
+        or plan.get("execution", {}).get("client_retry_count") != 0
+        or selection.get("status") != "PREINFERENCE_ROUTE_AND_SUITE_SELECTION"
+        or selection.get("outcomes_used_for_selection") is not False
+        or selection.get("conditional_success_subset_allowed") is not False
+        or execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
+        or execution.get("application_posts") != 20
+        or execution.get("client_retry_count") != 0
+        or execution.get("partial_resume_used") is not False
+        or aggregate.get("classification") != "COMPLETE_ROUTE_SMOKE_GATE_FAIL"
+        or aggregate.get("design")
+        != "PREINFERENCE_FROZEN_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
+        or aggregate.get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
+        or aggregate.get("metrics") != recomputed
+        or aggregate.get("strict_smoke_gate_pass") is not strict_pass
+        or aggregate.get("execution", {}).get("incremental_cash_cost_usd") != 0.0
+    ):
+        fail("Ox Alpha minimum-route evidence or interpretation boundary changed")
+    return [{"label": "Ox route (host/prompt; gate)", "metrics": recomputed}]
+
+
 def synthetic_configs() -> list[dict[str, Any]]:
     slsa = recompute_synthetic_lanes(
         study_root=SLSA_ROOT,
@@ -1012,7 +1084,13 @@ def local_configs() -> list[dict[str, Any]]:
 
 
 def metric_configs() -> list[dict[str, Any]]:
-    configs = [*legacy_configs(), *challenge_configs(), *synthetic_configs(), *local_configs()]
+    configs = [
+        *legacy_configs(),
+        *challenge_configs(),
+        *synthetic_configs(),
+        *local_configs(),
+        *ox_alpha_configs(),
+    ]
     labels = [str(row["label"]) for row in configs]
     if len(labels) != len(set(labels)):
         fail("paper configuration labels are not unique")
@@ -1426,8 +1504,20 @@ def validate_new_study_claims(tex: str) -> None:
         (r"hosted policy-switch.*excluded\s+in full", "hosted full-study exclusion"),
         (r"no successful hosted row", "no valid-subset selection"),
         (
-            r"40-cell hosted smoke.*excluded\s+in full.*no.*model rows",
+            r"40-cell hosted smoke.*excluded\s+in full.*no row from that run",
             "minimum-suite hosted full-study exclusion",
+        ),
+        (
+            r"Ox Alpha.*20.*zero-retry.*13/20.*6/10.*strict gate",
+            "Ox Alpha minimum-route outcome and gate",
+        ),
+        (
+            r"stealth.*does not identify a model family",
+            "Ox Alpha model-identity boundary",
+        ),
+        (
+            r"post-hoc route selection|selected after.*results were known",
+            "Ox Alpha post-hoc route-selection boundary",
         ),
     )
     for pattern, description in required:

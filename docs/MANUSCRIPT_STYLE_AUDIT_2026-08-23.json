@@ -11,14 +11,14 @@
       "throat_clearing": 0,
       "vague_importance": 0
     },
-    "manuscript_sha256": "2f30662516c878fd3ace44239f71450b0d79ddcc0245b33ec729347cab353672",
-    "prose_words": 4827,
-    "sentence_words_mean": 15.37,
-    "sentence_words_median": 14.5,
-    "sentence_words_over_40_percent": 0.6494,
-    "sentence_words_p90": 24.0,
-    "sentence_words_p95": 27.0,
-    "sentences": 308
+    "manuscript_sha256": "6dd7a09c05500dd50e973f4228b6c09f56ccc672ffd2a56cafbcaac60b044ca5",
+    "prose_words": 5083,
+    "sentence_words_mean": 15.74,
+    "sentence_words_median": 15,
+    "sentence_words_over_40_percent": 0.6309,
+    "sentence_words_p90": 24.4,
+    "sentence_words_p95": 27.2,
+    "sentences": 317
   },
   "before": {},
   "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",
@@ -54,10 +54,10 @@
     "existing_terminal_records_changed": false,
     "metrics_changed": true,
     "paper_binding_validator": "scripts/lint_paper_submission.py",
-    "retained_scored_model_calls_performed": 720,
-    "retained_scored_terminal_records_added": 720,
-    "total_application_posts_during_revision": 1241,
-    "total_model_calls_performed": 1240,
+    "retained_scored_model_calls_performed": 740,
+    "retained_scored_terminal_records_added": 740,
+    "total_application_posts_during_revision": 1261,
+    "total_model_calls_performed": 1260,
     "void_protocol_application_posts": 1
   },
   "status": "PASS"

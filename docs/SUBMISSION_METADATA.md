@@ -16,7 +16,7 @@ ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes under Executable P
 ## ICLR 2027 abstract
 
 ```text
-Language-model routes mediate structured policy decisions that should be deterministic. After policy revision, a route can remain valid-looking yet stale; valid-only scoring also hides interface failure. We introduce ClaimPromoteBench, a synthetic protocol for paired action conformance after output-contract validation. It holds typed context fixed while switching executable policies and scores calls jointly. Every scheduled service, syntax, schema, and semantic failure remains incorrect end to end. Established semantic differencing and set-cover machinery implement the compiler. In one authored BLUE-to-AMBER migration, rule-complete tests cover 6/10 action edges, graph-complete tests cover all ten reachable edges, and a 10-pair gate covers all 12 changed rules. Two pinned local routes, evaluated once without independent replication, score 10/60 and 2/60 pairs and fail the gate. Auxiliary r6 Qwen coverage is 272/300; item/pair accuracy is 258/300 and 113/150 end to end versus 258/272 and 113/123 conditional. In a balanced challenge, Qwen and Flash coverage is 148/180 and 146/180; end-to-end item/pair scores are 132/180,48/90 and 90/180,13/90, versus 132/148,48/64 and 90/146,13/61 conditional; DEMOTE recall is 4/30 and 0/30. The executor defines labels, not a learned baseline. Results support regression testing of finite authored decision surfaces, not model-family ranking, naturalistic validity, or causal comparison.
+Policy revisions can leave model-mediated structured decisions valid-looking but stale; valid-only scoring also hides interface failure. We introduce ClaimPromoteBench, a synthetic protocol that holds typed context fixed across executable policies and scores paired action conformance after output-contract validation. Every scheduled service, syntax, schema, and semantic failure remains incorrect end to end. In one authored BLUE-to-AMBER migration, rule-complete tests cover 6/10 action edges, graph-complete tests cover all ten reachable edges, and a 10-pair gate covers all 12 changed rules. Two pinned local routes, evaluated once without independent replication, score 10/60 and 2/60 pairs and fail the gate. Auxiliary r6 Qwen coverage is 272/300; item/pair accuracy is 258/300 and 113/150 end to end versus 258/272 and 113/123 conditional. In a balanced challenge, Qwen and Flash coverage is 148/180 and 146/180; end-to-end item/pair scores are 132/180,48/90 and 90/180,13/90, versus 132/148,48/64 and 90/146,13/61 conditional; DEMOTE recall is 4/30 and 0/30. A post-hoc route, frozen before its first call, returns 13/20 valid action-correct decisions and 6/10 pairs but fails the strict gate. The executor defines labels, not a learned baseline. Results support regression testing of finite authored decision surfaces, not model-family ranking, naturalistic validity, or causal comparison.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -99,6 +99,11 @@ Compiles behavioral differences between executable policy versions into minimum 
 - Challenge action recall (`ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE`) is 0.878 / 0.867 / 0.133 /
   0.767 for Qwen and 0.756 / 0.300 / 0.000 / 0.433 for Flash. Full confusion matrices retain a
   no-valid-decision column.
+- Ox minimum-route replay: 13 / 20 valid and action-correct decisions, six complete and correct
+  pairs, conditional item/pair accuracy 1.0 / 1.0, and end-to-end accuracy .65 / .60. Three HTTP
+  503, three cross-field semantic, and one length-terminated JSON failure cause the strict gate to
+  fail. This is a post-hoc route selection with a pre-call-frozen schedule and an undisclosed stealth
+  model identity.
 - The deterministic executor is the label definition, not a learned baseline. Naive Bayes is a
   weak sanity control; Random Forest profile-aware and profile-blind rows are construction and
   shortcut controls.
@@ -110,7 +115,7 @@ Compiles behavioral differences between executable policy versions into minimum 
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the public controlled benchmark, pair-balanced public challenge, reviewer-release hidden datasets and policy labels, exact prompt packets, projected C2 records, item-level empirical scoring records, recomputation code, privacy and correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, raw final-response text, free-form errors, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Structured decisions plus parse and failure classes preserve every scheduled denominator. Public repository and archival identifiers will be released when double-blind review permits disclosure.
+An anonymized supplementary bundle contains the public controlled benchmark, pair-balanced public challenge, reviewer-release hidden datasets and policy labels, exact prompt packets, projected C2 records, item-level empirical scoring records, the 20-row Ox minimum-route action/failure derivative, recomputation code, privacy and correction receipts, and executable and formal replay inputs. Its manifest records the generated tree's current file count. It excludes private construction seeds, raw final-response text, free-form errors, provider hidden-thinking content, provider response identifiers, author-identifying provenance, and generated caches. Structured decisions or action-only projections plus parse and failure classes preserve every scheduled denominator. Public repository and archival identifiers will be released when double-blind review permits disclosure.
 ```
 
 ### Public preprint version

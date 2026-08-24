@@ -13,7 +13,9 @@ The manuscript's central claim is a paired, failure-aware regression protocol fo
 model boundary under executable policy revision. Its central evidence is one authored migration,
 two 60-pair suites, and the same two pinned local routes evaluated once; the 10-pair minimum gate
 reuses graph records. R6, the public action-balanced challenge, and fixed-policy SLSA results are
-auxiliary route diagnostics rather than independent policy-migration replications.
+auxiliary route diagnostics rather than independent policy-migration replications. The later Ox
+minimum-route replay is a post-hoc route selection with a pre-call-frozen schedule and the same
+limited interpretation.
 
 The final isolated reviewer scored the preceding release candidate 4/10. That review was not
 rerated: the score describes the reviewed snapshot, not this revision, and does not predict venue
@@ -38,6 +40,12 @@ A prospectively frozen seven-route supplement was later found to share a quota-c
 tail. It remains immutable private audit material but is excluded from the manuscript, submission
 metadata, anonymous reviewer package, and minimum public-release core. No subset of its valid rows
 is reported as a replacement study.
+
+The later Ox Alpha Free route replay is independent of that excluded supplement. It made exactly 20
+zero-retry calls after its route, minimum-suite schedule, failure rule, and strict gate were
+committed. Thirteen decisions were valid and action-correct; six pairs were complete and correct.
+Seven retained failures reduce end-to-end item/pair accuracy to .65/.60, so the route fails the
+20/20-item and 10/10-pair gate. The stealth label does not identify a model family.
 
 ## Gate A — frozen v1 study remains intact
 
@@ -138,6 +146,21 @@ is reported as a replacement study.
   anonymous reviewer package. Its frozen private records are retained for audit rather than
   selectively rescored or filtered.
 
+### Post-hoc Ox minimum-route smoke replay
+
+- [x] Earlier route outcomes were known before route selection; this is disclosed as post-hoc route
+  selection, not a prospective model-family study.
+- [x] The route label, exact 20-item minimum-suite schedule, zero-retry rule, all-failure denominator,
+  and strict 20/20-item plus 10/10-pair pass rule were committed before the first Ox call.
+- [x] Exactly 20 application posts were made with zero client retries, no resume, and zero incremental
+  cash cost.
+- [x] The route produced 13/20 valid decisions, all action-correct, and 6/10 complete correct pairs;
+  conditional item/pair accuracy is 13/13 and 6/6, while end-to-end accuracy is 13/20 and 6/10.
+- [x] Three HTTP 503 failures, three cross-field state/action semantic failures, and one
+  length-terminated JSON failure remain in the denominator. The strict gate fails.
+- [x] Ox Alpha is reported as a time-stamped stealth service label. No developer, architecture,
+  weights, model family, provider ranking, temporal reliability, or causal claim is inferred.
+
 ## Gate D — post-protocol GPT-5.4 public-development follow-up
 
 - [x] The extension is labeled post-protocol, public-development, one-model, and one-pass evidence.
@@ -163,8 +186,8 @@ is reported as a replacement study.
 
 - [x] Abstract frames the task as synthetic, policy-constrained evidence-state transition
   evaluation rather than broad research-agent capability.
-- [x] Abstract leads with one authored migration and reports the auxiliary r6 and balanced-challenge
-  coverage, conditional and end-to-end item/pair scores, and `DEMOTE` recalls.
+- [x] Abstract leads with one authored migration, reports the auxiliary r6 and balanced-challenge
+  diagnostics, and gives the Ox minimum-route gate outcome without promoting it to central evidence.
 - [x] Abstract calls the deterministic executor a definitional policy ceiling and Naive Bayes a
   weak baseline while rejecting naturalistic-validity and causal-comparison interpretations.
 - [x] Main text defines action conformance after output-contract validation as the primary endpoint;
@@ -183,10 +206,10 @@ is reported as a replacement study.
 - [x] Main and appendix tables separate model routes from weak or construction-dependent sanity
   controls and give explicit prediction columns for every confusion cell.
 - [x] Manuscript truth lint is bound to the r6 result and reporting addendum, the balanced-challenge
-  plan and item records, both migration suites, confusion matrices, action recalls, and privacy
-  receipts.
-- [x] The anonymous evidence replay validates only the empirical records needed for the current
-  paper: fresh r6 and the balanced public challenge.
+  plan and item records, both migration suites, the Ox plan and 20 terminal records, confusion
+  matrices, action recalls, and privacy receipts.
+- [x] The anonymous evidence replay validates the empirical records needed for the current paper,
+  including all 20 projected Ox action/failure rows and the strict gate.
 - [x] Manuscript truth lint is bound to the r6 study-result self-digest, public analysis, complete
   Holm family, redaction/equivalence receipt, correction overlay, and exact paper-facing metrics.
 - [x] Balanced-challenge Macro-F1 is a fixed-four-class mean with zero division set to zero; a
@@ -194,9 +217,9 @@ is reported as a replacement study.
   360 terminal records.
 - [x] A compact factor-level table reports support, coverage range, E2E pair-accuracy range, and
   zero/perfect-factor counts from frozen records; the anonymous artifact retains every factor row.
-- [x] Discussion, limitations, and conclusion preserve all r6 and balanced-challenge service,
+- [x] Discussion, limitations, and conclusion preserve all r6, balanced-challenge, and Ox service,
   syntax, schema, and semantic failures in end-to-end denominators and reject causal,
-  hidden-generalization, and naturalistic-transfer interpretations.
+  hidden-generalization, model-family, reliability, and naturalistic-transfer interpretations.
 - [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
 
 ## Gate F — naturalistic evaluation boundary
@@ -239,10 +262,12 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Balanced public-challenge dataset, prompt packet, one-pass lane records, immutable historical
   aggregate, reporting-correction receipt, corrected reviewer aggregate, per-action/confusion
   diagnostics, workflow receipt, and privacy receipt guards pass.
+- [x] Ox minimum-route freeze, one-pass execution, aggregate replay, strict gate, finite failure
+  taxonomy, and public-safe derivative guards pass.
 - [x] The private seven-route records and audit tooling remain repository-verifiable but are outside
   the paper-facing lint, anonymous replay, and release package.
-- [x] Anonymous empirical-evidence validation replays fresh r6 and the balanced public challenge
-  from inside the finalized reviewer bundle.
+- [x] Anonymous empirical-evidence validation replays fresh r6, the balanced public challenge, and
+  the Ox minimum-route derivative from inside the finalized reviewer bundle.
 - [x] Naturalistic case validator and guard tests pass.
 - [x] v1 hidden freeze guard passes.
 - [x] v1 scored-study guard passes.
@@ -259,11 +284,12 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] The ICLR source archive includes the official pinned `fancyhdr.sty` and `natbib.sty`
   dependencies, preventing system-package drift from removing the anonymous-review page header.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 15 physical pages: nine pages through the scientific conclusion and
-  non-counting reproducibility/AI-use statements, three reference pages, and three appendix pages.
+- [x] ICLR PDF contains 17 physical pages: nine pages through the scientific conclusion, one page
+  containing only the non-counting reproducibility/AI-use statements, three reference pages, and
+  four appendix pages.
 - [x] Main-text page probe reports 9 pages, at the 9-page limit; the scientific conclusion ends on
   page 9.
-- [x] References begin on physical page 10 and the appendix on page 13; the release receipt binds
+- [x] References begin on physical page 11 and the appendix on page 14; the release receipt binds
   the page boundary, nine-page limit, and official ICLR 2027 style receipt.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
@@ -275,7 +301,7 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
   workflow module, author identity, or public workflow/provenance identifier.
 - [x] Anonymous reviewer ZIP contains the item-level evidence needed to replay the paper-facing
-  fresh r6 and balanced-challenge aggregates.
+  fresh r6, balanced-challenge, and Ox minimum-route aggregates.
 - [x] The anonymous manifest and release receipt derive payload and ZIP-entry counts from the
   generated tree; no long-lived prose supplies a fixed expected count. Two empty-directory builds
   and two release kits are byte-identical.
@@ -293,7 +319,7 @@ conference-paper scale.
 ## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 14 physical pages.
+- [x] The arXiv PDF contains 15 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
@@ -322,6 +348,9 @@ show its own preview before submission.
   anonymity checks passed.
 - [x] Its 4/10 recommendation on the reviewed snapshot identified three high-level framing issues
   and six additional presentation or proof issues. No second reviewer was used to rerate the fix.
+- [x] The later Ox replay did not trigger another reviewer cycle. Its addition is constrained by the
+  existing final-review boundaries and by independent item-level, privacy, manuscript, and package
+  validators.
 - [x] The revision narrows the contribution to paired failure-aware action-conformance testing at an
   existing model-service boundary; semantic differencing, mutants, set cover, and dynamic
   programming are identified as established machinery.

@@ -2491,6 +2491,193 @@ def validate_local_model_replications() -> Json:
     }
 
 
+def validate_ox_alpha_minimal_route() -> Json:
+    root = EVIDENCE / "ox-alpha-minimal-route"
+    manifest_path = root / "MANIFEST.json"
+    manifest = load_json(manifest_path)
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        fail("Ox Alpha minimum-route manifest is malformed")
+    manifest_payload = deepcopy(manifest)
+    observed_manifest_sha = manifest_payload.pop("manifest_sha256", None)
+    if observed_manifest_sha != sha256_text(canonical_json(manifest_payload)):
+        fail("Ox Alpha minimum-route manifest self-digest changed")
+    actual_files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path != manifest_path
+    }
+    expected_scope = {
+        "terminal_records": 20,
+        "all_scheduled_terminal_failures_included": True,
+        "item_level_action_records_included": True,
+        "raw_final_response_text_included": False,
+        "full_structured_decisions_included": False,
+        "free_form_error_text_included": False,
+        "provider_response_identifiers_included": False,
+        "hidden_reasoning_included": False,
+        "credentials_included": False,
+        "private_repository_or_commit_identity_included": False,
+    }
+    if (
+        manifest.get("status") != "ANONYMOUS_OX_ALPHA_MINIMUM_ROUTE_EVIDENCE"
+        or manifest.get("file_count") != len(actual_files)
+        or manifest.get("files") != actual_files
+        or manifest.get("scope") != expected_scope
+        or manifest.get("run_file") != "runs/ox-alpha-free-minimum-route.jsonl"
+    ):
+        fail("Ox Alpha minimum-route manifest coverage or scope changed")
+
+    plan = load_json(root / "study-plan.json")
+    selection = load_json(root / "selection-receipt.json")
+    schedule = load_json(root / "request-schedule.json")
+    aggregate = load_json(root / "reported-aggregate.json")
+    privacy = load_json(root / "privacy-receipt-review.json")
+    records = load_jsonl(root / "runs" / "ox-alpha-free-minimum-route.jsonl")
+    if any(
+        not isinstance(value, dict) for value in (plan, selection, schedule, aggregate, privacy)
+    ):
+        fail("Ox Alpha minimum-route evidence contains a malformed object")
+    validate_self_digest(privacy, "self_digest", "Ox Alpha privacy receipt")
+    review_files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path.name not in {"MANIFEST.json", "privacy-receipt-review.json"}
+    }
+    if (
+        privacy.get("status") != "ANONYMOUS_OX_ALPHA_ROUTE_DERIVATIVE_VALIDATED"
+        or privacy.get("terminal_records_validated") != 20
+        or privacy.get("all_scheduled_terminal_failures_included") is not True
+        or privacy.get("raw_final_response_text_included") is not False
+        or privacy.get("full_structured_decisions_included") is not False
+        or privacy.get("free_form_error_text_included") is not False
+        or privacy.get("provider_response_identifiers_included") is not False
+        or privacy.get("hidden_reasoning_fields_included") is not False
+        or privacy.get("credentials_included") is not False
+        or privacy.get("private_repository_or_commit_identity_included") is not False
+        or privacy.get("review_file_sha256") != review_files
+    ):
+        fail("Ox Alpha minimum-route privacy boundary changed")
+
+    cells = schedule.get("cells")
+    selected_item_ids = selection.get("selected_item_ids")
+    selected_pair_ids = selection.get("selected_pair_ids")
+    if (
+        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or plan.get("research_role") != "POSTHOC_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
+        or plan.get("route", {}).get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
+        or plan.get("execution", {}).get("planned_application_posts") != 20
+        or plan.get("execution", {}).get("client_retry_count") != 0
+        or selection.get("status") != "PREINFERENCE_ROUTE_AND_SUITE_SELECTION"
+        or selection.get("outcomes_used_for_selection") is not False
+        or selection.get("conditional_success_subset_allowed") is not False
+        or not isinstance(cells, list)
+        or not isinstance(selected_item_ids, list)
+        or not isinstance(selected_pair_ids, list)
+        or len(cells) != 20
+        or len(selected_item_ids) != 20
+        or len(selected_pair_ids) != 10
+        or len(records) != 20
+    ):
+        fail("Ox Alpha minimum-route frozen design changed")
+
+    expected_record_keys = {
+        "schema_version",
+        "sequence",
+        "item_id",
+        "pair_id",
+        "parse_status",
+        "raw_decision",
+        "failure_class",
+    }
+    for sequence, (cell, record) in enumerate(zip(cells, records, strict=True)):
+        if (
+            set(record) != expected_record_keys
+            or record.get("sequence") != sequence
+            or cell.get("sequence") != sequence
+            or record.get("item_id") != cell.get("item_id")
+            or record.get("pair_id") != cell.get("pair_id")
+            or record.get("item_id") != selected_item_ids[sequence]
+        ):
+            fail(f"Ox Alpha minimum-route record order changed at sequence {sequence}")
+        decision = record.get("raw_decision")
+        if record.get("parse_status") == "OK":
+            if (
+                not isinstance(decision, dict)
+                or set(decision) != {"action"}
+                or decision.get("action") not in ACTIONS
+                or record.get("failure_class") is not None
+            ):
+                fail(f"Ox Alpha valid action projection changed at sequence {sequence}")
+        elif decision is not None or not isinstance(record.get("failure_class"), str):
+            fail(f"Ox Alpha failed action projection changed at sequence {sequence}")
+
+    failure_counts = Counter(
+        str(record["failure_class"])
+        for record in records
+        if record.get("failure_class") is not None
+    )
+    if failure_counts != {
+        "HTTP_503_ENDPOINT_UNAVAILABLE": 3,
+        "CROSS_FIELD_STATE_ACTION_INCONSISTENCY": 3,
+        "LENGTH_TERMINATED_JSON": 1,
+    }:
+        fail("Ox Alpha minimum-route finite failure taxonomy changed")
+
+    graph_root = EVIDENCE / "local-model-replications" / "policy-transition-graph"
+    graph_gold = load_jsonl(graph_root / "dataset" / "evaluation-gold.jsonl")
+    graph_pairs = load_json(graph_root / "dataset" / "evaluation-pairs.json")
+    if not isinstance(graph_pairs, list):
+        fail("Ox Alpha source graph pair index is malformed")
+    selected_items = {str(value) for value in selected_item_ids}
+    selected_pairs = {str(value) for value in selected_pair_ids}
+    subset_gold = [row for row in graph_gold if str(row["id"]) in selected_items]
+    subset_pairs = [row for row in graph_pairs if str(row["pair_id"]) in selected_pairs]
+    if len(subset_gold) != 20 or len(subset_pairs) != 10:
+        fail("Ox Alpha minimum-route selection is not present in the released graph dataset")
+    recomputed = derive_balanced_metrics(subset_gold, subset_pairs, records)
+    bindings = aggregate.get("anonymous_bindings", {})
+    strict_pass = (
+        recomputed.get("parseable_items") == 20
+        and recomputed.get("correct_items") == 20
+        and recomputed.get("correct_pairs") == 10
+    )
+    if (
+        aggregate.get("status") != "COMPLETE"
+        or aggregate.get("classification") != "COMPLETE_ROUTE_SMOKE_GATE_FAIL"
+        or aggregate.get("design")
+        != "PREINFERENCE_FROZEN_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
+        or aggregate.get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
+        or aggregate.get("strict_smoke_gate_pass") is not strict_pass
+        or aggregate.get("raw_model_outputs_in_anonymous_derivative") is not False
+        or aggregate.get("metrics") != recomputed
+        or aggregate.get("execution", {}).get("application_posts") != 20
+        or aggregate.get("execution", {}).get("client_retries") != 0
+        or aggregate.get("execution", {}).get("incremental_cash_cost_usd") != 0.0
+        or aggregate.get("adequacy", {}).get("selected_pairs") != 10
+        or aggregate.get("adequacy", {}).get("selected_items") != 20
+        or bindings
+        != {
+            "study_plan_sha256": sha256_file(root / "study-plan.json"),
+            "selection_receipt_sha256": sha256_file(root / "selection-receipt.json"),
+            "request_schedule_sha256": sha256_file(root / "request-schedule.json"),
+            "run_sha256": sha256_file(root / "runs" / "ox-alpha-free-minimum-route.jsonl"),
+        }
+    ):
+        fail("Ox Alpha minimum-route aggregate differs from item-level replay")
+
+    return {
+        "status": "OX_ALPHA_MINIMUM_ROUTE_EVIDENCE_PASS",
+        "items": recomputed["items"],
+        "valid_decisions": recomputed["parseable_items"],
+        "correct_items": recomputed["correct_items"],
+        "pairs": recomputed["pairs"],
+        "complete_pairs": recomputed["covered_pairs"],
+        "correct_pairs": recomputed["correct_pairs"],
+        "strict_gate_pass": strict_pass,
+        "failure_classes": dict(sorted(failure_counts.items())),
+    }
+
+
 def validate_hosted_exclusion_receipts() -> Json:
     paths = {
         "initial_policy_switch": EVIDENCE / "hosted-policy-switch-exclusion.json",
@@ -2878,6 +3065,7 @@ def main() -> int:
         "policy_switch": validate_policy_switch(),
         "local_model_replications": validate_local_model_replications(),
         "hosted_exclusions": validate_hosted_exclusion_receipts(),
+        "ox_alpha_minimal_route": validate_ox_alpha_minimal_route(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0

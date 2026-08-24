@@ -60,6 +60,8 @@ ICLR_PUBLIC_IDENTIFIERS = (
     "f44b01eb",
     "8821e710",
     "e3823dbc",
+    "7f30dfb5",
+    "cac4cdab",
 )
 
 

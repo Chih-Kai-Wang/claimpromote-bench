@@ -15,6 +15,10 @@ auxiliary evidence and failure diagnostics:
 
 The central rule-stratified suite changes only the active profile and covers all 12 changed rules;
 the central graph suite covers all ten semantically reachable directed non-self action transitions.
+A later auxiliary Ox Alpha route replay reuses the preexisting ten-pair minimum witness. Its route
+was selected after other results were known, while the schedule and strict failure rule were frozen
+before its first call. It is a time-stamped route smoke test rather than another dataset, model-family
+comparison, independent policy replication, or reliability estimate.
 
 Every scheduled service, syntax, schema, and semantic failure remains incorrect in end-to-end
 metrics. Conditional accuracy is reported only alongside decision or pair coverage. The

@@ -96,6 +96,14 @@ A separately frozen 40-cell hosted execution of this minimum suite was excluded 
 cells returned explicit shared-quota exhaustion. It supplies no model-efficacy row and was not
 retried; the public-safe artifact retains only a redacted all-or-nothing exclusion receipt.
 
+A later OpenCode Go Ox Alpha Free replay is separate from that excluded run. The route was selected
+after earlier results were known, then its exact 20-item schedule, zero-retry rule, failure
+denominator, and strict gate were committed before its first call. It returned 13/20 valid,
+action-correct decisions and 6/10 correct pairs. Conditional item/pair accuracy is 1.0/1.0, while
+end-to-end accuracy is .65/.60 after three HTTP 503 failures, three cross-field semantic failures,
+and one length-terminated JSON response. The route failed the 20/20-item and 10/10-pair gate. Ox
+Alpha is a time-stamped stealth label, not a model-family identity or a causal comparison.
+
 ## Install and run checks
 
 Python 3.11 or newer is required.
@@ -161,6 +169,7 @@ from committed records and must not be rerun as part of paper construction.
 - Canonical manuscript: [`technical-report/main.tex`](technical-report/main.tex)
 - Scientific and packaging gate: [`technical-report/SUBMISSION_GATE_V2.md`](technical-report/SUBMISSION_GATE_V2.md)
 - Balanced challenge evidence: [`v2/balanced-public-challenge/results/`](v2/balanced-public-challenge/results/)
+- Ox minimum-route smoke evidence: [`v2/ox-alpha-minimal-route-v1/`](v2/ox-alpha-minimal-route-v1/)
 - Fresh r6 reviewer evidence: [`release/reviewer-evidence-source/fresh-confirmatory/`](release/reviewer-evidence-source/fresh-confirmatory/)
 - Data licensing: [`DATA_LICENSE.md`](DATA_LICENSE.md)
 - Third-party notices: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)

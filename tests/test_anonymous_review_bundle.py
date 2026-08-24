@@ -55,6 +55,40 @@ def test_manifest_reports_each_local_study_without_hard_coded_file_count(
     assert scope["local_policy_transition_graph_summary_included"] is True
     assert scope["local_policy_transition_graph_item_level_records_included"] is True
     assert scope["local_minimum_policy_migration_gate_included"] is False
+    assert scope["ox_alpha_minimum_route_summary_included"] is False
+
+
+def test_ox_alpha_minimum_route_projection_is_complete_and_private(tmp_path: Path) -> None:
+    builder = load_builder()
+    destination = tmp_path / "ox-alpha-minimal-route"
+
+    builder.build_ox_alpha_minimal_route_anonymous_evidence(destination)
+
+    rows = [
+        json.loads(line)
+        for line in (destination / "runs" / "ox-alpha-free-minimum-route.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    aggregate = json.loads((destination / "reported-aggregate.json").read_text(encoding="utf-8"))
+    manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    rendered = "\n".join(
+        path.read_text(encoding="utf-8") for path in destination.rglob("*") if path.is_file()
+    )
+
+    assert len(rows) == 20
+    assert sum(row["parse_status"] == "OK" for row in rows) == 13
+    assert sum(row["failure_class"] == "HTTP_503_ENDPOINT_UNAVAILABLE" for row in rows) == 3
+    assert all(set(row["raw_decision"]) == {"action"} for row in rows if row["raw_decision"])
+    assert aggregate["metrics"]["correct_items"] == 13
+    assert aggregate["metrics"]["correct_pairs"] == 6
+    assert aggregate["strict_smoke_gate_pass"] is False
+    assert manifest["file_count"] == len(manifest["files"])
+    assert "7f30dfb59bf74d751cf78fca0c9e020abb2546ea" not in rendered
+    assert '"raw_response_text"' not in rendered
+    assert '"provider_response_id"' not in rendered
+    builder.scan_identity(destination)
+    builder.scan_sensitive_payloads(destination)
 
 
 def test_identity_scan_checks_extensionless_license(tmp_path: Path) -> None:

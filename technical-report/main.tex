@@ -25,22 +25,21 @@
 \maketitle
 
 \begin{abstract}
-Language-model routes mediate structured policy decisions that should be
-deterministic. After policy revision, a route can remain valid-looking yet stale; valid-only scoring
-also hides interface failure. We introduce ClaimPromoteBench, a synthetic protocol for paired action
-conformance after output-contract validation. It holds typed context fixed while switching
-executable policies and scores calls jointly. Every scheduled service, syntax, schema, and semantic failure
-remains incorrect end to end. Established semantic differencing and set-cover machinery implement the
-compiler. In one authored \texttt{BLUE}-to-\texttt{AMBER} migration, rule-complete tests cover 6/10
+Policy revisions can leave model-mediated structured decisions valid-looking but stale; valid-only
+scoring also hides interface failure. We introduce ClaimPromoteBench, a synthetic protocol that
+holds typed context fixed across executable policies and scores paired action conformance after
+output-contract validation. Every scheduled service, syntax, schema, and semantic failure remains
+incorrect end to end. In one authored \texttt{BLUE}-to-\texttt{AMBER} migration, rule-complete tests cover 6/10
 action edges, graph-complete tests cover all ten reachable edges, and a 10-pair gate covers all 12
 changed rules. Two pinned local routes, evaluated once without independent replication, score 10/60
 and 2/60 pairs and fail the gate. Auxiliary r6 Qwen coverage is 272/300; item/pair accuracy is
 258/300 and 113/150 end to end versus 258/272 and 113/123 conditional. In a balanced challenge,
 Qwen and Flash coverage is 148/180 and 146/180; end-to-end item/pair scores are 132/180,48/90 and
 90/180,13/90, versus 132/148,48/64 and 90/146,13/61 conditional; \texttt{DEMOTE} recall is 4/30 and
-0/30. The executor defines labels, not a learned baseline. Results support regression testing of
-finite authored decision surfaces, not model-family ranking, naturalistic validity, or causal
-comparison.
+0/30. A post-hoc route, frozen before its first call, returns 13/20 valid
+action-correct decisions and 6/10 pairs but fails the strict gate. The executor defines labels,
+not a learned baseline. Results support regression testing of finite authored decision surfaces,
+not model-family ranking, naturalistic validity, or causal comparison.
 \end{abstract}
 
 \section{Introduction}
@@ -80,7 +79,7 @@ We instantiate the protocol in two synthetic ontologies. One governs research-ev
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item a paired model-route protocol for action conformance after output-contract validation that isolates evidence or active-policy interventions, retains route failure end to end, and rejects intervention-blind shortcuts;
+  \item a synthetic protocol for paired action conformance after output-contract validation that isolates evidence or active-policy interventions, retains route failure end to end, and rejects intervention-blind shortcuts;
   \item an adaptation of established semantic differencing to executable policy revisions, with separate changed-rule and observable action-transition adequacy; standard set-cover optimization, edge-local mutants, and exact dynamic programs serve as checkable implementation machinery; and
   \item a fully bound evaluation of one authored migration on two pinned local route stacks, plus auxiliary frozen evidence contrasts that diagnose route failure and action imbalance without supporting model-family or causal comparisons.
 \end{enumerate}
@@ -245,6 +244,13 @@ and Phi-4 snapshots with user-only prompts, unconstrained JSON extraction, and g
 decoding. They cover the fixed software policy and both policy suites. Quantization, chat templates,
 and hosted versus local execution preclude causal comparisons.
 
+After the preceding results were known, we selected OpenCode Go's then-listed Ox Alpha Free route
+\cite{opencode2026go}. Before its first call, we committed the route label, exact 20-item minimum-suite
+schedule, zero-retry rule, complete-failure denominator, and strict 20/20-item plus 10/10-pair gate.
+This is post-hoc route selection with a pre-inference-frozen schedule. The stealth label does not
+identify a model family. We report the run as a time-stamped auxiliary route smoke replay, not an
+independent policy replication, reliability estimate, provider ranking, or causal ablation.
+
 The research sanity control is a multinomial Naive Bayes text classifier trained on 100
 public-development items; it is weak and not a competitive baseline. The fixed software policy adds
 a 500-tree Random Forest trained on 72 development items using flattened model-visible state and
@@ -298,6 +304,12 @@ pairs; on the minimum gate, Phi-4 produced 6/20 valid decisions, 5/20 correct it
 correct pairs. Neither route passed the fixed 20/20-item and 10/10-pair rule. This subset reuses
 terminal records from the full graph run and is not an independent sample.
 
+The later Ox Alpha route made 20 zero-retry calls on the same minimum witness. It returned 13/20
+valid decisions, all action-correct, and completed six pairs, yielding 13/20 items and 6/10 pairs end
+to end versus 13/13 and 6/6 conditional. Three HTTP 503 responses, three cross-field semantic
+failures, and one length-terminated JSON response remained incorrect. The route therefore failed the
+strict gate despite zero incremental cash cost.
+
 \subsection{Coverage and correctness}
 
 Table~\ref{tab:core-results} reports every model-route denominator. In r6, the hosted Qwen
@@ -325,7 +337,7 @@ construction-dependent controls from model-route results.
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3.5pt}
-\caption{Model-route coverage and correctness. E2E retains every scheduled case; conditional columns use valid decisions or complete pairs. Host/prompt denotes prompt-only JSON; host/schema denotes strict-schema output; local/4b denotes pinned four-bit MLX-LM.}
+\caption{Model-route coverage and correctness. E2E retains every scheduled case; conditional columns use valid decisions or complete pairs. Host/prompt denotes prompt-only JSON; host/schema denotes strict-schema output; local/4b denotes pinned four-bit MLX-LM. The final row is a separately frozen minimum-route gate.}
 \label{tab:core-results}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
@@ -349,6 +361,9 @@ Switch Phi-4 (local/4b) & 59/120 & 46/120 & 46/59 & 14/60 & 4/60 & 4/14 \\
 \multicolumn{7}{@{}l}{\emph{Reachable policy-transition graph}}\\
 Graph Mistral (local/4b) & 71/120 & 40/120 & 40/71 & 31/60 & 10/60 & 10/31 \\
 Graph Phi-4 (local/4b) & 43/120 & 27/120 & 27/43 & 8/60 & 2/60 & 2/8 \\
+\midrule
+\multicolumn{7}{@{}l}{\emph{Post-hoc minimum-route smoke replay}}\\
+Ox route (host/prompt; gate) & 13/20 & 13/20 & 13/13 & 6/10 & 6/10 & 6/6 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -362,6 +377,9 @@ neither class. The public challenge raises each non-\allow{} support to 30: Qwen
 \demote{} cases on the fixed policy and policy switch. On the graph, both again recover 0/24.
 Mistral recovers 9/36
 \allow, 18/24 \hold, and 13/36 \escalate{} items; Phi-4 recovers 21/36, 5/24, and 1/36.
+On the Ox minimum replay, end-to-end recalls are 5/6, 4/4, 1/4, and 3/6; all 13 valid actions are
+correct. The small, one-context-per-edge support makes these gate diagnostics rather than class
+estimates.
 Appendix~\ref{app:complete-results} reports every action recall and confusion cell, including
 no-valid-decision counts.
 
@@ -402,7 +420,9 @@ Both SLSA hosted routes have 1.0 conditional pair accuracy, yet incomplete pairs
 scores to 49/60 and 28/60. Local routes add valid but wrong actions. On the balanced challenge,
 Qwen's 48/64 conditional pair score becomes 48/90 end to end; Flash's 13/61 becomes 13/90. Their
 4/30 and 0/30 \demote{} recalls expose a class asymmetry hidden by r6. Coverage, conditional
-correctness, and end-to-end correctness separate these failures.
+correctness, and end-to-end correctness separate these failures. In the Ox replay, 13/13 item and
+6/6 pair accuracy conditional become 13/20 and 6/10 end to end after seven failures, so the frozen
+gate rejects the route.
 
 \paragraph{The protocol evaluates a model boundary; it does not advocate one.}
 When policy and evidence are fully structured, a deterministic executor should enforce the
@@ -410,10 +430,9 @@ transition. The routes represent an existing boundary under contract change or m
 supplies its regression oracle; it does not show that a model is necessary or preferable.
 
 \paragraph{Route differences are descriptive.}
-The hosted routes were selected after an older interface-qualification study, and the old r6 Flash
-interface produced 300 HTTP 401 responses. Later Flash configurations used a different adapter and
-output contract. This proves neither model improvement nor an ablation effect. Hosted and local
-routes likewise differ in weights, quantization, prompts, adapters, and constraints.
+The old r6 Flash interface produced 300 HTTP 401 responses. Later Flash configurations changed the
+adapter and output contract; this proves neither model improvement nor an ablation effect. Hosted
+and local routes also differ in weights, quantization, prompts, adapters, and constraints.
 
 \section{Limitations}
 
@@ -433,22 +452,28 @@ is action conformance after output-contract validation, not six-field exact matc
 policy understanding. Local routes use four-bit snapshots on one Apple Silicon stack; route
 differences are not causal.
 
+The Ox route was selected after other outcomes were known but scheduled before its first call. Its
+stealth label does not identify a model family. Limited-time service status, one context per edge,
+and one pass preclude claims about replication, temporal reliability, weights, or provider effects.
+
 Naive Bayes is weak; the Random Forest controls expose direct feature shortcuts rather than
 competitive reasoning. Profile ablation closes one shortcut but does not establish rule following
 under paraphrase, long policies, adversarial evidence, or unseen composition.
 
 Edge-local mutants cover only their registered family; optimality is candidate-pool-relative, and
-the gate reuses graph records. Quota-confounded hosted policy-switch studies are excluded in full; no successful hosted row or conditional subset is selected. A 40-cell hosted smoke is excluded in full; no hosted model rows enter the paper. Invalid response contents are omitted, but their counts remain in end-to-end denominators and auditable records.
+the gate reuses graph records. Quota-confounded hosted policy-switch studies are excluded in full;
+no successful hosted row or conditional subset is selected. A separate 40-cell hosted smoke is
+excluded in full; no row from that run enters the paper. Invalid response contents are omitted while
+their counts remain in end-to-end denominators and auditable records.
 
 \section{Conclusion}
 
-\cpb turns one executable policy revision into paired, failure-aware model-route tests. The central
-result is narrow. Rule coverage misses four of ten reachable action edges. A standard exact search
-retains all 12 changed rules in a 20-call gate. Two pinned local routes score 10/60 and 2/60 pairs
-before both fail that gate. Auxiliary evidence contrasts show why route validity,
-action conformance, and end-to-end correctness must be reported separately. The protocol supports
-regression testing of finite authored policy surfaces. It does not establish model-family quality,
-naturalistic policy validity, exact policy understanding, or causal effects.
+\cpb compiles one executable policy revision into paired, failure-aware model-route tests. Rule
+coverage misses four of ten reachable action edges; an exact search retains all 12 changed rules in
+a 20-call gate. The two pinned local routes score 10/60 and 2/60 pairs; Ox fails the same gate despite
+perfect valid-only action scores. Reporting coverage, action conformance, and end-to-end correctness
+supports regression tests of finite authored policy surfaces without establishing model-family
+quality, naturalistic validity, exact policy understanding, or causal effects.
 
 \section{Reproducibility Statement}
 
@@ -457,7 +482,8 @@ terminal outcome classes, analyses, and privacy receipts. Validators recompute e
 metric and confusion cell from item records.
 The anonymous derivative removes raw response text, free-form errors, provider identifiers, hidden
 reasoning, account identity, and private commit identity; its manifest derives file counts from the
-generated tree. Hosted services are time-dependent, local weights remain external, and exact
+generated tree. The Ox derivative retains all 20 item-level action and failure classes while omitting
+full structured outputs. Hosted services are time-dependent, local weights remain external, and exact
 hardware-specific inference is not reproduced. Completed one-shot studies are never rerun.
 
 \section{AI Assistance Disclosure}
@@ -559,6 +585,8 @@ Graph Mistral (local/4b) & .2500 & .7500 & .0000 & .3611 & .3403 \\
 Graph Phi-4 (local/4b) & .5833 & .2083 & .0000 & .0278 & .2049 \\
 Graph RF/profile & .8889 & .7917 & 1.0000 & .8889 & .8924 \\
 Graph RF/blind & .2500 & .5833 & 1.0000 & .2778 & .5278 \\
+\midrule
+Ox route (host/prompt; gate) & .8333 & 1.0000 & .2500 & .5000 & .6458 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -593,6 +621,8 @@ Graph Mistral (local/4b) & .3462 & .7500 & .0000 & .7222 \\
 Graph Phi-4 (local/4b) & 1.0000 & .8333 & .0000 & 1.0000 \\
 Graph RF/profile & .8889 & .7917 & 1.0000 & .8889 \\
 Graph RF/blind & .2500 & .5833 & 1.0000 & .2778 \\
+\midrule
+Ox route (host/prompt; gate) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -709,6 +739,12 @@ Graph Phi-4 (local/4b) & \allow{} & 21 & 0 & 0 & 0 & 15 \\
 Graph Phi-4 (local/4b) & \hold{} & 1 & 5 & 0 & 0 & 18 \\
 Graph Phi-4 (local/4b) & \demote{} & 3 & 12 & 0 & 0 & 9 \\
 Graph Phi-4 (local/4b) & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
+\midrule
+Ox route (host/prompt; gate) & \allow{} & 5 & 0 & 0 & 0 & 1 \\
+Ox route (host/prompt; gate) & \hold{} & 0 & 4 & 0 & 0 & 0 \\
+Ox route (host/prompt; gate) & \demote{} & 0 & 0 & 1 & 0 & 3 \\
+Ox route (host/prompt; gate) & \escalate{} & 0 & 0 & 0 & 3 & 3 \\
+\midrule
 Graph RF/profile & \allow{} & 32 & 0 & 3 & 1 & 0 \\
 Graph RF/profile & \hold{} & 5 & 19 & 0 & 0 & 0 \\
 Graph RF/profile & \demote{} & 0 & 0 & 24 & 0 & 0 \\

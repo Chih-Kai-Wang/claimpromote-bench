@@ -17,6 +17,9 @@ establish redistribution rights.
 - the clean r6, balanced challenge, hosted SLSA-field study, and all three retained local studies
   needed to recompute every scheduled denominator, confusion cell, action recall, coverage value,
   and conditional or end-to-end metric;
+- the 20 projected Ox minimum-route item records, finite failure classes, pre-call-frozen schedule,
+  strict gate, aggregate, and privacy receipt needed to recompute its paper row, without raw response
+  text, full structured decisions, free-form errors, service identifiers, or private commit identity;
 - redacted full-study exclusion receipts, but no item records or model rows, from the hosted policy
   studies that exhausted shared subscription quota;
 - the three local plans, model catalog, pinned revisions, snapshot and environment
@@ -68,6 +71,9 @@ minimum replay path.
   conditional metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
 - the quota-confounded 40-cell hosted minimum-suite run's raw records, route labels, model rows,
   conditional metrics, and provider errors; retain only its public-safe full-study exclusion receipt;
+- the Ox minimum-route run's private response text, full structured decisions, free-form provider
+  errors, journals, local timestamps, and source commit binding; retain only the projected 20-row
+  action/failure derivative and public-safe receipts;
 - local `work/`, caches, downloaded paper corpora, build directories, and machine-specific paths;
 - downloaded model weights and Hugging Face caches;
 - the private repository's Git history.
