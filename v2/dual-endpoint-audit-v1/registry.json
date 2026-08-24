@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0.0",
+  "routes": [
+    {
+      "route_stack_id": "challenge-deepseek-flash-host-schema",
+      "record_lane_id": "opencode-go-deepseek-v4-flash-matched",
+      "evidence_role": "AUXILIARY_PUBLIC_ROBUSTNESS",
+      "task_id": "balanced-public-challenge",
+      "gold": "v2/balanced-public-challenge/dataset/gold.jsonl",
+      "pairs": "v2/balanced-public-challenge/dataset/pairs.json",
+      "run": "v2/balanced-public-challenge/results/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl"
+    },
+    {
+      "route_stack_id": "challenge-qwen-host-prompt",
+      "record_lane_id": "opencode-go-qwen3.7-max",
+      "evidence_role": "AUXILIARY_PUBLIC_ROBUSTNESS",
+      "task_id": "balanced-public-challenge",
+      "gold": "v2/balanced-public-challenge/dataset/gold.jsonl",
+      "pairs": "v2/balanced-public-challenge/dataset/pairs.json",
+      "run": "v2/balanced-public-challenge/results/runs/opencode-go-qwen3.7-max-full.jsonl"
+    },
+    {
+      "route_stack_id": "graph-mistral-local-4bit",
+      "record_lane_id": "local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2",
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "task_id": "policy-transition-graph",
+      "gold": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-pairs.json",
+      "run": "v2/local-model-replication-v1/transition-graph-v1/frozen/policy-transition-graph/results/local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2.jsonl"
+    },
+    {
+      "route_stack_id": "graph-phi4-local-4bit",
+      "record_lane_id": "local-mlx-phi-4-policy-transition-graph-v2",
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "task_id": "policy-transition-graph",
+      "gold": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-pairs.json",
+      "run": "v2/local-model-replication-v1/transition-graph-v1/frozen/policy-transition-graph/results/local-mlx-phi-4-policy-transition-graph-v2.jsonl"
+    },
+    {
+      "route_stack_id": "slsa-deepseek-flash-host-schema",
+      "record_lane_id": "opencode-go-deepseek-v4-flash-slsa-v2",
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "task_id": "slsa-fixed-policy",
+      "gold": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-pairs.json",
+      "run": "v2/slsa-portability-v1/replacement-v2/results/opencode-go-deepseek-v4-flash-slsa-v2.jsonl"
+    },
+    {
+      "route_stack_id": "slsa-mistral-local-4bit",
+      "record_lane_id": "local-mlx-mistral-small-3.2-24b-slsa-v2",
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "task_id": "slsa-fixed-policy",
+      "gold": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-pairs.json",
+      "run": "v2/local-model-replication-v1/replacement-v2/frozen/slsa/results/local-mlx-mistral-small-3.2-24b-slsa-v2.jsonl"
+    },
+    {
+      "route_stack_id": "slsa-phi4-local-4bit",
+      "record_lane_id": "local-mlx-phi-4-slsa-v2",
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "task_id": "slsa-fixed-policy",
+      "gold": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-pairs.json",
+      "run": "v2/local-model-replication-v1/replacement-v2/frozen/slsa/results/local-mlx-phi-4-slsa-v2.jsonl"
+    },
+    {
+      "route_stack_id": "slsa-qwen-host-prompt",
+      "record_lane_id": "opencode-go-qwen3.7-max-slsa-v2",
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "task_id": "slsa-fixed-policy",
+      "gold": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-pairs.json",
+      "run": "v2/slsa-portability-v1/replacement-v2/results/opencode-go-qwen3.7-max-slsa-v2.jsonl"
+    },
+    {
+      "route_stack_id": "switch-mistral-local-4bit",
+      "record_lane_id": "local-mlx-mistral-small-3.2-24b-policy-switch-v2",
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "task_id": "policy-switch",
+      "gold": "v2/policy-switch-v1/frozen/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/policy-switch-v1/frozen/dataset/evaluation-pairs.json",
+      "run": "v2/local-model-replication-v1/replacement-v2/frozen/policy-switch/results/local-mlx-mistral-small-3.2-24b-policy-switch-v2.jsonl"
+    },
+    {
+      "route_stack_id": "switch-phi4-local-4bit",
+      "record_lane_id": "local-mlx-phi-4-policy-switch-v2",
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "task_id": "policy-switch",
+      "gold": "v2/policy-switch-v1/frozen/dataset/evaluation-gold.jsonl",
+      "pairs": "v2/policy-switch-v1/frozen/dataset/evaluation-pairs.json",
+      "run": "v2/local-model-replication-v1/replacement-v2/frozen/policy-switch/results/local-mlx-phi-4-policy-switch-v2.jsonl"
+    }
+  ]
+}

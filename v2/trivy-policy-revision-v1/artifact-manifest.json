@@ -1,0 +1,18 @@
+{
+  "files": {
+    "cases.json": "sha256:6f9cb8b8fba174986c8033cf5988ee5a7002fc243ef9878e303c2fde792cb9fe",
+    "minimum-suite.json": "sha256:0d7aa7f107ab7c29d37394b1b5fdf9de7680fd93bfdda79d09ba7e5b8e78bb16",
+    "results.json": "sha256:cb3bcacae6de1a3a4a816260c3a5fb6c0a0c8a98f3492de4857189c79b84a007",
+    "source-validation-receipt.json": "sha256:bc060c042f6d9698f3db8b0ab79d85951ac3fcccb93a0d4b1115176a989aa861"
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:6416d1105274ae6c35d0b763a571bd823e811fe10295e47484545fb8ae9e57bb",
+  "source_files": {
+    "v2/trivy-policy-revision-v1/sources/encryption_provider_config_test.rego": "sha256:f042d86d152543823da4bd1121af292588929090f672ad37c7ac5826f3249421",
+    "v2/trivy-policy-revision-v1/sources/kubernetes.rego": "sha256:9db29f1c102a9aa51300d228716e41d810bf7c72834ade2286df47fda6edfbaa",
+    "v2/trivy-policy-revision-v1/sources/new.rego": "sha256:bfcff4dabdaf1410df81f21249979dcb9175702cf04630ad284311f05d74c704",
+    "v2/trivy-policy-revision-v1/sources/old.rego": "sha256:29664ef7c43eef7c7cd019886dbcf69c8bf58546e5889b016c059df4e431969a",
+    "v2/trivy-policy-revision-v1/sources/result-compat.rego": "sha256:11fe6b95bc8883e9c50866514c35bd1e5ee711cc5da90cbb0a653ec16875f772"
+  },
+  "status": "COMPLETE_DETERMINISTIC_BUILD"
+}

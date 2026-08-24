@@ -1,0 +1,21 @@
+{
+  "candidate_cases": 4,
+  "coverage": {
+    "action_edges": {
+      "covered": 2,
+      "total": 2
+    },
+    "documented_fault_modes": {
+      "covered": 1,
+      "total": 1
+    }
+  },
+  "lower_bound_cases": 2,
+  "schema_version": "1.0.0",
+  "selected_case_ids": [
+    "trivy-01",
+    "trivy-02"
+  ],
+  "status": "EXACT_MINIMUM_RELATIVE_TO_UPSTREAM_TEST_CASES",
+  "witness_cases": 2
+}

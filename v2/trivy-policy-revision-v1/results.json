@@ -1,0 +1,46 @@
+{
+  "documented_fault_mode": "INVERTED_FLAG_PREDICATE",
+  "results": [
+    {
+      "case_id": "trivy-01",
+      "new_action": "ALLOW",
+      "new_denial_count": 0,
+      "old_action": "HOLD",
+      "old_denial_count": 1,
+      "transition": "HOLD->ALLOW",
+      "upstream_test_name": "test_encryption_provider_config_is_set"
+    },
+    {
+      "case_id": "trivy-02",
+      "new_action": "HOLD",
+      "new_denial_count": 1,
+      "old_action": "ALLOW",
+      "old_denial_count": 0,
+      "transition": "ALLOW->HOLD",
+      "upstream_test_name": "test_encryption_provider_config_is_not_set"
+    },
+    {
+      "case_id": "trivy-03",
+      "new_action": "ALLOW",
+      "new_denial_count": 0,
+      "old_action": "HOLD",
+      "old_denial_count": 1,
+      "transition": "HOLD->ALLOW",
+      "upstream_test_name": "test_encryption_provider_config_is_set_args"
+    },
+    {
+      "case_id": "trivy-04",
+      "new_action": "HOLD",
+      "new_denial_count": 1,
+      "old_action": "ALLOW",
+      "old_denial_count": 0,
+      "transition": "ALLOW->HOLD",
+      "upstream_test_name": "test_encryption_provider_config_is_not_set_args"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "transition_support": {
+    "ALLOW->HOLD": 2,
+    "HOLD->ALLOW": 2
+  }
+}

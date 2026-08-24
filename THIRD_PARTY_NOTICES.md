@@ -42,6 +42,13 @@ Sigstore Cosign's Rego verifier source. Its registry pins the source repository,
 commits, original path, and upstream regression-test names. The copied Go files remain under the
 upstream Apache-2.0 license.
 
+## Aqua Trivy Checks policy revision
+
+The external policy-revision validation includes unmodified pre-fix and post-fix Rego policy
+sources, an upstream regression-test file, and an upstream helper library from Aqua Trivy Checks.
+These files remain under the upstream MIT license. A separately labeled six-line compatibility
+module is original study code under this repository's root license.
+
 ## Pinned local model snapshots
 
 The local replication downloads, but does not redistribute, two MLX Community snapshots. The

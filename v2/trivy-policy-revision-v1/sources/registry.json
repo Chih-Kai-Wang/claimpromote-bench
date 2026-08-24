@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "repository": "https://github.com/aquasecurity/trivy-checks",
+  "old_commit": "f37551204c6c6e731ccdc0b5ade0a74cf3f556b1",
+  "change_commit": "e4defae1e4c6e346104f41e70489503069ad1b90",
+  "change_url": "https://github.com/aquasecurity/trivy-checks/commit/e4defae1e4c6e346104f41e70489503069ad1b90",
+  "license": "MIT",
+  "license_path": "v2/trivy-policy-revision-v1/sources/LICENSE",
+  "policy_path": "checks/kubernetes/cisbenchmarks/apiserver/encryption_provider_config.rego",
+  "test_path": "checks/kubernetes/cisbenchmarks/apiserver/encryption_provider_config_test.rego",
+  "library_path": "lib/kubernetes/kubernetes.rego",
+  "old_source": "v2/trivy-policy-revision-v1/sources/old.rego",
+  "old_sha256": "sha256:29664ef7c43eef7c7cd019886dbcf69c8bf58546e5889b016c059df4e431969a",
+  "new_source": "v2/trivy-policy-revision-v1/sources/new.rego",
+  "new_sha256": "sha256:bfcff4dabdaf1410df81f21249979dcb9175702cf04630ad284311f05d74c704",
+  "test_source": "v2/trivy-policy-revision-v1/sources/encryption_provider_config_test.rego",
+  "test_sha256": "sha256:f042d86d152543823da4bd1121af292588929090f672ad37c7ac5826f3249421",
+  "library_source": "v2/trivy-policy-revision-v1/sources/kubernetes.rego",
+  "library_sha256": "sha256:9db29f1c102a9aa51300d228716e41d810bf7c72834ade2286df47fda6edfbaa",
+  "compat_source": "v2/trivy-policy-revision-v1/sources/result-compat.rego",
+  "compat_sha256": "sha256:11fe6b95bc8883e9c50866514c35bd1e5ee711cc5da90cbb0a653ec16875f772",
+  "upstream_test_names": [
+    "test_encryption_provider_config_is_set",
+    "test_encryption_provider_config_is_not_set",
+    "test_encryption_provider_config_is_set_args",
+    "test_encryption_provider_config_is_not_set_args"
+  ]
+}
