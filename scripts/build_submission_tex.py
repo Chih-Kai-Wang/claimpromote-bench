@@ -14,11 +14,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Paired Model-Service Tests over Finite Executable Policy Differences"
+TITLE = r"\cpb: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests"
 ICLR_TITLE = (
-    r"\mbox{\textsc{ClaimPromoteBench}: Paired Model-Service}\protect\\"
-    r"\mbox{Tests over Finite Executable}\protect\\"
-    r"\mbox{Policy Differences}"
+    r"\mbox{\textsc{ClaimPromoteBench}: Compiling Executable}\protect\\"
+    r"\mbox{Policy Revisions into Failure-Aware}\protect\\"
+    r"\mbox{Model-Service Tests}"
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (

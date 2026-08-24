@@ -9,8 +9,9 @@ expose material retained in Git history.
 The public tree should contain only material required to rebuild a reported result:
 
 - benchmark code, policies, schemas, controlled datasets, executable fixtures, and selected tests;
-- exact Gatekeeper, Trivy, and Cosign source revisions, upstream test bindings, licenses, finite
-  case grammars, minimum-suite certificates, and offline validators;
+- exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions, upstream test
+  bindings, licenses, finite case grammars, minimum-suite certificates, and offline validators;
+- the frozen external discovery registry and agentgateway fixed-commit source-test receipt;
 - all 144 sanitized Gatekeeper repetition records, the frozen schedule and plan, content-free
   failure classes, aggregate, and privacy receipt;
 - the r6 coverage addendum, balanced public challenge, authored SLSA migration instrument, and
@@ -19,7 +20,6 @@ The public tree should contain only material required to rebuild a reported resu
   contract-action metrics;
 - the policy-difference compiler, mutation audit, transition-coverage certificates, and minimum
   suite derivations used by the paper;
-- the frozen naturalistic source registry and zero-case pre-inference decision;
 - manuscript source and references when the repository serves as the paper artifact; and
 - licensing notices, a concise README, and manifests whose counts and digests are generated from
   the exported tree.

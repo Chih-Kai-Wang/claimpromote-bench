@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences"
+title: "ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests"
 message: "The scientific release candidate is complete. Cite the immutable archived release or public preprint only after an identifier exists."
 type: software
 authors:

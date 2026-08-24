@@ -114,10 +114,10 @@ AI-detector evasion method.
 
 ## Application to ClaimPromoteBench
 
-The release-candidate audit measures 4,827 prose words and 308 usable sentences after excluding
-LaTeX tables, figures, and display math. Median sentence length is 14.5 words, the 90th percentile is
-24, the 95th percentile is 27, and 0.6494% of sentences exceed 40 words. The submission lint counts
-220 abstract tokens. These values describe the current paper, whose central result is one
+The release-candidate audit measures 3,966 prose words and 268 usable sentences after excluding
+LaTeX tables, figures, and display math. Median sentence length is 13 words, the 90th percentile is
+23.3, the 95th percentile is 28, and 0.3731% of sentences exceed 40 words. The submission lint
+counts 220 abstract tokens. These values describe the current paper, whose central result is one
 policy-migration evaluation and whose other suites are auxiliary diagnostics; they are not compared
 with earlier drafts whose scientific scope differed. The revision:
 

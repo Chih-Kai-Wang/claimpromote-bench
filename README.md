@@ -1,4 +1,4 @@
-# ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences
+# ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests
 
 ClaimPromoteBench enumerates the behavioral difference between two caller-supplied executable
 policy evaluators and creates paired tests for a model-service boundary. Each pair holds the
@@ -8,6 +8,11 @@ change.
 The benchmark is a synthetic, policy-constrained evaluation. Its claims concern finite authored
 context grammars and time-stamped route stacks. A direct deterministic executor remains the
 preferred enforcement path when an application can call the policy itself.
+
+Six historical revisions across five public projects ground the failure model. Microsoft Agent
+Governance Toolkit and agentgateway add independently authored policy and guardrail-adapter faults
+at agent or model boundaries. These cases validate boundary-fault classes; they do not estimate
+deployment prevalence or naturalistic model interpretation.
 
 ## What the enumerator and reducer produce
 
@@ -47,6 +52,8 @@ reported beside the corresponding coverage denominator.
 | Gatekeeper repeated routes | central model-service study | 144 calls | three repetitions on each of two routes |
 | Trivy KCV0030 | independent policy-fault reproduction | 4 cases | inverted predicate, two transition directions |
 | Cosign Rego verifier | independent interface-fault reproduction | 6 cases | four documented verifier fault modes |
+| Agent Governance Toolkit | agent-policy interface reproduction | 2 cases | 11/15 parent versus 15/15 fixed upstream tests |
+| agentgateway Bedrock adapter | versioned guardrail-interface audit | 33 tests | exact fixed commit passes 33/33 offline tests |
 | Authored SLSA migration | four-action structural stress test | 60 graph pairs | 12/12 rules, 10/10 reachable edges, ten-pair minimum |
 | Research r6 | evidence-state coverage addendum | 150 pairs | rare-action support and complete denominators |
 | Public balanced challenge | publicly frozen authored diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
@@ -57,6 +64,8 @@ minimum-suite certificates are stored under:
 - `v2/upstream-policy-revisions-v1/`
 - `v2/trivy-policy-revision-v1/`
 - `v2/sigstore-policy-verifier-revision-v1/`
+- `v2/agent-governance-policy-interface-revision-v1/`
+- `v2/external-evidence-audit-v1/`
 
 ## Central repeated-route result
 
@@ -111,6 +120,8 @@ Run the paper and source bindings:
 
 ```bash
 .venv/bin/python scripts/validate_upstream_policy_revision_study.py
+.venv/bin/python scripts/validate_agent_governance_policy_interface_revision.py
+.venv/bin/python scripts/validate_external_evidence_audit.py
 .venv/bin/python scripts/validate_upstream_policy_route_repetition_results.py
 .venv/bin/python scripts/lint_paper_submission.py
 ```

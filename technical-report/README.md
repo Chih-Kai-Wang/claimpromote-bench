@@ -1,13 +1,13 @@
 # Technical report
 
-`main.tex` is the canonical scientific manuscript for *ClaimPromoteBench: Paired Model-Service
-Tests over Finite Executable Policy Differences*.
+`main.tex` is the canonical scientific manuscript for *ClaimPromoteBench: Compiling Executable
+Policy Revisions into Failure-Aware Model-Service Tests*.
 
 The central evidence combines two exact upstream Gatekeeper policy revisions with a 12-pair finite
-context set and three repeated executions on each of two hosted model IDs. Trivy and Cosign provide
-independent policy-fault and verifier-interface fault reproductions. An authored SLSA migration
-stress-tests four-action transition coverage. R6 and the public balanced challenge remain auxiliary
-evidence-state diagnostics.
+context set and three repeated executions on each of two hosted model IDs. Trivy, Cosign, Microsoft
+Agent Governance Toolkit, and agentgateway provide independent policy, verifier, and guardrail
+interface fault evidence. An authored SLSA migration stress-tests four-action transition coverage.
+R6 and the public balanced challenge remain auxiliary evidence-state diagnostics.
 
 Every scheduled call remains in end-to-end denominators. The manuscript separates strict top-level
 JSON action, contract-action, and full-decision endpoints. Failed response contents are omitted;

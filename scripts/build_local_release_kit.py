@@ -256,6 +256,8 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "upstream_gatekeeper_source_evidence_included",
         "trivy_source_evidence_included",
         "sigstore_source_evidence_included",
+        "agent_governance_source_evidence_included",
+        "external_boundary_evidence_audit_included",
         "upstream_route_repetition_summary_included",
         "upstream_route_repetition_item_level_records_included",
         "dual_endpoint_summary_included",

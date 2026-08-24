@@ -22,6 +22,8 @@ STYLE_AUDIT = ROOT / "docs" / "MANUSCRIPT_STYLE_AUDIT_2026-08-23.json"
 UPSTREAM = ROOT / "v2" / "upstream-policy-revisions-v1"
 TRIVY = ROOT / "v2" / "trivy-policy-revision-v1"
 SIGSTORE = ROOT / "v2" / "sigstore-policy-verifier-revision-v1"
+AGENT_GOVERNANCE = ROOT / "v2" / "agent-governance-policy-interface-revision-v1"
+EXTERNAL_AUDIT = ROOT / "v2" / "external-evidence-audit-v1"
 REPETITION = ROOT / "v2" / "upstream-policy-route-repetition-v1"
 DUAL_ENDPOINT = ROOT / "v2" / "dual-endpoint-audit-v1" / "aggregate.json"
 R6_ADDENDUM = ROOT / "v2" / "confirmatory" / "r6-execution" / "reviewer-reporting-addendum.json"
@@ -42,9 +44,10 @@ GRAPH_ROUTES = (
 NATURALISTIC = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences"
+    "ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware "
+    "Model-Service Tests"
 )
-TEX_TITLE = r"\cpb: Paired Model-Service Tests over Finite Executable Policy Differences"
+TEX_TITLE = r"\cpb: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests"
 
 
 def fail(message: str) -> None:
@@ -163,6 +166,8 @@ def validate_structure_and_metadata(tex: str, bib: str) -> None:
         "tzorefbrill2017semantic",
         "martin2007policytests",
         "ma2024promptregression",
+        "microsoft2026agentgovernance",
+        "agentgateway2026bedrock",
         "zhou2025rulearena",
         "ahmed2025speceval",
         "diao2025guidebench",
@@ -261,6 +266,82 @@ def validate_upstream_sources() -> None:
     expect(len(sigstore.get("results", [])), 6, "Cosign cases")
     expect(len(sigstore.get("fault_mode_support", {})), 4, "Cosign fault modes")
     expect(sigstore_min.get("witness_cases"), 4, "Cosign minimum")
+
+    agent_governance = load_object(
+        AGENT_GOVERNANCE / "results.json", "Agent Governance Toolkit results"
+    )
+    agent_governance_minimum = load_object(
+        AGENT_GOVERNANCE / "minimum-suite.json", "Agent Governance Toolkit minimum suite"
+    )
+    agent_governance_receipt = load_object(
+        AGENT_GOVERNANCE / "source-validation-receipt.json",
+        "Agent Governance Toolkit source receipt",
+    )
+    expect(
+        agent_governance.get("old_upstream_tests"),
+        {
+            "failed": [
+                "test_empty_text_with_zero_width_pattern_denies",
+                "test_match_start_of_empty_match_is_zero",
+                "test_zero_length_leftmost_match_still_denies",
+                "test_zero_width_match_reports_placeholder_offset",
+            ],
+            "passed": 11,
+            "total": 15,
+        },
+        "Agent Governance Toolkit old tests",
+    )
+    expect(
+        agent_governance.get("new_upstream_tests"),
+        {"failed": [], "passed": 15, "total": 15},
+        "Agent Governance Toolkit fixed tests",
+    )
+    expect(
+        agent_governance.get("transition_support"),
+        {"ALLOW->HOLD": 2},
+        "Agent Governance Toolkit transitions",
+    )
+    expect(agent_governance_minimum.get("witness_cases"), 1, "Agent Governance minimum")
+    expect(agent_governance_receipt.get("model_calls"), 0, "Agent Governance model calls")
+    expect(
+        agent_governance_receipt.get("action_mapping_is_author_mapping"),
+        True,
+        "Agent Governance action mapping",
+    )
+
+    audit = load_object(EXTERNAL_AUDIT / "audit-receipt.json", "external evidence audit")
+    registry = load_object(EXTERNAL_AUDIT / "candidate-registry.json", "external registry")
+    agentgateway = load_object(
+        EXTERNAL_AUDIT / "source-checks" / "agentgateway-bedrock-guardrail.json",
+        "agentgateway source check",
+    )
+    expect(audit.get("formal_repository_seeds"), 465, "external repository seeds")
+    expect(audit.get("deep_screened_candidates"), 11, "external source reviews")
+    expect(audit.get("model_calls"), 0, "external audit model calls")
+    expect(
+        audit.get("status"),
+        "GO_FOR_EXTERNAL_BOUNDARY_FAULT_EVIDENCE__NO_GO_FOR_NATURALISTIC_MODEL_POLICY_INTERPRETATION",
+        "external audit decision",
+    )
+    expect(
+        registry.get("outcome_counts"),
+        {
+            "ARCHITECTURE_ONLY": 6,
+            "EXCLUDED": 3,
+            "POLICY_REVISION_ONLY": 0,
+            "QUALIFYING_ROUTE_REVISION": 2,
+        },
+        "external audit outcomes",
+    )
+    expect(agentgateway.get("model_calls"), 0, "agentgateway model calls")
+    expect(agentgateway.get("aws_calls"), 0, "agentgateway AWS calls")
+    expect(
+        agentgateway.get("status"),
+        "EXACT_CHANGE_COMMIT_OFFLINE_REGRESSION_TESTS_PASS",
+        "agentgateway source status",
+    )
+    expect(agentgateway.get("test_run", {}).get("passed"), 33, "agentgateway selected tests")
+    expect(agentgateway.get("test_run", {}).get("failed"), 0, "agentgateway failed tests")
 
 
 def route_by_model(aggregate: dict[str, Any], model: str) -> dict[str, Any]:
@@ -492,7 +573,7 @@ def validate_naturalistic() -> None:
 
 def validate_manuscript_claims(tex: str) -> None:
     required = {
-        "synthetic scope": "prospective synthetic model-service interface",
+        "synthetic scope": "model-service study is prospective and synthetic",
         "caller obligations": "witness inference remain caller responsibilities",
         "three endpoints": (
             "strict top-level action $\\rightarrow$ contract action $\\rightarrow$ full decision"
@@ -515,7 +596,12 @@ def validate_manuscript_claims(tex: str) -> None:
         "historical interface": "obsolete frozen service interface",
         "causal boundary": "401 lane provides no causal comparison",
         "public challenge boundary": "measures robustness on known cases",
-        "naturalistic decision": "admitted zero naturalistic cases",
+        "external audit scope": "screened 465 repository seeds and source-reviewed 11 candidates",
+        "external Agent Governance result": "11/15 post-fix upstream tests pass",
+        "external agentgateway result": "all 33 selected offline tests pass",
+        "naturalistic decision": (
+            "Naturalistic model-policy interpretation therefore remains unvalidated"
+        ),
         "structural minimum boundary": (
             "Stochastic fault detection and release sufficiency remain unmeasured"
         ),

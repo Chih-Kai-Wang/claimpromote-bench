@@ -13,8 +13,9 @@ Documentation therefore carries no fixed file total.
 ## Included evidence
 
 - the public 20-pair benchmark, policies, schemas, executable fixtures, and Lean package;
-- exact Gatekeeper, Trivy, and Cosign revisions with upstream tests, licenses, finite cases,
-  minimum-suite certificates, and offline validators;
+- exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit revisions with upstream tests,
+  licenses, finite cases, minimum-suite certificates, and offline validators;
+- the frozen 465-repository discovery registry and agentgateway fixed-commit source-test receipt;
 - the 24-item Gatekeeper study plan, 144-cell frozen schedule, all six sanitized repetition files,
   content-free failure taxonomy, aggregate, and privacy receipts;
 - the r6 reviewer release and coverage addendum;
@@ -22,9 +23,8 @@ Documentation therefore carries no fixed file total.
 - the authored SLSA migration study and three pinned local replications;
 - 1,320 content-free dual-endpoint item records that reconstruct strict-action and contract-action
   metrics across ten route stacks;
-- the finite policy-difference enumerator, suite reducer, transition and mutation certificates, and minimum-suite
-  derivations; and
-- the frozen naturalistic-candidate registry and its zero-case pre-inference decision.
+- the finite policy-difference enumerator, suite reducer, transition and mutation certificates, and
+  minimum-suite derivations.
 
 ## Privacy boundary
 

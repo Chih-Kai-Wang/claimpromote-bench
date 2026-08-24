@@ -56,6 +56,8 @@ def test_manifest_reports_each_local_study_without_hard_coded_file_count(
     assert scope["local_policy_transition_graph_item_level_records_included"] is True
     assert scope["local_minimum_policy_migration_gate_included"] is False
     assert scope["upstream_gatekeeper_source_evidence_included"] is False
+    assert scope["agent_governance_source_evidence_included"] is False
+    assert scope["external_boundary_evidence_audit_included"] is False
     assert scope["upstream_route_repetition_summary_included"] is False
     assert scope["dual_endpoint_summary_included"] is False
 
@@ -369,17 +371,21 @@ def test_review_runner_prefers_the_bundled_source_tree() -> None:
     assert "subprocess.run(command, cwd=ROOT, check=True, env=env)" in runner
 
 
-def test_review_runner_checks_frozen_naturalistic_decision() -> None:
+def test_review_runner_checks_external_boundary_evidence() -> None:
     builder = load_builder()
 
     runner = builder.review_runner()
     readme = builder.review_readme()
-    assert "scripts/validate_v2_naturalistic_candidates.py" in runner
-    assert "tests/test_v2_naturalistic.py" in runner
+    assert "scripts/validate_agent_governance_policy_interface_revision.py" in runner
+    assert "scripts/validate_external_evidence_audit.py" in runner
+    assert "tests/test_agent_governance_policy_interface_revision.py" in runner
+    assert "tests/test_external_evidence_audit.py" in runner
+    assert "scripts/validate_v2_naturalistic_candidates.py" not in runner
     normalized = " ".join(readme.split())
-    assert "admitted zero cases" in normalized
+    assert "screened 465 public repository seeds" in normalized
+    assert "source-reviewed 11 candidates" in normalized
+    assert "retained two boundary-fault cases" in normalized
     assert "zero model calls" in normalized
-    assert "12 source pointers" in normalized
 
 
 def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None:
@@ -391,7 +397,8 @@ def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None
     assert "1,260" not in readme
     assert "seven-route" not in readme
     assert "Ox Alpha" not in readme
-    assert "exact Gatekeeper, Trivy, and Cosign source revisions" in readme
+    assert "exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit" in readme
+    assert "agentgateway source-test receipt" in readme
     assert "1,320 content-free item records" in readme
 
 
@@ -422,6 +429,7 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
 def test_anonymous_builder_includes_policy_study_construction_and_replay_code() -> None:
     source = BUILDER_PATH.read_text(encoding="utf-8")
     for relative in (
+        "scripts/build_agent_governance_policy_interface_revision.py",
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
@@ -429,6 +437,7 @@ def test_anonymous_builder_includes_policy_study_construction_and_replay_code() 
         "scripts/run_policy_transition_graph_local_study.py",
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
+        "scripts/validate_external_evidence_audit.py",
         "scripts/validate_policy_transition_graph_study.py",
     ):
         assert f'"{relative}"' in source

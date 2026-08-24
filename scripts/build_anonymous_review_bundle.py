@@ -3114,9 +3114,10 @@ def review_readme() -> str:
     return """# ClaimPromoteBench anonymous reviewer bundle
 
 This bundle reproduces the paper's synthetic policy-transition benchmarks and model-service
-regression studies. It contains exact Gatekeeper, Trivy, and Cosign source revisions; the frozen
-Gatekeeper route repetitions; the r6 and balanced-challenge records; the authored SLSA migration
-suite; pinned local replications; and a content-free dual-endpoint audit.
+regression studies. It contains exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit
+source revisions; the agentgateway source-test receipt; the frozen Gatekeeper route repetitions;
+the r6 and balanced-challenge records; the authored SLSA migration suite; pinned local
+replications; and a content-free dual-endpoint audit.
 
 ## Reproduce the review environment
 
@@ -3137,6 +3138,9 @@ Python replay when Lean is unavailable.
 - `v2/upstream-policy-revisions-v1/`, `v2/trivy-policy-revision-v1/`, and
   `v2/sigstore-policy-verifier-revision-v1/` bind upstream source, tests, licenses, authored finite
   contexts, and deterministic validation receipts.
+- `v2/agent-governance-policy-interface-revision-v1/` reproduces the exact parent/fixed Rego
+  verdict gap; `v2/external-evidence-audit-v1/` binds the frozen discovery registry and the
+  agentgateway fixed-commit test receipt.
 - `evidence/upstream-policy-route-repetition/` retains all 144 scheduled terminal classes and the
   six sanitized 24-item result files used for the three-repetition analysis.
 - `evidence/fresh-confirmatory/` and `evidence/balanced-public-challenge/` reproduce the r6 coverage
@@ -3156,8 +3160,9 @@ provenance. Each manifest derives its file count from the generated tree.
 
 The private construction seed is unnecessary for score recomputation and remains outside the
 bundle. A bound overlay corrects stale r6 construction metadata while preserving the byte-frozen
-manifest. The naturalistic-candidate audit reviewed 12 source pointers, admitted zero cases, and
-made zero model calls under the predeclared provenance threshold.
+manifest. The external audit screened 465 public repository seeds, source-reviewed 11 candidates,
+and retained two boundary-fault cases with zero model calls. It found no externally validated case
+in which a model interprets a changed executable policy.
 
 The central model IDs share one provider/API and adapter configuration; provider-side serving
 internals remain opaque. Cross-route values are descriptive. The challenge was author-created and
@@ -3420,6 +3425,8 @@ PYTHON_COMMANDS = [
     [sys.executable, "scripts/validate_upstream_policy_revision_study.py"],
     [sys.executable, "scripts/validate_trivy_policy_revision.py"],
     [sys.executable, "scripts/validate_sigstore_policy_verifier_revision.py"],
+    [sys.executable, "scripts/validate_agent_governance_policy_interface_revision.py"],
+    [sys.executable, "scripts/validate_external_evidence_audit.py"],
     [sys.executable, "scripts/validate_anonymous_current_evidence.py"],
     [
         sys.executable,
@@ -3463,25 +3470,16 @@ PYTHON_COMMANDS = [
     ],
     [
         sys.executable,
-        "scripts/validate_v2_naturalistic_candidates.py",
-        "--registry",
-        "v2/naturalistic-sources.json",
-        "--pool",
-        "v2/naturalistic-candidates.json",
-        "--out",
-        "work/naturalistic-candidate-validation.json",
-    ],
-    [
-        sys.executable,
         "-m",
         "pytest",
         "-q",
         "tests/test_v2.py",
-        "tests/test_v2_naturalistic.py",
         "tests/test_policy_difference_compiler.py",
         "tests/test_upstream_policy_revision_study.py",
         "tests/test_trivy_policy_revision.py",
         "tests/test_sigstore_policy_verifier_revision.py",
+        "tests/test_agent_governance_policy_interface_revision.py",
+        "tests/test_external_evidence_audit.py",
     ],
 ]
 
@@ -3652,6 +3650,7 @@ def verify_bundle(bundle: Path) -> None:
         "docs/POLICY_DIFFERENCE_COMPILER.md",
         "pyproject.toml",
         "requirements-review.lock",
+        "scripts/build_agent_governance_policy_interface_revision.py",
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
@@ -3664,7 +3663,9 @@ def verify_bundle(bundle: Path) -> None:
         "scripts/run_policy_transition_graph_local_study.py",
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
+        "scripts/validate_agent_governance_policy_interface_revision.py",
         "scripts/validate_anonymous_current_evidence.py",
+        "scripts/validate_external_evidence_audit.py",
         "scripts/validate_policy_transition_graph_study.py",
         "scripts/validate_sigstore_policy_verifier_revision.py",
         "scripts/validate_trivy_policy_revision.py",
@@ -3720,9 +3721,13 @@ def verify_bundle(bundle: Path) -> None:
         "v2/trivy-policy-revision-v1/source-validation-receipt.json",
         "v2/sigstore-policy-verifier-revision-v1/artifact-manifest.json",
         "v2/sigstore-policy-verifier-revision-v1/source-validation-receipt.json",
-        "v2/naturalistic-candidates.json",
-        "v2/naturalistic-review-decision.json",
-        "v2/naturalistic-sources.json",
+        "v2/agent-governance-policy-interface-revision-v1/artifact-manifest.json",
+        "v2/agent-governance-policy-interface-revision-v1/source-validation-receipt.json",
+        "v2/external-evidence-audit-v1/study-plan.json",
+        "v2/external-evidence-audit-v1/formal-search-seeds.json",
+        "v2/external-evidence-audit-v1/candidate-registry.json",
+        "v2/external-evidence-audit-v1/audit-receipt.json",
+        "v2/external-evidence-audit-v1/source-checks/agentgateway-bedrock-guardrail.json",
     }
     if (bundle / "evidence" / "public-model-breadth").exists():
         fail("excluded seven-route evidence survived anonymous staging")
@@ -3775,6 +3780,10 @@ def write_manifest(bundle: Path) -> None:
     upstream_sources_included = (bundle / "v2" / "upstream-policy-revisions-v1").is_dir()
     trivy_sources_included = (bundle / "v2" / "trivy-policy-revision-v1").is_dir()
     sigstore_sources_included = (bundle / "v2" / "sigstore-policy-verifier-revision-v1").is_dir()
+    agent_governance_sources_included = (
+        bundle / "v2" / "agent-governance-policy-interface-revision-v1"
+    ).is_dir()
+    external_audit_included = (bundle / "v2" / "external-evidence-audit-v1").is_dir()
     upstream_repetition_included = (
         bundle / "evidence" / "upstream-policy-route-repetition"
     ).is_dir()
@@ -3817,6 +3826,8 @@ def write_manifest(bundle: Path) -> None:
             "upstream_gatekeeper_source_evidence_included": upstream_sources_included,
             "trivy_source_evidence_included": trivy_sources_included,
             "sigstore_source_evidence_included": sigstore_sources_included,
+            "agent_governance_source_evidence_included": agent_governance_sources_included,
+            "external_boundary_evidence_audit_included": external_audit_included,
             "upstream_route_repetition_summary_included": upstream_repetition_included,
             "upstream_route_repetition_item_level_records_included": (upstream_repetition_included),
             "upstream_route_repetition_raw_response_text_included": False,
@@ -4006,6 +4017,7 @@ def build(destination: Path) -> None:
         "scripts/analyze_local_model_replication.py",
         "scripts/analyze_policy_transition_graph_local_study.py",
         "scripts/audit_public_pair_contracts.py",
+        "scripts/build_agent_governance_policy_interface_revision.py",
         "scripts/build_alpha.py",
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
@@ -4013,7 +4025,6 @@ def build(destination: Path) -> None:
         "scripts/build_sigstore_policy_verifier_revision.py",
         "scripts/build_trivy_policy_revision.py",
         "scripts/build_upstream_policy_revision_study.py",
-        "scripts/build_v2_naturalistic_candidates.py",
         "scripts/derive_minimal_policy_migration_suite.py",
         "scripts/derive_policy_difference_coverage.py",
         "scripts/derive_policy_migration_mutation_audit.py",
@@ -4033,7 +4044,9 @@ def build(destination: Path) -> None:
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
         "scripts/upstream_policy_revision.py",
+        "scripts/validate_agent_governance_policy_interface_revision.py",
         "scripts/validate_anonymous_current_evidence.py",
+        "scripts/validate_external_evidence_audit.py",
         "scripts/validate_local_model_replications.py",
         "scripts/validate_policy_switch_study.py",
         "scripts/validate_policy_transition_graph_local_study.py",
@@ -4042,9 +4055,9 @@ def build(destination: Path) -> None:
         "scripts/validate_sigstore_policy_verifier_revision.py",
         "scripts/validate_trivy_policy_revision.py",
         "scripts/validate_upstream_policy_revision_study.py",
-        "scripts/validate_v2_naturalistic_candidates.py",
+        "tests/test_agent_governance_policy_interface_revision.py",
+        "tests/test_external_evidence_audit.py",
         "tests/test_v2.py",
-        "tests/test_v2_naturalistic.py",
         "tests/test_policy_switch_study.py",
         "tests/test_policy_transition_graph_local_study.py",
         "tests/test_policy_transition_graph_study.py",
@@ -4052,9 +4065,6 @@ def build(destination: Path) -> None:
         "tests/test_sigstore_policy_verifier_revision.py",
         "tests/test_trivy_policy_revision.py",
         "tests/test_upstream_policy_revision_study.py",
-        "v2/naturalistic-candidates.json",
-        "v2/naturalistic-review-decision.json",
-        "v2/naturalistic-sources.json",
         "v2/local-model-replication-v1/model-catalog.json",
         "v2/local-model-replication-v1/requirements.txt",
         "v2/schemas/local-model-run-record.schema.json",
@@ -4064,6 +4074,8 @@ def build(destination: Path) -> None:
         "v2/schemas/upstream-policy-decision.schema.json",
     )
     anonymous_validator_files = {
+        "scripts/validate_agent_governance_policy_interface_revision.py",
+        "scripts/validate_external_evidence_audit.py",
         "scripts/validate_sigstore_policy_verifier_revision.py",
         "scripts/validate_trivy_policy_revision.py",
         "scripts/validate_upstream_policy_revision_study.py",
@@ -4085,6 +4097,8 @@ def build(destination: Path) -> None:
         "upstream-policy-revisions-v1",
         "trivy-policy-revision-v1",
         "sigstore-policy-verifier-revision-v1",
+        "agent-governance-policy-interface-revision-v1",
+        "external-evidence-audit-v1",
     ):
         copy_tree(ROOT / "v2" / study, destination / "v2" / study)
     validator_path = destination / "scripts" / "validate_anonymous_empirical_evidence.py"

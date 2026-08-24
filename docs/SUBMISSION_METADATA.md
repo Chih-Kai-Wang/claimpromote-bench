@@ -8,13 +8,13 @@ No OpenReview submission ID, arXiv ID, DOI, or archival identifier exists yet.
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences
+ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests
 ```
 
 ## ICLR 2027 abstract
 
 ```text
-Executable policy revisions can change prescribed actions for fixed evidence. We study a prospective synthetic model-service interface over two author-supplied policy evaluators. ClaimPromoteBench enumerates action-changing contexts from a finite authored grammar, attaches registered rule witnesses, and selects a minimum structural-coverage suite. It integrates finite policy differencing and suite reduction with failure-inclusive item/pair scoring. Two source-traceable Gatekeeper revisions yield 12 pairs and a two-pair minimum. Across 144 calls through one provider/API configuration, all 63 strictly parsed actions match OPA; 12 timeouts and 69 envelope violations reduce end-to-end item/pair scores to 53/72 and 21/36 for DeepSeek Flash and 10/72 and 0/36 for Qwen. An offline audit recovers 49 correct actions and 40 pairs outside the full contract. R6 Qwen reaches 258/300 items and 113/150 pairs end to end versus 258/272 and 113/123 conditional. On an authored challenge frozen publicly before calls, Qwen and Flash reach 132/180 and 90/180 items and 48/90 and 13/90 pairs end to end, versus 132/148 and 90/146 items and 48/64 and 13/61 pairs conditional; DEMOTE recall is 4/30 and 0/30. Complete confusion matrices retain every terminal failure. The evidence supports source-traceable exact-interface testing over finite authored policy surfaces. Deployment prevalence and naturalistic validity remain open.
+Executable policy revisions can change downstream actions for fixed inputs, yet model-service tests rarely isolate policy version. ClaimPromoteBench compiles deterministic policy versions and a finite authored context grammar into pairs whose oracle actions change. It records rule witnesses, action transitions, a minimum structural-coverage suite, and failure-inclusive endpoints. Six revisions across five public projects ground the fault model. Exact offline replay recovers policy or adapter faults in Gatekeeper, Trivy, Cosign, Microsoft Agent Governance Toolkit, and agentgateway; the latter two occur at agent or model boundaries. Two Gatekeeper revisions yield 12 pairs and a two-pair minimum. Across three runs on two hosted routes (144 calls), all 63 parsed actions match OPA; timeouts and envelope violations reduce end-to-end pair scores to 21/36 for DeepSeek Flash and 0/36 for Qwen. An offline endpoint audit recovers 40 correct pairs outside the full object contract. In evidence-state diagnostics, R6 Qwen reaches 113/150 pairs end to end versus 113/123 conditional. On an author-created challenge frozen publicly before calls, Qwen and Flash reach 48/90 and 13/90 pairs end to end versus 48/64 and 13/61 conditional, with DEMOTE recall of 4/30 and 0/30. Complete confusion matrices retain terminal failures. The results support regression testing of exact model-service interfaces under finite authored policy changes. Deployment prevalence and naturalistic model interpretation remain open.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -24,7 +24,7 @@ stay out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences
+ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests
 ```
 
 ## arXiv abstract
@@ -67,6 +67,11 @@ Enumerates finite action-changing differences between caller-supplied policy eva
   provider/API configuration; provider-side serving internals are opaque.
 - Trivy reproduces a real inverted policy predicate on four upstream cases. Cosign reproduces four
   verifier-interface fault modes on six cases. Cosign remains a separate evidence class.
+- A frozen public-source audit screens 465 repository seeds and reviews 11 candidates at source
+  level. Microsoft Agent Governance Toolkit reproduces an agent-policy verdict gap (11/15 parent
+  versus 15/15 fixed upstream tests), and agentgateway passes 33/33 offline tests at the exact
+  Bedrock guardrail-adapter fix. The audit validates boundary faults, not prevalence or
+  naturalistic model interpretation.
 - The authored SLSA rule suite covers 12/12 changed rules and 6/10 reachable action edges; the graph
   suite covers 12/12 and 10/10. A ten-pair structural-coverage suite is jointly minimum for the
   committed candidate pool.
