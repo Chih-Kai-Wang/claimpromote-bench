@@ -1,0 +1,12 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "7f30dfb59bf74d751cf78fca0c9e020abb2546ea",
+  "hidden_reasoning_retained": false,
+  "planned_cells": 20,
+  "provider_response_ids_retained": false,
+  "schedule_sha256": "sha256:89030543f0e1d97c73c6126068e77663c8dc693502b4ee7a721e98dbbc7fb70f",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-24T07:12:36.854917Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-ox-alpha-minimal-route-2026-08-v1"
+}
