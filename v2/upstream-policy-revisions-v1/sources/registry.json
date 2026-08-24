@@ -1,0 +1,38 @@
+{
+  "license": "Apache-2.0",
+  "license_path": "v2/upstream-policy-revisions-v1/sources/LICENSE",
+  "license_sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+  "license_url": "https://github.com/open-policy-agent/gatekeeper-library/blob/master/LICENSE",
+  "notice_path": "v2/upstream-policy-revisions-v1/sources/NOTICE",
+  "notice_sha256": "sha256:50bf80c4de02ec56f93f7002601f5a388b3f21414814d1d09b4201e0bfd540c8",
+  "repository": "https://github.com/open-policy-agent/gatekeeper-library",
+  "revisions": [
+    {
+      "change_commit": "749ebacafb023738aa95ce468b0503a88d3e2d75",
+      "change_url": "https://github.com/open-policy-agent/gatekeeper-library/commit/749ebacafb023738aa95ce468b0503a88d3e2d75",
+      "migration_id": "unique-service-selector-kind-filter",
+      "new_path": "src/general/uniqueserviceselector/src.rego",
+      "new_sha256": "sha256:3e8eff971f17916a19c60a896b679672b56d4daea0e29479209bdc1b4bf9284a",
+      "new_source": "v2/upstream-policy-revisions-v1/sources/unique-service-selector/new.rego",
+      "old_commit": "524c179d96e37ec67f1c45589dd0c7ba8b8039c3",
+      "old_path": "src/general/uniqueserviceselector/src.rego",
+      "old_sha256": "sha256:99c7a8fdd7ccc5b628083cfad3d415cd50bcc44f7c95ec6b2dc211c4aacc1ec6",
+      "old_source": "v2/upstream-policy-revisions-v1/sources/unique-service-selector/old.rego",
+      "upstream_test": "src/general/uniqueserviceselector/src_test.rego::test_no_service_selector"
+    },
+    {
+      "change_commit": "102bd7704077cb8f22967b2a75aba2aed4046b02",
+      "change_url": "https://github.com/open-policy-agent/gatekeeper-library/commit/102bd7704077cb8f22967b2a75aba2aed4046b02",
+      "migration_id": "flexvolume-empty-allowlist-blocks-all",
+      "new_path": "library/pod-security-policy/flexvolume-drivers/src.rego",
+      "new_sha256": "sha256:6d562d5130ca390ae2b82ea3dd0c6c45cce1bff1543b885f876cb9ba8bbe2e37",
+      "new_source": "v2/upstream-policy-revisions-v1/sources/flexvolume-empty-allowlist/new.rego",
+      "old_commit": "d6349175e86910de7f8fa4c675f6937a41304b50",
+      "old_path": "library/pod-security-policy/flexvolume-drivers/src.rego",
+      "old_sha256": "sha256:07812de7a9afd64d5775790e280d30fcf93613b73cb62448ab0652d758bd8781",
+      "old_source": "v2/upstream-policy-revisions-v1/sources/flexvolume-empty-allowlist/old.rego",
+      "upstream_test": "library/pod-security-policy/flexvolume-drivers/src_test.rego::test_input_flexvolume_empty_params"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

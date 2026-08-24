@@ -27,6 +27,14 @@ retain the source registry and upstream attribution while continuing to describe
 author operationalization. The counterfactual policy-switch profiles are also author-defined test
 instruments; neither profile is a standards interpretation or deployment recommendation.
 
+## Gatekeeper Library policy revisions
+
+The upstream-policy-revision study includes four unmodified Rego files from the Open Policy Agent
+Gatekeeper Library. The source registry pins the original repository, commits, paths, and change
+pages. Those files retain the upstream Apache-2.0 license and Gatekeeper Library notice; the
+surrounding study generator, schemas, and analysis code remain under this repository's root
+license.
+
 ## Pinned local model snapshots
 
 The local replication downloads, but does not redistribute, two MLX Community snapshots. The

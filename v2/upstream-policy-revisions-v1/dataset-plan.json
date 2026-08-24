@@ -1,0 +1,22 @@
+{
+  "action_vocabulary": [
+    "ALLOW",
+    "HOLD"
+  ],
+  "author_constructed_contexts": 12,
+  "candidate_items": 24,
+  "candidate_pairs": 12,
+  "controlled_coordinate": "/model_visible/policy_source",
+  "external_revision_count": 2,
+  "gold_source": "OPA 1.19.1 execution of exact commit-pinned upstream Rego bytes",
+  "human_annotator_count": 0,
+  "interpretation": "The two policy revisions are independently authored upstream operational changes. The twelve admission contexts are author-constructed finite-grammar probes. Results measure route conformance on those probes and do not estimate production frequency.",
+  "model_calls_before_freeze": 0,
+  "pair_balance": {
+    "ALLOW->HOLD": 6,
+    "HOLD->ALLOW": 6
+  },
+  "response_schema": "v2/schemas/upstream-policy-decision.schema.json",
+  "schema_version": "1.0.0",
+  "status": "DATASET_READY_FOR_PREINFERENCE_COMMIT"
+}

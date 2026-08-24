@@ -1,0 +1,5 @@
+Gatekeeper library
+Copyright 2018-2020 The Gatekeeper Authors
+
+The four Rego files in this directory are unmodified copies from the Open Policy Agent
+Gatekeeper Library commits recorded in registry.json. They remain under Apache-2.0.
