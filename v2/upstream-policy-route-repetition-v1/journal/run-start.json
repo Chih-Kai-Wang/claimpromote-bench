@@ -1,0 +1,14 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retries_authorized": 0,
+  "credentials_retained": false,
+  "frozen_plan_commit": "f2b4519816817c58a374b0459313d2bed609acf9",
+  "hidden_reasoning_retained": false,
+  "planned_cells": 144,
+  "provider_response_ids_retained": false,
+  "schedule_sha256": "sha256:e4776de2f0677267eaa4c26decc7d7b7e76863e474bb928bf25952d9005ba066",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-24T10:54:38.781261Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}

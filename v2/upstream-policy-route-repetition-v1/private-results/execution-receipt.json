@@ -1,0 +1,66 @@
+{
+  "action_extractable": 63,
+  "application_posts": 144,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-24T12:31:46.169378Z",
+  "contract_valid": 63,
+  "credentials_retained": false,
+  "durable_intents": 144,
+  "durable_terminal_records": 144,
+  "frozen_plan_commit": "f2b4519816817c58a374b0459313d2bed609acf9",
+  "hidden_reasoning_retained": false,
+  "outputs": [
+    {
+      "file": "opencode-go-qwen3.7-max-upstream-repeat-v1-r1.jsonl",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "records": 24,
+      "repetition": 1,
+      "sha256": "sha256:26262322f11373eb333a6fcd0afb10c44aa6a6ea6da67b6a13e2a6b3e6eed437"
+    },
+    {
+      "file": "opencode-go-qwen3.7-max-upstream-repeat-v1-r2.jsonl",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "records": 24,
+      "repetition": 2,
+      "sha256": "sha256:3cc409c1462896d924db91c3b9bccb266de7d21030a1d1f15d1d724a8cbebd08"
+    },
+    {
+      "file": "opencode-go-qwen3.7-max-upstream-repeat-v1-r3.jsonl",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "records": 24,
+      "repetition": 3,
+      "sha256": "sha256:dea6ed55634d8573637e04ef2dbec717127803f0b8b3fc907b399aab5b61b9a9"
+    },
+    {
+      "file": "opencode-go-deepseek-v4-flash-upstream-repeat-v1-r1.jsonl",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "records": 24,
+      "repetition": 1,
+      "sha256": "sha256:9d8369fe029b7e2bb4bad650680fb1e0e3d1a2b4fd2b492644e31049f579ec4d"
+    },
+    {
+      "file": "opencode-go-deepseek-v4-flash-upstream-repeat-v1-r2.jsonl",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "records": 24,
+      "repetition": 2,
+      "sha256": "sha256:f934b893c21f104c1358ae9bf83e16dc1e842097fc1aa258b77de00e7bb02cac"
+    },
+    {
+      "file": "opencode-go-deepseek-v4-flash-upstream-repeat-v1-r3.jsonl",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "records": 24,
+      "repetition": 3,
+      "sha256": "sha256:761fb42423f00d59ef83aa250de67911243ee3f8acbc3e179d04ad3620b53cda"
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 144,
+  "provider_response_ids_retained": false,
+  "schedule_sha256": "sha256:e4776de2f0677267eaa4c26decc7d7b7e76863e474bb928bf25952d9005ba066",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-24T10:54:38.781261Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1",
+  "transport_errors": 12,
+  "workflow_initiated_purchase_or_recharge": false
+}

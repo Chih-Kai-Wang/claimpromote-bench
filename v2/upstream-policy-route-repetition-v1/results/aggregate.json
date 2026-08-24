@@ -1,0 +1,1132 @@
+{
+  "analysis_timestamp_source": "execution-receipt.completed_at_utc",
+  "analyzed_at_utc": "2026-08-24T12:31:46.169378Z",
+  "client_retries": 0,
+  "denominator_rule": "Every scheduled terminal outcome remains in its route-repetition denominator.",
+  "design": "TWO_NAMED_ROUTES_BY_THREE_EXACT_REPETITIONS_ON_TWO_HISTORICAL_REVISIONS",
+  "endpoint_order": [
+    "strict_action",
+    "contract_action",
+    "full_decision_exact"
+  ],
+  "frozen_plan_commit": "f2b4519816817c58a374b0459313d2bed609acf9",
+  "historical_revisions": 2,
+  "interpretation_boundary": "Results describe these time-stamped model-service routes and frozen historical revision contexts. Cross-route differences are descriptive. Population reliability, model-family ranking, and causal service-ablation claims remain outside scope.",
+  "items_per_route_repetition": 24,
+  "lanes": [
+    {
+      "by_repetition": [
+        {
+          "action_extractable": {
+            "denominator": 24,
+            "numerator": 3,
+            "value": 0.125
+          },
+          "contract_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 3,
+              "value": 0.125
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 2,
+                "HOLD": 0,
+                "INVALID_CONTRACT": 10
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 1,
+                "INVALID_CONTRACT": 11
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 1,
+                "value": 0.08333333333333333
+              }
+            }
+          },
+          "contract_valid": {
+            "denominator": 24,
+            "numerator": 3,
+            "value": 0.125
+          },
+          "full_decision_exact": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 3,
+              "value": 0.125
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 1,
+                "value": 0.08333333333333333
+              }
+            }
+          },
+          "pair_accuracy": {
+            "contract_action": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            },
+            "full_decision_exact": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            },
+            "pairs": 12,
+            "strict_action": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            }
+          },
+          "parse_status_counts": {
+            "JSON_SYNTAX_ERROR": 21,
+            "OK": 3
+          },
+          "repetition": 1,
+          "scheduled_items": 24,
+          "strict_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 3,
+              "value": 0.125
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 2,
+                "HOLD": 0,
+                "UNEXTRACTABLE": 10
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 1,
+                "UNEXTRACTABLE": 11
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 1,
+                "value": 0.08333333333333333
+              }
+            }
+          },
+          "transport_errors": 0,
+          "usage_totals": {
+            "cached_input_tokens": 0,
+            "input_tokens": 13766,
+            "output_tokens": 34873,
+            "reasoning_tokens": 32444,
+            "total_tokens": 48639
+          }
+        },
+        {
+          "action_extractable": {
+            "denominator": 24,
+            "numerator": 2,
+            "value": 0.08333333333333333
+          },
+          "contract_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 2,
+              "value": 0.08333333333333333
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 0,
+                "HOLD": 0,
+                "INVALID_CONTRACT": 12
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 2,
+                "INVALID_CONTRACT": 10
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 0,
+                "value": 0.0
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              }
+            }
+          },
+          "contract_valid": {
+            "denominator": 24,
+            "numerator": 2,
+            "value": 0.08333333333333333
+          },
+          "full_decision_exact": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 2,
+              "value": 0.08333333333333333
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 0,
+                "value": 0.0
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              }
+            }
+          },
+          "pair_accuracy": {
+            "contract_action": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            },
+            "full_decision_exact": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            },
+            "pairs": 12,
+            "strict_action": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            }
+          },
+          "parse_status_counts": {
+            "JSON_SYNTAX_ERROR": 22,
+            "OK": 2
+          },
+          "repetition": 2,
+          "scheduled_items": 24,
+          "strict_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 2,
+              "value": 0.08333333333333333
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 0,
+                "HOLD": 0,
+                "UNEXTRACTABLE": 12
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 2,
+                "UNEXTRACTABLE": 10
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 0,
+                "value": 0.0
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              }
+            }
+          },
+          "transport_errors": 0,
+          "usage_totals": {
+            "cached_input_tokens": 0,
+            "input_tokens": 13766,
+            "output_tokens": 39730,
+            "reasoning_tokens": 37220,
+            "total_tokens": 53496
+          }
+        },
+        {
+          "action_extractable": {
+            "denominator": 24,
+            "numerator": 5,
+            "value": 0.20833333333333334
+          },
+          "contract_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 5,
+              "value": 0.20833333333333334
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 2,
+                "HOLD": 0,
+                "INVALID_CONTRACT": 10
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 3,
+                "INVALID_CONTRACT": 9
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 3,
+                "value": 0.25
+              }
+            }
+          },
+          "contract_valid": {
+            "denominator": 24,
+            "numerator": 5,
+            "value": 0.20833333333333334
+          },
+          "full_decision_exact": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 5,
+              "value": 0.20833333333333334
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 3,
+                "value": 0.25
+              }
+            }
+          },
+          "pair_accuracy": {
+            "contract_action": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            },
+            "full_decision_exact": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            },
+            "pairs": 12,
+            "strict_action": {
+              "denominator": 12,
+              "numerator": 0,
+              "value": 0.0
+            }
+          },
+          "parse_status_counts": {
+            "JSON_SYNTAX_ERROR": 19,
+            "OK": 5
+          },
+          "repetition": 3,
+          "scheduled_items": 24,
+          "strict_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 5,
+              "value": 0.20833333333333334
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 2,
+                "HOLD": 0,
+                "UNEXTRACTABLE": 10
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 3,
+                "UNEXTRACTABLE": 9
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 2,
+                "value": 0.16666666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 3,
+                "value": 0.25
+              }
+            }
+          },
+          "transport_errors": 0,
+          "usage_totals": {
+            "cached_input_tokens": 0,
+            "input_tokens": 13766,
+            "output_tokens": 38987,
+            "reasoning_tokens": 36571,
+            "total_tokens": 52753
+          }
+        }
+      ],
+      "descriptive_three_repeat_total": {
+        "action_extractable": {
+          "denominator": 72,
+          "numerator": 10,
+          "value": 0.1388888888888889
+        },
+        "contract_action": {
+          "accuracy": {
+            "denominator": 72,
+            "numerator": 10,
+            "value": 0.1388888888888889
+          },
+          "confusion_gold_by_terminal_prediction": {
+            "ALLOW": {
+              "ALLOW": 4,
+              "HOLD": 0,
+              "INVALID_CONTRACT": 32
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "HOLD": 6,
+              "INVALID_CONTRACT": 30
+            }
+          },
+          "recall_by_gold_action": {
+            "ALLOW": {
+              "denominator": 36,
+              "numerator": 4,
+              "value": 0.1111111111111111
+            },
+            "HOLD": {
+              "denominator": 36,
+              "numerator": 6,
+              "value": 0.16666666666666666
+            }
+          }
+        },
+        "contract_valid": {
+          "denominator": 72,
+          "numerator": 10,
+          "value": 0.1388888888888889
+        },
+        "full_decision_exact": {
+          "accuracy": {
+            "denominator": 72,
+            "numerator": 10,
+            "value": 0.1388888888888889
+          },
+          "recall_by_gold_action": {
+            "ALLOW": {
+              "denominator": 36,
+              "numerator": 4,
+              "value": 0.1111111111111111
+            },
+            "HOLD": {
+              "denominator": 36,
+              "numerator": 6,
+              "value": 0.16666666666666666
+            }
+          }
+        },
+        "pair_accuracy": {
+          "contract_action": {
+            "denominator": 36,
+            "numerator": 0,
+            "value": 0.0
+          },
+          "full_decision_exact": {
+            "denominator": 36,
+            "numerator": 0,
+            "value": 0.0
+          },
+          "pairs": 36,
+          "strict_action": {
+            "denominator": 36,
+            "numerator": 0,
+            "value": 0.0
+          }
+        },
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 62,
+          "OK": 10
+        },
+        "scheduled_items": 72,
+        "strict_action": {
+          "accuracy": {
+            "denominator": 72,
+            "numerator": 10,
+            "value": 0.1388888888888889
+          },
+          "confusion_gold_by_terminal_prediction": {
+            "ALLOW": {
+              "ALLOW": 4,
+              "HOLD": 0,
+              "UNEXTRACTABLE": 32
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "HOLD": 6,
+              "UNEXTRACTABLE": 30
+            }
+          },
+          "recall_by_gold_action": {
+            "ALLOW": {
+              "denominator": 36,
+              "numerator": 4,
+              "value": 0.1111111111111111
+            },
+            "HOLD": {
+              "denominator": 36,
+              "numerator": 6,
+              "value": 0.16666666666666666
+            }
+          }
+        },
+        "transport_errors": 0,
+        "usage_totals": {
+          "cached_input_tokens": 0,
+          "input_tokens": 41298,
+          "output_tokens": 113590,
+          "reasoning_tokens": 106235,
+          "total_tokens": 154888
+        }
+      },
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "model_family": "Qwen",
+      "model_requested": "qwen3.7-max",
+      "provider": "OpenCode Go",
+      "repetition_agreement": {
+        "full_contract_unanimous_terminal_outcome": {
+          "denominator": 24,
+          "numerator": 16,
+          "value": 0.6666666666666666
+        },
+        "full_decision_exact_in_all_three_repetitions": {
+          "denominator": 24,
+          "numerator": 0,
+          "value": 0.0
+        },
+        "items": 24,
+        "pairs_correct_in_all_three_repetitions": {
+          "contract_action": {
+            "denominator": 12,
+            "numerator": 0,
+            "value": 0.0
+          },
+          "full_decision_exact": {
+            "denominator": 12,
+            "numerator": 0,
+            "value": 0.0
+          },
+          "strict_action": {
+            "denominator": 12,
+            "numerator": 0,
+            "value": 0.0
+          }
+        },
+        "pairwise_strict_action_terminal_agreement": {
+          "denominator": 72,
+          "numerator": 56,
+          "value": 0.7777777777777778
+        },
+        "strict_action_correct_in_all_three_repetitions": {
+          "denominator": 24,
+          "numerator": 0,
+          "value": 0.0
+        },
+        "strict_action_unanimous_terminal_outcome": {
+          "denominator": 24,
+          "numerator": 16,
+          "value": 0.6666666666666666
+        }
+      }
+    },
+    {
+      "by_repetition": [
+        {
+          "action_extractable": {
+            "denominator": 24,
+            "numerator": 15,
+            "value": 0.625
+          },
+          "contract_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 15,
+              "value": 0.625
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 9,
+                "HOLD": 0,
+                "INVALID_CONTRACT": 3
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 6,
+                "INVALID_CONTRACT": 6
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 9,
+                "value": 0.75
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 6,
+                "value": 0.5
+              }
+            }
+          },
+          "contract_valid": {
+            "denominator": 24,
+            "numerator": 15,
+            "value": 0.625
+          },
+          "full_decision_exact": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 15,
+              "value": 0.625
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 9,
+                "value": 0.75
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 6,
+                "value": 0.5
+              }
+            }
+          },
+          "pair_accuracy": {
+            "contract_action": {
+              "denominator": 12,
+              "numerator": 6,
+              "value": 0.5
+            },
+            "full_decision_exact": {
+              "denominator": 12,
+              "numerator": 6,
+              "value": 0.5
+            },
+            "pairs": 12,
+            "strict_action": {
+              "denominator": 12,
+              "numerator": 6,
+              "value": 0.5
+            }
+          },
+          "parse_status_counts": {
+            "JSON_SYNTAX_ERROR": 5,
+            "OK": 15,
+            "TRANSPORT_ERROR": 4
+          },
+          "repetition": 1,
+          "scheduled_items": 24,
+          "strict_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 15,
+              "value": 0.625
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 9,
+                "HOLD": 0,
+                "UNEXTRACTABLE": 3
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 6,
+                "UNEXTRACTABLE": 6
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 9,
+                "value": 0.75
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 6,
+                "value": 0.5
+              }
+            }
+          },
+          "transport_errors": 4,
+          "usage_totals": {
+            "cached_input_tokens": 6144,
+            "input_tokens": 12849,
+            "output_tokens": 27421,
+            "reasoning_tokens": 0,
+            "total_tokens": 40270
+          }
+        },
+        {
+          "action_extractable": {
+            "denominator": 24,
+            "numerator": 19,
+            "value": 0.7916666666666666
+          },
+          "contract_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 19,
+              "value": 0.7916666666666666
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 12,
+                "HOLD": 0,
+                "INVALID_CONTRACT": 0
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 7,
+                "INVALID_CONTRACT": 5
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 12,
+                "value": 1.0
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 7,
+                "value": 0.5833333333333334
+              }
+            }
+          },
+          "contract_valid": {
+            "denominator": 24,
+            "numerator": 19,
+            "value": 0.7916666666666666
+          },
+          "full_decision_exact": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 18,
+              "value": 0.75
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 12,
+                "value": 1.0
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 6,
+                "value": 0.5
+              }
+            }
+          },
+          "pair_accuracy": {
+            "contract_action": {
+              "denominator": 12,
+              "numerator": 7,
+              "value": 0.5833333333333334
+            },
+            "full_decision_exact": {
+              "denominator": 12,
+              "numerator": 6,
+              "value": 0.5
+            },
+            "pairs": 12,
+            "strict_action": {
+              "denominator": 12,
+              "numerator": 7,
+              "value": 0.5833333333333334
+            }
+          },
+          "parse_status_counts": {
+            "OK": 19,
+            "TRANSPORT_ERROR": 5
+          },
+          "repetition": 2,
+          "scheduled_items": 24,
+          "strict_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 19,
+              "value": 0.7916666666666666
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 12,
+                "HOLD": 0,
+                "UNEXTRACTABLE": 0
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 7,
+                "UNEXTRACTABLE": 5
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 12,
+                "value": 1.0
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 7,
+                "value": 0.5833333333333334
+              }
+            }
+          },
+          "transport_errors": 5,
+          "usage_totals": {
+            "cached_input_tokens": 6144,
+            "input_tokens": 12613,
+            "output_tokens": 49056,
+            "reasoning_tokens": 0,
+            "total_tokens": 61669
+          }
+        },
+        {
+          "action_extractable": {
+            "denominator": 24,
+            "numerator": 19,
+            "value": 0.7916666666666666
+          },
+          "contract_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 19,
+              "value": 0.7916666666666666
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 11,
+                "HOLD": 0,
+                "INVALID_CONTRACT": 1
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 8,
+                "INVALID_CONTRACT": 4
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 11,
+                "value": 0.9166666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 8,
+                "value": 0.6666666666666666
+              }
+            }
+          },
+          "contract_valid": {
+            "denominator": 24,
+            "numerator": 19,
+            "value": 0.7916666666666666
+          },
+          "full_decision_exact": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 19,
+              "value": 0.7916666666666666
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 11,
+                "value": 0.9166666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 8,
+                "value": 0.6666666666666666
+              }
+            }
+          },
+          "pair_accuracy": {
+            "contract_action": {
+              "denominator": 12,
+              "numerator": 8,
+              "value": 0.6666666666666666
+            },
+            "full_decision_exact": {
+              "denominator": 12,
+              "numerator": 8,
+              "value": 0.6666666666666666
+            },
+            "pairs": 12,
+            "strict_action": {
+              "denominator": 12,
+              "numerator": 8,
+              "value": 0.6666666666666666
+            }
+          },
+          "parse_status_counts": {
+            "JSON_SYNTAX_ERROR": 2,
+            "OK": 19,
+            "TRANSPORT_ERROR": 3
+          },
+          "repetition": 3,
+          "scheduled_items": 24,
+          "strict_action": {
+            "accuracy": {
+              "denominator": 24,
+              "numerator": 19,
+              "value": 0.7916666666666666
+            },
+            "confusion_gold_by_terminal_prediction": {
+              "ALLOW": {
+                "ALLOW": 11,
+                "HOLD": 0,
+                "UNEXTRACTABLE": 1
+              },
+              "HOLD": {
+                "ALLOW": 0,
+                "HOLD": 8,
+                "UNEXTRACTABLE": 4
+              }
+            },
+            "recall_by_gold_action": {
+              "ALLOW": {
+                "denominator": 12,
+                "numerator": 11,
+                "value": 0.9166666666666666
+              },
+              "HOLD": {
+                "denominator": 12,
+                "numerator": 8,
+                "value": 0.6666666666666666
+              }
+            }
+          },
+          "transport_errors": 3,
+          "usage_totals": {
+            "cached_input_tokens": 7680,
+            "input_tokens": 13826,
+            "output_tokens": 49673,
+            "reasoning_tokens": 0,
+            "total_tokens": 63499
+          }
+        }
+      ],
+      "descriptive_three_repeat_total": {
+        "action_extractable": {
+          "denominator": 72,
+          "numerator": 53,
+          "value": 0.7361111111111112
+        },
+        "contract_action": {
+          "accuracy": {
+            "denominator": 72,
+            "numerator": 53,
+            "value": 0.7361111111111112
+          },
+          "confusion_gold_by_terminal_prediction": {
+            "ALLOW": {
+              "ALLOW": 32,
+              "HOLD": 0,
+              "INVALID_CONTRACT": 4
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "HOLD": 21,
+              "INVALID_CONTRACT": 15
+            }
+          },
+          "recall_by_gold_action": {
+            "ALLOW": {
+              "denominator": 36,
+              "numerator": 32,
+              "value": 0.8888888888888888
+            },
+            "HOLD": {
+              "denominator": 36,
+              "numerator": 21,
+              "value": 0.5833333333333334
+            }
+          }
+        },
+        "contract_valid": {
+          "denominator": 72,
+          "numerator": 53,
+          "value": 0.7361111111111112
+        },
+        "full_decision_exact": {
+          "accuracy": {
+            "denominator": 72,
+            "numerator": 52,
+            "value": 0.7222222222222222
+          },
+          "recall_by_gold_action": {
+            "ALLOW": {
+              "denominator": 36,
+              "numerator": 32,
+              "value": 0.8888888888888888
+            },
+            "HOLD": {
+              "denominator": 36,
+              "numerator": 20,
+              "value": 0.5555555555555556
+            }
+          }
+        },
+        "pair_accuracy": {
+          "contract_action": {
+            "denominator": 36,
+            "numerator": 21,
+            "value": 0.5833333333333334
+          },
+          "full_decision_exact": {
+            "denominator": 36,
+            "numerator": 20,
+            "value": 0.5555555555555556
+          },
+          "pairs": 36,
+          "strict_action": {
+            "denominator": 36,
+            "numerator": 21,
+            "value": 0.5833333333333334
+          }
+        },
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 7,
+          "OK": 53,
+          "TRANSPORT_ERROR": 12
+        },
+        "scheduled_items": 72,
+        "strict_action": {
+          "accuracy": {
+            "denominator": 72,
+            "numerator": 53,
+            "value": 0.7361111111111112
+          },
+          "confusion_gold_by_terminal_prediction": {
+            "ALLOW": {
+              "ALLOW": 32,
+              "HOLD": 0,
+              "UNEXTRACTABLE": 4
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "HOLD": 21,
+              "UNEXTRACTABLE": 15
+            }
+          },
+          "recall_by_gold_action": {
+            "ALLOW": {
+              "denominator": 36,
+              "numerator": 32,
+              "value": 0.8888888888888888
+            },
+            "HOLD": {
+              "denominator": 36,
+              "numerator": 21,
+              "value": 0.5833333333333334
+            }
+          }
+        },
+        "transport_errors": 12,
+        "usage_totals": {
+          "cached_input_tokens": 19968,
+          "input_tokens": 39288,
+          "output_tokens": 126150,
+          "reasoning_tokens": 0,
+          "total_tokens": 165438
+        }
+      },
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "model_family": "DeepSeek",
+      "model_requested": "deepseek-v4-flash",
+      "provider": "OpenCode Go",
+      "repetition_agreement": {
+        "full_contract_unanimous_terminal_outcome": {
+          "denominator": 24,
+          "numerator": 14,
+          "value": 0.5833333333333334
+        },
+        "full_decision_exact_in_all_three_repetitions": {
+          "denominator": 24,
+          "numerator": 13,
+          "value": 0.5416666666666666
+        },
+        "items": 24,
+        "pairs_correct_in_all_three_repetitions": {
+          "contract_action": {
+            "denominator": 12,
+            "numerator": 5,
+            "value": 0.4166666666666667
+          },
+          "full_decision_exact": {
+            "denominator": 12,
+            "numerator": 5,
+            "value": 0.4166666666666667
+          },
+          "strict_action": {
+            "denominator": 12,
+            "numerator": 5,
+            "value": 0.4166666666666667
+          }
+        },
+        "pairwise_strict_action_terminal_agreement": {
+          "denominator": 72,
+          "numerator": 54,
+          "value": 0.75
+        },
+        "strict_action_correct_in_all_three_repetitions": {
+          "denominator": 24,
+          "numerator": 13,
+          "value": 0.5416666666666666
+        },
+        "strict_action_unanimous_terminal_outcome": {
+          "denominator": 24,
+          "numerator": 15,
+          "value": 0.625
+        }
+      }
+    }
+  ],
+  "pairs_per_route_repetition": 12,
+  "raw_or_invalid_response_content_in_aggregate": false,
+  "schedule_sha256": "sha256:e4776de2f0677267eaa4c26decc7d7b7e76863e474bb928bf25952d9005ba066",
+  "scheduled_cells": 144,
+  "schema_version": "1.0.0",
+  "status": "COMPLETE_ALL_SCHEDULED_CELLS_END_TO_END",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}
