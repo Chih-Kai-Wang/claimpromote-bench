@@ -1,0 +1,29 @@
+{
+  "account_identifiers_retained": false,
+  "catalog_response_sha256": "sha256:d73378adbfe2632b91c85e63bea92d91997770337f5c03aad792e8a6f40c5f15",
+  "catalog_url": "https://opencode.ai/zen/go/v1/models",
+  "credentials_retained": false,
+  "model_outputs_available_before_freeze": false,
+  "provider_response_identifiers_retained": false,
+  "recorded_at_utc": "2026-08-24T10:53:09.284816Z",
+  "schema_version": "1.0.0",
+  "selected_model_entries": [
+    {
+      "id": "qwen3.7-max",
+      "object": "model",
+      "owned_by": "opencode"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "object": "model",
+      "owned_by": "opencode"
+    }
+  ],
+  "selected_model_ids": [
+    "qwen3.7-max",
+    "deepseek-v4-flash"
+  ],
+  "self_digest": "sha256:fbc809a365852179cf6863a8624afddd02e0ca3890c7f3c65df80b0a0d98ccfa",
+  "status": "AUTHENTICATED_CATALOG_SNAPSHOT_BEFORE_INFERENCE",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}

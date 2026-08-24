@@ -131,7 +131,15 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/validate_dual_endpoint_audit.py",
     "scripts/validate_trivy_policy_revision.py",
     "scripts/upstream_policy_revision.py",
+    "scripts/upstream_route_repetition.py",
+    "scripts/openai_compatible_call.py",
+    "scripts/freeze_upstream_policy_route_repetition.py",
+    "scripts/validate_upstream_policy_route_repetition.py",
+    "scripts/run_upstream_policy_route_repetition.py",
+    "scripts/analyze_upstream_policy_route_repetition.py",
+    "scripts/validate_upstream_policy_route_repetition_results.py",
     "scripts/validate_upstream_policy_revision_study.py",
+    "v2/schemas/upstream-policy-route-repetition-record.schema.json",
 }
 
 
