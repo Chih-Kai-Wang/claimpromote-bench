@@ -505,6 +505,20 @@ specialized search selects one candidate per edge and also covers every rule, it
 meets the lower bound. This certifies the two-pair Gatekeeper suite and the ten-pair authored SLSA
 suite relative to their committed candidate pools.
 
+\section{Failure Taxonomy and Scope Notes}
+
+The repeated Gatekeeper study classifies failures from terminal protocol metadata only. Qwen has
+62 \texttt{MARKDOWN\_CODE\_FENCE} failures. DeepSeek Flash has 12
+\texttt{READ\_TIMEOUT}, three \texttt{MARKDOWN\_CODE\_FENCE}, three
+\texttt{NON\_JSON\_PREFIX\_OR\_ENVELOPE}, and one
+\texttt{LENGTH\_TERMINATED\_NON\_JSON} failure. The diagnostic loads no gold labels, raw response
+text, hidden reasoning, free-form error strings, or provider response identifiers.
+
+The naturalistic-candidate review applied source-traceability criteria before constructing any
+prompt. Twelve candidates lacked the complete time-stamped artifacts and provenance required for
+the author policy mapping. The frozen outcome is zero eligible cases and zero model calls; the
+artifact claims no annotators and no agreement statistic.
+
 \section{Complete Action-Level Results}
 \label{app:complete-results}
 
@@ -539,10 +553,15 @@ Graph Phi-4, contract & 21/36 & 5/24 & 0/24 & 1/36 \\
 \begin{table}[H]
 \centering
 \scriptsize
-\setlength{\tabcolsep}{5pt}
-\caption{Gatekeeper aggregate strict-action confusion counts over three repetitions. \texttt{N}
-means no safely extracted action.}
+\setlength{\tabcolsep}{3.5pt}
+\caption{Gatekeeper aggregate strict-action confusion counts over three repetitions (left) and
+authored SLSA transition-graph contract-action confusion counts (right). \texttt{N} marks the
+endpoint's terminal failure category.}
 \label{tab:gate-confusion}
+\label{tab:graph-confusion}
+\begin{minipage}[t]{0.31\textwidth}
+\centering
+\textbf{Gatekeeper}\par\smallskip
 \begin{tabular}{@{}llrrr@{}}
 \toprule
 Route & Gold & \allow{} & \hold{} & \texttt{N} \\
@@ -553,6 +572,26 @@ Flash & \allow{} & 32 & 0 & 4 \\
 Flash & \hold{} & 0 & 21 & 15 \\
 \bottomrule
 \end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.65\textwidth}
+\centering
+\textbf{Authored transition graph}\par\smallskip
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+\midrule
+Mistral & \allow{} & 9 & 8 & 0 & 9 & 10 \\
+Mistral & \hold{} & 2 & 18 & 0 & 4 & 0 \\
+Mistral & \demote{} & 3 & 0 & 0 & 0 & 21 \\
+Mistral & \escalate{} & 2 & 3 & 0 & 13 & 18 \\
+\midrule
+Phi-4 & \allow{} & 21 & 0 & 0 & 0 & 15 \\
+Phi-4 & \hold{} & 1 & 5 & 0 & 0 & 18 \\
+Phi-4 & \demote{} & 3 & 12 & 0 & 0 & 9 \\
+Phi-4 & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
+\bottomrule
+\end{tabular}
+\end{minipage}
 \end{table}
 
 \begin{table}[H]
@@ -639,42 +678,5 @@ Flash & contract & \escalate{} & 0&0&0&17&3 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\begin{table}[H]
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3.5pt}
-\caption{Authored SLSA transition-graph contract-action confusion counts.}
-\label{tab:graph-confusion}
-\begin{tabular}{@{}llrrrrr@{}}
-\toprule
-Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
-\midrule
-Mistral & \allow{} & 9 & 8 & 0 & 9 & 10 \\
-Mistral & \hold{} & 2 & 18 & 0 & 4 & 0 \\
-Mistral & \demote{} & 3 & 0 & 0 & 0 & 21 \\
-Mistral & \escalate{} & 2 & 3 & 0 & 13 & 18 \\
-\midrule
-Phi-4 & \allow{} & 21 & 0 & 0 & 0 & 15 \\
-Phi-4 & \hold{} & 1 & 5 & 0 & 0 & 18 \\
-Phi-4 & \demote{} & 3 & 12 & 0 & 0 & 9 \\
-Phi-4 & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\section{Failure Taxonomy and Scope Notes}
-
-The repeated Gatekeeper study classifies failures from terminal protocol metadata only. Qwen has
-62 \texttt{MARKDOWN\_CODE\_FENCE} failures. DeepSeek Flash has 12
-\texttt{READ\_TIMEOUT}, three \texttt{MARKDOWN\_CODE\_FENCE}, three
-\texttt{NON\_JSON\_PREFIX\_OR\_ENVELOPE}, and one
-\texttt{LENGTH\_TERMINATED\_NON\_JSON} failure. The diagnostic loads no gold labels, raw response
-text, hidden reasoning, free-form error strings, or provider response identifiers.
-
-The naturalistic-candidate review applied source-traceability criteria before constructing any
-prompt. Twelve candidates lacked the complete time-stamped artifacts and provenance required for
-the author policy mapping. The frozen outcome is zero eligible cases and zero model calls; the
-artifact claims no annotators and no agreement statistic.
 
 \end{document}
