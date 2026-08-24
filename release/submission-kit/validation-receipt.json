@@ -1,23 +1,22 @@
 {
   "anonymous_bundle": {
-    "manifest_file_count": 549,
-    "manifest_plus_self_file_count": 550,
-    "manifest_sha256": "be769a1dd8783e3d6bb3a57f15978b0734c59373130a0ec720a005e7bde54dc9",
+    "manifest_file_count": 609,
+    "manifest_plus_self_file_count": 610,
+    "manifest_sha256": "70f2583cbe492871d937d578fea6fef02240726aacbb83473b6816c20d00ad71",
     "privacy_scope": {
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
       "balanced_public_challenge_raw_response_text_included": false,
       "balanced_public_challenge_summary_included": true,
       "capable_hidden_evidence_included": false,
+      "dual_endpoint_item_level_records_included": true,
+      "dual_endpoint_raw_response_text_included": false,
+      "dual_endpoint_summary_included": true,
       "fresh_confirmatory_hidden_reasoning_included": false,
       "fresh_confirmatory_item_level_records_included": true,
       "fresh_confirmatory_raw_response_text_included": false,
       "fresh_confirmatory_summary_included": true,
       "gpt54_public_development_evidence_included": false,
-      "hosted_minimum_policy_migration_exclusion_receipt_included": true,
-      "hosted_policy_switch_exclusion_receipt_included": true,
-      "hosted_policy_switch_replacement_exclusion_receipt_included": true,
-      "hosted_policy_transition_graph_exclusion_receipt_included": true,
       "human_subject_study_records_included": false,
       "item_level_empirical_records_included": true,
       "legacy_v1_evidence_included": false,
@@ -32,54 +31,46 @@
       "local_policy_transition_graph_summary_included": true,
       "local_slsa_replication_item_level_records_included": true,
       "local_slsa_replication_summary_included": true,
-      "ontology_count": 2,
-      "ox_alpha_minimum_route_full_structured_decisions_included": false,
-      "ox_alpha_minimum_route_hidden_reasoning_included": false,
-      "ox_alpha_minimum_route_item_level_records_included": true,
-      "ox_alpha_minimum_route_raw_response_text_included": false,
-      "ox_alpha_minimum_route_summary_included": true,
-      "policy_instrument_count": 4,
-      "policy_switch_item_level_records_included": false,
-      "policy_switch_raw_response_text_included": false,
-      "policy_switch_summary_included": false,
       "private_construction_seed_included": false,
       "provider_response_identifiers_included": false,
       "public_alpha_included": true,
-      "public_model_breadth_hidden_reasoning_included": false,
-      "public_model_breadth_item_level_records_included": false,
-      "public_model_breadth_raw_final_response_text_included": false,
-      "public_model_breadth_summary_included": false,
       "public_pilot_evidence_included": false,
       "public_repository_identity_included": false,
       "reviewer_release_hidden_data_included": true,
+      "sigstore_source_evidence_included": true,
       "slsa_portability_item_level_records_included": true,
       "slsa_portability_raw_response_text_included": false,
       "slsa_portability_summary_included": true,
-      "slsa_portability_void_raw_records_included": false
+      "slsa_portability_void_raw_records_included": false,
+      "trivy_source_evidence_included": true,
+      "upstream_gatekeeper_source_evidence_included": true,
+      "upstream_route_repetition_item_level_records_included": true,
+      "upstream_route_repetition_raw_response_text_included": false,
+      "upstream_route_repetition_summary_included": true
     },
     "verification": "PASS",
-    "zip_file_entries": 550
+    "zip_file_entries": 610
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 401838,
-      "sha256": "74f8aaa49f62de754bc2c97e4b2051368cb499d2a07302a34d74815335d05361"
+      "bytes": 366450,
+      "sha256": "3f6686e87f5782f216197ae3d79b22add02d0bffa007d588cec2193eed02a8da"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 1574828,
-      "sha256": "849326f810fd84cd396e9e237188ea4b4a19b77a825264171a31fa4c50f21b6a"
+      "bytes": 1683189,
+      "sha256": "f03bac29102f7465ba58c95180894d5c74d121d2f2fd46410250bfa714474ccb"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 25017,
-      "sha256": "186ea94bf2bde24cd7c1958819954d7fa7306b47f75ddd30b4c78a5f205730d1"
+      "bytes": 20920,
+      "sha256": "ce78fbaf8750321ffa25fe2602e93b59a9f700cdb588c9009f5f23e95da64481"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 52052,
-      "sha256": "b99d8c79ce718e0609185324de6acd08fbf777ba686f32926c9d5fce5ff48f13"
+      "bytes": 47933,
+      "sha256": "4c98c81a563617843e4491f3110dbb58033ca2af3b7eba91a0cc44c329465019"
     },
     "iclr2027.pdf": {
-      "bytes": 262616,
-      "sha256": "1686873b01ac0a7a7bb9ba69155dac705da3da9f96f145de3ba238f43a1280e8"
+      "bytes": 242273,
+      "sha256": "1f3944615a7fe4498a6b390ed9f8c9e538adc9ffa5f491453ece3a1a4cc405b7"
     }
   },
   "checks": {
@@ -118,39 +109,39 @@
         "all_embedded": true,
         "font_count": 26,
         "fonts": [
-          "/APDBSD+CMTI9",
-          "/BGWQLU+CMMI5",
           "/BSTKNX+MSBM10",
-          "/BTAKYE+CMSY8",
-          "/CNTRLV+CMR7",
-          "/CUCRDY+CMR10",
-          "/DITIZN+CMTT9",
+          "/BYFKRJ+CMSY10",
+          "/CCUWNO+CMR8",
+          "/CFUVDR+CMR7",
+          "/DWLSIB+CMMI7",
+          "/ECOSEW+CMTT9",
           "/EUWOLL+CMBX9",
-          "/HEQDGV+CMSY10",
-          "/IAOOWQ+CMMI10",
-          "/JLMFRX+CMR17",
-          "/KXKRHX+CMBX8",
+          "/EWDQZJ+CMMI8",
+          "/HQVQIC+CMBX7",
+          "/IANXRN+CMTI9",
+          "/IHQCLP+CMR17",
           "/LQBNTO+CMR12",
           "/MNATLR+CMCSC10",
-          "/OYWZOC+CMTT10",
-          "/PNEHEQ+CMTI8",
-          "/SSVWAU+CMBX12",
-          "/SXFQKZ+CMTI10",
-          "/VBFWVW+CMMI6",
+          "/QXVNND+CMSY8",
+          "/SDVCAT+CMSY7",
+          "/TDDTND+CMR9",
+          "/TFVNFO+CMR6",
+          "/VPFMMI+CMTI10",
           "/WATVRQ+CMTT8",
-          "/WYBAZQ+CMBX10",
-          "/WZZKCF+CMR8",
-          "/YXGOTI+CMR9",
-          "/ZKCFRW+CMMI8",
+          "/WEZGFP+CMTT10",
+          "/XNFUNW+CMR10",
+          "/YUMFZG+CMBX10",
           "/ZPGVCH+CMEX10",
-          "/ZVJBGO+CMMI7"
+          "/ZPXUAX+CMBX12",
+          "/ZXGFIK+CMMI10",
+          "/ZXILHJ+CMR5"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 15,
+      "pages": 11,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 15
+      "visual_pages_inspected": 11
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -158,36 +149,37 @@
       "creator": "LaTeX with hyperref",
       "fonts": {
         "all_embedded": true,
-        "font_count": 17,
+        "font_count": 18,
         "fonts": [
-          "/AJMRFE+CMSY9",
           "/ALVSVR+NimbusSanL-Bold",
-          "/BGWQLU+CMMI5",
           "/BSTKNX+MSBM10",
-          "/CANUHS+NimbusRomNo9L-ReguItal",
-          "/DPZIDV+CMR10",
-          "/EJHWOM+CMR9",
-          "/HEQDGV+CMSY10",
-          "/IAOOWQ+CMMI10",
-          "/IZNCQU+NimbusRomNo9L-Regu",
-          "/JNNQNO+CMR7",
-          "/LFLHGO+NimbusRomNo9L-Medi",
-          "/NEVQOJ+CMMI9",
-          "/QMDALW+NimbusMonL-Regu",
-          "/VBFWVW+CMMI6",
+          "/BYFKRJ+CMSY10",
+          "/DWLSIB+CMMI7",
+          "/FXTVSZ+CMR10",
+          "/HPJFCO+NimbusRomNo9L-ReguItal",
+          "/IONRUT+NimbusRomNo9L-Medi",
+          "/IRJNSY+NimbusMonL-Regu",
+          "/NSBAHC+CMMI9",
+          "/OKXGWA+NimbusRomNo9L-Regu",
+          "/SDVCAT+CMSY7",
+          "/SVZIZS+CMSY9",
+          "/TFVNFO+CMR6",
+          "/WRMBHN+CMR9",
+          "/YOISRB+CMR7",
           "/ZPGVCH+CMEX10",
-          "/ZVJBGO+CMMI7"
+          "/ZXGFIK+CMMI10",
+          "/ZXILHJ+CMR5"
         ]
       },
       "main_text_page_limit": 9,
-      "main_text_pages": 9,
+      "main_text_pages": 7,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 17,
+      "pages": 11,
       "producer": "pdfTeX-1.40.29",
-      "references_start_page": 11,
+      "references_start_page": 8,
       "style_receipt": "iclr-style-receipt.json",
       "style_template": "ICLR 2027 official style archive",
-      "visual_pages_inspected": 17
+      "visual_pages_inspected": 11
     }
   }
 }

@@ -221,7 +221,11 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
     scope = manifest.get("scope")
     if not isinstance(scope, dict):
         fail("anonymous manifest scope is missing")
-    false_guards = (
+    false_guards = {
+        "legacy_v1_evidence_included",
+        "public_pilot_evidence_included",
+        "gpt54_public_development_evidence_included",
+        "capable_hidden_evidence_included",
         "human_subject_study_records_included",
         "private_construction_seed_included",
         "provider_response_identifiers_included",
@@ -232,22 +236,30 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "balanced_public_challenge_raw_response_text_included",
         "slsa_portability_raw_response_text_included",
         "slsa_portability_void_raw_records_included",
-        "policy_switch_raw_response_text_included",
+        "upstream_route_repetition_raw_response_text_included",
+        "dual_endpoint_raw_response_text_included",
         "local_model_replication_raw_generation_text_included",
         "local_model_weights_included",
-        "public_model_breadth_summary_included",
-        "public_model_breadth_item_level_records_included",
-        "public_model_breadth_hidden_reasoning_included",
-        "public_model_breadth_raw_final_response_text_included",
-        "ox_alpha_minimum_route_raw_response_text_included",
-        "ox_alpha_minimum_route_full_structured_decisions_included",
-        "ox_alpha_minimum_route_hidden_reasoning_included",
-    )
+    }
     if any(scope.get(key) is not False for key in false_guards):
         fail("anonymous manifest privacy scope changed")
-    true_guards = (
+    true_guards = {
+        "public_alpha_included",
+        "reviewer_release_hidden_data_included",
+        "item_level_empirical_records_included",
+        "fresh_confirmatory_summary_included",
+        "fresh_confirmatory_item_level_records_included",
+        "balanced_public_challenge_summary_included",
+        "balanced_public_challenge_item_level_records_included",
         "slsa_portability_summary_included",
         "slsa_portability_item_level_records_included",
+        "upstream_gatekeeper_source_evidence_included",
+        "trivy_source_evidence_included",
+        "sigstore_source_evidence_included",
+        "upstream_route_repetition_summary_included",
+        "upstream_route_repetition_item_level_records_included",
+        "dual_endpoint_summary_included",
+        "dual_endpoint_item_level_records_included",
         "local_model_replications_included",
         "local_model_replication_item_level_records_included",
         "local_slsa_replication_summary_included",
@@ -257,13 +269,12 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "local_policy_transition_graph_summary_included",
         "local_policy_transition_graph_item_level_records_included",
         "local_minimum_policy_migration_gate_included",
-        "ox_alpha_minimum_route_summary_included",
-        "ox_alpha_minimum_route_item_level_records_included",
-    )
+    }
     if any(scope.get(key) is not True for key in true_guards):
         fail("anonymous manifest multi-policy evidence scope changed")
-    if scope.get("ontology_count") != 2 or scope.get("policy_instrument_count") != 4:
-        fail("anonymous manifest policy coverage changed")
+    expected_scope = false_guards | true_guards
+    if set(scope) != expected_scope:
+        fail("anonymous manifest evidence scope changed")
     return manifest, actual
 
 

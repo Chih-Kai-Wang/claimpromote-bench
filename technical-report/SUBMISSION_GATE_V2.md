@@ -1,399 +1,114 @@
-# Revised ICLR/arXiv submission gate
+# ICLR/arXiv submission gate
 
-This gate applies to PR #20 and supersedes the v1-only readiness verdict in
-`technical-report/SUBMISSION_GATE.md` whenever the post-v1 public controls are included in the
-paper. It is deliberately fail-closed.
+This receipt describes the current release candidate. Machine-generated manifests and validation
+receipts remain authoritative for file totals, hashes, page counts, and replay results.
 
-## Current verdict
+## Verdict
 
-**SCIENTIFIC_RC_READY = YES — LOCAL SCIENTIFIC, REVIEW, AND ARTIFACT GATES PASS;
-R6 FLASH LANE NON-EVALUABLE; ACCOUNT-SIDE SUBMISSION NOT AUTHORIZED OR COMPLETED**
+`SCIENTIFIC_RC_READY = PENDING_FINAL_ISOLATED_REVIEW`
 
-The manuscript's central claim is a paired, failure-aware regression protocol for an existing
-model boundary under executable policy revision. Its central evidence is one authored migration,
-two 60-pair suites, and the same two pinned local routes evaluated once; the 10-pair minimum gate
-reuses graph records. R6, the public action-balanced challenge, and fixed-policy SLSA results are
-auxiliary route diagnostics rather than independent policy-migration replications. The later Ox
-minimum-route replay is a post-hoc route selection with a pre-call-frozen schedule and the same
-limited interpretation.
+The manuscript, anonymous replay bundle, and local PDF package pass their current deterministic,
+privacy, and visual checks. One zero-context isolated review and the post-review verification cycle
+remain. Merge, public release, OpenReview upload, arXiv upload, and archival publication require
+separate author authorization.
 
-The final isolated reviewer scored the preceding release candidate 4/10. That review was not
-rerated: the score describes the reviewed snapshot, not this revision, and does not predict venue
-acceptance. All safely actionable high and medium findings were addressed by narrowing novelty,
-disclosing post-exploratory route selection and stack confounds, correcting the HOLD/DEMOTE proof,
-demoting standard optimization machinery, separating controls, expanding confusion matrices, and
-limiting reproducibility claims to metric and contract replay. The exact disposition is recorded in
-`docs/reviews/2026-08-24-final-isolated-iclr-review-disposition.md`.
+## Scientific claim boundary
 
-The reviewer tree excludes hidden reasoning and malformed response contents, verifies retained
-structured records and failure classes, and derives its file count from the generated manifest. PR
-#20 remains Draft and unmerged until the author explicitly authorizes a merge or account-side
-submission.
+- ClaimPromoteBench compiles executable policy revisions into paired regression tests for
+  model-mediated structured decisions.
+- Its main contribution is the integration of policy differencing, action-transition coverage,
+  minimum-suite certificates, and failure-inclusive model-service evaluation. The component
+  techniques are established machinery.
+- The deterministic policy executor defines the policy ceiling. It is an executable task
+  specification rather than a learned comparator.
+- The multinomial Naive Bayes result is a deliberately weak sanity control.
+- Hosted results describe time-stamped model, provider, adapter, schema, decoding, and service
+  stacks. Cross-route differences are descriptive.
+- The public balanced challenge measures robustness on a public, pre-call-frozen suite and yields
+  no hidden-distribution generalization estimate.
+- The historical r6 Flash lane records an obsolete frozen service-interface failure. A later
+  executable Flash route establishes only that the later service path ran successfully.
+- Every scheduled transport, syntax, schema, and semantic failure remains in each end-to-end
+  denominator. Failed response content is omitted from paper-facing artifacts.
+- The naturalistic-candidate audit produced zero eligible cases and zero model calls. The study
+  reports author policy mappings and makes no human-annotation or agreement claim.
 
-The later balanced public challenge has an executable Flash service path, but it uses a different
-stack and does not retroactively turn the r6 HTTP 401 lane into model evidence or a causal ablation.
-A post-analysis reporting correction assigns zero to Flash's zero-prediction `DEMOTE` class in the
-fixed-four-class Macro-F1, changing only that derived end-to-end value from .5237 to .3928 and its
-conditional counterpart from .6243 to .4682. The historical aggregate remains immutable.
+## Evidence represented in the manuscript
 
-A prospectively frozen seven-route supplement was later found to share a quota-confounded failure
-tail. It remains immutable private audit material but is excluded from the manuscript, submission
-metadata, anonymous reviewer package, and minimum public-release core. No subset of its valid rows
-is reported as a replacement study.
+- Two exact Gatekeeper revisions supply 12 action-changing pairs. Three repetitions on each of two
+  hosted routes yield 144 frozen cells with one request per cell and zero client retries.
+- Independent Trivy and Cosign reproductions exercise policy-logic and verifier-interface faults
+  against pinned upstream source bytes and tests.
+- An authored SLSA migration instrument covers four actions, changed rules, and directed action
+  transitions. Its labels and policies are author-defined evaluation instruments.
+- The offline dual-endpoint audit recomputes strict-action and contract-action outcomes for 1,320
+  previously scheduled cells without model calls.
+- The r6 coverage addendum and 90-pair balanced public challenge provide auxiliary
+  evidence-state diagnostics with complete confusion matrices, per-action recall, coverage,
+  conditional metrics, and end-to-end metrics.
 
-The later Ox Alpha Free route replay is independent of that excluded supplement. It made exactly 20
-zero-retry calls after its route, minimum-suite schedule, failure rule, and strict gate were
-committed. Thirteen decisions were valid and action-correct; six pairs were complete and correct.
-Seven retained failures reduce end-to-end item/pair accuracy to .65/.60, so the route fails the
-20/20-item and 10/10-pair gate. The stealth label does not identify a model family.
+## Current package checks
 
-## Gate A — frozen v1 study remains intact
+- [x] `technical-report/main.tex` is the canonical scientific source.
+- [x] The ICLR build uses the hash-locked official ICLR 2027 style files.
+- [x] The ICLR main-text probe is within the nine-page limit.
+- [x] The release receipt derives physical pages and the reference boundary from the generated
+  PDFs.
+- [x] The arXiv PDF and source archive are generated from the same canonical manuscript.
+- [x] LaTeX logs contain no unresolved citations, unresolved references, or horizontal overflow.
+- [x] Every PDF font is embedded.
+- [x] Every ICLR and arXiv page was rendered and inspected for overlap, clipping, crowding,
+  isolated headings, table readability, and figure-caption collisions.
+- [x] The anonymous source and PDF scans contain no author, affiliation, account, repository,
+  workflow, or private commit identity.
+- [x] The anonymous replay bundle omits provider request/response identifiers, credentials, hidden
+  reasoning, raw failed responses, and free-form transport errors.
+- [x] The anonymous manifest derives its file map and count from the generated tree.
+- [x] A clean bundle verifies against its manifest before packaging.
+- [x] A separate generated copy passes the complete reviewer replay, including Python checks,
+  source validators, endpoint recomputation, selected tests, Lean builds, and `leanchecker`.
+- [x] The local release-kit receipt reports `PASS` for LaTeX logs, ICLR anonymity, arXiv identity,
+  embedded fonts, bundle privacy, and visual review.
 
-- [x] Hidden v1 data, labels, policy, prompts, outputs, and recovery remain unchanged.
-- [x] Primary v1 matrix remains 300 hidden instances × 2 models × 4 arms × 3 seeds = 7,200
-  decisions.
-- [x] Headline values remain 5,327 format errors and 1,873 parseable raw decisions, all `ALLOW`.
-- [x] Exactly 27 cross-field-invalid records were reclassified as format errors; legal model
-  decisions were not rewritten.
-- [x] Source workflow remains `32255636879`.
-- [x] Recovery workflow remains `32274814703`.
-- [x] Recovered study SHA-256 remains
-  `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664`.
-- [x] Python 3.11.15/3.11.16 identity drift remains disclosed; no post-hoc regrouping is used.
+## Final isolated review
 
-## Gate B — post-v1 public formatting control
+The final reviewer receives the stable manuscript, rendered ICLR PDF, anonymous replay bundle,
+and primary-source bibliography without prior review narratives or author defenses. The review
+must assess:
 
-- [x] Pilot is labeled post-v1, public, one-seed diagnostic evidence.
-- [x] Pilot is not described as preregistered hidden primary evidence.
-- [x] Dataset is the 20-pair / 40-instance public alpha set.
-- [x] Models are the same frozen Qwen3-0.6B and Qwen3-1.7B artifacts used in v1.
-- [x] Runtime is the same pinned llama.cpp commit.
-- [x] Free and constrained conditions have identical prompt hashes, model artifact, runtime, seed,
-  and hardware record.
-- [x] The only registered decoding difference is `response_format`.
-- [x] Canonical source workflow is `32291482079`.
-- [x] Artifact-only recovery is `32297818154`.
-- [x] Recovery required four complete 40-record runs and recomputed the aggregate twice with
-  identical bytes.
-- [x] Public aggregate SHA-256 is
-  `sha256:eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5`.
-- [x] Across constrained decoding, 78/80 decisions are parseable and 38/40 pairs are complete.
-- [x] All constrained parseable actions remain `ALLOW`.
-- [x] Raw pair accuracy and raw flip rate remain zero.
-- [x] Two duplicate-`reason_codes` responses remain schema errors and were not manually repaired.
-- [x] No paid API or paid GPU runner was used.
+1. whether each related-work statement is supported by the cited primary source;
+2. whether the prose follows the distilled computer-science corpus: claim-first paragraphs,
+   concrete verbs, stable terminology, local denominators, calibrated claims, and sparse contrast;
+3. whether any sentence, table, appendix item, or operational detail can be removed without
+   weakening verification or interpretation;
+4. whether the contribution is novel relative to behavioral testing, contrast sets, metamorphic
+   testing, policy differencing, structured output, selective prediction, and research-agent
+   evaluation;
+5. whether the deployment problem is evidenced, consequential, and scoped at the correct level;
+6. whether the compiler, certificates, scoring endpoints, and artifacts address the stated
+   problem; and
+7. whether a human reviewer can locate the question, novelty, evidence, failure semantics,
+   limitations, and reproducibility path with minimal effort.
 
-## Gate C — adaptive capable-model extension and fresh replacement study
+All safely improvable major findings must be resolved once. The revision then receives fresh PDF,
+artifact, privacy, type, lint, test, and formal checks. This is the final reviewer cycle; a second
+reviewer will not be used to rescore the revision.
 
-- [x] The original protocol and every later transport/adapter amendment remain separately recorded.
-- [x] All 14 executed pilot attempts (168 records), not only seven terminal canonical pilots, are
-  included in reviewer evidence with their analyses and hashes.
-- [x] Three historical request/parser source snapshots and a canonical-selection map are included.
-- [x] The recorded amendment procedure used transport/parser classes rather than actions or gold
-  accuracy, but no independent escrow enforced this boundary.
-- [x] Exactly two terminal pilots led to fresh 300-instance full passes; five `STOP` lanes are not
-  assigned model-accuracy scores.
-- [x] The extension is labeled `EXPLORATORY_ADAPTIVE_INTERFACE_QUALIFICATION`, not confirmatory.
-- [x] A post-hoc sensitivity excludes the 12 reused pilot inputs and six pairs.
-- [x] On the 288 nonpilot instances, Qwen3.7-Max reaches 270/288 action and 126/144 pair accuracy;
-  DeepSeek-V4-Flash reaches 181/288 and 37/144.
-- [x] Four-action confusion and recall are reported; both completed lanes score 0/8 on `DEMOTE`.
-- [x] The six registered unique-model hypotheses remain the declared family; completed-lane exact
-  tests are descriptive and no confirmatory familywise claim is made.
-- [x] The same-model alternate service path is treated as descriptive service-path sensitivity, not
-  a causal model, tier, or provider ablation.
-- [x] The capable-study aggregate SHA-256 is
-  `sha256:abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91`.
-- [x] The same-oracle post-check is labeled an implementation-conformance check rather than learned
-  model evidence.
-- [x] Only synthetic, release-intended benchmark material was sent; no secret, personal, or
-  unreleased user data was included.
-- [x] A new 150-pair / 300-item private realization is frozen after adapters, baselines, prompts,
-  parser, lane definitions, and analysis freeze under C0, a future randomness beacon, and C1.
-- [x] The exact 600-request schedule is fixed before inference; each registered lane receives one
-  call per item with zero client retries and no post-C1 adjustment or selection.
-- [x] C2 seals all 600 terminal cells before gold loading or analysis.
-- [x] The frozen public-development text Naive Bayes baseline is trained only on 100 public items;
-  constant baselines, per-action confusion/recall, factor/template summaries, and the registered
-  composition-sensitivity envelope are retained.
-- [x] Qwen3.7-Max produces 272 valid decisions, 258/300 correct actions, and 113/150 correct pairs,
-  for .860 item accuracy and .753 pair accuracy.
-- [x] The registered pair-blocked comparison remains machine-readable, but the paper does not use
-  it as a model-superiority claim because the frozen text Naive Bayes comparator is weak.
-- [x] Qwen action-wise reporting preserves 143/150 `ALLOW`, 110/134 `HOLD`, 5/8 `ESCALATE`, and
-  0/8 `DEMOTE`; the paper explicitly limits the breadth of the aggregate result.
-- [x] Fourteen HTTP 500 responses, one HTTP 503 response, ten timeouts, and three semantic-invalid
-  Qwen outputs remain incorrect with zero retries.
-- [x] The registered Flash lane returns 300 HTTP 401 responses and no model output; H2 remains in
-  the Holm family with `p=1`, model efficacy is non-evaluable, and dual-model confirmation is
-  unsupported.
-- [x] Service labels are treated as time-stamped configurations; no fixed-weight, provider, tier,
-  serving-stack, or causal ablation claim is made.
+## Remaining external gates
 
-### Post-r6 public robustness evidence
+- [ ] Confirm the final private-branch head, clean worktree, repository visibility, and draft PR
+  state after all review fixes are pushed.
+- [ ] Obtain a successful remote compatibility matrix when GitHub allocates a runner. Current
+  private-repository failures terminate before runner allocation with `steps=[]`; they provide no
+  code-regression evidence.
+- [ ] Complete OpenReview profile, author, policy, and submission checks only after explicit author
+  authorization.
+- [ ] Complete arXiv metadata and server-preview checks only after explicit author authorization.
+- [ ] Create any public release, tag, DOI, or archival identifier only after explicit author
+  authorization.
 
-- [x] The separately preregistered public challenge freezes 90 pairs, 180 items, 15 factors, action
-  balance, prompts, adapters, analysis, and a zero-retry schedule before inference.
-- [x] Each of its two service routes makes 180 calls. Qwen returns 148 valid decisions and reaches
-  .7333/.5333 end-to-end item/pair accuracy; Flash returns 146 and reaches .5000/.1444.
-- [x] Conditional item/pair accuracy is reported only beside coverage: .8919/.7500 for Qwen and
-  .6164/.2131 for Flash.
-- [x] Complete confusion matrices and action recalls retain every no-valid cell. `DEMOTE` recall is
-  4/30 for Qwen and 0/30 for Flash.
-- [x] The later Flash path establishes only that its different frozen route executed; it neither
-  repairs the old r6 401 lane nor identifies a causal model, provider, schema, or adapter effect.
-- [x] The quota-confounded seven-route study is not paper evidence and is not included in the
-  anonymous reviewer package. Its frozen private records are retained for audit rather than
-  selectively rescored or filtered.
+## Readiness semantics
 
-### Post-hoc Ox minimum-route smoke replay
-
-- [x] Earlier route outcomes were known before route selection; this is disclosed as post-hoc route
-  selection, not a prospective model-family study.
-- [x] The route label, exact 20-item minimum-suite schedule, zero-retry rule, all-failure denominator,
-  and strict 20/20-item plus 10/10-pair pass rule were committed before the first Ox call.
-- [x] Exactly 20 application posts were made with zero client retries, no resume, and zero incremental
-  cash cost.
-- [x] The route produced 13/20 valid decisions, all action-correct, and 6/10 complete correct pairs;
-  conditional item/pair accuracy is 13/13 and 6/6, while end-to-end accuracy is 13/20 and 6/10.
-- [x] Three HTTP 503 failures, three cross-field state/action semantic failures, and one
-  length-terminated JSON failure remain in the denominator. The strict gate fails.
-- [x] Ox Alpha is reported as a time-stamped stealth service label. No developer, architecture,
-  weights, model family, provider ranking, temporal reliability, or causal claim is inferred.
-
-## Gate D — post-protocol GPT-5.4 public-development follow-up
-
-- [x] The extension is labeled post-protocol, public-development, one-model, and one-pass evidence.
-- [x] It is not described as preregistered hidden primary evidence.
-- [x] The frozen prompt packet contains 50 pairs / 100 instances and balances the 12-instance pilot
-  across policy families.
-- [x] The first OpenRouter plan and 12-request transport-only `STOP` remain distinct records.
-- [x] The revised plan was committed before successful inference and changed only the output-token
-  parameter from `max_completion_tokens` to `max_tokens`.
-- [x] Direct OpenAI upstream routing, strict JSON Schema, medium reasoning, a 3,072-token ceiling,
-  zero retries, and the authorized $8 cap are registered.
-- [x] The revised pilot returned 12/12 parseable decisions and passed its prespecified continuation
-  gate.
-- [x] The fresh full pass returned 99/100 parseable decisions and 49/50 complete pairs.
-- [x] All 99 covered decisions and all 49 covered pairs match the policy oracle.
-- [x] Raw false promotions are 0/49 and valid promotions are 50/50.
-- [x] The sole nonparseable response is retained as a 3,072-token length-limit failure.
-- [x] Provider, item, prompt, request, response, run, analysis, metric, and cost bindings validate.
-- [x] Computed pilot-plus-full cost is $2.1883195, below the authorized cap.
-- [x] Temporary OpenRouter keys were deleted after usage readback; Gemini has no temporary API key.
-
-## Gate E — manuscript claim integrity
-
-- [x] Abstract frames the task as synthetic, policy-constrained evidence-state transition
-  evaluation rather than broad research-agent capability.
-- [x] Abstract leads with one authored migration, reports the auxiliary r6 and balanced-challenge
-  diagnostics, and gives the Ox minimum-route gate outcome without promoting it to central evidence.
-- [x] Abstract calls the deterministic executor a definitional policy ceiling and Naive Bayes a
-  weak baseline while rejecting naturalistic-validity and causal-comparison interpretations.
-- [x] Main text defines action conformance after output-contract validation as the primary endpoint;
-  exact six-field agreement is not claimed.
-- [x] The old r6 Flash 401 route appears as a pre-output interface-failure paragraph rather than a
-  model-result row. Its zero scheduled coverage remains explicit and conditional scores remain
-  undefined.
-- [x] The post-v1 public formatting pilot is compressed to reader-relevant prose rather than a
-  secondary result table.
-- [x] Instance accuracy is not used as a substitute for controlled-pair sensitivity.
-- [x] Raw model behavior and post-gate behavior remain separate.
-- [x] Gate correctness is described as fixed-policy enforcement, not model learning.
-- [x] Limitations preserve public-data, one-pass, two-local-route, one-migration, synthetic-data,
-  route-selection, and service-stack scope.
-- [x] Naturalistic candidate preparation is not called a completed real-world evaluation.
-- [x] Main and appendix tables separate model routes from weak or construction-dependent sanity
-  controls and give explicit prediction columns for every confusion cell.
-- [x] Manuscript truth lint is bound to the r6 result and reporting addendum, the balanced-challenge
-  plan and item records, both migration suites, the Ox plan and 20 terminal records, confusion
-  matrices, action recalls, and privacy receipts.
-- [x] The anonymous evidence replay validates the empirical records needed for the current paper,
-  including all 20 projected Ox action/failure rows and the strict gate.
-- [x] Manuscript truth lint is bound to the r6 study-result self-digest, public analysis, complete
-  Holm family, redaction/equivalence receipt, correction overlay, and exact paper-facing metrics.
-- [x] Balanced-challenge Macro-F1 is a fixed-four-class mean with zero division set to zero; a
-  self-digested correction receipt binds the unchanged historical aggregate, analyzer, dataset, and
-  360 terminal records.
-- [x] A compact factor-level table reports support, coverage range, E2E pair-accuracy range, and
-  zero/perfect-factor counts from frozen records; the anonymous artifact retains every factor row.
-- [x] Discussion, limitations, and conclusion preserve all r6, balanced-challenge, and Ox service,
-  syntax, schema, and semantic failures in end-to-end denominators and reject causal,
-  hidden-generalization, model-family, reliability, and naturalistic-transfer interpretations.
-- [x] No unqualified “first benchmark,” “first system,” or safety-guarantee claim appears.
-
-## Gate F — naturalistic evaluation boundary
-
-- [x] Source registry is pinned before any naturalistic scoring.
-- [x] Candidate selection is deterministic and independent of ClaimPromoteBench model outputs.
-- [x] Twelve CORE-Bench candidates are frozen as unlabeled pointer-only candidates.
-- [x] Candidate records contain no source results, model outputs, or ClaimPromoteBench labels.
-- [x] Naturalistic-case schema separates model-visible and evaluator-only content.
-- [x] Validator checks source binding, commit-pinned URLs, evaluation time, evidence time, licensing,
-  copied-byte status, and label leakage.
-- [x] Curation worksheet states that exclusion is preferable to inventing weak cases.
-- [x] Source-level review is bound to the frozen pool and records zero cases and zero model calls
-  because the candidate records lack sufficient transition-policy evidence.
-
-The paper therefore does not claim a completed naturalistic replication, human labels, or agreement.
-
-## Gate G — code and evidence verification on the final scientific head
-
-- [x] Ruff lint passes.
-- [x] Ruff formatting passes.
-- [x] Mypy passes.
-- [x] Full Mac tests and branch coverage pass on the final source tree: 301 tests and 83.21% branch
-  coverage under Python 3.12.13.
-- [x] Python 3.12 Mac gates pass in a fresh virtual environment.
-- [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
-  failures have `steps=[]` and are recorded as an account billing/spending-limit condition, not a
-  code result.
-- [x] Deterministic alpha rebuild produces no diff.
-- [x] Dataset, public pair-contract, shortcut, invariance, executable, and contribution checks pass.
-- [x] Pinned Lean alpha replay passes.
-- [x] Pinned Lean v1 public-dev replay passes.
-- [x] v1 public release-result validator passes.
-- [x] v2 public pilot validator passes.
-- [x] GPT-5.4 stronger-model protocol, pilot, full-run, provider, metric, and cost validator passes.
-- [x] Capable hidden-study prompt, dataset, pilot/full-run, analysis, aggregate, and baseline
-  validators pass.
-- [x] Fresh-study C0, C1, C2, dataset, prompt, baseline, service-runner, statistics, public-release,
-  redaction, metadata-correction, and permanent-manifest guards pass.
-- [x] Balanced public-challenge dataset, prompt packet, one-pass lane records, immutable historical
-  aggregate, reporting-correction receipt, corrected reviewer aggregate, per-action/confusion
-  diagnostics, workflow receipt, and privacy receipt guards pass.
-- [x] Ox minimum-route freeze, one-pass execution, aggregate replay, strict gate, finite failure
-  taxonomy, and public-safe derivative guards pass.
-- [x] The private seven-route records and audit tooling remain repository-verifiable but are outside
-  the paper-facing lint, anonymous replay, and release package.
-- [x] Anonymous empirical-evidence validation replays fresh r6, the balanced public challenge, and
-  the Ox minimum-route derivative from inside the finalized reviewer bundle.
-- [x] Naturalistic case validator and guard tests pass.
-- [x] v1 hidden freeze guard passes.
-- [x] v1 scored-study guard passes.
-- [x] v1 recovery guard passes.
-- [x] A fresh Python 3.12 environment reproduces the public build, validators, audits, and full
-  branch-coverage test suite.
-- [x] All six pinned Lean packages and `leanchecker` replay successfully: public alpha, capable
-  hidden, fresh r6, GPT-5.4 public development, balanced challenge, and r4 reviewer evidence.
-- [x] README, manuscript, `CITATION.cff`, and submission metadata use the same canonical title.
-
-## Gate H — final ICLR 2027 package
-
-- [x] Official ICLR 2027 style archive and file hashes are committed in a fail-closed lock.
-- [x] The ICLR source archive includes the official pinned `fancyhdr.sty` and `natbib.sty`
-  dependencies, preventing system-package drift from removing the anonymous-review page header.
-- [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 17 physical pages: nine pages through the scientific conclusion, one page
-  containing only the non-counting reproducibility/AI-use statements, three reference pages, and
-  four appendix pages.
-- [x] Main-text page probe reports 9 pages, at the 9-page limit; the scientific conclusion ends on
-  page 9.
-- [x] References begin on physical page 11 and the appendix on page 14; the release receipt binds
-  the page boundary, nine-page limit, and official ICLR 2027 style receipt.
-- [x] No unresolved citations or references.
-- [x] No horizontal overflow.
-- [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
-  repository URL, workflow/run identifiers, commit identifiers, or released aggregate hashes.
-- [x] ICLR PDF metadata contains no author identity.
-- [x] AI-use disclosure remains present in the ICLR submission.
-- [x] All PDF fonts are embedded.
-- [x] Anonymous reviewer ZIP contains no generated cache, unmanifested file, unused human-review
-  workflow module, author identity, or public workflow/provenance identifier.
-- [x] Anonymous reviewer ZIP contains the item-level evidence needed to replay the paper-facing
-  fresh r6, balanced-challenge, and Ox minimum-route aggregates.
-- [x] The anonymous manifest and release receipt derive payload and ZIP-entry counts from the
-  generated tree; no long-lived prose supplies a fixed expected count. Two empty-directory builds
-  and two release kits are byte-identical.
-- [x] Fail-closed scans reject author/repository/workflow identity, account identifiers, provider
-  response/request identifiers, hidden reasoning, credential patterns, and unknown protected
-  fields. An exact-byte Keychain credential scan traverses the current generated files and
-  decompressed ZIP entries with zero findings and does not print or retain the credential.
-- [x] Final ICLR PDF was rendered and inspected page by page for crowding, overlap, clipping,
-  broken glyphs, unreadable tables, and figure/caption collisions.
-
-Observed result: no overlap, clipping, broken glyphs, table overflow, figure collision, or
-unacceptable crowding. The densest limitations/reproducibility page remains readable at normal
-conference-paper scale.
-
-## Gate I — final arXiv package
-
-- [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 15 physical pages.
-- [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
-  no auxiliary build output.
-- [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
-- [x] Exact operational workflow, commit, and aggregate identities remain in repository evidence
-  manifests instead of interrupting the manuscript narrative.
-- [x] No unresolved citations/references or horizontal overflow.
-- [x] All PDF fonts are embedded.
-- [x] Source ZIP contains `arxiv.tex` and `references.bib` and no auxiliary build files.
-- [x] Final arXiv PDF was rendered and inspected page by page for crowding, overlap, clipping,
-  broken glyphs, unreadable tables, and figure/caption collisions.
-- [ ] arXiv metadata, category, title, abstract, author, affiliation, and server-compiled preview are
-  checked during the account-side submission.
-
-Observed result: the named PDF and repository-bound provenance statement are correct, and no visual
-defect was found.
-The final metadata/preview item necessarily remains account-side because arXiv must compile and
-show its own preview before submission.
-
-## Final isolated review checkpoint
-
-- [x] Exactly one additional reviewer was designated as the final isolated review for this
-  revision. It audited the manuscript, frozen records, code, anonymous bundle, and rendered PDF
-  without access to prior review narratives.
-- [x] The reviewer independently reproduced all dataset supports, route metrics, action recalls,
-  confusion cells, failure totals, bundle hashes, and page boundaries; numerical, artifact, and
-  anonymity checks passed.
-- [x] Its 4/10 recommendation on the reviewed snapshot identified three high-level framing issues
-  and six additional presentation or proof issues. No second reviewer was used to rerate the fix.
-- [x] The later Ox replay did not trigger another reviewer cycle. Its addition is constrained by the
-  existing final-review boundaries and by independent item-level, privacy, manuscript, and package
-  validators.
-- [x] The revision narrows the contribution to paired failure-aware action-conformance testing at an
-  existing model-service boundary; semantic differencing, mutants, set cover, and dynamic
-  programming are identified as established machinery.
-- [x] The paper now states one migration, two local routes, one pass, no independent replication,
-  and reuse of graph records by the minimum gate; auxiliary evidence suites do not inflate the
-  central evidence count.
-- [x] Hosted route selection timing, route-stack confounds, the historical 401 interface failure,
-  corrected HOLD/DEMOTE precedence proof, primary endpoint, sanity controls, explicit confusion
-  columns, and metric/contract replay boundary are all stated directly.
-- [x] Review and resolution are preserved in
-  `docs/reviews/2026-08-24-final-isolated-iclr-review.md` and
-  `docs/reviews/2026-08-24-final-isolated-iclr-review-disposition.md`.
-
-## Gate J — account-side submission
-
-- [ ] OpenReview profile exists and is current.
-- [ ] All required author/reviewer-account obligations are satisfied.
-- [ ] OpenReview title, genuine abstract, and final author list are entered before **2026-09-18
-  AOE**.
-- [ ] Full paper and supplementary files are submitted before **2026-09-25 AOE**.
-- [ ] Final paper metadata, author list, topics, Code of Ethics acknowledgement, AI-use statement, and uploaded PDF preview are checked by the author.
-- [ ] The submission form and manuscript consistently state that no human-subject or human-annotation study is included.
-- [ ] arXiv account and any endorsement requirement are complete.
-
-## Gate K — archival release
-
-- [ ] One immutable release/tag is created from the final submission head.
-- [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and
-  current pre-submission status.
-- [x] Clean-environment public validation succeeds from the release candidate.
-- [x] The committed fresh r6 and balanced-challenge evidence reproduces every paper-facing
-  empirical result without model inference.
-- [ ] Release notes and the final package version agree with the future immutable tag.
-- [ ] Long-term citable archive is created if required by the venue or desired for the paper.
-- [ ] Archive identifiers are added only after they exist.
-
-## Readiness rule
-
-`SCIENTIFIC_RC_READY` means the scoped Qwen hypothesis, manuscript, permanent reviewer artifact,
-anonymous evidence package, and local submission package all pass
-their deterministic and visual gates. It does not turn the Flash operational failure into model
-evidence, rank model families, establish dual-model confirmation, or complete account-side
-submission. Keep PR #20 Draft and unmerged, and do not claim “submitted” or create archival
-identifiers, until the author explicitly authorizes the corresponding action and Gate J is
-completed. Any later Gate K release must use the exact submitted release candidate and must not
-invent an arXiv ID, DOI, or archive identifier.
+`SCIENTIFIC_RC_READY` certifies the scoped manuscript and local replay artifacts. Its scope excludes
+venue acceptance, cross-provider causality, broad model-family ranking, naturalistic validity,
+hidden-test generalization, account-side submission, and repository publication.
