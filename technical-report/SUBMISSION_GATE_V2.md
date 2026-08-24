@@ -5,26 +5,31 @@ receipts remain authoritative for file totals, hashes, page counts, and replay r
 
 ## Verdict
 
-`SCIENTIFIC_RC_READY = PENDING_FINAL_ISOLATED_REVIEW`
+`SCIENTIFIC_RC_READY = YES`
 
-The manuscript, anonymous replay bundle, and local PDF package pass their current deterministic,
-privacy, and visual checks. One zero-context isolated review and the post-review verification cycle
-remain. Merge, public release, OpenReview upload, arXiv upload, and archival publication require
-separate author authorization.
+The final zero-context review and its single revision cycle are complete. The manuscript, anonymous
+replay bundle, and local PDF package pass deterministic, privacy, replay, type, lint, formal, and
+visual checks. This verdict covers the scoped scientific release candidate. Merge, public release,
+OpenReview upload, arXiv upload, and archival publication require separate author authorization.
 
 ## Scientific claim boundary
 
-- ClaimPromoteBench compiles executable policy revisions into paired regression tests for
-  model-mediated structured decisions.
-- Its main contribution is the integration of policy differencing, action-transition coverage,
-  minimum-suite certificates, and failure-inclusive model-service evaluation. The component
-  techniques are established machinery.
+- ClaimPromoteBench is a prospective synthetic test construction over two caller-supplied policy
+  evaluators, a finite context set, stable identifiers, registered rule witnesses, and declared
+  coverage inventories.
+- Its main contribution is the source-traceable integration of finite policy differencing,
+  policy-version paired route records, joint rule/action-transition suite reduction, and
+  failure-inclusive model-service endpoints. The component algorithms are established machinery.
+- The implementation is a finite policy-difference enumerator and suite reducer. Policy parsing,
+  context synthesis, changed-rule discovery, and witness inference remain caller responsibilities.
 - The deterministic policy executor defines the policy ceiling. It is an executable task
   specification rather than a learned comparator.
-- The multinomial Naive Bayes result is a deliberately weak sanity control.
-- Hosted results describe time-stamped model, provider, adapter, schema, decoding, and service
-  stacks. Cross-route differences are descriptive.
-- The public balanced challenge measures robustness on a public, pre-call-frozen suite and yields
+- The r6 multinomial Naive Bayes result is a weak shortcut control: 184/300 items and 34/150 pairs.
+- The central model IDs use the same provider, base URL, OpenAI-compatible API, prompt-only output
+  mode, and adapter settings. Provider-side serving internals are opaque; route differences are
+  descriptive.
+- The author-created balanced challenge was frozen publicly before calls, measures known-case
+  robustness, and yields
   no hidden-distribution generalization estimate.
 - The historical r6 Flash lane records an obsolete frozen service-interface failure. A later
   executable Flash route establishes only that the later service path ran successfully.
@@ -37,10 +42,14 @@ separate author authorization.
 
 - Two exact Gatekeeper revisions supply 12 action-changing pairs. Three repetitions on each of two
   hosted routes yield 144 frozen cells with one request per cell and zero client retries.
+- All 63 strictly parsed Gatekeeper actions match OPA. The end-to-end losses are 12 timeouts and 69
+  serialization or envelope violations, so the central hosted result concerns exact-interface
+  completion.
 - Independent Trivy and Cosign reproductions exercise policy-logic and verifier-interface faults
   against pinned upstream source bytes and tests.
 - An authored SLSA migration instrument covers four actions, changed rules, and directed action
-  transitions. Its labels and policies are author-defined evaluation instruments.
+  transitions. Its policy-aware/profile-blind controls reach 47/60 and 0/60 pairs. Its labels and
+  policies are author-defined evaluation instruments.
 - The offline dual-endpoint audit recomputes strict-action and contract-action outcomes for 1,320
   previously scheduled cells without model calls.
 - The r6 coverage addendum and 90-pair balanced public challenge provide auxiliary
@@ -52,6 +61,8 @@ separate author authorization.
 - [x] `technical-report/main.tex` is the canonical scientific source.
 - [x] The ICLR build uses the hash-locked official ICLR 2027 style files.
 - [x] The ICLR main-text probe is within the nine-page limit.
+- [x] The final ICLR PDF has 13 physical pages, an eight-page main-text probe, and references
+  beginning on physical page 9; the arXiv PDF has 12 pages.
 - [x] The release receipt derives physical pages and the reference boundary from the generated
   PDFs.
 - [x] The arXiv PDF and source archive are generated from the same canonical manuscript.
@@ -69,30 +80,31 @@ separate author authorization.
   source validators, endpoint recomputation, selected tests, Lean builds, and `leanchecker`.
 - [x] The local release-kit receipt reports `PASS` for LaTeX logs, ICLR anonymity, arXiv identity,
   embedded fonts, bundle privacy, and visual review.
+- [x] The full repository gates pass: 336 pytest tests, Ruff check, Ruff format check, and mypy over
+  29 configured source files.
 
 ## Final isolated review
 
-The final reviewer receives the stable manuscript, rendered ICLR PDF, anonymous replay bundle,
-and primary-source bibliography without prior review narratives or author defenses. The review
-must assess:
+The isolated reviewer assessed the pre-revision candidate `ddcc1d0` with zero prior-review context
+and returned Weak Reject (4/10, confidence 4/5). The review found no fatal validity issue and
+independently reproduced the numerical, source, minimum-suite, Python, and Lean evidence. Its three
+major findings were:
 
-1. whether each related-work statement is supported by the cited primary source;
-2. whether the prose follows the distilled computer-science corpus: claim-first paragraphs,
-   concrete verbs, stable terminology, local denominators, calibrated claims, and sparse contrast;
-3. whether any sentence, table, appendix item, or operational detail can be removed without
-   weakening verification or interpretation;
-4. whether the contribution is novel relative to behavioral testing, contrast sets, metamorphic
-   testing, policy differencing, structured output, selective prediction, and research-agent
-   evaluation;
-5. whether the deployment problem is evidenced, consequential, and scoped at the correct level;
-6. whether the compiler, certificates, scoring endpoints, and artifacts address the stated
-   problem; and
-7. whether a human reviewer can locate the question, novelty, evidence, failure semantics,
-   limitations, and reproducibility path with minimal effort.
+1. real policy revisions were established, while the model-mediated boundary was author-created;
+2. “compiler” exceeded the finite enumerator and registered-witness implementation; and
+3. the hosted Gatekeeper result measured strict interface completion because every parsed action
+   was semantically correct.
 
-All safely improvable major findings must be resolved once. The revision then receives fresh PDF,
-artifact, privacy, type, lint, test, and formal checks. This is the final reviewer cycle; a second
-reviewer will not be used to rescore the revision.
+The revision accepted all three findings. It narrows the deployment claim, states caller
+obligations, replaces compiler terminology in scientific prose, expands primary-source related
+work, leads with exact-interface reliability, corrects the shared provider/API route description,
+and promotes policy-aware/profile-blind controls. Moderate findings on the public freeze, Naive
+Bayes, structural-suite semantics, naturalistic screening, evidence hierarchy, replay command, and
+table density were also resolved. Deployment prevalence, naturalistic validity, and stochastic
+fault-detection power remain open because they require external evidence.
+
+The review and complete disposition are preserved under `docs/reviews/`. The 4/10 score describes
+the pre-revision candidate; no second reviewer or post-hoc rerating was requested.
 
 ## Remaining external gates
 

@@ -17,7 +17,8 @@ REPORT = ROOT / "technical-report"
 TITLE = r"\cpb: Paired Model-Service Tests over Finite Executable Policy Differences"
 ICLR_TITLE = (
     r"\mbox{\textsc{ClaimPromoteBench}: Paired Model-Service}\protect\\"
-    r"\mbox{Tests over Finite Executable Policy Differences}"
+    r"\mbox{Tests over Finite Executable}\protect\\"
+    r"\mbox{Policy Differences}"
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (

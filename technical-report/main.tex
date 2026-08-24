@@ -120,7 +120,7 @@ model-service boundary: a fixed route receives paired policy versions, rule and 
 coverage are minimized jointly, and every service failure stays in the scored denominator. The
 source-traceable integration is the method contribution.
 
-\paragraph{Rule following and evolving specifications.}
+\paragraph{Rule and specification following.}
 RuleArena and SpecEval test rule-governed and specification-following behavior
 \cite{zhou2025rulearena,ahmed2025speceval}. GuideBench includes guideline updates, and TDAD studies
 specification evolution with hidden tests and semantic mutants
@@ -241,7 +241,7 @@ provides a distinct boundary-fault evidence class.
 \label{tab:evidence}
 \begin{tabular}{@{}p{0.16\linewidth}p{0.24\linewidth}p{0.25\linewidth}rp{0.17\linewidth}@{}}
 \toprule
-Instrument & Revision or instrument & Evaluation role & Size & Structural coverage \\
+Instrument & Revision or instrument & Evaluation role & Size & \shortstack[l]{Structural\\coverage} \\
 \midrule
 \multicolumn{5}{@{}l}{\textit{Source-anchored revisions and faults}} \\
 Gatekeeper & two upstream Rego revisions & central authored route test & 12 pairs & 2 rules, 2/2 edges; min. 2 \\
@@ -252,7 +252,7 @@ Cosign Rego verifier & upstream query fix & interface-fault reproduction & 6 cas
 Authored SLSA & 12-rule policy migration & four-action transition test & 60 pairs & 12 rules, 10/10 edges; min. 10 \\
 \addlinespace[2pt]
 \multicolumn{5}{@{}l}{\textit{Auxiliary evidence-state diagnostics}} \\
-Research r6 & authored evidence contrasts & coverage addendum & 150 pairs & -- \\
+Research r6 & authored paired contrasts & coverage addendum & 150 pairs & -- \\
 Public challenge & publicly frozen authored contrasts & balanced robustness & 90 pairs & -- \\
 \bottomrule
 \end{tabular}
@@ -267,9 +267,9 @@ committed before the first call. The routes use two model IDs through the same p
 OpenAI-compatible API, prompt-only output mode, and adapter settings. Provider-side serving
 internals are opaque. Their results are descriptive route measurements.
 
-The authored SLSA instrument maps structured attestation fields to
-\allow/\hold/\demote/\escalate{} under two author-defined profiles
-\cite{slsa2026v12,intoto2026attestation}. Its rule-stratified suite covers 12 changed rules. Its
+The authored SLSA instrument defines two profiles over structured attestation fields and assigns
+one of four actions: \allow, \hold, \demote, or \escalate
+{}~\cite{slsa2026v12,intoto2026attestation}. Its rule-stratified suite covers 12 changed rules. Its
 graph suite covers every reachable directed action edge. Two pinned four-bit local routes provide a
 stress test of the enumerated pairs. The deterministic executor supplies the labels and is the
 \emph{definitional policy ceiling}. It is an oracle, while learned rows remain empirical controls.
@@ -540,6 +540,7 @@ suite relative to their committed candidate pools.
 
 \section{Failure Taxonomy and Scope Notes}
 
+{\raggedright
 The repeated Gatekeeper study classifies failures from terminal protocol metadata only. Qwen has
 62 \texttt{MARKDOWN\_CODE\_FENCE} failures. DeepSeek Flash has 12
 \texttt{READ\_TIMEOUT}, three \texttt{MARKDOWN\_CODE\_FENCE}, three
@@ -547,6 +548,7 @@ The repeated Gatekeeper study classifies failures from terminal protocol metadat
 \texttt{LENGTH\_TERMINATED\_NON\_JSON} failure. The diagnostic reads only terminal metadata. Gold
 labels, raw response text, hidden reasoning, free-form error strings, and provider response
 identifiers remain excluded.
+\par}
 
 The historical r6 Flash lane used an obsolete service interface. All 300 requests returned HTTP
 401 before model output, leaving conditional metrics undefined. Later Flash routes changed the

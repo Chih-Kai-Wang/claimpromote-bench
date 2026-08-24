@@ -11,14 +11,14 @@
       "throat_clearing": 0,
       "vague_importance": 0
     },
-    "manuscript_sha256": "af46501ef3298dab2e46c217d60e75e67b5f7b14356242062ce11e3706c035e3",
-    "prose_words": 3757,
-    "sentence_words_mean": 14.53,
-    "sentence_words_median": 13,
-    "sentence_words_over_40_percent": 1.1765,
+    "manuscript_sha256": "4c28a671f1481d1ecf4e6ed6e2d8c4a5994ef7ab407e95870127733a57fe847c",
+    "prose_words": 3761,
+    "sentence_words_mean": 14.58,
+    "sentence_words_median": 13.0,
+    "sentence_words_over_40_percent": 1.1811,
     "sentence_words_p90": 23.0,
     "sentence_words_p95": 28.0,
-    "sentences": 255
+    "sentences": 254
   },
   "before": {},
   "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",

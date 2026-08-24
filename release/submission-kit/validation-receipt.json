@@ -2,7 +2,7 @@
   "anonymous_bundle": {
     "manifest_file_count": 609,
     "manifest_plus_self_file_count": 610,
-    "manifest_sha256": "70f2583cbe492871d937d578fea6fef02240726aacbb83473b6816c20d00ad71",
+    "manifest_sha256": "4710a8854d25360cd7affcd671d5f0b58c3215ba6fd642733b1fdae04061ef11",
     "privacy_scope": {
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
@@ -53,24 +53,24 @@
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 366450,
-      "sha256": "3f6686e87f5782f216197ae3d79b22add02d0bffa007d588cec2193eed02a8da"
+      "bytes": 387154,
+      "sha256": "9dcc098e8f25b6f30183940c75dbbe3e6dca17d727fe4c131203dad7f3c979c9"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 1683189,
-      "sha256": "f03bac29102f7465ba58c95180894d5c74d121d2f2fd46410250bfa714474ccb"
+      "bytes": 1683224,
+      "sha256": "5ee448f5f8247a8d1bbd4a41ee230eb1a465e4e100c8664f4e959fd2b0469791"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 20920,
-      "sha256": "ce78fbaf8750321ffa25fe2602e93b59a9f700cdb588c9009f5f23e95da64481"
+      "bytes": 21987,
+      "sha256": "3a3c808588e724e218a52933880d3ed4bbcb1a7df14df3fba01a0c9f23ed97d4"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 47933,
-      "sha256": "4c98c81a563617843e4491f3110dbb58033ca2af3b7eba91a0cc44c329465019"
+      "bytes": 49000,
+      "sha256": "cba39fe3982b59f4c9c545eb39f4936f34037bdee9efad6e4737313d25cab2fc"
     },
     "iclr2027.pdf": {
-      "bytes": 242273,
-      "sha256": "1f3944615a7fe4498a6b390ed9f8c9e538adc9ffa5f491453ece3a1a4cc405b7"
+      "bytes": 250707,
+      "sha256": "798e453fefc863e281f4764c58dc2dfc2cf4b0f65120a4866ed0ddc7bb2edbfc"
     }
   },
   "checks": {
@@ -107,41 +107,42 @@
       "creator": "LaTeX with hyperref",
       "fonts": {
         "all_embedded": true,
-        "font_count": 26,
+        "font_count": 27,
         "fonts": [
           "/BSTKNX+MSBM10",
           "/BYFKRJ+CMSY10",
-          "/CCUWNO+CMR8",
           "/CFUVDR+CMR7",
+          "/CMCHRH+CMR10",
           "/DWLSIB+CMMI7",
           "/ECOSEW+CMTT9",
           "/EUWOLL+CMBX9",
           "/EWDQZJ+CMMI8",
           "/HQVQIC+CMBX7",
-          "/IANXRN+CMTI9",
-          "/IHQCLP+CMR17",
+          "/IRPFNI+CMTT10",
+          "/KOQYKF+CMR9",
           "/LQBNTO+CMR12",
           "/MNATLR+CMCSC10",
+          "/PSBQFY+CMR17",
+          "/QDUYRF+CMR8",
+          "/QHFKYO+CMTI9",
           "/QXVNND+CMSY8",
+          "/RHTRPE+CMBX10",
           "/SDVCAT+CMSY7",
-          "/TDDTND+CMR9",
           "/TFVNFO+CMR6",
+          "/TUIAQN+CMTI8",
           "/VPFMMI+CMTI10",
           "/WATVRQ+CMTT8",
-          "/WEZGFP+CMTT10",
-          "/XNFUNW+CMR10",
-          "/YUMFZG+CMBX10",
+          "/WFETLW+CMBX12",
           "/ZPGVCH+CMEX10",
-          "/ZPXUAX+CMBX12",
           "/ZXGFIK+CMMI10",
           "/ZXILHJ+CMR5"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 11,
+      "pages": 12,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 11
+      "visual_pages_inspected": 12
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -155,15 +156,15 @@
           "/BSTKNX+MSBM10",
           "/BYFKRJ+CMSY10",
           "/DWLSIB+CMMI7",
+          "/FITNNQ+NimbusRomNo9L-Medi",
           "/FXTVSZ+CMR10",
-          "/HPJFCO+NimbusRomNo9L-ReguItal",
-          "/IONRUT+NimbusRomNo9L-Medi",
-          "/IRJNSY+NimbusMonL-Regu",
           "/NSBAHC+CMMI9",
-          "/OKXGWA+NimbusRomNo9L-Regu",
+          "/QODKRB+NimbusRomNo9L-ReguItal",
           "/SDVCAT+CMSY7",
           "/SVZIZS+CMSY9",
           "/TFVNFO+CMR6",
+          "/TVAYVZ+NimbusMonL-Regu",
+          "/VLBQLR+NimbusRomNo9L-Regu",
           "/WRMBHN+CMR9",
           "/YOISRB+CMR7",
           "/ZPGVCH+CMEX10",
@@ -172,14 +173,14 @@
         ]
       },
       "main_text_page_limit": 9,
-      "main_text_pages": 7,
+      "main_text_pages": 8,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 11,
+      "pages": 13,
       "producer": "pdfTeX-1.40.29",
-      "references_start_page": 8,
+      "references_start_page": 9,
       "style_receipt": "iclr-style-receipt.json",
       "style_template": "ICLR 2027 official style archive",
-      "visual_pages_inspected": 11
+      "visual_pages_inspected": 13
     }
   }
 }
