@@ -25,49 +25,41 @@
 \maketitle
 
 \begin{abstract}
-Executable policy revisions can change downstream actions for fixed inputs, yet model-service tests
-rarely isolate policy version. \cpb turns finite differences between deterministic policy versions
-into paired route tests whose oracle action must change. It records source witnesses, rule and
-action-transition coverage, exact minimum structural suites, parser provenance, and
-failure-inclusive endpoints. Six revisions across five public projects ground policy, verifier,
-and adapter fault classes. AGT is replayed parent-to-fix; agentgateway's parent is source-audited
-and its fixed commit passes 33 offline tests. Two Gatekeeper revisions yield 12 pairs and a two-pair
-minimum. Across 144 hosted calls, all 63 raw-strict actions match OPA, while timeouts and envelope
-failures reduce end-to-end pair completion to 21/36 and 0/36. An audit of 1,320 frozen records
-separates raw-strict parsing, registered route parsers, and full contracts; six fenced Qwen
-challenge outputs account for a 128/180 versus 132/180 item difference. R6 records 113/150 pairs
-end to end and 113/123 conditional. A commit-frozen, action-balanced challenge yields 48/90 and
-13/90 full-contract pairs end to end versus 48/64 and 13/61 conditional, with \demote{} recall of
-4/30 and 0/30. Complete confusion matrices retain terminal failures. These results establish a
-source-traceable regression protocol for finite authored policy changes. Deployment prevalence and
-naturalistic model interpretation remain open.
+Executable policy revisions can change the required action for an unchanged input, yet
+model-service tests rarely isolate policy version. We introduce \cpb, which enumerates
+action-changing differences between two deterministic evaluators and converts them into paired
+route tests. It reports changed-rule and action-transition coverage, a cardinality-minimum
+structural suite, parser provenance, and failure-inclusive item and pair accuracy. We trace six
+revisions from five public projects and evaluate hosted routes on two Gatekeeper revisions. Across
+144 calls, Qwen and DeepSeek Flash complete 0/36 and 21/36 raw-strict pairs. All 63 extracted
+actions agree with the Open Policy Agent oracle, locating the observed failures at the service or
+output interface. On an imbalanced evidence-state suite, Qwen reaches 113/150 pairs end to end and
+113/123 conditional. An action-balanced challenge yields 48/90 and 13/90 full-contract pairs end
+to end for Qwen and Flash, versus 48/64 and 13/61 conditional, with \demote{} recall of 4/30 and
+0/30. Complete confusion matrices retain terminal failures. These results support source-traceable
+regression testing under finite executable policy changes. The study measures a synthetic
+model-service boundary; deployment frequency and naturalistic policy interpretation require field
+evidence.
 \end{abstract}
 
 \section{Introduction}
 
-Executable decision policies evolve. Content-moderation studies describe frequent policy updates,
-limited new labels, and conflicts between historical labels and current rules
-\cite{mullick2023evolving,ji2026argus}. Software-policy repositories expose the same maintenance
-problem in executable form. A Gatekeeper revision changed an empty FlexVolume allowlist from
-permitting every driver to blocking every driver; another restricted a selector search to Services
-\cite{gatekeeper2020flexvolume,gatekeeper2021selector}. Trivy corrected an inverted admission
-predicate \cite{aquasecurity2024trivy}, and Cosign repaired a verifier that could accept a true
-\texttt{deny} result or an undefined query \cite{sigstore2022rego}. Microsoft Agent Governance
-Toolkit (AGT) repaired a disagreement between Rego pattern matching and deny-verdict generation at agent
-lifecycle policy points \cite{microsoft2026agentgovernance}. Agentgateway corrected intervention
-classification and multipart-content preservation in a versioned Bedrock guardrail adapter
-\cite{agentgateway2026bedrock}. These six revisions across five projects establish policy,
-verifier, and adapter fault classes. A fixed-query discovery audit found the latter two cases; it
-does not estimate their prevalence. Prior prompt-regression work holds an application task fixed
-while a hosted LLM API evolves \cite{ma2024promptregression}. We examine the complementary version
-axis: the service route is fixed while the executable policy changes.
+Executable decision policies evolve, and regressions can change downstream actions for unchanged
+inputs. Content-moderation studies document frequent updates, scarce new labels, and conflicts
+between historical labels and current rules \cite{mullick2023evolving,ji2026argus}. Public software
+histories expose the same problem at three boundaries. Gatekeeper and Trivy changed executable
+policy behavior \cite{gatekeeper2020flexvolume,gatekeeper2021selector,aquasecurity2024trivy}; Cosign
+repaired verifier semantics \cite{sigstore2022rego}; Microsoft Agent Governance Toolkit and
+agentgateway repaired agent-facing policy interfaces
+\cite{microsoft2026agentgovernance,agentgateway2026bedrock}. We trace six revisions across these five
+projects. Prior prompt-regression work fixes an application task while a hosted LLM API evolves
+\cite{ma2024promptregression}. We instead fix the service route and vary the policy version.
 
-The evaluated model-service boundary is an author-constructed, prospective test setting. It asks
-whether a route presented with structured evidence and an explicit policy version follows the new
-decision surface and satisfies a downstream output contract. A directly callable policy executor
-remains the preferred enforcement mechanism for structured inputs. Here it supplies the defining
-oracle for testing a model-mediated interface. The study therefore establishes a reusable test
-construction; deployed incidence and operational benefit require separate field evidence.
+We use \emph{route} for the model, provider, prompt, parser, and output contract evaluated together.
+Our prospective test asks whether a route follows an explicit policy version and satisfies its
+downstream contract. A directly callable policy executor is preferable for structured inputs; here
+it defines the oracle for a model-mediated interface. Field studies must establish how often that
+interface occurs and whether testing it improves deployed systems.
 
 Static accuracy gives an incomplete answer. A route can ignore the policy version and exploit
 stable field--action correlations. A response can also expose the correct action while violating a
@@ -75,22 +67,21 @@ larger schema, or fail before any action is available. Valid-only scoring remove
 failures from the denominator. Rule coverage creates another blind spot: a suite may exercise every
 edited rule while omitting action transitions induced by their interactions.
 
-\cpb accepts two deterministic evaluators $P_0,P_1$, a finite context set $\mathcal X$ with stable
-identifiers, registered changed-rule witnesses, and declared coverage inventories. Its enumerator
-executes both policies and retains contexts whose prescribed actions differ. It duplicates each
-context and varies only the active policy. A pair is correct only when both actions follow their
-respective policies. The suite reducer reports changed-rule and directed action-transition coverage
-and selects a cardinality-minimum structural-coverage suite. Policy parsing, grammar synthesis,
-rule-change discovery, and witness inference remain caller responsibilities. Route evaluation then
-separates raw-strict parsing, the frozen registered route parser, full contract validity, and exact
-structured-decision agreement while retaining every scheduled call in end-to-end denominators.
+\cpb takes two deterministic evaluators $P_0,P_1$, a finite context set $\mathcal X$ with stable
+identifiers, registered changed-rule witnesses, and declared coverage inventories. We execute both
+policies, retain contexts whose prescribed actions differ, and duplicate each context while varying
+the active policy. A pair is correct only when both actions follow their respective policies. We
+report changed-rule and directed action-transition coverage and select a cardinality-minimum
+structural-coverage suite. Users remain responsible for policy parsing, grammar synthesis,
+rule-change discovery, and witness inference. Route evaluation separates raw-strict parsing, the
+registered route parser, full contract validity, and exact structured-decision agreement. Every
+scheduled call remains in its end-to-end denominator.
 
-The evaluation has three evidence layers. Six upstream histories from Gatekeeper, Trivy, Cosign,
-AGT, and agentgateway establish external policy and interface fault
-instances. The Gatekeeper revisions then support an authored 12-pair model-service study with three
-frozen repetitions on two hosted model IDs. An authored four-action SLSA-inspired migration tests
-transition coverage, while two research-evidence suites diagnose action imbalance and endpoint
-sensitivity. Every model-facing mapping and label remains an author-defined instrument.
+We organize the evidence in three layers. Six public histories establish policy, verifier, and
+adapter faults. Two Gatekeeper revisions support a 12-pair hosted study with three repetitions on
+two routes. A four-action SLSA-inspired migration and two evidence-state suites test transition
+coverage, endpoint sensitivity, and action balance. All model-facing mappings and labels are
+deterministic author policy mappings.
 
 The contributions are:
 \begin{enumerate}[leftmargin=*]
@@ -102,9 +93,9 @@ The contributions are:
   \item a source-traceable evaluation spanning six upstream revisions in five projects, repeated
   hosted routes, and action-balanced evidence-state diagnostics.
 \end{enumerate}
-The enumerator adapts established semantic-differencing and set-cover machinery. The contribution
-is their integration into a test object that joins an action-changing policy intervention, a paired
-model-service record, parser provenance, and an explicit failure-inclusive endpoint.
+The enumerator adapts established semantic-differencing and set-cover machinery. Our contribution
+is the test object that joins an action-changing policy intervention with paired route records,
+parser provenance, and a failure-inclusive endpoint.
 
 \section{Related Work}
 
@@ -147,30 +138,26 @@ terminal category and remain errors end to end.
 
 \paragraph{Research agents.}
 ScienceAgentBench, CORE-Bench, and POPPER evaluate data analysis, reproducibility, and sequential
-falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. The auxiliary
-research-evidence ontology covers one downstream state transition after evidence registration.
-Evidence discovery and end-to-end scientific work remain outside its scope.
+falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. They evaluate
+broad scientific workflows; our auxiliary evidence-state suites isolate a downstream policy
+transition after evidence registration.
 
 \begin{table}[t]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\caption{Positioning by controlled coordinate. \cpb contributes the joint setting in the final
-row; each constituent technique is established.}
+\caption{Positioning by controlled coordinate. The final row combines established components.}
 \label{tab:positioning}
 \begin{tabular}{@{}p{0.20\linewidth}p{0.20\linewidth}p{0.25\linewidth}p{0.27\linewidth}@{}}
 \toprule
-Test family & Controlled coordinate & Primary oracle or endpoint & Unjoined coordinate \\
+Test family & Controlled coordinate & Primary oracle or endpoint & Role in this work \\
 \midrule
-Behavioral / contrast & input perturbation & labels or behavioral invariants & executable policy
-revision \\
-Conformance / policy diff & specification or policy & executable semantics & hosted model-service
-record \\
-Rule / specification following & textual rules & task labels & executable version difference \\
-Structured output / abstention & schema or coverage & syntax, contract, or risk & action-changing
-policy pair \\
-Prompt regression & hosted service time & application tests & policy version \\
-This work & policy source & executable action plus route contract & source-to-route regression \\
+Behavioral / contrast & input perturbation & labels or behavioral invariants & paired intervention \\
+Conformance / policy diff & specification or policy & executable semantics & change oracle \\
+Rule / specification following & textual rules & task labels & model-facing task \\
+Structured output / abstention & schema or coverage & syntax, contract, or risk & route endpoint \\
+Prompt regression & hosted service time & application tests & service-level regression \\
+This work & policy version & executable action plus route contract & joint policy-to-route test \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -179,7 +166,7 @@ This work & policy source & executable action plus route contract & source-to-ro
 
 \subsection{Finite policy-difference enumeration}
 
-The caller supplies deterministic evaluators $P_0$ and $P_1$, a finite set $\mathcal X$ of complete
+The benchmark takes deterministic evaluators $P_0$ and $P_1$, a finite set $\mathcal X$ of complete
 typed contexts with stable identifiers, registered changed-rule witnesses, and the rule inventory
 to cover. Let $\pi_P(c)$ denote the prescribed action. The enumerator executes both evaluators and
 defines
@@ -200,25 +187,24 @@ A(T)=\left(\frac{|R(T)|}{|R_\Delta|},
 \]
 where $R_\Delta$ is the registered changed-rule inventory and $E_{\mathrm{reach}}$ is the action-edge
 set observed by exhaustive execution over $\mathcal X$. Both certificates are relative to the
-published context set and caller-declared witnesses. Their validity depends on context completeness
+declared context set and registered witnesses. Their validity depends on context completeness
 and witness correctness.
 
 Selecting the smallest structural-coverage suite with $A(T)=(1,1)$ is a set-cover instance. We use a standard exact
 bit-mask dynamic program with $O(n2^{r+k})$ state updates for $n$ candidates, $r$ rules, and $k$
 edges. A specialized search selects one context per edge while tracking rule masks; a complete
-$k$-pair witness meets the edge lower bound and is globally minimum for the candidate pool. These
-solvers are checkable implementation components. Appendix~\ref{app:enumerator} gives the proof and
-optimality certificate.
+$k$-pair witness meets the edge lower bound and is globally minimum for the candidate pool.
+Appendix~\ref{app:enumerator} gives the proof and optimality certificate.
 
 \subsection{Parser and contract endpoints}
 
 For scheduled item $x$, let $y(x)=\pi_P(c)$; let $r(x)$ be the action parsed directly from retained
-raw text; let $p(x)$ be the action recorded by the route's frozen registered parser; let $v(x)$
+raw text; let $p(x)$ be the action recorded by the route-specific registered parser; let $v(x)$
 indicate full output-contract validity; and let $d(x)$ be the parsed structured decision. The
 raw-strict parser accepts exactly one duplicate-free top-level JSON object and performs no fence or
 substring extraction, repair, coercion, or non-standard constant handling. Registered parsers retain
 their historical route-specific behavior. Their provenance distinguishes direct parsing from
-deterministic single-object extraction. No audited response contains a duplicate key. We report:
+deterministic single-object extraction. No retained response contains a duplicate key. We report:
 \begin{align*}
 C_R(x)&=\mathbb 1[r(x)=y(x)], &&\text{raw-strict action},\\
 C_P(x)&=\mathbb 1[p(x)=y(x)], &&\text{registered-parser action},\\
@@ -227,25 +213,25 @@ C_F(x)&=\mathbb 1[v(x)=1]\mathbb 1[d(x)=d^*(x)], &&\text{full decision}.
 \end{align*}
 The task-specific contract contains five fields for Gatekeeper and six fields for the evidence-state
 tasks. Pair correctness is the product of the two member indicators for the selected endpoint.
-End-to-end metrics divide by every scheduled item or pair. Conditional action metrics divide by
-available parser actions or contract-valid items and complete pairs; they describe behavior after
-the indicated interface succeeds. Terminal failures are shown as \texttt{N} in confusion matrices,
-outside the policy action set. Response contents from failed cells are omitted.
+End-to-end metrics divide by every scheduled item or pair. Conditional item metrics divide by items
+for which the selected parser or contract succeeds; conditional pair metrics require both members to
+succeed. Terminal failures are shown as \texttt{N} in confusion matrices, outside the policy action
+set.
 
 \begin{figure}[t]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}c@{\hspace{5pt}}c@{\hspace{5pt}}c@{}}
-\fbox{\parbox[c][0.58in][c]{0.25\linewidth}{\centering author-supplied\\evaluators $P_0,P_1$}} &
+\fbox{\parbox[c][0.58in][c]{0.25\linewidth}{\centering declared\\evaluators $P_0,P_1$}} &
 \fbox{\parbox[c][0.58in][c]{0.27\linewidth}{\centering finite contexts $\mathcal X$\\and stable IDs}} &
 \fbox{\parbox[c][0.58in][c]{0.25\linewidth}{\centering registered witnesses\\and source tests}}\\[4pt]
 \multicolumn{3}{c}{$\downarrow$ exhaustive differencing and source validation $\downarrow$}\\[3pt]
 \multicolumn{3}{c}{\fbox{\parbox[c][0.52in][c]{0.73\linewidth}{\centering action-changing pairs $+$ relative rule/edge certificates\\$+$ minimum structural-coverage suite}}}\\[4pt]
-\multicolumn{3}{c}{$\downarrow$ frozen model--service calls $\downarrow$}\\[3pt]
+\multicolumn{3}{c}{$\downarrow$ scheduled model--service calls $\downarrow$}\\[3pt]
 \multicolumn{3}{c}{\fbox{\parbox[c][0.56in][c]{0.73\linewidth}{\centering raw-strict $\rightarrow$ registered parser $\rightarrow$ full contract $\rightarrow$ exact decision\\item/pair metrics with complete denominators}}}
 \end{tabular}
-\caption{Benchmark and evidence flow. Caller-supplied artifacts precede enumeration; source
+\caption{Benchmark and evidence flow. Declared inputs precede enumeration; source
 validation and suite construction finish before model calls. Each scoring layer corresponds to a
 distinct interface requirement.}
 \label{fig:evidence-flow}
@@ -255,130 +241,119 @@ distinct interface requirement.}
 
 \subsection{Source-traceable revisions}
 
-Table~\ref{tab:evidence} separates policy revisions, verifier faults, authored stress instruments,
-and auxiliary robustness tests. The Gatekeeper study preserves exact old and new Rego source bytes,
-their parent and change commits, upstream regression-test names, and Apache-2.0 notices. OPA 1.19.1
-reproduces both changes. We author a finite 12-context grammar around the upstream tests: six
-contexts for the FlexVolume empty-list change and six for the selector-kind change. Mapping zero
-violations to \allow{} and one or more violations to \hold{} is an author policy mapping. The
-resulting 24 items were frozen before any route call. All labels are deterministic author mappings;
-the study contains zero human annotations.
+For Gatekeeper, we preserve the old and new Rego sources, parent and change commits, upstream test
+names, and license notices. Open Policy Agent 1.19.1 reproduces both changes. We construct 12
+contexts around the upstream tests: six for the FlexVolume empty-list change and six for the
+selector-kind change. We map zero violations to \allow{} and one or more violations to \hold{}, then
+fix the resulting 24 items before inference. Every label follows a deterministic mapping; no human
+annotation enters the evaluation.
 
 The Trivy reproduction executes four upstream regression cases around the corrected inverted
 predicate. The Cosign reproduction exercises six cases and four verifier fault modes using the
 historical Go query logic and upstream tests. Cosign changes the verifier--policy interface and
 provides a distinct boundary-fault evidence class.
 
-A frozen fixed-query discovery audit screened 465 unique public repository seeds and reviewed 11
-joint model/policy candidates at source level. Inclusion required a public model or agent path, an
-executable or versioned policy boundary, a finite downstream action, a historical fault, a usable
-license, and auditable source evidence. Two candidates met every criterion. The AGT reproduction
-evaluates exact parent and fixed Rego bytes; its two action labels are an
-author mapping of an undefined deny verdict to the upstream-documented caller fallback. The
-agentgateway check compiles the exact change commit and runs its offline Bedrock guardrail tests.
-The discovery process is neither random nor exhaustive.
+We also screened 465 public repository seeds with a fixed query and inspected 11 model--policy
+candidates at source level. The screen required an executable or versioned policy boundary, a finite
+downstream action, a historical fault, usable licensing, and source evidence. Two candidates met
+these criteria. For Microsoft Agent Governance Toolkit, we execute the parent and fixed Rego
+sources and map an undefined deny verdict to the caller fallback documented upstream. For
+agentgateway, we inspect the parent implementation and run 33 Bedrock guardrail tests at the exact
+change commit. This fixed-query convenience sample supports case validity rather than prevalence.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3.5pt}
-\caption{Evidence hierarchy. Structural minima are exact relative to each committed candidate set.}
+\caption{Evidence hierarchy. Structural minima are exact relative to each declared candidate set.}
 \label{tab:evidence}
 \begin{tabular}{@{}p{0.16\linewidth}p{0.24\linewidth}p{0.25\linewidth}rp{0.17\linewidth}@{}}
 \toprule
 Instrument & Revision or instrument & Evaluation role & Size & Coverage or check \\
 \midrule
 \multicolumn{5}{@{}l}{\textit{Source-anchored revisions and faults}} \\
-Gatekeeper & two upstream Rego revisions & central authored route test & 12 pairs & 2 rules, 2/2 edges; min. 2 \\
+Gatekeeper & two upstream Rego revisions & central hosted route test & 12 pairs & 2 rules, 2/2 edges; min. 2 \\
 Trivy KCV0030 & upstream predicate fix & policy-fault reproduction & 4 cases & 2/2 edges; min. 2 \\
 Cosign Rego verifier & upstream query fix & interface-fault reproduction & 6 cases & 2/2 edges; min. 4 \\
 AGT helper & upstream verdict fix & agent-policy interface fault & 2 cases & 1/1 edge; min. 1 \\
 agentgateway & Bedrock adapter fix & guardrail-interface fault & 33 tests & 33/33 fixed \\
 \addlinespace[2pt]
-\multicolumn{5}{@{}l}{\textit{Author-defined structural stress instrument}} \\
-Authored SLSA & 12-rule policy migration & four-action transition test & 60 pairs & 12 rules, 10/10 edges; min. 10 \\
+\multicolumn{5}{@{}l}{\textit{Synthetic structural stress instrument}} \\
+SLSA-inspired & 12-rule policy migration & four-action transition test & 60 pairs & 12 rules, 10/10 edges; min. 10 \\
 \addlinespace[2pt]
 \multicolumn{5}{@{}l}{\textit{Auxiliary evidence-state diagnostics}} \\
-Research r6 & authored paired contrasts & coverage addendum & 150 pairs & -- \\
-Public challenge & commit-frozen authored contrasts & balanced robustness & 90 pairs & -- \\
+Imbalanced suite & evidence-state contrasts & coverage diagnostic & 150 pairs & -- \\
+Balanced challenge & action-balanced contrasts & robustness diagnostic & 90 pairs & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Route studies and auxiliary instruments}
 
-The central route study repeats all 24 Gatekeeper items three times on each of two hosted routes,
-for 144 scheduled calls. Each cell receives one request, zero client retries, and a 180-second
-timeout. The complete schedule, prompts, route labels, endpoint definitions, and no-retry rule were
-committed before the first call. The routes use two model IDs through the same provider, base URL,
-OpenAI-compatible API, prompt-only output mode, and adapter settings. Provider-side serving
-internals are opaque. Their results are descriptive route measurements.
+The central study repeats all 24 Gatekeeper items three times on two hosted routes, for 144
+scheduled calls. Each cell receives one request without client retries. We fix the schedule,
+prompts, route labels, endpoints, and no-retry rule before inference. Both model
+IDs use the same provider, base URL, OpenAI-compatible API, prompt-only output mode, and adapter
+settings. We report descriptive route measurements because provider-side serving internals are
+opaque.
 
-The authored SLSA instrument defines two profiles over structured attestation fields and assigns
+The SLSA-inspired instrument defines two profiles over structured attestation fields and assigns
 one of four actions: \allow, \hold, \demote, or \escalate
-{}~\cite{slsa2026v12,intoto2026attestation}. Its rule-stratified suite covers 12 changed rules. Its
-graph suite covers every reachable directed action edge. Two pinned four-bit local routes provide a
-stress test of the enumerated pairs. The deterministic executor supplies the labels and is the
-\emph{definitional policy ceiling}. It is an oracle, while learned rows remain empirical controls.
-Registered structured random-forest controls test profile sensitivity directly: the policy-aware
-control reaches 107/120 items and 47/60 pairs end to end, while the profile-blind control reaches
-57/120 items and 0/60 pairs. These rows serve as diagnostic controls for the paired endpoint.
+{}~\cite{slsa2026v12,intoto2026attestation}. A rule-stratified suite covers 12 changed rules, and a
+graph suite covers every reachable directed action edge. We evaluate two local model
+routes and two registered random-forest controls. The deterministic executor defines the labels and
+is the \emph{definitional policy ceiling}; learned systems are empirical controls.
 
-The research-evidence ontology supplies two auxiliary suites. R6 contains 300 items with only eight
-\demote{} and eight \escalate{} labels. The challenge contains 90 pairs, 180 items, and 15 factors;
-it balances 90 \allow{} items against 30 each of \hold, \demote, and \escalate. Its cases were
-author-created and commit-frozen before calls according to retained workflow receipts. It therefore
-measures robustness on known cases rather than hidden-test generalization. A multinomial Naive Bayes
-sanity control is deliberately weak: on r6 it reaches 184/300 items and 34/150 pairs end to end,
-with balanced action recall 0.328. Its role is a weak shortcut check.
+The evidence-state task supplies two auxiliary suites. The imbalanced suite contains 300 items,
+including eight \demote{} and eight \escalate{} labels. The balanced challenge contains 90 pairs,
+180 items, and 15 factors. Its 90 action-changing members are balanced across \hold, \demote, and
+\escalate{} (30 each), and each has an \allow{} counterpart. We fix its cases and labels before
+inference. Its estimand is robustness on known cases. We include a weak multinomial Naive Bayes
+shortcut control for the imbalanced suite.
 
 \section{Results}
 
 \subsection{Source validation and finite structural coverage}
 
-OPA execution reproduces both Gatekeeper behavior changes on all 12 contexts. The suite covers
-2/2 changed rules and both \allow$\rightarrow$\hold{} and
-\hold$\rightarrow$\allow{} transitions. One pair realizes one edge, and a two-pair witness also
-covers both rules; the witness meets the two-edge lower bound. The Trivy cases reproduce two
-transitions in each direction around the inverted predicate, with a two-case minimum. The Cosign
-cases reproduce four documented verifier fault modes and both directions; four cases are required
-to cover the four modes. Against the exact AGT parent source, 11/15 post-fix
-upstream tests pass; all 15 pass after the fix. Both decision cases change from an undefined deny
-verdict to \texttt{deny}, yielding two author-mapped \allow$\rightarrow$\hold{} transitions and a
-one-case minimum. At the exact agentgateway change commit, all 33 selected offline tests pass. The
-source audit traces the old adapter's overbroad anonymization classification and multipart-content
-replacement; it does not retrofit the post-fix test module onto the parent commit. These results
-establish concrete policy, verifier, and guardrail-interface fault instances.
+Open Policy Agent execution reproduces both Gatekeeper changes on all 12 contexts. A two-pair
+witness covers 2/2 changed rules and both \allow$\rightarrow$\hold{} and
+\hold$\rightarrow$\allow{} transitions, meeting the two-edge lower bound. Trivy reproduces two
+transitions in each direction around its inverted predicate, with a two-case minimum. Cosign
+reproduces four verifier fault modes and requires four cases to cover them.
 
-The authored four-action migration exposes a separate structural result. Its 12-rule stratified suite
+At the Agent Governance Toolkit parent revision, 11/15 post-fix upstream tests pass; all 15 pass after
+the fix. Both decision cases change from an undefined deny verdict to \texttt{deny}, yielding two
+mapped \allow$\rightarrow$\hold{} transitions and a one-case minimum. For agentgateway, we inspect
+the parent source and execute tests at the change commit, where all 33 selected tests pass. Together
+these revisions instantiate policy, verifier, and guardrail-interface faults.
+
+The four-action migration gives a separate structural result. Its 12-rule stratified suite
 covers 12/12 changed rules and 6/10 reachable edges. The graph suite covers 12/12 rules and 10/10
 edges. An exact search selects a 10-pair, 20-call joint suite, reducing the 120-call graph suite by
-83.3\%. The two local routes score 10/60 and 2/60 pairs on the full graph. This minimum certifies
+83.3\%. Mistral and Phi-4 score 10/60 and 2/60 pairs on the full graph. This minimum certifies
 coverage of the declared rules and observed edges. Stochastic fault detection and release
 sufficiency remain unmeasured. The registered policy-aware random-forest control reaches
 107/120 items and 47/60 pairs, while the profile-blind control reaches 57/120 items and 0/60 pairs.
-The zero-pair result confirms that the pair endpoint detects policy-profile invariance on this
-authored graph.
+The zero-pair result shows that paired scoring detects policy-profile invariance on this graph. The
+weak Naive Bayes control reaches 184/300 items and 34/150 pairs on the imbalanced suite, with
+balanced action recall 0.328.
 
 \subsection{Repeated route behavior on upstream revisions}
 
-The central hosted result is an exact-interface completion gap. Table~\ref{tab:repeat} reports every
-scheduled Gatekeeper cell. Raw-strict and contract-action scores coincide because every raw-strict
-object also satisfies the task contract. The DeepSeek route records 15/24, 19/24,
-and 19/24 actions and totals 53/72 items and 21/36 pairs; 52/72 decisions and 20/36 pairs are fully
-exact. The Qwen route totals 10/72 items and 0/36 pairs. All 63 raw-strict actions match the OPA
-oracle, so this study observes zero semantic action errors after raw-strict extraction. Conditional
-item and pair accuracy is 1.0 whenever the required item or complete pair is available.
+The central hosted result is a gap between action correctness and interface completion. DeepSeek
+Flash totals 53/72 raw-strict items and 21/36 pairs; Qwen totals 10/72 items and 0/36 pairs. All 63
+extracted actions
+match the Open Policy Agent oracle, so we observe zero semantic action errors after raw-strict
+extraction. Conditional item and pair accuracy is 1.0 whenever the required item or complete pair
+is available. Table~\ref{tab:repeat} shows the three repetitions and exact-decision scores.
 
-Terminal metadata identifies the limiting interface behavior; response content remains excluded.
-The Qwen route produces 62 Markdown-fenced objects, all rejected by the frozen strict parser.
-The DeepSeek route records 12 read timeouts, three fenced objects, three non-JSON prefixes or
-envelopes, and one length-terminated non-JSON response. The protocol performs zero response repair
-or rescoring.
-Across repeated cells, 13/24 DeepSeek items are raw-strict correct in all three repetitions,
-compared with 0/24 for Qwen; 5/12 DeepSeek pairs pass all three repetitions.
+Terminal metadata identifies the limiting interface behavior. Qwen produces 62 Markdown-fenced
+objects, which the raw-strict endpoint rejects. DeepSeek Flash records 12 read timeouts, three
+fenced objects, three non-JSON prefixes or envelopes, and one length-terminated response. We apply
+no response repair or rescoring; these records remain terminal failures. Across repetitions, 13/24
+DeepSeek items and 5/12 pairs pass every time; no Qwen item does.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3.5pt}
@@ -406,34 +381,34 @@ DeepSeek Flash & 3 & 19/24 & 19/24 & 8/12 & 8/12 \\
 
 \subsection{Endpoint sensitivity and evidence-state diagnostics}
 
-The offline endpoint audit covers 1,320 previously scheduled items across ten route stacks.
+The endpoint reanalysis covers 1,320 previously scheduled items across ten route stacks.
 Raw-strict parsing finds 69 extractable actions outside the full six-field contract; 49 actions and
 40 pairs are correct. Conversely, 452 contract-valid registered-parser actions are unavailable to
 raw-strict parsing, including 329 correct actions and 78 correct pairs. Most of the latter occur on
-historical local routes whose registered parsers used deterministic single-object extraction. The
-endpoints are nonnested and answer different integration questions.
+historical local routes whose registered parsers used deterministic single-object extraction.
+Neither endpoint contains the other, and each answers a different integration question.
 
-On the fixed SLSA Qwen route, raw-strict action yields 120/120 items and 60/60 pairs, while the full
+On the SLSA Qwen route, raw-strict action yields 120/120 items and 60/60 pairs, while the full
 contract yields 88/120 and 28/60. On the balanced Qwen challenge, the registered parser accepts six
-fenced objects---four correct actions and two correct pairs---that raw-strict parsing rejects.
+fenced objects, including four correct actions and two correct pairs, that raw-strict parsing rejects.
 Raw-strict scores are therefore 128/180 items and 46/90 pairs, compared with 132/180 and 48/90
 under the full contract. The balanced Flash route changes from 105/180 and 19/90 under raw-strict
 parsing to 90/180 and 13/90 under the contract. Registered-parser actions and full-contract actions
-coincide in these frozen records because a parser-owned decision is retained only after contract
+coincide in these records because a parser-owned decision is retained only after contract
 validation.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \caption{Auxiliary item/pair metrics. All raw and contract scores are end to end; the last column is
-conditional on contract validity. ``--'' marks unavailable retained raw text for r6.}
+conditional on contract validity. ``--'' marks unavailable retained raw text.}
 \label{tab:aux}
 \begin{tabular}{@{}p{0.20\linewidth}rrrr@{}}
 \toprule
 Route & Reg. valid & Raw item/pair & Contract item/pair & Cond. item/pair \\
 \midrule
-r6 Qwen & 272/300 & -- & 258/300; 113/150 & 258/272; 113/123 \\
+Imbalanced Qwen & 272/300 & -- & 258/300; 113/150 & 258/272; 113/123 \\
 Challenge Qwen & 148/180 & 128/180; 46/90 & 132/180; 48/90 & 132/148; 48/64 \\
 Challenge Flash & 146/180 & 105/180; 19/90 & 90/180; 13/90 & 90/146; 13/61 \\
 SLSA Qwen & 88/120 & 120/120; 60/60 & 88/120; 28/60 & 88/88; 28/28 \\
@@ -442,13 +417,7 @@ SLSA Flash & 108/120 & 110/120; 51/60 & 108/120; 49/60 & 108/108; 49/49 \\
 \end{tabular}
 \end{table}
 
-Action support changes the diagnosis. Table~\ref{tab:key-recall} gives end-to-end contract-action
-recall. R6 Qwen has only eight examples for each rare action and recovers 0/8 \demote{} and 5/8
-\escalate. The balanced challenge increases each non-\allow{} action to 30 cases: Qwen recovers
-4/30 \demote, and Flash recovers 0/30. The complete confusion matrices in
-Appendix~\ref{app:complete-results} retain terminal failures in every row.
-
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{5pt}
@@ -458,121 +427,97 @@ Appendix~\ref{app:complete-results} retain terminal failures in every row.
 \toprule
 Route & \allow{} & \hold{} & \demote{} & \escalate{} \\
 \midrule
-r6 Qwen & 143/150 & 110/134 & 0/8 & 5/8 \\
+Imbalanced Qwen & 143/150 & 110/134 & 0/8 & 5/8 \\
 Challenge Qwen & 79/90 & 26/30 & 4/30 & 23/30 \\
 Challenge Flash & 68/90 & 9/30 & 0/30 & 13/30 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+Action support changes the diagnosis. Table~\ref{tab:key-recall} gives end-to-end contract-action
+recall. The imbalanced suite has eight examples for each rare action; Qwen recovers 0/8 \demote{}
+and 5/8 \escalate. The balanced challenge increases each non-\allow{} action to 30 cases: Qwen
+recovers 4/30 \demote, and Flash recovers 0/30. The complete confusion matrices in
+Appendix~\ref{app:complete-results} retain terminal failures in every row.
+
 \section{Discussion}
 
-\paragraph{The external histories validate a composed regression target.}
-The six revisions show that fixed inputs can change action because of policy source, verifier query
-semantics, or guardrail-adapter logic. The AGT and agentgateway cases place the
-latter two failure classes directly at public agent or model boundaries. A regression test that
-isolates only the model or only the policy misses this composition. \cpb covers the policy-version
-coordinate by joining executable differences to paired route records and failure-inclusive
-endpoints. The discovery audit establishes examples, while their deployment frequency remains
-unknown.
+\paragraph{The regression unit crosses component boundaries.}
+The six histories show action changes at the policy source, verifier, and guardrail adapter.
+Verifier and adapter changes show that faults can arise beyond the policy source; Agent Governance
+Toolkit and agentgateway connect this boundary to public agent or model interfaces. These cases
+motivate a regression unit that binds the executable policy version to the route stack, parser, and
+output contract. \cpb provides that unit.
 
-\paragraph{The hosted finding concerns exact-interface completion.}
-The two Gatekeeper routes complete 21/36 and 0/36 raw-strict pairs, while all 63 available actions
-agree with OPA. The recorded gap arises from 12 service timeouts and 69 serialization or envelope
-violations. The 1,320-item audit shows why parser semantics must be named: raw-strict parsing finds
-correct actions outside the full contract, whereas registered parsers recover other actions through
-their frozen extraction policy. The six fenced Qwen challenge outputs change the raw-strict result
-to 128/180 items and 46/90 pairs, below its 132/180 and 48/90 full-contract result. Neither endpoint
-dominates. Interface consumers should select the endpoint that matches their contract while
-preserving the scheduled denominator and parser provenance.
+\paragraph{Action choice and interface completion are separate outcomes.}
+All 63 raw-strict Gatekeeper actions agree with the executable oracle, yet transport and
+serialization failures prevent many complete pairs. The endpoint reanalysis adds a second
+distinction: raw-strict and full-contract endpoints accept different records. A deployment-facing
+test should therefore name its parser, contract, and scheduled denominator.
 
-\paragraph{Pair and action diagnostics expose distinct shortcuts.}
-The policy-aware control reaches 47/60 pairs, whereas the profile-blind control reaches 0/60,
-showing that paired scoring detects policy invariance on the authored transition graph. R6's
-113/150 end-to-end versus 113/123 conditional pairs accompany 0/8 \demote{} recall. Balancing the
-challenge exposes the same failure with more support: Qwen and Flash reach only 4/30 and 0/30 on
-\demote, while their full-contract pair results are 48/90 and 13/90 end to end versus 48/64 and
-13/61 conditional. Complete confusion matrices retain terminal failures as \texttt{N}, preventing
-aggregate accuracy from concealing action-specific and interface failures.
+\paragraph{Pairs and balanced actions expose different shortcuts.}
+The profile-blind control completes no pair because it ignores the policy profile. The imbalanced
+suite conceals weak \demote{} behavior behind abundant \allow{} and \hold{} cases; the balanced
+challenge exposes it. Pair accuracy, action recall, and terminal columns answer different questions,
+so the benchmark reports all three.
 
-\paragraph{The intended use is prospective and bounded.}
-The evaluated model-service boundary is an authored test construction for policy maintenance. A
-direct deterministic executor remains the preferred enforcement path for fully structured inputs
-and defines the policy ceiling here. The r6 Naive Bayes control reaches only 184/300 items and
-34/150 pairs, so it supplies a weak shortcut check. Field evidence must establish whether the
-model-mediated boundary occurs often enough to justify operational adoption.
+\paragraph{The intended use is prospective.}
+A deterministic executor remains the preferred enforcement path for fully structured inputs and
+defines the policy ceiling here. The Naive Bayes control supplies a weak shortcut check. \cpb tests
+model-mediated interfaces whose operational value must be measured in deployed systems.
 
 \section{Limitations}
 
-The model-service study is prospective and synthetic. It covers two Gatekeeper revisions, one
-author-built context set, two hosted model IDs, and three repetitions. Trivy, Cosign, AGT, and
-agentgateway broaden source validity; route replication covers only
-Gatekeeper. The authored SLSA migration broadens the action graph while preserving synthetic policy
-scope. Population estimates for policies, model families, deployments, and operational impact
-remain open.
+Our hosted evaluation covers two Gatekeeper revisions, one constructed context set, two model IDs,
+and three repetitions. The other public revisions broaden source validity without route
+replication. The SLSA-inspired migration broadens the action graph within the same synthetic scope.
+The study cannot estimate performance across policy populations, model families, or deployments.
 
-The Gatekeeper, AGT, SLSA, and research-evidence action labels are author
-policy mappings. The study contains zero human annotations. The fixed-query external audit screened
-465 repository seeds and source-reviewed 11 candidates, but it is not a random or exhaustive
-sample. Its two qualifying cases validate boundary faults, and neither asks a model to interpret a
-changed executable policy. Naturalistic model-policy interpretation therefore remains unvalidated.
+We define the Gatekeeper, Agent Governance Toolkit, SLSA, and evidence-state action mappings. No
+human annotation enters the evaluation. The fixed-query screen covered 465 repository seeds and
+inspected 11 candidates, making its two qualifying cases a convenience sample of boundary faults.
+No retained external case tests a model interpreting a changed executable policy; naturalistic
+validity requires such a case.
 
-The finite context set bounds every coverage claim. Context omissions can hide behavior, and
-incorrect registered witnesses can invalidate rule coverage. Minimum-suite optimality certifies
-structural coverage of the declared rule/edge universe; stochastic fault-detection power and
-release sufficiency remain unmeasured. The Trivy reproduction
-uses a documented compatibility helper to execute historical Rego under the current runtime while
-preserving upstream policy bytes. The Cosign study targets verifier logic, a separate evidence class
-from policy-source differencing.
+Each coverage claim is conditional on a finite context set and registered witnesses. Missing
+contexts can hide behavior, and incorrect witnesses invalidate rule coverage. Minimum-suite
+optimality covers the declared rule and edge universe; stochastic fault-detection power and release
+sufficiency remain unmeasured. Trivy requires a documented compatibility helper for historical Rego,
+while Cosign evaluates verifier logic rather than policy-source differencing.
 
-Hosted route results combine model weights, prompts, output constraints, provider service state,
-and time. Both central model IDs use the same provider, base URL, OpenAI-compatible API, prompt-only
-mode, and adapter settings; provider-side serving internals remain opaque. The three repetitions
-describe one fixed schedule and yield descriptive route measurements. The historical r6 Flash lane
-used an obsolete frozen service interface: all 300 requests returned HTTP 401 before model output.
-Later Flash calls establish executability only for their newer service paths. The service and output
-stack changed, so the 401 lane provides no causal comparison.
+Hosted results combine model weights, prompts, constraints, provider state, and time. Both central
+model IDs share one provider, base URL, API, output mode, and adapter configuration, while serving
+internals are opaque. The historical Flash configuration for the imbalanced suite used an obsolete
+service interface: all 300 requests returned HTTP 401 before model output. Later Flash calls show
+that their newer paths execute. Because the service and output stack changed, the 401 lane provides
+no causal comparison.
 
-The challenge was author-created and commit-frozen before calls according to retained workflow
-receipts; it shares an ontology with r6 and measures robustness on known cases. Its Qwen and Flash
-full-contract pair scores are 48/90 and 13/90 end to end versus 48/64 and 13/61 conditional; r6
-Qwen reaches 113/150 versus 113/123. The challenge's 4/30 and 0/30 \demote{} recalls and complete
-confusion matrices retain every terminal failure. Six Qwen outputs are accepted by the frozen
-registered parser through deterministic single-object extraction but rejected by raw-strict
-parsing. Failed response contents remain excluded. Policy retrieval, ambiguous source text,
-evidence extraction, and downstream utility remain outside the evaluation.
+We fixed the balanced challenge before inference, and its estimand is robustness on known cases.
+The registered parser accepts six fenced Qwen outputs through deterministic single-object
+extraction; raw-strict parsing rejects them. Policy retrieval, ambiguous source text, evidence
+extraction, and downstream utility fall outside the evaluation.
 
 \section{Conclusion}
 
-\cpb joins finite executable policy differences to paired model-service records, relative
-rule/transition certificates, an exact minimum structural suite, and parser-provenance-aware
-endpoints. Six public revision histories ground policy, verifier, and guardrail-interface fault
-classes. The Gatekeeper study exposes exact-interface completion; the r6 and commit-frozen balanced
-challenge expose the gap between end-to-end and conditional performance, including \demote{}
-recalls of 4/30 and 0/30 under balanced support. Complete confusion matrices preserve terminal
-failures. A deterministic executor remains the definitional policy ceiling. The next discriminating
-test is a source-traceable deployed route in which a model interprets a changed policy across
-independent service stacks.
+\cpb turns executable policy changes into paired route records with rule and transition coverage,
+a cardinality-minimum structural suite, parser provenance, and failure-inclusive endpoints. Public
+revision histories establish the target fault classes; hosted and action-balanced tests show how
+interface completion and action recall can fail independently. A deterministic executor remains the
+definitional policy ceiling. The next discriminating experiment is a source-traceable deployed
+route in which a model interprets a changed policy across independent service stacks.
 
 \section{Reproducibility Statement}
 
-The artifact binds released policies, datasets, prompts, source bytes and tests, finite grammars,
-frozen schedules, route configurations, parser source, and the external discovery registry. It also
-binds terminal outcome classes, analyses, and privacy receipts. From the anonymous bundle root, run
-\texttt{python scripts/run\_review\_checks.py}. Validators recompute source bindings, coverage,
-minimum suites, endpoint metrics, parser provenance, action recalls, and confusion matrices. This
-is deterministic source and score replay; hosted calls are not reissued. The anonymous derivative
-excludes raw failed responses, free-form errors, provider identifiers, hidden reasoning, account
-identity, and private commit identity. Its manifest derives file counts from the generated tree.
-Completed one-shot studies remain frozen.
+The released artifact binds policies, datasets, prompts, source tests, route configurations, and
+parser implementations. Its deterministic replay recomputes source bindings, coverage, minimum
+suites, endpoint metrics, action recalls, and confusion matrices without reissuing hosted calls.
+The anonymous bundle removes private service metadata and hidden reasoning.
 
 \section{AI Assistance Disclosure}
 
-Generative AI tools assisted literature search, protocol critique, implementation, debugging,
-deterministic reaggregation, source checks, and editing. The author selected the research question,
-policies, protocols, exclusions, analyses, and claims; inspected primary sources and rendered
-artifacts; verified generated code through tests and replay; and assumes responsibility. AI systems
-are excluded from authorship and human-annotation counts.
+Generative AI assisted literature search, code development, analysis checks, and editing. The author
+selected the research question and protocol, verified sources, results, and artifacts, and assumes
+responsibility for the paper.
 
 \bibliographystyle{plain}
 \bibliography{references}
@@ -599,24 +544,8 @@ candidate pools.
 \paragraph{Edge lower bound.}
 Each pair realizes one directed edge. Covering $k$ edges requires at least $k$ pairs. If the
 specialized search selects one candidate per edge and also covers every rule, its $k$-pair witness
-meets the lower bound. This certifies the two-pair Gatekeeper suite and the ten-pair authored SLSA
-suite relative to their committed candidate pools.
-
-\section{Failure Taxonomy and Scope Notes}
-
-{\raggedright
-The repeated Gatekeeper study classifies failures from terminal protocol metadata only. Qwen has
-62 \texttt{MARKDOWN\_CODE\_FENCE} failures. DeepSeek Flash has 12
-\texttt{READ\_TIMEOUT}, three \texttt{MARKDOWN\_CODE\_FENCE}, three
-\texttt{NON\_JSON\_PREFIX\_OR\_ENVELOPE}, and one
-\texttt{LENGTH\_TERMINATED\_NON\_JSON} failure. The diagnostic reads only terminal metadata. Gold
-labels, raw response text, hidden reasoning, free-form error strings, and provider response
-identifiers remain excluded.
-\par}
-
-The historical r6 Flash lane used an obsolete service interface. All 300 requests returned HTTP
-401 before model output, leaving conditional metrics undefined. Later Flash routes changed the
-service and output stack; their successful calls establish only that those newer paths execute.
+meets the lower bound. This certifies the two-pair Gatekeeper suite and the ten-pair SLSA-inspired
+suite relative to their declared candidate pools.
 
 \section{Complete Action-Level Results}
 \label{app:complete-results}
@@ -634,7 +563,7 @@ Configuration and endpoint & \allow{} & \hold{} & \demote{} & \escalate{} \\
 \midrule
 Gatekeeper Qwen, raw-strict & 4/36 & 6/36 & -- & -- \\
 Gatekeeper Flash, raw-strict & 32/36 & 21/36 & -- & -- \\
-r6 Qwen, contract & 143/150 & 110/134 & 0/8 & 5/8 \\
+Imbalanced Qwen, contract & 143/150 & 110/134 & 0/8 & 5/8 \\
 Challenge Qwen, raw-strict & 77/90 & 26/30 & 3/30 & 22/30 \\
 Challenge Qwen, contract & 79/90 & 26/30 & 4/30 & 23/30 \\
 Challenge Flash, raw-strict & 68/90 & 10/30 & 2/30 & 25/30 \\
@@ -654,7 +583,7 @@ Graph Phi-4, contract & 21/36 & 5/24 & 0/24 & 1/36 \\
 \scriptsize
 \setlength{\tabcolsep}{3.5pt}
 \caption{Gatekeeper aggregate raw-strict confusion counts over three repetitions (left) and
-authored SLSA transition-graph contract-action confusion counts (right). \texttt{N} marks the
+SLSA-inspired transition-graph contract-action confusion counts (right). \texttt{N} marks the
 endpoint's terminal failure category.}
 \label{tab:gate-confusion}
 \label{tab:graph-confusion}
@@ -674,7 +603,7 @@ Flash & \hold{} & 0 & 21 & 15 \\
 \end{minipage}\hfill
 \begin{minipage}[t]{0.65\textwidth}
 \centering
-\textbf{Authored transition graph}\par\smallskip
+\textbf{SLSA-inspired graph}\par\smallskip
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
 Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
@@ -697,17 +626,17 @@ Phi-4 & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3.5pt}
-\caption{R6 and balanced-challenge full-contract confusion counts. Columns are terminal predicted
+\caption{Imbalanced-suite and balanced-challenge full-contract confusion counts. Columns are terminal predicted
 actions; \texttt{N} is a contract failure.}
 \label{tab:evidence-confusion}
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
 Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
-r6 Qwen & \allow{} & 143 & 0 & 0 & 0 & 7 \\
-r6 Qwen & \hold{} & 4 & 110 & 0 & 2 & 18 \\
-r6 Qwen & \demote{} & 8 & 0 & 0 & 0 & 0 \\
-r6 Qwen & \escalate{} & 0 & 0 & 0 & 5 & 3 \\
+Imbalanced Qwen & \allow{} & 143 & 0 & 0 & 0 & 7 \\
+Imbalanced Qwen & \hold{} & 4 & 110 & 0 & 2 & 18 \\
+Imbalanced Qwen & \demote{} & 8 & 0 & 0 & 0 & 0 \\
+Imbalanced Qwen & \escalate{} & 0 & 0 & 0 & 5 & 3 \\
 \midrule
 Challenge Qwen & \allow{} & 79 & 0 & 0 & 0 & 11 \\
 Challenge Qwen & \hold{} & 0 & 26 & 0 & 0 & 4 \\
@@ -750,7 +679,7 @@ Challenge Flash & \escalate{} & 0 & 3 & 2 & 25 & 0 \\
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3.5pt}
-\caption{Fixed SLSA raw-strict and contract-action confusion counts. \texttt{N} is the endpoint's
+\caption{SLSA-inspired raw-strict and contract-action confusion counts. \texttt{N} is the endpoint's
 terminal failure category.}
 \label{tab:slsa-confusion}
 \begin{tabular}{@{}lllrrrrr@{}}

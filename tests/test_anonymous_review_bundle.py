@@ -396,8 +396,8 @@ def test_review_runner_checks_external_boundary_evidence() -> None:
     assert "tests/test_external_evidence_audit.py" in runner
     assert "scripts/validate_v2_naturalistic_candidates.py" not in runner
     normalized = " ".join(readme.split())
-    assert "screened 465 public repository seeds" in normalized
-    assert "source-reviewed 11 candidates" in normalized
+    assert "source screen covered 465 public repository seeds" in normalized
+    assert "inspected 11 candidates" in normalized
     assert "retained two boundary-fault cases" in normalized
     assert "zero model calls" in normalized
 
@@ -412,7 +412,9 @@ def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None
     assert "seven-route" not in readme
     assert "Ox Alpha" not in readme
     assert "exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit" in readme
-    assert "agentgateway source-test receipt" in readme
+    assert "agentgateway test evidence" in readme
+    assert "workflow receipts" not in readme
+    assert "the r6" not in readme
     assert "1,320 content-free item records" in readme
 
 
@@ -638,10 +640,12 @@ def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> 
         blocks.append(body[start:] if next_section < 0 else body[start:next_section])
     combined = "".join(blocks)
 
-    assert "binds released policies, datasets, prompts" in combined
-    assert "terminal outcome classes, analyses, and privacy receipts" in combined
-    assert "manifest derives file counts from the generated tree" in " ".join(combined.split())
-    assert "Generative AI tools assisted" in combined
+    assert "binds policies, datasets, prompts, source tests" in combined
+    assert "without reissuing hosted calls" in combined
+    assert "removes private service metadata and hidden reasoning" in combined
+    assert "Generative AI assisted" in combined
+    assert "run_review_checks.py" not in combined
+    assert "workflow receipts" not in combined
     assert "all 14 pilot attempts" not in combined
     for block in blocks:
         assert block in submission_builder.iclr_tex(body)

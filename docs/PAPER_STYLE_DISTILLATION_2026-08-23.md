@@ -114,20 +114,19 @@ AI-detector evasion method.
 
 ## Application to ClaimPromoteBench
 
-The release-candidate audit measures 4,142 prose words and 276 usable sentences after excluding
-LaTeX tables, figures, and display math. Median sentence length is 13 words, the 90th percentile is
-25, the 95th percentile is 28, and 0.7246% of sentences exceed 40 words. The submission lint counts
-213 abstract tokens. These values describe the current paper, whose central result is one
-source-traceable policy-revision evaluation and whose other suites are auxiliary diagnostics; they
-are not compared with earlier drafts whose scientific scope differed. The revision:
+The refined manuscript contains 3,322 prose words and 227 usable sentences after excluding LaTeX
+tables, figures, and display math. Median sentence length is 14 words, the 90th percentile is 22,
+the 95th percentile is 24.7, and 0.4405% of sentences exceed 40 words. The submission lint counts
+189 abstract tokens. These measurements guide editing; they do not substitute for semantic or
+scientific review. The revision:
 
 - makes executable policy revision, rather than broad research-agent capability, the unit of
   study;
 - separates semantic policy differencing, migration adequacy, minimum-suite construction, and
   model-route evaluation so that inherited and new technical elements are explicit;
-- reports central routes, the commit-frozen challenge, fixed-policy, policy-switch, and
+- reports central routes, the balanced challenge, fixed-policy, policy-switch, and
   full-transition-graph results with end-to-end denominators beside conditional scores;
-- distinguishes raw-strict parsing, frozen registered-parser behavior, full contracts, and parser
+- distinguishes raw-strict parsing, registered-parser behavior, full contracts, and parser
   provenance instead of assigning one parser label to incompatible historical routes;
 - keeps malformed-response counts in every scheduled denominator while omitting their contents
   from the paper and anonymous release;
@@ -136,8 +135,8 @@ are not compared with earlier drafts whose scientific scope differed. The revisi
 - excludes quota-confounded hosted studies in full instead of selecting successful cells;
 - moves the zero-case naturalistic-candidate decision to limitations and makes clear that there
   were no human annotators or agreement statistic; and
-- compresses execution chronology into reader-relevant protocol, scope, and reproducibility
-  statements.
+- removes literal commands, internal run names, terminal enum strings, and workflow or receipt
+  chronology from the manuscript while preserving reader-relevant protocol and failure causes.
 
 The final negative-pattern scan finds zero instances of the configured throat-clearing, vague
 importance, pompous-copula, AI-lexicon, formulaic-pivot, superficial-participle,

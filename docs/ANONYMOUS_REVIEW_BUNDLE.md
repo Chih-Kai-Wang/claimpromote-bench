@@ -15,13 +15,13 @@ Documentation therefore carries no fixed file total.
 - the public 20-pair benchmark, policies, schemas, executable fixtures, and Lean package;
 - exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit revisions with upstream tests,
   licenses, finite cases, minimum-suite certificates, and offline validators;
-- the frozen 465-repository discovery registry and agentgateway fixed-commit source-test receipt;
+- the 465-repository source-screen registry and agentgateway change-commit test evidence;
 - the 24-item Gatekeeper study plan, 144-cell frozen schedule, all six sanitized repetition files,
   content-free failure taxonomy, aggregate, and privacy receipts;
-- the r6 reviewer release and coverage addendum;
+- the imbalanced evidence-state suite and coverage addendum;
 - the 90-pair balanced public challenge;
-- the authored SLSA migration study and three pinned local replications;
-- 1,320 content-free endpoint-audit records that reconstruct raw-strict, registered-parser, and
+- the SLSA-inspired migration study and three pinned local replications;
+- 1,320 content-free endpoint records that reconstruct raw-strict, registered-parser, and
   full-contract action metrics across ten route stacks;
 - the finite policy-difference enumerator, suite reducer, transition and mutation certificates, and
   minimum-suite derivations.
@@ -34,12 +34,11 @@ denominator. The bundle omits raw response text, free-form transport errors, com
 objects, provider request and response identifiers, account identifiers, credentials, hidden
 reasoning, author provenance, private commit identity, and Git history.
 
-The r6 metadata overlay corrects stale construction labels while preserving the byte-frozen source
+The versioned metadata overlay supplies current terminology while preserving the source-bound
 manifest. The endpoint derivative records raw-strict and registered-parser actions plus parser
 provenance before response-content redaction. The bundle includes the exact raw-strict parser and
-the historical route-parser source needed to inspect that distinction. No audited response contains
-a duplicate key. Frozen SLSA plans retain inert hashes for excluded exploratory runners; those
-scripts and their results contribute no manuscript metric.
+the historical route-parser source needed to inspect that distinction. No retained response contains
+a duplicate key. Exploratory scripts and outputs that contribute no manuscript metric are excluded.
 
 ## Reviewer command
 
@@ -61,6 +60,6 @@ source and score replay; it does not reissue hosted calls.
 A successful replay establishes internal consistency among released source bytes, datasets,
 sanitized route records, validators, and manuscript statistics. The central model IDs share one
 provider/API and adapter configuration; provider-side serving internals remain opaque. The
-challenge was author-created and commit-frozen before calls according to retained workflow
-receipts. Authored SLSA labels encode the paper's policy mapping, the deterministic executor defines
-the policy ceiling, and Naive Bayes supplies a deliberately weak sanity control.
+balanced challenge was fixed before inference and measures robustness on known cases. SLSA labels
+encode the authors' policy mapping, the deterministic executor defines the policy ceiling, and
+Naive Bayes supplies a weak shortcut control.

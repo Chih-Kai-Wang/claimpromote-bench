@@ -14,22 +14,23 @@ or archival publication.
 
 ## Scientific claim boundary
 
-- ClaimPromoteBench is a prospective synthetic test protocol over two caller-supplied deterministic
+- ClaimPromoteBench is a prospective synthetic test protocol over two declared deterministic
   evaluators, a finite context set, stable identifiers, registered rule witnesses, and declared
   coverage inventories.
 - Its supported novelty is the integration of finite executable-policy differencing,
   policy-version paired route records, joint rule/action-transition reduction, parser provenance,
   and failure-inclusive item/pair endpoints. The constituent algorithms are established.
 - Policy parsing, context synthesis, changed-rule discovery, witness inference, and context
-  completeness remain caller responsibilities.
+  completeness remain user responsibilities.
 - The deterministic policy executor is the definitional policy ceiling, not a learned baseline.
-  The r6 Naive Bayes result is a deliberately weak shortcut control.
+  The imbalanced-suite Naive Bayes result is a weak shortcut control.
 - Both central model IDs use the same provider/API and adapter configuration. Provider-side serving
   internals are opaque, so cross-route results are descriptive and not causal.
-- The balanced challenge is author-created and commit-frozen before calls according to retained
-  workflow receipts. It measures robustness on known cases, not hidden-test generalization.
-- The historical r6 Flash lane records an obsolete frozen service interface: 300 HTTP 401 outcomes
-  before model output. Later routes establish only their own executability.
+- The balanced challenge was fixed before inference. It measures robustness on known cases, not
+  hidden-test generalization.
+- The historical Flash configuration for the imbalanced suite records an obsolete service
+  interface: 300 HTTP 401 outcomes before model output. Later routes establish only their own
+  executability.
 - Every scheduled transport, syntax, schema, and semantic failure remains in each end-to-end
   denominator. Failed response contents are excluded from reviewer-facing artifacts.
 - No retained external case validates a model interpreting a changed executable policy. The study
@@ -39,22 +40,22 @@ or archival publication.
 
 - Six revisions across Gatekeeper, Trivy, Cosign, Microsoft Agent Governance Toolkit, and
   agentgateway ground policy, verifier, and adapter fault classes.
-- The fixed-query audit screened 465 unique public repository seeds, source-reviewed 11 candidates,
-  and retained two boundary-fault cases with zero model calls. It is not a prevalence sample.
+- The fixed-query screen covered 465 unique public repository seeds, inspected 11 candidates, and
+  retained two boundary-fault cases with zero model calls. It is a convenience sample.
 - Two Gatekeeper revisions supply 12 action-changing pairs and a two-pair structural minimum. Three
-  repetitions on each of two hosted routes yield 144 frozen cells, one request per cell, and zero
+  repetitions on each of two hosted routes yield 144 scheduled cells, one request per cell, and zero
   client retries.
 - All 63 Gatekeeper raw-strict actions match OPA. Twelve timeouts and 69 serialization/envelope
   failures make the central hosted result an exact-interface completion result.
-- The authored SLSA migration covers four actions, 12 changed rules, and ten reachable directed
+- The SLSA-inspired migration covers four actions, 12 changed rules, and ten reachable directed
   transitions. Policy-aware/profile-blind controls reach 47/60 and 0/60 pairs.
-- The 1,320-record endpoint audit separates raw-strict, registered-parser, and full-contract action
+- The 1,320-record endpoint reanalysis separates raw-strict, registered-parser, and full-contract action
   endpoints. Raw-strict contributes 49 correct items and 40 correct pairs outside the contract; the
   contract contributes 329 correct items and 78 correct pairs outside raw-strict.
-- Six Qwen challenge responses are fenced and accepted by the frozen registered parser. Raw-strict
+- Six Qwen challenge responses are fenced and accepted by the registered parser. Raw-strict
   scores are 128/180 items and 46/90 pairs; full-contract scores remain 132/180 and 48/90.
-- R6 and the 90-pair challenge report complete confusion matrices, every action recall, coverage,
-  conditional metrics, and failure-inclusive end-to-end metrics.
+- The imbalanced suite and 90-pair challenge report complete confusion matrices, every action
+  recall, coverage, conditional metrics, and failure-inclusive end-to-end metrics.
 
 ## Final local checks
 
@@ -64,15 +65,18 @@ or archival publication.
 - [x] Ruff lint and format checks pass.
 - [x] Strict mypy passes over 29 configured source files.
 - [x] Paper truth lint, endpoint rebuild, source validators, and privacy checks pass.
+- [x] The prose audit reports 3,322 words, 227 usable sentences, a 14-word median, a 22-word 90th
+  percentile, 189 abstract tokens, and zero configured AI-writing-pattern findings.
 - [x] The ICLR source uses hash-locked official 2027 style files.
-- [x] The ICLR main-text probe is nine pages. The full PDF is 14 physical pages and references begin
-  on physical page 10. The arXiv PDF is 13 pages.
+- [x] The ICLR main-text probe is eight pages. The full PDF is 13 physical pages and references begin
+  on physical page 9. The arXiv PDF is 12 pages.
 - [x] Final LaTeX logs have no unresolved citation/reference or horizontal-overflow warning.
 - [x] PDF fonts are embedded.
-- [x] Both release source archives rebuild independently to 14-page ICLR and 13-page arXiv PDFs.
-- [x] All 14 ICLR and 13 arXiv pages were rendered and inspected for clipping, overlap, crowding,
+- [x] Both release source archives rebuild independently to 13-page ICLR and 12-page arXiv PDFs.
+- [x] All 13 ICLR and 12 arXiv pages were rendered and inspected for clipping, overlap, crowding,
   isolated headings, figure-caption collisions, and table readability.
-- [x] The anonymous manifest derives its file map and count from the generated tree.
+- [x] The anonymous manifest derives all 628 entries from the generated tree; the package contains
+  629 files including the manifest itself.
 - [x] The anonymous package excludes credentials, account identity, author provenance, provider
   request/response IDs, hidden reasoning, raw failed responses, and free-form transport errors.
 - [x] A separate clean Python 3.12 environment installs the hash-locked reviewer dependencies and

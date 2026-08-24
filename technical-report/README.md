@@ -6,8 +6,8 @@ Regression Tests for Model Services under Policy Revision*.
 The central evidence combines two exact upstream Gatekeeper policy revisions with a 12-pair finite
 context set and three repeated executions on each of two hosted model IDs. Trivy, Cosign, Microsoft
 Agent Governance Toolkit, and agentgateway provide independent policy, verifier, and guardrail
-interface fault evidence. An authored SLSA migration stress-tests four-action transition coverage.
-R6 and the public balanced challenge remain auxiliary evidence-state diagnostics.
+interface fault evidence. An SLSA-inspired migration stress-tests four-action transition coverage.
+The imbalanced suite and balanced challenge provide auxiliary evidence-state diagnostics.
 
 Every scheduled call remains in end-to-end denominators. The manuscript separates raw-strict,
 registered-parser, contract-action, and full-decision endpoints. Failed response contents are
@@ -46,8 +46,8 @@ file totals from generated manifests.
 
 The deterministic policy executor is the definitional policy ceiling. The central model IDs share
 one provider/API and adapter configuration; provider-side serving internals remain opaque. Their
-results are descriptive. The author-created challenge was commit-frozen before calls according to
-retained workflow receipts and measures robustness on known cases.
+results are descriptive. The balanced challenge was fixed before inference and measures robustness
+on known cases.
 
 A passing local build does not authorize a merge, public release, OpenReview upload, or arXiv
 submission. Completed one-shot studies remain frozen and are replayed only from committed records.

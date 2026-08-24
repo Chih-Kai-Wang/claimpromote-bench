@@ -3117,11 +3117,11 @@ def review_readme() -> str:
     return """# ClaimPromoteBench anonymous reviewer bundle
 
 This bundle provides deterministic source and score replay for the paper's policy-transition
-benchmarks and frozen model-service records; it does not reissue hosted calls.
-It contains exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions; the
-agentgateway source-test receipt; the frozen Gatekeeper route repetitions;
-the r6 and balanced-challenge records; the authored SLSA migration suite; pinned local
-replications; and a content-free dual-endpoint audit.
+benchmarks and retained model-service records. It never issues hosted calls. The evidence includes
+exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions; agentgateway test
+evidence; six sanitized Gatekeeper route repetitions; the imbalanced evidence-state suite and
+balanced challenge; the SLSA-inspired migration and local replications; and a privacy-filtered
+endpoint reanalysis.
 
 ## Reproduce the review environment
 
@@ -3140,16 +3140,15 @@ Python replay when Lean is unavailable.
 ## Evidence map
 
 - `v2/upstream-policy-revisions-v1/`, `v2/trivy-policy-revision-v1/`, and
-  `v2/sigstore-policy-verifier-revision-v1/` bind upstream source, tests, licenses, authored finite
-  contexts, and deterministic validation receipts.
-- `v2/agent-governance-policy-interface-revision-v1/` reproduces the exact parent/fixed Rego
-  verdict gap; `v2/external-evidence-audit-v1/` binds the frozen discovery registry and the
-  agentgateway fixed-commit test receipt.
+  `v2/sigstore-policy-verifier-revision-v1/` bind upstream source, tests, licenses, constructed
+  finite contexts, and deterministic validation receipts.
+- `v2/agent-governance-policy-interface-revision-v1/` reproduces the parent/fixed Rego verdict gap;
+  `v2/external-evidence-audit-v1/` binds the source-screen registry and agentgateway test evidence.
 - `evidence/upstream-policy-route-repetition/` retains all 144 scheduled terminal classes and the
   six sanitized 24-item result files used for the three-repetition analysis.
-- `evidence/fresh-confirmatory/` and `evidence/balanced-public-challenge/` reproduce the r6 coverage
-  addendum and public challenge.
-- `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the authored
+- `evidence/fresh-confirmatory/` and `evidence/balanced-public-challenge/` reproduce the imbalanced
+  suite's coverage addendum and balanced challenge.
+- `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the SLSA-inspired
   migration and fixed-policy studies.
 - `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute
   raw-strict, registered-parser, and full-contract endpoints with parser provenance. The included
@@ -3164,18 +3163,16 @@ response identifiers, account identifiers, credentials, hidden reasoning, Git hi
 provenance. Each manifest derives its file count from the generated tree.
 
 The private construction seed is unnecessary for score recomputation and remains outside the
-bundle. A bound overlay corrects stale r6 construction metadata while preserving the byte-frozen
-manifest. The external audit screened 465 public repository seeds, source-reviewed 11 candidates,
-and retained two boundary-fault cases with zero model calls. It found no externally validated case
-in which a model interprets a changed executable policy.
+bundle. A versioned metadata overlay supplies current terminology while preserving the source-bound
+manifest. The source screen covered 465 public repository seeds, inspected 11 candidates, and
+retained two boundary-fault cases with zero model calls. It found no external case in which a model
+interprets a changed executable policy.
 
-Frozen SLSA plans retain inert hashes for excluded exploratory runners; those files and their
-results are outside this release and contribute no manuscript metric. The central model IDs share
-one provider/API and adapter configuration; provider-side serving internals remain opaque.
-Cross-route values are descriptive. The challenge was author-created and commit-frozen before
-calls according to retained workflow receipts, and the SLSA labels are author-defined policy
-mappings. The deterministic executor is the policy definition's ceiling; the Naive Bayes model is
-a deliberately weak sanity control.
+Exploratory outputs that contribute no manuscript metric are excluded. The central model IDs share
+one provider/API and adapter configuration, with opaque provider-side serving internals; cross-route
+values are descriptive. The balanced challenge was fixed before inference and measures robustness
+on known cases. SLSA labels are author policy mappings, the deterministic executor defines the
+policy ceiling, and Naive Bayes supplies a weak shortcut control.
 """
 
 

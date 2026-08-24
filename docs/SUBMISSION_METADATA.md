@@ -14,7 +14,7 @@ ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Po
 ## ICLR 2027 abstract
 
 ```text
-Executable policy revisions can change downstream actions for fixed inputs, yet model-service tests rarely isolate policy version. ClaimPromoteBench turns finite differences between deterministic policy versions into paired route tests whose oracle action must change. It records source witnesses, rule and action-transition coverage, exact minimum structural suites, parser provenance, and failure-inclusive endpoints. Six revisions across five public projects ground policy, verifier, and adapter fault classes. AGT is replayed parent-to-fix; agentgateway's parent is source-audited and its fixed commit passes 33 offline tests. Two Gatekeeper revisions yield 12 pairs and a two-pair minimum. Across 144 hosted calls, all 63 raw-strict actions match OPA, while timeouts and envelope failures reduce end-to-end pair completion to 21/36 and 0/36. An audit of 1,320 frozen records separates raw-strict parsing, registered route parsers, and full contracts; six fenced Qwen challenge outputs account for a 128/180 versus 132/180 item difference. R6 records 113/150 pairs end to end and 113/123 conditional. A commit-frozen, action-balanced challenge yields 48/90 and 13/90 full-contract pairs end to end versus 48/64 and 13/61 conditional, with DEMOTE recall of 4/30 and 0/30. Complete confusion matrices retain terminal failures. These results establish a source-traceable regression protocol for finite authored policy changes. Deployment prevalence and naturalistic model interpretation remain open.
+Executable policy revisions can change the required action for an unchanged input, yet model-service tests rarely isolate policy version. We introduce ClaimPromoteBench, which enumerates action-changing differences between two deterministic evaluators and converts them into paired route tests. It reports changed-rule and action-transition coverage, a cardinality-minimum structural suite, parser provenance, and failure-inclusive item and pair accuracy. We trace six revisions from five public projects and evaluate hosted routes on two Gatekeeper revisions. Across 144 calls, Qwen and DeepSeek Flash complete 0/36 and 21/36 raw-strict pairs. All 63 extracted actions agree with the Open Policy Agent oracle, locating the observed failures at the service or output interface. On an imbalanced evidence-state suite, Qwen reaches 113/150 pairs end to end and 113/123 conditional. An action-balanced challenge yields 48/90 and 13/90 full-contract pairs end to end for Qwen and Flash, versus 48/64 and 13/61 conditional, with DEMOTE recall of 4/30 and 0/30. Complete confusion matrices retain terminal failures. These results support source-traceable regression testing under finite executable policy changes. The study measures a synthetic model-service boundary; deployment frequency and naturalistic policy interpretation require field evidence.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -72,7 +72,7 @@ Joins finite action-changing differences between caller-supplied policy evaluato
   versus 15/15 fixed upstream tests), and agentgateway passes 33/33 offline tests at the exact
   Bedrock guardrail-adapter fix. The audit validates boundary faults, not prevalence or
   naturalistic model interpretation.
-- The authored SLSA rule suite covers 12/12 changed rules and 6/10 reachable action edges; the graph
+- The SLSA-inspired rule suite covers 12/12 changed rules and 6/10 reachable action edges; the graph
   suite covers 12/12 and 10/10. A ten-pair structural-coverage suite is jointly minimum for the
   committed candidate pool.
 - The policy-aware structured random-forest control reaches 107/120 items and 47/60 pairs; the
@@ -82,15 +82,15 @@ Joins finite action-changing differences between caller-supplied policy evaluato
   49 correct actions and 40 correct pairs. The registered challenge parser accepts six fenced Qwen
   objects, so raw-strict Qwen scores are 128/180 items and 46/90 pairs versus full-contract scores
   of 132/180 and 48/90.
-- R6 Qwen returns 272/300 valid decisions and scores 258/300 items and 113/150 pairs end to end,
+- The imbalanced suite's Qwen route returns 272/300 valid decisions and scores 258/300 items and 113/150 pairs end to end,
   versus 258/272 and 113/123 conditional. Its `DEMOTE` support is 8/300 and recall is 0/8.
 - The public balanced challenge contains 90 pairs, 180 items, 15 factors, 90 `ALLOW` members, and 30
   members for each remaining action. Qwen and Flash score 48/90 and 13/90 pairs end to end versus
   48/64 and 13/61 conditional; `DEMOTE` recall is 4/30 and 0/30.
-- The historical r6 Flash interface returns HTTP 401 before model output on all 300 calls. Later
+- The historical Flash interface for the imbalanced suite returns HTTP 401 before model output on all 300 calls. Later
   Flash paths establish only their own executability because the service stacks differ.
 - The deterministic executor is the definitional policy ceiling. Naive Bayes is a weak sanity
-  control, reaching 184/300 items and 34/150 pairs on r6.
+  control, reaching 184/300 items and 34/150 pairs on the imbalanced suite.
 
 ## Data and code availability
 

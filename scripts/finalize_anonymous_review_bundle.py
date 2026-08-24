@@ -54,6 +54,9 @@ def patch_runner(bundle: Path) -> None:
 def patch_readme(bundle: Path) -> None:
     path = bundle / "README.md"
     text = path.read_text(encoding="utf-8")
+    current = "The default command validates source bindings, controlled-pair contracts"
+    if current in text:
+        return
     old = "The checks validate the public alpha benchmark, run"
     new = (
         "The checks validate the public alpha benchmark, verify all 20 "

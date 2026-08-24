@@ -589,25 +589,25 @@ def validate_naturalistic() -> None:
 
 def validate_manuscript_claims(tex: str) -> None:
     required = {
-        "synthetic scope": "model-service study is prospective and synthetic",
-        "caller obligations": "witness inference remain caller responsibilities",
+        "synthetic scope": "study measures a synthetic model-service boundary",
+        "caller obligations": "Users remain responsible for policy parsing",
         "endpoint layers": (
             "raw-strict $\\rightarrow$ registered parser $\\rightarrow$ full contract "
             "$\\rightarrow$ exact decision"
         ),
         "definitional ceiling": "definitional policy ceiling",
-        "weak Naive Bayes": "Naive Bayes sanity control is deliberately weak",
+        "weak Naive Bayes": "Naive Bayes control supplies a weak shortcut check",
         "Gatekeeper coverage": "2/2 changed rules",
         "Gatekeeper minimum": "two-pair witness",
-        "repeated Flash result": "53/72 items and 21/36 pairs",
-        "repeated Qwen result": "Qwen route totals 10/72 items and 0/36 pairs",
+        "repeated Flash result": "DeepSeek Flash totals 53/72 raw-strict items and 21/36 pairs",
+        "repeated Qwen result": "Qwen totals 10/72 items and 0/36 pairs",
         "semantic route boundary": "zero semantic action errors after raw-strict extraction",
         "shared route configuration": "same provider, base URL",
         "failure taxonomy": "12 read timeouts, three fenced objects",
         "raw-strict outside contract": "49 actions and 40 pairs are correct",
         "contract outside raw-strict": ("including 329 correct actions and 78 correct pairs"),
         "challenge parser provenance": (
-            "registered parser accepts six fenced objects---four correct actions and two "
+            "registered parser accepts six fenced objects, including four correct actions and two "
             "correct pairs"
         ),
         "challenge raw-strict score": (
@@ -618,23 +618,20 @@ def validate_manuscript_claims(tex: str) -> None:
         "challenge Qwen": "132/180",
         "challenge Flash": "90/180",
         "rare action": "4/30 \\demote, and Flash recovers 0/30",
-        "historical interface": "obsolete frozen service interface",
+        "historical interface": "obsolete service interface",
         "causal boundary": "401 lane provides no causal comparison",
-        "public challenge boundary": "measures robustness on known cases",
-        "commit-frozen challenge": (
-            "commit-frozen before calls according to retained workflow receipts"
+        "public challenge boundary": "estimand is robustness on known cases",
+        "pre-inference challenge": "fix its cases and labels before inference",
+        "external source-screen scope": (
+            "screen covered 465 repository seeds and inspected 11 candidates"
         ),
-        "external audit scope": "screened 465 repository seeds and source-reviewed 11 candidates",
         "external Agent Governance result": "11/15 post-fix upstream tests pass",
-        "external agentgateway result": "all 33 selected offline tests pass",
-        "naturalistic decision": (
-            "Naturalistic model-policy interpretation therefore remains unvalidated"
-        ),
+        "external agentgateway result": "all 33 selected tests pass",
+        "naturalistic decision": "naturalistic validity requires such a case",
         "structural minimum boundary": (
             "Stochastic fault detection and release sufficiency remain unmeasured"
         ),
-        "review replay command": "python scripts/run\\_review\\_checks.py",
-        "replay boundary": "hosted calls are not reissued",
+        "replay boundary": "without reissuing hosted calls",
     }
     for label, needle in required.items():
         require_text(tex, needle, label)
@@ -651,6 +648,13 @@ def validate_manuscript_claims(tex: str) -> None:
         ),
         "invalid response quotation": r"raw (?:invalid|failed) response(?: text)?\s*[:=]",
         "fixed obsolete file count": r"\b(?:179|170|619)\s+files?\b",
+        "internal run label": r"\br6\b",
+        "workflow receipt trace": r"\bworkflow receipts?\b",
+        "literal reviewer command": r"\\texttt\{(?:python|bash|sh|make|pytest|ruff|mypy)\b",
+        "internal terminal enum": (
+            r"\b(?:MARKDOWN_CODE_FENCE|READ_TIMEOUT|NON_JSON_PREFIX_OR_ENVELOPE|"
+            r"LENGTH_TERMINATED_NON_JSON)\b"
+        ),
     }
     for label, pattern in forbidden.items():
         if re.search(pattern, tex, re.IGNORECASE | re.DOTALL):
