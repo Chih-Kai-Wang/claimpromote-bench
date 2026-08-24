@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anonymous.invalid/schemas/agent-policy-decision.schema.json",
+  "title": "ExternalAgentPolicyDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "policy_version",
+    "action",
+    "reason_codes"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^agent-policy-[a-z0-9-]+$"
+    },
+    "policy_version": {
+      "enum": [
+        "BEFORE",
+        "AFTER"
+      ]
+    },
+    "action": {
+      "enum": [
+        "ALLOW",
+        "HOLD",
+        "DEMOTE",
+        "ESCALATE"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "POLICY_SATISFIED",
+          "DEPENDENCY_NOT_EXPLOITABLE",
+          "SECURITY_REVIEW_REQUIRED",
+          "BREAKING_INTERFACE_CHANGE",
+          "PUBLIC_SYMBOL_RENAME_FORBIDDEN",
+          "PUBLIC_HOOK_ARGUMENT_REMOVAL",
+          "BC_IMPACT_REVIEW_REQUIRED"
+        ]
+      }
+    }
+  }
+}
