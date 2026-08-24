@@ -55,7 +55,9 @@ def test_manifest_reports_each_local_study_without_hard_coded_file_count(
     assert scope["local_policy_transition_graph_summary_included"] is True
     assert scope["local_policy_transition_graph_item_level_records_included"] is True
     assert scope["local_minimum_policy_migration_gate_included"] is False
-    assert scope["ox_alpha_minimum_route_summary_included"] is False
+    assert scope["upstream_gatekeeper_source_evidence_included"] is False
+    assert scope["upstream_route_repetition_summary_included"] is False
+    assert scope["dual_endpoint_summary_included"] is False
 
 
 def test_ox_alpha_minimum_route_projection_is_complete_and_private(tmp_path: Path) -> None:
@@ -87,6 +89,78 @@ def test_ox_alpha_minimum_route_projection_is_complete_and_private(tmp_path: Pat
     assert "7f30dfb59bf74d751cf78fca0c9e020abb2546ea" not in rendered
     assert '"raw_response_text"' not in rendered
     assert '"provider_response_id"' not in rendered
+    builder.scan_identity(destination)
+    builder.scan_sensitive_payloads(destination)
+
+
+def test_upstream_route_repetition_projection_is_complete_and_private(tmp_path: Path) -> None:
+    builder = load_builder()
+    destination = tmp_path / "upstream-policy-route-repetition"
+
+    builder.build_upstream_route_repetition_anonymous_evidence(destination)
+
+    rows = [
+        json.loads(line)
+        for path in sorted((destination / "results" / "records").glob("*.jsonl"))
+        for line in path.read_text(encoding="utf-8").splitlines()
+    ]
+    aggregate = json.loads((destination / "results" / "aggregate.json").read_text(encoding="utf-8"))
+    manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    rendered = "\n".join(
+        path.read_text(encoding="utf-8") for path in destination.rglob("*") if path.is_file()
+    )
+
+    assert len(rows) == 144
+    assert sum(row["strict_action_correct"] for row in rows) == 63
+    assert sum(row["full_decision_exact"] for row in rows) == 62
+    assert aggregate["frozen_plan_commit"] == "WITHHELD_PREINFERENCE_COMMIT"
+    assert manifest["file_count"] == len(manifest["files"])
+    assert manifest["scope"]["raw_response_text_included"] is False
+    assert "f2b4519816817c58a374b0459313d2bed609acf9" not in rendered
+    assert all("raw_response_text" not in row for row in rows)
+    assert all("provider_response_id" not in row for row in rows)
+    builder.scan_identity(destination)
+    builder.scan_sensitive_payloads(destination)
+
+
+def test_dual_endpoint_projection_replays_all_scheduled_items_without_payloads(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    destination = tmp_path / "dual-endpoint-audit"
+
+    builder.build_dual_endpoint_anonymous_evidence(destination)
+
+    rows = [
+        json.loads(line)
+        for line in (destination / "items.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    aggregate = json.loads((destination / "aggregate.json").read_text(encoding="utf-8"))
+    manifest = json.loads((destination / "MANIFEST.json").read_text(encoding="utf-8"))
+    rendered = "\n".join(
+        path.read_text(encoding="utf-8") for path in destination.rglob("*") if path.is_file()
+    )
+
+    assert len(rows) == 1320
+    assert len({(row["route_stack_id"], row["item_id"]) for row in rows}) == 1320
+    assert (
+        sum(
+            route["metrics"]["endpoint_difference"]["action_correct_items_outside_full_contract"]
+            for route in aggregate["routes"]
+        )
+        == 49
+    )
+    assert (
+        sum(
+            route["metrics"]["endpoint_difference"]["additional_action_correct_pairs"]
+            for route in aggregate["routes"]
+        )
+        == 40
+    )
+    assert manifest["file_count"] == len(manifest["files"]) == 3
+    assert '"raw_response_text"' not in rendered
+    assert '"provider_response_id"' not in rendered
+    assert '"reasoning_content"' not in rendered
     builder.scan_identity(destination)
     builder.scan_sensitive_payloads(destination)
 
@@ -303,21 +377,22 @@ def test_review_runner_checks_frozen_naturalistic_decision() -> None:
     assert "scripts/validate_v2_naturalistic_candidates.py" in runner
     assert "tests/test_v2_naturalistic.py" in runner
     normalized = " ".join(readme.split())
-    assert "zero benchmark cases" in normalized
+    assert "admitted zero cases" in normalized
     assert "zero model calls" in normalized
-    assert "no human annotators" in normalized
+    assert "12 source pointers" in normalized
 
 
 def test_review_readme_describes_validation_without_claiming_a_rebuild() -> None:
     builder = load_builder()
 
     readme = builder.review_readme()
-    assert "validate the public alpha benchmark" in readme
+    assert "validates source bindings" in readme
     assert "rebuild and validate" not in readme
     assert "1,260" not in readme
-    assert "subscription quota" in readme
-    assert "excluded in full" in readme
     assert "seven-route" not in readme
+    assert "Ox Alpha" not in readme
+    assert "exact Gatekeeper, Trivy, and Cosign source revisions" in readme
+    assert "1,320 content-free item records" in readme
 
 
 def test_paper_empirical_projection_contains_only_retained_studies() -> None:
@@ -333,6 +408,8 @@ def test_paper_empirical_projection_contains_only_retained_studies() -> None:
     assert "def validate_slsa_portability" in validator
     assert "def validate_local_model_replications" in validator
     assert "def validate_synthetic_policy_evidence" in validator
+    assert "def validate_hosted_exclusion_receipts" not in validator
+    assert "def validate_ox_alpha_minimal_route" not in validator
     assert '"policy_switch": validate_policy_switch()' not in validator
     assert "def validate_capable_hidden" not in validator
     assert "def validate_public_model_breadth" not in validator
@@ -454,7 +531,7 @@ def test_hosted_minimum_migration_exclusion_contains_no_model_rows(tmp_path: Pat
     assert receipt["source_bindings_included"] is False
 
     projected_validator = builder.paper_empirical_validator()
-    assert "def validate_hosted_exclusion_receipts" in projected_validator
+    assert "def validate_hosted_exclusion_receipts" not in projected_validator
     compile(projected_validator, "validate_anonymous_empirical_evidence.py", "exec")
 
 

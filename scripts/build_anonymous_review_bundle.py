@@ -25,9 +25,11 @@ TEXT_SUFFIXES = {
     ".cff",
     ".json",
     ".jsonl",
+    ".go",
     ".lean",
     ".md",
     ".py",
+    ".rego",
     ".sh",
     ".toml",
     ".txt",
@@ -127,6 +129,7 @@ FORBIDDEN_TEXT = {
     "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
     "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b",
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
+    "f2b4519816817c58a374b0459313d2bed609acf9",
     LOCAL_WORKSPACE_ROOT,
     GITHUB_RUNNER_ROOT,
     MAC_WORKSPACE_ROOT,
@@ -169,6 +172,7 @@ PROVENANCE_REPLACEMENTS = {
     "057e785483eed14742e63817f81bea6add579c53": "0000000000000000000000000000000000000007",
     "f44b01eb97418d87aa6d7486fa785c0f49b9dda2": ("0000000000000000000000000000000000000008"),
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516": ("0000000000000000000000000000000000000009"),
+    "f2b4519816817c58a374b0459313d2bed609acf9": "WITHHELD_PREINFERENCE_COMMIT",
     LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
     GITHUB_RUNNER_ROOT: "/anonymous/workspace",
     MAC_WORKSPACE_ROOT: "/anonymous/workspace",
@@ -2820,6 +2824,200 @@ dataset and prompt packet are in the sibling `balanced-public-challenge` evidenc
     write_json(destination / "MANIFEST.json", manifest)
 
 
+def _write_dynamic_tree_manifest(
+    root: Path,
+    *,
+    status: str,
+    scope: Json,
+) -> None:
+    files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": status,
+        "file_count": len(files),
+        "files": files,
+        "scope": scope,
+    }
+    manifest["manifest_sha256"] = _digest_without(manifest, "manifest_sha256")
+    write_json(root / "MANIFEST.json", manifest)
+
+
+def build_upstream_route_repetition_anonymous_evidence(destination: Path) -> None:
+    """Project the frozen route repetition without private terminal payloads."""
+
+    source = ROOT / "v2" / "upstream-policy-route-repetition-v1"
+    for name in (
+        "catalog-snapshot.json",
+        "request-schedule.json",
+        "selection-receipt.json",
+        "study-plan.json",
+    ):
+        copy_file(source / name, destination / name)
+    copy_anonymized_tree(source / "results", destination / "results")
+    copy_anonymized_tree(source / "diagnostics", destination / "diagnostics")
+
+    results = destination / "results"
+    aggregate_path = results / "aggregate.json"
+    aggregate = load_object(aggregate_path)
+    if aggregate.get("frozen_plan_commit") != "WITHHELD_PREINFERENCE_COMMIT":
+        fail("anonymous repetition aggregate retained its private preinference commit")
+
+    privacy_path = results / "privacy-receipt.json"
+    privacy = load_object(privacy_path)
+    scanned = privacy.get("scanned_files_sha256")
+    if not isinstance(scanned, dict):
+        fail("upstream repetition privacy receipt lacks a scanned file map")
+    privacy["scanned_files_sha256"] = {
+        relative: sha256_file(results / str(relative)) for relative in sorted(scanned)
+    }
+    write_json(privacy_path, privacy)
+
+    manifest_path = results / "manifest.json"
+    manifest = load_object(manifest_path)
+    files = {
+        path.relative_to(results).as_posix(): sha256_file(path)
+        for path in sorted(results.rglob("*"))
+        if path.is_file() and path != manifest_path
+    }
+    manifest["file_count"] = len(files) + 1
+    manifest["hashed_file_count"] = len(files)
+    manifest["files_sha256"] = files
+    manifest["self_digest"] = _digest_without(manifest, "self_digest")
+    write_json(manifest_path, manifest)
+
+    _write_dynamic_tree_manifest(
+        destination,
+        status="ANONYMOUS_UPSTREAM_ROUTE_REPETITION_EVIDENCE",
+        scope={
+            "scheduled_terminal_records": 144,
+            "all_scheduled_failures_included_in_denominators": True,
+            "content_free_failure_modes_included": True,
+            "raw_response_text_included": False,
+            "free_form_transport_errors_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+            "credentials_included": False,
+            "private_repository_or_commit_identity_included": False,
+        },
+    )
+    scan_identity(destination)
+    scan_sensitive_payloads(destination)
+
+
+def _load_dual_endpoint_builder() -> Any:
+    path = ROOT / "scripts" / "build_dual_endpoint_audit.py"
+    spec = importlib.util.spec_from_file_location("review_dual_endpoint_builder", path)
+    if spec is None or spec.loader is None:
+        fail("cannot load the dual-endpoint audit builder")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def build_dual_endpoint_anonymous_evidence(destination: Path) -> None:
+    """Release endpoint metrics with content-free item records for exact replay."""
+
+    module = _load_dual_endpoint_builder()
+    source = ROOT / "v2" / "dual-endpoint-audit-v1"
+    registry = load_object(source / "registry.json")
+    aggregate = load_object(source / "aggregate.json")
+    canonical_routes = {
+        str(row["route_stack_id"]): row
+        for row in aggregate.get("routes", [])
+        if isinstance(row, dict)
+    }
+    registry_routes = registry.get("routes")
+    if not isinstance(registry_routes, list) or len(registry_routes) != 10:
+        fail("dual-endpoint registry boundary changed")
+
+    projected_rows: list[Json] = []
+    source_bindings: Json = {}
+    for route in registry_routes:
+        if not isinstance(route, dict):
+            fail("dual-endpoint registry contains a malformed route")
+        route_id = str(route["route_stack_id"])
+        gold_path = ROOT / str(route["gold"])
+        pairs_path = ROOT / str(route["pairs"])
+        run_path = ROOT / str(route["run"])
+        gold = [json.loads(line) for line in gold_path.read_text(encoding="utf-8").splitlines()]
+        pairs = json.loads(pairs_path.read_text(encoding="utf-8"))
+        records = [json.loads(line) for line in run_path.read_text(encoding="utf-8").splitlines()]
+        rebuilt = module.derive_metrics(gold, pairs, records)
+        if route_id not in canonical_routes or rebuilt != canonical_routes[route_id].get("metrics"):
+            fail(f"dual-endpoint source replay differs before redaction: {route_id}")
+
+        gold_by_id = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+        pair_by_item = {
+            str(item_id): str(pair["pair_id"]) for pair in pairs for item_id in pair["member_ids"]
+        }
+        for record in records:
+            item_id = str(record["item_id"])
+            strict_action, extraction_source = module.extract_action(record)
+            parse_status = str(record.get("parse_status"))
+            contract_action = strict_action if parse_status == "OK" else None
+            projected_rows.append(
+                {
+                    "schema_version": "1.0.0-review",
+                    "route_stack_id": route_id,
+                    "lane_id": str(route["record_lane_id"]),
+                    "task_id": str(route["task_id"]),
+                    "item_id": item_id,
+                    "pair_id": pair_by_item[item_id],
+                    "gold_action": gold_by_id[item_id],
+                    "parse_status": parse_status,
+                    "strict_action": strict_action,
+                    "strict_action_source": extraction_source,
+                    "contract_action": contract_action,
+                }
+            )
+        source_bindings[route_id] = {
+            "gold_sha256": sha256_file(gold_path),
+            "pairs_sha256": sha256_file(pairs_path),
+            "terminal_record_count": len(records),
+        }
+
+    projected_rows.sort(key=lambda row: (str(row["route_stack_id"]), str(row["item_id"])))
+    if len(projected_rows) != 1320:
+        fail(f"dual-endpoint projection has {len(projected_rows)} rows instead of 1320")
+    write_jsonl(destination / "items.jsonl", projected_rows)
+    write_json(destination / "aggregate.json", aggregate)
+    privacy: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_DUAL_ENDPOINT_DERIVATIVE_VALIDATED",
+        "item_records": len(projected_rows),
+        "route_stacks": len(registry_routes),
+        "source_bindings": source_bindings,
+        "raw_response_text_included": False,
+        "full_structured_decisions_included": False,
+        "free_form_error_text_included": False,
+        "provider_response_identifiers_included": False,
+        "hidden_reasoning_included": False,
+        "model_calls_performed": 0,
+        "items_sha256": sha256_file(destination / "items.jsonl"),
+        "aggregate_sha256": sha256_file(destination / "aggregate.json"),
+    }
+    privacy["self_digest"] = _digest_without(privacy, "self_digest")
+    write_json(destination / "privacy-receipt.json", privacy)
+    _write_dynamic_tree_manifest(
+        destination,
+        status="ANONYMOUS_DUAL_ENDPOINT_AUDIT_EVIDENCE",
+        scope={
+            "item_level_endpoint_records_included": True,
+            "scheduled_terminal_records": len(projected_rows),
+            "raw_response_text_included": False,
+            "full_structured_decisions_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+        },
+    )
+    scan_identity(destination)
+    scan_sensitive_payloads(destination)
+
+
 def anonymize_stronger_results(source: Json) -> Json:
     pilot = source.get("pilot")
     full = source.get("full")
@@ -2915,12 +3113,10 @@ def anonymous_license() -> str:
 def review_readme() -> str:
     return """# ClaimPromoteBench anonymous reviewer bundle
 
-This focused bundle contains the material needed to replay the paper: the public controlled
-benchmark, executable and Lean fixtures, the reviewer-release r6 data, the pair-balanced public
-challenge, the SLSA-derived evidence study, three pinned open-weight local replications, and the
-20-cell Ox Alpha minimum-route smoke replay. It
-contains no Git history, author metadata, public repository link, private construction seed,
-human-subject record, or public workflow identifier.
+This bundle reproduces the paper's synthetic policy-transition benchmarks and model-service
+regression studies. It contains exact Gatekeeper, Trivy, and Cosign source revisions; the frozen
+Gatekeeper route repetitions; the r6 and balanced-challenge records; the authored SLSA migration
+suite; pinned local replications; and a content-free dual-endpoint audit.
 
 ## Reproduce the review environment
 
@@ -2930,67 +3126,41 @@ python -m pip install --no-deps -e .
 python scripts/run_review_checks.py
 ```
 
-The default command uses the staged files to validate the public alpha benchmark, verify all 20
-controlled-pair contracts, run shortcut, invariance, executable, empirical-evidence,
-naturalistic-freeze, and selected pytest checks, then build and check the Lean fixtures. It fails
-if `lake` is missing.
-Use `--python-only` for an explicitly partial replay when Lean is unavailable.
+The default command validates source bindings, controlled-pair contracts, benchmark invariants,
+empirical aggregates, privacy receipts, selected tests, and Lean fixtures. `--python-only` runs the
+Python replay when Lean is unavailable.
 
-The evidence directory retains the r6 300-item hidden realization, frozen baseline, projected
-records, and analysis; the 180-item public challenge; the hosted 120-item SLSA-field study; three
-local 120-item software-policy studies; and the 20-cell Ox route replay. Paper-facing records retain
-the action needed for metric replay, parse and failure classes, and every scheduled denominator
-while omitting raw response text and free-form errors. Provider account and response identifiers,
-credentials, author provenance, and hidden reasoning are excluded.
+## Evidence map
 
-## Scope limitation
+- `v2/upstream-policy-revisions-v1/`, `v2/trivy-policy-revision-v1/`, and
+  `v2/sigstore-policy-verifier-revision-v1/` bind upstream source, tests, licenses, authored finite
+  contexts, and deterministic validation receipts.
+- `evidence/upstream-policy-route-repetition/` retains all 144 scheduled terminal classes and the
+  six sanitized 24-item result files used for the three-repetition analysis.
+- `evidence/fresh-confirmatory/` and `evidence/balanced-public-challenge/` reproduce the r6 coverage
+  addendum and public challenge.
+- `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the authored
+  migration and fixed-policy studies.
+- `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute the strict
+  action and contract-action endpoints.
 
-The private deterministic-construction seed remains excluded because the released dataset bytes,
-prompt packet, labels, records, and commitments suffice for result recomputation. The r6
-construction manifest remains byte-frozen. Its stale `CFM_R5` namespace label and
-three construction-time `PENDING` values are corrected by a bound overlay; all released r6 item
-and pair IDs use the `v1-test-cfo-*` namespace. The original manifest is not rewritten because its
-digest is bound by C1 and C2. Provider hidden-thinking blocks are excluded from the r6 derivative,
-and a redaction receipt records the post-C2 publication boundary and score-equivalence check.
+## Release boundary
 
-The challenge is pair-balanced and non-ALLOW-balanced, with gold support 90/30/30/30; it is not a
-four-class-balanced hidden test. Its service stacks differ, so their outcomes do not form a causal
-model ablation. Every unusable r6 or challenge response remains in the registered denominator. The
-top-level manifest records the generated tree's actual file count.
+Every scheduled service, syntax, schema, and semantic failure stays in its registered end-to-end
+denominator. Paper-facing records retain actions, terminal classes, and correctness fields needed
+for metric replay. The release omits raw response text, free-form transport errors, provider
+response identifiers, account identifiers, credentials, hidden reasoning, Git history, and author
+provenance. Each manifest derives its file count from the generated tree.
 
-The SLSA-derived study instantiates a second authored policy ontology. The local policy-switch
-study holds evidence and states fixed while changing only the applicable published profile. SLSA
-and in-toto ground the evidence vocabulary; all transition rules, profiles, and labels remain
-author-defined. These studies are not standards certification, naturalistic deployment estimates,
-or between-route causal comparisons. Every scheduled failure in a retained study remains in the
-end-to-end denominator. Recomputable receipts distinguish coverage of all 12 authored profile
-differences from behavioral coverage: the rule-stratified suite covers 6/10 reachable directed
-non-self action transitions, while the transition graph covers 10/10 and certifies two impossible
-directions.
+The private construction seed is unnecessary for score recomputation and remains outside the
+bundle. A bound overlay corrects stale r6 construction metadata while preserving the byte-frozen
+manifest. The naturalistic-candidate audit reviewed 12 source pointers, admitted zero cases, and
+made zero model calls under the predeclared provenance threshold.
 
-Two frozen hosted policy-switch executions, one hosted transition-graph execution, and one 40-cell
-minimum-suite execution exhausted a shared subscription quota. All four are excluded in full, and
-the bundle retains only redacted exclusion receipts. No excluded hosted row, item record, or
-conditional hosted metric enters the paper or reviewer evidence.
-
-The later Ox Alpha replay is separate from that excluded 40-cell execution. Its route and minimum
-suite were selected after earlier results were known, then the 20-item schedule, zero-retry rule,
-failure denominator, and strict gate were committed before its first call. The stealth label does
-not identify a model family. This time-stamped replay supports only route-level smoke-test claims.
-
-Two open-weight model families were selected and revision-pinned before benchmark inference, then
-run locally on all three software-policy datasets with greedy decoding and zero retries. Exact model
-revisions, snapshot file digests, qualification receipts, and every terminal outcome are included;
-weights are downloaded from their upstream repositories and are not redistributed in this bundle.
-
-The frozen naturalistic-candidate pool contains 12 source pointers. Source-level review created
-zero benchmark cases and made zero model calls because the records lacked the time-stamped
-execution, dependency, runtime, provenance, and licensing evidence required for a defensible
-author-policy mapping. This is an inclusion decision, not a naturalistic evaluation result; no
-human annotators, human gold labels, or agreement statistic are claimed.
-
-Post-gate correctness applies the same fixed policy as the benchmark oracle. It must not be
-interpreted as model learning or independent prediction accuracy.
+The reported hosted routes combine model, serving, adapter, prompt, and output-contract behavior.
+Cross-route values are descriptive. The public challenge measures frozen robustness, and the SLSA
+labels are author-defined policy mappings. The deterministic executor is the policy definition's
+ceiling; the Naive Bayes model is a deliberately weak sanity control.
 """
 
 
@@ -3244,6 +3414,10 @@ PYTHON_COMMANDS = [
         "work/executable-fixtures.json",
     ],
     [sys.executable, "scripts/validate_anonymous_empirical_evidence.py"],
+    [sys.executable, "scripts/validate_upstream_policy_revision_study.py"],
+    [sys.executable, "scripts/validate_trivy_policy_revision.py"],
+    [sys.executable, "scripts/validate_sigstore_policy_verifier_revision.py"],
+    [sys.executable, "scripts/validate_anonymous_current_evidence.py"],
     [
         sys.executable,
         "scripts/derive_policy_difference_coverage.py",
@@ -3302,6 +3476,9 @@ PYTHON_COMMANDS = [
         "tests/test_v2.py",
         "tests/test_v2_naturalistic.py",
         "tests/test_policy_difference_compiler.py",
+        "tests/test_upstream_policy_revision_study.py",
+        "tests/test_trivy_policy_revision.py",
+        "tests/test_sigstore_policy_verifier_revision.py",
     ],
 ]
 
@@ -3475,13 +3652,20 @@ def verify_bundle(bundle: Path) -> None:
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
+        "scripts/build_sigstore_policy_verifier_revision.py",
+        "scripts/build_trivy_policy_revision.py",
+        "scripts/build_upstream_policy_revision_study.py",
         "scripts/derive_minimal_policy_migration_suite.py",
         "scripts/derive_policy_migration_mutation_audit.py",
         "scripts/policy_transition_graph_local.py",
         "scripts/run_policy_transition_graph_local_study.py",
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
+        "scripts/validate_anonymous_current_evidence.py",
         "scripts/validate_policy_transition_graph_study.py",
+        "scripts/validate_sigstore_policy_verifier_revision.py",
+        "scripts/validate_trivy_policy_revision.py",
+        "scripts/validate_upstream_policy_revision_study.py",
         "src/claimpromotebench/policy_difference.py",
         "evidence/fresh-confirmatory/MANIFEST.json",
         "evidence/fresh-confirmatory/frozen-manifest-metadata-correction.json",
@@ -3498,17 +3682,19 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/slsa-portability/execution-receipt.json",
         "evidence/slsa-portability/reported-aggregate.json",
         "evidence/slsa-portability/void-exclusion-receipt.json",
-        "evidence/hosted-policy-switch-exclusion.json",
-        "evidence/hosted-policy-switch-replacement-exclusion.json",
-        "evidence/hosted-policy-transition-graph-exclusion.json",
-        "evidence/hosted-minimum-policy-migration-exclusion.json",
-        "evidence/ox-alpha-minimal-route/MANIFEST.json",
-        "evidence/ox-alpha-minimal-route/privacy-receipt-review.json",
-        "evidence/ox-alpha-minimal-route/reported-aggregate.json",
-        "evidence/ox-alpha-minimal-route/request-schedule.json",
-        "evidence/ox-alpha-minimal-route/runs/ox-alpha-free-minimum-route.jsonl",
-        "evidence/ox-alpha-minimal-route/selection-receipt.json",
-        "evidence/ox-alpha-minimal-route/study-plan.json",
+        "evidence/upstream-policy-route-repetition/MANIFEST.json",
+        "evidence/upstream-policy-route-repetition/study-plan.json",
+        "evidence/upstream-policy-route-repetition/request-schedule.json",
+        "evidence/upstream-policy-route-repetition/results/aggregate.json",
+        "evidence/upstream-policy-route-repetition/results/manifest.json",
+        "evidence/upstream-policy-route-repetition/results/privacy-receipt.json",
+        "evidence/upstream-policy-route-repetition/diagnostics/failure-modes.json",
+        "evidence/upstream-policy-route-repetition/results/records/opencode-go-deepseek-v4-flash-upstream-repeat-v1-r1.jsonl",
+        "evidence/upstream-policy-route-repetition/results/records/opencode-go-qwen3.7-max-upstream-repeat-v1-r1.jsonl",
+        "evidence/dual-endpoint-audit/MANIFEST.json",
+        "evidence/dual-endpoint-audit/aggregate.json",
+        "evidence/dual-endpoint-audit/items.jsonl",
+        "evidence/dual-endpoint-audit/privacy-receipt.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -3525,6 +3711,12 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
         "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
         "evidence/local-model-replications/policy-transition-graph/reported-aggregate.json",
+        "v2/upstream-policy-revisions-v1/artifact-manifest.json",
+        "v2/upstream-policy-revisions-v1/source-validation-receipt.json",
+        "v2/trivy-policy-revision-v1/artifact-manifest.json",
+        "v2/trivy-policy-revision-v1/source-validation-receipt.json",
+        "v2/sigstore-policy-verifier-revision-v1/artifact-manifest.json",
+        "v2/sigstore-policy-verifier-revision-v1/source-validation-receipt.json",
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
@@ -3533,6 +3725,20 @@ def verify_bundle(bundle: Path) -> None:
         fail("excluded seven-route evidence survived anonymous staging")
     if (bundle / "evidence" / "policy-switch").exists():
         fail("excluded hosted policy-switch records survived anonymous staging")
+    for excluded_evidence in (
+        "ox-alpha-minimal-route",
+        "public-model-breadth",
+    ):
+        if (bundle / "evidence" / excluded_evidence).exists():
+            fail(f"out-of-scope evidence survived anonymous staging: {excluded_evidence}")
+    for excluded_receipt in (
+        "hosted-policy-switch-exclusion.json",
+        "hosted-policy-switch-replacement-exclusion.json",
+        "hosted-policy-transition-graph-exclusion.json",
+        "hosted-minimum-policy-migration-exclusion.json",
+    ):
+        if (bundle / "evidence" / excluded_receipt).exists():
+            fail(f"out-of-scope exclusion receipt survived staging: {excluded_receipt}")
     absent = sorted(required - set(actual_paths))
     if absent:
         fail(f"required reviewer-bundle files are missing: {absent}")
@@ -3563,18 +3769,13 @@ def write_manifest(bundle: Path) -> None:
     fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
     balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
     slsa_portability_included = (bundle / "evidence" / "slsa-portability").is_dir()
-    hosted_policy_switch_exclusion_included = (
-        bundle / "evidence" / "hosted-policy-switch-exclusion.json"
-    ).is_file()
-    hosted_policy_switch_replacement_exclusion_included = (
-        bundle / "evidence" / "hosted-policy-switch-replacement-exclusion.json"
-    ).is_file()
-    hosted_policy_transition_graph_exclusion_included = (
-        bundle / "evidence" / "hosted-policy-transition-graph-exclusion.json"
-    ).is_file()
-    hosted_minimum_policy_migration_exclusion_included = (
-        bundle / "evidence" / "hosted-minimum-policy-migration-exclusion.json"
-    ).is_file()
+    upstream_sources_included = (bundle / "v2" / "upstream-policy-revisions-v1").is_dir()
+    trivy_sources_included = (bundle / "v2" / "trivy-policy-revision-v1").is_dir()
+    sigstore_sources_included = (bundle / "v2" / "sigstore-policy-verifier-revision-v1").is_dir()
+    upstream_repetition_included = (
+        bundle / "evidence" / "upstream-policy-route-repetition"
+    ).is_dir()
+    dual_endpoint_included = (bundle / "evidence" / "dual-endpoint-audit").is_dir()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
     local_replication_root = bundle / "evidence" / "local-model-replications"
     local_slsa_included = (local_replication_root / "slsa").is_dir()
@@ -3583,7 +3784,6 @@ def write_manifest(bundle: Path) -> None:
     local_minimum_gate_included = (
         local_replication_root / "policy-transition-graph" / "minimum-subset-analysis.json"
     ).is_file()
-    ox_alpha_route_included = (bundle / "evidence" / "ox-alpha-minimal-route").is_dir()
     manifest = {
         "schema_version": "1.0.0-review",
         "status": "ANONYMOUS_REVIEW_BUNDLE",
@@ -3611,21 +3811,15 @@ def write_manifest(bundle: Path) -> None:
             "slsa_portability_item_level_records_included": slsa_portability_included,
             "slsa_portability_raw_response_text_included": False,
             "slsa_portability_void_raw_records_included": False,
-            "policy_switch_summary_included": False,
-            "policy_switch_item_level_records_included": False,
-            "policy_switch_raw_response_text_included": False,
-            "hosted_policy_switch_exclusion_receipt_included": (
-                hosted_policy_switch_exclusion_included
-            ),
-            "hosted_policy_switch_replacement_exclusion_receipt_included": (
-                hosted_policy_switch_replacement_exclusion_included
-            ),
-            "hosted_policy_transition_graph_exclusion_receipt_included": (
-                hosted_policy_transition_graph_exclusion_included
-            ),
-            "hosted_minimum_policy_migration_exclusion_receipt_included": (
-                hosted_minimum_policy_migration_exclusion_included
-            ),
+            "upstream_gatekeeper_source_evidence_included": upstream_sources_included,
+            "trivy_source_evidence_included": trivy_sources_included,
+            "sigstore_source_evidence_included": sigstore_sources_included,
+            "upstream_route_repetition_summary_included": upstream_repetition_included,
+            "upstream_route_repetition_item_level_records_included": (upstream_repetition_included),
+            "upstream_route_repetition_raw_response_text_included": False,
+            "dual_endpoint_summary_included": dual_endpoint_included,
+            "dual_endpoint_item_level_records_included": dual_endpoint_included,
+            "dual_endpoint_raw_response_text_included": False,
             "local_model_replications_included": local_replications_included,
             "local_model_replication_item_level_records_included": local_replications_included,
             "local_model_replication_raw_generation_text_included": False,
@@ -3639,17 +3833,6 @@ def write_manifest(bundle: Path) -> None:
                 local_transition_graph_included
             ),
             "local_minimum_policy_migration_gate_included": local_minimum_gate_included,
-            "ox_alpha_minimum_route_summary_included": ox_alpha_route_included,
-            "ox_alpha_minimum_route_item_level_records_included": ox_alpha_route_included,
-            "ox_alpha_minimum_route_raw_response_text_included": False,
-            "ox_alpha_minimum_route_full_structured_decisions_included": False,
-            "ox_alpha_minimum_route_hidden_reasoning_included": False,
-            "ontology_count": 2,
-            "policy_instrument_count": 4,
-            "public_model_breadth_summary_included": False,
-            "public_model_breadth_item_level_records_included": False,
-            "public_model_breadth_raw_final_response_text_included": False,
-            "public_model_breadth_hidden_reasoning_included": False,
             "provider_response_identifiers_included": False,
             "private_construction_seed_included": False,
         },
@@ -3765,8 +3948,6 @@ def paper_empirical_validator() -> str:
             "validate_balanced_public_challenge",
             "validate_slsa_portability",
             "validate_local_model_replications",
-            "validate_hosted_exclusion_receipts",
-            "validate_ox_alpha_minimal_route",
         },
         "Recompute the paper-facing studies from anonymous item-level records.",
     ).rstrip()
@@ -3779,8 +3960,6 @@ def main() -> int:
         "balanced_public_challenge": validate_balanced_public_challenge(),
         "slsa_portability": validate_slsa_portability(),
         "local_model_replications": validate_local_model_replications(),
-        "hosted_exclusions": validate_hosted_exclusion_receipts(),
-        "ox_alpha_minimal_route": validate_ox_alpha_minimal_route(),
     }
     print(json.dumps(result, sort_keys=True))
     return 0
@@ -3828,6 +4007,9 @@ def build(destination: Path) -> None:
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
+        "scripts/build_sigstore_policy_verifier_revision.py",
+        "scripts/build_trivy_policy_revision.py",
+        "scripts/build_upstream_policy_revision_study.py",
         "scripts/build_v2_naturalistic_candidates.py",
         "scripts/derive_minimal_policy_migration_suite.py",
         "scripts/derive_policy_difference_coverage.py",
@@ -3847,11 +4029,16 @@ def build(destination: Path) -> None:
         "scripts/synthetic_policy_output.py",
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
+        "scripts/upstream_policy_revision.py",
+        "scripts/validate_anonymous_current_evidence.py",
         "scripts/validate_local_model_replications.py",
         "scripts/validate_policy_switch_study.py",
         "scripts/validate_policy_transition_graph_local_study.py",
         "scripts/validate_policy_transition_graph_study.py",
         "scripts/validate_slsa_portability_study.py",
+        "scripts/validate_sigstore_policy_verifier_revision.py",
+        "scripts/validate_trivy_policy_revision.py",
+        "scripts/validate_upstream_policy_revision_study.py",
         "scripts/validate_v2_naturalistic_candidates.py",
         "tests/test_v2.py",
         "tests/test_v2_naturalistic.py",
@@ -3859,6 +4046,9 @@ def build(destination: Path) -> None:
         "tests/test_policy_transition_graph_local_study.py",
         "tests/test_policy_transition_graph_study.py",
         "tests/test_policy_difference_compiler.py",
+        "tests/test_sigstore_policy_verifier_revision.py",
+        "tests/test_trivy_policy_revision.py",
+        "tests/test_upstream_policy_revision_study.py",
         "v2/naturalistic-candidates.json",
         "v2/naturalistic-review-decision.json",
         "v2/naturalistic-sources.json",
@@ -3868,9 +4058,32 @@ def build(destination: Path) -> None:
         "v2/schemas/slsa-agent-decision.schema.json",
         "v2/schemas/run-record-v2.schema.json",
         "v2/schemas/stronger-model-run-record.schema.json",
+        "v2/schemas/upstream-policy-decision.schema.json",
     )
+    anonymous_validator_files = {
+        "scripts/validate_sigstore_policy_verifier_revision.py",
+        "scripts/validate_trivy_policy_revision.py",
+        "scripts/validate_upstream_policy_revision_study.py",
+    }
     for relative in selected_files:
-        copy_file(ROOT / relative, destination / relative)
+        source = ROOT / relative
+        target = destination / relative
+        if relative in anonymous_validator_files:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            validator_text = str(anonymize_provenance(source.read_text(encoding="utf-8")))
+            validator_text = validator_text.replace('"Chih-Kai"', '"anonymous-author-marker"')
+            target.write_text(validator_text, encoding="utf-8", newline="\n")
+        elif relative == "v2/schemas/upstream-policy-decision.schema.json":
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
+        else:
+            copy_file(source, target)
+    for study in (
+        "upstream-policy-revisions-v1",
+        "trivy-policy-revision-v1",
+        "sigstore-policy-verifier-revision-v1",
+    ):
+        copy_tree(ROOT / "v2" / study, destination / "v2" / study)
     validator_path = destination / "scripts" / "validate_anonymous_empirical_evidence.py"
     validator_path.parent.mkdir(parents=True, exist_ok=True)
     validator_path.write_text(paper_empirical_validator(), encoding="utf-8", newline="\n")
@@ -3899,24 +4112,13 @@ def build(destination: Path) -> None:
             copy_anonymized_tree(source, evidence_destination)
     build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
     build_slsa_portability_anonymous_evidence(destination / "evidence" / "slsa-portability")
-    build_hosted_policy_switch_exclusion_receipt(
-        destination / "evidence" / "hosted-policy-switch-exclusion.json"
-    )
-    build_hosted_policy_switch_replacement_exclusion_receipt(
-        destination / "evidence" / "hosted-policy-switch-replacement-exclusion.json"
-    )
-    build_hosted_transition_graph_exclusion_receipt(
-        destination / "evidence" / "hosted-policy-transition-graph-exclusion.json"
-    )
-    build_hosted_minimum_migration_exclusion_receipt(
-        destination / "evidence" / "hosted-minimum-policy-migration-exclusion.json"
-    )
     build_local_model_replications_anonymous_evidence(
         destination / "evidence" / "local-model-replications"
     )
-    build_ox_alpha_minimal_route_anonymous_evidence(
-        destination / "evidence" / "ox-alpha-minimal-route"
+    build_upstream_route_repetition_anonymous_evidence(
+        destination / "evidence" / "upstream-policy-route-repetition"
     )
+    build_dual_endpoint_anonymous_evidence(destination / "evidence" / "dual-endpoint-audit")
     (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
     (destination / "README.md").write_text(review_readme(), encoding="utf-8")
     (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")

@@ -122,6 +122,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/train_slsa_structured_baseline.py",
     "scripts/train_policy_switch_baselines.py",
     "scripts/validate_public_model_breadth_study.py",
+    "scripts/validate_anonymous_current_evidence.py",
     "scripts/validate_slsa_portability_freeze.py",
     "scripts/validate_slsa_portability_study.py",
     "scripts/validate_policy_switch_study.py",

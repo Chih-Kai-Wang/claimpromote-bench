@@ -2,90 +2,43 @@
 
 ## Purpose
 
-The `anonymous review bundle` workflow builds a double-blind supplementary artifact for
-ClaimPromoteBench. It combines the public benchmark with privacy-filtered reviewer-release
-evidence so reviewers can recompute paper-facing results without receiving repository identity,
-provider response identifiers, hidden reasoning, credentials, or private construction seeds.
+The anonymous bundle is the paper's double-blind replay artifact. It combines the controlled
+benchmark, source-traceable revisions, and privacy-filtered model-service records needed to
+recompute every reported endpoint. Model inference is never invoked during bundle construction or
+review replay.
 
-The bundle replays archived evidence; it does not rerun model inference. Its top-level
-`MANIFEST.json` computes `file_count` and every file digest from the generated tree. Documentation
-must not replace that dynamic value with a hard-coded file total.
+The top-level `MANIFEST.json` derives its file count and SHA-256 map from the generated tree.
+Documentation therefore carries no fixed file total.
 
-## Included material
+## Included evidence
 
-The staged bundle contains:
+- the public 20-pair benchmark, policies, schemas, executable fixtures, and Lean package;
+- exact Gatekeeper, Trivy, and Cosign revisions with upstream tests, licenses, finite cases,
+  minimum-suite certificates, and offline validators;
+- the 24-item Gatekeeper study plan, 144-cell frozen schedule, all six sanitized repetition files,
+  content-free failure taxonomy, aggregate, and privacy receipts;
+- the r6 reviewer release and coverage addendum;
+- the 90-pair balanced public challenge;
+- the authored SLSA migration study and three pinned local replications;
+- 1,320 content-free dual-endpoint item records that reconstruct strict-action and contract-action
+  metrics across ten route stacks;
+- the policy-difference compiler, transition and mutation certificates, and minimum-suite
+  derivations; and
+- the frozen naturalistic-candidate registry and its zero-case pre-inference decision.
 
-- the public 20-pair / 40-instance alpha benchmark, policy, schemas, exact-rational fixtures,
-  executable checks, and pinned Lean package;
-- the preregistered r6 reviewer-release dataset, study plan, prompt packet, frozen baseline,
-  projected C2 records, item-level final outputs, gold, analysis, redaction/equivalence receipt,
-  and frozen-manifest correction overlay;
-- the balanced public challenge's 90 pairs / 180 items, two one-pass lane records, analyses,
-  corrected reporting aggregate, bound Macro-F1 correction receipt, full confusion matrices,
-  action-level metrics, and privacy receipt;
-- the hosted SLSA portability study and three zero-retry local studies on the fixed policy,
-  rule-stratified policy switch, and complete reachable policy-transition graph, with item-level
-  records, learned comparators, freeze receipts, recomputable coverage certificates, and the
-  zero-call edge-local migration-mutant audit, minimum 10-pair smoke-suite receipt, and the
-  prospectively frozen 20-item subset analysis derived without additional route calls;
-- redacted all-or-nothing exclusion receipts for four hosted policy studies that exhausted shared
-  subscription quota, without their item records, route labels, free-form errors, or model rows;
-- the frozen 12-record naturalistic candidate pool and the bound source-level decision recording
-  zero created cases, zero model calls, zero human annotators, and no agreement statistic;
-- selected validation code and tests, an anonymous MIT license, a one-command review runner, and a
-  generated SHA-256 manifest.
+## Privacy boundary
 
-## Deliberately excluded material
+Paper-facing records retain item and pair identities, gold and extracted actions, terminal classes,
+endpoint validity, and correctness fields. Every scheduled failure remains in the end-to-end
+denominator. The bundle omits raw response text, free-form transport errors, complete invalid
+objects, provider request and response identifiers, account identifiers, credentials, hidden
+reasoning, author provenance, private commit identity, and Git history.
 
-The builder excludes:
-
-- Git history, GitHub workflow files, public branch names, repository links, author name,
-  institution, username, and email;
-- source workflow, artifact, commit, and searchable released-digest identifiers;
-- credentials, provider account identifiers, provider response/request identifiers, and
-  machine-readable hidden-reasoning fields or content blocks;
-- the quota-confounded seven-route study in full, including its records, aggregates, and private
-  audit journal;
-- private construction seeds or salts, raw human-subject records, unused human-review workflow
-  modules, manuscript source, and identity-bearing status documents;
-- caches, bytecode, logs, generated work products, and unrelated build artifacts;
-- earlier v1 recovery, public-interface pilot, GPT-5.4 development, and adaptive capable-extension
-  evidence that is not needed to replay the paper's reported results.
-
-The balanced-challenge derivative retains model-visible final JSON text and sanitized transport or
-parse-error text so reviewers can audit parser outcomes. Fail-closed scans reject credentials,
-account identifiers, provider response identifiers, hidden reasoning, and author provenance.
-
-## Fail-closed privacy and identity scan
-
-Before manifesting or packaging, the builder recursively scans filenames and text for known author
-and repository identity, frozen provenance tokens, common credential forms, provider response IDs,
-provider account IDs, and hidden-reasoning keys/content blocks. Unknown fields in protected
-empirical record types fail validation. JSON Schema `$id` values and named license provenance are
-rewritten only in the anonymous derivative. Any finding stops the build.
-
-## Automated validation
-
-Validation runs inside the staged artifact:
-
-1. install the staged Python package;
-2. validate the public alpha dataset, oracle labels, pair contracts, shortcut resistance,
-   metamorphic invariance, and executable fixtures;
-3. recompute the r6, balanced-challenge, SLSA portability, and three local-study results from
-   included item-level evidence, including fixed-four-class Macro-F1 with zero division set to
-   zero, then reproduce the 6/10 versus 10/10 migration-mutant audit;
-4. reproduce the graph-and-rule-complete 10-pair, 20-item minimum-suite certificate and recompute
-   its strict prospective gate result from the same full transition-graph records;
-5. validate the naturalistic candidate freeze and its pre-model-call zero-case decision;
-6. run the selected v2 tests;
-7. build and replay the public Lean package and execute formal fixtures;
-8. rebuild a fresh clean bundle and require a byte-identical manifest;
-9. verify that every manifested path and digest matches disk and that no excluded file survives;
-10. package the clean tree as a ZIP and produce a SHA-256 sidecar.
+The r6 metadata overlay corrects stale construction labels while preserving the byte-frozen source
+manifest. The dual-endpoint derivative records the exact extracted action and extraction class
+before response-content redaction, allowing metric replay within the release boundary.
 
 ## Reviewer command
-
-After extraction:
 
 ```bash
 python -m pip install --require-hashes -r requirements-review.lock
@@ -93,25 +46,14 @@ python -m pip install --no-deps -e .
 python scripts/run_review_checks.py
 ```
 
-The default command includes Lean build, import, and formal-fixture checks. It fails when `lake` is
-unavailable; `--python-only` is an explicitly partial replay.
+The default command validates source bindings, pair contracts, benchmark invariants, empirical
+aggregates, privacy receipts, selected tests, and Lean fixtures. `--python-only` runs the Python
+portion when Lean is unavailable.
 
-## Artifact identity
+## Interpretation
 
-The workflow artifact name is:
-
-```text
-claimpromotebench-anonymous-review-bundle
-```
-
-The Actions artifact is temporary. A future venue upload must use the verified ZIP itself or a
-double-blind-compatible location; reviewers must not be directed to the identity-bearing private
-repository during review.
-
-## Interpretation boundary
-
-A passing bundle establishes internal replayability of the included data, validators, archived
-service outputs, and paper-facing statistics. It does not establish that model inference was
-rerun, that the author-defined policy is external scientific consensus, that the deterministic
-executor is a learned baseline, that naturalistic transfer was measured, or that differing service
-stacks form a causal ablation.
+A successful replay establishes internal consistency among released source bytes, datasets,
+sanitized route records, validators, and manuscript statistics. Hosted route values describe the
+complete time-stamped service stack. The public challenge measures frozen robustness. Authored
+SLSA labels encode the paper's policy mapping, the deterministic executor defines the policy
+ceiling, and Naive Bayes supplies a deliberately weak sanity control.
