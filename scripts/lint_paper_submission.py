@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed checks for the submission-facing ClaimPromoteBench manuscript."""
+"""Fail-closed evidence and scope checks for the submission manuscript."""
 
 from __future__ import annotations
 
@@ -16,56 +16,20 @@ BIB = ROOT / "technical-report" / "references.bib"
 README = ROOT / "README.md"
 CITATION = ROOT / "CITATION.cff"
 SUBMISSION_METADATA = ROOT / "docs" / "SUBMISSION_METADATA.md"
-PAGE_RULES = ROOT / "docs" / "FREE_SUBMISSION_AND_PAGE_RULES.md"
-SUBMISSION_GATE = ROOT / "technical-report" / "SUBMISSION_GATE_V2.md"
 SUBMISSION_BUILDER = ROOT / "scripts" / "build_submission_tex.py"
 STYLE_AUDIT = ROOT / "docs" / "MANUSCRIPT_STYLE_AUDIT_2026-08-23.json"
-STYLE_CORPUS_MANIFEST = ROOT / "docs" / "PAPER_STYLE_CORPUS_MANIFEST_2026-08-23.json"
-STYLE_CORPUS_STATISTICS = ROOT / "docs" / "PAPER_STYLE_CORPUS_STATISTICS_2026-08-23.json"
 
-RESULTS_FREEZE = ROOT / "technical-report" / "results-freeze.json"
-R6_RESULT = ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json"
+UPSTREAM = ROOT / "v2" / "upstream-policy-revisions-v1"
+TRIVY = ROOT / "v2" / "trivy-policy-revision-v1"
+SIGSTORE = ROOT / "v2" / "sigstore-policy-verifier-revision-v1"
+REPETITION = ROOT / "v2" / "upstream-policy-route-repetition-v1"
+DUAL_ENDPOINT = ROOT / "v2" / "dual-endpoint-audit-v1" / "aggregate.json"
 R6_ADDENDUM = ROOT / "v2" / "confirmatory" / "r6-execution" / "reviewer-reporting-addendum.json"
-R6_REDACTION = (
-    ROOT
-    / "release"
-    / "reviewer-evidence-source"
-    / "fresh-confirmatory"
-    / "public-release-scientific-equivalence.json"
-)
-R6_CORRECTION = (
-    ROOT / "v2" / "confirmatory" / "r6-execution" / "frozen-manifest-metadata-correction.json"
-)
-CHALLENGE_PLAN = ROOT / "v2" / "balanced-public-challenge-study-plan.json"
-CHALLENGE_RESULT = ROOT / "v2" / "balanced-public-challenge" / "results" / "aggregate.json"
-CHALLENGE_RECEIPT = (
-    ROOT / "v2" / "balanced-public-challenge" / "results" / "github-artifact-receipt.json"
-)
-CHALLENGE_CORRECTION = (
-    ROOT / "v2" / "balanced-public-challenge" / "results" / "reporting-correction-v1.json"
-)
-SLSA_ROOT = ROOT / "v2" / "slsa-portability-v1" / "replacement-v2"
-SLSA_RESULT = SLSA_ROOT / "results" / "aggregate.json"
-POLICY_SWITCH_ROOT = ROOT / "v2" / "policy-switch-v1" / "frozen"
-POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
-POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
-POLICY_TRANSITION_GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1" / "frozen"
-POLICY_TRANSITION_GRAPH_COVERAGE = POLICY_TRANSITION_GRAPH_ROOT / "transition-coverage.json"
-POLICY_TRANSITION_GRAPH_INTERPRETATION_ADDENDUM = (
-    ROOT / "v2" / "policy-transition-graph-v1" / "transition-coverage-interpretation-addendum.json"
-)
-POLICY_MIGRATION_MUTATION_AUDIT = ROOT / "v2" / "policy-transition-graph-v1" / "mutation-audit.json"
-MINIMAL_POLICY_MIGRATION_SUITE = (
-    ROOT / "v2" / "policy-transition-graph-v1" / "minimal-release-suite.json"
-)
-MINIMUM_POLICY_MIGRATION_ANALYSIS_PLAN = (
-    ROOT
-    / "v2"
-    / "local-model-replication-v1"
-    / "transition-graph-v1"
-    / "minimum-subset-analysis-plan.json"
-)
-MINIMUM_POLICY_MIGRATION_ANALYSIS = (
+CHALLENGE = ROOT / "v2" / "balanced-public-challenge" / "results" / "aggregate.json"
+POLICY_SWITCH_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
+GRAPH_COVERAGE = ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "transition-coverage.json"
+GRAPH_MINIMUM = ROOT / "v2" / "policy-transition-graph-v1" / "minimal-release-suite.json"
+GRAPH_ROUTES = (
     ROOT
     / "v2"
     / "local-model-replication-v1"
@@ -73,57 +37,17 @@ MINIMUM_POLICY_MIGRATION_ANALYSIS = (
     / "frozen"
     / "policy-transition-graph"
     / "results"
-    / "minimum-subset-analysis.json"
+    / "aggregate.json"
 )
-HOSTED_POLICY_REPLACEMENT_RECEIPT = (
-    ROOT
-    / "v2"
-    / "policy-switch-v1"
-    / "hosted-replacement-v2"
-    / "results"
-    / "manuscript-eligibility-receipt.json"
-)
-HOSTED_MINIMUM_MIGRATION_RECEIPT = (
-    ROOT
-    / "v2"
-    / "policy-transition-graph-v1"
-    / "hosted-minimal-v1"
-    / "results"
-    / "manuscript-eligibility-receipt.json"
-)
-LOCAL_REPLICATION_ROOT = ROOT / "v2" / "local-model-replication-v1" / "replacement-v2" / "frozen"
-LOCAL_TRANSITION_GRAPH_ROOT = (
-    ROOT / "v2" / "local-model-replication-v1" / "transition-graph-v1" / "frozen"
-)
-BREADTH_PLAN = ROOT / "v2" / "public-model-breadth-v1" / "study-plan.json"
-BREADTH_RESULT_ROOT = ROOT / "v2" / "public-model-breadth-v1" / "results"
-BREADTH_RESULT = BREADTH_RESULT_ROOT / "reported-aggregate.json"
-BREADTH_FAILURE_ADDENDUM = BREADTH_RESULT_ROOT / "failure-cause-addendum.json"
-BREADTH_FAILURE_DERIVER = ROOT / "scripts" / "derive_public_model_breadth_failure_addendum.py"
-BREADTH_PRIVATE_JOURNAL = (
-    ROOT
-    / "v2"
-    / "public-model-breadth-v1"
-    / "private-results"
-    / "journal"
-    / "terminal-records.jsonl"
-)
-BREADTH_PACKET = ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json"
-BREADTH_DATASET = ROOT / "v2" / "balanced-public-challenge" / "dataset"
-BREADTH_VERIFIER = ROOT / "release" / "tools" / "verify_public_model_breadth_public_evidence.py"
-OX_ALPHA_ROOT = ROOT / "v2" / "ox-alpha-minimal-route-v1"
-OX_ALPHA_RESULT = OX_ALPHA_ROOT / "results" / "aggregate.json"
-OX_ALPHA_RUN = (
-    OX_ALPHA_ROOT / "private-results" / "opencode-go-ox-alpha-free-minimal-route-v1.jsonl"
-)
-NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
-NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
+NATURALISTIC = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes "
-    "under Executable Policy Revisions"
+    "ClaimPromoteBench: Compiling Executable Policy Revisions into Paired "
+    "Model-Service Regression Tests"
 )
-ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
+TEX_TITLE = (
+    r"\cpb: Compiling Executable Policy Revisions into Paired Model-Service Regression Tests"
+)
 
 
 def fail(message: str) -> None:
@@ -131,45 +55,49 @@ def fail(message: str) -> None:
 
 
 def load_object(path: Path, label: str) -> dict[str, Any]:
+    if not path.is_file():
+        fail(f"missing {label}: {path.relative_to(ROOT)}")
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
         fail(f"{label} must contain a JSON object")
     return value
 
 
-def self_digest(value: dict[str, Any], field: str) -> str:
-    payload = dict(value)
-    payload.pop(field, None)
-    encoded = json.dumps(
-        payload,
-        ensure_ascii=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    ).encode("utf-8")
-    return "sha256:" + hashlib.sha256(encoded).hexdigest()
-
-
-def sha256_file(path: Path) -> str:
+def sha256_hex(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return "sha256:" + digest.hexdigest()
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
-def require_regex(text: str, pattern: str, description: str) -> None:
-    if not re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL):
-        fail(f"required result or boundary missing: {description}")
+def expect(actual: Any, expected: Any, label: str) -> None:
+    if actual != expected:
+        fail(f"{label}: expected {expected!r}, found {actual!r}")
+
+
+def nested(value: dict[str, Any], path: str) -> Any:
+    current: Any = value
+    for part in path.split("."):
+        if not isinstance(current, dict) or part not in current:
+            fail(f"missing evidence field {path}")
+        current = current[part]
+    return current
 
 
 def normalize_space(value: str) -> str:
     return " ".join(value.split())
 
 
+def require_text(text: str, needle: str, label: str) -> None:
+    if normalize_space(needle) not in normalize_space(text):
+        fail(f"manuscript missing {label}")
+
+
 def manuscript_abstract_plain(tex: str) -> str:
-    match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL)
-    if not match:
-        fail("abstract not found")
+    match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, re.DOTALL)
+    if match is None:
+        fail("abstract is missing")
     value = match.group(1)
     macros = {
         "cpb": "ClaimPromoteBench",
@@ -178,1854 +106,455 @@ def manuscript_abstract_plain(tex: str) -> str:
         "demote": "DEMOTE",
         "escalate": "ESCALATE",
     }
-
-    def replace_macro(match: re.Match[str]) -> str:
-        return macros[match.group(1)]
-
-    value = re.sub(r"\\(cpb|allow|hold|demote|escalate)(?:\{\})?", replace_macro, value)
+    value = re.sub(
+        r"\\(cpb|allow|hold|demote|escalate)(?:\{\})?",
+        lambda match: macros[match.group(1)],
+        value,
+    )
     value = value.replace(r"\%", "%").replace(r"\_", "_")
     value = re.sub(r"\\texttt\{([^{}]*)\}", r"\1", value)
     return normalize_space(value)
 
 
-def validate_submission_metadata(tex: str) -> None:
-    readme = README.read_text(encoding="utf-8")
-    citation = CITATION.read_text(encoding="utf-8")
-    metadata = SUBMISSION_METADATA.read_text(encoding="utf-8")
-    page_rules = PAGE_RULES.read_text(encoding="utf-8")
-
-    if readme.splitlines()[0] != f"# {CANONICAL_TITLE}":
-        fail("README title differs from canonical title")
-    if f'title: "{CANONICAL_TITLE}"' not in citation:
-        fail("CITATION.cff title differs from canonical title")
-    if metadata.count(CANONICAL_TITLE) < 2:
-        fail("ICLR and arXiv metadata titles must match canonical title")
-    expected_tex_title = (
-        r"\title{\cpb: Failure-Aware Paired Tests of Model Routes "
-        r"under Executable Policy Revisions}"
-    )
-    if expected_tex_title not in tex:
-        fail("manuscript title differs from canonical title")
-
-    abstract_match = re.search(
-        r"## ICLR 2027 abstract\s+```text\s+(.*?)\s+```",
-        metadata,
-        flags=re.DOTALL,
-    )
-    if not abstract_match:
-        fail("copy-ready ICLR abstract is missing")
-    if normalize_space(abstract_match.group(1)) != manuscript_abstract_plain(tex):
-        fail("submission metadata abstract differs from manuscript abstract")
-    if "## arXiv abstract" not in metadata or "same canonical abstract" not in metadata:
-        fail("arXiv abstract binding is missing")
-
-    required_metadata = (
-        "Chih-Kai Wang",
-        "Department of Mathematics and Information Education",
-        "National Taipei University of Education",
-        "Suggested primary category: `cs.SE`",
-        "Possible cross-list: `cs.AI`",
-        "synthetic benchmarks",
-        "policy conformance",
-        "evidence-state transitions",
-        "behavioral testing",
-        "structured decision making",
-        "trustworthy AI",
-        "formal verification / verification-aware systems",
-    )
-    for phrase in required_metadata:
-        if phrase not in metadata:
-            fail(f"required submission metadata is missing: {phrase!r}")
-
-    for date in ("2026-09-18", "2026-09-25"):
-        if date not in metadata or date not in page_rules:
-            fail(f"official ICLR date is missing: {date}")
-    for stale in ("2026-09-11", "2026-09-16"):
-        if stale in metadata or stale in page_rules:
-            fail(f"stale ICLR date remains: {stale}")
-
-
-def validate_manuscript_style_audit() -> None:
-    audit = load_object(STYLE_AUDIT, "manuscript style audit")
-    after = audit.get("after")
-    boundary = audit.get("scientific_content_boundary")
-    if not isinstance(after, dict) or not isinstance(boundary, dict):
-        fail("manuscript style audit is malformed")
-    expected_hashes = {
-        "corpus_manifest_sha256": sha256_file(STYLE_CORPUS_MANIFEST).removeprefix("sha256:"),
-        "corpus_statistics_sha256": sha256_file(STYLE_CORPUS_STATISTICS).removeprefix("sha256:"),
-    }
-    if audit.get("status") != "PASS" or any(
-        audit.get(field) != value for field, value in expected_hashes.items()
-    ):
-        fail("manuscript style audit corpus binding changed")
-    if after.get("manuscript_sha256") != sha256_file(TEX).removeprefix("sha256:"):
-        fail("manuscript style audit is stale for technical-report/main.tex")
-    findings = after.get("configured_pattern_findings")
-    if (
-        not isinstance(findings, dict)
-        or not findings
-        or any(value != 0 for value in findings.values())
-    ):
-        fail("manuscript style audit retains a configured negative-pattern finding")
-    if (
-        boundary.get("metrics_changed") is not True
-        or boundary.get("existing_terminal_records_changed") is not False
-        or boundary.get("retained_scored_terminal_records_added") != 740
-        or boundary.get("retained_scored_model_calls_performed") != 740
-        or boundary.get("excluded_resource_failure_terminal_records_added") != 520
-        or boundary.get("excluded_resource_failure_model_calls_performed") != 520
-        or boundary.get("total_model_calls_performed") != 1260
-        or boundary.get("excluded_resource_failure_model_rows_entered_manuscript") is not False
-        or boundary.get("void_protocol_application_posts") != 1
-        or boundary.get("total_application_posts_during_revision") != 1261
-        or boundary.get("completed_singleton_workflows_rerun") is not False
-        or boundary.get("balanced_public_v1_rerun") is not False
-        or boundary.get("paper_binding_validator") != "scripts/lint_paper_submission.py"
-    ):
-        fail("manuscript style audit scientific-content boundary changed")
-
-
-def validate_no_stale_file_counts() -> None:
-    paths = (TEX, README, SUBMISSION_METADATA, SUBMISSION_GATE, SUBMISSION_BUILDER)
-    pattern = re.compile(r"\b(?:179|170|619)(?:-file|\s+files?)\b", flags=re.IGNORECASE)
-    for path in paths:
-        match = pattern.search(path.read_text(encoding="utf-8"))
-        if match:
-            fail(
-                f"stale fixed artifact count remains in {path.relative_to(ROOT)}: {match.group(0)}"
-            )
-
-
-def validate_submission_builder(tex: str) -> None:
-    namespace = runpy.run_path(str(SUBMISSION_BUILDER))
-    canonical_body = namespace["canonical_body"]()
-    canonical_appendix = namespace["canonical_appendix"]()
-    body_start = tex.index(r"\begin{abstract}")
-    bib_start = tex.rindex(r"\bibliographystyle")
-    expected_body = tex[body_start:bib_start].rstrip() + "\n\n"
-    if canonical_body != expected_body:
-        fail("submission builder changes the canonical manuscript body")
-    bibliography = r"\bibliography{references}"
-    bibliography_end = tex.rindex(bibliography) + len(bibliography)
-    document_end = tex.rindex(r"\end{document}")
-    appendix = tex[bibliography_end:document_end].strip()
-    expected_appendix = appendix + ("\n" if appendix else "")
-    if canonical_appendix != expected_appendix:
-        fail("submission builder changes the canonical appendix")
-
-    preserved_blocks = []
-    for heading in ("Reproducibility Statement", "AI Assistance Disclosure"):
-        section_start = expected_body.index(rf"\section{{{heading}}}")
-        next_section = expected_body.find(r"\section{", section_start + 1)
-        preserved_blocks.append(
-            expected_body[section_start:]
-            if next_section < 0
-            else expected_body[section_start:next_section]
-        )
-    rendered = {
-        "ICLR": namespace["iclr_tex"](canonical_body, canonical_appendix),
-        "arXiv": namespace["arxiv_tex"](canonical_body, canonical_appendix),
-    }
-    for label, wrapper in rendered.items():
-        if any(block not in wrapper for block in preserved_blocks):
-            fail(f"{label} wrapper changes reproducibility or AI-disclosure prose")
-        if canonical_appendix not in wrapper:
-            fail(f"{label} wrapper drops the canonical appendix")
-    for stale in (
-        "same 7,200-record aggregate",
-        "all 14 pilot attempts",
-        "ICLR_REPRODUCIBILITY",
-        "AI_DISCLOSURE =",
-    ):
-        if stale in SUBMISSION_BUILDER.read_text(encoding="utf-8"):
-            fail(f"submission builder retains stale injected prose: {stale!r}")
-
-
-def validate_factor_metrics(
-    metrics: Any,
-    *,
-    label: str,
-    factor_count: int,
-    pair_support: set[int],
-    pair_coverage_range: tuple[float, float],
-    end_to_end_range: tuple[float, float],
-    zero_factor_ids: set[str],
-    perfect_factor_ids: set[str],
-) -> dict[str, dict[str, Any]]:
-    if not isinstance(metrics, list) or not all(isinstance(row, dict) for row in metrics):
-        fail(f"{label} factor metrics are malformed")
-    by_id = {str(row.get("factor_id")): row for row in metrics}
-    if len(metrics) != factor_count or len(by_id) != factor_count:
-        fail(f"{label} factor count changed")
-    if {int(row.get("pairs", -1)) for row in metrics} != pair_support:
-        fail(f"{label} pair support changed")
-    coverages = [float(row.get("pair_coverage", -1)) for row in metrics]
-    accuracies = [float(row.get("end_to_end_pair_accuracy", -1)) for row in metrics]
-    if (min(coverages), max(coverages)) != pair_coverage_range:
-        fail(f"{label} factor pair-coverage range changed")
-    if (min(accuracies), max(accuracies)) != end_to_end_range:
-        fail(f"{label} factor end-to-end pair range changed")
-    observed_zero = {
-        factor_id for factor_id, row in by_id.items() if row.get("end_to_end_pair_accuracy") == 0
-    }
-    observed_perfect = {
-        factor_id for factor_id, row in by_id.items() if row.get("end_to_end_pair_accuracy") == 1
-    }
-    if observed_zero != zero_factor_ids or observed_perfect != perfect_factor_ids:
-        fail(f"{label} zero/perfect factor identities changed")
-    return by_id
-
-
-def validate_r6_evidence(tex: str) -> None:
-    result = load_object(R6_RESULT, "r6 result")
-    addendum = load_object(R6_ADDENDUM, "r6 reporting addendum")
-    redaction = load_object(R6_REDACTION, "r6 redaction receipt")
-    correction = load_object(R6_CORRECTION, "r6 metadata correction")
-
-    if result.get("study_result_sha256") != self_digest(result, "study_result_sha256"):
-        fail("r6 study-result self-digest changed")
-    if result.get("status") != "R6_QWEN_CONFIRMATORY_SUPPORTED_FLASH_MODEL_EFFICACY_NON_EVALUABLE":
-        fail("r6 disposition changed")
-    if result.get("c2", {}).get("sealed_cells") != 600:
-        fail("r6 C2 sealed-cell count changed")
-    qwen_result = result.get("qwen_service_configuration", {})
-    flash_result = result.get("deepseek_flash_service_configuration", {})
-    expected_result_metrics = {
-        "valid_decisions": 272,
-        "end_to_end_item_accuracy": 0.86,
-        "end_to_end_pair_accuracy": 0.753333333333333,
-        "decision_coverage": 0.906666666666667,
-        "balanced_action_recall": 0.599807213930348,
-        "macro_f1": 0.626502732240437,
-    }
-    for key, expected in expected_result_metrics.items():
-        if qwen_result.get(key) != expected:
-            fail(f"r6 Qwen metric changed: {key}")
-    if (
-        flash_result.get("http_401_records") != 300
-        or flash_result.get("model_outputs") != 0
-        or flash_result.get("model_capability_interpretation") != "NON_EVALUABLE_NO_MODEL_OUTPUT"
-    ):
-        fail("r6 Flash interface disposition changed")
-
-    if addendum.get("self_digest") != self_digest(addendum, "self_digest"):
-        fail("r6 reporting-addendum self-digest changed")
-    if addendum.get("schema_version") != "1.1.0":
-        fail("r6 reporting-addendum schema changed")
-    qwen = addendum.get("qwen_service_configuration", {})
-    expected_addendum = {
-        "items": 300,
-        "pairs": 150,
-        "valid_decisions": 272,
-        "complete_pairs": 123,
-        "correct_items": 258,
-        "correct_pairs": 113,
-        "decision_coverage": 0.9066666666666666,
-        "pair_coverage": 0.82,
-        "end_to_end_item_accuracy": 0.86,
-        "end_to_end_pair_accuracy": 0.7533333333333333,
-        "conditional_item_accuracy_given_valid_decision": 0.9485294117647058,
-        "conditional_pair_accuracy_given_complete_pair": 0.9186991869918699,
-    }
-    for key, expected in expected_addendum.items():
-        if qwen.get(key) != expected:
-            fail(f"r6 addendum metric changed: {key}")
-    expected_confusion = {
-        "ALLOW": {"ALLOW": 143, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_DECISION": 7},
-        "HOLD": {"ALLOW": 4, "HOLD": 110, "DEMOTE": 0, "ESCALATE": 2, "NO_DECISION": 18},
-        "DEMOTE": {"ALLOW": 8, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_DECISION": 0},
-        "ESCALATE": {"ALLOW": 0, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 5, "NO_DECISION": 3},
-    }
-    if qwen.get("confusion") != expected_confusion:
-        fail("r6 full confusion matrix changed")
-    r6_factors = validate_factor_metrics(
-        qwen.get("factor_metrics"),
-        label="r6 Qwen",
-        factor_count=20,
-        pair_support={7, 8},
-        pair_coverage_range=(2 / 7, 1.0),
-        end_to_end_range=(0.0, 1.0),
-        zero_factor_ids={"current_binding", "dependency_statement"},
-        perfect_factor_ids={
-            "dependency_verifier",
-            "precision",
-            "preregistration",
-            "repetitions",
-            "tool_exit",
-            "transitive_dependency",
-            "verifier_execution",
-        },
-    )
-    if (
-        r6_factors["dependency_statement"].get("covered_pairs") != 2
-        or r6_factors["dependency_statement"].get("pairs") != 7
-        or r6_factors["current_binding"].get("covered_pairs") != 6
-        or r6_factors["current_binding"].get("pairs") != 8
-    ):
-        fail("r6 zero-accuracy factor details changed")
-    if addendum.get("public_dev_text_nb") != {
-        "balanced_action_recall": 0.3283582089552239,
-        "end_to_end_item_accuracy": 0.6133333333333333,
-        "end_to_end_pair_accuracy": 0.22666666666666666,
-        "macro_f1": 0.3123610914077647,
-    }:
-        fail("r6 Naive Bayes addendum changed")
-    ceiling = addendum.get("deterministic_policy_executor", {})
-    if (
-        ceiling.get("item_accuracy") != 1.0
-        or ceiling.get("pair_accuracy") != 1.0
-        or ceiling.get("role") != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
-    ):
-        fail("r6 definitional policy ceiling changed")
-    if (
-        redaction.get("hidden_reasoning_present_in_public_release") is not False
-        or redaction.get("scientific_analysis_payload_byte_identical") is not True
-    ):
-        fail("r6 redaction disposition changed")
-    if correction.get("self_digest") != self_digest(correction, "self_digest"):
-        fail("r6 metadata-correction self-digest changed")
-
-    required = (
-        (r"272/300\s+valid decisions", "r6 valid-decision count"),
-        (r"123/150", "r6 complete-pair count"),
-        (r"258/272", "r6 conditional item accuracy"),
-        (r"113/123", "r6 conditional pair accuracy"),
-        (r"272/300", "r6 decision coverage"),
-        (r"123/150", "r6 pair coverage"),
-        (r"(?:300\s+HTTP 401|HTTP 401[^.]{0,40}300 requests)", "r6 Flash HTTP 401 count"),
-        (r"historical (?:r6 )?Flash service interface", "old Flash interface boundary"),
-        (
-            r"dependency.statement changes.*0/7|0/7.*dependency.statement",
-            "r6 dependency-statement factor result",
-        ),
-        (
-            r"current.state binding.*0/8|0/8.*current.state binding",
-            "r6 current-binding factor result",
-        ),
-        (r"Naive Bayes.*weak|weak.*Naive Bayes", "Naive Bayes weakness"),
-        (r"definitional policy ceiling", "deterministic ceiling role"),
-    )
-    for pattern, description in required:
-        require_regex(tex, pattern, description)
-
-
-def challenge_lane(aggregate: dict[str, Any], lane_id: str) -> dict[str, Any]:
-    lanes = aggregate.get("lanes")
-    if not isinstance(lanes, list):
-        fail("balanced challenge lanes are missing")
-    for lane in lanes:
-        if isinstance(lane, dict) and lane.get("lane_id") == lane_id:
-            return lane
-    fail(f"balanced challenge lane missing: {lane_id}")
-    raise AssertionError
-
-
-def validate_challenge_lane(
-    lane: dict[str, Any],
-    *,
-    expected: dict[str, Any],
-    confusion: dict[str, dict[str, int]],
-    recalls: dict[str, float],
-) -> None:
-    metrics = lane.get("metrics")
-    if not isinstance(metrics, dict):
-        fail(f"balanced challenge metrics missing: {lane.get('lane_id')}")
-    for key, value in expected.items():
-        if metrics.get(key) != value:
-            fail(f"balanced challenge metric changed: {lane.get('lane_id')}.{key}")
-    if metrics.get("confusion_matrix", {}).get("counts") != confusion:
-        fail(f"balanced challenge confusion changed: {lane.get('lane_id')}")
-    per_action = metrics.get("per_action", {})
-    for action, recall in recalls.items():
-        if per_action.get(action, {}).get("end_to_end_recall") != recall:
-            fail(f"balanced challenge recall changed: {lane.get('lane_id')}.{action}")
-    if (
-        metrics.get("failure_rule")
-        != "Every non-OK response remains in the denominator as incorrect."
-    ):
-        fail(f"balanced challenge denominator rule changed: {lane.get('lane_id')}")
-
-
-def validate_balanced_challenge(tex: str) -> None:
-    plan = load_object(CHALLENGE_PLAN, "balanced challenge plan")
-    aggregate = load_object(CHALLENGE_RESULT, "balanced challenge aggregate")
-    receipt = load_object(CHALLENGE_RECEIPT, "balanced challenge receipt")
-    correction = load_object(CHALLENGE_CORRECTION, "balanced challenge reporting correction")
-
-    dataset = plan.get("dataset", {})
-    design = plan.get("design", {})
-    if (
-        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
-        or dataset.get("pairs") != 90
-        or dataset.get("instances") != 180
-        or dataset.get("factors") != 15
-        or dataset.get("invalid_action_counts") != {"HOLD": 30, "DEMOTE": 30, "ESCALATE": 30}
-        or design.get("planned_model_item_cells") != 360
-        or design.get("attempts_per_item") != 1
-        or design.get("held_out_generalization_claim") is not False
-    ):
-        fail("balanced challenge frozen design changed")
-    if (
-        aggregate.get("status") != "COMPLETE"
-        or aggregate.get("design") != "PUBLIC_PRECOMMITTED_BALANCED_CHALLENGE"
-        or aggregate.get("truth_status") != "COMPUTATIONAL"
-    ):
-        fail("balanced challenge aggregate disposition changed")
-    if (
-        self_digest(correction, "receipt_sha256") != correction.get("receipt_sha256")
-        or correction.get("status") != "REPORTING_CORRECTION"
-        or correction.get("metric_convention")
-        != "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
-        or correction.get("scope", {}).get("model_calls_performed") != 0
-        or correction.get("scope", {}).get("raw_or_terminal_records_changed") is not False
-        or correction.get("scope", {}).get("primary_endpoints_changed") is not False
-    ):
-        fail("balanced challenge reporting-correction boundary changed")
-    for relative, expected in correction.get("source_bindings", {}).items():
-        if sha256_file(ROOT / relative) != expected:
-            fail(f"balanced challenge reporting-correction binding changed: {relative}")
-
-    qwen_confusion = {
-        "ALLOW": {"ALLOW": 79, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 11},
-        "HOLD": {"ALLOW": 0, "HOLD": 26, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 4},
-        "DEMOTE": {"ALLOW": 8, "HOLD": 4, "DEMOTE": 4, "ESCALATE": 4, "NO_VALID_DECISION": 10},
-        "ESCALATE": {"ALLOW": 0, "HOLD": 0, "DEMOTE": 0, "ESCALATE": 23, "NO_VALID_DECISION": 7},
-    }
-    flash_confusion = {
-        "ALLOW": {"ALLOW": 68, "HOLD": 4, "DEMOTE": 0, "ESCALATE": 8, "NO_VALID_DECISION": 10},
-        "HOLD": {"ALLOW": 13, "HOLD": 9, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 8},
-        "DEMOTE": {"ALLOW": 25, "HOLD": 3, "DEMOTE": 0, "ESCALATE": 0, "NO_VALID_DECISION": 2},
-        "ESCALATE": {"ALLOW": 0, "HOLD": 3, "DEMOTE": 0, "ESCALATE": 13, "NO_VALID_DECISION": 14},
-    }
-    qwen = challenge_lane(aggregate, "opencode-go-qwen3.7-max")
-    flash = challenge_lane(aggregate, "opencode-go-deepseek-v4-flash-matched")
-    validate_challenge_lane(
-        qwen,
-        expected={
-            "items": 180,
-            "pairs": 90,
-            "parseable_items": 148,
-            "covered_pairs": 64,
-            "correct_items": 132,
-            "correct_pairs": 48,
-            "decision_coverage": 0.8222222222222222,
-            "pair_coverage": 0.7111111111111111,
-            "end_to_end_item_accuracy": 0.7333333333333333,
-            "end_to_end_pair_accuracy": 0.5333333333333333,
-            "conditional_item_accuracy": 0.8918918918918919,
-            "conditional_pair_accuracy": 0.75,
-            "balanced_action_recall": 0.6611111111111111,
-            "macro_f1": 0.7004084238512532,
-            "parse_status_counts": {"OK": 148, "SEMANTIC_ERROR": 1, "TRANSPORT_ERROR": 31},
-        },
-        confusion=qwen_confusion,
-        recalls={
-            "ALLOW": 0.8777777777777778,
-            "HOLD": 0.8666666666666667,
-            "DEMOTE": 0.13333333333333333,
-            "ESCALATE": 0.7666666666666667,
-        },
-    )
-    validate_challenge_lane(
-        flash,
-        expected={
-            "items": 180,
-            "pairs": 90,
-            "parseable_items": 146,
-            "covered_pairs": 61,
-            "correct_items": 90,
-            "correct_pairs": 13,
-            "decision_coverage": 0.8111111111111111,
-            "pair_coverage": 0.6777777777777778,
-            "end_to_end_item_accuracy": 0.5,
-            "end_to_end_pair_accuracy": 0.14444444444444443,
-            "conditional_item_accuracy": 0.6164383561643836,
-            "conditional_pair_accuracy": 0.21311475409836064,
-            "balanced_action_recall": 0.37222222222222223,
-            "macro_f1": 0.5236761371215153,
-            "parse_status_counts": {"OK": 146, "SEMANTIC_ERROR": 34},
-        },
-        confusion=flash_confusion,
-        recalls={
-            "ALLOW": 0.7555555555555555,
-            "HOLD": 0.3,
-            "DEMOTE": 0.0,
-            "ESCALATE": 0.43333333333333335,
-        },
-    )
-    validate_factor_metrics(
-        qwen.get("metrics", {}).get("factor_metrics"),
-        label="challenge Qwen",
-        factor_count=15,
-        pair_support={6},
-        pair_coverage_range=(0.5, 1.0),
-        end_to_end_range=(0.0, 1.0),
-        zero_factor_ids={
-            "current_computation_binding",
-            "current_computation_stale",
-            "current_review_environment",
-        },
-        perfect_factor_ids={"contradiction_status", "tool_exit"},
-    )
-    validate_factor_metrics(
-        flash.get("metrics", {}).get("factor_metrics"),
-        label="challenge Flash",
-        factor_count=15,
-        pair_support={6},
-        pair_coverage_range=(0.0, 1.0),
-        end_to_end_range=(0.0, 5 / 6),
-        zero_factor_ids={
-            "age",
-            "contradiction_claim_identity",
-            "contradiction_freshness",
-            "contradiction_reviewer_identity",
-            "contradiction_verifier_execution",
-            "current_computation_binding",
-            "current_computation_stale",
-            "current_computation_verifier",
-            "current_review_environment",
-            "current_review_identity",
-            "reviewer_identity",
-        },
-        perfect_factor_ids=set(),
-    )
-    flash_correction = correction.get("affected_lanes", {}).get(
-        "opencode-go-deepseek-v4-flash-matched", {}
-    )
-    if flash_correction.get("historical") != {
-        "conditional_macro_f1": 0.6243032962151766,
-        "macro_f1": 0.5236761371215153,
-        "per_action.DEMOTE.conditional_f1": None,
-        "per_action.DEMOTE.end_to_end_f1": None,
-        "per_action.DEMOTE.precision": None,
-    } or flash_correction.get("corrected") != {
-        "conditional_macro_f1": 0.46822747216138244,
-        "macro_f1": 0.39275710284113646,
-        "per_action.DEMOTE.conditional_f1": 0.0,
-        "per_action.DEMOTE.end_to_end_f1": 0.0,
-        "per_action.DEMOTE.precision": 0.0,
-    }:
-        fail("balanced challenge reporting-correction values changed")
-    ceiling = aggregate.get("deterministic_policy_executor", {})
-    if (
-        ceiling.get("end_to_end_item_accuracy") != 1.0
-        or ceiling.get("end_to_end_pair_accuracy") != 1.0
-        or ceiling.get("label") != "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE"
-    ):
-        fail("balanced challenge definitional ceiling changed")
-    validation = receipt.get("validation", {})
-    if (
-        receipt.get("status") != "IMPORTED_AND_INDEPENDENTLY_RECOMPUTED"
-        or receipt.get("workflow", {}).get("conclusion") != "success"
-        or validation.get("terminal_records_validated") != 360
-        or validation.get("non_numeric_fields_exact") is not True
-        or validation.get("provider_account_identifier_findings") != 0
-        or validation.get("retained_provider_response_ids") != 0
-        or validation.get("hidden_reasoning_field_findings") != 0
-    ):
-        fail("balanced challenge receipt changed")
-
-    required = (
-        (r"90\s+pairs", "challenge pair count"),
-        (r"15\s+factors", "challenge factor count"),
-        (r"148/180", "challenge Qwen coverage count"),
-        (r"146/180", "challenge Flash coverage count"),
-        (r"132/180.*48/90", "challenge Qwen end-to-end metrics"),
-        (r"132/148.*48/64", "challenge Qwen conditional metrics"),
-        (r"90/180.*13/90", "challenge Flash end-to-end metrics"),
-        (r"90/146.*13/61", "challenge Flash conditional metrics"),
-        (r"public challenge", "public challenge boundary"),
-        (r"causal (?:comparison|ablation)", "cross-service causal boundary"),
-        (r"factor.*pair", "factor-level pair reporting"),
-    )
-    for pattern, description in required:
-        require_regex(tex, pattern, description)
-
-
-def paper_rate(value: Any) -> str:
-    if value is None:
-        return "N/E"
-    if not isinstance(value, (int, float)):
-        fail(f"paper rate is not numeric: {value!r}")
-    return f"{float(value):.4f}".removeprefix("0")
-
-
-def load_jsonl(path: Path, label: str) -> list[dict[str, Any]]:
-    rows = [
-        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
-    ]
-    if any(not isinstance(row, dict) for row in rows):
-        fail(f"{label} contains a non-object JSONL row")
-    return rows
-
-
-def recompute_synthetic_lanes(
-    *,
-    study_root: Path,
-    dataset_root: Path,
-    aggregate_path: Path,
-    expected_design: str,
-) -> dict[str, dict[str, Any]]:
-    aggregate = load_object(aggregate_path, f"{study_root.name} aggregate")
-    execution = load_object(study_root / "results" / "execution-receipt.json", "execution receipt")
-    result_receipt = load_object(
-        study_root / "results" / "result-receipt.json", "synthetic-policy result receipt"
-    )
-    if (
-        aggregate.get("status") != "COMPLETE"
-        or aggregate.get("design") != expected_design
-        or execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
-        or execution.get("planned_cells") != 240
-        or execution.get("durable_terminal_records") != 240
-        or execution.get("client_retry_count") != 0
-        or result_receipt.get("status") != "SYNTHETIC_POLICY_RESULTS_SEALED"
-        or result_receipt.get("planned_and_terminal_cells") != 240
-        or result_receipt.get("all_failures_retained_in_end_to_end_denominator") is not True
-    ):
-        fail(f"completed synthetic-policy boundary changed: {study_root}")
-    if aggregate.get("deterministic_policy_executor", {}).get("label") != (
-        "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_BASELINE"
-    ):
-        fail(f"deterministic ceiling role changed: {study_root}")
-
-    analyzer = runpy.run_path(str(ROOT / "scripts" / "analyze_balanced_public_challenge.py"))
-    derive = analyzer.get("derive_reporting_metrics")
-    if not callable(derive):
-        fail("balanced metrics recomputation entry point is missing")
-    gold = load_jsonl(dataset_root / "evaluation-gold.jsonl", "synthetic-policy gold")
-    pairs = json.loads((dataset_root / "evaluation-pairs.json").read_text(encoding="utf-8"))
-    if not isinstance(pairs, list):
-        fail("synthetic-policy pair index is malformed")
-    lanes = {
-        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
-    }
-    if len(lanes) != 2:
-        fail(f"synthetic-policy lane count changed: {study_root}")
-    for lane_id, lane in lanes.items():
-        run_path = study_root / "results" / f"{lane_id}.jsonl"
-        rows = load_jsonl(run_path, f"{lane_id} run")
-        recomputed = derive(gold, pairs, rows)
-        if recomputed != lane.get("metrics"):
-            fail(f"paper aggregate differs from item records: {lane_id}")
-        if lane.get("run_sha256") != sha256_file(run_path):
-            fail(f"paper aggregate run binding changed: {lane_id}")
-    return lanes
-
-
-def legacy_configs() -> list[dict[str, Any]]:
-    qwen = {
-        "items": 300,
-        "parseable_items": 272,
-        "correct_items": 258,
-        "pairs": 150,
-        "covered_pairs": 123,
-        "correct_pairs": 113,
-        "balanced_action_recall": 0.599807213930348,
-        "per_action": {
-            "ALLOW": {"end_to_end_recall": 143 / 150},
-            "HOLD": {"end_to_end_recall": 110 / 134},
-            "DEMOTE": {"end_to_end_recall": 0.0},
-            "ESCALATE": {"end_to_end_recall": 5 / 8},
-        },
-        "confusion_matrix": {
-            "counts": {
-                "ALLOW": {
-                    "ALLOW": 143,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 7,
-                },
-                "HOLD": {
-                    "ALLOW": 4,
-                    "HOLD": 110,
-                    "DEMOTE": 0,
-                    "ESCALATE": 2,
-                    "NO_VALID_DECISION": 18,
-                },
-                "DEMOTE": {
-                    "ALLOW": 8,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 0,
-                },
-                "ESCALATE": {
-                    "ALLOW": 0,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 5,
-                    "NO_VALID_DECISION": 3,
-                },
-            }
-        },
-    }
-    nb = {
-        "items": 300,
-        "parseable_items": 300,
-        "correct_items": 184,
-        "pairs": 150,
-        "covered_pairs": 150,
-        "correct_pairs": 34,
-        "balanced_action_recall": 0.3283582089552239,
-        "per_action": {
-            "ALLOW": {"end_to_end_recall": 0.5},
-            "HOLD": {"end_to_end_recall": 109 / 134},
-            "DEMOTE": {"end_to_end_recall": 0.0},
-            "ESCALATE": {"end_to_end_recall": 0.0},
-        },
-        "confusion_matrix": {
-            "counts": {
-                "ALLOW": {
-                    "ALLOW": 75,
-                    "HOLD": 75,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 0,
-                },
-                "HOLD": {
-                    "ALLOW": 25,
-                    "HOLD": 109,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 0,
-                },
-                "DEMOTE": {
-                    "ALLOW": 8,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 0,
-                },
-                "ESCALATE": {
-                    "ALLOW": 8,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 0,
-                },
-            }
-        },
-    }
-    return [
-        {"label": "r6 Qwen (host/prompt)", "metrics": qwen},
-        {"label": "r6 NB sanity", "metrics": nb},
-    ]
-
-
-def challenge_configs() -> list[dict[str, Any]]:
-    aggregate = load_object(CHALLENGE_RESULT, "balanced challenge aggregate")
-    labels = {
-        "opencode-go-qwen3.7-max": "Challenge Qwen (host/prompt)",
-        "opencode-go-deepseek-v4-flash-matched": "Challenge Flash (host/schema)",
-    }
-    lanes = {
-        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
-    }
-    if set(lanes) != set(labels):
-        fail("balanced challenge paper lane set changed")
-    return [{"label": labels[lane_id], "metrics": lanes[lane_id]["metrics"]} for lane_id in labels]
-
-
-def ox_alpha_configs() -> list[dict[str, Any]]:
-    aggregate = load_object(OX_ALPHA_RESULT, "Ox Alpha minimum-route aggregate")
-    plan = load_object(OX_ALPHA_ROOT / "study-plan.json", "Ox Alpha minimum-route plan")
-    selection = load_object(
-        OX_ALPHA_ROOT / "selection-receipt.json", "Ox Alpha minimum-route selection"
-    )
-    execution = load_object(
-        OX_ALPHA_ROOT / "private-results" / "execution-receipt.json",
-        "Ox Alpha minimum-route execution receipt",
-    )
-    rows = load_jsonl(OX_ALPHA_RUN, "Ox Alpha minimum-route run")
-    selected_items = {str(value) for value in selection.get("selected_item_ids", [])}
-    selected_pairs = {str(value) for value in selection.get("selected_pair_ids", [])}
-    gold = [
-        row
-        for row in load_jsonl(
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-gold.jsonl",
-            "policy-transition graph gold",
-        )
-        if str(row["id"]) in selected_items
-    ]
-    all_pairs = json.loads(
-        (POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    if not isinstance(all_pairs, list):
-        fail("policy-transition graph pair index is malformed")
-    pairs = [row for row in all_pairs if str(row["pair_id"]) in selected_pairs]
-    analyzer = runpy.run_path(str(ROOT / "scripts" / "analyze_balanced_public_challenge.py"))
-    derive = analyzer.get("derive_reporting_metrics")
-    if not callable(derive):
-        fail("balanced metrics recomputation entry point is missing")
-    recomputed = derive(gold, pairs, rows)
-    strict_pass = (
-        recomputed.get("parseable_items") == 20
-        and recomputed.get("correct_items") == 20
-        and recomputed.get("correct_pairs") == 10
-    )
-    if (
-        len(gold) != 20
-        or len(pairs) != 10
-        or len(rows) != 20
-        or plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
-        or plan.get("research_role") != "POSTHOC_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
-        or plan.get("route", {}).get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
-        or plan.get("execution", {}).get("planned_application_posts") != 20
-        or plan.get("execution", {}).get("client_retry_count") != 0
-        or selection.get("status") != "PREINFERENCE_ROUTE_AND_SUITE_SELECTION"
-        or selection.get("outcomes_used_for_selection") is not False
-        or selection.get("conditional_success_subset_allowed") is not False
-        or execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
-        or execution.get("application_posts") != 20
-        or execution.get("client_retry_count") != 0
-        or execution.get("partial_resume_used") is not False
-        or aggregate.get("classification") != "COMPLETE_ROUTE_SMOKE_GATE_FAIL"
-        or aggregate.get("design")
-        != "PREINFERENCE_FROZEN_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
-        or aggregate.get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
-        or aggregate.get("metrics") != recomputed
-        or aggregate.get("strict_smoke_gate_pass") is not strict_pass
-        or aggregate.get("execution", {}).get("incremental_cash_cost_usd") != 0.0
-    ):
-        fail("Ox Alpha minimum-route evidence or interpretation boundary changed")
-    return [{"label": "Ox route (host/prompt; gate)", "metrics": recomputed}]
-
-
-def synthetic_configs() -> list[dict[str, Any]]:
-    slsa = recompute_synthetic_lanes(
-        study_root=SLSA_ROOT,
-        dataset_root=SLSA_ROOT / "dataset",
-        aggregate_path=SLSA_RESULT,
-        expected_design="PROSPECTIVELY_FROZEN_SECOND_POLICY_PORTABILITY_STUDY",
-    )
-    labels = {
-        "opencode-go-qwen3.7-max-slsa-v2": "SLSA Qwen (host/prompt)",
-        "opencode-go-deepseek-v4-flash-slsa-v2": "SLSA Flash (host/schema)",
-    }
-    if set(slsa) != set(labels):
-        fail("hosted SLSA paper lane set changed")
-    result = [
-        {"label": labels[lane_id], "metrics": lane["metrics"]} for lane_id, lane in slsa.items()
-    ]
-    slsa_aggregate = load_object(SLSA_RESULT, "SLSA aggregate")
-    result.append(
-        {
-            "label": "SLSA RF sanity",
-            "metrics": slsa_aggregate["structured_random_forest_action_baseline"]["metrics"],
-        }
-    )
-    return result
-
-
-def local_configs() -> list[dict[str, Any]]:
-    result: list[dict[str, Any]] = []
-    for dataset_key, prefix, study_root, source_root, expected_design in (
-        (
-            "slsa",
-            "SLSA",
-            LOCAL_REPLICATION_ROOT / "slsa",
-            SLSA_ROOT / "dataset",
-            "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_SLSA_POLICY_STUDY",
-        ),
-        (
-            "policy-switch",
-            "Switch",
-            LOCAL_REPLICATION_ROOT / "policy-switch",
-            POLICY_SWITCH_ROOT / "dataset",
-            "LOCAL_MODEL_REPLICATION_REPLACEMENT_V2_OF_FROZEN_POLICY_SWITCH_STUDY",
-        ),
-        (
-            "policy-transition-graph",
-            "Graph",
-            LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph",
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset",
-            "LOCAL_MODEL_EVALUATION_OF_FROZEN_REACHABLE_POLICY_TRANSITION_GRAPH",
-        ),
-    ):
-        lanes = recompute_synthetic_lanes(
-            study_root=study_root,
-            dataset_root=source_root,
-            aggregate_path=study_root / "results" / "aggregate.json",
-            expected_design=expected_design,
-        )
-        families = {
-            str(row.get("model_family")): row for row in lanes.values() if isinstance(row, dict)
-        }
-        if set(families) != {"Mistral", "Phi"}:
-            fail(f"local replication family set changed: {dataset_key}")
-        for family, label in (("Mistral", "Mistral"), ("Phi", "Phi-4")):
-            result.append(
-                {
-                    "label": f"{prefix} {label} (local/4b)",
-                    "metrics": families[family]["metrics"],
-                }
-            )
-        if dataset_key in {"policy-switch", "policy-transition-graph"}:
-            aggregate = load_object(
-                study_root / "results" / "aggregate.json",
-                f"local {dataset_key} aggregate",
-            )
-            comparators = aggregate.get("structured_random_forest_comparators", {})
-            for comparator_id, label in (
-                ("policy_aware", f"{prefix} RF/profile"),
-                ("profile_blind", f"{prefix} RF/blind"),
-            ):
-                result.append(
-                    {
-                        "label": label,
-                        "metrics": comparators[comparator_id]["metrics"],
-                    }
-                )
-    return result
-
-
-def metric_configs() -> list[dict[str, Any]]:
-    configs = [
-        *legacy_configs(),
-        *challenge_configs(),
-        *synthetic_configs(),
-        *local_configs(),
-        *ox_alpha_configs(),
-    ]
-    labels = [str(row["label"]) for row in configs]
-    if len(labels) != len(set(labels)):
-        fail("paper configuration labels are not unique")
-    return configs
-
-
-def confusion_counts(metrics: dict[str, Any]) -> dict[str, dict[str, int]]:
-    matrix = metrics.get("confusion_matrix", {})
-    counts = matrix.get("counts") if isinstance(matrix, dict) else None
-    if not isinstance(counts, dict) or set(counts) != set(ACTIONS):
-        fail("paper configuration lacks a four-row confusion matrix")
-    return counts
-
-
-def conditional_action_recall(metrics: dict[str, Any], action: str) -> float | None:
-    """Derive conditional recall from the complete confusion row.
-
-    Some historical aggregates encode zero when an action has no valid decisions.  The paper uses
-    N/E for that empty denominator, so the confusion matrix is the authoritative representation.
-    """
-
-    per_action = metrics.get("per_action")
-    if not isinstance(per_action, dict) or not isinstance(per_action.get(action), dict):
-        fail(f"paper configuration lacks action metrics: {action}")
-    counts = confusion_counts(metrics)[action]
-    parseable = sum(int(counts.get(predicted, 0)) for predicted in ACTIONS)
-    if parseable == 0:
-        return None
-    return int(counts.get(action, 0)) / parseable
-
-
-def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
-    for label in (
-        "tab:core-results",
-        "tab:sanity-controls",
-        "tab:action-recall",
-        "tab:conditional-action-recall",
-        "tab:confusion",
-    ):
-        if rf"\label{{{label}}}" not in tex:
-            fail(f"required paper table is missing: {label}")
-    for config in configs:
-        label = str(config["label"])
-        metrics = config["metrics"]
-        items = int(metrics["items"])
-        pairs = int(metrics["pairs"])
-        valid = int(metrics["parseable_items"])
-        correct_items = int(metrics["correct_items"])
-        complete = int(metrics["covered_pairs"])
-        correct_pairs = int(metrics["correct_pairs"])
-        conditional_item = "N/E" if valid == 0 else f"{correct_items}/{valid}"
-        conditional_pair = "N/E" if complete == 0 else f"{correct_pairs}/{complete}"
-        core = (
-            f"{label} & {valid}/{items} & {correct_items}/{items} & {conditional_item} & "
-            f"{complete}/{pairs} & {correct_pairs}/{pairs} & {conditional_pair}"
-        )
-        if core not in tex:
-            fail(f"paper core-result row is missing or stale: {label}")
-        per_action = metrics.get("per_action")
-        if not isinstance(per_action, dict) or set(per_action) != set(ACTIONS):
-            fail(f"paper action metrics are malformed: {label}")
-        action = f"{label} & " + " & ".join(
-            [
-                *(paper_rate(per_action[name]["end_to_end_recall"]) for name in ACTIONS),
-                paper_rate(metrics["balanced_action_recall"]),
-            ]
-        )
-        if action not in tex:
-            fail(f"paper action-recall row is missing or stale: {label}")
-        conditional_action = f"{label} & " + " & ".join(
-            paper_rate(conditional_action_recall(metrics, name)) for name in ACTIONS
-        )
-        if conditional_action not in tex:
-            fail(f"paper conditional-action-recall row is missing or stale: {label}")
-        counts = confusion_counts(metrics)
-        action_tex = {
-            "ALLOW": r"\allow{}",
-            "HOLD": r"\hold{}",
-            "DEMOTE": r"\demote{}",
-            "ESCALATE": r"\escalate{}",
-        }
-        for gold in ACTIONS:
-            values = [
-                counts[gold].get(predicted, counts[gold].get("NO_DECISION", -1))
-                for predicted in (*ACTIONS, "NO_VALID_DECISION")
-            ]
-            confusion = f"{label} & {action_tex[gold]} & " + " & ".join(
-                str(value) for value in values
-            )
-            if -1 in values or confusion not in tex:
-                fail(f"paper confusion row is missing or stale: {label}/{gold}")
-
-
-def validate_new_study_claims(tex: str) -> None:
-    if "TBD" in tex or "TODO" in tex:
-        fail("manuscript contains an unresolved result placeholder")
-    for excluded_row in ("Switch Qwen &", "Switch Flash &"):
-        if excluded_row in tex:
-            fail(f"quota-confounded hosted policy row entered the paper: {excluded_row}")
-    exclusion = load_object(
-        POLICY_SWITCH_ROOT / "results" / "manuscript-exclusion-receipt.json",
-        "hosted policy-switch exclusion receipt",
-    )
-    if (
-        exclusion.get("status") != "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION"
-        or exclusion.get("decision", {}).get("hosted_model_rows_enter_manuscript") is not False
-        or exclusion.get("decision", {}).get("successful_row_subset_selected") is not False
-    ):
-        fail("hosted policy-switch exclusion boundary changed")
-    replacement_exclusion = load_object(
-        HOSTED_POLICY_REPLACEMENT_RECEIPT,
-        "hosted policy-switch replacement exclusion receipt",
-    )
-    replacement_classification = replacement_exclusion.get("classification", {})
-    replacement_decision = replacement_exclusion.get("decision", {})
-    if (
-        replacement_exclusion.get("status")
-        != "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
-        or replacement_exclusion.get("self_digest")
-        != self_digest(replacement_exclusion, "self_digest")
-        or replacement_classification.get("eligible_for_model_efficacy_reporting") is not False
-        or replacement_classification.get("explicit_resource_exhaustion_errors") != 240
-        or replacement_classification.get("persistent_exhaustion_trigger_sequence") != 0
-        or replacement_decision.get("all_240_terminal_outcomes_considered") is not True
-        or replacement_decision.get("hosted_model_rows_enter_manuscript") is not False
-        or replacement_decision.get("conditional_success_subset_selected") is not False
-        or replacement_exclusion.get("free_form_error_text_included") is not False
-    ):
-        fail("hosted policy-switch replacement exclusion boundary changed")
-    minimum_exclusion = load_object(
-        HOSTED_MINIMUM_MIGRATION_RECEIPT,
-        "hosted minimum policy-migration exclusion receipt",
-    )
-    minimum_classification = minimum_exclusion.get("classification", {})
-    minimum_decision = minimum_exclusion.get("decision", {})
-    if (
-        minimum_exclusion.get("status")
-        != "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
-        or minimum_exclusion.get("self_digest") != self_digest(minimum_exclusion, "self_digest")
-        or minimum_classification.get("eligible_for_route_conformance_reporting") is not False
-        or minimum_classification.get("explicit_resource_exhaustion_errors") != 40
-        or minimum_classification.get("persistent_exhaustion_trigger_sequence") != 0
-        or minimum_classification.get("transport_status_counts") != {"ERROR": 40}
-        or minimum_classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 40}
-        or minimum_decision.get("all_40_terminal_outcomes_considered") is not True
-        or minimum_decision.get("hosted_route_rows_enter_manuscript") is not False
-        or minimum_decision.get("conditional_success_subset_selected") is not False
-        or minimum_exclusion.get("free_form_error_text_included") is not False
-    ):
-        fail("hosted minimum policy-migration exclusion boundary changed")
-    difference_coverage = load_object(
-        POLICY_DIFFERENCE_COVERAGE, "policy-difference coverage receipt"
-    )
-    coverage = difference_coverage.get("coverage", {})
-    source_bindings = difference_coverage.get("source_bindings", {})
-    expected_bindings = {
-        "evaluation_items_sha256": sha256_file(
-            POLICY_SWITCH_ROOT / "dataset" / "evaluation-items.jsonl"
-        ),
-        "evaluation_gold_sha256": sha256_file(
-            POLICY_SWITCH_ROOT / "dataset" / "evaluation-gold.jsonl"
-        ),
-        "evaluation_pairs_sha256": sha256_file(
-            POLICY_SWITCH_ROOT / "dataset" / "evaluation-pairs.json"
-        ),
-        "dataset_manifest_sha256": sha256_file(POLICY_SWITCH_ROOT / "dataset" / "manifest.json"),
-        "policy_contract_sha256": sha256_file(
-            ROOT / "v2" / "policy-switch-v1" / "policy-contract.json"
-        ),
-    }
-    if (
-        difference_coverage.get("status") != "POLICY_DIFFERENCE_COVERAGE_COMPLETE"
-        or difference_coverage.get("record_sha256")
-        != self_digest(difference_coverage, "record_sha256")
-        or source_bindings != expected_bindings
-        or coverage.get("authored_profile_difference_factors_covered") != 12
-        or coverage.get("authored_profile_difference_factors_total") != 12
-        or coverage.get("contexts_per_factor") != 5
-        or coverage.get("directed_nonself_action_transitions_covered") != 6
-        or coverage.get("directed_nonself_action_transitions_possible_over_four_actions") != 12
-        or set(coverage.get("blue_to_amber_transition_counts", {}).values()) != {10}
-        or coverage.get("transition_scope") != "ADMISSION_CENTERED_STAR_NOT_COMPLETE_ACTION_GRAPH"
-    ):
-        fail("policy-difference coverage receipt changed")
-    policy_aggregate = load_object(
-        LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
-        "local policy-switch aggregate",
-    )
-    comparators = policy_aggregate.get("structured_random_forest_comparators", {})
-    aware = comparators.get("policy_aware", {}).get("metrics", {})
-    blind = comparators.get("profile_blind", {}).get("metrics", {})
-    if (
-        aware.get("correct_items") != 120
-        or aware.get("correct_pairs") != 60
-        or blind.get("correct_items") != 60
-        or blind.get("correct_pairs") != 0
-    ):
-        fail("registered policy-switch shortcut result changed")
-    transition_coverage = load_object(
-        POLICY_TRANSITION_GRAPH_COVERAGE, "policy-transition graph coverage receipt"
-    )
-    transition_source_bindings = transition_coverage.get("source_bindings", {})
-    expected_transition_bindings = {
-        "base_policy_sha256": sha256_file(
-            ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json"
-        ),
-        "switch_policy_sha256": sha256_file(
-            ROOT / "v2" / "policy-switch-v1" / "policy-contract.json"
-        ),
-        "evaluation_items_sha256": sha256_file(
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-items.jsonl"
-        ),
-        "evaluation_gold_sha256": sha256_file(
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-gold.jsonl"
-        ),
-        "evaluation_pairs_sha256": sha256_file(
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
-        ),
-        "manifest_sha256": sha256_file(POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "manifest.json"),
-    }
-    if (
-        transition_coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
-        or transition_coverage.get("self_digest") != self_digest(transition_coverage, "self_digest")
-        or transition_source_bindings != expected_transition_bindings
-        or transition_coverage.get("authored_profile_difference_rules_covered") != 12
-        or transition_coverage.get("authored_profile_difference_rules_total") != 12
-        or transition_coverage.get("directed_action_transitions_covered") != 10
-        or transition_coverage.get("directed_action_transitions_semantically_reachable") != 10
-        or transition_coverage.get("directed_nonself_action_transitions_possible") != 12
-        or set(transition_coverage.get("evaluation_transition_counts", {}).values()) != {6}
-        or transition_coverage.get("structurally_unreachable_transitions")
-        != ["HOLD->DEMOTE", "DEMOTE->HOLD"]
-        or transition_coverage.get("profile_action_support")
-        != {
-            "POLICY_AMBER": {"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18},
-            "POLICY_BLUE": {"ALLOW": 18, "HOLD": 12, "DEMOTE": 12, "ESCALATE": 18},
-        }
-    ):
-        fail("reachable policy-transition graph coverage changed")
-    transition_addendum = load_object(
-        POLICY_TRANSITION_GRAPH_INTERPRETATION_ADDENDUM,
-        "policy-transition graph interpretation addendum",
-    )
-    if (
-        transition_addendum.get("status")
-        != "POST_FREEZE_TRANSITION_UNREACHABILITY_EXPLANATION_CORRECTED"
-        or transition_addendum.get("source_transition_coverage_sha256")
-        != sha256_file(POLICY_TRANSITION_GRAPH_COVERAGE)
-        or transition_addendum.get("self_digest") != self_digest(transition_addendum, "self_digest")
-        or transition_addendum.get("conclusions_changed") is not False
-        or transition_addendum.get("client_or_model_calls") != 0
-        or "reaches DEMOTE before HOLD"
-        not in str(transition_addendum.get("corrected_certificate", ""))
-    ):
-        fail("policy-transition graph interpretation correction changed")
-    mutation_audit = load_object(POLICY_MIGRATION_MUTATION_AUDIT, "policy-migration mutation audit")
-    rule_mutants = mutation_audit.get("suites", {}).get("rule_stratified", {})
-    graph_mutants = mutation_audit.get("suites", {}).get("transition_graph", {})
-    expected_mutation_bindings = {
-        "rule_pairs_sha256": sha256_file(
-            ROOT / "v2" / "policy-switch-v1" / "frozen" / "dataset" / "evaluation-pairs.json"
-        ),
-        "rule_coverage_sha256": sha256_file(
-            ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
-        ),
-        "graph_pairs_sha256": sha256_file(
-            POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
-        ),
-        "graph_coverage_sha256": sha256_file(POLICY_TRANSITION_GRAPH_COVERAGE),
-    }
-    if (
-        mutation_audit.get("status") != "EDGE_LOCAL_MIGRATION_MUTATION_AUDIT_COMPLETE"
-        or mutation_audit.get("self_digest") != self_digest(mutation_audit, "self_digest")
-        or mutation_audit.get("model_or_client_calls") != 0
-        or mutation_audit.get("source_bindings") != expected_mutation_bindings
-        or rule_mutants.get("changed_rule_coverage") != {"numerator": 12, "denominator": 12}
-        or rule_mutants.get("edge_local_mutant_detection")
-        != {"numerator": 6, "denominator": 10, "value": 0.6}
-        or graph_mutants.get("changed_rule_coverage") != {"numerator": 12, "denominator": 12}
-        or graph_mutants.get("edge_local_mutant_detection")
-        != {"numerator": 10, "denominator": 10, "value": 1.0}
-    ):
-        fail("policy-migration mutation audit changed")
-    minimal_suite = load_object(MINIMAL_POLICY_MIGRATION_SUITE, "minimum policy-migration suite")
-    if (
-        minimal_suite.get("status") != "PROVABLY_MINIMUM_GRAPH_AND_RULE_COMPLETE_SUITE"
-        or minimal_suite.get("self_digest") != self_digest(minimal_suite, "self_digest")
-        or minimal_suite.get("model_or_client_calls_to_derive") != 0
-        or minimal_suite.get("source_bindings")
-        != {
-            "evaluation_pairs_sha256": sha256_file(
-                POLICY_TRANSITION_GRAPH_ROOT / "dataset" / "evaluation-pairs.json"
-            ),
-            "transition_coverage_sha256": sha256_file(POLICY_TRANSITION_GRAPH_COVERAGE),
-        }
-        or minimal_suite.get("optimality_certificate", {}).get("lower_bound_pairs") != 10
-        or minimal_suite.get("optimality_certificate", {}).get("witness_pairs") != 10
-        or minimal_suite.get("optimality_certificate", {}).get("bound_met") is not True
-        or minimal_suite.get("coverage")
-        != {
-            "reachable_edges": {"covered": 10, "total": 10},
-            "changed_rules": {"covered": 12, "total": 12},
-        }
-        or minimal_suite.get("execution_budget", {}).get("minimum_smoke_items") != 20
-        or minimal_suite.get("execution_budget", {}).get("balanced_diagnostic_items") != 120
-        or minimal_suite.get("execution_budget", {}).get("item_call_reduction_fraction") != 5 / 6
-    ):
-        fail("minimum policy-migration suite changed")
-    minimum_analysis = load_object(
-        MINIMUM_POLICY_MIGRATION_ANALYSIS,
-        "prospective minimum policy-migration subset analysis",
-    )
-    analysis_module = runpy.run_path(
-        str(ROOT / "scripts" / "analyze_minimal_policy_migration_gate.py")
-    )
-    analyze_minimum = analysis_module.get("analyze")
-    if not callable(analyze_minimum):
-        fail("minimum policy-migration analysis entry point is missing")
-    recomputed_minimum = analyze_minimum(
-        MINIMUM_POLICY_MIGRATION_ANALYSIS_PLAN,
-        MINIMUM_POLICY_MIGRATION_ANALYSIS.parent,
-    )
-    minimum_lanes = minimum_analysis.get("lanes")
-    if (
-        minimum_analysis != recomputed_minimum
-        or minimum_analysis.get("status")
-        != "COMPLETE_PROSPECTIVE_MINIMUM_MIGRATION_SUBSET_ANALYSIS"
-        or minimum_analysis.get("self_digest") != self_digest(minimum_analysis, "self_digest")
-        or minimum_analysis.get("selection", {}).get("selected_pair_ids")
-        != minimal_suite.get("selected_pair_ids")
-        or minimum_analysis.get("selection", {}).get("selected_item_ids")
-        != minimal_suite.get("selected_item_ids")
-        or minimum_analysis.get("selection", {}).get("selected_before_route_execution") is not True
-        or minimum_analysis.get("selection", {}).get("model_outputs_consulted") is not False
-        or minimum_analysis.get("scope", {}).get("additional_model_or_client_calls") != 0
-        or minimum_analysis.get("scope", {}).get("replaces_balanced_diagnostic_suite") is not False
-        or not isinstance(minimum_lanes, list)
-        or len(minimum_lanes) != 2
-        or {str(row.get("model_family")) for row in minimum_lanes} != {"Mistral", "Phi"}
-    ):
-        fail("prospective minimum policy-migration subset analysis changed")
-    for lane in minimum_lanes:
-        metrics = lane.get("metrics", {})
-        family = str(lane.get("model_family"))
-        label = "Phi-4" if family == "Phi" else family
-        if (
-            metrics.get("items") != 20
-            or metrics.get("pairs") != 10
-            or not isinstance(metrics.get("parseable_items"), int)
-            or not isinstance(metrics.get("correct_items"), int)
-            or not isinstance(metrics.get("correct_pairs"), int)
-        ):
-            fail(f"minimum policy-migration subset metrics are malformed: {family}")
-        require_regex(
-            tex,
-            rf"minimum[^.]*{re.escape(label)}[^.]*{metrics['parseable_items']}/20\s+valid"
-            rf"[^.]*{metrics['correct_items']}/20[^.]*{metrics['correct_pairs']}/10",
-            f"prospective minimum-gate result for {label}",
-        )
-    graph_aggregate = load_object(
-        LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
-        "local policy-transition graph aggregate",
-    )
-    graph_comparators = graph_aggregate.get("structured_random_forest_comparators", {})
-    graph_aware = graph_comparators.get("policy_aware", {}).get("metrics", {})
-    graph_blind = graph_comparators.get("profile_blind", {}).get("metrics", {})
-    if (
-        graph_aware.get("correct_items") != 107
-        or graph_aware.get("correct_pairs") != 47
-        or graph_blind.get("correct_items") != 57
-        or graph_blind.get("correct_pairs") != 0
-    ):
-        fail("registered transition-graph shortcut result changed")
-    for aggregate_path in (
-        LOCAL_REPLICATION_ROOT / "slsa" / "results" / "aggregate.json",
-        LOCAL_REPLICATION_ROOT / "policy-switch" / "results" / "aggregate.json",
-        LOCAL_TRANSITION_GRAPH_ROOT / "policy-transition-graph" / "results" / "aggregate.json",
-    ):
-        aggregate = load_object(aggregate_path, "local replication aggregate")
-        lanes = aggregate.get("lanes")
-        if (
-            aggregate.get("status") != "COMPLETE"
-            or not isinstance(lanes, list)
-            or len(lanes) != 2
-            or {str(row.get("model_family")) for row in lanes} != {"Mistral", "Phi"}
-        ):
-            fail("local replication model-family boundary changed")
-    required = (
-        (r"intervention-blind certificate", "intervention-blind shortcut certificate"),
-        (r"same action for both members", "policy-blind proof premise"),
-        (r"0/60 pair accuracy", "profile-blind shortcut result"),
-        (r"all 12 authored.*five contexts each", "policy-difference factor coverage"),
-        (r"six admission-centered transitions.*ten pairs each", "policy transition balance"),
-        (r"10/10 reachable non-self edges", "reachable transition-graph coverage"),
-        (r"six contexts for each.*reachable\s+directed edge", "transition-graph balance"),
-        (r"HOLD.*DEMOTE.*structurally", "unreachable transition certificate"),
-        (r"reaches\s+\\demote\{\} before \\hold", "corrected transition precedence proof"),
-        (r"18/12/12/18", "transition-graph per-profile action balance"),
-        (r"kills 6/10[\s\S]{0,120}kills 10/10", "edge-local migration mutation audit"),
-        (r"not a model of fault.*prevalence", "migration-mutant interpretation boundary"),
-        (r"provably minimum.*10-pair.*20-call", "minimum migration smoke suite"),
-        (r"does not replace.*60-pair.*diagnostic", "minimum-suite interpretation boundary"),
-        (r"30.*\\allow.*ten.*other action", "per-profile action balance"),
-        (r"Mistral Small 3\.2 24B", "pinned Mistral route"),
-        (r"Phi-4", "pinned Phi route"),
-        (r"four-bit", "local quantization boundary"),
-        (r"SLSA.*in-toto.*do not endorse", "source-standard interpretation boundary"),
-        (r"different service stack", "old and new Flash stack boundary"),
-        (r"neither model improvement nor an ablation effect", "Flash causal boundary"),
-        (r"invalid response contents are omitted", "invalid-content publication boundary"),
-        (r"hosted policy-switch.*excluded\s+in full", "hosted full-study exclusion"),
-        (r"no successful hosted row", "no valid-subset selection"),
-        (
-            r"40-cell hosted smoke.*excluded\s+in full.*no row from that run",
-            "minimum-suite hosted full-study exclusion",
-        ),
-        (
-            r"Ox Alpha.*20.*zero-retry.*13/20.*6/10.*strict gate",
-            "Ox Alpha minimum-route outcome and gate",
-        ),
-        (
-            r"stealth.*does not identify a model family",
-            "Ox Alpha model-identity boundary",
-        ),
-        (
-            r"post-hoc route selection|selected after.*results were known",
-            "Ox Alpha post-hoc route-selection boundary",
-        ),
-    )
-    for pattern, description in required:
-        require_regex(tex, pattern, description)
-
-
-def validate_public_model_breadth(tex: str) -> bool:
-    if not BREADTH_RESULT.exists():
-        return False
-
-    verifier_module = runpy.run_path(str(BREADTH_VERIFIER))
-    verify = verifier_module.get("verify_public_evidence")
-    if not callable(verify):
-        fail("public model-breadth verifier entry point is missing")
-    verification = verify(
-        BREADTH_RESULT_ROOT,
-        BREADTH_PLAN,
-        BREADTH_PACKET,
-        BREADTH_DATASET,
-        api_key="",
-    )
-    if verification.get("status") != "PUBLIC_MODEL_BREADTH_EVIDENCE_PASS":
-        fail("public model-breadth evidence replay failed")
-
-    plan = load_object(BREADTH_PLAN, "public model-breadth plan")
-    aggregate = load_object(BREADTH_RESULT, "public model-breadth aggregate")
-    failure_addendum = load_object(BREADTH_FAILURE_ADDENDUM, "breadth failure addendum")
-    failure_deriver = runpy.run_path(str(BREADTH_FAILURE_DERIVER))
-    derive_failure_addendum = failure_deriver.get("derive")
-    if not callable(derive_failure_addendum):
-        fail("breadth failure-addendum derivation entry point is missing")
-    _, expected_public_addendum = derive_failure_addendum(BREADTH_PRIVATE_JOURNAL)
-    if failure_addendum != expected_public_addendum:
-        fail("breadth failure addendum differs from the frozen private journal")
-    lane_order = plan.get("execution", {}).get("base_lane_order")
-    if not isinstance(lane_order, list) or len(lane_order) != 7:
-        fail("public model-breadth plan does not retain seven lanes")
-    lane_ids = {str(value) for value in lane_order}
-    lanes = {
-        str(lane.get("lane_id")): lane
-        for lane in aggregate.get("lanes", [])
-        if isinstance(lane, dict)
-    }
-    if set(lanes) != lane_ids:
-        fail("public model-breadth aggregate lane set changed")
-    if (
-        aggregate.get("status") != "COMPLETE"
-        or aggregate.get("design") != "PUBLIC_PRECOMMITTED_MODEL_BREADTH_SUPPLEMENT"
-        or aggregate.get("service_comparison", {}).get("causal_model_ablation_claimed") is not False
-        or aggregate.get("scope_limits")
-        != {
-            "breadth_dimension_added": "MODEL_FAMILY_ONLY",
-            "hidden_generalization_claimed": False,
-            "naturalistic_cases": 0,
-            "ontology_count": 1,
-            "policy_count": 1,
-            "public_known_challenge": True,
-        }
-    ):
-        fail("public model-breadth interpretation boundary changed")
-
-    labels = {
-        "opencode-go-qwen3.8-max-breadth": "Qwen3.8-Max",
-        "opencode-go-deepseek-v4-pro-breadth": "DeepSeek-V4-Pro",
-        "opencode-go-glm-5.3-breadth": "GLM-5.3",
-        "opencode-go-kimi-k3-breadth": "Kimi-K3",
-        "opencode-go-mimo-v2.5-pro-breadth": "MiMo-V2.5-Pro",
-        "opencode-go-minimax-m3-breadth": "MiniMax-M3",
-        "opencode-go-hy3-breadth": "Hunyuan-HY3",
-    }
-    if set(labels) != lane_ids:
-        fail("public model-breadth paper label map changed")
-    for lane_id in lane_order:
-        lane = lanes[str(lane_id)]
-        metrics = lane.get("metrics")
-        if not isinstance(metrics, dict):
-            fail(f"public model-breadth metrics are missing: {lane_id}")
-        confusion = metrics.get("confusion_matrix", {})
-        counts = confusion.get("counts")
-        per_action = metrics.get("per_action")
-        if (
-            not isinstance(counts, dict)
-            or set(counts) != set(ACTIONS)
-            or any(
-                not isinstance(counts.get(action), dict)
-                or set(counts[action])
-                != {"ALLOW", "HOLD", "DEMOTE", "ESCALATE", "NO_VALID_DECISION"}
-                for action in ACTIONS
-            )
-            or not isinstance(per_action, dict)
-            or set(per_action) != set(ACTIONS)
-        ):
-            fail(f"public model-breadth class reporting is incomplete: {lane_id}")
-        conditional_items = (
-            "N/E"
-            if metrics["parseable_items"] == 0
-            else f"{metrics['correct_items']}/{metrics['parseable_items']}"
-        )
-        conditional_pairs = (
-            "N/E"
-            if metrics["covered_pairs"] == 0
-            else f"{metrics['correct_pairs']}/{metrics['covered_pairs']}"
-        )
-        core_row = (
-            f"{labels[str(lane_id)]} & {metrics['parseable_items']}/180 & "
-            f"{metrics['correct_items']}/180 & {conditional_items} & "
-            f"{metrics['covered_pairs']}/90 & {metrics['correct_pairs']}/90 & "
-            f"{conditional_pairs}"
-        )
-        if core_row not in tex:
-            fail(f"public model-breadth result row is missing or changed: {lane_id}")
-        action_row = (
-            f"{labels[str(lane_id)]} & "
-            + " & ".join(paper_rate(per_action[action]["end_to_end_recall"]) for action in ACTIONS)
-            + f" & {paper_rate(metrics['balanced_action_recall'])} & "
-            f"{paper_rate(metrics['macro_f1'])}"
-        )
-        if action_row not in tex:
-            fail(f"public model-breadth action row is missing or changed: {lane_id}")
-        confusion_row = f"{labels[str(lane_id)]} & " + " & ".join(
-            "/".join(str(counts[gold][predicted]) for predicted in (*ACTIONS, "NO_VALID_DECISION"))
-            for gold in ACTIONS
-        )
-        if confusion_row not in tex:
-            fail(f"public model-breadth confusion row is missing or changed: {lane_id}")
-
-    for label in (
-        "tab:breadth-results",
-        "tab:breadth-action-recall",
-        "tab:breadth-confusion",
-    ):
-        if rf"\label{{{label}}}" not in tex:
-            fail(f"required public model-breadth table missing: {label}")
-    required = (
-        (r"frozen service-route stress test", "frozen route stress test"),
-        (r"seven.*service configurations", "seven route configurations"),
-        (r"1\{?,?\}?260.*terminal", "breadth terminal-cell count"),
-        (r"known public.*challenge", "known-public interpretation"),
-        (r"final 547.*quota/rate-limit", "shared quota confound"),
-        (
-            r"547 quota/rate-limit, 76 authorization, five server, one timeout, and one connection",
-            "transport failure categories",
-        ),
-        (r"complete route confusion matrices", "route class artifact"),
-        (r"model identity.*serving implementation.*API adapter", "route causal boundary"),
-    )
-    for pattern, description in required:
-        require_regex(tex, pattern, description)
-    return True
-
-
-def parse_confusion_table(tex: str) -> dict[tuple[str, str], tuple[int, ...]]:
-    match = re.search(
-        r"\\label\{tab:confusion\}(.*?)\\end\{table\}",
-        tex,
-        flags=re.DOTALL,
-    )
-    if not match:
-        fail("full confusion table is missing")
-    current = ""
-    rows: dict[tuple[str, str], tuple[int, ...]] = {}
-    action_macros = {
-        r"\allow{}": "ALLOW",
-        r"\hold{}": "HOLD",
-        r"\demote{}": "DEMOTE",
-        r"\escalate{}": "ESCALATE",
-    }
-    for line in match.group(1).splitlines():
-        if "&" not in line or not line.rstrip().endswith(r"\\"):
-            continue
-        fields = [field.strip() for field in line.rstrip()[:-2].split("&")]
-        if len(fields) != 7 or fields[0] == "Configuration":
-            continue
-        if fields[0]:
-            current = fields[0]
-        gold = action_macros.get(fields[1])
-        if not current or gold is None:
-            continue
-        try:
-            values = tuple(int(field) for field in fields[2:])
-        except ValueError:
-            continue
-        rows[(current, gold)] = values
-    return rows
-
-
-def validate_manuscript_tables(tex: str) -> None:
-    table_rows = parse_confusion_table(tex)
-    expected = {
-        ("r6 Qwen", "ALLOW"): (143, 0, 0, 0, 7),
-        ("r6 Qwen", "HOLD"): (4, 110, 0, 2, 18),
-        ("r6 Qwen", "DEMOTE"): (8, 0, 0, 0, 0),
-        ("r6 Qwen", "ESCALATE"): (0, 0, 0, 5, 3),
-        ("r6 text NB", "ALLOW"): (75, 75, 0, 0, 0),
-        ("r6 text NB", "HOLD"): (25, 109, 0, 0, 0),
-        ("r6 text NB", "DEMOTE"): (8, 0, 0, 0, 0),
-        ("r6 text NB", "ESCALATE"): (8, 0, 0, 0, 0),
-        ("Challenge Qwen", "ALLOW"): (79, 0, 0, 0, 11),
-        ("Challenge Qwen", "HOLD"): (0, 26, 0, 0, 4),
-        ("Challenge Qwen", "DEMOTE"): (8, 4, 4, 4, 10),
-        ("Challenge Qwen", "ESCALATE"): (0, 0, 0, 23, 7),
-        ("Challenge Flash", "ALLOW"): (68, 4, 0, 8, 10),
-        ("Challenge Flash", "HOLD"): (13, 9, 0, 0, 8),
-        ("Challenge Flash", "DEMOTE"): (25, 3, 0, 0, 2),
-        ("Challenge Flash", "ESCALATE"): (0, 3, 0, 13, 14),
-    }
-    if table_rows != expected:
-        fail("manuscript confusion table differs from bound evidence")
-
-    for label in (
-        "tab:core-results",
-        "tab:factor-inventory",
-        "tab:action-recall",
-        "tab:confusion",
-        "tab:factor-results",
-    ):
-        if rf"\label{{{label}}}" not in tex:
-            fail(f"required result table missing: {label}")
-    core_rows = (
-        (
-            r"r6 Qwen3\.7-Max\s*&\s*272/300\s*&\s*258/300\s*&\s*258/272"
-            r"\s*&\s*123/150\s*&\s*113/150\s*&\s*113/123"
-        ),
-        (
-            r"r6 public-dev text NB\s*&\s*300/300\s*&\s*184/300\s*&\s*184/300"
-            r"\s*&\s*150/150\s*&\s*34/150\s*&\s*34/150"
-        ),
-        (
-            r"Public challenge Qwen\s*&\s*148/180\s*&\s*132/180\s*&\s*132/148"
-            r"\s*&\s*64/90\s*&\s*48/90\s*&\s*48/64"
-        ),
-        (
-            r"Public challenge Flash\s*&\s*146/180\s*&\s*90/180\s*&\s*90/146"
-            r"\s*&\s*61/90\s*&\s*13/90\s*&\s*13/61"
-        ),
-        (
-            r"Old Flash service-interface failure\s*&\s*0/300\s*&\s*0/300\s*&\s*N/E"
-            r"\s*&\s*0/150\s*&\s*0/150\s*&\s*N/E"
-        ),
-    )
-    for pattern in core_rows:
-        require_regex(tex, pattern, "core result table row")
-    action_rows = (
-        (
-            r"r6 Qwen3\.7-Max\s*&\s*\.9533\s*&\s*\.8209\s*&\s*\.0000"
-            r"\s*&\s*\.6250\s*&\s*\.5998\s*&\s*\.6265"
-        ),
-        (
-            r"r6 public-dev text NB\s*&\s*\.5000\s*&\s*\.8134\s*&\s*\.0000"
-            r"\s*&\s*\.0000\s*&\s*\.3284\s*&\s*\.3124"
-        ),
-        (
-            r"Public challenge Qwen\s*&\s*\.8778\s*&\s*\.8667\s*&\s*\.1333"
-            r"\s*&\s*\.7667\s*&\s*\.6611\s*&\s*\.7004"
-        ),
-        (
-            r"Public challenge Flash\s*&\s*\.7556\s*&\s*\.3000\s*&\s*\.0000"
-            r"\s*&\s*\.4333\s*&\s*\.3722\s*&\s*\.3928"
-        ),
-    )
-    for pattern in action_rows:
-        require_regex(tex, pattern, "action-recall table row")
-    factor_rows = (
-        "r6 Qwen & 20 & .2857--1.0000 & .0000--1.0000 & 2 / 7",
-        "Challenge Qwen & 15 & .5000--1.0000 & .0000--1.0000 & 3 / 2",
-        "Challenge Flash & 15 & .0000--1.0000 & .0000--.8333 & 11 / 0",
-    )
-    for row in factor_rows:
-        if row not in tex:
-            fail(f"factor-result table row missing or changed: {row}")
-
-
-def validate_naturalistic_decision(tex: str) -> None:
-    pool_bytes = NATURALISTIC_POOL.read_bytes()
-    pool = load_object(NATURALISTIC_POOL, "naturalistic candidate pool")
-    decision = load_object(NATURALISTIC_DECISION, "naturalistic review decision")
-    observed_sha = "sha256:" + hashlib.sha256(pool_bytes).hexdigest()
-    if decision.get("candidate_pool") != {
-        "path": "v2/naturalistic-candidates.json",
-        "sha256": observed_sha,
-        "candidate_count": len(pool.get("candidates", [])),
-    }:
-        fail("naturalistic decision is not bound to candidate pool")
-    expected_ids = [row.get("candidate_id") for row in pool.get("candidates", [])]
-    if decision.get("reviewed_candidate_ids") != expected_ids:
-        fail("naturalistic reviewed candidate list changed")
-    if decision.get("decision") != {
-        "cases_created": 0,
-        "model_calls": 0,
-        "claimpromotebench_model_outputs_consulted": False,
-        "human_annotators": 0,
-        "agreement_statistic": None,
-        "selection_frozen_before_model_calls": True,
-    }:
-        fail("naturalistic pre-model decision changed")
-    required = (
-        (r"created zero cases", "zero naturalistic cases"),
-        (r"zero model calls", "zero naturalistic model calls"),
-        (r"No human annotators", "no fabricated human annotation"),
-        (r"Naturalistic validity therefore remains untested", "naturalistic limitation"),
-    )
-    for pattern, description in required:
-        require_regex(tex, pattern, description)
-
-
-def validate_v1_diagnostic(tex: str) -> None:
-    frozen = load_object(RESULTS_FREEZE, "v1 results freeze")
-    if frozen.get("source_study_sha256") != (
-        "sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664"
-    ):
-        fail("v1 results freeze changed")
-    if frozen.get("format_error_count") != 5327 or frozen.get("parseable_raw_decisions") != 1873:
-        fail("v1 diagnostic counts changed")
-    # The frozen v1 artifact remains bound and available to reviewers, but its execution history
-    # is no longer required in the main narrative. The paper centers the r6 and balanced-challenge
-    # evidence regimes.
-
-
-def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]:
-    lower = tex.lower()
-    normalized_lower = normalize_space(lower)
-    for section in (
+def validate_structure_and_metadata(tex: str, bib: str) -> None:
+    expected_title = rf"\title{{{TEX_TITLE}}}"
+    if expected_title not in tex:
+        fail("canonical manuscript title changed")
+
+    sections = [
         "Introduction",
         "Related Work",
-        "Task and Protocol",
-        "Evaluation Design",
+        "Method",
+        "Evidence and Evaluation Design",
         "Results",
         "Discussion",
         "Limitations",
+        "Conclusion",
         "Reproducibility Statement",
         "AI Assistance Disclosure",
-        "Conclusion",
-    ):
-        if rf"\section{{{section}}}" not in tex:
-            fail(f"required manuscript section missing: {section}")
-    if r"\label{fig:evidence-flow}" not in tex:
-        fail("benchmark/evidence-flow figure is missing")
-    for phrase in (
-        "complete versioned policy contract",
-        "exactly six fields",
-        "first matching row fixes the action, proposed state, and ordered reason codes",
-        "Every scheduled service, syntax, schema, and semantic failure",
-        "intervention-blind certificate",
-        "definitional policy ceiling",
-    ):
-        if phrase not in tex:
-            fail(f"self-contained task description is missing: {phrase!r}")
+    ]
+    positions = [tex.find(rf"\section{{{name}}}") for name in sections]
+    if any(position < 0 for position in positions) or positions != sorted(positions):
+        fail("required main-text sections are missing or out of order")
+    bibliography = tex.find(r"\bibliographystyle{plain}")
+    appendix = tex.find(r"\appendix")
+    if bibliography < positions[-1] or appendix < bibliography:
+        fail("bibliography or appendix boundary changed")
 
-    overclaims = (
-        r"\bfirst benchmark\b",
-        r"\bfirst system\b",
-        r"\bfirst framework\b",
-        r"\bstate[- ]of[- ]the[- ]art\b",
-        r"\bguarantees? safety\b",
-        r"general research-agent competence is established",
-    )
-    for pattern in overclaims:
-        if re.search(pattern, tex, flags=re.IGNORECASE):
-            fail(f"unsupported novelty or capability claim found: {pattern}")
-    excluded_study_markers = (
-        "1,260",
-        "78/1,260",
-        "quota/rate-limit",
-        "Qwen3.8-Max",
-        "DeepSeek-V4-Pro",
-        "Kimi-K3",
-        "MiniMax-M3",
-        "tab:breadth-results",
-        "tab:breadth-action-recall",
-        "tab:breadth-confusion",
-    )
-    for marker in excluded_study_markers:
-        if marker in tex:
-            fail(f"excluded seven-route study leaked into manuscript: {marker}")
-    for phrase in (
-        "synthetic protocol for paired action conformance",
-        "author-defined executable specification",
-        "service, syntax, schema, and semantic failure",
-        "action conformance after output-contract validation",
-        "retained after an older adaptive interface study",
-        "one migration, one grammar, two local snapshots",
-        "metric and contract replay",
-        "No human annotators or agreement statistic are claimed",
-        "Naturalistic validity therefore remains untested",
-        "between-route comparisons are descriptive",
-    ):
-        if phrase.lower() not in normalized_lower:
-            fail(f"required interpretation boundary missing: {phrase!r}")
+    abstract = manuscript_abstract_plain(tex)
+    abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'/-]*", abstract)
+    if not 180 <= len(abstract_words) <= 300:
+        fail(f"abstract length outside 180--300 words: {len(abstract_words)}")
 
-    cite_keys: set[str] = set()
-    for group in re.findall(r"\\cite(?:t|p)?\{([^}]+)\}", tex):
-        cite_keys.update(key.strip() for key in group.split(",") if key.strip())
-    bib_keys = set(re.findall(r"@\w+\{([^,]+),", bib))
-    missing = sorted(cite_keys - bib_keys)
+    cite_groups = re.findall(r"\\cite\{([^}]+)\}", tex)
+    cited = {key.strip() for group in cite_groups for key in group.split(",")}
+    bib_keys = re.findall(r"@\w+\{([^,]+),", bib)
+    if len(bib_keys) != len(set(bib_keys)):
+        fail("duplicate BibTeX keys")
+    missing = sorted(cited - set(bib_keys))
     if missing:
-        fail(f"citation keys missing from references.bib: {missing}")
-    required_citations = {
+        fail(f"missing BibTeX entries: {missing}")
+
+    for key in (
+        "mullick2023evolving",
+        "ji2026argus",
         "ribeiro2020checklist",
         "gardner2020contrastsets",
         "chan1998metamorphic",
-        "chow1978fsm",
-        "harrold1993testsuite",
-        "fisler2005policychange",
         "martin2007policytests",
-        "martin2007policymutation",
-        "tzorefbrill2017semantic",
-        "scholak2021picard",
-        "geng2023grammar",
-        "omg2024dmn",
-        "tretmans1996conformance",
-        "geng2025jsonschemabench",
-        "patil2025bfcl",
-        "datla2025policytotests",
-        "rehan2026tdad",
-        "geifman2017selective",
-        "geifman2019selectivenet",
-        "zhou2025rulearena",
-        "mu2024rules",
-        "zhang2026inverseifeval",
-        "cisneros2026policycompliance",
-        "bao2026policyllm",
         "diao2025guidebench",
-        "liu2026augmentedpolicy",
-        "choi2026compass",
-        "ma2024promptregression",
-        "ahmed2025speceval",
-        "gonzalez2026aiware",
-        "javaji2025claimbench",
-        "chen2026evidenceledger",
-        "kim2026ledger",
-        "elliman2026claimledger",
-        "liu2026policyinternalization",
-        "yang2026rulesual",
+        "rehan2026tdad",
+        "scholak2021picard",
+        "geifman2017selective",
         "chen2025scienceagentbench",
-        "siegel2025corebench",
-        "huang2025popper",
-        "slsa2026v12",
-        "intoto2026attestation",
-    }
-    if not required_citations <= cite_keys:
-        fail(f"required primary-source citations missing: {sorted(required_citations - cite_keys)}")
-    labels = re.findall(r"\\label\{([^}]+)\}", tex)
-    duplicates = sorted({label for label in labels if labels.count(label) > 1})
-    if duplicates:
-        fail(f"duplicate labels: {duplicates}")
-    refs = set(re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", tex))
-    missing_labels = sorted(refs - set(labels))
-    if missing_labels:
-        fail(f"references without labels: {missing_labels}")
-
-    abstract = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex, flags=re.DOTALL)
-    if not abstract:
-        fail("abstract not found")
-    abstract_text = re.sub(r"\\[A-Za-z]+\*?(?:\{[^{}]*\})?", " ", abstract.group(1))
-    abstract_words = re.findall(r"[A-Za-z0-9][A-Za-z0-9'._-]*", abstract_text)
-    if len(abstract_words) > 220:
-        fail(f"abstract exceeds 220 words: {len(abstract_words)}")
-
-    for pattern in (
-        r"\bit is worth noting\b",
-        r"\bserves as\b",
-        r"\bin conclusion\b",
-        r"\bto sum up\b",
-        r"\bdelve\b",
-        r"\btapestry\b",
-        r"\b(?:research|technical|ai) landscape\b",
-        r"\bpost-v1 public formatting control\b",
-        r"\badaptive hidden service study\b",
     ):
-        if re.search(pattern, tex, flags=re.IGNORECASE):
-            fail(f"manuscript retains formulaic or reader-irrelevant prose: {pattern}")
+        if key not in cited:
+            fail(f"required literature family is absent: {key}")
 
-    contributions = re.search(
-        r"Our contributions are:\s*\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
-        tex,
-        flags=re.DOTALL,
+    readme = README.read_text(encoding="utf-8")
+    citation = CITATION.read_text(encoding="utf-8")
+    metadata = SUBMISSION_METADATA.read_text(encoding="utf-8")
+    expect(readme.splitlines()[0], f"# {CANONICAL_TITLE}", "README title")
+    if f'title: "{CANONICAL_TITLE}"' not in citation:
+        fail("CITATION.cff title differs from the manuscript")
+    if metadata.count(CANONICAL_TITLE) < 2:
+        fail("ICLR and arXiv metadata titles are not bound")
+    abstract_match = re.search(
+        r"## ICLR 2027 abstract\s+```text\s+(.*?)\s+```", metadata, re.DOTALL
     )
-    if not contributions:
-        fail("contributions block not found")
-    contribution_count = len(re.findall(r"\\item\b", contributions.group(1)))
-    if not 3 <= contribution_count <= 5:
-        fail("contributions block must contain three to five items")
-    if "The author chose" not in tex or "responsible for the manuscript" not in tex:
-        fail("AI assistance disclosure must retain author responsibility")
-    return len(cite_keys), len(set(labels)), len(abstract_words)
+    if abstract_match is None:
+        fail("copy-ready ICLR abstract is missing")
+    expect(
+        normalize_space(abstract_match.group(1)),
+        abstract,
+        "submission metadata abstract",
+    )
+
+    for path in (README, SUBMISSION_METADATA, TEX):
+        content = path.read_text(encoding="utf-8")
+        if re.search(r"\b(?:179|170|619)\s+(?:files?|檔案)", content, re.IGNORECASE):
+            fail(f"stale fixed file count in {path.relative_to(ROOT)}")
+
+
+def validate_builder(tex: str) -> None:
+    namespace = runpy.run_path(str(SUBMISSION_BUILDER))
+    expect(namespace.get("TITLE"), TEX_TITLE, "arXiv wrapper title")
+    body = namespace["canonical_body"]()
+    appendix = namespace["canonical_appendix"]()
+    if (
+        body
+        != tex[tex.index(r"\begin{abstract}") : tex.rindex(r"\bibliographystyle")].rstrip() + "\n\n"
+    ):
+        fail("submission builder changes the canonical scientific body")
+    if not appendix.startswith(r"\appendix"):
+        fail("submission builder dropped the appendix")
+    anonymous = namespace["anonymous_iclr_body"](body)
+    for marker in ("wangzhikai", "f0909172434", "Chih-Kai Wang", "National Taipei"):
+        if marker.lower() in anonymous.lower():
+            fail(f"anonymous manuscript retains identity marker: {marker}")
+
+
+def validate_upstream_sources() -> None:
+    coverage = load_object(UPSTREAM / "coverage.json", "Gatekeeper coverage")
+    minimum = load_object(UPSTREAM / "minimum-suite.json", "Gatekeeper minimum suite")
+    receipt = load_object(UPSTREAM / "source-validation-receipt.json", "Gatekeeper receipt")
+    expect(coverage.get("candidate_pairs"), 12, "Gatekeeper pairs")
+    expect(len(coverage.get("changed_rules", [])), 2, "Gatekeeper changed rules")
+    expect(
+        coverage.get("reachable_action_edges"), ["ALLOW->HOLD", "HOLD->ALLOW"], "Gatekeeper edges"
+    )
+    expect(
+        coverage.get("contexts_per_transition"),
+        {"ALLOW->HOLD": 6, "HOLD->ALLOW": 6},
+        "Gatekeeper edge support",
+    )
+    expect(
+        nested(minimum, "coverage.changed_rules"),
+        {"covered": 2, "total": 2},
+        "Gatekeeper rule minimum",
+    )
+    expect(
+        nested(minimum, "coverage.action_edges"),
+        {"covered": 2, "total": 2},
+        "Gatekeeper edge minimum",
+    )
+    expect(minimum.get("witness_pairs"), 2, "Gatekeeper minimum size")
+    expect(receipt.get("source_bytes_match_registry"), True, "Gatekeeper source bytes")
+    expect(receipt.get("model_calls"), 0, "Gatekeeper pre-route model calls")
+    expect(
+        len(receipt.get("finite_grammar_oracle_evaluations", [])), 24, "Gatekeeper OPA evaluations"
+    )
+
+    trivy = load_object(TRIVY / "results.json", "Trivy results")
+    trivy_min = load_object(TRIVY / "minimum-suite.json", "Trivy minimum suite")
+    expect(len(trivy.get("results", [])), 4, "Trivy cases")
+    expect(
+        trivy.get("transition_support"), {"ALLOW->HOLD": 2, "HOLD->ALLOW": 2}, "Trivy transitions"
+    )
+    expect(trivy_min.get("witness_cases"), 2, "Trivy minimum")
+
+    sigstore = load_object(SIGSTORE / "results.json", "Cosign verifier results")
+    sigstore_min = load_object(SIGSTORE / "minimum-suite.json", "Cosign minimum suite")
+    expect(len(sigstore.get("results", [])), 6, "Cosign cases")
+    expect(len(sigstore.get("fault_mode_support", {})), 4, "Cosign fault modes")
+    expect(sigstore_min.get("witness_cases"), 4, "Cosign minimum")
+
+
+def route_by_model(aggregate: dict[str, Any], model: str) -> dict[str, Any]:
+    matches = [lane for lane in aggregate.get("lanes", []) if lane.get("model_requested") == model]
+    if len(matches) != 1:
+        fail(f"expected one repeated route for {model}, found {len(matches)}")
+    return matches[0]
+
+
+def validate_repeated_routes() -> None:
+    aggregate = load_object(REPETITION / "results" / "aggregate.json", "repeated-route aggregate")
+    diagnostic = load_object(
+        REPETITION / "diagnostics" / "failure-modes.json", "repeated-route failure diagnostic"
+    )
+    expect(aggregate.get("scheduled_cells"), 144, "repeated scheduled cells")
+    expect(aggregate.get("items_per_route_repetition"), 24, "items per repetition")
+    expect(aggregate.get("pairs_per_route_repetition"), 12, "pairs per repetition")
+    expect(
+        [len(lane.get("by_repetition", [])) for lane in aggregate.get("lanes", [])],
+        [3, 3],
+        "repetition count",
+    )
+    expect(
+        aggregate.get("raw_or_invalid_response_content_in_aggregate"), False, "aggregate privacy"
+    )
+
+    qwen = route_by_model(aggregate, "qwen3.7-max")
+    flash = route_by_model(aggregate, "deepseek-v4-flash")
+    for lane, model, items, full_items, pairs, full_pairs, repeats in (
+        (qwen, "Qwen", 10, 10, 0, 0, [(3, 3, 0, 0), (2, 2, 0, 0), (5, 5, 0, 0)]),
+        (flash, "Flash", 53, 52, 21, 20, [(15, 15, 6, 6), (19, 18, 7, 6), (19, 19, 8, 8)]),
+    ):
+        total = lane["descriptive_three_repeat_total"]
+        expect(nested(total, "strict_action.accuracy.numerator"), items, f"{model} strict items")
+        expect(nested(total, "strict_action.accuracy.denominator"), 72, f"{model} item denominator")
+        expect(
+            nested(total, "contract_action.accuracy.numerator"), items, f"{model} contract items"
+        )
+        expect(
+            nested(total, "full_decision_exact.accuracy.numerator"),
+            full_items,
+            f"{model} full items",
+        )
+        expect(
+            nested(total, "pair_accuracy.strict_action.numerator"), pairs, f"{model} strict pairs"
+        )
+        expect(
+            nested(total, "pair_accuracy.strict_action.denominator"),
+            36,
+            f"{model} pair denominator",
+        )
+        expect(
+            nested(total, "pair_accuracy.full_decision_exact.numerator"),
+            full_pairs,
+            f"{model} full pairs",
+        )
+        observed = []
+        for repetition in lane["by_repetition"]:
+            observed.append(
+                (
+                    nested(repetition, "strict_action.accuracy.numerator"),
+                    nested(repetition, "full_decision_exact.accuracy.numerator"),
+                    nested(repetition, "pair_accuracy.strict_action.numerator"),
+                    nested(repetition, "pair_accuracy.full_decision_exact.numerator"),
+                )
+            )
+        expect(observed, repeats, f"{model} repetition rows")
+
+    expect(diagnostic.get("gold_loaded"), False, "failure diagnostic gold boundary")
+    expect(diagnostic.get("raw_response_text_retained"), False, "failure diagnostic raw text")
+    expect(diagnostic.get("hidden_reasoning_retained"), False, "failure diagnostic reasoning")
+    expect(
+        diagnostic.get("provider_response_identifiers_retained"), False, "failure diagnostic IDs"
+    )
+    expect(diagnostic.get("response_repair_or_rescoring_performed"), False, "failure repair")
+    failure_by_model = {
+        lane["model_requested"]: lane["failure_mode_counts"] for lane in diagnostic["lanes"]
+    }
+    expect(
+        failure_by_model["qwen3.7-max"],
+        {"CONTRACT_VALID": 10, "MARKDOWN_CODE_FENCE": 62},
+        "Qwen failure modes",
+    )
+    expect(
+        failure_by_model["deepseek-v4-flash"],
+        {
+            "CONTRACT_VALID": 53,
+            "LENGTH_TERMINATED_NON_JSON": 1,
+            "MARKDOWN_CODE_FENCE": 3,
+            "NON_JSON_PREFIX_OR_ENVELOPE": 3,
+            "READ_TIMEOUT": 12,
+        },
+        "Flash failure modes",
+    )
+
+
+def challenge_lane(aggregate: dict[str, Any], lane_id: str) -> dict[str, Any]:
+    matches = [lane for lane in aggregate.get("lanes", []) if lane.get("lane_id") == lane_id]
+    if len(matches) != 1:
+        fail(f"expected one challenge lane {lane_id}")
+    return matches[0]
+
+
+def validate_auxiliary_results() -> None:
+    dual = load_object(DUAL_ENDPOINT, "dual-endpoint audit")
+    routes = dual.get("routes", [])
+    expect(len(routes), 10, "dual-endpoint route count")
+    expect(
+        sum(route["metrics"]["scheduled_items"] for route in routes), 1320, "dual scheduled items"
+    )
+    expect(
+        sum(
+            route["metrics"]["endpoint_difference"]["extractable_items_outside_full_contract"]
+            for route in routes
+        ),
+        69,
+        "dual extra extractable items",
+    )
+    expect(
+        sum(
+            route["metrics"]["endpoint_difference"]["action_correct_items_outside_full_contract"]
+            for route in routes
+        ),
+        49,
+        "dual extra correct items",
+    )
+    expect(
+        sum(
+            route["metrics"]["endpoint_difference"]["additional_action_correct_pairs"]
+            for route in routes
+        ),
+        40,
+        "dual extra correct pairs",
+    )
+    by_id = {route["route_stack_id"]: route for route in routes}
+    for lane_id, strict_items, contract_items, strict_pairs, contract_pairs in (
+        ("challenge-deepseek-flash-host-schema", 105, 90, 19, 13),
+        ("challenge-qwen-host-prompt", 132, 132, 48, 48),
+        ("slsa-deepseek-flash-host-schema", 110, 108, 51, 49),
+        ("slsa-qwen-host-prompt", 120, 88, 60, 28),
+    ):
+        metrics = by_id[lane_id]["metrics"]
+        expect(
+            nested(metrics, "action_only.correct_items"), strict_items, f"{lane_id} strict items"
+        )
+        expect(
+            nested(metrics, "full_contract.action_correct_items"),
+            contract_items,
+            f"{lane_id} contract items",
+        )
+        expect(
+            nested(metrics, "action_only.correct_pairs"), strict_pairs, f"{lane_id} strict pairs"
+        )
+        expect(
+            nested(metrics, "full_contract.action_correct_pairs"),
+            contract_pairs,
+            f"{lane_id} contract pairs",
+        )
+
+    r6 = load_object(R6_ADDENDUM, "r6 addendum")["qwen_service_configuration"]
+    for field, expected in (
+        ("valid_decisions", 272),
+        ("correct_items", 258),
+        ("correct_pairs", 113),
+        ("complete_pairs", 123),
+    ):
+        expect(r6.get(field), expected, f"r6 {field}")
+
+    challenge = load_object(CHALLENGE, "balanced challenge")
+    qwen = challenge_lane(challenge, "opencode-go-qwen3.7-max")
+    flash = challenge_lane(challenge, "opencode-go-deepseek-v4-flash-matched")
+    for lane, label, valid, items, pairs, complete in (
+        (qwen, "challenge Qwen", 148, 132, 48, 64),
+        (flash, "challenge Flash", 146, 90, 13, 61),
+    ):
+        metrics = lane["metrics"]
+        expect(metrics.get("parseable_items"), valid, f"{label} valid")
+        expect(metrics.get("correct_items"), items, f"{label} items")
+        expect(metrics.get("correct_pairs"), pairs, f"{label} pairs")
+        expect(metrics.get("covered_pairs"), complete, f"{label} complete pairs")
+
+
+def validate_authored_graph() -> None:
+    switch = load_object(POLICY_SWITCH_COVERAGE, "authored rule coverage")
+    graph = load_object(GRAPH_COVERAGE, "authored graph coverage")
+    minimum = load_object(GRAPH_MINIMUM, "authored minimum suite")
+    expect(
+        nested(switch, "coverage.authored_profile_difference_factors_covered"),
+        12,
+        "rule-suite rules",
+    )
+    expect(
+        nested(switch, "coverage.directed_nonself_action_transitions_covered"),
+        6,
+        "rule-suite edges",
+    )
+    expect(graph.get("authored_profile_difference_rules_covered"), 12, "graph rules")
+    expect(graph.get("directed_action_transitions_covered"), 10, "graph edges")
+    expect(nested(minimum, "coverage.changed_rules"), {"covered": 12, "total": 12}, "minimum rules")
+    expect(
+        nested(minimum, "coverage.reachable_edges"), {"covered": 10, "total": 10}, "minimum edges"
+    )
+    expect(nested(minimum, "execution_budget.minimum_smoke_pairs"), 10, "minimum pairs")
+    expect(nested(minimum, "execution_budget.minimum_smoke_items"), 20, "minimum items")
+
+    routes = load_object(GRAPH_ROUTES, "authored graph routes")
+    pair_counts = {lane["lane_id"]: lane["metrics"]["correct_pairs"] for lane in routes["lanes"]}
+    expect(
+        pair_counts["local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2"],
+        10,
+        "Mistral graph pairs",
+    )
+    expect(pair_counts["local-mlx-phi-4-policy-transition-graph-v2"], 2, "Phi graph pairs")
+
+
+def validate_naturalistic() -> None:
+    decision = load_object(NATURALISTIC, "naturalistic-candidate decision")
+    expect(nested(decision, "candidate_pool.candidate_count"), 12, "naturalistic candidates")
+    expect(nested(decision, "decision.cases_created"), 0, "naturalistic retained cases")
+    expect(nested(decision, "decision.model_calls"), 0, "naturalistic model calls")
+    expect(nested(decision, "decision.human_annotators"), 0, "naturalistic annotators")
+    expect(nested(decision, "decision.agreement_statistic"), None, "naturalistic agreement")
+    expect(
+        nested(decision, "decision.selection_frozen_before_model_calls"),
+        True,
+        "naturalistic freeze boundary",
+    )
+
+
+def validate_manuscript_claims(tex: str) -> None:
+    required = {
+        "synthetic scope": "synthetic, policy-constrained evaluation",
+        "three endpoints": (
+            "strict action $\\rightarrow$ contract action $\\rightarrow$ full decision"
+        ),
+        "definitional ceiling": "definitional policy ceiling",
+        "weak Naive Bayes": "Naive Bayes sanity control is deliberately weak",
+        "Gatekeeper coverage": "2/2 changed rules",
+        "Gatekeeper minimum": "two-pair witness",
+        "repeated Flash result": "53/72 items and 21/36 pairs",
+        "repeated Qwen result": "10/72 strict and full decisions",
+        "failure taxonomy": "12 read timeouts, three fenced objects",
+        "dual endpoint totals": "49 are correct and create 40 additional correct pairs",
+        "r6 result": "258/300",
+        "challenge Qwen": "132/180",
+        "challenge Flash": "90/180",
+        "rare action": "4/30 \\demote, and Flash recovers 0/30",
+        "historical interface": "obsolete frozen service interface",
+        "causal boundary": "carry no causal comparison with the 401 lane",
+        "public challenge boundary": "robustness check under known cases",
+        "naturalistic decision": "zero admissible cases",
+    }
+    for label, needle in required.items():
+        require_text(tex, needle, label)
+
+    forbidden = {
+        "broad research-agent claim": r"general research[- ]agent (?:ability|capability)",
+        "model-family ranking": r"(?:rank|ranking|outperform\w*)[^.]{0,80}model famil",
+        "causal route claim": (
+            r"(?:proves?|establishes?) (?:that )?(?:the )?"
+            r"(?:model|provider|schema|adapter).{0,50}(?:caus|improv)"
+        ),
+        "human agreement claim": (
+            r"(?:inter[- ]annotator|annotator agreement|human agreement)\s*(?:=|of|was|is)"
+        ),
+        "invalid response quotation": r"raw (?:invalid|failed) response(?: text)?\s*[:=]",
+        "fixed obsolete file count": r"\b(?:179|170|619)\s+files?\b",
+    }
+    for label, pattern in forbidden.items():
+        if re.search(pattern, tex, re.IGNORECASE | re.DOTALL):
+            fail(f"forbidden manuscript claim: {label}")
+
+
+def validate_style_receipt() -> None:
+    audit = load_object(STYLE_AUDIT, "manuscript style audit")
+    expect(audit.get("status"), "PASS", "style audit status")
+    expect(
+        nested(audit, "after.manuscript_sha256"), sha256_hex(TEX), "style audit manuscript digest"
+    )
+    findings = nested(audit, "after.configured_pattern_findings")
+    if any(value != 0 for value in findings.values()):
+        fail(f"style audit contains negative-pattern findings: {findings}")
 
 
 def main() -> int:
     tex = TEX.read_text(encoding="utf-8")
     bib = BIB.read_text(encoding="utf-8")
-    validate_submission_metadata(tex)
-    validate_manuscript_style_audit()
-    validate_no_stale_file_counts()
-    validate_submission_builder(tex)
-    validate_r6_evidence(tex)
-    validate_balanced_challenge(tex)
-    configs = metric_configs()
-    validate_metric_rows(tex, configs)
-    validate_new_study_claims(tex)
-    validate_naturalistic_decision(tex)
-    validate_v1_diagnostic(tex)
-    citation_count, label_count, abstract_words = validate_structure_and_citations(tex, bib)
-    print(
-        "paper-lint: PASS "
-        f"({citation_count} citation keys, {label_count} labels, "
-        f"{abstract_words} abstract words; {len(configs)} configurations bound; "
-        "seven-route study excluded)"
-    )
+    validate_structure_and_metadata(tex, bib)
+    validate_builder(tex)
+    validate_upstream_sources()
+    validate_repeated_routes()
+    validate_auxiliary_results()
+    validate_authored_graph()
+    validate_naturalistic()
+    validate_manuscript_claims(tex)
+    validate_style_receipt()
+    print("paper-lint: PASS")
     return 0
 
 

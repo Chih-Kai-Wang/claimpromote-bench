@@ -1,183 +1,135 @@
-# ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes under Executable Policy Revisions
+# ClaimPromoteBench: Compiling Executable Policy Revisions into Paired Model-Service Regression Tests
 
-ClaimPromoteBench adapts semantic policy differencing to paired, failure-aware tests of an existing
-model-service boundary under an executable policy revision. Primary correctness is action
-conformance after output-contract validation. It is not an evaluation of exact policy execution,
-general research-agent ability, or naturalistic scientific judgment.
+ClaimPromoteBench converts the behavioral difference between two executable policy versions into
+paired regression tests for a model-service boundary. Each pair holds the complete context fixed,
+changes only the policy version, and requires the prescribed action to change.
 
-## Task
+The benchmark is a synthetic, policy-constrained evaluation. Its claims concern finite authored
+context grammars and time-stamped route stacks. A direct deterministic executor remains the
+preferred enforcement path when an application can call the policy itself.
 
-Each item contains a typed subject, evidence ledger, current state, requested target state, and
-frozen evaluation time. The policy returns one of four actions:
+## What the compiler produces
 
-`ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
+Given `P_old`, `P_new`, and a finite context grammar, the compiler:
 
-Research status, computational support, formal certification, and independent review remain
-separate state axes. Evidence pairs change one registered prerequisite under a fixed policy;
-policy pairs change only the active profile while reusing the evidence and states. A response
-counts as valid only if it satisfies the JSON contract and all cross-field semantics.
+1. executes both policies over every context;
+2. retains contexts whose prescribed actions differ;
+3. creates paired items that vary only the policy source;
+4. certifies changed-rule and directed action-transition coverage; and
+5. selects a cardinality-minimum suite that covers both targets.
 
-Service, syntax, schema, and semantic failures remain incorrect in end-to-end metrics. Conditional
-accuracy is reported only beside decision or pair coverage. The deterministic policy executor
-defines the labels and is therefore a definitional policy ceiling, not a learned baseline.
-Primary correctness is action-level after gold-free schema and cross-field validation; it is not
-an exact-match score over every field in the decision object.
+The reusable implementation is in `src/claimpromotebench/policy_difference.py`.
 
-## Auxiliary evidence diagnostics
+## Scoring endpoints
 
-The central policy-migration validation appears in the next section. The research-evidence suites
-below diagnose action imbalance and end-to-end route failure; they do not independently validate
-policy differencing.
+Every scheduled call remains in end-to-end denominators. The evaluator reports three nested
+endpoints:
 
-The fresh hidden r6 diagnostic contains 300 items and 150 controlled pairs. Its gold distribution
-is imbalanced, with only eight `DEMOTE` and eight `ESCALATE` items.
+- **strict action**: an exact action recovered from a parser-owned object or one strict top-level
+  JSON object;
+- **contract action**: the action is correct after the complete task contract passes; and
+- **full decision**: the complete structured decision matches the deterministic oracle.
 
-| Configuration | Valid | E2E item / pair | Conditional item / pair | Pair coverage |
+The strict parser performs no repair, code-fence extraction, coercion, or duplicate-key recovery.
+Transport, syntax, schema, and semantic failures remain terminal errors. Conditional metrics are
+reported beside the corresponding coverage denominator.
+
+## Evidence layers
+
+| Instrument | Evidence role | Size | Main certificate or result |
+|---|---|---:|---|
+| Gatekeeper revisions | central source-traceable policy study | 12 pairs | 2/2 rules, 2/2 edges, two-pair minimum |
+| Gatekeeper repeated routes | central model-service study | 144 calls | three repetitions on each of two routes |
+| Trivy KCV0030 | independent policy-fault reproduction | 4 cases | inverted predicate, two transition directions |
+| Cosign Rego verifier | independent interface-fault reproduction | 6 cases | four documented verifier fault modes |
+| Authored SLSA migration | four-action compiler stress test | 60 graph pairs | 12/12 rules, 10/10 reachable edges, ten-pair minimum |
+| Research r6 | evidence-state coverage addendum | 150 pairs | rare-action support and complete denominators |
+| Public balanced challenge | preregistered robustness diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
+
+Exact old and new upstream source bytes, commit bindings, licenses, source-validation receipts, and
+minimum-suite certificates are stored under:
+
+- `v2/upstream-policy-revisions-v1/`
+- `v2/trivy-policy-revision-v1/`
+- `v2/sigstore-policy-verifier-revision-v1/`
+
+## Central repeated-route result
+
+The Gatekeeper schedule contains 24 items per repetition, three repetitions per route, one request
+per cell, zero client retries, and a 180-second timeout.
+
+| Route | Strict action | Full decision | Strict pair | Full pair |
 |---|---:|---:|---:|---:|
-| Qwen host/prompt route | 272 / 300 | 0.860 / 0.753 | 0.949 / 0.919 | 0.820 |
+| DeepSeek Flash | 53/72 | 52/72 | 21/36 | 20/36 |
+| Qwen | 10/72 | 10/72 | 0/36 | 0/36 |
 
-The Qwen configuration recovered 143/150 `ALLOW`, 110/134 `HOLD`, 0/8 `DEMOTE`, and 5/8
-`ESCALATE` items end to end. A separate Naive Bayes sanity control is weak: 184/300 items and
-34/150 pairs. The historical Flash service interface returned 300 HTTP 401 responses before any
-model output; it is an interface failure, not a model-result row.
+Every safely extracted action matches OPA. The remaining 81 cells comprise 12 read timeouts and 69
+output-envelope failures. The content-free diagnostic is
+`v2/upstream-policy-route-repetition-v1/diagnostics/failure-modes.json`.
 
-The separate public robustness challenge contains 180 items and 90 pairs over 15 factors. It
-balances 90 `ALLOW` members with 30 members for each other action.
+The two route stacks differ in model, service, and adapter behavior. Their results are descriptive
+route measurements.
 
-| Configuration | Valid | E2E item / pair | Conditional item / pair | Pair coverage |
+## Auxiliary evidence-state results
+
+R6 Qwen returns 272/300 contract-valid decisions. Its end-to-end item/pair scores are 258/300 and
+113/150, compared with 258/272 and 113/123 conditional. The historical r6 Flash path returned HTTP
+401 before model output on all 300 calls; this records an obsolete service-interface failure.
+
+The public balanced challenge contains 90 `ALLOW` items and 30 items for each of `HOLD`, `DEMOTE`,
+and `ESCALATE`.
+
+| Route | Valid | E2E item/pair | Conditional item/pair | `DEMOTE` recall |
 |---|---:|---:|---:|---:|
-| Qwen host/prompt route | 148 / 180 | 0.733 / 0.533 | 0.892 / 0.750 | 0.711 |
-| Flash host/schema route | 146 / 180 | 0.500 / 0.144 | 0.616 / 0.213 | 0.678 |
+| Qwen | 148/180 | 132/180; 48/90 | 132/148; 48/64 | 4/30 |
+| Flash | 146/180 | 90/180; 13/90 | 90/146; 13/61 | 0/30 |
 
-End-to-end `DEMOTE` recall is 4/30 for Qwen and 0/30 for Flash. Full confusion matrices, all action
-recalls, factor-level pair outcomes, and privacy receipts are reported in the manuscript and
-committed result artifacts. The challenge was public before inference, and the two routes use
-different service stacks. Their difference is descriptive; it is neither hidden-test
-generalization nor a causal ablation.
+An offline dual-endpoint audit of 1,320 prior route items finds 69 safely extractable actions outside
+the full six-field contract, including 49 correct actions and 40 additional correct pairs. The
+audit changes no frozen record and performs no response repair.
 
-## Central policy-migration validation
+## Install and verify
 
-For two executable policy profiles, ClaimPromoteBench enumerates contexts on which their prescribed
-actions differ. It reports changed-rule coverage separately from reachable directed action-edge
-coverage. In the frozen software-policy instrument, a 60-pair rule-stratified suite covers all 12
-changed rules but only 6/10 reachable edges and detects 6/10 registered edge-local stale-policy
-mutants. The balanced graph suite covers and detects all ten edges. Under the published executor
-and shared-state pair contract, the two HOLD/DEMOTE directions are impossible: DEMOTE requires an
-admitted state with a failed enforced check, and that failure reaches DEMOTE before HOLD.
-
-The reusable compiler in `src/claimpromotebench/policy_difference.py` accepts arbitrary
-deterministic policies, a finite context grammar, stable context identifiers, and authored rule
-witnesses. It has no dependency on the two study ontologies, prompts, models, or providers. The
-standard exact search returns a smallest jointly rule- and edge-complete suite even when one context
-per edge is insufficient; a specialized lower-bound search certifies minimum witnesses that use one
-context per edge. Both functions reproduce the published witness from the same frozen 60-pair
-candidate graph. Semantic differencing and test-suite reduction are established software-engineering
-practice; they are implementation machinery here. The contribution is paired failure-aware testing
-of model routes under an executable revision.
-
-A deterministic selection over the frozen graph yields a provably minimum joint-adequacy smoke
-suite: ten pairs, 20 route calls, all 12 rules, and all ten reachable edges. This cuts the structural
-gate by 83.3% relative to the 60-pair graph suite. The full suite remains the diagnostic tier for
-six-context-per-edge evidence, factor localization, and stochastic-route assessment. Neither the
-mutation family nor the minimum suite estimates production fault prevalence.
-
-This division supports two reproducible release operations. A policy change regenerates the
-difference set, adequacy certificates, and minimum gate; a model, prompt, decoder, adapter, or
-provider change replays the already frozen pairs.
-
-On the 60-pair graph, pinned local Mistral produced 71/120 valid decisions, 40/120 correct items,
-and 10/60 correct pairs; Phi-4 produced 43/120, 27/120, and 2/60. Conditional pair accuracy was
-10/31 and 2/8, and both routes had 0/24 end-to-end `DEMOTE` recall. On the prospectively selected
-minimum gate, Mistral produced 14/20 valid decisions, 9/20 correct items, and 2/10 correct pairs;
-Phi-4 produced 6/20, 5/20, and 0/10. Both failed the fixed strict gate. The subset reuses the full
-graph records and is not an independent replication.
-
-A separately frozen 40-cell hosted execution of this minimum suite was excluded in full after all
-cells returned explicit shared-quota exhaustion. It supplies no model-efficacy row and was not
-retried; the public-safe artifact retains only a redacted all-or-nothing exclusion receipt.
-
-A later OpenCode Go Ox Alpha Free replay is separate from that excluded run. The route was selected
-after earlier results were known, then its exact 20-item schedule, zero-retry rule, failure
-denominator, and strict gate were committed before its first call. It returned 13/20 valid,
-action-correct decisions and 6/10 correct pairs. Conditional item/pair accuracy is 1.0/1.0, while
-end-to-end accuracy is .65/.60 after three HTTP 503 failures, three cross-field semantic failures,
-and one length-terminated JSON response. The route failed the 20/20-item and 10/10-pair gate. Ox
-Alpha is a time-stamped stealth label, not a model-family identity or a causal comparison.
-
-## Install and run checks
-
-Python 3.11 or newer is required.
+Python 3.11 or newer is recommended.
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e '.[dev]'
-
-python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
-ruff check .
-ruff format --check .
-mypy src
-python scripts/lint_paper_submission.py
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/python -m pytest
+.venv/bin/python -m ruff check .
+.venv/bin/python -m ruff format --check .
+.venv/bin/python -m mypy src scripts
 ```
 
-Rebuild and validate the public alpha benchmark:
+Run the paper and source bindings:
 
 ```bash
-python scripts/build_alpha.py
-python -m claimpromotebench validate data/alpha
-python scripts/audit_public_pair_contracts.py \
-  --dataset data/alpha \
-  --out work/public-pair-contract-audit.json
-python -m claimpromotebench.shortcuts \
-  --dataset data/alpha \
-  --out work/shortcut-audit.json
-python -m claimpromotebench.invariance \
-  --dataset data/alpha \
-  --out work/invariance-audit.json
+.venv/bin/python scripts/validate_upstream_policy_revision_study.py
+.venv/bin/python scripts/validate_upstream_policy_route_repetition_results.py
+.venv/bin/python scripts/lint_paper_submission.py
 ```
 
-Build the anonymous reviewer derivative and replay its empirical claims without model credentials:
+Build venue-specific TeX sources:
 
 ```bash
-python scripts/build_anonymous_review_bundle.py --out work/anonymous-review
-cd work/anonymous-review
-python scripts/run_review_checks.py
+.venv/bin/python scripts/build_submission_tex.py --out work/submission
 ```
 
-Pinned Lean checks and executable fixtures are documented in
-[`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md). Completed singleton model studies must be replayed
-from committed records and must not be rerun as part of paper construction.
+The official ICLR style files are hash-pinned by
+`technical-report/iclr2027-style-lock.json`. `technical-report/main.tex` is the canonical
+scientific source.
 
-## Scope and evidence policy
+## Interpretation and release boundary
 
-- The policy and labels are authored operational definitions; oracle agreement does not establish
-  scientific truth or community consensus.
-- Rule-coverage certificates trust authored witness mappings; action edges are recomputed, but an
-  incorrect witness inventory would invalidate rule adequacy.
-- The hidden r6 study tests a fresh realization of the same ontology and mostly the same template
-  family.
-- The balanced challenge is a known public robustness construction.
-- One call per item and zero client retries define the service-level estimand.
-- No naturalistic cases were scored because the frozen candidates lacked sufficient source evidence
-  for a defensible policy mapping. No human labels or agreement statistic are claimed.
-- Later executability of a different Flash route does not repair the old r6 HTTP 401 lane or identify
-  the cause of a cross-stack performance gap.
+The deterministic executor defines every gold label and is the **definitional policy ceiling**.
+The multinomial Naive Bayes row is a weak sanity control. The public balanced challenge is a frozen
+public robustness test, and service-stack differences support no causal attribution.
 
-## Paper, evidence, and release boundary
+Reviewer-facing derivatives exclude raw failed responses, free-form errors, provider response
+identifiers, hidden reasoning, account identity, and private commit identity. Their manifests
+derive file counts from the generated trees. Completed one-shot studies remain frozen.
 
-- Canonical manuscript: [`technical-report/main.tex`](technical-report/main.tex)
-- Scientific and packaging gate: [`technical-report/SUBMISSION_GATE_V2.md`](technical-report/SUBMISSION_GATE_V2.md)
-- Balanced challenge evidence: [`v2/balanced-public-challenge/results/`](v2/balanced-public-challenge/results/)
-- Ox minimum-route smoke evidence: [`v2/ox-alpha-minimal-route-v1/`](v2/ox-alpha-minimal-route-v1/)
-- Fresh r6 reviewer evidence: [`release/reviewer-evidence-source/fresh-confirmatory/`](release/reviewer-evidence-source/fresh-confirmatory/)
-- Data licensing: [`DATA_LICENSE.md`](DATA_LICENSE.md)
-- Third-party notices: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
-- Future public export policy: [`docs/PUBLIC_RELEASE_BOUNDARY.md`](docs/PUBLIC_RELEASE_BOUNDARY.md)
+The durable export rules are recorded in `docs/PUBLIC_RELEASE_BOUNDARY.md`.
 
-This development repository remains private. A future public repository must be a new,
-history-free export containing the minimum replay core. It must pass dynamic manifest, privacy,
-licensing, metric-replay, and standalone-install gates before publication.
-
-The private development history also retains completed studies that are not part of the paper or
-anonymous reviewer package. Their presence must not be interpreted as submission evidence.
+The repository, PR, and submission state are operational controls. A passing local build does not
+authorize a merge, public release, OpenReview submission, or arXiv upload.

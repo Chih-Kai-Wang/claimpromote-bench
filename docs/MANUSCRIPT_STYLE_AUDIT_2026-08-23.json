@@ -1,6 +1,6 @@
 {
   "after": {
-    "abstract_submission_lint_tokens": 220,
+    "abstract_submission_lint_tokens": 202,
     "configured_pattern_findings": {
       "ai_lexicon": 0,
       "formulaic_pivot": 0,
@@ -11,14 +11,14 @@
       "throat_clearing": 0,
       "vague_importance": 0
     },
-    "manuscript_sha256": "6dd7a09c05500dd50e973f4228b6c09f56ccc672ffd2a56cafbcaac60b044ca5",
-    "prose_words": 5083,
-    "sentence_words_mean": 15.74,
-    "sentence_words_median": 15,
-    "sentence_words_over_40_percent": 0.6309,
-    "sentence_words_p90": 24.4,
-    "sentence_words_p95": 27.2,
-    "sentences": 317
+    "manuscript_sha256": "f06164147018b7a9ab5f4c47a2978b619c01e3e5be4b14e3e7c3fe9a1f28e37f",
+    "prose_words": 3343,
+    "sentence_words_mean": 14.47,
+    "sentence_words_median": 14,
+    "sentence_words_over_40_percent": 0.4405,
+    "sentence_words_p90": 22.0,
+    "sentence_words_p95": 26.0,
+    "sentences": 227
   },
   "before": {},
   "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",
@@ -37,7 +37,7 @@
       "LaTeX stripping and sentence segmentation are approximate",
       "metrics guide editing ranges and do not determine scientific quality"
     ],
-    "measurement_revision": "paper-facing-five-study-transition-graph-v1",
+    "measurement_revision": "upstream-revision-three-endpoint-paper-v1",
     "pattern_scan": "case-insensitive regular expressions",
     "sentence_filter_alphanumeric_tokens_min_max": [
       5,
@@ -54,10 +54,10 @@
     "existing_terminal_records_changed": false,
     "metrics_changed": true,
     "paper_binding_validator": "scripts/lint_paper_submission.py",
-    "retained_scored_model_calls_performed": 740,
-    "retained_scored_terminal_records_added": 740,
-    "total_application_posts_during_revision": 1261,
-    "total_model_calls_performed": 1260,
+    "retained_scored_model_calls_performed": 884,
+    "retained_scored_terminal_records_added": 884,
+    "total_application_posts_during_revision": 1405,
+    "total_model_calls_performed": 1404,
     "void_protocol_application_posts": 1
   },
   "status": "PASS"
