@@ -22,6 +22,7 @@ from external_agent_policy_revision import (  # noqa: E402
 from factor_complete_route_breadth import (  # noqa: E402
     conservative_cost_upper_bound_usd as factor_complete_cost_upper_bound_usd,
 )
+from freeze_external_agent_policy_revision import prompt_for  # noqa: E402
 from run_external_agent_policy_revision import diagnose  # noqa: E402
 
 from claimpromotebench.hashing import sha256_bytes  # noqa: E402
@@ -75,6 +76,14 @@ def test_external_policy_routes_use_one_prompt_only_contract() -> None:
     assert responses["input"][0]["content"] == [{"type": "input_text", "text": "prompt"}]
     assert responses["max_output_tokens"] == MAX_OUTPUT_TOKENS
     assert all("response_format" not in body for body in (chat, messages, responses))
+
+
+def test_external_policy_prompt_has_distinct_complete_action_semantics() -> None:
+    prompt = prompt_for(CASES[0], "after", "Repository policy text.")
+    assert "HOLD: do not proceed" in prompt
+    assert "blocks it" in prompt
+    assert "blocks or deprioritizes" not in prompt
+    assert "ESCALATE, then HOLD, then DEMOTE, then ALLOW" in prompt
 
 
 def test_external_policy_schedule_is_complete_balanced_and_below_quota() -> None:
