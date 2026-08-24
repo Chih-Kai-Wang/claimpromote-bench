@@ -5,21 +5,22 @@ with matched evidence and policy contrasts. The experiments are synthetic and
 configuration-specific; they do not measure general research-agent ability or natural-distribution
 performance.
 
-The paper reports five frozen datasets:
+The central validation uses one authored migration, two 60-pair suites, and the same two pinned
+local route stacks without independent replication. Three additional frozen datasets provide
+auxiliary evidence and failure diagnostics:
 
 - a hidden research-evidence realization with 300 items and 150 evidence pairs;
 - a public action-balanced challenge with 180 items and 90 evidence pairs;
-- a software-artifact portability study with 120 items and 60 evidence pairs;
-- a rule-stratified policy-switch study with 120 items and 60 pairs that change only the active
-  profile; and
-- a policy-transition graph with 120 items and 60 pairs covering all ten semantically reachable
-  directed non-self action transitions.
+- and a software-artifact portability study with 120 items and 60 evidence pairs.
+
+The central rule-stratified suite changes only the active profile and covers all 12 changed rules;
+the central graph suite covers all ten semantically reachable directed non-self action transitions.
 
 Every scheduled service, syntax, schema, and semantic failure remains incorrect in end-to-end
 metrics. Conditional accuracy is reported only alongside decision or pair coverage. The
 deterministic policy executor generates the labels and is therefore a definitional policy ceiling,
-not a learned baseline. The Naive Bayes reference remains weak. Structured Random Forest
-comparators show fixed-policy learnability and the registered profile-oblivious shortcut.
+not a learned baseline. The Naive Bayes and structured Random Forest rows are weak or
+construction-dependent sanity controls, not competitive baselines.
 
 ## Build and validate
 

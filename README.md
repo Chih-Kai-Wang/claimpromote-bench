@@ -1,9 +1,9 @@
-# ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
+# ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes under Executable Policy Revisions
 
-ClaimPromoteBench compiles behavioral differences between executable policy versions into paired
-state-transition tests, then evaluates the complete model-service route against the resulting
-contract. It is a synthetic conformance-testing protocol, not an evaluation of general
-research-agent ability or naturalistic scientific judgment.
+ClaimPromoteBench adapts semantic policy differencing to paired, failure-aware tests of an existing
+model-service boundary under an executable policy revision. Primary correctness is action
+conformance after output-contract validation. It is not an evaluation of exact policy execution,
+general research-agent ability, or naturalistic scientific judgment.
 
 ## Task
 
@@ -23,29 +23,31 @@ defines the labels and is therefore a definitional policy ceiling, not a learned
 Primary correctness is action-level after gold-free schema and cross-field validation; it is not
 an exact-match score over every field in the decision object.
 
-## Principal evidence
+## Auxiliary evidence diagnostics
+
+The central policy-migration validation appears in the next section. The research-evidence suites
+below diagnose action imbalance and end-to-end route failure; they do not independently validate
+policy differencing.
 
 The fresh hidden r6 diagnostic contains 300 items and 150 controlled pairs. Its gold distribution
 is imbalanced, with only eight `DEMOTE` and eight `ESCALATE` items.
 
 | Configuration | Valid | E2E item / pair | Conditional item / pair | Pair coverage |
 |---|---:|---:|---:|---:|
-| Qwen3.7-Max | 272 / 300 | 0.860 / 0.753 | 0.949 / 0.919 | 0.820 |
-| Public-development text Naive Bayes | 300 / 300 | 0.613 / 0.227 | 0.613 / 0.227 | 1.000 |
-| Old Flash service interface | 0 / 300 | 0.000 / 0.000 | N/E | 0.000 |
+| Qwen host/prompt route | 272 / 300 | 0.860 / 0.753 | 0.949 / 0.919 | 0.820 |
 
 The Qwen configuration recovered 143/150 `ALLOW`, 110/134 `HOLD`, 0/8 `DEMOTE`, and 5/8
-`ESCALATE` items end to end. The Naive Bayes comparator is a weak learned reference. The old Flash
-lane returned 300 HTTP 401 responses before any model output; it measures failure of that frozen
-service interface and supplies no model-efficacy estimate.
+`ESCALATE` items end to end. A separate Naive Bayes sanity control is weak: 184/300 items and
+34/150 pairs. The historical Flash service interface returned 300 HTTP 401 responses before any
+model output; it is an interface failure, not a model-result row.
 
 The separate public robustness challenge contains 180 items and 90 pairs over 15 factors. It
 balances 90 `ALLOW` members with 30 members for each other action.
 
 | Configuration | Valid | E2E item / pair | Conditional item / pair | Pair coverage |
 |---|---:|---:|---:|---:|
-| Qwen route | 148 / 180 | 0.733 / 0.533 | 0.892 / 0.750 | 0.711 |
-| Flash route | 146 / 180 | 0.500 / 0.144 | 0.616 / 0.213 | 0.678 |
+| Qwen host/prompt route | 148 / 180 | 0.733 / 0.533 | 0.892 / 0.750 | 0.711 |
+| Flash host/schema route | 146 / 180 | 0.500 / 0.144 | 0.616 / 0.213 | 0.678 |
 
 End-to-end `DEMOTE` recall is 4/30 for Qwen and 0/30 for Flash. Full confusion matrices, all action
 recalls, factor-level pair outcomes, and privacy receipts are reported in the manuscript and
@@ -53,23 +55,25 @@ committed result artifacts. The challenge was public before inference, and the t
 different service stacks. Their difference is descriptive; it is neither hidden-test
 generalization nor a causal ablation.
 
-## Policy-migration release gate
+## Central policy-migration validation
 
 For two executable policy profiles, ClaimPromoteBench enumerates contexts on which their prescribed
 actions differ. It reports changed-rule coverage separately from reachable directed action-edge
 coverage. In the frozen software-policy instrument, a 60-pair rule-stratified suite covers all 12
 changed rules but only 6/10 reachable edges and detects 6/10 registered edge-local stale-policy
-mutants. The balanced graph suite covers and detects all ten edges; two other directions are
-structurally impossible because pair members share their current state.
+mutants. The balanced graph suite covers and detects all ten edges. Under the published executor
+and shared-state pair contract, the two HOLD/DEMOTE directions are impossible: DEMOTE requires an
+admitted state with a failed enforced check, and that failure reaches DEMOTE before HOLD.
 
 The reusable compiler in `src/claimpromotebench/policy_difference.py` accepts arbitrary
 deterministic policies, a finite context grammar, stable context identifiers, and authored rule
 witnesses. It has no dependency on the two study ontologies, prompts, models, or providers. The
-exact search returns a smallest jointly rule- and edge-complete suite even when one context per edge
-is insufficient; a specialized lower-bound search certifies minimum witnesses that use one context
-per edge. A cross-check reconstructs the published witness from the frozen 60-pair candidate graph.
-Test-suite reduction is established software-engineering practice; the contribution here is the
-paired model-service test object and the joint changed-rule/action-transition adequacy target.
+standard exact search returns a smallest jointly rule- and edge-complete suite even when one context
+per edge is insufficient; a specialized lower-bound search certifies minimum witnesses that use one
+context per edge. Both functions reproduce the published witness from the same frozen 60-pair
+candidate graph. Semantic differencing and test-suite reduction are established software-engineering
+practice; they are implementation machinery here. The contribution is paired failure-aware testing
+of model routes under an executable revision.
 
 A deterministic selection over the frozen graph yields a provably minimum joint-adequacy smoke
 suite: ten pairs, 20 route calls, all 12 rules, and all ten reachable edges. This cuts the structural

@@ -14,11 +14,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Compiling Policy Differences into Failure-Aware State-Transition Tests"
+TITLE = r"\cpb: Failure-Aware Paired Tests of Model Routes under Executable Policy Revisions"
 ICLR_TITLE = (
-    r"\mbox{\textsc{ClaimPromoteBench}: Compiling Policy}\protect\\"
-    r"\mbox{Differences into Failure-Aware}\protect\\"
-    r"\mbox{State-Transition Tests}"
+    r"\mbox{\textsc{ClaimPromoteBench}: Failure-Aware Paired}\protect\\"
+    r"\mbox{Tests of Model Routes under Executable}\protect\\"
+    r"\mbox{Policy Revisions}"
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (
@@ -132,16 +132,20 @@ def anonymous_iclr_body(body: str) -> str:
     return anonymous
 
 
+def without_section(body: str, heading: str) -> str:
+    section_start = body.index(rf"\section{{{heading}}}")
+    next_section = body.find(r"\section{", section_start + 1)
+    if next_section < 0:
+        return body[:section_start]
+    return body[:section_start] + body[next_section:]
+
+
 def without_ai_disclosure(body: str) -> str:
-    ai_start = body.index(r"\section{AI Assistance Disclosure}")
-    conclusion_start = body.index(r"\section{Conclusion}", ai_start)
-    return body[:ai_start] + body[conclusion_start:]
+    return without_section(body, "AI Assistance Disclosure")
 
 
 def without_reproducibility(body: str) -> str:
-    reproducibility_start = body.index(r"\section{Reproducibility Statement}")
-    ai_start = body.index(r"\section{AI Assistance Disclosure}", reproducibility_start)
-    return body[:reproducibility_start] + body[ai_start:]
+    return without_section(body, "Reproducibility Statement")
 
 
 def without_reproducibility_or_ai(body: str) -> str:

@@ -112,17 +112,29 @@ jobs:
           unzip -q /tmp/iclr2027.zip -d /tmp/iclr2027-style
           sty="$(find /tmp/iclr2027-style -type f -name 'iclr2027_conference.sty' -print -quit)"
           bst="$(find /tmp/iclr2027-style -type f -name 'iclr2027_conference.bst' -print -quit)"
+          fancyhdr="$(find /tmp/iclr2027-style -type f -name 'fancyhdr.sty' -print -quit)"
+          natbib="$(find /tmp/iclr2027-style -type f -name 'natbib.sty' -print -quit)"
           test -n "$sty"
           test -n "$bst"
+          test -n "$fancyhdr"
+          test -n "$natbib"
           cp "$sty" work/submission/iclr2027_conference.sty
           cp "$bst" work/submission/iclr2027_conference.bst
+          cp "$fancyhdr" work/submission/fancyhdr.sty
+          cp "$natbib" work/submission/natbib.sty
           expected_sty="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["files"]["iclr2027_conference.sty"])')"
           expected_bst="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["files"]["iclr2027_conference.bst"])')"
+          expected_fancyhdr="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["files"]["fancyhdr.sty"])')"
+          expected_natbib="$(python -c 'import json; print(json.load(open("technical-report/iclr2027-style-lock.json"))["files"]["natbib.sty"])')"
           printf '%s  %s\n' "$expected_sty" work/submission/iclr2027_conference.sty | sha256sum -c -
           printf '%s  %s\n' "$expected_bst" work/submission/iclr2027_conference.bst | sha256sum -c -
+          printf '%s  %s\n' "$expected_fancyhdr" work/submission/fancyhdr.sty | sha256sum -c -
+          printf '%s  %s\n' "$expected_natbib" work/submission/natbib.sty | sha256sum -c -
           sha256sum /tmp/iclr2027.zip \
+            work/submission/fancyhdr.sty \
             work/submission/iclr2027_conference.sty \
             work/submission/iclr2027_conference.bst \
+            work/submission/natbib.sty \
             > work/submission/iclr-style-sha256.txt
 
       - name: Compile ICLR 2027 submission
@@ -203,15 +215,17 @@ jobs:
           zip -q claimpromotebench-iclr2027-source.zip \
             iclr2027.tex \
             references.bib \
+            fancyhdr.sty \
             iclr2027_conference.sty \
-            iclr2027_conference.bst
+            iclr2027_conference.bst \
+            natbib.sty
 
           printf '%s\n' arxiv.tex references.bib | sort > /tmp/arxiv-source-expected.txt
           unzip -Z1 claimpromotebench-arxiv-source.zip | sort > /tmp/arxiv-source-actual.txt
           diff -u /tmp/arxiv-source-expected.txt /tmp/arxiv-source-actual.txt
 
           printf '%s\n' iclr2027.tex references.bib \
-            iclr2027_conference.sty iclr2027_conference.bst \
+            fancyhdr.sty iclr2027_conference.sty iclr2027_conference.bst natbib.sty \
             | sort > /tmp/iclr-source-expected.txt
           unzip -Z1 claimpromotebench-iclr2027-source.zip \
             | sort > /tmp/iclr-source-actual.txt

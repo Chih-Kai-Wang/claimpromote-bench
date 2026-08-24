@@ -1816,6 +1816,9 @@ def validate_synthetic_policy_evidence(study_kind: str) -> Json:
             or coverage.get("directed_action_transitions_covered") != 10
             or coverage.get("structurally_unreachable_transitions")
             != ["HOLD->DEMOTE", "DEMOTE->HOLD"]
+            or coverage.get("historical_certificate_superseded") is not True
+            or "reaches DEMOTE before HOLD"
+            not in str(coverage.get("unreachability_certificate", ""))
             or coverage.get("authored_profile_difference_rules_covered") != 12
             or coverage.get("authored_profile_difference_rules_total") != 12
             or coverage.get("source_bindings") != expected_bindings

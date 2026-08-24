@@ -51,6 +51,9 @@ POLICY_SWITCH_RESULT = POLICY_SWITCH_ROOT / "results" / "aggregate.json"
 POLICY_DIFFERENCE_COVERAGE = ROOT / "v2" / "policy-switch-v1" / "policy-difference-coverage.json"
 POLICY_TRANSITION_GRAPH_ROOT = ROOT / "v2" / "policy-transition-graph-v1" / "frozen"
 POLICY_TRANSITION_GRAPH_COVERAGE = POLICY_TRANSITION_GRAPH_ROOT / "transition-coverage.json"
+POLICY_TRANSITION_GRAPH_INTERPRETATION_ADDENDUM = (
+    ROOT / "v2" / "policy-transition-graph-v1" / "transition-coverage-interpretation-addendum.json"
+)
 POLICY_MIGRATION_MUTATION_AUDIT = ROOT / "v2" / "policy-transition-graph-v1" / "mutation-audit.json"
 MINIMAL_POLICY_MIGRATION_SUITE = (
     ROOT / "v2" / "policy-transition-graph-v1" / "minimal-release-suite.json"
@@ -112,7 +115,8 @@ NATURALISTIC_POOL = ROOT / "v2" / "naturalistic-candidates.json"
 NATURALISTIC_DECISION = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests"
+    "ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes "
+    "under Executable Policy Revisions"
 )
 ACTIONS = ("ALLOW", "HOLD", "DEMOTE", "ESCALATE")
 
@@ -192,7 +196,8 @@ def validate_submission_metadata(tex: str) -> None:
     if metadata.count(CANONICAL_TITLE) < 2:
         fail("ICLR and arXiv metadata titles must match canonical title")
     expected_tex_title = (
-        r"\title{\cpb: Compiling Policy Differences into Failure-Aware State-Transition Tests}"
+        r"\title{\cpb: Failure-Aware Paired Tests of Model Routes "
+        r"under Executable Policy Revisions}"
     )
     if expected_tex_title not in tex:
         fail("manuscript title differs from canonical title")
@@ -304,15 +309,21 @@ def validate_submission_builder(tex: str) -> None:
     if canonical_appendix != expected_appendix:
         fail("submission builder changes the canonical appendix")
 
-    reproducibility_start = expected_body.index(r"\section{Reproducibility Statement}")
-    conclusion_start = expected_body.index(r"\section{Conclusion}", reproducibility_start)
-    canonical_tail = expected_body[reproducibility_start:conclusion_start]
+    preserved_blocks = []
+    for heading in ("Reproducibility Statement", "AI Assistance Disclosure"):
+        section_start = expected_body.index(rf"\section{{{heading}}}")
+        next_section = expected_body.find(r"\section{", section_start + 1)
+        preserved_blocks.append(
+            expected_body[section_start:]
+            if next_section < 0
+            else expected_body[section_start:next_section]
+        )
     rendered = {
         "ICLR": namespace["iclr_tex"](canonical_body, canonical_appendix),
         "arXiv": namespace["arxiv_tex"](canonical_body, canonical_appendix),
     }
     for label, wrapper in rendered.items():
-        if canonical_tail not in wrapper:
+        if any(block not in wrapper for block in preserved_blocks):
             fail(f"{label} wrapper changes reproducibility or AI-disclosure prose")
         if canonical_appendix not in wrapper:
             fail(f"{label} wrapper drops the canonical appendix")
@@ -478,7 +489,7 @@ def validate_r6_evidence(tex: str) -> None:
         (r"272/300", "r6 decision coverage"),
         (r"123/150", "r6 pair coverage"),
         (r"(?:300\s+HTTP 401|HTTP 401[^.]{0,40}300 requests)", "r6 Flash HTTP 401 count"),
-        (r"old (?:r6 )?Flash interface", "old Flash interface boundary"),
+        (r"historical (?:r6 )?Flash service interface", "old Flash interface boundary"),
         (
             r"dependency.statement changes.*0/7|0/7.*dependency.statement",
             "r6 dependency-statement factor result",
@@ -892,60 +903,17 @@ def legacy_configs() -> list[dict[str, Any]]:
             }
         },
     }
-    old_flash = {
-        "items": 300,
-        "parseable_items": 0,
-        "correct_items": 0,
-        "pairs": 150,
-        "covered_pairs": 0,
-        "correct_pairs": 0,
-        "balanced_action_recall": 0.0,
-        "per_action": {action: {"end_to_end_recall": 0.0} for action in ACTIONS},
-        "confusion_matrix": {
-            "counts": {
-                "ALLOW": {
-                    "ALLOW": 0,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 150,
-                },
-                "HOLD": {
-                    "ALLOW": 0,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 134,
-                },
-                "DEMOTE": {
-                    "ALLOW": 0,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 8,
-                },
-                "ESCALATE": {
-                    "ALLOW": 0,
-                    "HOLD": 0,
-                    "DEMOTE": 0,
-                    "ESCALATE": 0,
-                    "NO_VALID_DECISION": 8,
-                },
-            }
-        },
-    }
     return [
-        {"label": "r6 Qwen", "metrics": qwen},
-        {"label": "r6 text NB", "metrics": nb},
-        {"label": "Old r6 Flash interface", "metrics": old_flash},
+        {"label": "r6 Qwen (host/prompt)", "metrics": qwen},
+        {"label": "r6 NB sanity", "metrics": nb},
     ]
 
 
 def challenge_configs() -> list[dict[str, Any]]:
     aggregate = load_object(CHALLENGE_RESULT, "balanced challenge aggregate")
     labels = {
-        "opencode-go-qwen3.7-max": "Challenge Qwen",
-        "opencode-go-deepseek-v4-flash-matched": "Challenge Flash",
+        "opencode-go-qwen3.7-max": "Challenge Qwen (host/prompt)",
+        "opencode-go-deepseek-v4-flash-matched": "Challenge Flash (host/schema)",
     }
     lanes = {
         str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
@@ -963,8 +931,8 @@ def synthetic_configs() -> list[dict[str, Any]]:
         expected_design="PROSPECTIVELY_FROZEN_SECOND_POLICY_PORTABILITY_STUDY",
     )
     labels = {
-        "opencode-go-qwen3.7-max-slsa-v2": "SLSA Qwen",
-        "opencode-go-deepseek-v4-flash-slsa-v2": "SLSA Flash",
+        "opencode-go-qwen3.7-max-slsa-v2": "SLSA Qwen (host/prompt)",
+        "opencode-go-deepseek-v4-flash-slsa-v2": "SLSA Flash (host/schema)",
     }
     if set(slsa) != set(labels):
         fail("hosted SLSA paper lane set changed")
@@ -974,7 +942,7 @@ def synthetic_configs() -> list[dict[str, Any]]:
     slsa_aggregate = load_object(SLSA_RESULT, "SLSA aggregate")
     result.append(
         {
-            "label": "SLSA structured RF",
+            "label": "SLSA RF sanity",
             "metrics": slsa_aggregate["structured_random_forest_action_baseline"]["metrics"],
         }
     )
@@ -1017,8 +985,13 @@ def local_configs() -> list[dict[str, Any]]:
         }
         if set(families) != {"Mistral", "Phi"}:
             fail(f"local replication family set changed: {dataset_key}")
-        for family, label in (("Mistral", "Mistral local"), ("Phi", "Phi-4 local")):
-            result.append({"label": f"{prefix} {label}", "metrics": families[family]["metrics"]})
+        for family, label in (("Mistral", "Mistral"), ("Phi", "Phi-4")):
+            result.append(
+                {
+                    "label": f"{prefix} {label} (local/4b)",
+                    "metrics": families[family]["metrics"],
+                }
+            )
         if dataset_key in {"policy-switch", "policy-transition-graph"}:
             aggregate = load_object(
                 study_root / "results" / "aggregate.json",
@@ -1026,8 +999,8 @@ def local_configs() -> list[dict[str, Any]]:
             )
             comparators = aggregate.get("structured_random_forest_comparators", {})
             for comparator_id, label in (
-                ("policy_aware", f"{prefix} policy-aware RF"),
-                ("profile_blind", f"{prefix} profile-blind RF"),
+                ("policy_aware", f"{prefix} RF/profile"),
+                ("profile_blind", f"{prefix} RF/blind"),
             ):
                 result.append(
                     {
@@ -1074,6 +1047,7 @@ def conditional_action_recall(metrics: dict[str, Any], action: str) -> float | N
 def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
     for label in (
         "tab:core-results",
+        "tab:sanity-controls",
         "tab:action-recall",
         "tab:conditional-action-recall",
         "tab:confusion",
@@ -1114,15 +1088,22 @@ def validate_metric_rows(tex: str, configs: list[dict[str, Any]]) -> None:
         if conditional_action not in tex:
             fail(f"paper conditional-action-recall row is missing or stale: {label}")
         counts = confusion_counts(metrics)
-        confusion = f"{label} & " + " & ".join(
-            "/".join(
-                str(counts[gold].get(predicted, counts[gold].get("NO_DECISION", -1)))
+        action_tex = {
+            "ALLOW": r"\allow{}",
+            "HOLD": r"\hold{}",
+            "DEMOTE": r"\demote{}",
+            "ESCALATE": r"\escalate{}",
+        }
+        for gold in ACTIONS:
+            values = [
+                counts[gold].get(predicted, counts[gold].get("NO_DECISION", -1))
                 for predicted in (*ACTIONS, "NO_VALID_DECISION")
+            ]
+            confusion = f"{label} & {action_tex[gold]} & " + " & ".join(
+                str(value) for value in values
             )
-            for gold in ACTIONS
-        )
-        if "-1" in confusion or confusion not in tex:
-            fail(f"paper confusion row is missing or stale: {label}")
+            if -1 in values or confusion not in tex:
+                fail(f"paper confusion row is missing or stale: {label}/{gold}")
 
 
 def validate_new_study_claims(tex: str) -> None:
@@ -1271,6 +1252,22 @@ def validate_new_study_claims(tex: str) -> None:
         }
     ):
         fail("reachable policy-transition graph coverage changed")
+    transition_addendum = load_object(
+        POLICY_TRANSITION_GRAPH_INTERPRETATION_ADDENDUM,
+        "policy-transition graph interpretation addendum",
+    )
+    if (
+        transition_addendum.get("status")
+        != "POST_FREEZE_TRANSITION_UNREACHABILITY_EXPLANATION_CORRECTED"
+        or transition_addendum.get("source_transition_coverage_sha256")
+        != sha256_file(POLICY_TRANSITION_GRAPH_COVERAGE)
+        or transition_addendum.get("self_digest") != self_digest(transition_addendum, "self_digest")
+        or transition_addendum.get("conclusions_changed") is not False
+        or transition_addendum.get("client_or_model_calls") != 0
+        or "reaches DEMOTE before HOLD"
+        not in str(transition_addendum.get("corrected_certificate", ""))
+    ):
+        fail("policy-transition graph interpretation correction changed")
     mutation_audit = load_object(POLICY_MIGRATION_MUTATION_AUDIT, "policy-migration mutation audit")
     rule_mutants = mutation_audit.get("suites", {}).get("rule_stratified", {})
     graph_mutants = mutation_audit.get("suites", {}).get("transition_graph", {})
@@ -1412,6 +1409,7 @@ def validate_new_study_claims(tex: str) -> None:
         (r"10/10 reachable non-self edges", "reachable transition-graph coverage"),
         (r"six contexts for each.*reachable\s+directed edge", "transition-graph balance"),
         (r"HOLD.*DEMOTE.*structurally", "unreachable transition certificate"),
+        (r"reaches\s+\\demote\{\} before \\hold", "corrected transition precedence proof"),
         (r"18/12/12/18", "transition-graph per-profile action balance"),
         (r"kills 6/10[\s\S]{0,120}kills 10/10", "edge-local migration mutation audit"),
         (r"not a model of fault.*prevalence", "migration-mutant interpretation boundary"),
@@ -1750,6 +1748,7 @@ def validate_v1_diagnostic(tex: str) -> None:
 
 def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]:
     lower = tex.lower()
+    normalized_lower = normalize_space(lower)
     for section in (
         "Introduction",
         "Related Work",
@@ -1804,14 +1803,18 @@ def validate_structure_and_citations(tex: str, bib: str) -> tuple[int, int, int]
         if marker in tex:
             fail(f"excluded seven-route study leaked into manuscript: {marker}")
     for phrase in (
-        "synthetic conformance-testing protocol",
+        "synthetic protocol for paired action conformance",
         "author-defined executable specification",
         "service, syntax, schema, and semantic failure",
+        "action conformance after output-contract validation",
+        "retained after an older adaptive interface study",
+        "one migration, one grammar, two local snapshots",
+        "metric and contract replay",
         "No human annotators or agreement statistic are claimed",
         "Naturalistic validity therefore remains untested",
         "between-route comparisons are descriptive",
     ):
-        if phrase.lower() not in lower:
+        if phrase.lower() not in normalized_lower:
             fail(f"required interpretation boundary missing: {phrase!r}")
 
     cite_keys: set[str] = set()

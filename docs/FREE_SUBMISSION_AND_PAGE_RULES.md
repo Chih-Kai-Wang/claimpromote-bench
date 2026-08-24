@@ -25,10 +25,11 @@ Official source: `https://iclr.cc/Conferences/2027/AuthorGuidelines`
 There is **no paid overlength option** in the author rules. The guide states that excess main-text pages are desk-rejected. This is a hard compliance rule, not a page charge that can be paid.
 
 The repository therefore keeps an automated ICLR main-text probe at `<= 9` pages. The 2026-08-24
-release candidate has a **9-page main-text probe** and a **14-page physical ICLR PDF**. References
-start on physical page 10 and the appendix starts on page 13, so those five pages do not consume the
-initial-submission main-text allowance. The named arXiv PDF has 13 physical pages. All 27 rendered
-pages were inspected for overlap, clipping, crowding, orphaned headings, and table readability.
+release candidate has a **9-page main-text probe** and a **15-page physical ICLR PDF**. The
+scientific conclusion and the non-counting reproducibility and AI-use statements end on page 9.
+References start on page 10 and the appendix starts on page 13. The named arXiv PDF has 14 physical
+pages. All 29 rendered pages were inspected for overlap, clipping, crowding,
+orphaned headings, and table readability.
 
 ## Human-subject scope
 

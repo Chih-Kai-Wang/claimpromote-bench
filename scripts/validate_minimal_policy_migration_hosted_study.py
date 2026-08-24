@@ -28,7 +28,12 @@ from freeze_minimal_policy_migration_hosted_study import (  # noqa: E402
     self_digest,
 )
 from validate_policy_switch_study import validate_baselines  # noqa: E402
-from validate_policy_transition_graph_study import validate as validate_graph  # noqa: E402
+from validate_policy_transition_graph_study import (  # noqa: E402
+    runtime_source_hash_matches,
+)
+from validate_policy_transition_graph_study import (  # noqa: E402
+    validate as validate_graph,
+)
 
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
@@ -206,7 +211,7 @@ def validate_freeze(
     if not isinstance(runtime, dict) or set(runtime) != set(RUNTIME_SOURCES):
         fail("runtime-source inventory changed")
     for path, expected in runtime.items():
-        if sha256_file(ROOT / path) != expected:
+        if not runtime_source_hash_matches(path, expected):
             fail(f"runtime source changed after freeze: {path}")
     return {
         "status": "MINIMAL_POLICY_MIGRATION_HOSTED_FREEZE_VALID",

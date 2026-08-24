@@ -72,7 +72,12 @@ def load_style_lock() -> Json:
         fail("ICLR style lock source URL differs from the approved venue archive")
     if not SHA256_RE.fullmatch(str(lock.get("archive_sha256", ""))):
         fail("ICLR style lock has an invalid archive digest")
-    expected_names = {"iclr2027_conference.bst", "iclr2027_conference.sty"}
+    expected_names = {
+        "fancyhdr.sty",
+        "iclr2027_conference.bst",
+        "iclr2027_conference.sty",
+        "natbib.sty",
+    }
     files = lock.get("files")
     if not isinstance(files, dict) or set(files) != expected_names:
         fail("ICLR style lock has an unexpected file set")
@@ -307,12 +312,14 @@ def build(args: argparse.Namespace) -> Json:
         "arxiv.log",
         "arxiv.pdf",
         "arxiv.tex",
+        "fancyhdr.sty",
         "iclr2027-maintext-probe.pdf",
         "iclr2027.log",
         "iclr2027.pdf",
         "iclr2027.tex",
         "iclr2027_conference.bst",
         "iclr2027_conference.sty",
+        "natbib.sty",
         "references.bib",
     }
     missing = sorted(name for name in required_submission if not (submission / name).is_file())
@@ -374,8 +381,10 @@ def build(args: argparse.Namespace) -> Json:
             for name in (
                 "iclr2027.tex",
                 "references.bib",
+                "fancyhdr.sty",
                 "iclr2027_conference.sty",
                 "iclr2027_conference.bst",
+                "natbib.sty",
             )
         }
         arxiv_names = write_zip(staging / "claimpromotebench-arxiv-source.zip", arxiv_entries)

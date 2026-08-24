@@ -1,0 +1,43 @@
+{
+  "authorized_validation_source_updates": {
+    "scripts/build_policy_transition_graph_study.py": {
+      "affects_frozen_requests_or_scores": false,
+      "change_scope": "Correct the unreachable-edge explanation; generated pairs, prompts, labels, and coverage counts are unchanged.",
+      "corrected_sha256": "sha256:884d406bd1dd75fdd77bedef765b1671792ca336304f1e3178b3d11a9c389c40",
+      "historical_sha256": "sha256:f6119f49efeff8dbcb87a1bf564a04a727af10470687ba7e2a86974419a773a2"
+    },
+    "scripts/validate_minimal_policy_migration_hosted_study.py": {
+      "affects_frozen_requests_or_scores": false,
+      "change_scope": "Accept only exact addendum-authorized explanation and validation-source updates; the frozen minimum-suite requests and scores are unchanged.",
+      "corrected_sha256": "sha256:9014cb2749502cc7dc7419b06fd205378d9d720d30602a604af3e80c560c5411",
+      "historical_sha256": "sha256:f020684f2eba3d408175b3a89bbbf87872ff2132af632f6c76b26707685eae1a"
+    },
+    "scripts/validate_policy_transition_graph_hosted_study.py": {
+      "affects_frozen_requests_or_scores": false,
+      "change_scope": "Accept only exact addendum-authorized explanation and validation-source updates; the frozen hosted requests and scores are unchanged.",
+      "corrected_sha256": "sha256:9de9ebdef0dc829238748987e1146e47b4c321967d9bb40ec079cf1177b00a65",
+      "historical_sha256": "sha256:56719bdc96f42376c7db4732db9c606c236804a192fa74738b7431bd442f2d75"
+    },
+    "scripts/validate_policy_transition_graph_local_study.py": {
+      "affects_frozen_requests_or_scores": false,
+      "change_scope": "Accept only exact addendum-authorized explanation and validation-source updates; the frozen local requests and scores are unchanged.",
+      "corrected_sha256": "sha256:6b908b03455a4fa8c1e7f395326dc754d800a233e77743e6ccf6b49b51d299af",
+      "historical_sha256": "sha256:8383c87f1ffcd677b6be0907c7aafcf0bf8de19a5a4b22628a9de6c5a6336eed"
+    },
+    "scripts/validate_policy_transition_graph_study.py": {
+      "affects_frozen_requests_or_scores": false,
+      "change_scope": "Correct the certificate derivation and validate the exact post-freeze interpretation overlay without changing any frozen request or score.",
+      "corrected_sha256": "sha256:411fcdbcd16c2cf57c2c7429da7c6a3e96f5b15dcd9742671a79015dd9ec7b0b",
+      "historical_sha256": "sha256:3c498b21c50cc261048084df4b6a8598ffdd318041c32bf25bfc05f622d0e928"
+    }
+  },
+  "client_or_model_calls": 0,
+  "conclusions_changed": false,
+  "corrected_certificate": "Under the published executor and shared-state pair contract, DEMOTE is available only when current_state.release_status=ADMITTED and an enforced check fails. On an ADMITTED state, that failure reaches DEMOTE before HOLD under first-match precedence; on a non-ADMITTED state, DEMOTE is unavailable. Therefore neither HOLD->DEMOTE nor DEMOTE->HOLD is reachable.",
+  "correction_scope": "This addendum corrects only the explanatory premise for the two unreachable directions. The reachable edge set, pair set, action labels, coverage counts, minimum-suite result, and all model-route outcomes are unchanged.",
+  "historical_certificate": "HOLD requires current_state.release_status=CANDIDATE; DEMOTE requires current_state.release_status=ADMITTED. Pair members share current_state, so neither HOLD->DEMOTE nor DEMOTE->HOLD is reachable under the published executor.",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:5df349274af2a1ec4072c7186cfbb3886d673ee15a86bc58d062c7dd82d494b5",
+  "source_transition_coverage_sha256": "sha256:bb02a0165b3be0db63dc842442b93fa25d4bd37aa9a45bdeff1b502d6331df83",
+  "status": "POST_FREEZE_TRANSITION_UNREACHABILITY_EXPLANATION_CORRECTED"
+}

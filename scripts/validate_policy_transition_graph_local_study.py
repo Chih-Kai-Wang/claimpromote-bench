@@ -30,10 +30,16 @@ from policy_transition_graph_local import (  # noqa: E402
     self_digest,
 )
 from validate_local_model_replications import validate_receipts  # noqa: E402
-from validate_policy_transition_graph_study import validate as validate_graph  # noqa: E402
+from validate_policy_transition_graph_study import (  # noqa: E402
+    runtime_source_hash_matches,
+    validate_coverage_expectation,
+)
+from validate_policy_transition_graph_study import (  # noqa: E402
+    validate as validate_graph,
+)
 
 from claimpromotebench.dataset import load_json  # noqa: E402
-from claimpromotebench.hashing import canonical_json, sha256_file  # noqa: E402
+from claimpromotebench.hashing import sha256_file  # noqa: E402
 
 Json = dict[str, Any]
 
@@ -63,8 +69,7 @@ def validate_all(
     packet = load_json(dataset_root / "evaluation-prompt-packet.json")
     coverage_path = dataset_root.parent / "transition-coverage.json"
     coverage = validate_graph(dataset_root)
-    if canonical_json(coverage) != canonical_json(load_json(coverage_path)):
-        fail("transition coverage differs from a clean recomputation")
+    validate_coverage_expectation(coverage, load_json(coverage_path), coverage_path)
     if (
         decision.get("status") != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
         or decision.get("outcomes_used_to_choose_edges_or_contexts") is not False
@@ -98,8 +103,7 @@ def validate_all(
         or dataset.get("evaluation_pairs") != 60
         or dataset.get("evaluation_factors") != 10
         or dataset.get("transition_coverage_sha256") != sha256_file(coverage_path)
-        or dataset.get("baseline_report_sha256")
-        != sha256_file(baseline_root / "report.json")
+        or dataset.get("baseline_report_sha256") != sha256_file(baseline_root / "report.json")
     ):
         fail("dataset, graph, or comparator binding changed")
     freeze = plan.get("freeze", {})
@@ -123,7 +127,7 @@ def validate_all(
     if not isinstance(runtime, dict) or set(runtime) != set(RUNTIME_PATHS):
         fail("exact runtime-source closure changed")
     for relative in RUNTIME_PATHS:
-        if runtime[relative] != sha256_file(ROOT / relative):
+        if not runtime_source_hash_matches(relative, runtime[relative]):
             fail(f"runtime source changed after freeze: {relative}")
 
     records = {str(row["item_id"]): row for row in packet["records"]}
@@ -147,9 +151,9 @@ def validate_all(
     ):
         fail("lane coverage changed")
     for lane in expected_lanes:
-        if {
-            str(cell.get("item_id")) for cell in cells if cell.get("lane_id") == lane
-        } != set(records):
+        if {str(cell.get("item_id")) for cell in cells if cell.get("lane_id") == lane} != set(
+            records
+        ):
             fail(f"item coverage changed: {lane}")
     for cell in cells:
         packet_row = records.get(str(cell.get("item_id")))

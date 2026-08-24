@@ -35,6 +35,22 @@ from slsa_policy import load_slsa_policy  # noqa: E402
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
 Json = dict[str, Any]
+HISTORICAL_COVERAGE_PATH = (
+    ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "transition-coverage.json"
+)
+INTERPRETATION_ADDENDUM_PATH = (
+    ROOT / "v2" / "policy-transition-graph-v1" / "transition-coverage-interpretation-addendum.json"
+)
+EXPLANATION_ONLY_COVERAGE_FIELDS = frozenset({"unreachability_certificate", "self_digest"})
+EXPECTED_INTERPRETATION_UPDATE_PATHS = frozenset(
+    {
+        "scripts/build_policy_transition_graph_study.py",
+        "scripts/validate_minimal_policy_migration_hosted_study.py",
+        "scripts/validate_policy_transition_graph_hosted_study.py",
+        "scripts/validate_policy_transition_graph_local_study.py",
+        "scripts/validate_policy_transition_graph_study.py",
+    }
+)
 
 
 def fail(message: str) -> None:
@@ -58,6 +74,89 @@ def load_jsonl(path: Path) -> list[Json]:
 def self_digest(value: Json, field: str) -> str:
     payload = {key: child for key, child in value.items() if key != field}
     return sha256_bytes(canonical_json(payload).encode("utf-8"))
+
+
+def validate_interpretation_addendum() -> Json:
+    """Validate the exact post-freeze explanation and validator-source correction."""
+
+    historical = load_object(HISTORICAL_COVERAGE_PATH)
+    addendum = load_object(INTERPRETATION_ADDENDUM_PATH)
+    updates = addendum.get("authorized_validation_source_updates")
+    if (
+        addendum.get("status") != "POST_FREEZE_TRANSITION_UNREACHABILITY_EXPLANATION_CORRECTED"
+        or addendum.get("source_transition_coverage_sha256")
+        != sha256_file(HISTORICAL_COVERAGE_PATH)
+        or addendum.get("historical_certificate") != historical.get("unreachability_certificate")
+        or addendum.get("self_digest") != self_digest(addendum, "self_digest")
+        or addendum.get("conclusions_changed") is not False
+        or addendum.get("client_or_model_calls") != 0
+        or not isinstance(updates, dict)
+        or set(updates) != EXPECTED_INTERPRETATION_UPDATE_PATHS
+    ):
+        fail("transition-coverage interpretation addendum changed")
+    expected_update_fields = {
+        "historical_sha256",
+        "corrected_sha256",
+        "change_scope",
+        "affects_frozen_requests_or_scores",
+    }
+    for relative, update in updates.items():
+        if (
+            not isinstance(relative, str)
+            or not isinstance(update, dict)
+            or set(update) != expected_update_fields
+            or update.get("affects_frozen_requests_or_scores") is not False
+            or update.get("historical_sha256") == update.get("corrected_sha256")
+            or not str(update.get("change_scope", "")).strip()
+            or sha256_file(ROOT / relative) != update.get("corrected_sha256")
+        ):
+            fail(f"unauthorized interpretation-source update: {relative}")
+    return addendum
+
+
+def validate_coverage_expectation(
+    observed: Json,
+    expected: Json,
+    expected_path: Path,
+) -> None:
+    """Accept an exact receipt or its explanation-only, addendum-bound successor."""
+
+    if canonical_json(observed) == canonical_json(expected):
+        return
+    if expected_path.resolve() != HISTORICAL_COVERAGE_PATH.resolve():
+        fail("noncanonical coverage receipt differs from a clean recomputation")
+    observed_stable = {
+        key: value for key, value in observed.items() if key not in EXPLANATION_ONLY_COVERAGE_FIELDS
+    }
+    expected_stable = {
+        key: value for key, value in expected.items() if key not in EXPLANATION_ONLY_COVERAGE_FIELDS
+    }
+    addendum = validate_interpretation_addendum()
+    if (
+        canonical_json(observed_stable) != canonical_json(expected_stable)
+        or expected.get("self_digest") != self_digest(expected, "self_digest")
+        or observed.get("self_digest") != self_digest(observed, "self_digest")
+        or expected.get("unreachability_certificate") != addendum.get("historical_certificate")
+        or observed.get("unreachability_certificate") != addendum.get("corrected_certificate")
+    ):
+        fail("recomputed coverage differs beyond the authorized explanation correction")
+
+
+def runtime_source_hash_matches(relative: str, expected: str) -> bool:
+    """Allow only source updates bound exactly by the interpretation addendum."""
+
+    observed = sha256_file(ROOT / relative)
+    if observed == expected:
+        return True
+    update = validate_interpretation_addendum()["authorized_validation_source_updates"].get(
+        relative
+    )
+    return bool(
+        isinstance(update, dict)
+        and update.get("historical_sha256") == expected
+        and update.get("corrected_sha256") == observed
+        and update.get("affects_frozen_requests_or_scores") is False
+    )
 
 
 def validate(dataset_root: Path) -> Json:
@@ -198,8 +297,7 @@ def validate(dataset_root: Path) -> Json:
     ):
         fail("prompt packet coverage changed")
     evaluation_items = {
-        str(row["id"]): row
-        for row in load_jsonl(dataset_root / "evaluation-items.jsonl")
+        str(row["id"]): row for row in load_jsonl(dataset_root / "evaluation-items.jsonl")
     }
     for row in packet_records:
         item_id = str(row["item_id"])
@@ -225,9 +323,11 @@ def validate(dataset_root: Path) -> Json:
         "development_transition_counts": dict(sorted(development_transition_counts.items())),
         "structurally_unreachable_transitions": list(UNREACHABLE_TRANSITIONS),
         "unreachability_certificate": (
-            "HOLD requires current_state.release_status=CANDIDATE; DEMOTE requires "
-            "current_state.release_status=ADMITTED. Pair members share current_state, so neither "
-            "HOLD->DEMOTE nor DEMOTE->HOLD is reachable under the published executor."
+            "Under the published executor and shared-state pair contract, DEMOTE is available "
+            "only when current_state.release_status=ADMITTED and an enforced check fails. On an "
+            "ADMITTED state, that failure reaches DEMOTE before HOLD under first-match precedence; "
+            "on a non-ADMITTED state, DEMOTE is unavailable. Therefore neither HOLD->DEMOTE nor "
+            "DEMOTE->HOLD is reachable."
         ),
         "authored_profile_difference_rules_covered": len(authored_rules),
         "authored_profile_difference_rules_total": len(policy_rules),
@@ -257,9 +357,8 @@ def main() -> int:
     args = parser.parse_args()
     coverage = validate(args.dataset_root.resolve())
     if args.expect is not None:
-        expected = load_object(args.expect.resolve())
-        if canonical_json(coverage) != canonical_json(expected):
-            fail("recomputed coverage differs from --expect")
+        expected_path = args.expect.resolve()
+        validate_coverage_expectation(coverage, load_object(expected_path), expected_path)
     if args.coverage_out is not None:
         args.coverage_out.parent.mkdir(parents=True, exist_ok=True)
         args.coverage_out.write_text(

@@ -10,13 +10,13 @@ the corresponding service has issued it and the author has verified it.
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
+ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes under Executable Policy Revisions
 ```
 
 ## ICLR 2027 abstract
 
 ```text
-Model-mediated workflows can apply versioned policies to structured evidence before emitting state changes. Fixed-policy accuracy cannot show that a route used the active version, and scoring only valid outputs hides interface failure. We introduce ClaimPromoteBench, a synthetic conformance-testing protocol that compiles evidence changes and executable policy differences into action-changing pairs. Migration adequacy separates changed-rule from reachable action-transition coverage; exact dynamic programs then select a minimum joint suite. In one authored migration, a rule-complete suite covers 6/10 reachable edges, whereas a graph-complete suite covers all ten, certifies two impossible directions, and yields a 10-pair gate covering 12 changed rules. Five frozen evaluations contain 420 pairs across two ontologies. Every scheduled service, syntax, schema, and semantic failure remains incorrect end to end. In hidden r6, Qwen returns 272/300 valid and 258/300 correct decisions, with 113/150 correct pairs. On an action-balanced public challenge, Qwen scores 48/90 pairs end to end and 48/64 conditionally; Flash scores 13/90 and 13/61, with DEMOTE recalls of 4/30 and 0/30. On the policy graph, local Mistral and Phi-4 score 10/60 and 2/60 pairs; both fail the minimum gate. The deterministic executor defines labels rather than serving as a learned baseline. These results support regression testing of finite typed decision surfaces, not naturalistic policy validity or causal model comparisons.
+Language-model routes mediate structured policy decisions that should be deterministic. After policy revision, a route can remain valid-looking yet stale; valid-only scoring also hides interface failure. We introduce ClaimPromoteBench, a synthetic protocol for paired action conformance after output-contract validation. It holds typed context fixed while switching executable policies and scores calls jointly. Every scheduled service, syntax, schema, and semantic failure remains incorrect end to end. Established semantic differencing and set-cover machinery implement the compiler. In one authored BLUE-to-AMBER migration, rule-complete tests cover 6/10 action edges, graph-complete tests cover all ten reachable edges, and a 10-pair gate covers all 12 changed rules. Two pinned local routes, evaluated once without independent replication, score 10/60 and 2/60 pairs and fail the gate. Auxiliary r6 Qwen coverage is 272/300; item/pair accuracy is 258/300 and 113/150 end to end versus 258/272 and 113/123 conditional. In a balanced challenge, Qwen and Flash coverage is 148/180 and 146/180; end-to-end item/pair scores are 132/180,48/90 and 90/180,13/90, versus 132/148,48/64 and 90/146,13/61 conditional; DEMOTE recall is 4/30 and 0/30. The executor defines labels, not a learned baseline. Results support regression testing of finite authored decision surfaces, not model-family ranking, naturalistic validity, or causal comparison.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -26,7 +26,7 @@ out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Compiling Policy Differences into Failure-Aware State-Transition Tests
+ClaimPromoteBench: Failure-Aware Paired Tests of Model Routes under Executable Policy Revisions
 ```
 
 ## arXiv abstract
@@ -78,48 +78,32 @@ Compiles behavioral differences between executable policy versions into minimum 
 
 ## Main empirical findings
 
-- fresh confirmatory realization: 150 controlled pairs / 300 items, 600 frozen requests, and all
-  600 terminal cells C2-sealed before gold loading or analysis;
-- Qwen3.7-Max: 272 / 300 valid decisions, 258 / 300 correct actions, and 113 / 150 correct pairs;
-- Qwen3.7-Max decision / pair coverage: 0.907 and 0.820; E2E item / pair accuracy: 0.860 and
-  0.753; conditional item / pair accuracy: 0.949 and 0.919;
-- frozen public-development four-class multinomial Naive Bayes (`alpha=1`, identifier-normalized
-  unigram and bigram prompt counts): 184 / 300 correct actions and 34 / 150 correct pairs; this is
-  a weak low-cost comparator, not a representative competitive baseline;
-- Qwen3.7-Max per-action correct counts: 143 / 150 `ALLOW`, 110 / 134 `HOLD`, 5 / 8
-  `ESCALATE`, and 0 / 8 `DEMOTE`;
-- Qwen3.7-Max service failures: 14 HTTP 500 responses, one HTTP 503 response, ten timeouts, and
-  three semantic-invalid outputs, all incorrect with zero retries;
-- registered Flash lane: 300 HTTP 401 responses and no model output; scheduled service-configuration
-  E2E scores are 0 / 300 items and 0 / 150 pairs, while conditional correctness and model efficacy
-  are non-evaluable and dual-model confirmation is unsupported;
-- pair-balanced public challenge: 90 pairs / 180 items / 15 factors, with 90 `ALLOW` and 30 each of
-  `HOLD`, `DEMOTE`, and `ESCALATE`;
-- challenge Qwen: 148 / 180 valid decisions, 0.733 / 0.533 E2E item / pair accuracy, and
-  0.892 / 0.750 conditional item / pair accuracy;
-- challenge Flash: 146 / 180 valid decisions, 0.500 / 0.144 E2E item / pair accuracy, and
-  0.616 / 0.213 conditional item / pair accuracy;
-- the manuscript reports complete/correct pair counts for all 20 r6 factors and all 15 challenge
-  factors; every configuration has zero-accuracy factors;
-- challenge Qwen action recall (`ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE`):
-  0.878 / 0.867 / 0.133 / 0.767; Flash: 0.756 / 0.300 / 0.000 / 0.433;
-- the later Flash route establishes service-path executability only; differing service stacks
-  preclude a strict causal model ablation;
-- service labels are configuration labels. Model, serving implementation, and adapter differ, so
-  the old/new Flash routes do not support a strict causal ablation or model-family ranking;
-- the 60-pair policy-transition graph covers all ten reachable directed action edges and all 12
-  changed rules; the rule-stratified suite covers only 6/10 edges;
-- graph Mistral: 71 / 120 valid decisions, 40 / 120 correct items, 10 / 60 correct pairs, and
-  10 / 31 conditional pair accuracy; graph Phi-4: 43 / 120, 27 / 120, 2 / 60, and 2 / 8;
-- both graph routes have 0 / 24 end-to-end `DEMOTE` recall;
-- the prospectively selected minimum gate uses 10 pairs / 20 items while retaining all ten edges
-  and all 12 changed rules; Mistral scores 14 / 20 valid, 9 / 20 items, and 2 / 10 pairs, while
-  Phi-4 scores 6 / 20, 5 / 20, and 0 / 10; both fail the fixed strict gate;
-- the minimum-gate analysis makes zero additional calls, reuses the full graph records, and is not
-  an independent replication or a replacement for the 60-pair diagnostic;
-- permanent reviewer evidence uses dynamically counted manifests and reasoning-free derivatives;
-- deterministic policy execution is a definitional policy ceiling, not a learned baseline; the
-  public-development text Naive Bayes comparator remains weak.
+- Central migration: the rule-stratified 60-pair suite covers all 12 changed rules but 6 / 10
+  reachable action edges; the 60-pair graph suite covers all ten edges and all 12 rules.
+- Graph routes: Mistral produces 71 / 120 valid decisions, 40 / 120 correct items, 10 / 60 correct
+  pairs, and 10 / 31 conditional pair accuracy; Phi-4 produces 43 / 120, 27 / 120, 2 / 60, and
+  2 / 8. Both have 0 / 24 end-to-end `DEMOTE` recall.
+- Minimum gate: ten pairs retain all ten edges and all 12 rules. Mistral produces 14 / 20 valid
+  decisions, 9 / 20 correct items, and 2 / 10 correct pairs; Phi-4 produces 6 / 20, 5 / 20, and
+  0 / 10. Both fail the fixed gate. The gate reuses graph records and is not an independent sample.
+- Auxiliary r6 Qwen route: 272 / 300 valid decisions, 258 / 300 correct actions, and 113 / 150
+  correct pairs; conditional item and pair scores are 258 / 272 and 113 / 123. Its action recalls
+  are 143 / 150 `ALLOW`, 110 / 134 `HOLD`, 0 / 8 `DEMOTE`, and 5 / 8 `ESCALATE`.
+- Historical r6 Flash interface: all 300 requests return HTTP 401 before model output. It is an
+  interface failure described in prose, not a model-result row; a later route on a different stack
+  cannot establish a causal model or provider effect.
+- Auxiliary balanced challenge: 90 pairs, 180 items, and 15 factors, with 90 `ALLOW` items and 30
+  for each other action. Qwen coverage is 148 / 180, with 132 / 180 item and 48 / 90 pair accuracy
+  end to end versus 132 / 148 and 48 / 64 conditional. Flash coverage is 146 / 180, with 90 / 180
+  and 13 / 90 end to end versus 90 / 146 and 13 / 61 conditional.
+- Challenge action recall (`ALLOW` / `HOLD` / `DEMOTE` / `ESCALATE`) is 0.878 / 0.867 / 0.133 /
+  0.767 for Qwen and 0.756 / 0.300 / 0.000 / 0.433 for Flash. Full confusion matrices retain a
+  no-valid-decision column.
+- The deterministic executor is the label definition, not a learned baseline. Naive Bayes is a
+  weak sanity control; Random Forest profile-aware and profile-blind rows are construction and
+  shortcut controls.
+- The quota-confounded seven-route supplement is excluded in full. Permanent reviewer evidence
+  uses dynamically counted manifests and reasoning-free derivatives.
 
 ## Data and code availability
 

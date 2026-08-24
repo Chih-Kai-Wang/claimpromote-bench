@@ -189,9 +189,7 @@ def build_split(
                 item["active_policy_profile"] = profile_id
                 decision = evaluate_policy_switch(item, switch_policy, base_policy)
                 if decision["action"] != expected_by_profile[profile_id]:
-                    fail(
-                        f"unexpected action for {pair_id}/{profile_id}: {decision['action']}"
-                    )
+                    fail(f"unexpected action for {pair_id}/{profile_id}: {decision['action']}")
                 members.append((item, decision))
             if changed_paths(members[0][0], members[1][0]) != ["/active_policy_profile"]:
                 fail(f"pair changes more than active_policy_profile: {pair_id}")
@@ -302,9 +300,7 @@ def build(out_root: Path) -> Json:
         split: Counter(str(row["decision"]["action"]) for row in rows)
         for split, rows in (("development", development[1]), ("evaluation", evaluation[1]))
     }
-    profile_counts: dict[str, Counter[str]] = {
-        profile: Counter() for profile in PROFILE_ORDER
-    }
+    profile_counts: dict[str, Counter[str]] = {profile: Counter() for profile in PROFILE_ORDER}
     items_by_id = {str(row["id"]): row for row in evaluation[0]}
     gold_by_id = {str(row["id"]): row for row in evaluation[1]}
     for item_id, item in items_by_id.items():
@@ -344,8 +340,9 @@ def build(out_root: Path) -> Json:
             "structurally_unreachable_transitions": list(UNREACHABLE_TRANSITIONS),
             "contexts_per_evaluation_transition": 6,
             "unreachability_reason": (
-                "HOLD requires a CANDIDATE current state, whereas DEMOTE requires an ADMITTED "
-                "current state; pair members share one current state."
+                "Under the shared-state pair contract, DEMOTE is available only on an ADMITTED "
+                "current state with a failed enforced check. On that state, the same failure "
+                "reaches DEMOTE before HOLD; on a non-ADMITTED state, DEMOTE is unavailable."
             ),
         },
         "dataset_fingerprint": fingerprint,

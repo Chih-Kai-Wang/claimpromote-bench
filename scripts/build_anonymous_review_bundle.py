@@ -2023,6 +2023,9 @@ def build_transition_graph_review_receipts(
     destination: Path,
 ) -> Json:
     source_coverage = load_object(source_root / "transition-coverage.json")
+    source_addendum = load_object(
+        source_root.parent / "transition-coverage-interpretation-addendum.json"
+    )
     if (
         source_coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
         or source_coverage.get("directed_action_transitions_semantically_reachable") != 10
@@ -2031,10 +2034,23 @@ def build_transition_graph_review_receipts(
         or source_coverage.get("self_digest") != _digest_without(source_coverage, "self_digest")
     ):
         fail("policy-transition graph coverage receipt changed")
+    if (
+        source_addendum.get("status")
+        != "POST_FREEZE_TRANSITION_UNREACHABILITY_EXPLANATION_CORRECTED"
+        or source_addendum.get("source_transition_coverage_sha256")
+        != sha256_file(source_root / "transition-coverage.json")
+        or source_addendum.get("self_digest") != _digest_without(source_addendum, "self_digest")
+        or source_addendum.get("conclusions_changed") is not False
+        or source_addendum.get("client_or_model_calls") != 0
+    ):
+        fail("policy-transition graph interpretation addendum changed")
     dataset = destination / "dataset"
     coverage = anonymize_provenance(source_coverage)
     coverage["schema_version"] = "1.0.0-review"
     coverage["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    coverage["unreachability_certificate"] = source_addendum["corrected_certificate"]
+    coverage["historical_certificate_superseded"] = True
+    coverage["correction_scope"] = source_addendum["correction_scope"]
     coverage["source_bindings"] = {
         "manifest_sha256": sha256_file(dataset / "manifest.json"),
         "evaluation_items_sha256": sha256_file(dataset / "evaluation-items.jsonl"),

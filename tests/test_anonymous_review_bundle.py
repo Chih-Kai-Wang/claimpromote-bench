@@ -465,6 +465,8 @@ def test_policy_transition_graph_review_receipts_are_rebound_and_identity_free(
     assert coverage["directed_action_transitions_covered"] == 10
     assert coverage["directed_action_transitions_semantically_reachable"] == 10
     assert coverage["authored_profile_difference_rules_covered"] == 12
+    assert coverage["historical_certificate_superseded"] is True
+    assert "reaches DEMOTE before HOLD" in coverage["unreachability_certificate"]
     assert decision["transition_graph_model_calls_before_freeze"] == 0
     assert decision["outcomes_used_to_choose_edges_or_contexts"] is False
     assert bindings["dataset"]["transition_coverage_sha256"] == builder.sha256_file(
@@ -495,16 +497,21 @@ def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> 
     submission_builder = load_submission_builder()
 
     body = submission_builder.canonical_body()
-    reproducibility_start = body.index(r"\section{Reproducibility Statement}")
-    conclusion_start = body.index(r"\section{Conclusion}", reproducibility_start)
-    canonical_tail = body[reproducibility_start:conclusion_start]
+    blocks = []
+    for heading in ("Reproducibility Statement", "AI Assistance Disclosure"):
+        start = body.index(rf"\section{{{heading}}}")
+        next_section = body.find(r"\section{", start + 1)
+        blocks.append(body[start:] if next_section < 0 else body[start:next_section])
+    combined = "".join(blocks)
 
-    assert "binds policies, source standards, generators" in canonical_tail
-    assert "manifest derives file counts from the generated tree" in canonical_tail
-    assert "Generative AI tools assisted" in canonical_tail
-    assert "all 14 pilot attempts" not in canonical_tail
-    assert canonical_tail in submission_builder.iclr_tex(body)
-    assert canonical_tail in submission_builder.arxiv_tex(body)
+    assert "binds released policies, datasets, prompts" in combined
+    assert "terminal outcome classes, analyses, and privacy receipts" in combined
+    assert "manifest derives file counts from the generated tree" in " ".join(combined.split())
+    assert "Generative AI tools assisted" in combined
+    assert "all 14 pilot attempts" not in combined
+    for block in blocks:
+        assert block in submission_builder.iclr_tex(body)
+        assert block in submission_builder.arxiv_tex(body)
 
 
 def test_stronger_followup_anonymization_keeps_metrics_and_removes_provenance() -> None:

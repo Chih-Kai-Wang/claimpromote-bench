@@ -16,7 +16,7 @@
 \newcommand{\demote}{\texttt{DEMOTE}}
 \newcommand{\escalate}{\texttt{ESCALATE}}
 
-\title{\cpb: Compiling Policy Differences into Failure-Aware State-Transition Tests}
+\title{\cpb: Failure-Aware Paired Tests of Model Routes under Executable Policy Revisions}
 \author{Anonymous Author(s)}
 \date{}
 
@@ -25,39 +25,49 @@
 \maketitle
 
 \begin{abstract}
-Model-mediated workflows can apply versioned policies to structured evidence before emitting state
-changes. Fixed-policy accuracy cannot show that a route used the active version, and scoring only
-valid outputs hides interface failure. We introduce \cpb, a synthetic conformance-testing protocol that
-compiles evidence changes and executable policy differences into action-changing pairs. Migration
-adequacy separates changed-rule from reachable action-transition coverage; exact dynamic programs
-then select a minimum joint suite. In one authored migration, a rule-complete suite covers 6/10
-reachable edges, whereas a graph-complete suite covers all ten, certifies two impossible directions,
-and yields a 10-pair gate covering 12 changed rules. Five frozen evaluations contain 420 pairs
-across two ontologies. Every scheduled service, syntax, schema, and semantic failure remains
-incorrect end to end. In hidden r6, Qwen returns 272/300 valid and 258/300 correct decisions, with
-113/150 correct pairs. On an action-balanced public challenge, Qwen scores 48/90 pairs end to end
-and 48/64 conditionally; Flash scores 13/90 and 13/61, with \demote{} recalls of 4/30 and 0/30.
-On the policy graph, local Mistral and Phi-4 score 10/60 and 2/60 pairs; both fail the minimum gate.
-The deterministic executor defines labels rather than serving as a learned baseline. These results
-support regression testing of finite typed decision surfaces, not naturalistic policy validity or
-causal model comparisons.
+Language-model routes mediate structured policy decisions that should be
+deterministic. After policy revision, a route can remain valid-looking yet stale; valid-only scoring
+also hides interface failure. We introduce ClaimPromoteBench, a synthetic protocol for paired action
+conformance after output-contract validation. It holds typed context fixed while switching
+executable policies and scores calls jointly. Every scheduled service, syntax, schema, and semantic failure
+remains incorrect end to end. Established semantic differencing and set-cover machinery implement the
+compiler. In one authored \texttt{BLUE}-to-\texttt{AMBER} migration, rule-complete tests cover 6/10
+action edges, graph-complete tests cover all ten reachable edges, and a 10-pair gate covers all 12
+changed rules. Two pinned local routes, evaluated once without independent replication, score 10/60
+and 2/60 pairs and fail the gate. Auxiliary r6 Qwen coverage is 272/300; item/pair accuracy is
+258/300 and 113/150 end to end versus 258/272 and 113/123 conditional. In a balanced challenge,
+Qwen and Flash coverage is 148/180 and 146/180; end-to-end item/pair scores are 132/180,48/90 and
+90/180,13/90, versus 132/148,48/64 and 90/146,13/61 conditional; \texttt{DEMOTE} recall is 4/30 and
+0/30. The executor defines labels, not a learned baseline. Results support regression testing of
+finite authored decision surfaces, not model-family ranking, naturalistic validity, or causal
+comparison.
 \end{abstract}
 
 \section{Introduction}
 
-Versioned policies create a specific regression risk at a model-mediated decision boundary. The
-same artifact may be admitted under one release profile and held under another; one failed verifier
-field may change the action under a fixed profile. After a policy revision, a route can preserve
-stale behavior, misread evidence, or fail before returning a valid structured action.
+Versioned policies create regression risk at model-mediated decision boundaries. The same artifact
+may be admitted under one profile and held under another; one failed verifier field may change an
+action under a fixed profile. After revision, a route can preserve stale behavior, misread evidence,
+or fail before producing a valid structured action. We study regression testing during maintenance
+or migration, not green-field enforcement. If the structured policy can replace the route, a
+deterministic executor is safer.
 
-Ordinary accuracy does not separate these cases. A fixed-policy dataset can reward a stable field-to-label shortcut. Evaluating only parseable responses can hide service, syntax, schema, and semantic failures. More fundamentally, a regression suite that covers every edited rule need not cover every behavioral transition induced by the policy revision. We study a bounded question: does a route emit the transition prescribed by a published executable policy for a typed ledger, current state, and requested state? This is conformance to an author-defined executable specification, not a test of scientific truth, software security, policy legitimacy, or general agent competence.
+Ordinary accuracy conflates these cases. A fixed-policy dataset can reward a stable
+field-to-label shortcut, and evaluating only parseable responses can hide service, syntax, schema,
+and semantic failures. A regression suite that covers every edited rule can also miss behavioral
+transitions induced by the revision. We ask a bounded question: after output-contract validation,
+does a route emit the action prescribed by a published executable policy for a typed ledger,
+current state, and requested state? This is action conformance to an author-defined executable
+specification, not a test of exact six-field execution, scientific truth, software security, policy
+legitimacy, or general agent competence.
 
 \cpb treats the revision, rather than a static dataset, as the source of tests. An \emph{evidence
 contrast} changes one registered field under a fixed policy. A \emph{policy contrast} holds the
 complete decision context fixed and changes only the active profile. Every pair changes the
-prescribed action. This gives an intervention-blind certificate: a route that ignores the
-intervention cannot pass both members. Pair correctness requires two valid, correct decisions;
-end-to-end estimates retain every scheduled failure.
+prescribed action. This gives a necessary intervention-blind certificate: a route that ignores the
+intervention cannot pass both members. It is not sufficient evidence that a passing route followed
+the policy. Pair correctness requires two valid, action-correct decisions; end-to-end estimates
+retain every scheduled failure.
 
 The policy contrast turns a revision into a test-generation problem. We execute both policies over
 a finite authored context grammar, retain their behavioral difference, and compile that set against
@@ -70,10 +80,9 @@ We instantiate the protocol in two synthetic ontologies. One governs research-ev
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item a paired conformance protocol that isolates evidence and active-policy interventions, retains route failure end to end, and certifies the failure of intervention-blind shortcuts;
-  \item an adaptation of semantic policy differencing to model-route tests, with separate changed-rule and observable action-transition adequacy, impossible-edge certificates, and registered stale-policy mutants;
-  \item a joint-adequacy minimum-suite formulation and exact dynamic programs that produce a checkable optimum or an edge-count optimality witness; and
-  \item five frozen evaluations spanning 420 pairs and two authored ontologies, with complete item, pair, action, confusion, and learned-shortcut diagnostics for hosted and pinned local routes.
+  \item a paired model-route protocol for action conformance after output-contract validation that isolates evidence or active-policy interventions, retains route failure end to end, and rejects intervention-blind shortcuts;
+  \item an adaptation of established semantic differencing to executable policy revisions, with separate changed-rule and observable action-transition adequacy; standard set-cover optimization, edge-local mutants, and exact dynamic programs serve as checkable implementation machinery; and
+  \item a fully bound evaluation of one authored migration on two pinned local route stacks, plus auxiliary frozen evidence contrasts that diagnose route failure and action imbalance without supporting model-family or causal comparisons.
 \end{enumerate}
 
 \section{Related Work}
@@ -85,7 +94,7 @@ Coverage-preserving test-suite reduction also predates our work \cite{harrold199
 that optimization view only after policy differencing has produced paired model-service tests; the
 adequacy target jointly covers changed rules and observable action transitions.
 
-Semantic policy differencing is established software-engineering work. Margrave computes witnesses on which two access-control policies disagree; Cirg uses change-impact analysis to generate and reduce policy tests; mutation testing measures access-policy fault detection \cite{fisler2005policychange,martin2007policytests,martin2007policymutation}. Semantic differencing has also been applied to evolving combinatorial test models \cite{tzorefbrill2017semantic}. Our contribution is not the differencing operation. We turn each witness into two scored model-service executions, retain output-contract failure, and distinguish changed-rule coverage from coverage of the observable four-action changes induced by a revision. The latter includes transitions between non-\allow{} actions that a rule-complete suite can miss.
+Semantic policy differencing is established software-engineering work. Margrave computes witnesses on which two access-control policies disagree; Cirg uses change-impact analysis to generate and reduce policy tests; mutation testing measures access-policy fault detection \cite{fisler2005policychange,martin2007policytests,martin2007policymutation}. Semantic differencing has also been applied to evolving combinatorial test models \cite{tzorefbrill2017semantic}. Our contribution is not the differencing operation, mutation testing, or suite reduction. We adapt them to paired model-service executions, retain output-contract failure, and distinguish changed-rule coverage from coverage of the observable four-action changes induced by a revision. The latter includes transitions between non-\allow{} actions that a rule-complete suite can miss.
 
 \paragraph{Policy and rule reasoning.}
 Rule-following benchmarks test conversational constraints, unusual instructions, long rule sets, policy comprehension, and request classification \cite{mu2024rules,zhang2026inverseifeval,zhou2025rulearena,bao2026policyllm,cisneros2026policycompliance}. Other systems extract rule flows or internalize policy documents \cite{yang2026rulesual,liu2026policyinternalization}. GuideBench varies domain guidelines, and augmented policy training studies unseen guardrail policies \cite{diao2025guidebench,liu2026augmentedpolicy}. These works establish policy variation as prior art. They do not compile paired regression tests from the semantic difference of two executable policies or certify coverage of the induced action graph.
@@ -111,7 +120,7 @@ An item is $x=(P,z,s,\tau)$, where $P$ is the active policy, $z$ is a typed evid
 \]
 \demote{} lowers a currently elevated state whose recorded basis is invalid. \escalate{} preserves state and opens review for an authenticated active conflict. \hold{} rejects a requested promotion with incomplete prerequisites. \allow{} accepts the requested state when no preceding rule matches. The first matching row fixes the action, proposed state, and ordered reason codes.
 
-The evaluated route receives the complete versioned policy contract, one canonical JSON ledger, and passive verifier facts. It must return one JSON object with exactly six fields: \texttt{action}, \texttt{proposed\_state}, \texttt{p\_admissible}, \texttt{used\_evidence\_ids}, \texttt{reason\_codes}, and \texttt{missing\_evidence\_ids}. We request no rationale. Exact syntax, schema, and gold-free cross-field checks determine validity. Primary correctness then scores the prescribed action; it does not require exact oracle agreement on probabilities, evidence lists, or reason codes.
+The evaluated route receives the complete versioned policy contract, one canonical JSON ledger, and passive verifier facts. It must return one JSON object with exactly six fields: \texttt{action}, \texttt{proposed\_state}, \texttt{p\_admissible}, \texttt{used\_evidence\_ids}, \texttt{reason\_codes}, and \texttt{missing\_evidence\_ids}. We request no rationale. Exact syntax, schema, and gold-free cross-field checks determine validity. The primary endpoint is \emph{action conformance after output-contract validation}: it scores the prescribed action but does not require exact oracle agreement on probabilities, evidence lists, or reason codes.
 
 Let $v(x)$ indicate a valid response and let $\hat y(x)$ denote its action. End-to-end item correctness is
 \[
@@ -128,7 +137,7 @@ route invariant to $q$ returns the same action for both members. It can answer a
 and has $C_{\mathrm{pair}}(i)=0$. Across any such pair set, its end-to-end item accuracy is at most
 $1/2$ and its pair accuracy is zero. The policy case specializes to a classifier $h(z,s,\tau)$ that
 cannot observe $P$; the evidence case covers a route insensitive to the mutated verifier field.
-\emph{Proof.} The gold actions differ while an invariant route's outputs are equal, so at most one output matches. The certificate depends on the pair construction, not model quality or training procedure.
+\emph{Proof.} The gold actions differ while an invariant route's outputs are equal, so at most one output matches. The certificate depends on the pair construction, not model quality or training procedure. It is necessary but not sufficient: a route can react to $q$ without executing the policy faithfully.
 \paragraph{Policy-difference compilation.}
 For two policies and an authored context grammar $\mathcal{X}$, let
 $\Delta(P_a,P_b;\mathcal{X})$ contain exactly the contexts $c=(z,s,\tau)$ for which
@@ -159,12 +168,14 @@ policy evaluators, a finite context sequence, stable context identifiers, and au
 witnesses; it has no SLSA, prompt, model, or provider dependency. Enumerating the behavioral
 difference costs $O(|\mathcal X|(C_a+C_b))$ for policy costs $C_a,C_b$.
 \textbf{Proposition 2.} Finding a cardinality-minimum joint rule- and edge-complete suite is NP-hard, even when every candidate has the same required edge. The reduction is given in Appendix~\ref{app:compiler-guarantees}. For $n$ candidates, $r$ required rules,
-and $k$ required edges, our exact subset dynamic program takes $O(n2^{r+k})$ state updates. Each
+and $k$ required edges, a standard exact subset dynamic program takes $O(n2^{r+k})$ state updates. Each
 state retains the shortest, then lexicographically first, subset for a coverage mask. An
 include-or-exclude induction proves optimality at the full mask. A specialized search selects one
 context per edge while retaining at most $2^r$ rule masks. If it finds a complete witness, the
-$k$-context edge lower bound proves global minimality. Both implementations independently
-reconstruct the frozen witness from the published 60-pair candidate graph.
+$k$-context edge lower bound proves global minimality. Both implementations reproduce the frozen
+witness from the published 60-pair candidate graph. These solvers are
+correctness-preserving implementation machinery, not an algorithmic contribution; both functions
+operate in one module on the same frozen input.
 
 \begin{figure}[t]
 \centering
@@ -174,7 +185,7 @@ reconstruct the frozen witness from the published 60-pair candidate graph.
 \fbox{\parbox[c][0.82in][c]{0.40\linewidth}{\centering\textbf{Evidence-pair builder}\\$(P,s,\tau)$ fixed\\one registered field $(z_a\rightarrow z_b)$}} &
 \fbox{\parbox[c][0.82in][c]{0.40\linewidth}{\centering\textbf{Policy-difference compiler}\\two policies $+$ finite grammar\\rule, graph, or minimum suite}}\\[6pt]
 \multicolumn{2}{c}{\(\searrow\quad\) model, service, or local route \(\quad\swarrow\)}\\[4pt]
-\multicolumn{2}{c}{\fbox{\parbox[c][0.45in][c]{0.58\linewidth}{\centering exact six-field validation}}}\\[4pt]
+\multicolumn{2}{c}{\fbox{\parbox[c][0.45in][c]{0.58\linewidth}{\centering six-field output-contract validation}}}\\[4pt]
 \multicolumn{2}{c}{\(\downarrow\)}\\[-1pt]
 \multicolumn{2}{c}{\fbox{\parbox[c][0.55in][c]{0.72\linewidth}{\centering coverage, end-to-end and conditional item/pair metrics, action recall, confusion}}}
 \end{tabular}
@@ -194,29 +205,56 @@ For example, one pair holds an admitted artifact, its evidence, and its requeste
 
 \section{Evaluation Design}
 
-Table~\ref{tab:design} summarizes the five datasets. The first four suites pair one \allow{} member with a changed action. R6 is a frozen hidden realization with rare \demote{} and \escalate{} support. The public challenge contains 90 pairs across 15 factors and balances its 90 non-\allow{} members across the other three actions. The transition graph also includes pairs between non-\allow{} actions.
+Table~\ref{tab:design} separates the central migration validation from three auxiliary diagnostics.
+The central evidence comprises 120 pairs from one authored policy migration: a rule-stratified
+suite and a transition-graph suite evaluated once on the same two pinned local routes. These are not
+independent replications, and the minimum gate reuses graph records. The auxiliary suites test
+evidence contrasts or fixed-policy output behavior; they do not validate policy differencing. R6
+has rare \demote{} and \escalate{} support. The public challenge contains 90 pairs across 15
+factors and balances its 90 non-\allow{} members across the other three actions. The transition
+graph also includes pairs between non-\allow{} actions.
 
 \begin{table}[t]
 \centering
-\scriptsize
-\caption{Frozen evaluations. Supports follow \allow/\hold/\demote/\escalate. Factors are registered evidence or rule factors except in the last row, where they are reachable directed edges.}
+\small
+\caption{Frozen evaluations. The two central rows instantiate one migration; the other rows are auxiliary diagnostics. Supports follow \allow/\hold/\demote/\escalate.}
 \label{tab:design}
 \begin{tabular}{@{}p{0.19\linewidth}p{0.10\linewidth}p{0.22\linewidth}rrrr@{}}
 \toprule
 Dataset & Contrast & Policy instrument & Pairs & Items & Factors & Support \\
 \midrule
+\multicolumn{7}{@{}l}{\emph{Central policy-migration validation}}\\
+Policy switch & Policy & \texttt{BLUE}/\texttt{AMBER} & 60 & 120 & 12 & 60/20/20/20 \\
+Transition graph & Policy & \texttt{BLUE}/\texttt{AMBER} & 60 & 120 & 10 & 36/24/24/36 \\
+\midrule
+\multicolumn{7}{@{}l}{\emph{Auxiliary evidence and failure diagnostics}}\\
 Research r6 (hidden) & Evidence & Research transition policy & 150 & 300 & 20 & 150/134/8/8 \\
 Public challenge & Evidence & Research transition policy & 90 & 180 & 15 & 90/30/30/30 \\
 SLSA portability & Evidence & Artifact-admission policy & 60 & 120 & 12 & 60/20/20/20 \\
-Policy switch & Policy & \texttt{BLUE}/\texttt{AMBER} & 60 & 120 & 12 & 60/20/20/20 \\
-Transition graph & Policy & \texttt{BLUE}/\texttt{AMBER} & 60 & 120 & 10 & 36/24/24/36 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Every model configuration receives one call per item with zero client retries. Hosted studies use two repeated configurations: Qwen3.7-Max with prompt-only JSON and DeepSeek-V4-Flash with a strict JSON schema. Model, provider adapter, and output constraint differ, so between-route comparisons are descriptive. Separately frozen local runs use pinned four-bit Mistral Small 3.2 24B and Phi-4 snapshots with user-only prompts and greedy MLX-LM decoding. They cover the fixed software policy and both policy suites. Quantization, chat templates, and hosted versus local execution preclude causal comparisons.
+Every route receives one call per item with zero client retries. The hosted Qwen and Flash
+configurations were retained after an older adaptive interface study because they completed that
+interface; they are selected service routes, not a prospective sample of model families. The Qwen
+stack uses prompt-only JSON, whereas the Flash stack uses strict-schema output. Model, serving
+implementation, provider adapter, and output constraint therefore differ, so between-route
+comparisons are descriptive. Separately frozen local runs use pinned four-bit Mistral Small 3.2 24B
+and Phi-4 snapshots with user-only prompts, unconstrained JSON extraction, and greedy MLX-LM
+decoding. They cover the fixed software policy and both policy suites. Quantization, chat templates,
+and hosted versus local execution preclude causal comparisons.
 
-The research comparator is a multinomial Naive Bayes text classifier trained on 100 public-development items. It is a weak reference. The fixed software policy adds a 500-tree Random Forest trained on 72 development items using flattened model-visible state and verifier fields. Each policy suite trains the same algorithm twice on its development split: the policy-aware version observes the active profile; the profile-blind version does not. Both exclude identifiers, pair metadata, evaluation labels, oracle calls, and model outputs. A profile-blind classifier receives identical features for both pair members and therefore cannot answer an action-changing pair completely. Policy-contrast model results use prospectively selected, pinned local routes.
+The research sanity control is a multinomial Naive Bayes text classifier trained on 100
+public-development items; it is weak and not a competitive baseline. The fixed software policy adds
+a 500-tree Random Forest trained on 72 development items using flattened model-visible state and
+verifier fields. Each policy suite trains the same algorithm twice on its development split: the
+policy-aware version observes the active profile; the profile-blind version does not. Both exclude
+identifiers, pair metadata, evaluation labels, oracle calls, and model outputs. A profile-blind
+classifier receives identical features for both pair members and therefore cannot answer an
+action-changing pair completely. These Random Forest rows are construction and shortcut controls,
+not evidence of learned policy reasoning. Policy-contrast model routes were pinned before those
+route outputs were observed.
 
 The deterministic executor generates every label and reproduces all items by construction. We call this the \emph{definitional policy ceiling}. It is neither a learned baseline nor external validation of the authored policies.
 
@@ -234,9 +272,11 @@ ten pairs each:
 \allow$\leftrightarrow$\hold, \allow$\leftrightarrow$\demote, and
 \allow$\leftrightarrow$\escalate. The graph suite instead contains six contexts for each reachable
 directed edge. It covers 10/10 reachable non-self edges and all 12 rules. The remaining directions,
-\hold$\rightarrow$\demote{} and \demote$\rightarrow$\hold, are structurally impossible under the published
-executor: \hold{} requires a candidate current state, \demote{} requires an admitted current state,
-and pair members share that state. Each profile has the same action support (18/12/12/18 for
+\hold$\rightarrow$\demote{} and \demote$\rightarrow$\hold, are structurally impossible under the
+published executor and shared-state pair contract. \demote{} is available only when the current
+state is admitted and an enforced check fails. On an admitted state, that same failure reaches
+\demote{} before \hold{} under first-match precedence; on a non-admitted state, \demote{} is
+unavailable. Each profile has the same action support (18/12/12/18 for
 \allow/\hold/\demote/\escalate), blocking a profile-only class prior. The adequacy vectors are
 $A(T_{\mathrm{rule}})=(1,.6)$ and $A(T_{\mathrm{graph}})=(1,1)$ on the published grammar.
 
@@ -246,7 +286,7 @@ $a$. A controlled pair kills $m_e$ if and only if it covers $e$. The rule-strati
 kills 6/10 registered edge mutants, whereas the graph suite kills 10/10. This oracle-side audit
 explains the coverage criterion; it is not a model of fault prevalence.
 
-One pair realizes one edge, so ten reachable edges require at least ten pairs. A deterministic
+One pair realizes one edge, so ten reachable edges require at least ten pairs. A standard exact
 search over the six frozen contexts per edge finds a witness that also covers all 12 rules. This is
 a provably minimum 10-pair, 20-call gate for the joint $(1,1)$ target on the published candidate
 pool, an 83.3\% reduction from 120 calls. A digest-bound receipt publishes the selected
@@ -260,56 +300,62 @@ terminal records from the full graph run and is not an independent sample.
 
 \subsection{Coverage and correctness}
 
-Table~\ref{tab:core-results} reports every denominator. In r6, Qwen returned 272/300 valid decisions and achieved 258/300 item and 113/150 pair accuracy end to end. The old Flash interface returned HTTP 401 for all 300 requests and produced no model output. A later Flash route used a different service stack; its success establishes only that the later path executed.
+Table~\ref{tab:core-results} reports every model-route denominator. In r6, the hosted Qwen
+prompt-only route returned 272/300 valid decisions and achieved 258/300 item and 113/150 pair
+accuracy end to end.
 
-The public challenge exposes action errors among valid outputs. Qwen and Flash achieved 132/180 and 90/180 end-to-end item accuracy, with conditional item accuracy 132/148 and 90/146. Pair accuracy fell to 48/90 and 13/90 end to end.
+The historical r6 Flash service interface is not a model-result row: all 300 requests returned
+HTTP 401 before any model output. Its decision coverage, end-to-end item score, and end-to-end pair
+score are therefore 0/300, 0/300, and 0/150; conditional scores are undefined. A later Flash route
+used a different service stack. Its success establishes only that the later path executed.
 
-The fixed software policy gives a different decomposition. Flash produced 108/120 valid decisions and 49/60 complete pairs; Qwen produced 88/120 and 28/60. Every valid decision was correct for both hosted routes. Local Mistral produced 94/120 valid and 91/120 correct decisions, yielding 31/60 correct pairs; local Phi-4 produced 102/120 valid and 83/120 correct decisions, yielding 23/60 pairs. The Random Forest reached 120/120 items and 60/60 pairs. The fixed mapping is learnable from the published fields, but route performance still reflects both decision and output-contract errors.
+The public challenge exposes action errors among valid outputs. Its hosted Qwen prompt-only and
+Flash strict-schema routes achieved 132/180 and 90/180 end-to-end item accuracy, with conditional
+item accuracy 132/148 and 90/146. Pair accuracy fell to 48/90 and 13/90 end to end.
 
-On the rule-stratified policy contrast, local Mistral and Phi-4 produced 77/120 and 59/120 valid decisions, achieved 38/120 and 46/120 item accuracy, and completed 6/60 and 4/60 pairs correctly. Its policy-aware Random Forest achieved 120/120 items and 60/60 pairs, while its profile-blind counterpart achieved 60/120 items and 0/60 pairs. On the transition graph, Mistral produced 71/120 valid and 40/120 correct decisions, with 10/60 correct pairs; Phi-4 produced 43/120, 27/120, and 2/60. Conditional pair accuracy was 10/31 and 2/8. The policy-aware and profile-blind Random Forests reached 47/60 and 0/60 pairs. Profile-blind models are registered shortcut controls, not competitive baselines.
+The fixed software policy gives a different decomposition. Every valid hosted decision is
+action-correct, but incomplete pairs limit end-to-end pair scores to 49/60 for Flash and 28/60 for
+Qwen. Local Mistral and Phi-4 add action errors after validation and score 31/60 and 23/60 pairs.
+On the rule-stratified policy contrast, the local routes score 38/120 and 46/120 items and 6/60 and
+4/60 pairs. On the transition graph, they score 40/120 and 27/120 items and 10/60 and 2/60 pairs;
+conditional pair accuracy is 10/31 and 2/8. Appendix~\ref{tab:sanity-controls} separates weak and
+construction-dependent controls from model-route results.
 
 \begin{table}[t]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{3.2pt}
-\caption{Coverage and correctness. E2E retains every scheduled case; conditional columns use valid decisions or complete pairs. N/E denotes an empty conditional denominator.}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Model-route coverage and correctness. E2E retains every scheduled case; conditional columns use valid decisions or complete pairs. Host/prompt denotes prompt-only JSON; host/schema denotes strict-schema output; local/4b denotes pinned four-bit MLX-LM.}
 \label{tab:core-results}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
 Configuration & Valid & E2E item & Cond. item & Complete & E2E pair & Cond. pair \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Research-evidence policy}}\\
-r6 Qwen & 272/300 & 258/300 & 258/272 & 123/150 & 113/150 & 113/123 \\
-r6 text NB & 300/300 & 184/300 & 184/300 & 150/150 & 34/150 & 34/150 \\
-Old r6 Flash interface & 0/300 & 0/300 & N/E & 0/150 & 0/150 & N/E \\
-Challenge Qwen & 148/180 & 132/180 & 132/148 & 64/90 & 48/90 & 48/64 \\
-Challenge Flash & 146/180 & 90/180 & 90/146 & 61/90 & 13/90 & 13/61 \\
+r6 Qwen (host/prompt) & 272/300 & 258/300 & 258/272 & 123/150 & 113/150 & 113/123 \\
+Challenge Qwen (host/prompt) & 148/180 & 132/180 & 132/148 & 64/90 & 48/90 & 48/64 \\
+Challenge Flash (host/schema) & 146/180 & 90/180 & 90/146 & 61/90 & 13/90 & 13/61 \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Fixed software-artifact policy}}\\
-SLSA Qwen & 88/120 & 88/120 & 88/88 & 28/60 & 28/60 & 28/28 \\
-SLSA Flash & 108/120 & 108/120 & 108/108 & 49/60 & 49/60 & 49/49 \\
-SLSA Mistral local & 94/120 & 91/120 & 91/94 & 34/60 & 31/60 & 31/34 \\
-SLSA Phi-4 local & 102/120 & 83/120 & 83/102 & 42/60 & 23/60 & 23/42 \\
-SLSA structured RF & 120/120 & 120/120 & 120/120 & 60/60 & 60/60 & 60/60 \\
+SLSA Qwen (host/prompt) & 88/120 & 88/120 & 88/88 & 28/60 & 28/60 & 28/28 \\
+SLSA Flash (host/schema) & 108/120 & 108/120 & 108/108 & 49/60 & 49/60 & 49/49 \\
+SLSA Mistral (local/4b) & 94/120 & 91/120 & 91/94 & 34/60 & 31/60 & 31/34 \\
+SLSA Phi-4 (local/4b) & 102/120 & 83/120 & 83/102 & 42/60 & 23/60 & 23/42 \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Counterfactual active-policy switch}}\\
-Switch Mistral local & 77/120 & 38/120 & 38/77 & 33/60 & 6/60 & 6/33 \\
-Switch Phi-4 local & 59/120 & 46/120 & 46/59 & 14/60 & 4/60 & 4/14 \\
-Switch policy-aware RF & 120/120 & 120/120 & 120/120 & 60/60 & 60/60 & 60/60 \\
-Switch profile-blind RF & 120/120 & 60/120 & 60/120 & 60/60 & 0/60 & 0/60 \\
+Switch Mistral (local/4b) & 77/120 & 38/120 & 38/77 & 33/60 & 6/60 & 6/33 \\
+Switch Phi-4 (local/4b) & 59/120 & 46/120 & 46/59 & 14/60 & 4/60 & 4/14 \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Reachable policy-transition graph}}\\
-Graph Mistral local & 71/120 & 40/120 & 40/71 & 31/60 & 10/60 & 10/31 \\
-Graph Phi-4 local & 43/120 & 27/120 & 27/43 & 8/60 & 2/60 & 2/8 \\
-Graph policy-aware RF & 120/120 & 107/120 & 107/120 & 60/60 & 47/60 & 47/60 \\
-Graph profile-blind RF & 120/120 & 57/120 & 57/120 & 60/60 & 0/60 & 0/60 \\
+Graph Mistral (local/4b) & 71/120 & 40/120 & 40/71 & 31/60 & 10/60 & 10/31 \\
+Graph Phi-4 (local/4b) & 43/120 & 27/120 & 27/43 & 8/60 & 2/60 & 2/8 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Action-level diagnostics}
 
-R6 contains only eight \demote{} and eight \escalate{} items, and the weak text baseline recovers
+R6 contains only eight \demote{} and eight \escalate{} items, and the weak text sanity control recovers
 neither class. The public challenge raises each non-\allow{} support to 30: Qwen recovers 4/30
 \demote{} cases and Flash recovers 0/30. On the SLSA contrast, Qwen recovers 1/20 \demote{} and
 7/20 \escalate{} cases; Flash recovers 15/20 and 17/20. Both local configurations recover 0/20
@@ -323,11 +369,9 @@ no-valid-decision counts.
 
 Pair outcomes localize different failure modes. R6 Qwen scores 0/7 pairs on dependency-statement changes and 0/8 on current-state binding; seven of 20 factors are perfect. Challenge Qwen has three zero-accuracy factors and two perfect factors, while challenge Flash has 11 zero-accuracy factors. Each factor has only six to eight pairs, so these are diagnostics rather than stable rankings.
 
-On the SLSA contrast, conditional pair accuracy is 1.0 for every covered factor in both hosted
-routes. The local routes add action errors after validation: Mistral reaches 31/34 conditional pair
-accuracy, while Phi-4 reaches 23/42. On the policy switch, Mistral obtains five of its six correct
-pairs from one authenticated-conflict factor; Phi-4's four correct pairs occur in three
-candidate-admission factors.
+On the SLSA contrast, every covered hosted factor is correct, whereas the local routes add action
+errors. On the policy switch, Mistral obtains five of six correct pairs from one conflict factor;
+Phi-4's four correct pairs occupy three candidate-admission factors.
 
 On the graph, Mistral's ten correct pairs occupy three edges, including all six
 \hold{}$\rightarrow$\escalate{} pairs; Phi-4's two correct pairs both lie on
@@ -345,60 +389,80 @@ Rule coverage misses four reachable non-\allow{} edges; the graph covers all ten
 mutants mirror this distinction by construction, so they validate adequacy rather than estimate
 fault prevalence. The 20-call minimum gate does not replace the 60-pair diagnostic, which retains
 repeated contexts and factor localization. It rejects both local routes, but two reused subsets do
-not estimate the gate's sensitivity or specificity. A policy edit regenerates the difference set and receipt,
-whereas a route edit reruns frozen pairs. This separates missing coverage, invalid output, and wrong
-actions. The compiler applies to finite typed decision surfaces, but we validate it only on two
-authored ontologies; admission, escalation, and authorization remain prospective uses.
+not estimate the gate's sensitivity or specificity. A policy edit regenerates the difference set
+and certificates; a route edit reruns frozen pairs. The resulting suite can gate changes to a
+prompt, decoder, adapter, provider, or model: the 20-call subset gives a low-cost rejection test,
+while the full graph localizes failures. This pattern applies to structured admission, escalation,
+or routing boundaries only when executable policies and a finite grammar are available. We validate
+it on one authored migration. The other ontology supplies auxiliary evidence contrasts, not an
+independent migration replication; additional policy families remain prospective work.
 
 \paragraph{Failure-aware scoring changes the diagnosis.}
-The SLSA hosted routes make no action mistakes after validation, yet their end-to-end pair
-accuracies are 49/60 and 28/60. Conditional accuracy alone would report 1.0 and erase 43 incomplete
-pairs across the two routes. The local routes show the complementary case on the same frozen
-corpus: some valid outputs choose the wrong action. Reporting coverage, conditional correctness,
-and end-to-end correctness distinguishes these layers. On the balanced challenge, Qwen's 48/64
-conditional pair score becomes 48/90 end to end; Flash's 13/61 becomes 13/90. Their 4/30 and 0/30
-\demote{} recalls expose a class asymmetry hidden by r6.
+Both SLSA hosted routes have 1.0 conditional pair accuracy, yet incomplete pairs reduce end-to-end
+scores to 49/60 and 28/60. Local routes add valid but wrong actions. On the balanced challenge,
+Qwen's 48/64 conditional pair score becomes 48/90 end to end; Flash's 13/61 becomes 13/90. Their
+4/30 and 0/30 \demote{} recalls expose a class asymmetry hidden by r6. Coverage, conditional
+correctness, and end-to-end correctness separate these failures.
 
 \paragraph{The protocol evaluates a model boundary; it does not advocate one.}
-When policy and evidence are fully structured, a deterministic executor should enforce the transition. The learned routes emulate systems that already place a model at this tool-facing boundary. \cpb tests that boundary; it does not show that a model is preferable to the executor.
+When policy and evidence are fully structured, a deterministic executor should enforce the
+transition. The routes represent an existing boundary under contract change or migration. \cpb
+supplies its regression oracle; it does not show that a model is necessary or preferable.
 
 \paragraph{Route differences are descriptive.}
-The old r6 Flash interface produced 300 HTTP 401 responses; later Flash configurations used a different adapter and output contract. This proves neither model improvement nor an ablation effect. Hosted and local routes likewise differ in weights, quantization, prompts, adapters, and constraints.
+The hosted routes were selected after an older interface-qualification study, and the old r6 Flash
+interface produced 300 HTTP 401 responses. Later Flash configurations used a different adapter and
+output contract. This proves neither model improvement nor an ablation effect. Hosted and local
+routes likewise differ in weights, quantization, prompts, adapters, and constraints.
 
 \section{Limitations}
 
-All labels come from authored synthetic policies. Compilation assumes two deterministic policies, authored rule witnesses, and a finite grammar; it neither extracts rules from prose nor exhausts deployment behavior. Action edges are recomputed, but incorrect witnesses would invalidate the rule-coverage certificate. SLSA and in-toto ground the software fields but do not endorse our state machine. Two ontologies do not define a policy population, and the profiles are fixed instruments rather than unseen-policy synthesis.
+All labels come from authored synthetic policies. Compilation assumes two deterministic policies,
+authored rule witnesses, and a finite grammar; it neither extracts rules from prose nor exhausts
+deployment behavior. Action edges are recomputed, but incorrect witnesses would invalidate the
+rule-coverage certificate. SLSA and in-toto ground the software fields but do not endorse our state
+machine. The central result uses one migration, one grammar, two local snapshots on one stack,
+greedy one-shot decoding, and no independent replication. Two ontologies do not define a policy
+population, and the profiles are fixed instruments rather than unseen-policy synthesis.
 
 R6 and the public challenge share one ontology and mostly the same templates; the challenge is public robustness evidence, not hidden-test generalization. Canonical ledgers leave extraction, ambiguity, policy retrieval, and downstream outcomes untested. Reviewing 12 source-traceable CORE-Bench candidates created zero cases and zero model calls because time-stamped artifacts and provenance were missing. Naturalistic validity therefore remains untested. No human annotators or agreement statistic are claimed.
 
-Each configuration receives one call per item with zero retries. The results do not estimate sampling variance, temporal stability, retry policies, or a model population. Primary conformance is action-level after structural validation, not six-field exact match. Local routes use four-bit snapshots on one Apple Silicon stack; route differences are not causal.
+Each configuration receives one call per item with zero retries. The results do not estimate
+sampling variance, temporal stability, retry policies, or a model population. The primary endpoint
+is action conformance after output-contract validation, not six-field exact match or evidence of
+policy understanding. Local routes use four-bit snapshots on one Apple Silicon stack; route
+differences are not causal.
 
-The research ontology has only a weak Naive Bayes comparator. The Random Forest's fixed-policy result exposes direct label encoding, and its policy-aware graph result is 107/120. Profile ablations close one shortcut but do not establish rule following under paraphrase, long policies, adversarial evidence, or unseen profile composition.
+Naive Bayes is weak; the Random Forest controls expose direct feature shortcuts rather than
+competitive reasoning. Profile ablation closes one shortcut but does not establish rule following
+under paraphrase, long policies, adversarial evidence, or unseen composition.
 
-The edge-local mutants cover only their registered family, and minimum-suite optimality is
-candidate-pool-relative. The minimum-gate scores reuse the graph records and are not an independent
-replication. Quota-confounded hosted policy-switch studies and a 40-cell hosted smoke are excluded
-in full; no successful hosted row, conditional subset, or hosted model rows enter the paper.
-Invalid response contents are omitted from the paper and anonymous release, but their counts remain
-in end-to-end denominators and auditable records.
+Edge-local mutants cover only their registered family; optimality is candidate-pool-relative, and
+the gate reuses graph records. Quota-confounded hosted policy-switch studies are excluded in full; no successful hosted row or conditional subset is selected. A 40-cell hosted smoke is excluded in full; no hosted model rows enter the paper. Invalid response contents are omitted, but their counts remain in end-to-end denominators and auditable records.
+
+\section{Conclusion}
+
+\cpb turns one executable policy revision into paired, failure-aware model-route tests. The central
+result is narrow. Rule coverage misses four of ten reachable action edges. A standard exact search
+retains all 12 changed rules in a 20-call gate. Two pinned local routes score 10/60 and 2/60 pairs
+before both fail that gate. Auxiliary evidence contrasts show why route validity,
+action conformance, and end-to-end correctness must be reported separately. The protocol supports
+regression testing of finite authored policy surfaces. It does not establish model-family quality,
+naturalistic policy validity, exact policy understanding, or causal effects.
 
 \section{Reproducibility Statement}
 
-The artifact binds policies, source standards, generators, datasets, prompt packets, model revisions, schedules, one-call terminal records, analyses, and privacy receipts. Validators recompute every reported metric and confusion cell from item records. The anonymous derivative removes raw response text, free-form errors, provider identifiers, hidden reasoning, account identity, and private commit identity; its manifest derives file counts from the generated tree. Excluded protocol attempts are represented only by redacted receipts and contribute no model rows. Completed one-shot studies are never rerun.
+The artifact supports metric and contract replay. It binds released policies, datasets, prompts,
+terminal outcome classes, analyses, and privacy receipts. Validators recompute every reported
+metric and confusion cell from item records.
+The anonymous derivative removes raw response text, free-form errors, provider identifiers, hidden
+reasoning, account identity, and private commit identity; its manifest derives file counts from the
+generated tree. Hosted services are time-dependent, local weights remain external, and exact
+hardware-specific inference is not reproduced. Completed one-shot studies are never rerun.
 
 \section{AI Assistance Disclosure}
 
 Generative AI tools assisted literature search, planning, code and benchmark drafting, debugging, analysis checks, and manuscript editing. The author chose the research question, policies, protocols, exclusions, analyses, and claims; verified the datasets, results, artifacts, and references; and is responsible for the manuscript. AI systems are neither authors nor human annotators.
-
-\section{Conclusion}
-
-\cpb turns executable policy revisions into paired route tests with two oracle-side adequacy axes.
-On the authored migration, rule coverage misses four of ten reachable action edges; the exact
-minimum joint gate retains all 12 changed rules in 20 calls. Local graph routes reach 10/60 and
-2/60 pairs and both fail that gate. Across r6, the public challenge, and the software-policy
-studies, gaps between end-to-end and conditional scores and low \demote{} recall separate route
-validity from action conformance. These results support regression testing of finite typed policy
-surfaces, not naturalistic policy validity or causal model comparisons.
 
 \bibliographystyle{plain}
 \bibliography{references}
@@ -414,6 +478,16 @@ Give every candidate the same required action edge. Any nonempty selection cover
 covers all required rules exactly when the corresponding subsets cover $U$. A minimum
 joint-adequacy suite therefore gives a minimum set cover. The construction is polynomial.
 
+\paragraph{Unreachable HOLD/DEMOTE directions.}
+Policy-contrast members share current state. Under the published first-match executor, \demote{} is
+available only for an admitted state with a failed enforced check. For an admitted state, that
+failure selects \demote{} before the executor can reach \hold. For any non-admitted state,
+\demote{} is unavailable. No shared state can therefore support either
+\hold$\rightarrow$\demote{} or \demote$\rightarrow$\hold. This argument supersedes the frozen
+receipt's narrower statement that \hold{} requires a candidate state; \hold{} can also occur for a
+quarantined state. A digest-bound post-freeze interpretation addendum corrects the premise without
+changing the edge set, labels, coverage counts, selected suite, or route results.
+
 \paragraph{Exact dynamic program.}
 Index the $r+k$ required rules and edges and encode coverage as a bit mask. After processing the
 first $j$ candidates, the table stores, for every reachable mask, the shortest subset that realizes
@@ -421,19 +495,39 @@ that mask, breaking ties by context identifier. This invariant holds initially f
 For candidate $j+1$, the exclude transition preserves every prior state and the include transition
 unions its coverage mask with each prior mask. Keeping the shorter, then lexicographically first,
 representative preserves the invariant. At $j=n$, the representative for the full mask is therefore
-a cardinality-minimum joint-complete suite. The algorithm performs $O(n2^{r+k})$ state updates and
-stores at most $2^{r+k}$ states.
+a cardinality-minimum joint-complete suite. This standard bit-mask implementation performs
+$O(n2^{r+k})$ state updates and stores at most $2^{r+k}$ states.
 
 \paragraph{Edge lower-bound certificate.}
 Each policy-contrast pair realizes one directed action edge. Covering $k$ distinct required edges
 therefore needs at least $k$ pairs. The specialized search chooses one candidate from each edge
 group while tracking rule masks. If its full-rule state exists, the returned $k$-pair suite meets
-the lower bound and is globally minimum. The generic and specialized implementations both
-reconstruct the frozen ten-pair witness. The exact implementation also matches exhaustive subset
-enumeration on 64 deterministic small candidate pools.
+the lower bound and is globally minimum. The generic and specialized functions both reproduce the
+frozen ten-pair witness from the same input. The exact implementation also matches exhaustive
+subset enumeration on 64 deterministic small candidate pools.
 
 \section{Complete Action-Level Results}
 \label{app:complete-results}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Sanity and shortcut controls, separated from model-route results. These rows check task construction or direct feature shortcuts; they are not competitive learned baselines.}
+\label{tab:sanity-controls}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Control & Valid & E2E item & Cond. item & Complete & E2E pair & Cond. pair \\
+\midrule
+r6 NB sanity & 300/300 & 184/300 & 184/300 & 150/150 & 34/150 & 34/150 \\
+SLSA RF sanity & 120/120 & 120/120 & 120/120 & 60/60 & 60/60 & 60/60 \\
+Switch RF/profile & 120/120 & 120/120 & 120/120 & 60/60 & 60/60 & 60/60 \\
+Switch RF/blind & 120/120 & 60/120 & 60/120 & 60/60 & 0/60 & 0/60 \\
+Graph RF/profile & 120/120 & 107/120 & 107/120 & 60/60 & 47/60 & 47/60 \\
+Graph RF/blind & 120/120 & 57/120 & 57/120 & 60/60 & 0/60 & 0/60 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[H]
 \centering
@@ -445,27 +539,26 @@ enumeration on 64 deterministic small candidate pools.
 \toprule
 Configuration & \allow{} & \hold{} & \demote{} & \escalate{} & Bal. \\
 \midrule
-r6 Qwen & .9533 & .8209 & .0000 & .6250 & .5998 \\
-r6 text NB & .5000 & .8134 & .0000 & .0000 & .3284 \\
-Old r6 Flash interface & .0000 & .0000 & .0000 & .0000 & .0000 \\
-Challenge Qwen & .8778 & .8667 & .1333 & .7667 & .6611 \\
-Challenge Flash & .7556 & .3000 & .0000 & .4333 & .3722 \\
+r6 Qwen (host/prompt) & .9533 & .8209 & .0000 & .6250 & .5998 \\
+r6 NB sanity & .5000 & .8134 & .0000 & .0000 & .3284 \\
+Challenge Qwen (host/prompt) & .8778 & .8667 & .1333 & .7667 & .6611 \\
+Challenge Flash (host/schema) & .7556 & .3000 & .0000 & .4333 & .3722 \\
 \midrule
-SLSA Qwen & 1.0000 & 1.0000 & .0500 & .3500 & .6000 \\
-SLSA Flash & .9833 & .8500 & .7500 & .8500 & .8583 \\
-SLSA Mistral local & 1.0000 & .9500 & .0000 & .6000 & .6375 \\
-SLSA Phi-4 local & 1.0000 & .2000 & .0000 & .9500 & .5375 \\
-SLSA structured RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+SLSA Qwen (host/prompt) & 1.0000 & 1.0000 & .0500 & .3500 & .6000 \\
+SLSA Flash (host/schema) & .9833 & .8500 & .7500 & .8500 & .8583 \\
+SLSA Mistral (local/4b) & 1.0000 & .9500 & .0000 & .6000 & .6375 \\
+SLSA Phi-4 (local/4b) & 1.0000 & .2000 & .0000 & .9500 & .5375 \\
+SLSA RF sanity & 1.0000 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \midrule
-Switch Mistral local & .2667 & .6000 & .0000 & .5000 & .3417 \\
-Switch Phi-4 local & .6333 & .3000 & .0000 & .1000 & .2583 \\
-Switch policy-aware RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
-Switch profile-blind RF & .0000 & 1.0000 & 1.0000 & 1.0000 & .7500 \\
+Switch Mistral (local/4b) & .2667 & .6000 & .0000 & .5000 & .3417 \\
+Switch Phi-4 (local/4b) & .6333 & .3000 & .0000 & .1000 & .2583 \\
+Switch RF/profile & 1.0000 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Switch RF/blind & .0000 & 1.0000 & 1.0000 & 1.0000 & .7500 \\
 \midrule
-Graph Mistral local & .2500 & .7500 & .0000 & .3611 & .3403 \\
-Graph Phi-4 local & .5833 & .2083 & .0000 & .0278 & .2049 \\
-Graph policy-aware RF & .8889 & .7917 & 1.0000 & .8889 & .8924 \\
-Graph profile-blind RF & .2500 & .5833 & 1.0000 & .2778 & .5278 \\
+Graph Mistral (local/4b) & .2500 & .7500 & .0000 & .3611 & .3403 \\
+Graph Phi-4 (local/4b) & .5833 & .2083 & .0000 & .0278 & .2049 \\
+Graph RF/profile & .8889 & .7917 & 1.0000 & .8889 & .8924 \\
+Graph RF/blind & .2500 & .5833 & 1.0000 & .2778 & .5278 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -480,64 +573,150 @@ Graph profile-blind RF & .2500 & .5833 & 1.0000 & .2778 & .5278 \\
 \toprule
 Configuration & \allow{} & \hold{} & \demote{} & \escalate{} \\
 \midrule
-r6 Qwen & 1.0000 & .9483 & .0000 & 1.0000 \\
-r6 text NB & .5000 & .8134 & .0000 & .0000 \\
-Old r6 Flash interface & N/E & N/E & N/E & N/E \\
-Challenge Qwen & 1.0000 & 1.0000 & .2000 & 1.0000 \\
-Challenge Flash & .8500 & .4091 & .0000 & .8125 \\
+r6 Qwen (host/prompt) & 1.0000 & .9483 & .0000 & 1.0000 \\
+r6 NB sanity & .5000 & .8134 & .0000 & .0000 \\
+Challenge Qwen (host/prompt) & 1.0000 & 1.0000 & .2000 & 1.0000 \\
+Challenge Flash (host/schema) & .8500 & .4091 & .0000 & .8125 \\
 \midrule
-SLSA Qwen & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
-SLSA Flash & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
-SLSA Mistral local & 1.0000 & .9500 & .0000 & 1.0000 \\
-SLSA Phi-4 local & 1.0000 & .2222 & .0000 & .9500 \\
-SLSA structured RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+SLSA Qwen (host/prompt) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+SLSA Flash (host/schema) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+SLSA Mistral (local/4b) & 1.0000 & .9500 & .0000 & 1.0000 \\
+SLSA Phi-4 (local/4b) & 1.0000 & .2222 & .0000 & .9500 \\
+SLSA RF sanity & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \midrule
-Switch Mistral local & .3636 & .6000 & N/E & .7692 \\
-Switch Phi-4 local & 1.0000 & 1.0000 & .0000 & 1.0000 \\
-Switch policy-aware RF & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
-Switch profile-blind RF & .0000 & 1.0000 & 1.0000 & 1.0000 \\
+Switch Mistral (local/4b) & .3636 & .6000 & N/E & .7692 \\
+Switch Phi-4 (local/4b) & 1.0000 & 1.0000 & .0000 & 1.0000 \\
+Switch RF/profile & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Switch RF/blind & .0000 & 1.0000 & 1.0000 & 1.0000 \\
 \midrule
-Graph Mistral local & .3462 & .7500 & .0000 & .7222 \\
-Graph Phi-4 local & 1.0000 & .8333 & .0000 & 1.0000 \\
-Graph policy-aware RF & .8889 & .7917 & 1.0000 & .8889 \\
-Graph profile-blind RF & .2500 & .5833 & 1.0000 & .2778 \\
+Graph Mistral (local/4b) & .3462 & .7500 & .0000 & .7222 \\
+Graph Phi-4 (local/4b) & 1.0000 & .8333 & .0000 & 1.0000 \\
+Graph RF/profile & .8889 & .7917 & 1.0000 & .8889 \\
+Graph RF/blind & .2500 & .5833 & 1.0000 & .2778 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Each confusion entry follows predicted-column order \([\allow,\hold,\demote,\escalate,\texttt{N}]\), where \texttt{N} means no valid decision.
+The following tables give every end-to-end confusion cell explicitly. \texttt{N} means no valid
+decision and is not a policy action.
 
 \begin{table}[H]
 \centering
 \scriptsize
-\setlength{\tabcolsep}{3pt}
-\caption{Full end-to-end confusion matrices in compact row form. Columns after configuration correspond to gold \allow, \hold, \demote, and \escalate.}
+\setlength{\tabcolsep}{4pt}
+\caption{Research-evidence route and sanity-control confusion counts. Columns are predicted actions.}
 \label{tab:confusion}
-\begin{tabular}{@{}lrrrr@{}}
+\begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Configuration & Gold \allow{} & Gold \hold{} & Gold \demote{} & Gold \escalate{} \\
+Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
-r6 Qwen & 143/0/0/0/7 & 4/110/0/2/18 & 8/0/0/0/0 & 0/0/0/5/3 \\
-r6 text NB & 75/75/0/0/0 & 25/109/0/0/0 & 8/0/0/0/0 & 8/0/0/0/0 \\
-Old r6 Flash interface & 0/0/0/0/150 & 0/0/0/0/134 & 0/0/0/0/8 & 0/0/0/0/8 \\
-Challenge Qwen & 79/0/0/0/11 & 0/26/0/0/4 & 8/4/4/4/10 & 0/0/0/23/7 \\
-Challenge Flash & 68/4/0/8/10 & 13/9/0/0/8 & 25/3/0/0/2 & 0/3/0/13/14 \\
+r6 Qwen (host/prompt) & \allow{} & 143 & 0 & 0 & 0 & 7 \\
+r6 Qwen (host/prompt) & \hold{} & 4 & 110 & 0 & 2 & 18 \\
+r6 Qwen (host/prompt) & \demote{} & 8 & 0 & 0 & 0 & 0 \\
+r6 Qwen (host/prompt) & \escalate{} & 0 & 0 & 0 & 5 & 3 \\
+r6 NB sanity & \allow{} & 75 & 75 & 0 & 0 & 0 \\
+r6 NB sanity & \hold{} & 25 & 109 & 0 & 0 & 0 \\
+r6 NB sanity & \demote{} & 8 & 0 & 0 & 0 & 0 \\
+r6 NB sanity & \escalate{} & 8 & 0 & 0 & 0 & 0 \\
+Challenge Qwen (host/prompt) & \allow{} & 79 & 0 & 0 & 0 & 11 \\
+Challenge Qwen (host/prompt) & \hold{} & 0 & 26 & 0 & 0 & 4 \\
+Challenge Qwen (host/prompt) & \demote{} & 8 & 4 & 4 & 4 & 10 \\
+Challenge Qwen (host/prompt) & \escalate{} & 0 & 0 & 0 & 23 & 7 \\
+Challenge Flash (host/schema) & \allow{} & 68 & 4 & 0 & 8 & 10 \\
+Challenge Flash (host/schema) & \hold{} & 13 & 9 & 0 & 0 & 8 \\
+Challenge Flash (host/schema) & \demote{} & 25 & 3 & 0 & 0 & 2 \\
+Challenge Flash (host/schema) & \escalate{} & 0 & 3 & 0 & 13 & 14 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{Fixed software-policy confusion counts. Columns are predicted actions.}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
-SLSA Qwen & 60/0/0/0/0 & 0/20/0/0/0 & 0/0/1/0/19 & 0/0/0/7/13 \\
-SLSA Flash & 59/0/0/0/1 & 0/17/0/0/3 & 0/0/15/0/5 & 0/0/0/17/3 \\
-SLSA Mistral local & 60/0/0/0/0 & 1/19/0/0/0 & 0/2/0/0/18 & 0/0/0/12/8 \\
-SLSA Phi-4 local & 60/0/0/0/0 & 14/4/0/0/2 & 4/0/0/0/16 & 1/0/0/19/0 \\
-SLSA structured RF & 60/0/0/0/0 & 0/20/0/0/0 & 0/0/20/0/0 & 0/0/0/20/0 \\
+SLSA Qwen (host/prompt) & \allow{} & 60 & 0 & 0 & 0 & 0 \\
+SLSA Qwen (host/prompt) & \hold{} & 0 & 20 & 0 & 0 & 0 \\
+SLSA Qwen (host/prompt) & \demote{} & 0 & 0 & 1 & 0 & 19 \\
+SLSA Qwen (host/prompt) & \escalate{} & 0 & 0 & 0 & 7 & 13 \\
+SLSA Flash (host/schema) & \allow{} & 59 & 0 & 0 & 0 & 1 \\
+SLSA Flash (host/schema) & \hold{} & 0 & 17 & 0 & 0 & 3 \\
+SLSA Flash (host/schema) & \demote{} & 0 & 0 & 15 & 0 & 5 \\
+SLSA Flash (host/schema) & \escalate{} & 0 & 0 & 0 & 17 & 3 \\
+SLSA Mistral (local/4b) & \allow{} & 60 & 0 & 0 & 0 & 0 \\
+SLSA Mistral (local/4b) & \hold{} & 1 & 19 & 0 & 0 & 0 \\
+SLSA Mistral (local/4b) & \demote{} & 0 & 2 & 0 & 0 & 18 \\
+SLSA Mistral (local/4b) & \escalate{} & 0 & 0 & 0 & 12 & 8 \\
+SLSA Phi-4 (local/4b) & \allow{} & 60 & 0 & 0 & 0 & 0 \\
+SLSA Phi-4 (local/4b) & \hold{} & 14 & 4 & 0 & 0 & 2 \\
+SLSA Phi-4 (local/4b) & \demote{} & 4 & 0 & 0 & 0 & 16 \\
+SLSA Phi-4 (local/4b) & \escalate{} & 1 & 0 & 0 & 19 & 0 \\
+SLSA RF sanity & \allow{} & 60 & 0 & 0 & 0 & 0 \\
+SLSA RF sanity & \hold{} & 0 & 20 & 0 & 0 & 0 \\
+SLSA RF sanity & \demote{} & 0 & 0 & 20 & 0 & 0 \\
+SLSA RF sanity & \escalate{} & 0 & 0 & 0 & 20 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{Rule-stratified policy-switch confusion counts. Columns are predicted actions.}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
-Switch Mistral local & 16/13/0/15/16 & 8/12/0/0/0 & 0/0/0/0/20 & 3/0/0/10/7 \\
-Switch Phi-4 local & 38/0/0/0/22 & 0/6/0/0/14 & 4/9/0/0/7 & 0/0/0/2/18 \\
-Switch policy-aware RF & 60/0/0/0/0 & 0/20/0/0/0 & 0/0/20/0/0 & 0/0/0/20/0 \\
-Switch profile-blind RF & 0/20/20/20/0 & 0/20/0/0/0 & 0/0/20/0/0 & 0/0/0/20/0 \\
+Switch Mistral (local/4b) & \allow{} & 16 & 13 & 0 & 15 & 16 \\
+Switch Mistral (local/4b) & \hold{} & 8 & 12 & 0 & 0 & 0 \\
+Switch Mistral (local/4b) & \demote{} & 0 & 0 & 0 & 0 & 20 \\
+Switch Mistral (local/4b) & \escalate{} & 3 & 0 & 0 & 10 & 7 \\
+Switch Phi-4 (local/4b) & \allow{} & 38 & 0 & 0 & 0 & 22 \\
+Switch Phi-4 (local/4b) & \hold{} & 0 & 6 & 0 & 0 & 14 \\
+Switch Phi-4 (local/4b) & \demote{} & 4 & 9 & 0 & 0 & 7 \\
+Switch Phi-4 (local/4b) & \escalate{} & 0 & 0 & 0 & 2 & 18 \\
+Switch RF/profile & \allow{} & 60 & 0 & 0 & 0 & 0 \\
+Switch RF/profile & \hold{} & 0 & 20 & 0 & 0 & 0 \\
+Switch RF/profile & \demote{} & 0 & 0 & 20 & 0 & 0 \\
+Switch RF/profile & \escalate{} & 0 & 0 & 0 & 20 & 0 \\
+Switch RF/blind & \allow{} & 0 & 20 & 20 & 20 & 0 \\
+Switch RF/blind & \hold{} & 0 & 20 & 0 & 0 & 0 \\
+Switch RF/blind & \demote{} & 0 & 0 & 20 & 0 & 0 \\
+Switch RF/blind & \escalate{} & 0 & 0 & 0 & 20 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{Reachable policy-transition graph confusion counts. Columns are predicted actions.}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
-Graph Mistral local & 9/8/0/9/10 & 2/18/0/4/0 & 3/0/0/0/21 & 2/3/0/13/18 \\
-Graph Phi-4 local & 21/0/0/0/15 & 1/5/0/0/18 & 3/12/0/0/9 & 0/0/0/1/35 \\
-Graph policy-aware RF & 32/0/3/1/0 & 5/19/0/0/0 & 0/0/24/0/0 & 3/0/1/32/0 \\
-Graph profile-blind RF & 9/8/12/7/0 & 7/14/0/3/0 & 0/0/24/0/0 & 8/6/12/10/0 \\
+Graph Mistral (local/4b) & \allow{} & 9 & 8 & 0 & 9 & 10 \\
+Graph Mistral (local/4b) & \hold{} & 2 & 18 & 0 & 4 & 0 \\
+Graph Mistral (local/4b) & \demote{} & 3 & 0 & 0 & 0 & 21 \\
+Graph Mistral (local/4b) & \escalate{} & 2 & 3 & 0 & 13 & 18 \\
+Graph Phi-4 (local/4b) & \allow{} & 21 & 0 & 0 & 0 & 15 \\
+Graph Phi-4 (local/4b) & \hold{} & 1 & 5 & 0 & 0 & 18 \\
+Graph Phi-4 (local/4b) & \demote{} & 3 & 12 & 0 & 0 & 9 \\
+Graph Phi-4 (local/4b) & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
+Graph RF/profile & \allow{} & 32 & 0 & 3 & 1 & 0 \\
+Graph RF/profile & \hold{} & 5 & 19 & 0 & 0 & 0 \\
+Graph RF/profile & \demote{} & 0 & 0 & 24 & 0 & 0 \\
+Graph RF/profile & \escalate{} & 3 & 0 & 1 & 32 & 0 \\
+Graph RF/blind & \allow{} & 9 & 8 & 12 & 7 & 0 \\
+Graph RF/blind & \hold{} & 7 & 14 & 0 & 3 & 0 \\
+Graph RF/blind & \demote{} & 0 & 0 & 24 & 0 & 0 \\
+Graph RF/blind & \escalate{} & 8 & 6 & 12 & 10 & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}

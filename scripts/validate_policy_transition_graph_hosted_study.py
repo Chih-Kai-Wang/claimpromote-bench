@@ -30,7 +30,13 @@ from freeze_policy_transition_graph_hosted_study import (  # noqa: E402
 )
 from freeze_slsa_portability_study import request_body  # noqa: E402
 from validate_policy_switch_study import validate_baselines  # noqa: E402
-from validate_policy_transition_graph_study import validate as validate_graph  # noqa: E402
+from validate_policy_transition_graph_study import (  # noqa: E402
+    runtime_source_hash_matches,
+    validate_coverage_expectation,
+)
+from validate_policy_transition_graph_study import (  # noqa: E402
+    validate as validate_graph,
+)
 
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
@@ -61,8 +67,7 @@ def validate_freeze(
     manifest = load_object(dataset_root / "manifest.json")
     packet = load_object(dataset_root / "evaluation-prompt-packet.json")
     coverage_path = dataset_root.parent / "transition-coverage.json"
-    if canonical_json(coverage) != canonical_json(load_object(coverage_path)):
-        fail("transition coverage differs from a clean recomputation")
+    validate_coverage_expectation(coverage, load_object(coverage_path), coverage_path)
     if (
         plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
         or plan.get("truth_status") != "SEALED_UNTIL_ALL_TERMINAL_RECORDS_EXIST"
@@ -230,7 +235,7 @@ def validate_freeze(
     if not isinstance(runtime, dict) or set(runtime) != set(RUNTIME_SOURCES):
         fail("runtime-source inventory changed")
     for path, expected in runtime.items():
-        if sha256_file(ROOT / path) != expected:
+        if not runtime_source_hash_matches(path, expected):
             fail(f"runtime source changed after freeze: {path}")
     return {
         "status": "POLICY_TRANSITION_GRAPH_HOSTED_FREEZE_VALID",

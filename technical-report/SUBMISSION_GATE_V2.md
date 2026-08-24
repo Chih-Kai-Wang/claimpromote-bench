@@ -9,17 +9,24 @@ paper. It is deliberately fail-closed.
 **SCIENTIFIC_RC_READY = YES — LOCAL SCIENTIFIC, REVIEW, AND ARTIFACT GATES PASS;
 R6 FLASH LANE NON-EVALUABLE; ACCOUNT-SIDE SUBMISSION NOT AUTHORIZED OR COMPLETED**
 
-The new r6 realization satisfies the zero-adjustment fresh-split requirement. Its Qwen hypothesis
-passes the registered point-estimate and complete-family significance gates. The registered Flash
-lane terminates in 300 authorization errors and supplies no model output, so its hypothesis is
-unsupported and dual-model confirmation remains unavailable. This is a scoped scientific release
-candidate, not a claim of uniform four-action competence or provider-independent replication.
+The manuscript's central claim is a paired, failure-aware regression protocol for an existing
+model boundary under executable policy revision. Its central evidence is one authored migration,
+two 60-pair suites, and the same two pinned local routes evaluated once; the 10-pair minimum gate
+reuses graph records. R6, the public action-balanced challenge, and fixed-policy SLSA results are
+auxiliary route diagnostics rather than independent policy-migration replications.
 
-The manuscript focuses on the fresh result and the pair-balanced public robustness challenge.
-Earlier v1 and adaptive studies remain in the private development repository but are omitted from
-the paper-facing replay core. The reviewer tree excludes hidden reasoning, verifies its retained
-records, and derives its file count from the generated manifest. PR #20 remains Draft and unmerged
-until the author explicitly authorizes a merge or account-side submission.
+The final isolated reviewer scored the preceding release candidate 4/10. That review was not
+rerated: the score describes the reviewed snapshot, not this revision, and does not predict venue
+acceptance. All safely actionable high and medium findings were addressed by narrowing novelty,
+disclosing post-exploratory route selection and stack confounds, correcting the HOLD/DEMOTE proof,
+demoting standard optimization machinery, separating controls, expanding confusion matrices, and
+limiting reproducibility claims to metric and contract replay. The exact disposition is recorded in
+`docs/reviews/2026-08-24-final-isolated-iclr-review-disposition.md`.
+
+The reviewer tree excludes hidden reasoning and malformed response contents, verifies retained
+structured records and failure classes, and derives its file count from the generated manifest. PR
+#20 remains Draft and unmerged until the author explicitly authorizes a merge or account-side
+submission.
 
 The later balanced public challenge has an executable Flash service path, but it uses a different
 stack and does not retroactively turn the r6 HTTP 401 lane into model evidence or a causal ablation.
@@ -156,23 +163,28 @@ is reported as a replacement study.
 
 - [x] Abstract frames the task as synthetic, policy-constrained evidence-state transition
   evaluation rather than broad research-agent capability.
-- [x] Abstract reports fresh-study coverage plus conditional and end-to-end item/pair accuracy,
-  balanced-challenge results, and the complete-matrix `DEMOTE` finding.
+- [x] Abstract leads with one authored migration and reports the auxiliary r6 and balanced-challenge
+  coverage, conditional and end-to-end item/pair scores, and `DEMOTE` recalls.
 - [x] Abstract calls the deterministic executor a definitional policy ceiling and Naive Bayes a
   weak baseline while rejecting naturalistic-validity and causal-comparison interpretations.
-- [x] Main text contains dedicated fresh protocol and results subsections plus a compact result
-  table that reports the old Flash service-configuration E2E item/pair scores as zero while marking
-  conditional correctness and model efficacy `N/E`.
+- [x] Main text defines action conformance after output-contract validation as the primary endpoint;
+  exact six-field agreement is not claimed.
+- [x] The old r6 Flash 401 route appears as a pre-output interface-failure paragraph rather than a
+  model-result row. Its zero scheduled coverage remains explicit and conditional scores remain
+  undefined.
 - [x] The post-v1 public formatting pilot is compressed to reader-relevant prose rather than a
   secondary result table.
 - [x] Instance accuracy is not used as a substitute for controlled-pair sensitivity.
 - [x] Raw model behavior and post-gate behavior remain separate.
 - [x] Gate correctness is described as fixed-policy enforcement, not model learning.
-- [x] Limitations preserve public-data, one-seed, small-model, synthetic-data, and post-v1 scope.
+- [x] Limitations preserve public-data, one-pass, two-local-route, one-migration, synthetic-data,
+  route-selection, and service-stack scope.
 - [x] Naturalistic candidate preparation is not called a completed real-world evaluation.
-- [x] Manuscript truth lint is bound to the v1 recovered-study diagnostic, the r6 result and
-  reporting addendum, and the balanced-challenge plan, item-level aggregate, confusion matrices,
-  action recalls, and privacy receipt.
+- [x] Main and appendix tables separate model routes from weak or construction-dependent sanity
+  controls and give explicit prediction columns for every confusion cell.
+- [x] Manuscript truth lint is bound to the r6 result and reporting addendum, the balanced-challenge
+  plan and item records, both migration suites, confusion matrices, action recalls, and privacy
+  receipts.
 - [x] The anonymous evidence replay validates only the empirical records needed for the current
   paper: fresh r6 and the balanced public challenge.
 - [x] Manuscript truth lint is bound to the r6 study-result self-digest, public analysis, complete
@@ -207,7 +219,7 @@ The paper therefore does not claim a completed naturalistic replication, human l
 - [x] Ruff lint passes.
 - [x] Ruff formatting passes.
 - [x] Mypy passes.
-- [x] Full Mac tests and branch coverage pass on the final source tree: 222 tests and 83.24% branch
+- [x] Full Mac tests and branch coverage pass on the final source tree: 301 tests and 83.21% branch
   coverage under Python 3.12.13.
 - [x] Python 3.12 Mac gates pass in a fresh virtual environment.
 - [ ] A fresh remote compatibility matrix awaits GitHub runner allocation; current private-repo
@@ -244,11 +256,15 @@ The paper therefore does not claim a completed naturalistic replication, human l
 ## Gate H — final ICLR 2027 package
 
 - [x] Official ICLR 2027 style archive and file hashes are committed in a fail-closed lock.
+- [x] The ICLR source archive includes the official pinned `fancyhdr.sty` and `natbib.sty`
+  dependencies, preventing system-package drift from removing the anonymous-review page header.
 - [x] ICLR PDF compiles from the final scientific head.
-- [x] ICLR PDF contains 9 physical pages including references and required disclosures.
-- [x] Main-text page probe reports 7 pages, within the 9-page limit.
-- [x] References begin on physical page 8; the release receipt binds this boundary, the nine-page
-  limit, and the official ICLR 2027 style receipt.
+- [x] ICLR PDF contains 15 physical pages: nine pages through the scientific conclusion and
+  non-counting reproducibility/AI-use statements, three reference pages, and three appendix pages.
+- [x] Main-text page probe reports 9 pages, at the 9-page limit; the scientific conclusion ends on
+  page 9.
+- [x] References begin on physical page 10 and the appendix on page 13; the release receipt binds
+  the page boundary, nine-page limit, and official ICLR 2027 style receipt.
 - [x] No unresolved citations or references.
 - [x] No horizontal overflow.
 - [x] ICLR TeX and extracted PDF text contain no author name, institution, username, email, public
@@ -277,7 +293,7 @@ conference-paper scale.
 ## Gate I — final arXiv package
 
 - [x] Named arXiv PDF compiles from the final scientific head.
-- [x] The arXiv PDF contains 8 physical pages.
+- [x] The arXiv PDF contains 14 physical pages.
 - [x] The arXiv source ZIP places `arxiv.tex` and `references.bib` at the archive root and contains
   no auxiliary build output.
 - [x] arXiv PDF contains Chih-Kai Wang and National Taipei University of Education.
@@ -296,39 +312,28 @@ defect was found.
 The final metadata/preview item necessarily remains account-side because arXiv must compile and
 show its own preview before submission.
 
-## Independent final review checkpoints
+## Final isolated review checkpoint
 
-- [x] One isolated final strict review found zero high-severity issues and one medium-severity issue:
-  Flash Macro-F1 omitted the
-  supported but zero-prediction `DEMOTE` class.
-- [x] The issue was fixed by the bound reporting correction and regression tests without model
-  calls, primary-endpoint changes, or mutation of the historical aggregate.
-- [x] At the user's explicit request, one additional context-isolated, read-only strict AI reviewer
-  started from scientific head `e52cee4` without access to the first review disposition, handoff,
-  submission gate, or commit narrative. This was an internal audit, not human peer review.
-- [x] The additional reviewer found zero blocker/high issues, two medium issues, and one low issue:
-  the old Flash E2E denominator was mislabeled `N/E`, factor heterogeneity was hidden by aggregate
-  reporting, and a software-release DOI was attached to a technical-report citation.
-- [x] All three findings were resolved from frozen records without model calls, primary-endpoint
-  changes, or causal/generalization overclaim; the resolutions are regression-guarded and recorded
-  separately in `docs/reviews/2026-08-22-additional-isolated-review-disposition.md`.
-- [x] The third and explicitly final context-isolated strict review found no P0, metric corruption,
-  denominator exclusion, anonymity failure, or unsupported causal interpretation. Its weak-reject
-  recommendation concerned bounded novelty and experimental breadth; artifact score was 8/10.
-- [x] The final review's safely actionable issues were resolved through narrower positioning,
-  primary-source related work, licensing boundaries, a history-free minimum public-release plan,
-  official style locking, and removal of execution-diary prose. The disposition is recorded in
-  `docs/reviews/2026-08-23-last-isolated-review-disposition.md`.
-- [x] Two final context-isolated strict AI reviewers checked the two-study release candidate. The
-  first found no blocker/high issue and two medium issues: incomplete scope wording around the
-  decision tables and dead excluded-study code in the anonymous bundle.
-- [x] The manuscript now includes the Naive Bayes action recalls and confusion cells, confines the
-  decision matrix to output-producing configurations, and leaves the old 401 route explicitly
-  non-evaluable. The focused bundle now contains only the two retained empirical validators and
-  their required analysis surface.
-- [x] An independent delta review of the rebuilt bundle and PDFs returned `Closure PASS` with zero
-  blocker, high, or medium findings. The disposition is recorded in
-  `docs/reviews/2026-08-23-two-study-release-closure.md`.
+- [x] Exactly one additional reviewer was designated as the final isolated review for this
+  revision. It audited the manuscript, frozen records, code, anonymous bundle, and rendered PDF
+  without access to prior review narratives.
+- [x] The reviewer independently reproduced all dataset supports, route metrics, action recalls,
+  confusion cells, failure totals, bundle hashes, and page boundaries; numerical, artifact, and
+  anonymity checks passed.
+- [x] Its 4/10 recommendation on the reviewed snapshot identified three high-level framing issues
+  and six additional presentation or proof issues. No second reviewer was used to rerate the fix.
+- [x] The revision narrows the contribution to paired failure-aware action-conformance testing at an
+  existing model-service boundary; semantic differencing, mutants, set cover, and dynamic
+  programming are identified as established machinery.
+- [x] The paper now states one migration, two local routes, one pass, no independent replication,
+  and reuse of graph records by the minimum gate; auxiliary evidence suites do not inflate the
+  central evidence count.
+- [x] Hosted route selection timing, route-stack confounds, the historical 401 interface failure,
+  corrected HOLD/DEMOTE precedence proof, primary endpoint, sanity controls, explicit confusion
+  columns, and metric/contract replay boundary are all stated directly.
+- [x] Review and resolution are preserved in
+  `docs/reviews/2026-08-24-final-isolated-iclr-review.md` and
+  `docs/reviews/2026-08-24-final-isolated-iclr-review-disposition.md`.
 
 ## Gate J — account-side submission
 
