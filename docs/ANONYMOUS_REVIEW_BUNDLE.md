@@ -22,7 +22,7 @@ Documentation therefore carries no fixed file total.
 - the authored SLSA migration study and three pinned local replications;
 - 1,320 content-free dual-endpoint item records that reconstruct strict-action and contract-action
   metrics across ten route stacks;
-- the policy-difference compiler, transition and mutation certificates, and minimum-suite
+- the finite policy-difference enumerator, suite reducer, transition and mutation certificates, and minimum-suite
   derivations; and
 - the frozen naturalistic-candidate registry and its zero-case pre-inference decision.
 
@@ -40,6 +40,8 @@ before response-content redaction, allowing metric replay within the release bou
 
 ## Reviewer command
 
+Use Python 3.11 or newer.
+
 ```bash
 python -m pip install --require-hashes -r requirements-review.lock
 python -m pip install --no-deps -e .
@@ -53,7 +55,8 @@ portion when Lean is unavailable.
 ## Interpretation
 
 A successful replay establishes internal consistency among released source bytes, datasets,
-sanitized route records, validators, and manuscript statistics. Hosted route values describe the
-complete time-stamped service stack. The public challenge measures frozen robustness. Authored
-SLSA labels encode the paper's policy mapping, the deterministic executor defines the policy
-ceiling, and Naive Bayes supplies a deliberately weak sanity control.
+sanitized route records, validators, and manuscript statistics. The central model IDs share one
+provider/API and adapter configuration; provider-side serving internals remain opaque. The
+challenge was author-created and publicly frozen before calls. Authored SLSA labels encode the
+paper's policy mapping, the deterministic executor defines the policy ceiling, and Naive Bayes
+supplies a deliberately weak sanity control.

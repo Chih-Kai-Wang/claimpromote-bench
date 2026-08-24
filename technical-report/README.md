@@ -1,17 +1,17 @@
 # Technical report
 
-`main.tex` is the canonical scientific manuscript for *ClaimPromoteBench: Compiling Executable
-Policy Revisions into Paired Model-Service Regression Tests*.
+`main.tex` is the canonical scientific manuscript for *ClaimPromoteBench: Paired Model-Service
+Tests over Finite Executable Policy Differences*.
 
 The central evidence combines two exact upstream Gatekeeper policy revisions with a 12-pair finite
-grammar and three repeated executions on each of two hosted routes. Trivy and Cosign provide
+context set and three repeated executions on each of two hosted model IDs. Trivy and Cosign provide
 independent policy-fault and verifier-interface fault reproductions. An authored SLSA migration
 stress-tests four-action transition coverage. R6 and the public balanced challenge remain auxiliary
 evidence-state diagnostics.
 
-Every scheduled call remains in end-to-end denominators. The manuscript separates strict-action,
-contract-action, and full-decision endpoints. Failed response contents are omitted; content-free
-terminal classes and complete confusion matrices remain available.
+Every scheduled call remains in end-to-end denominators. The manuscript separates strict top-level
+JSON action, contract-action, and full-decision endpoints. Failed response contents are omitted;
+content-free terminal classes and complete confusion matrices remain available.
 
 ## Build and validate
 
@@ -43,9 +43,10 @@ file totals from generated manifests.
 
 ## Scope and release boundary
 
-The deterministic policy executor is the definitional policy ceiling. Hosted-route differences are
-descriptive because model, adapter, schema, provider, and service conditions differ. The public
-balanced challenge measures robustness on known frozen cases.
+The deterministic policy executor is the definitional policy ceiling. The central model IDs share
+one provider/API and adapter configuration; provider-side serving internals remain opaque. Their
+results are descriptive. The author-created public challenge measures robustness on known frozen
+cases.
 
 A passing local build does not authorize a merge, public release, OpenReview upload, or arXiv
 submission. Completed one-shot studies remain frozen and are replayed only from committed records.

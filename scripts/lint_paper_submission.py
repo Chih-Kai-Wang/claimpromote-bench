@@ -42,12 +42,9 @@ GRAPH_ROUTES = (
 NATURALISTIC = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Compiling Executable Policy Revisions into Paired "
-    "Model-Service Regression Tests"
+    "ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences"
 )
-TEX_TITLE = (
-    r"\cpb: Compiling Executable Policy Revisions into Paired Model-Service Regression Tests"
-)
+TEX_TITLE = r"\cpb: Paired Model-Service Tests over Finite Executable Policy Differences"
 
 
 def fail(message: str) -> None:
@@ -161,7 +158,13 @@ def validate_structure_and_metadata(tex: str, bib: str) -> None:
         "ribeiro2020checklist",
         "gardner2020contrastsets",
         "chan1998metamorphic",
+        "tretmans1996conformance",
+        "chow1978fsm",
+        "tzorefbrill2017semantic",
         "martin2007policytests",
+        "ma2024promptregression",
+        "zhou2025rulearena",
+        "ahmed2025speceval",
         "diao2025guidebench",
         "rehan2026tdad",
         "scholak2021picard",
@@ -489,26 +492,34 @@ def validate_naturalistic() -> None:
 
 def validate_manuscript_claims(tex: str) -> None:
     required = {
-        "synthetic scope": "synthetic, policy-constrained evaluation",
+        "synthetic scope": "prospective synthetic model-service interface",
+        "caller obligations": "witness inference remain caller responsibilities",
         "three endpoints": (
-            "strict action $\\rightarrow$ contract action $\\rightarrow$ full decision"
+            "strict top-level action $\\rightarrow$ contract action $\\rightarrow$ full decision"
         ),
         "definitional ceiling": "definitional policy ceiling",
         "weak Naive Bayes": "Naive Bayes sanity control is deliberately weak",
         "Gatekeeper coverage": "2/2 changed rules",
         "Gatekeeper minimum": "two-pair witness",
         "repeated Flash result": "53/72 items and 21/36 pairs",
-        "repeated Qwen result": "10/72 strict and full decisions",
+        "repeated Qwen result": "Qwen route totals 10/72 items and 0/36 pairs",
+        "semantic route boundary": "zero semantic action errors after strict extraction",
+        "shared route configuration": "same provider, base URL",
         "failure taxonomy": "12 read timeouts, three fenced objects",
         "dual endpoint totals": "49 are correct and create 40 additional correct pairs",
+        "profile-blind control": "profile-blind control reaches 57/120 items and 0/60 pairs",
         "r6 result": "258/300",
         "challenge Qwen": "132/180",
         "challenge Flash": "90/180",
         "rare action": "4/30 \\demote, and Flash recovers 0/30",
         "historical interface": "obsolete frozen service interface",
-        "causal boundary": "carry no causal comparison with the 401 lane",
-        "public challenge boundary": "robustness check under known cases",
-        "naturalistic decision": "zero admissible cases",
+        "causal boundary": "401 lane provides no causal comparison",
+        "public challenge boundary": "measures robustness on known cases",
+        "naturalistic decision": "admitted zero naturalistic cases",
+        "structural minimum boundary": (
+            "Stochastic fault detection and release sufficiency remain unmeasured"
+        ),
+        "review replay command": "python scripts/run\\_review\\_checks.py",
     }
     for label, needle in required.items():
         require_text(tex, needle, label)

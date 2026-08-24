@@ -8,13 +8,13 @@ No OpenReview submission ID, arXiv ID, DOI, or archival identifier exists yet.
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Compiling Executable Policy Revisions into Paired Model-Service Regression Tests
+ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences
 ```
 
 ## ICLR 2027 abstract
 
 ```text
-Policy revisions can change prescribed actions for fixed evidence, creating regression risk in structured decisions routed through language-model services. ClaimPromoteBench is a synthetic, policy-constrained evaluation that compiles two executable policy versions and a finite grammar into paired tests that hold context fixed and change only policy. It certifies changed-rule and action-transition coverage and selects a minimum joint suite. Two source-traceable Gatekeeper revisions yield 12 pairs covering two rules and both transitions; two pairs suffice. Across three frozen repetitions per hosted route, strict end-to-end action/pair scores are 53/72 and 21/36 for DeepSeek Flash and 10/72 and 0/36 for Qwen. Every extracted action is correct; failures are 12 timeouts and 69 output-envelope violations. A 1,320-item audit recovers 49 correct actions and 40 correct pairs outside the full contract. R6 Qwen scores 258/300 items and 113/150 pairs end to end versus 258/272 and 113/123 conditional. On a public balanced challenge, Qwen and Flash score 132/180, 48/90 and 90/180, 13/90 end to end versus 132/148, 48/64 and 90/146, 13/61 conditional; DEMOTE recall is 4/30 and 0/30. Results support regression testing of finite authored policy surfaces and model-service interfaces.
+Executable policy revisions can change prescribed actions for fixed evidence. We study a prospective synthetic model-service interface over two author-supplied policy evaluators. ClaimPromoteBench enumerates action-changing contexts from a finite authored grammar, attaches registered rule witnesses, and selects a minimum structural-coverage suite. It integrates finite policy differencing and suite reduction with failure-inclusive item/pair scoring. Two source-traceable Gatekeeper revisions yield 12 pairs and a two-pair minimum. Across 144 calls through one provider/API configuration, all 63 strictly parsed actions match OPA; 12 timeouts and 69 envelope violations reduce end-to-end item/pair scores to 53/72 and 21/36 for DeepSeek Flash and 10/72 and 0/36 for Qwen. An offline audit recovers 49 correct actions and 40 pairs outside the full contract. R6 Qwen reaches 258/300 items and 113/150 pairs end to end versus 258/272 and 113/123 conditional. On an authored challenge frozen publicly before calls, Qwen and Flash reach 132/180 and 90/180 items and 48/90 and 13/90 pairs end to end, versus 132/148 and 90/146 items and 48/64 and 13/61 pairs conditional; DEMOTE recall is 4/30 and 0/30. Complete confusion matrices retain every terminal failure. The evidence supports source-traceable exact-interface testing over finite authored policy surfaces. Deployment prevalence and naturalistic validity remain open.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -24,7 +24,7 @@ stay out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Compiling Executable Policy Revisions into Paired Model-Service Regression Tests
+ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences
 ```
 
 ## arXiv abstract
@@ -54,7 +54,7 @@ This identity belongs only in the public arXiv wrapper.
 ## Suggested TL;DR
 
 ```text
-Compiles action-changing differences between executable policy versions into minimum coverage-certified paired regression tests, then scores complete model-service routes at action and structured-contract endpoints.
+Enumerates finite action-changing differences between caller-supplied policy evaluators, reduces them to a minimum structural-coverage pair suite, and scores complete model-service routes at action and structured-contract endpoints.
 ```
 
 ## Main empirical findings
@@ -62,12 +62,16 @@ Compiles action-changing differences between executable policy versions into min
 - Two exact Gatekeeper revisions yield 12 source-traceable pairs covering 2/2 changed rules and
   2/2 observed action edges; a two-pair suite is jointly complete for the committed grammar.
 - Three repetitions per hosted route yield 53/72 strict actions and 21/36 pairs for DeepSeek Flash,
-  versus 10/72 and 0/36 for Qwen. Every safely extracted action is correct. Terminal failures are
-  12 read timeouts and 69 output-envelope failures.
+  versus 10/72 and 0/36 for Qwen. All 63 strictly parsed actions are correct. Terminal failures are
+  12 read timeouts and 69 serialization or output-envelope failures. Both model IDs use the same
+  provider/API configuration; provider-side serving internals are opaque.
 - Trivy reproduces a real inverted policy predicate on four upstream cases. Cosign reproduces four
   verifier-interface fault modes on six cases. Cosign remains a separate evidence class.
 - The authored SLSA rule suite covers 12/12 changed rules and 6/10 reachable action edges; the graph
-  suite covers 12/12 and 10/10. A ten-pair suite is jointly minimum for the committed candidate pool.
+  suite covers 12/12 and 10/10. A ten-pair structural-coverage suite is jointly minimum for the
+  committed candidate pool.
+- The policy-aware structured random-forest control reaches 107/120 items and 47/60 pairs; the
+  profile-blind control reaches 57/120 items and 0/60 pairs.
 - An offline audit of 1,320 prior route items recovers 69 strict actions outside the full contract,
   including 49 correct actions and 40 additional correct pairs.
 - R6 Qwen returns 272/300 valid decisions and scores 258/300 items and 113/150 pairs end to end,
@@ -78,14 +82,14 @@ Compiles action-changing differences between executable policy versions into min
 - The historical r6 Flash interface returns HTTP 401 before model output on all 300 calls. Later
   Flash paths establish only their own executability because the service stacks differ.
 - The deterministic executor is the definitional policy ceiling. Naive Bayes is a weak sanity
-  control.
+  control, reaching 184/300 items and 34/150 pairs on r6.
 
 ## Data and code availability
 
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the policy-difference compiler, exact source-validation inputs and receipts, frozen paired datasets, prompt packets, content-free terminal records, analysis code, complete confusion matrices, and privacy receipts needed to recompute the paper. Its manifest derives file counts from the generated tree. It excludes raw failed responses, free-form errors, provider response identifiers, hidden reasoning, account identity, author-identifying provenance, private construction seeds, and generated caches.
+An anonymized supplementary bundle contains the finite policy-difference enumerator and suite reducer, exact source-validation inputs and receipts, frozen paired datasets, prompt packets, content-free terminal records, analysis code, complete confusion matrices, and privacy receipts needed to recompute the paper. Its manifest derives file counts from the generated tree. It excludes raw failed responses, free-form errors, provider response identifiers, hidden reasoning, account identity, author-identifying provenance, private construction seeds, and generated caches.
 ```
 
 ### Public preprint version

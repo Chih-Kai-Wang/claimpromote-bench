@@ -1,22 +1,27 @@
-# ClaimPromoteBench: Compiling Executable Policy Revisions into Paired Model-Service Regression Tests
+# ClaimPromoteBench: Paired Model-Service Tests over Finite Executable Policy Differences
 
-ClaimPromoteBench converts the behavioral difference between two executable policy versions into
-paired regression tests for a model-service boundary. Each pair holds the complete context fixed,
-changes only the policy version, and requires the prescribed action to change.
+ClaimPromoteBench enumerates the behavioral difference between two caller-supplied executable
+policy evaluators and creates paired tests for a model-service boundary. Each pair holds the
+complete context fixed, changes only the policy version, and requires the prescribed action to
+change.
 
 The benchmark is a synthetic, policy-constrained evaluation. Its claims concern finite authored
 context grammars and time-stamped route stacks. A direct deterministic executor remains the
 preferred enforcement path when an application can call the policy itself.
 
-## What the compiler produces
+## What the enumerator and reducer produce
 
-Given `P_old`, `P_new`, and a finite context grammar, the compiler:
+Given `P_old`, `P_new`, a finite context set with stable identifiers, registered changed-rule
+witnesses, and declared coverage inventories, the implementation:
 
 1. executes both policies over every context;
 2. retains contexts whose prescribed actions differ;
 3. creates paired items that vary only the policy source;
-4. certifies changed-rule and directed action-transition coverage; and
-5. selects a cardinality-minimum suite that covers both targets.
+4. reports changed-rule and directed action-transition coverage relative to those inputs; and
+5. selects a cardinality-minimum structural-coverage suite.
+
+Policy parsing, context synthesis, rule-change discovery, and witness inference remain caller
+responsibilities.
 
 The reusable implementation is in `src/claimpromotebench/policy_difference.py`.
 
@@ -25,8 +30,8 @@ The reusable implementation is in `src/claimpromotebench/policy_difference.py`.
 Every scheduled call remains in end-to-end denominators. The evaluator reports three nested
 endpoints:
 
-- **strict action**: an exact action recovered from a parser-owned object or one strict top-level
-  JSON object;
+- **strict top-level JSON action**: an exact action recovered from a parser-owned object or one
+  strict top-level JSON object;
 - **contract action**: the action is correct after the complete task contract passes; and
 - **full decision**: the complete structured decision matches the deterministic oracle.
 
@@ -42,9 +47,9 @@ reported beside the corresponding coverage denominator.
 | Gatekeeper repeated routes | central model-service study | 144 calls | three repetitions on each of two routes |
 | Trivy KCV0030 | independent policy-fault reproduction | 4 cases | inverted predicate, two transition directions |
 | Cosign Rego verifier | independent interface-fault reproduction | 6 cases | four documented verifier fault modes |
-| Authored SLSA migration | four-action compiler stress test | 60 graph pairs | 12/12 rules, 10/10 reachable edges, ten-pair minimum |
+| Authored SLSA migration | four-action structural stress test | 60 graph pairs | 12/12 rules, 10/10 reachable edges, ten-pair minimum |
 | Research r6 | evidence-state coverage addendum | 150 pairs | rare-action support and complete denominators |
-| Public balanced challenge | preregistered robustness diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
+| Public balanced challenge | publicly frozen authored diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
 
 Exact old and new upstream source bytes, commit bindings, licenses, source-validation receipts, and
 minimum-suite certificates are stored under:
@@ -58,17 +63,18 @@ minimum-suite certificates are stored under:
 The Gatekeeper schedule contains 24 items per repetition, three repetitions per route, one request
 per cell, zero client retries, and a 180-second timeout.
 
-| Route | Strict action | Full decision | Strict pair | Full pair |
+| Route | Strict top-level action | Full decision | Strict pair | Full pair |
 |---|---:|---:|---:|---:|
 | DeepSeek Flash | 53/72 | 52/72 | 21/36 | 20/36 |
 | Qwen | 10/72 | 10/72 | 0/36 | 0/36 |
 
-Every safely extracted action matches OPA. The remaining 81 cells comprise 12 read timeouts and 69
-output-envelope failures. The content-free diagnostic is
+All 63 strictly parsed actions match OPA. The remaining 81 cells comprise 12 read timeouts and 69
+serialization or output-envelope failures. The content-free diagnostic is
 `v2/upstream-policy-route-repetition-v1/diagnostics/failure-modes.json`.
 
-The two route stacks differ in model, service, and adapter behavior. Their results are descriptive
-route measurements.
+The two model IDs use the same provider, base URL, OpenAI-compatible API, prompt-only output mode,
+and adapter settings. Provider-side serving internals are opaque. The results are descriptive route
+measurements.
 
 ## Auxiliary evidence-state results
 
@@ -84,13 +90,13 @@ and `ESCALATE`.
 | Qwen | 148/180 | 132/180; 48/90 | 132/148; 48/64 | 4/30 |
 | Flash | 146/180 | 90/180; 13/90 | 90/146; 13/61 | 0/30 |
 
-An offline dual-endpoint audit of 1,320 prior route items finds 69 safely extractable actions outside
-the full six-field contract, including 49 correct actions and 40 additional correct pairs. The
-audit changes no frozen record and performs no response repair.
+An offline dual-endpoint audit of 1,320 prior route items finds 69 strict top-level actions outside
+the full six-field contract, including 49 correct actions and 40 additional correct pairs. The audit
+changes no frozen record and performs zero response repair.
 
 ## Install and verify
 
-Python 3.11 or newer is recommended.
+Python 3.11 or newer is required.
 
 ```bash
 python3 -m venv .venv
@@ -98,7 +104,7 @@ python3 -m venv .venv
 .venv/bin/python -m pytest
 .venv/bin/python -m ruff check .
 .venv/bin/python -m ruff format --check .
-.venv/bin/python -m mypy src scripts
+.venv/bin/python -m mypy
 ```
 
 Run the paper and source bindings:
@@ -122,8 +128,9 @@ scientific source.
 ## Interpretation and release boundary
 
 The deterministic executor defines every gold label and is the **definitional policy ceiling**.
-The multinomial Naive Bayes row is a weak sanity control. The public balanced challenge is a frozen
-public robustness test, and service-stack differences support no causal attribution.
+The r6 multinomial Naive Bayes control reaches 184/300 items and 34/150 pairs and serves as a weak
+shortcut check. The balanced challenge was author-created and publicly frozen before calls. Route
+differences support descriptive interpretation only.
 
 Reviewer-facing derivatives exclude raw failed responses, free-form errors, provider response
 identifiers, hidden reasoning, account identity, and private commit identity. Their manifests

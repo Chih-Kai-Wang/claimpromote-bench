@@ -3120,6 +3120,8 @@ suite; pinned local replications; and a content-free dual-endpoint audit.
 
 ## Reproduce the review environment
 
+Use Python 3.11 or newer.
+
 ```bash
 python -m pip install --require-hashes -r requirements-review.lock
 python -m pip install --no-deps -e .
@@ -3157,10 +3159,11 @@ bundle. A bound overlay corrects stale r6 construction metadata while preserving
 manifest. The naturalistic-candidate audit reviewed 12 source pointers, admitted zero cases, and
 made zero model calls under the predeclared provenance threshold.
 
-The reported hosted routes combine model, serving, adapter, prompt, and output-contract behavior.
-Cross-route values are descriptive. The public challenge measures frozen robustness, and the SLSA
-labels are author-defined policy mappings. The deterministic executor is the policy definition's
-ceiling; the Naive Bayes model is a deliberately weak sanity control.
+The central model IDs share one provider/API and adapter configuration; provider-side serving
+internals remain opaque. Cross-route values are descriptive. The challenge was author-created and
+publicly frozen before calls, and the SLSA labels are author-defined policy mappings. The
+deterministic executor is the policy definition's ceiling; the Naive Bayes model is a deliberately
+weak sanity control.
 """
 
 
