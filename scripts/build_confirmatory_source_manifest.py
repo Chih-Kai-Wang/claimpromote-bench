@@ -63,6 +63,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/analyze_minimal_policy_migration_gate.py",
     "scripts/analyze_minimal_policy_migration_hosted_study.py",
     "scripts/analyze_ox_alpha_minimal_route_study.py",
+    "scripts/build_sigstore_policy_verifier_revision.py",
     "scripts/build_upstream_policy_revision_study.py",
     "scripts/build_policy_switch_study.py",
     "scripts/build_slsa_portability_study.py",
@@ -124,6 +125,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/validate_local_model_replications.py",
     "scripts/validate_minimal_policy_migration_hosted_study.py",
     "scripts/validate_ox_alpha_minimal_route_study.py",
+    "scripts/validate_sigstore_policy_verifier_revision.py",
     "scripts/upstream_policy_revision.py",
     "scripts/validate_upstream_policy_revision_study.py",
 }

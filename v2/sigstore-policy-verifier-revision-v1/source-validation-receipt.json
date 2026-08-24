@@ -1,0 +1,26 @@
+{
+  "change_commit": "3b597b999ad083afd2ce0dba68fa2715ddec0f06",
+  "change_url": "https://github.com/sigstore/cosign/commit/3b597b999ad083afd2ce0dba68fa2715ddec0f06",
+  "credentials_retained": false,
+  "model_calls": 0,
+  "new_source_sha256": "sha256:074615b012bc28b19e7e69a3fbb2d07e471e93081ba3b26f40f320000e3f2b49",
+  "old_commit": "0c26fba3492cd6047fbfecbad622c9c2782fb16a",
+  "old_source_sha256": "sha256:77bf8f4f3f64df488dce46b6526f8f4dedb144e6266d1ee69881e2d90b36f0bb",
+  "opa_runtime": {
+    "binary_sha256": "sha256:805ce3f336154150bef73bafa2dab8806631851bccc7cae95bef46ffabdf8fc3",
+    "build_commit": "54896f9f28515d14b31a93e6ef5737bb85866e30",
+    "platform": "darwin/arm64",
+    "rego_version": "v1",
+    "version": "1.19.1"
+  },
+  "repository": "https://github.com/sigstore/cosign",
+  "schema_version": "1.0.0",
+  "source_bytes_match_registry": true,
+  "status": "HISTORICAL_SIGSTORE_POLICY_VERIFIER_FAULT_REPRODUCED",
+  "test_source_sha256": "sha256:5673cf64e40ece28851c88c62cd4e2b380b54c95c0fc5e84ba7ee74c27de0168",
+  "upstream_test_names": [
+    "undefined result due to no matching rules",
+    "policy query evaluates to false"
+  ],
+  "upstream_test_path": "pkg/cosign/rego/rego_test.go"
+}

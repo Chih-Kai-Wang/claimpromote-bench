@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "case_id": "sigstore-01",
+      "fault_mode": "UNDEFINED_RESULT_ACCEPTED",
+      "origin": "UPSTREAM_REGRESSION_TEST_SEMANTICS",
+      "policy_source": "package signature\n\nallow {\n    input.predicateType == \"https://slsa.dev/provenance/v99.9\"\n}\n",
+      "upstream_test_name": "undefined result due to no matching rules"
+    },
+    {
+      "case_id": "sigstore-02",
+      "fault_mode": "NONTRUE_RESULT_ACCEPTED",
+      "origin": "UPSTREAM_REGRESSION_TEST_SEMANTICS",
+      "policy_source": "package signature\n\ndefault allow = false\n",
+      "upstream_test_name": "policy query evaluates to false"
+    },
+    {
+      "case_id": "sigstore-03",
+      "fault_mode": "DENY_TRUE_ACCEPTED",
+      "origin": "UPSTREAM_COMMIT_MESSAGE_FAILURE_MODE",
+      "policy_source": "package signature\n\ndeny {\n    input.predicateType == \"https://slsa.dev/provenance/v0.2\"\n}\n"
+    },
+    {
+      "case_id": "sigstore-04",
+      "fault_mode": "DENY_TRUE_ACCEPTED",
+      "origin": "AUTHOR_VARIANT_OF_DOCUMENTED_FAILURE_MODE",
+      "policy_source": "package signature\n\ndeny {\n    input._type == \"https://in-toto.io/Statement/v0.1\"\n}\n"
+    },
+    {
+      "case_id": "sigstore-05",
+      "fault_mode": "QUERY_TARGET_CHANGES_PRECEDENCE",
+      "origin": "AUTHOR_CONTRAST_FOR_CHANGED_QUERY",
+      "policy_source": "package signature\n\nallow {\n    input.predicateType == \"https://slsa.dev/provenance/v0.2\"\n}\n\ndeny[msg] {\n    input._type == \"https://in-toto.io/Statement/v0.1\"\n    msg := \"legacy type denial\"\n}\n"
+    },
+    {
+      "case_id": "sigstore-06",
+      "fault_mode": "QUERY_TARGET_CHANGES_PRECEDENCE",
+      "origin": "AUTHOR_CONTRAST_FOR_CHANGED_QUERY",
+      "policy_source": "package signature\n\nallow {\n    input._type == \"https://in-toto.io/Statement/v0.1\"\n}\n\ndeny[msg] {\n    input.predicateType == \"https://slsa.dev/provenance/v0.2\"\n    msg := \"legacy predicate denial\"\n}\n"
+    }
+  ],
+  "context_input": {
+    "_type": "https://in-toto.io/Statement/v0.1",
+    "predicateType": "https://slsa.dev/provenance/v0.2"
+  },
+  "model_calls": 0,
+  "schema_version": "1.0.0",
+  "status": "FROZEN_EXTERNAL_FAULT_CONTEXTS"
+}

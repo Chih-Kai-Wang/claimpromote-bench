@@ -1,0 +1,22 @@
+{
+  "change_commit": "3b597b999ad083afd2ce0dba68fa2715ddec0f06",
+  "change_url": "https://github.com/sigstore/cosign/commit/3b597b999ad083afd2ce0dba68fa2715ddec0f06",
+  "license": "Apache-2.0",
+  "license_path": "v2/upstream-policy-revisions-v1/sources/LICENSE",
+  "new_path": "pkg/cosign/rego/rego.go",
+  "new_sha256": "sha256:074615b012bc28b19e7e69a3fbb2d07e471e93081ba3b26f40f320000e3f2b49",
+  "new_source": "v2/sigstore-policy-verifier-revision-v1/sources/new.go",
+  "old_commit": "0c26fba3492cd6047fbfecbad622c9c2782fb16a",
+  "old_path": "pkg/cosign/rego/rego.go",
+  "old_sha256": "sha256:77bf8f4f3f64df488dce46b6526f8f4dedb144e6266d1ee69881e2d90b36f0bb",
+  "old_source": "v2/sigstore-policy-verifier-revision-v1/sources/old.go",
+  "repository": "https://github.com/sigstore/cosign",
+  "schema_version": "1.0.0",
+  "test_sha256": "sha256:5673cf64e40ece28851c88c62cd4e2b380b54c95c0fc5e84ba7ee74c27de0168",
+  "test_source": "v2/sigstore-policy-verifier-revision-v1/sources/rego_test.go",
+  "upstream_test_path": "pkg/cosign/rego/rego_test.go",
+  "upstream_test_names": [
+    "undefined result due to no matching rules",
+    "policy query evaluates to false"
+  ]
+}

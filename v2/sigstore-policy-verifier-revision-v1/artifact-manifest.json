@@ -1,0 +1,16 @@
+{
+  "files": {
+    "cases.json": "sha256:19db05536a2ca8f6cbbc737a684d8dcbf3f28f8ef4de8bdcb1507e2ca0dc9267",
+    "minimum-suite.json": "sha256:10b2c90242b3df298ac78ea10df7fa627e1f69716d116c04daf9ca2ac9bf12e7",
+    "results.json": "sha256:2f363996277011bb8879154a1bab169356844c6370e2b54a00ef5a4bed2442db",
+    "source-validation-receipt.json": "sha256:1c51163819a6a1940810c91c108c4c956e51d8080fe73723e898de3530939a2e"
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:7039392a5d536f149204f93d48fb99960940e8d06736aec51c317e37c72e91be",
+  "source_files": {
+    "v2/sigstore-policy-verifier-revision-v1/sources/new.go": "sha256:074615b012bc28b19e7e69a3fbb2d07e471e93081ba3b26f40f320000e3f2b49",
+    "v2/sigstore-policy-verifier-revision-v1/sources/old.go": "sha256:77bf8f4f3f64df488dce46b6526f8f4dedb144e6266d1ee69881e2d90b36f0bb",
+    "v2/sigstore-policy-verifier-revision-v1/sources/rego_test.go": "sha256:5673cf64e40ece28851c88c62cd4e2b380b54c95c0fc5e84ba7ee74c27de0168"
+  },
+  "status": "COMPLETE_DETERMINISTIC_BUILD"
+}

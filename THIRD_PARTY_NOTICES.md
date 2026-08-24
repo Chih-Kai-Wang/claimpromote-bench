@@ -35,6 +35,13 @@ pages. Those files retain the upstream Apache-2.0 license and Gatekeeper Library
 surrounding study generator, schemas, and analysis code remain under this repository's root
 license.
 
+## Sigstore Cosign policy-verifier revision
+
+The external fault-validation addendum includes unmodified pre-fix and post-fix copies of
+Sigstore Cosign's Rego verifier source. Its registry pins the source repository, parent and change
+commits, original path, and upstream regression-test names. The copied Go files remain under the
+upstream Apache-2.0 license.
+
 ## Pinned local model snapshots
 
 The local replication downloads, but does not redistribute, two MLX Community snapshots. The
