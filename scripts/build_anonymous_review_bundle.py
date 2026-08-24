@@ -2956,12 +2956,13 @@ def build_dual_endpoint_anonymous_evidence(destination: Path) -> None:
         }
         for record in records:
             item_id = str(record["item_id"])
-            strict_action, extraction_source = module.extract_action(record)
+            raw_action, raw_source = module.raw_strict_action(record)
+            parser_action, parser_provenance = module.registered_parser_action(record)
             parse_status = str(record.get("parse_status"))
-            contract_action = strict_action if parse_status == "OK" else None
+            contract_action = parser_action if parse_status == "OK" else None
             projected_rows.append(
                 {
-                    "schema_version": "1.0.0-review",
+                    "schema_version": "1.1.0-review",
                     "route_stack_id": route_id,
                     "lane_id": str(route["record_lane_id"]),
                     "task_id": str(route["task_id"]),
@@ -2969,8 +2970,10 @@ def build_dual_endpoint_anonymous_evidence(destination: Path) -> None:
                     "pair_id": pair_by_item[item_id],
                     "gold_action": gold_by_id[item_id],
                     "parse_status": parse_status,
-                    "strict_action": strict_action,
-                    "strict_action_source": extraction_source,
+                    "raw_strict_action": raw_action,
+                    "raw_strict_source": raw_source,
+                    "registered_parser_action": parser_action,
+                    "registered_parser_provenance": parser_provenance,
                     "contract_action": contract_action,
                 }
             )
@@ -2986,7 +2989,7 @@ def build_dual_endpoint_anonymous_evidence(destination: Path) -> None:
     write_jsonl(destination / "items.jsonl", projected_rows)
     write_json(destination / "aggregate.json", aggregate)
     privacy: Json = {
-        "schema_version": "1.0.0-review",
+        "schema_version": "1.1.0-review",
         "status": "ANONYMOUS_DUAL_ENDPOINT_DERIVATIVE_VALIDATED",
         "item_records": len(projected_rows),
         "route_stacks": len(registry_routes),
@@ -3113,9 +3116,10 @@ def anonymous_license() -> str:
 def review_readme() -> str:
     return """# ClaimPromoteBench anonymous reviewer bundle
 
-This bundle reproduces the paper's synthetic policy-transition benchmarks and model-service
-regression studies. It contains exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit
-source revisions; the agentgateway source-test receipt; the frozen Gatekeeper route repetitions;
+This bundle provides deterministic source and score replay for the paper's policy-transition
+benchmarks and frozen model-service records; it does not reissue hosted calls.
+It contains exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions; the
+agentgateway source-test receipt; the frozen Gatekeeper route repetitions;
 the r6 and balanced-challenge records; the authored SLSA migration suite; pinned local
 replications; and a content-free dual-endpoint audit.
 
@@ -3147,8 +3151,9 @@ Python replay when Lean is unavailable.
   addendum and public challenge.
 - `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the authored
   migration and fixed-policy studies.
-- `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute the strict
-  action and contract-action endpoints.
+- `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute
+  raw-strict, registered-parser, and full-contract endpoints with parser provenance. The included
+  endpoint parser source makes the distinction inspectable without releasing response text.
 
 ## Release boundary
 
@@ -3164,11 +3169,13 @@ manifest. The external audit screened 465 public repository seeds, source-review
 and retained two boundary-fault cases with zero model calls. It found no externally validated case
 in which a model interprets a changed executable policy.
 
-The central model IDs share one provider/API and adapter configuration; provider-side serving
-internals remain opaque. Cross-route values are descriptive. The challenge was author-created and
-publicly frozen before calls, and the SLSA labels are author-defined policy mappings. The
-deterministic executor is the policy definition's ceiling; the Naive Bayes model is a deliberately
-weak sanity control.
+Frozen SLSA plans retain inert hashes for excluded exploratory runners; those files and their
+results are outside this release and contribute no manuscript metric. The central model IDs share
+one provider/API and adapter configuration; provider-side serving internals remain opaque.
+Cross-route values are descriptive. The challenge was author-created and commit-frozen before
+calls according to retained workflow receipts, and the SLSA labels are author-defined policy
+mappings. The deterministic executor is the policy definition's ceiling; the Naive Bayes model is
+a deliberately weak sanity control.
 """
 
 
@@ -3479,6 +3486,7 @@ PYTHON_COMMANDS = [
         "tests/test_trivy_policy_revision.py",
         "tests/test_sigstore_policy_verifier_revision.py",
         "tests/test_agent_governance_policy_interface_revision.py",
+        "tests/test_endpoint_parser_policy.py",
         "tests/test_external_evidence_audit.py",
     ],
 ]
@@ -4019,6 +4027,7 @@ def build(destination: Path) -> None:
         "scripts/audit_public_pair_contracts.py",
         "scripts/build_agent_governance_policy_interface_revision.py",
         "scripts/build_alpha.py",
+        "scripts/build_dual_endpoint_audit.py",
         "scripts/build_policy_switch_study.py",
         "scripts/build_policy_transition_graph_study.py",
         "scripts/build_slsa_portability_study.py",
@@ -4044,6 +4053,7 @@ def build(destination: Path) -> None:
         "scripts/train_policy_switch_baselines.py",
         "scripts/train_slsa_structured_baseline.py",
         "scripts/upstream_policy_revision.py",
+        "scripts/upstream_route_repetition.py",
         "scripts/validate_agent_governance_policy_interface_revision.py",
         "scripts/validate_anonymous_current_evidence.py",
         "scripts/validate_external_evidence_audit.py",
@@ -4056,6 +4066,7 @@ def build(destination: Path) -> None:
         "scripts/validate_trivy_policy_revision.py",
         "scripts/validate_upstream_policy_revision_study.py",
         "tests/test_agent_governance_policy_interface_revision.py",
+        "tests/test_endpoint_parser_policy.py",
         "tests/test_external_evidence_audit.py",
         "tests/test_v2.py",
         "tests/test_policy_switch_study.py",

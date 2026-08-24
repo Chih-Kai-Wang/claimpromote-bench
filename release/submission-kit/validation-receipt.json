@@ -1,9 +1,10 @@
 {
   "anonymous_bundle": {
-    "manifest_file_count": 609,
-    "manifest_plus_self_file_count": 610,
-    "manifest_sha256": "4710a8854d25360cd7affcd671d5f0b58c3215ba6fd642733b1fdae04061ef11",
+    "manifest_file_count": 628,
+    "manifest_plus_self_file_count": 629,
+    "manifest_sha256": "eed3f4e0434aefcab4cb0bff36100c9ac6d122255c42e0b86535f53a3673adba",
     "privacy_scope": {
+      "agent_governance_source_evidence_included": true,
       "balanced_public_challenge_hidden_reasoning_included": false,
       "balanced_public_challenge_item_level_records_included": true,
       "balanced_public_challenge_raw_response_text_included": false,
@@ -12,6 +13,7 @@
       "dual_endpoint_item_level_records_included": true,
       "dual_endpoint_raw_response_text_included": false,
       "dual_endpoint_summary_included": true,
+      "external_boundary_evidence_audit_included": true,
       "fresh_confirmatory_hidden_reasoning_included": false,
       "fresh_confirmatory_item_level_records_included": true,
       "fresh_confirmatory_raw_response_text_included": false,
@@ -49,28 +51,28 @@
       "upstream_route_repetition_summary_included": true
     },
     "verification": "PASS",
-    "zip_file_entries": 610
+    "zip_file_entries": 629
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 387154,
-      "sha256": "9dcc098e8f25b6f30183940c75dbbe3e6dca17d727fe4c131203dad7f3c979c9"
+      "bytes": 392402,
+      "sha256": "b2246af42f5106cc32b1f056ba241d6971043ea22a58fb16b18fd62615408d91"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 1683224,
-      "sha256": "5ee448f5f8247a8d1bbd4a41ee230eb1a465e4e100c8664f4e959fd2b0469791"
+      "bytes": 1764847,
+      "sha256": "04baeb65616b60c16ba2cfbf66c7952e0c70965fa1e36762337fef2714c48132"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 21987,
-      "sha256": "3a3c808588e724e218a52933880d3ed4bbcb1a7df14df3fba01a0c9f23ed97d4"
+      "bytes": 23668,
+      "sha256": "49c8e630edcffef562d41c51fe3236b926e1cd7616e29730e5975889842594ce"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 49000,
-      "sha256": "cba39fe3982b59f4c9c545eb39f4936f34037bdee9efad6e4737313d25cab2fc"
+      "bytes": 50705,
+      "sha256": "e2c65fa8dd13d56bc87d050ff01ec77156a1966d9089863b125bfefd6edecfd5"
     },
     "iclr2027.pdf": {
-      "bytes": 250707,
-      "sha256": "798e453fefc863e281f4764c58dc2dfc2cf4b0f65120a4866ed0ddc7bb2edbfc"
+      "bytes": 255593,
+      "sha256": "dfbe4f79b431f5a73b81c306d77145951b10ad360ced0e27de37850adbdd451d"
     }
   },
   "checks": {
@@ -109,40 +111,40 @@
         "all_embedded": true,
         "font_count": 27,
         "fonts": [
+          "/AFVTUK+CMR10",
+          "/BFFSKV+CMR17",
           "/BSTKNX+MSBM10",
           "/BYFKRJ+CMSY10",
           "/CFUVDR+CMR7",
-          "/CMCHRH+CMR10",
-          "/DWLSIB+CMMI7",
+          "/CLROKM+CMMI8",
           "/ECOSEW+CMTT9",
           "/EUWOLL+CMBX9",
-          "/EWDQZJ+CMMI8",
           "/HQVQIC+CMBX7",
           "/IRPFNI+CMTT10",
           "/KOQYKF+CMR9",
           "/LQBNTO+CMR12",
           "/MNATLR+CMCSC10",
-          "/PSBQFY+CMR17",
-          "/QDUYRF+CMR8",
+          "/NAUQRC+CMBX10",
           "/QHFKYO+CMTI9",
+          "/QLEEAI+CMMI7",
           "/QXVNND+CMSY8",
-          "/RHTRPE+CMBX10",
           "/SDVCAT+CMSY7",
           "/TFVNFO+CMR6",
+          "/TNKHHL+CMMI10",
           "/TUIAQN+CMTI8",
+          "/VLBJAG+CMR8",
           "/VPFMMI+CMTI10",
           "/WATVRQ+CMTT8",
-          "/WFETLW+CMBX12",
+          "/YXKYAS+CMBX12",
           "/ZPGVCH+CMEX10",
-          "/ZXGFIK+CMMI10",
           "/ZXILHJ+CMR5"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 12,
+      "pages": 13,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 12
+      "visual_pages_inspected": 13
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -155,32 +157,32 @@
           "/ALVSVR+NimbusSanL-Bold",
           "/BSTKNX+MSBM10",
           "/BYFKRJ+CMSY10",
-          "/DWLSIB+CMMI7",
-          "/FITNNQ+NimbusRomNo9L-Medi",
           "/FXTVSZ+CMR10",
-          "/NSBAHC+CMMI9",
+          "/QLEEAI+CMMI7",
           "/QODKRB+NimbusRomNo9L-ReguItal",
           "/SDVCAT+CMSY7",
           "/SVZIZS+CMSY9",
           "/TFVNFO+CMR6",
+          "/TNKHHL+CMMI10",
           "/TVAYVZ+NimbusMonL-Regu",
-          "/VLBQLR+NimbusRomNo9L-Regu",
           "/WRMBHN+CMR9",
+          "/YCWAPA+NimbusRomNo9L-Medi",
           "/YOISRB+CMR7",
+          "/YTZTKW+NimbusRomNo9L-Regu",
           "/ZPGVCH+CMEX10",
-          "/ZXGFIK+CMMI10",
-          "/ZXILHJ+CMR5"
+          "/ZXILHJ+CMR5",
+          "/ZZYNEO+CMMI9"
         ]
       },
       "main_text_page_limit": 9,
-      "main_text_pages": 8,
+      "main_text_pages": 9,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 13,
+      "pages": 14,
       "producer": "pdfTeX-1.40.29",
-      "references_start_page": 9,
+      "references_start_page": 10,
       "style_receipt": "iclr-style-receipt.json",
       "style_template": "ICLR 2027 official style archive",
-      "visual_pages_inspected": 13
+      "visual_pages_inspected": 14
     }
   }
 }

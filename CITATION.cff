@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests"
+title: "ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision"
 message: "The scientific release candidate is complete. Cite the immutable archived release or public preprint only after an identifier exists."
 type: software
 authors:

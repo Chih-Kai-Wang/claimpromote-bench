@@ -1,4 +1,4 @@
-# ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests
+# ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision
 
 ClaimPromoteBench enumerates the behavioral difference between two caller-supplied executable
 policy evaluators and creates paired tests for a model-service boundary. Each pair holds the
@@ -32,17 +32,22 @@ The reusable implementation is in `src/claimpromotebench/policy_difference.py`.
 
 ## Scoring endpoints
 
-Every scheduled call remains in end-to-end denominators. The evaluator reports three nested
-endpoints:
+Every scheduled call remains in end-to-end denominators. The evaluator separates four reporting
+layers:
 
-- **strict top-level JSON action**: an exact action recovered from a parser-owned object or one
-  strict top-level JSON object;
-- **contract action**: the action is correct after the complete task contract passes; and
+- **raw-strict action**: the retained response is exactly one duplicate-free top-level JSON object
+  containing a registered action;
+- **registered-parser action**: the frozen route parser records a valid action, with provenance for
+  direct parsing or deterministic single-object extraction;
+- **contract action**: the registered action is correct after the complete task contract passes;
+  and
 - **full decision**: the complete structured decision matches the deterministic oracle.
 
-The strict parser performs no repair, code-fence extraction, coercion, or duplicate-key recovery.
-Transport, syntax, schema, and semantic failures remain terminal errors. Conditional metrics are
-reported beside the corresponding coverage denominator.
+The raw-strict parser performs no repair, code-fence extraction, coercion, or duplicate-key
+recovery. Registered-parser semantics remain route-specific because the historical records are
+frozen; the audit reports that provenance instead of relabeling it as raw-strict parsing. No
+audited response contains a duplicate key. Transport, syntax, schema, and semantic failures remain
+terminal errors. Conditional metrics are reported beside the corresponding coverage denominator.
 
 ## Evidence layers
 
@@ -56,7 +61,7 @@ reported beside the corresponding coverage denominator.
 | agentgateway Bedrock adapter | versioned guardrail-interface audit | 33 tests | exact fixed commit passes 33/33 offline tests |
 | Authored SLSA migration | four-action structural stress test | 60 graph pairs | 12/12 rules, 10/10 reachable edges, ten-pair minimum |
 | Research r6 | evidence-state coverage addendum | 150 pairs | rare-action support and complete denominators |
-| Public balanced challenge | publicly frozen authored diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
+| Public balanced challenge | commit-frozen authored diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
 
 Exact old and new upstream source bytes, commit bindings, licenses, source-validation receipts, and
 minimum-suite certificates are stored under:
@@ -72,12 +77,12 @@ minimum-suite certificates are stored under:
 The Gatekeeper schedule contains 24 items per repetition, three repetitions per route, one request
 per cell, zero client retries, and a 180-second timeout.
 
-| Route | Strict top-level action | Full decision | Strict pair | Full pair |
+| Route | Raw-strict action | Full decision | Raw-strict pair | Full pair |
 |---|---:|---:|---:|---:|
 | DeepSeek Flash | 53/72 | 52/72 | 21/36 | 20/36 |
 | Qwen | 10/72 | 10/72 | 0/36 | 0/36 |
 
-All 63 strictly parsed actions match OPA. The remaining 81 cells comprise 12 read timeouts and 69
+All 63 raw-strict actions match OPA. The remaining 81 cells comprise 12 read timeouts and 69
 serialization or output-envelope failures. The content-free diagnostic is
 `v2/upstream-policy-route-repetition-v1/diagnostics/failure-modes.json`.
 
@@ -99,9 +104,12 @@ and `ESCALATE`.
 | Qwen | 148/180 | 132/180; 48/90 | 132/148; 48/64 | 4/30 |
 | Flash | 146/180 | 90/180; 13/90 | 90/146; 13/61 | 0/30 |
 
-An offline dual-endpoint audit of 1,320 prior route items finds 69 strict top-level actions outside
-the full six-field contract, including 49 correct actions and 40 additional correct pairs. The audit
-changes no frozen record and performs zero response repair.
+An offline audit of 1,320 prior route items separates raw-strict actions, actions retained by each
+frozen registered parser, and the full contract. Raw-strict parsing recovers 69 actions outside the
+full contract, including 49 correct actions and 40 correct pairs. Conversely, registered parsers
+retain actions from responses that raw-strict parsing rejects; six balanced-challenge Qwen records
+use deterministic single-object extraction from a fenced response. The audit reports parser
+provenance, changes no frozen record, and makes zero model calls.
 
 ## Install and verify
 
@@ -140,8 +148,8 @@ scientific source.
 
 The deterministic executor defines every gold label and is the **definitional policy ceiling**.
 The r6 multinomial Naive Bayes control reaches 184/300 items and 34/150 pairs and serves as a weak
-shortcut check. The balanced challenge was author-created and publicly frozen before calls. Route
-differences support descriptive interpretation only.
+shortcut check. The balanced challenge was author-created and commit-frozen before calls according
+to retained workflow receipts. Route differences support descriptive interpretation only.
 
 Reviewer-facing derivatives exclude raw failed responses, free-form errors, provider response
 identifiers, hidden reasoning, account identity, and private commit identity. Their manifests

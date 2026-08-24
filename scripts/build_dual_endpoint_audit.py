@@ -66,22 +66,32 @@ def strict_json_action(text: str) -> str | None:
     return action if isinstance(action, str) and action in ACTIONS else None
 
 
-def extract_action(record: Json) -> tuple[str | None, str]:
-    """Use a parser-owned object first, then exact strict JSON without repair."""
+def raw_strict_action(record: Json) -> tuple[str | None, str]:
+    """Parse only the retained raw text as one duplicate-free top-level JSON object."""
 
-    parsed = record.get("raw_decision")
-    if isinstance(parsed, dict):
-        action = parsed.get("action")
-        if isinstance(action, str) and action in ACTIONS:
-            return action, "PARSER_OBJECT"
     text = record.get("raw_response_text")
     if not isinstance(text, str):
-        return None, "UNEXTRACTABLE"
+        return None, "NO_RAW_RESPONSE"
     expected_digest = record.get("raw_response_sha256")
     if isinstance(expected_digest, str) and sha256_bytes(text.encode("utf-8")) != expected_digest:
         fail(f"raw response digest differs for {record.get('item_id')}")
     action = strict_json_action(text)
-    return (action, "STRICT_RAW_JSON") if action is not None else (None, "UNEXTRACTABLE")
+    return (action, "RAW_STRICT_JSON") if action is not None else (None, "RAW_STRICT_REJECTED")
+
+
+def registered_parser_action(record: Json) -> tuple[str | None, str]:
+    """Read the action and extraction provenance recorded by the frozen route parser."""
+
+    parsed = record.get("raw_decision")
+    if not isinstance(parsed, dict):
+        return None, "NO_REGISTERED_ACTION"
+    action = parsed.get("action")
+    if not isinstance(action, str) or action not in ACTIONS:
+        return None, "NO_REGISTERED_ACTION"
+    detail = record.get("parse_error_detail")
+    if isinstance(detail, str) and "DETERMINISTIC_SINGLE_JSON_OBJECT_EXTRACTION" in detail:
+        return action, "REGISTERED_SINGLE_OBJECT_EXTRACTION"
+    return action, "REGISTERED_DIRECT_PARSE"
 
 
 def _confusion_template(no_decision_column: str) -> Json:
@@ -89,8 +99,54 @@ def _confusion_template(no_decision_column: str) -> Json:
     return {gold: {prediction: 0 for prediction in columns} for gold in ACTIONS}
 
 
+def _endpoint_metrics(
+    predictions: dict[str, str | None],
+    selected_gold: dict[str, Json],
+    selected_pairs: list[Json],
+    *,
+    no_decision_column: str,
+) -> Json:
+    confusion = _confusion_template(no_decision_column)
+    correct_items = 0
+    for item_id, prediction in predictions.items():
+        gold_action = str(selected_gold[item_id]["decision"]["action"])
+        if prediction is None:
+            confusion[gold_action][no_decision_column] += 1
+        else:
+            confusion[gold_action][prediction] += 1
+            correct_items += prediction == gold_action
+
+    covered_pairs = 0
+    correct_pairs = 0
+    for pair in selected_pairs:
+        member_ids = [str(value) for value in pair["member_ids"]]
+        covered = all(predictions[item_id] is not None for item_id in member_ids)
+        covered_pairs += covered
+        correct_pairs += covered and all(
+            predictions[item_id] == selected_gold[item_id]["decision"]["action"]
+            for item_id in member_ids
+        )
+
+    items = len(predictions)
+    pairs = len(selected_pairs)
+    extractable_items = sum(value is not None for value in predictions.values())
+    return {
+        "extractable_items": extractable_items,
+        "correct_items": correct_items,
+        "item_coverage": rate(extractable_items, items),
+        "end_to_end_item_accuracy": rate(correct_items, items),
+        "conditional_item_accuracy": rate(correct_items, extractable_items),
+        "covered_pairs": covered_pairs,
+        "correct_pairs": correct_pairs,
+        "pair_coverage": rate(covered_pairs, pairs),
+        "end_to_end_pair_accuracy": rate(correct_pairs, pairs),
+        "conditional_pair_accuracy": rate(correct_pairs, covered_pairs),
+        "confusion": confusion,
+    }
+
+
 def derive_metrics(gold: list[Json], pairs: list[Json], records: list[Json]) -> Json:
-    """Compare exact-action extraction with contract-validated action conformance."""
+    """Compare raw-strict, registered-parser, and full-contract endpoints."""
 
     if not records:
         fail("route records are empty")
@@ -121,104 +177,113 @@ def derive_metrics(gold: list[Json], pairs: list[Json], records: list[Json]) -> 
         if str(row["pair_id"]) != expected_pair:
             fail(f"record pair binding differs for {item_id}")
 
-    action_predictions: dict[str, str | None] = {}
-    extraction_sources: Counter[str] = Counter()
+    raw_predictions: dict[str, str | None] = {}
+    registered_predictions: dict[str, str | None] = {}
+    contract_predictions: dict[str, str | None] = {}
+    raw_sources: Counter[str] = Counter()
+    parser_sources: Counter[str] = Counter()
     parse_statuses: Counter[str] = Counter()
-    action_confusion = _confusion_template("NO_EXTRACTABLE_ACTION")
-    contract_confusion = _confusion_template("NO_VALID_CONTRACT")
-    action_correct = 0
-    contract_valid = 0
-    contract_correct = 0
     for item_id, row in record_by_id.items():
         gold_action = str(selected_gold[item_id]["decision"]["action"])
         if gold_action not in ACTIONS:
             fail(f"unknown gold action for {item_id}: {gold_action}")
-        action, source = extract_action(row)
-        action_predictions[item_id] = action
-        extraction_sources[source] += 1
+        raw_action, raw_source = raw_strict_action(row)
+        parser_action, parser_source = registered_parser_action(row)
+        raw_predictions[item_id] = raw_action
+        registered_predictions[item_id] = parser_action
+        raw_sources[raw_source] += 1
+        parser_sources[parser_source] += 1
         parse_status = str(row.get("parse_status"))
         parse_statuses[parse_status] += 1
-        if action is None:
-            action_confusion[gold_action]["NO_EXTRACTABLE_ACTION"] += 1
-        else:
-            action_confusion[gold_action][action] += 1
-            action_correct += action == gold_action
         if parse_status == "OK":
-            if source != "PARSER_OBJECT" or action is None:
+            if parser_action is None:
                 fail(f"OK record lacks a parser-owned action: {item_id}")
-            contract_valid += 1
-            contract_confusion[gold_action][action] += 1
-            contract_correct += action == gold_action
+            contract_predictions[item_id] = parser_action
         else:
-            contract_confusion[gold_action]["NO_VALID_CONTRACT"] += 1
+            contract_predictions[item_id] = None
 
-    action_covered_pairs = 0
-    action_correct_pairs = 0
-    contract_covered_pairs = 0
-    contract_correct_pairs = 0
+    raw_metrics = _endpoint_metrics(
+        raw_predictions,
+        selected_gold,
+        selected_pairs,
+        no_decision_column="NO_RAW_STRICT_ACTION",
+    )
+    parser_metrics = _endpoint_metrics(
+        registered_predictions,
+        selected_gold,
+        selected_pairs,
+        no_decision_column="NO_REGISTERED_ACTION",
+    )
+    contract_metrics = _endpoint_metrics(
+        contract_predictions,
+        selected_gold,
+        selected_pairs,
+        no_decision_column="NO_VALID_CONTRACT",
+    )
+
+    raw_correct_outside_contract = sum(
+        raw_predictions[item_id] == selected_gold[item_id]["decision"]["action"]
+        and contract_predictions[item_id] is None
+        for item_id in record_by_id
+    )
+    contract_correct_outside_raw = sum(
+        contract_predictions[item_id] == selected_gold[item_id]["decision"]["action"]
+        and raw_predictions[item_id] != selected_gold[item_id]["decision"]["action"]
+        for item_id in record_by_id
+    )
+    raw_extractable_outside_contract = sum(
+        raw_predictions[item_id] is not None and contract_predictions[item_id] is None
+        for item_id in record_by_id
+    )
+    contract_extractable_outside_raw = sum(
+        contract_predictions[item_id] is not None and raw_predictions[item_id] is None
+        for item_id in record_by_id
+    )
+    raw_correct_pairs_outside_contract = 0
+    contract_correct_pairs_outside_raw = 0
     for pair in selected_pairs:
         member_ids = [str(value) for value in pair["member_ids"]]
-        action_covered = all(action_predictions[item_id] is not None for item_id in member_ids)
-        contract_covered = all(
-            record_by_id[item_id]["parse_status"] == "OK" for item_id in member_ids
-        )
-        action_covered_pairs += action_covered
-        contract_covered_pairs += contract_covered
-        action_pair_correct = action_covered and all(
-            action_predictions[item_id] == selected_gold[item_id]["decision"]["action"]
+        raw_correct = all(
+            raw_predictions[item_id] == selected_gold[item_id]["decision"]["action"]
             for item_id in member_ids
         )
-        contract_pair_correct = contract_covered and all(
-            action_predictions[item_id] == selected_gold[item_id]["decision"]["action"]
+        contract_correct = all(
+            contract_predictions[item_id] == selected_gold[item_id]["decision"]["action"]
             for item_id in member_ids
         )
-        action_correct_pairs += action_pair_correct
-        contract_correct_pairs += contract_pair_correct
+        raw_correct_pairs_outside_contract += raw_correct and not contract_correct
+        contract_correct_pairs_outside_raw += contract_correct and not raw_correct
 
     items = len(records)
     pair_count = len(selected_pairs)
-    extractable_items = items - extraction_sources["UNEXTRACTABLE"]
-    outside_contract = extractable_items - contract_valid
-    outside_contract_correct = action_correct - contract_correct
-    if outside_contract < 0 or outside_contract_correct < 0:
-        fail("action extraction cannot be narrower than contract validation")
     return {
         "scheduled_items": items,
         "scheduled_pairs": pair_count,
-        "action_only": {
-            "extractable_items": extractable_items,
-            "correct_items": action_correct,
-            "item_coverage": rate(extractable_items, items),
-            "end_to_end_item_accuracy": rate(action_correct, items),
-            "conditional_item_accuracy": rate(action_correct, extractable_items),
-            "covered_pairs": action_covered_pairs,
-            "correct_pairs": action_correct_pairs,
-            "pair_coverage": rate(action_covered_pairs, pair_count),
-            "end_to_end_pair_accuracy": rate(action_correct_pairs, pair_count),
-            "conditional_pair_accuracy": rate(action_correct_pairs, action_covered_pairs),
-            "confusion": action_confusion,
-        },
+        "raw_strict_action": raw_metrics,
+        "registered_parser_action": parser_metrics,
         "full_contract": {
-            "valid_items": contract_valid,
-            "action_correct_items": contract_correct,
-            "item_validity": rate(contract_valid, items),
-            "end_to_end_action_accuracy": rate(contract_correct, items),
-            "conditional_action_accuracy": rate(contract_correct, contract_valid),
-            "valid_pairs": contract_covered_pairs,
-            "action_correct_pairs": contract_correct_pairs,
-            "pair_validity": rate(contract_covered_pairs, pair_count),
-            "end_to_end_action_pair_accuracy": rate(contract_correct_pairs, pair_count),
-            "conditional_action_pair_accuracy": rate(
-                contract_correct_pairs, contract_covered_pairs
-            ),
-            "confusion": contract_confusion,
+            "valid_items": contract_metrics["extractable_items"],
+            "action_correct_items": contract_metrics["correct_items"],
+            "item_validity": contract_metrics["item_coverage"],
+            "end_to_end_action_accuracy": contract_metrics["end_to_end_item_accuracy"],
+            "conditional_action_accuracy": contract_metrics["conditional_item_accuracy"],
+            "valid_pairs": contract_metrics["covered_pairs"],
+            "action_correct_pairs": contract_metrics["correct_pairs"],
+            "pair_validity": contract_metrics["pair_coverage"],
+            "end_to_end_action_pair_accuracy": contract_metrics["end_to_end_pair_accuracy"],
+            "conditional_action_pair_accuracy": contract_metrics["conditional_pair_accuracy"],
+            "confusion": contract_metrics["confusion"],
         },
-        "endpoint_difference": {
-            "extractable_items_outside_full_contract": outside_contract,
-            "action_correct_items_outside_full_contract": outside_contract_correct,
-            "additional_action_correct_pairs": action_correct_pairs - contract_correct_pairs,
+        "endpoint_overlap": {
+            "raw_strict_extractable_outside_full_contract": raw_extractable_outside_contract,
+            "raw_strict_correct_items_outside_full_contract": raw_correct_outside_contract,
+            "raw_strict_correct_pairs_outside_full_contract": (raw_correct_pairs_outside_contract),
+            "full_contract_extractable_outside_raw_strict": contract_extractable_outside_raw,
+            "full_contract_correct_items_outside_raw_strict": contract_correct_outside_raw,
+            "full_contract_correct_pairs_outside_raw_strict": (contract_correct_pairs_outside_raw),
         },
-        "extraction_source_counts": dict(sorted(extraction_sources.items())),
+        "raw_strict_source_counts": dict(sorted(raw_sources.items())),
+        "registered_parser_provenance_counts": dict(sorted(parser_sources.items())),
         "parse_status_counts": dict(sorted(parse_statuses.items())),
     }
 
@@ -264,12 +329,18 @@ def build(output_root: Path) -> None:
         )
     output_root.mkdir(parents=True, exist_ok=True)
     aggregate: Json = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "status": "COMPLETE_POST_HOC_DUAL_ENDPOINT_AUDIT",
         "endpoint_definitions": {
-            "action_only": (
-                "Exact four-class action from a parser-owned object or one strict top-level JSON "
-                "object. No repair, code-fence extraction, coercion, or duplicate key is accepted."
+            "raw_strict_action": (
+                "Exact four-class action parsed directly from one duplicate-free top-level JSON "
+                "object in retained raw response text. No fence or substring extraction, repair, "
+                "coercion, or non-standard constant is accepted."
+            ),
+            "registered_parser_action": (
+                "Four-class action in the object emitted by each frozen route's registered parser. "
+                "Parser provenance distinguishes direct parsing from deterministic single-object "
+                "extraction."
             ),
             "full_contract": (
                 "The frozen parser marked the six-field output syntax-, schema-, and "
@@ -280,8 +351,10 @@ def build(output_root: Path) -> None:
             ),
         },
         "interpretation": (
-            "This offline audit separates safely extracted action behavior from complete output-"
-            "contract conformance. It changes no frozen record, registered endpoint, or model call."
+            "This offline audit separates raw-strict action parsing, each route's registered "
+            "parser policy, and complete output-contract conformance. Registered parsers follow "
+            "their frozen duplicate-key and object-extraction policies; no duplicate key occurs "
+            "in the audited responses. The audit changes no frozen record or model call."
         ),
         "routes": sorted(outputs, key=lambda row: str(row["route_stack_id"])),
     }
@@ -290,7 +363,7 @@ def build(output_root: Path) -> None:
         json.dumps(aggregate, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     receipt: Json = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "status": "DUAL_ENDPOINT_AUDIT_REBUILT_FROM_FROZEN_RECORDS",
         "aggregate_sha256": sha256_file(aggregate_path),
         "registry_sha256": sha256_file(REGISTRY_PATH),
@@ -303,7 +376,7 @@ def build(output_root: Path) -> None:
     receipt_path = output_root / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     manifest: Json = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "status": "COMPLETE_DETERMINISTIC_BUILD",
         "files": {
             "aggregate.json": sha256_file(aggregate_path),
@@ -330,7 +403,14 @@ def compare_build(candidate: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument(
+        "--replace-generated",
+        action="store_true",
+        help="replace only the three deterministic generated files in the registered study root",
+    )
     args = parser.parse_args()
+    if args.check and args.replace_generated:
+        fail("--check and --replace-generated are mutually exclusive")
     if args.check:
         with tempfile.TemporaryDirectory(prefix="cpb-dual-endpoint-") as directory:
             candidate = Path(directory) / STUDY_ROOT.name
@@ -338,8 +418,11 @@ def main() -> int:
             compare_build(candidate)
     else:
         existing = [name for name in GENERATED if (STUDY_ROOT / name).exists()]
-        if existing:
+        if existing and not args.replace_generated:
             fail(f"refusing to overwrite generated artifacts: {existing}")
+        if args.replace_generated:
+            for name in existing:
+                (STUDY_ROOT / name).unlink()
         build(STUDY_ROOT)
     print(
         "dual-endpoint-audit: "

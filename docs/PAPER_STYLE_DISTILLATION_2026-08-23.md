@@ -114,19 +114,21 @@ AI-detector evasion method.
 
 ## Application to ClaimPromoteBench
 
-The release-candidate audit measures 3,966 prose words and 268 usable sentences after excluding
+The release-candidate audit measures 4,142 prose words and 276 usable sentences after excluding
 LaTeX tables, figures, and display math. Median sentence length is 13 words, the 90th percentile is
-23.3, the 95th percentile is 28, and 0.3731% of sentences exceed 40 words. The submission lint
-counts 220 abstract tokens. These values describe the current paper, whose central result is one
-policy-migration evaluation and whose other suites are auxiliary diagnostics; they are not compared
-with earlier drafts whose scientific scope differed. The revision:
+25, the 95th percentile is 28, and 0.7246% of sentences exceed 40 words. The submission lint counts
+213 abstract tokens. These values describe the current paper, whose central result is one
+source-traceable policy-revision evaluation and whose other suites are auxiliary diagnostics; they
+are not compared with earlier drafts whose scientific scope differed. The revision:
 
 - makes executable policy revision, rather than broad research-agent capability, the unit of
   study;
-- separates semantic policy differencing, migration adequacy, minimum-suite compilation, and
+- separates semantic policy differencing, migration adequacy, minimum-suite construction, and
   model-route evaluation so that inherited and new technical elements are explicit;
-- reports hidden, public-challenge, fixed-policy, policy-switch, and full-transition-graph results
-  with end-to-end denominators beside conditional scores;
+- reports central routes, the commit-frozen challenge, fixed-policy, policy-switch, and
+  full-transition-graph results with end-to-end denominators beside conditional scores;
+- distinguishes raw-strict parsing, frozen registered-parser behavior, full contracts, and parser
+  provenance instead of assigning one parser label to incompatible historical routes;
 - keeps malformed-response counts in every scheduled denominator while omitting their contents
   from the paper and anonymous release;
 - identifies the deterministic executor as the label definition, the profile-blind models as

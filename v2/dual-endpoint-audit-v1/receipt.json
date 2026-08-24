@@ -1,11 +1,11 @@
 {
-  "aggregate_sha256": "sha256:a92bddefeb3b65a86d8d1e9dd5a72fc88ebd160a7688aa485f22a2d7bd9adba6",
+  "aggregate_sha256": "sha256:630f61f296396de9262cb9d5e7c3a478a908518a557ccea3a9e43bcdc5047f75",
   "model_calls": 0,
   "provider_response_ids_written": false,
   "raw_response_content_written": false,
   "registry_sha256": "sha256:80d7526d2bfac70b2bd6f83c176b007c205696843fdabbc434d02231e1c459cb",
   "route_stacks": 10,
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "source_digests": {
     "v2/balanced-public-challenge/dataset/gold.jsonl": "sha256:35035a5a7505b0f54dc5577bd9d26380c733041b3ab95b118237876e27509056",
     "v2/balanced-public-challenge/dataset/pairs.json": "sha256:af5f397f981fb0f2f8db3f7616b1db305d90a8764575333f78d78afbd44c9a26",

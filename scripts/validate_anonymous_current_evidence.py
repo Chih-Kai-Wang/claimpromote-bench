@@ -301,93 +301,115 @@ def confusion_template(no_decision: str) -> Json:
     return {gold: {prediction: 0 for prediction in (*ACTIONS, no_decision)} for gold in ACTIONS}
 
 
-def derive_dual_metrics(rows: list[Json]) -> Json:
-    action_confusion = confusion_template("NO_EXTRACTABLE_ACTION")
-    contract_confusion = confusion_template("NO_VALID_CONTRACT")
-    extraction_sources: Counter[str] = Counter()
-    parse_statuses: Counter[str] = Counter()
+def derive_endpoint_metrics(rows: list[Json], action_field: str, no_decision: str) -> Json:
+    confusion = confusion_template(no_decision)
     by_pair: dict[str, list[Json]] = defaultdict(list)
-    action_correct = contract_valid = contract_correct = 0
+    correct_items = 0
     for row in rows:
-        record_label = f"{row['route_stack_id']}/{row['item_id']}"
         gold = str(row["gold_action"])
-        action = row.get("strict_action")
-        contract = row.get("contract_action")
-        parse_status = str(row["parse_status"])
+        action = row.get(action_field)
         by_pair[str(row["pair_id"])].append(row)
-        extraction_sources[str(row["strict_action_source"])] += 1
-        parse_statuses[parse_status] += 1
         if action is None:
-            action_confusion[gold]["NO_EXTRACTABLE_ACTION"] += 1
+            confusion[gold][no_decision] += 1
         else:
-            action_confusion[gold][str(action)] += 1
-            action_correct += action == gold
-        if parse_status == "OK":
-            if contract != action or action is None:
-                fail(f"dual endpoint valid record lacks its action: {record_label}")
-            contract_valid += 1
-            contract_confusion[gold][str(contract)] += 1
-            contract_correct += contract == gold
-        else:
-            if contract is not None:
-                fail(f"dual endpoint invalid record retains a contract action: {record_label}")
-            contract_confusion[gold]["NO_VALID_CONTRACT"] += 1
+            confusion[gold][str(action)] += 1
+            correct_items += action == gold
     if any(len(members) != 2 for members in by_pair.values()):
         fail("dual endpoint pair membership differs")
-    action_covered_pairs = sum(
-        all(row["strict_action"] is not None for row in members) for members in by_pair.values()
+    covered_pairs = sum(
+        all(row[action_field] is not None for row in members) for members in by_pair.values()
     )
-    action_correct_pairs = sum(
-        all(row["strict_action"] == row["gold_action"] for row in members)
-        for members in by_pair.values()
-    )
-    contract_covered_pairs = sum(
-        all(row["parse_status"] == "OK" for row in members) for members in by_pair.values()
-    )
-    contract_correct_pairs = sum(
-        all(row["contract_action"] == row["gold_action"] for row in members)
+    correct_pairs = sum(
+        all(row[action_field] == row["gold_action"] for row in members)
         for members in by_pair.values()
     )
     items = len(rows)
     pairs = len(by_pair)
-    extractable = items - extraction_sources["UNEXTRACTABLE"]
+    extractable = sum(row[action_field] is not None for row in rows)
     return {
-        "scheduled_items": items,
-        "scheduled_pairs": pairs,
-        "action_only": {
-            "extractable_items": extractable,
-            "correct_items": action_correct,
-            "item_coverage": rate(extractable, items),
-            "end_to_end_item_accuracy": rate(action_correct, items),
-            "conditional_item_accuracy": rate(action_correct, extractable),
-            "covered_pairs": action_covered_pairs,
-            "correct_pairs": action_correct_pairs,
-            "pair_coverage": rate(action_covered_pairs, pairs),
-            "end_to_end_pair_accuracy": rate(action_correct_pairs, pairs),
-            "conditional_pair_accuracy": rate(action_correct_pairs, action_covered_pairs),
-            "confusion": action_confusion,
-        },
+        "extractable_items": extractable,
+        "correct_items": correct_items,
+        "item_coverage": rate(extractable, items),
+        "end_to_end_item_accuracy": rate(correct_items, items),
+        "conditional_item_accuracy": rate(correct_items, extractable),
+        "covered_pairs": covered_pairs,
+        "correct_pairs": correct_pairs,
+        "pair_coverage": rate(covered_pairs, pairs),
+        "end_to_end_pair_accuracy": rate(correct_pairs, pairs),
+        "conditional_pair_accuracy": rate(correct_pairs, covered_pairs),
+        "confusion": confusion,
+    }
+
+
+def derive_dual_metrics(rows: list[Json]) -> Json:
+    raw = derive_endpoint_metrics(rows, "raw_strict_action", "NO_RAW_STRICT_ACTION")
+    registered = derive_endpoint_metrics(rows, "registered_parser_action", "NO_REGISTERED_ACTION")
+    contract = derive_endpoint_metrics(rows, "contract_action", "NO_VALID_CONTRACT")
+    raw_sources: Counter[str] = Counter()
+    parser_sources: Counter[str] = Counter()
+    parse_statuses: Counter[str] = Counter()
+    by_pair: dict[str, list[Json]] = defaultdict(list)
+    raw_correct_outside_contract = 0
+    contract_correct_outside_raw = 0
+    raw_extractable_outside_contract = 0
+    contract_extractable_outside_raw = 0
+    for row in rows:
+        record_label = f"{row['route_stack_id']}/{row['item_id']}"
+        raw_action = row.get("raw_strict_action")
+        registered_action = row.get("registered_parser_action")
+        contract_action = row.get("contract_action")
+        gold = row["gold_action"]
+        parse_status = str(row["parse_status"])
+        raw_sources[str(row["raw_strict_source"])] += 1
+        parser_sources[str(row["registered_parser_provenance"])] += 1
+        parse_statuses[parse_status] += 1
+        by_pair[str(row["pair_id"])].append(row)
+        if parse_status == "OK":
+            if contract_action != registered_action or registered_action is None:
+                fail(f"dual endpoint valid record lacks its parser action: {record_label}")
+        elif contract_action is not None:
+            fail(f"dual endpoint invalid record retains a contract action: {record_label}")
+        raw_extractable_outside_contract += raw_action is not None and contract_action is None
+        raw_correct_outside_contract += raw_action == gold and contract_action is None
+        contract_extractable_outside_raw += contract_action is not None and raw_action is None
+        contract_correct_outside_raw += contract_action == gold and raw_action != gold
+
+    raw_correct_pairs_outside_contract = 0
+    contract_correct_pairs_outside_raw = 0
+    for members in by_pair.values():
+        raw_correct = all(row["raw_strict_action"] == row["gold_action"] for row in members)
+        contract_correct = all(row["contract_action"] == row["gold_action"] for row in members)
+        raw_correct_pairs_outside_contract += raw_correct and not contract_correct
+        contract_correct_pairs_outside_raw += contract_correct and not raw_correct
+
+    return {
+        "scheduled_items": len(rows),
+        "scheduled_pairs": len(by_pair),
+        "raw_strict_action": raw,
+        "registered_parser_action": registered,
         "full_contract": {
-            "valid_items": contract_valid,
-            "action_correct_items": contract_correct,
-            "item_validity": rate(contract_valid, items),
-            "end_to_end_action_accuracy": rate(contract_correct, items),
-            "conditional_action_accuracy": rate(contract_correct, contract_valid),
-            "valid_pairs": contract_covered_pairs,
-            "action_correct_pairs": contract_correct_pairs,
-            "pair_validity": rate(contract_covered_pairs, pairs),
-            "end_to_end_action_pair_accuracy": rate(contract_correct_pairs, pairs),
-            "conditional_action_pair_accuracy": rate(
-                contract_correct_pairs, contract_covered_pairs
-            ),
-            "confusion": contract_confusion,
+            "valid_items": contract["extractable_items"],
+            "action_correct_items": contract["correct_items"],
+            "item_validity": contract["item_coverage"],
+            "end_to_end_action_accuracy": contract["end_to_end_item_accuracy"],
+            "conditional_action_accuracy": contract["conditional_item_accuracy"],
+            "valid_pairs": contract["covered_pairs"],
+            "action_correct_pairs": contract["correct_pairs"],
+            "pair_validity": contract["pair_coverage"],
+            "end_to_end_action_pair_accuracy": contract["end_to_end_pair_accuracy"],
+            "conditional_action_pair_accuracy": contract["conditional_pair_accuracy"],
+            "confusion": contract["confusion"],
         },
-        "endpoint_difference": {
-            "extractable_items_outside_full_contract": extractable - contract_valid,
-            "action_correct_items_outside_full_contract": action_correct - contract_correct,
-            "additional_action_correct_pairs": action_correct_pairs - contract_correct_pairs,
+        "endpoint_overlap": {
+            "raw_strict_extractable_outside_full_contract": raw_extractable_outside_contract,
+            "raw_strict_correct_items_outside_full_contract": raw_correct_outside_contract,
+            "raw_strict_correct_pairs_outside_full_contract": (raw_correct_pairs_outside_contract),
+            "full_contract_extractable_outside_raw_strict": contract_extractable_outside_raw,
+            "full_contract_correct_items_outside_raw_strict": contract_correct_outside_raw,
+            "full_contract_correct_pairs_outside_raw_strict": contract_correct_pairs_outside_raw,
         },
-        "extraction_source_counts": dict(sorted(extraction_sources.items())),
+        "raw_strict_source_counts": dict(sorted(raw_sources.items())),
+        "registered_parser_provenance_counts": dict(sorted(parser_sources.items())),
         "parse_status_counts": dict(sorted(parse_statuses.items())),
     }
 
@@ -432,26 +454,42 @@ def validate_dual_endpoint() -> Json:
         )
     ):
         fail("dual-endpoint privacy boundary differs")
-    extra_extractable = sum(
-        int(row["metrics"]["endpoint_difference"]["extractable_items_outside_full_contract"])
+    raw_extra_extractable = sum(
+        int(row["metrics"]["endpoint_overlap"]["raw_strict_extractable_outside_full_contract"])
         for row in aggregate["routes"]
     )
-    extra_correct_items = sum(
-        int(row["metrics"]["endpoint_difference"]["action_correct_items_outside_full_contract"])
+    raw_extra_correct_items = sum(
+        int(row["metrics"]["endpoint_overlap"]["raw_strict_correct_items_outside_full_contract"])
         for row in aggregate["routes"]
     )
-    extra_pairs = sum(
-        int(row["metrics"]["endpoint_difference"]["additional_action_correct_pairs"])
+    raw_extra_pairs = sum(
+        int(row["metrics"]["endpoint_overlap"]["raw_strict_correct_pairs_outside_full_contract"])
         for row in aggregate["routes"]
     )
-    if extra_extractable != 69 or extra_correct_items != 49 or extra_pairs != 40:
-        fail("dual-endpoint headline totals differ")
+    contract_extra_correct_items = sum(
+        int(row["metrics"]["endpoint_overlap"]["full_contract_correct_items_outside_raw_strict"])
+        for row in aggregate["routes"]
+    )
+    contract_extra_pairs = sum(
+        int(row["metrics"]["endpoint_overlap"]["full_contract_correct_pairs_outside_raw_strict"])
+        for row in aggregate["routes"]
+    )
+    if (
+        raw_extra_extractable != 69
+        or raw_extra_correct_items != 49
+        or raw_extra_pairs != 40
+        or contract_extra_correct_items != 329
+        or contract_extra_pairs != 78
+    ):
+        fail("dual-endpoint overlap totals differ")
     return {
         "route_stacks": len(grouped),
         "scheduled_items": len(rows),
-        "extra_extractable_items": extra_extractable,
-        "extra_correct_items": extra_correct_items,
-        "extra_correct_pairs": extra_pairs,
+        "raw_strict_extra_extractable_items": raw_extra_extractable,
+        "raw_strict_extra_correct_items": raw_extra_correct_items,
+        "raw_strict_extra_correct_pairs": raw_extra_pairs,
+        "contract_extra_correct_items": contract_extra_correct_items,
+        "contract_extra_correct_pairs": contract_extra_pairs,
         "manifest_files": manifest["file_count"],
     }
 

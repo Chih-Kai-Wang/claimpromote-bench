@@ -16,18 +16,19 @@ The public tree should contain only material required to rebuild a reported resu
   failure classes, aggregate, and privacy receipt;
 - the r6 coverage addendum, balanced public challenge, authored SLSA migration instrument, and
   retained pinned local replications used in the manuscript;
-- the 1,320 content-free dual-endpoint records and validator that reconstruct strict-action and
-  contract-action metrics;
-- the policy-difference compiler, mutation audit, transition-coverage certificates, and minimum
+- the 1,320 content-free endpoint-audit records and validator that reconstruct raw-strict,
+  registered-parser, and full-contract action metrics with parser provenance;
+- the policy-difference enumerator, mutation audit, transition-coverage certificates, and minimum
   suite derivations used by the paper;
 - manuscript source and references when the repository serves as the paper artifact; and
 - licensing notices, a concise README, and manifests whose counts and digests are generated from
   the exported tree.
 
 Model weights stay in their upstream repositories. Released model-service records retain the
-fields needed for metric replay: item and pair identities, gold and extracted actions, endpoint
-validity, terminal classes, and correctness fields. Every scheduled failure remains represented in
-the end-to-end denominator.
+fields needed for deterministic source and score replay: item and pair identities, gold and
+extracted actions, parser provenance, endpoint validity, terminal classes, and correctness fields.
+They do not reproduce hosted inference. Every scheduled failure remains represented in the
+end-to-end denominator.
 
 ## Material outside the public tree
 

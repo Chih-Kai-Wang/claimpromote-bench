@@ -38,7 +38,7 @@ def test_dual_endpoints_separate_action_from_contract() -> None:
             "pair_id": "p",
             "parse_status": "OK",
             "raw_decision": {"action": "ALLOW"},
-            "raw_response_text": None,
+            "raw_response_text": '{"action":"ALLOW"}',
         },
         {
             "item_id": "b",
@@ -49,15 +49,36 @@ def test_dual_endpoints_separate_action_from_contract() -> None:
         },
     ]
     result = module.derive_metrics(gold, pairs, records)
-    assert result["action_only"]["correct_items"] == 2
-    assert result["action_only"]["correct_pairs"] == 1
+    assert result["raw_strict_action"]["correct_items"] == 2
+    assert result["raw_strict_action"]["correct_pairs"] == 1
+    assert result["registered_parser_action"]["correct_items"] == 1
+    assert result["registered_parser_action"]["correct_pairs"] == 0
     assert result["full_contract"]["action_correct_items"] == 1
     assert result["full_contract"]["action_correct_pairs"] == 0
-    assert result["endpoint_difference"] == {
-        "extractable_items_outside_full_contract": 1,
-        "action_correct_items_outside_full_contract": 1,
-        "additional_action_correct_pairs": 1,
+    assert result["endpoint_overlap"] == {
+        "raw_strict_extractable_outside_full_contract": 1,
+        "raw_strict_correct_items_outside_full_contract": 1,
+        "raw_strict_correct_pairs_outside_full_contract": 1,
+        "full_contract_extractable_outside_raw_strict": 0,
+        "full_contract_correct_items_outside_raw_strict": 0,
+        "full_contract_correct_pairs_outside_raw_strict": 0,
     }
+
+
+def test_parser_provenance_keeps_fence_extraction_out_of_raw_strict() -> None:
+    module = load_builder()
+    record = {
+        "item_id": "a",
+        "parse_status": "OK",
+        "raw_decision": {"action": "ALLOW"},
+        "raw_response_text": '```json\n{"action":"ALLOW"}\n```',
+        "parse_error_detail": "DETERMINISTIC_SINGLE_JSON_OBJECT_EXTRACTION",
+    }
+    assert module.raw_strict_action(record) == (None, "RAW_STRICT_REJECTED")
+    assert module.registered_parser_action(record) == (
+        "ALLOW",
+        "REGISTERED_SINGLE_OBJECT_EXTRACTION",
+    )
 
 
 def test_committed_dual_endpoint_audit_rebuilds() -> None:
@@ -76,6 +97,8 @@ def test_committed_dual_endpoint_audit_validates() -> None:
     assert module.validate() == {
         "route_stacks": 10,
         "scheduled_items": 1320,
-        "action_correct_outside_contract": 49,
-        "action_correct_pairs_outside_contract": 40,
+        "raw_strict_correct_outside_contract": 49,
+        "raw_strict_correct_pairs_outside_contract": 40,
+        "contract_correct_outside_raw_strict": 329,
+        "contract_correct_pairs_outside_raw_strict": 78,
     }

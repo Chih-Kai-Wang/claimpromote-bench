@@ -8,13 +8,13 @@ No OpenReview submission ID, arXiv ID, DOI, or archival identifier exists yet.
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests
+ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision
 ```
 
 ## ICLR 2027 abstract
 
 ```text
-Executable policy revisions can change downstream actions for fixed inputs, yet model-service tests rarely isolate policy version. ClaimPromoteBench compiles deterministic policy versions and a finite authored context grammar into pairs whose oracle actions change. It records rule witnesses, action transitions, a minimum structural-coverage suite, and failure-inclusive endpoints. Six revisions across five public projects ground the fault model. Exact offline replay recovers policy or adapter faults in Gatekeeper, Trivy, Cosign, Microsoft Agent Governance Toolkit, and agentgateway; the latter two occur at agent or model boundaries. Two Gatekeeper revisions yield 12 pairs and a two-pair minimum. Across three runs on two hosted routes (144 calls), all 63 parsed actions match OPA; timeouts and envelope violations reduce end-to-end pair scores to 21/36 for DeepSeek Flash and 0/36 for Qwen. An offline endpoint audit recovers 40 correct pairs outside the full object contract. In evidence-state diagnostics, R6 Qwen reaches 113/150 pairs end to end versus 113/123 conditional. On an author-created challenge frozen publicly before calls, Qwen and Flash reach 48/90 and 13/90 pairs end to end versus 48/64 and 13/61 conditional, with DEMOTE recall of 4/30 and 0/30. Complete confusion matrices retain terminal failures. The results support regression testing of exact model-service interfaces under finite authored policy changes. Deployment prevalence and naturalistic model interpretation remain open.
+Executable policy revisions can change downstream actions for fixed inputs, yet model-service tests rarely isolate policy version. ClaimPromoteBench turns finite differences between deterministic policy versions into paired route tests whose oracle action must change. It records source witnesses, rule and action-transition coverage, exact minimum structural suites, parser provenance, and failure-inclusive endpoints. Six revisions across five public projects ground policy, verifier, and adapter fault classes. AGT is replayed parent-to-fix; agentgateway's parent is source-audited and its fixed commit passes 33 offline tests. Two Gatekeeper revisions yield 12 pairs and a two-pair minimum. Across 144 hosted calls, all 63 raw-strict actions match OPA, while timeouts and envelope failures reduce end-to-end pair completion to 21/36 and 0/36. An audit of 1,320 frozen records separates raw-strict parsing, registered route parsers, and full contracts; six fenced Qwen challenge outputs account for a 128/180 versus 132/180 item difference. R6 records 113/150 pairs end to end and 113/123 conditional. A commit-frozen, action-balanced challenge yields 48/90 and 13/90 full-contract pairs end to end versus 48/64 and 13/61 conditional, with DEMOTE recall of 4/30 and 0/30. Complete confusion matrices retain terminal failures. These results establish a source-traceable regression protocol for finite authored policy changes. Deployment prevalence and naturalistic model interpretation remain open.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -24,7 +24,7 @@ stay out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests
+ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision
 ```
 
 ## arXiv abstract
@@ -54,15 +54,15 @@ This identity belongs only in the public arXiv wrapper.
 ## Suggested TL;DR
 
 ```text
-Enumerates finite action-changing differences between caller-supplied policy evaluators, reduces them to a minimum structural-coverage pair suite, and scores complete model-service routes at action and structured-contract endpoints.
+Joins finite action-changing differences between caller-supplied policy evaluators to source-traceable, failure-inclusive model-service regression tests with explicit parser provenance.
 ```
 
 ## Main empirical findings
 
 - Two exact Gatekeeper revisions yield 12 source-traceable pairs covering 2/2 changed rules and
   2/2 observed action edges; a two-pair suite is jointly complete for the committed grammar.
-- Three repetitions per hosted route yield 53/72 strict actions and 21/36 pairs for DeepSeek Flash,
-  versus 10/72 and 0/36 for Qwen. All 63 strictly parsed actions are correct. Terminal failures are
+- Three repetitions per hosted route yield 53/72 raw-strict actions and 21/36 pairs for DeepSeek
+  Flash, versus 10/72 and 0/36 for Qwen. All 63 raw-strict actions are correct. Terminal failures are
   12 read timeouts and 69 serialization or output-envelope failures. Both model IDs use the same
   provider/API configuration; provider-side serving internals are opaque.
 - Trivy reproduces a real inverted policy predicate on four upstream cases. Cosign reproduces four
@@ -77,8 +77,11 @@ Enumerates finite action-changing differences between caller-supplied policy eva
   committed candidate pool.
 - The policy-aware structured random-forest control reaches 107/120 items and 47/60 pairs; the
   profile-blind control reaches 57/120 items and 0/60 pairs.
-- An offline audit of 1,320 prior route items recovers 69 strict actions outside the full contract,
-  including 49 correct actions and 40 additional correct pairs.
+- An offline audit of 1,320 prior route items separates raw-strict, registered-parser, and
+  full-contract endpoints. Raw-strict parsing finds 69 actions outside the full contract, including
+  49 correct actions and 40 correct pairs. The registered challenge parser accepts six fenced Qwen
+  objects, so raw-strict Qwen scores are 128/180 items and 46/90 pairs versus full-contract scores
+  of 132/180 and 48/90.
 - R6 Qwen returns 272/300 valid decisions and scores 258/300 items and 113/150 pairs end to end,
   versus 258/272 and 113/123 conditional. Its `DEMOTE` support is 8/300 and recall is 0/8.
 - The public balanced challenge contains 90 pairs, 180 items, 15 factors, 90 `ALLOW` members, and 30
@@ -94,7 +97,7 @@ Enumerates finite action-changing differences between caller-supplied policy eva
 ### Anonymous conference version
 
 ```text
-An anonymized supplementary bundle contains the finite policy-difference enumerator and suite reducer, exact source-validation inputs and receipts, frozen paired datasets, prompt packets, content-free terminal records, analysis code, complete confusion matrices, and privacy receipts needed to recompute the paper. Its manifest derives file counts from the generated tree. It excludes raw failed responses, free-form errors, provider response identifiers, hidden reasoning, account identity, author-identifying provenance, private construction seeds, and generated caches.
+An anonymized supplementary bundle contains the finite policy-difference enumerator and suite reducer, exact source-validation inputs and receipts, frozen paired datasets, prompt packets, content-free terminal records, parser provenance, analysis code, complete confusion matrices, and privacy receipts needed for deterministic source and score replay. It does not reissue hosted calls. Its manifest derives file counts from the generated tree. It excludes raw failed responses, free-form errors, provider response identifiers, hidden reasoning, account identity, author-identifying provenance, private construction seeds, and generated caches.
 ```
 
 ### Public preprint version
@@ -106,7 +109,7 @@ A history-free public export will retain the necessary code, licensed source exc
 ## Reproducibility statement
 
 ```text
-The artifact binds exact upstream source bytes and commits, licenses, executable policies, finite grammars, prompts, frozen zero-retry schedules, content-free terminal outcome classes, and analysis code. Validators recompute source behavior, coverage, minimum suites, endpoint metrics, action recalls, and confusion matrices. Reviewer derivatives preserve every scheduled denominator while removing response content and identifying metadata.
+The artifact binds exact upstream source bytes and commits, licenses, executable policies, finite grammars, prompts, frozen zero-retry schedules, content-free terminal outcome classes, parser source, and analysis code. Validators perform deterministic source and score replay for source behavior, coverage, minimum suites, endpoint metrics, parser provenance, action recalls, and confusion matrices; they do not reproduce hosted inference. Reviewer derivatives preserve every scheduled denominator while removing response content and identifying metadata.
 ```
 
 ## Ethics and AI-use scope

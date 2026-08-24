@@ -1,6 +1,6 @@
 {
   "after": {
-    "abstract_submission_lint_tokens": 220,
+    "abstract_submission_lint_tokens": 213,
     "configured_pattern_findings": {
       "ai_lexicon": 0,
       "formulaic_pivot": 0,
@@ -11,14 +11,14 @@
       "throat_clearing": 0,
       "vague_importance": 0
     },
-    "manuscript_sha256": "7ea7fdc0ef353598c4ec16f7cf9ec9cfb308ba36f32e3c115f5908aecb6af04d",
-    "prose_words": 3966,
-    "sentence_words_mean": 14.6,
+    "manuscript_sha256": "87a492b239e198f79f3062676c989721dfeeec0aa850e0b19c9ae64d49030919",
+    "prose_words": 4142,
+    "sentence_words_mean": 14.8,
     "sentence_words_median": 13.0,
-    "sentence_words_over_40_percent": 0.3731,
-    "sentence_words_p90": 23.3,
+    "sentence_words_over_40_percent": 0.7246,
+    "sentence_words_p90": 25.0,
     "sentence_words_p95": 28.0,
-    "sentences": 268
+    "sentences": 276
   },
   "before": {},
   "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",

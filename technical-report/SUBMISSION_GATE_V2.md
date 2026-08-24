@@ -1,126 +1,116 @@
 # ICLR/arXiv submission gate
 
-This receipt describes the current release candidate. Machine-generated manifests and validation
-receipts remain authoritative for file totals, hashes, page counts, and replay results.
+This receipt describes the final locally verified release candidate. Machine-generated manifests
+and release receipts remain authoritative for hashes, file totals, page counts, and replay results.
 
 ## Verdict
 
 `SCIENTIFIC_RC_READY = YES`
 
-The final zero-context review and its single revision cycle are complete. The manuscript, anonymous
-replay bundle, and local PDF package pass deterministic, privacy, replay, type, lint, formal, and
-visual checks. This verdict covers the scoped scientific release candidate. Merge, public release,
-OpenReview upload, arXiv upload, and archival publication require separate author authorization.
+The scoped manuscript, anonymous source-and-score replay bundle, and local PDF package pass the
+required scientific, privacy, replay, type, lint, formal, and visual gates. This verdict is not an
+acceptance prediction and does not authorize merge, public release, OpenReview upload, arXiv upload,
+or archival publication.
 
 ## Scientific claim boundary
 
-- ClaimPromoteBench is a prospective synthetic test construction over two caller-supplied policy
+- ClaimPromoteBench is a prospective synthetic test protocol over two caller-supplied deterministic
   evaluators, a finite context set, stable identifiers, registered rule witnesses, and declared
   coverage inventories.
-- Its main contribution is the source-traceable integration of finite policy differencing,
-  policy-version paired route records, joint rule/action-transition suite reduction, and
-  failure-inclusive model-service endpoints. The component algorithms are established machinery.
-- The implementation is a finite policy-difference enumerator and suite reducer. Policy parsing,
-  context synthesis, changed-rule discovery, and witness inference remain caller responsibilities.
-- The deterministic policy executor defines the policy ceiling. It is an executable task
-  specification rather than a learned comparator.
-- The r6 multinomial Naive Bayes result is a weak shortcut control: 184/300 items and 34/150 pairs.
-- The central model IDs use the same provider, base URL, OpenAI-compatible API, prompt-only output
-  mode, and adapter settings. Provider-side serving internals are opaque; route differences are
-  descriptive.
-- The author-created balanced challenge was frozen publicly before calls, measures known-case
-  robustness, and yields
-  no hidden-distribution generalization estimate.
-- The historical r6 Flash lane records an obsolete frozen service-interface failure. A later
-  executable Flash route establishes only that the later service path ran successfully.
+- Its supported novelty is the integration of finite executable-policy differencing,
+  policy-version paired route records, joint rule/action-transition reduction, parser provenance,
+  and failure-inclusive item/pair endpoints. The constituent algorithms are established.
+- Policy parsing, context synthesis, changed-rule discovery, witness inference, and context
+  completeness remain caller responsibilities.
+- The deterministic policy executor is the definitional policy ceiling, not a learned baseline.
+  The r6 Naive Bayes result is a deliberately weak shortcut control.
+- Both central model IDs use the same provider/API and adapter configuration. Provider-side serving
+  internals are opaque, so cross-route results are descriptive and not causal.
+- The balanced challenge is author-created and commit-frozen before calls according to retained
+  workflow receipts. It measures robustness on known cases, not hidden-test generalization.
+- The historical r6 Flash lane records an obsolete frozen service interface: 300 HTTP 401 outcomes
+  before model output. Later routes establish only their own executability.
 - Every scheduled transport, syntax, schema, and semantic failure remains in each end-to-end
-  denominator. Failed response content is omitted from paper-facing artifacts.
-- The naturalistic-candidate audit produced zero eligible cases and zero model calls. The study
-  reports author policy mappings and makes no human-annotation or agreement claim.
+  denominator. Failed response contents are excluded from reviewer-facing artifacts.
+- No retained external case validates a model interpreting a changed executable policy. The study
+  contains zero human annotations and makes no agreement claim.
 
 ## Evidence represented in the manuscript
 
-- Two exact Gatekeeper revisions supply 12 action-changing pairs. Three repetitions on each of two
-  hosted routes yield 144 frozen cells with one request per cell and zero client retries.
-- All 63 strictly parsed Gatekeeper actions match OPA. The end-to-end losses are 12 timeouts and 69
-  serialization or envelope violations, so the central hosted result concerns exact-interface
-  completion.
-- Independent Trivy and Cosign reproductions exercise policy-logic and verifier-interface faults
-  against pinned upstream source bytes and tests.
-- An authored SLSA migration instrument covers four actions, changed rules, and directed action
-  transitions. Its policy-aware/profile-blind controls reach 47/60 and 0/60 pairs. Its labels and
-  policies are author-defined evaluation instruments.
-- The offline dual-endpoint audit recomputes strict-action and contract-action outcomes for 1,320
-  previously scheduled cells without model calls.
-- The r6 coverage addendum and 90-pair balanced public challenge provide auxiliary
-  evidence-state diagnostics with complete confusion matrices, per-action recall, coverage,
-  conditional metrics, and end-to-end metrics.
+- Six revisions across Gatekeeper, Trivy, Cosign, Microsoft Agent Governance Toolkit, and
+  agentgateway ground policy, verifier, and adapter fault classes.
+- The fixed-query audit screened 465 unique public repository seeds, source-reviewed 11 candidates,
+  and retained two boundary-fault cases with zero model calls. It is not a prevalence sample.
+- Two Gatekeeper revisions supply 12 action-changing pairs and a two-pair structural minimum. Three
+  repetitions on each of two hosted routes yield 144 frozen cells, one request per cell, and zero
+  client retries.
+- All 63 Gatekeeper raw-strict actions match OPA. Twelve timeouts and 69 serialization/envelope
+  failures make the central hosted result an exact-interface completion result.
+- The authored SLSA migration covers four actions, 12 changed rules, and ten reachable directed
+  transitions. Policy-aware/profile-blind controls reach 47/60 and 0/60 pairs.
+- The 1,320-record endpoint audit separates raw-strict, registered-parser, and full-contract action
+  endpoints. Raw-strict contributes 49 correct items and 40 correct pairs outside the contract; the
+  contract contributes 329 correct items and 78 correct pairs outside raw-strict.
+- Six Qwen challenge responses are fenced and accepted by the frozen registered parser. Raw-strict
+  scores are 128/180 items and 46/90 pairs; full-contract scores remain 132/180 and 48/90.
+- R6 and the 90-pair challenge report complete confusion matrices, every action recall, coverage,
+  conditional metrics, and failure-inclusive end-to-end metrics.
 
-## Current package checks
+## Final local checks
 
-- [x] `technical-report/main.tex` is the canonical scientific source.
-- [x] The ICLR build uses the hash-locked official ICLR 2027 style files.
-- [x] The ICLR main-text probe is within the nine-page limit.
-- [x] The final ICLR PDF has 13 physical pages, an eight-page main-text probe, and references
-  beginning on physical page 9; the arXiv PDF has 12 pages.
-- [x] The release receipt derives physical pages and the reference boundary from the generated
-  PDFs.
-- [x] The arXiv PDF and source archive are generated from the same canonical manuscript.
-- [x] LaTeX logs contain no unresolved citations, unresolved references, or horizontal overflow.
-- [x] Every PDF font is embedded.
-- [x] Every ICLR and arXiv page was rendered and inspected for overlap, clipping, crowding,
-  isolated headings, table readability, and figure-caption collisions.
-- [x] The anonymous source and PDF scans contain no author, affiliation, account, repository,
-  workflow, or private commit identity.
-- [x] The anonymous replay bundle omits provider request/response identifiers, credentials, hidden
-  reasoning, raw failed responses, and free-form transport errors.
+- [x] Python 3.12.13 virtual environment installed with `.[dev]`.
+- [x] 343 full repository tests pass.
+- [x] Branch coverage is 83.21%, above the 80% gate.
+- [x] Ruff lint and format checks pass.
+- [x] Strict mypy passes over 29 configured source files.
+- [x] Paper truth lint, endpoint rebuild, source validators, and privacy checks pass.
+- [x] The ICLR source uses hash-locked official 2027 style files.
+- [x] The ICLR main-text probe is nine pages. The full PDF is 14 physical pages and references begin
+  on physical page 10. The arXiv PDF is 13 pages.
+- [x] Final LaTeX logs have no unresolved citation/reference or horizontal-overflow warning.
+- [x] PDF fonts are embedded.
+- [x] Both release source archives rebuild independently to 14-page ICLR and 13-page arXiv PDFs.
+- [x] All 14 ICLR and 13 arXiv pages were rendered and inspected for clipping, overlap, crowding,
+  isolated headings, figure-caption collisions, and table readability.
 - [x] The anonymous manifest derives its file map and count from the generated tree.
-- [x] A clean bundle verifies against its manifest before packaging.
-- [x] A separate generated copy passes the complete reviewer replay, including Python checks,
-  source validators, endpoint recomputation, selected tests, Lean builds, and `leanchecker`.
-- [x] The local release-kit receipt reports `PASS` for LaTeX logs, ICLR anonymity, arXiv identity,
-  embedded fonts, bundle privacy, and visual review.
-- [x] The full repository gates pass: 336 pytest tests, Ruff check, Ruff format check, and mypy over
-  29 configured source files.
+- [x] The anonymous package excludes credentials, account identity, author provenance, provider
+  request/response IDs, hidden reasoning, raw failed responses, and free-form transport errors.
+- [x] A separate clean Python 3.12 environment installs the hash-locked reviewer dependencies and
+  passes 27 selected tests, all source/score validators, Lean build, and `leanchecker`.
+- [x] The reviewer command performs deterministic source and score replay; it does not reissue
+  hosted calls.
 
 ## Final isolated review
 
-The isolated reviewer assessed the pre-revision candidate `ddcc1d0` with zero prior-review context
-and returned Weak Reject (4/10, confidence 4/5). The review found no fatal validity issue and
-independently reproduced the numerical, source, minimum-suite, Python, and Lean evidence. Its three
-major findings were:
+The context-isolated AI reviewer assessed commit `6f13f72` without prior-review context and returned
+Weak Reject (4/10, confidence 4/5). It found no fabricated source, numerical defect in the frozen
+studies, privacy leak, or format blocker. Its material finding was an endpoint-label error: six
+fenced Qwen challenge objects had been accepted by the historical registered parser while the paper
+called their endpoint strict top-level JSON.
 
-1. real policy revisions were established, while the model-mediated boundary was author-created;
-2. “compiler” exceeded the finite enumerator and registered-witness implementation; and
-3. the hosted Gatekeeper result measured strict interface completion because every parsed action
-   was semantically correct.
+The revision corrects the raw-strict score, recall row, confusion matrix, audit schema, parser
+provenance, manuscript definitions, and anonymous replay. It also accepts the review's safe changes
+to novelty positioning, public-freeze wording, agentgateway replay scope, and artifact terminology.
+The 4/10 score remains the only score; no second reviewer or post-hoc rerating was requested.
 
-The revision accepted all three findings. It narrows the deployment claim, states caller
-obligations, replaces compiler terminology in scientific prose, expands primary-source related
-work, leads with exact-interface reliability, corrects the shared provider/API route description,
-and promotes policy-aware/profile-blind controls. Moderate findings on the public freeze, Naive
-Bayes, structural-suite semantics, naturalistic screening, evidence hierarchy, replay command, and
-table density were also resolved. Deployment prevalence, naturalistic validity, and stochastic
-fault-detection power remain open because they require external evidence.
-
-The review and complete disposition are preserved under `docs/reviews/`. The 4/10 score describes
-the pre-revision candidate; no second reviewer or post-hoc rerating was requested.
+The review's largest scientific concern remains open because it requires new evidence: an
+independently authored deployed route in which a model interprets a changed executable policy.
+Deployment prevalence, cross-stack causality, naturalistic validity, and stochastic fault-detection
+power are not established.
 
 ## Remaining external gates
 
-- [ ] Confirm the final private-branch head, clean worktree, repository visibility, and draft PR
-  state after all review fixes are pushed.
-- [ ] Obtain a successful remote compatibility matrix when GitHub allocates a runner. Current
-  private-repository failures terminate before runner allocation with `steps=[]`; they provide no
-  code-regression evidence.
-- [ ] Complete OpenReview profile, author, policy, and submission checks only after explicit author
-  authorization.
-- [ ] Complete arXiv metadata and server-preview checks only after explicit author authorization.
-- [ ] Create any public release, tag, DOI, or archival identifier only after explicit author
-  authorization.
+- Obtain a successful remote compatibility matrix after GitHub allocates a runner. Current private
+  repository runs terminate before runner allocation with `steps=[]`; they are not code-regression
+  evidence.
+- Complete OpenReview and arXiv account, author, policy, metadata, and server-preview checks only
+  after explicit author authorization.
+- Create a history-free public export, tag, DOI, or archival identifier only after explicit author
+  authorization. Never change the development repository's visibility for publication.
 
 ## Readiness semantics
 
-`SCIENTIFIC_RC_READY` certifies the scoped manuscript and local replay artifacts. Its scope excludes
-venue acceptance, cross-provider causality, broad model-family ranking, naturalistic validity,
-hidden-test generalization, account-side submission, and repository publication.
+`SCIENTIFIC_RC_READY` certifies the bounded manuscript and local replay artifacts. It excludes venue
+acceptance, broad model-family ranking, deployed prevalence, causal provider comparisons,
+naturalistic model-policy validity, hidden-test generalization, submission, and repository
+publication.

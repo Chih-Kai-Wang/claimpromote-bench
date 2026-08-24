@@ -44,10 +44,9 @@ GRAPH_ROUTES = (
 NATURALISTIC = ROOT / "v2" / "naturalistic-review-decision.json"
 
 CANONICAL_TITLE = (
-    "ClaimPromoteBench: Compiling Executable Policy Revisions into Failure-Aware "
-    "Model-Service Tests"
+    "ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision"
 )
-TEX_TITLE = r"\cpb: Compiling Executable Policy Revisions into Failure-Aware Model-Service Tests"
+TEX_TITLE = r"\cpb: Source-Traceable Regression Tests for Model Services under Policy Revision"
 
 
 def fail(message: str) -> None:
@@ -452,40 +451,32 @@ def validate_auxiliary_results() -> None:
     expect(
         sum(route["metrics"]["scheduled_items"] for route in routes), 1320, "dual scheduled items"
     )
-    expect(
-        sum(
-            route["metrics"]["endpoint_difference"]["extractable_items_outside_full_contract"]
-            for route in routes
-        ),
-        69,
-        "dual extra extractable items",
-    )
-    expect(
-        sum(
-            route["metrics"]["endpoint_difference"]["action_correct_items_outside_full_contract"]
-            for route in routes
-        ),
-        49,
-        "dual extra correct items",
-    )
-    expect(
-        sum(
-            route["metrics"]["endpoint_difference"]["additional_action_correct_pairs"]
-            for route in routes
-        ),
-        40,
-        "dual extra correct pairs",
-    )
+    overlap_expectations = {
+        "raw_strict_extractable_outside_full_contract": 69,
+        "raw_strict_correct_items_outside_full_contract": 49,
+        "raw_strict_correct_pairs_outside_full_contract": 40,
+        "full_contract_extractable_outside_raw_strict": 452,
+        "full_contract_correct_items_outside_raw_strict": 329,
+        "full_contract_correct_pairs_outside_raw_strict": 78,
+    }
+    for field, expected in overlap_expectations.items():
+        expect(
+            sum(route["metrics"]["endpoint_overlap"][field] for route in routes),
+            expected,
+            f"dual endpoint overlap {field}",
+        )
     by_id = {route["route_stack_id"]: route for route in routes}
-    for lane_id, strict_items, contract_items, strict_pairs, contract_pairs in (
+    for lane_id, raw_items, contract_items, raw_pairs, contract_pairs in (
         ("challenge-deepseek-flash-host-schema", 105, 90, 19, 13),
-        ("challenge-qwen-host-prompt", 132, 132, 48, 48),
+        ("challenge-qwen-host-prompt", 128, 132, 46, 48),
         ("slsa-deepseek-flash-host-schema", 110, 108, 51, 49),
         ("slsa-qwen-host-prompt", 120, 88, 60, 28),
     ):
         metrics = by_id[lane_id]["metrics"]
         expect(
-            nested(metrics, "action_only.correct_items"), strict_items, f"{lane_id} strict items"
+            nested(metrics, "raw_strict_action.correct_items"),
+            raw_items,
+            f"{lane_id} raw-strict items",
         )
         expect(
             nested(metrics, "full_contract.action_correct_items"),
@@ -493,13 +484,38 @@ def validate_auxiliary_results() -> None:
             f"{lane_id} contract items",
         )
         expect(
-            nested(metrics, "action_only.correct_pairs"), strict_pairs, f"{lane_id} strict pairs"
+            nested(metrics, "raw_strict_action.correct_pairs"),
+            raw_pairs,
+            f"{lane_id} raw-strict pairs",
         )
         expect(
             nested(metrics, "full_contract.action_correct_pairs"),
             contract_pairs,
             f"{lane_id} contract pairs",
         )
+        expect(
+            nested(metrics, "registered_parser_action.correct_items"),
+            contract_items,
+            f"{lane_id} registered-parser items",
+        )
+        expect(
+            nested(metrics, "registered_parser_action.correct_pairs"),
+            contract_pairs,
+            f"{lane_id} registered-parser pairs",
+        )
+
+    expect(
+        nested(
+            by_id["challenge-qwen-host-prompt"],
+            "metrics.registered_parser_provenance_counts",
+        ),
+        {
+            "NO_REGISTERED_ACTION": 32,
+            "REGISTERED_DIRECT_PARSE": 142,
+            "REGISTERED_SINGLE_OBJECT_EXTRACTION": 6,
+        },
+        "challenge Qwen parser provenance",
+    )
 
     r6 = load_object(R6_ADDENDUM, "r6 addendum")["qwen_service_configuration"]
     for field, expected in (
@@ -575,8 +591,9 @@ def validate_manuscript_claims(tex: str) -> None:
     required = {
         "synthetic scope": "model-service study is prospective and synthetic",
         "caller obligations": "witness inference remain caller responsibilities",
-        "three endpoints": (
-            "strict top-level action $\\rightarrow$ contract action $\\rightarrow$ full decision"
+        "endpoint layers": (
+            "raw-strict $\\rightarrow$ registered parser $\\rightarrow$ full contract "
+            "$\\rightarrow$ exact decision"
         ),
         "definitional ceiling": "definitional policy ceiling",
         "weak Naive Bayes": "Naive Bayes sanity control is deliberately weak",
@@ -584,10 +601,18 @@ def validate_manuscript_claims(tex: str) -> None:
         "Gatekeeper minimum": "two-pair witness",
         "repeated Flash result": "53/72 items and 21/36 pairs",
         "repeated Qwen result": "Qwen route totals 10/72 items and 0/36 pairs",
-        "semantic route boundary": "zero semantic action errors after strict extraction",
+        "semantic route boundary": "zero semantic action errors after raw-strict extraction",
         "shared route configuration": "same provider, base URL",
         "failure taxonomy": "12 read timeouts, three fenced objects",
-        "dual endpoint totals": "49 are correct and create 40 additional correct pairs",
+        "raw-strict outside contract": "49 actions and 40 pairs are correct",
+        "contract outside raw-strict": ("including 329 correct actions and 78 correct pairs"),
+        "challenge parser provenance": (
+            "registered parser accepts six fenced objects---four correct actions and two "
+            "correct pairs"
+        ),
+        "challenge raw-strict score": (
+            "Raw-strict scores are therefore 128/180 items and 46/90 pairs"
+        ),
         "profile-blind control": "profile-blind control reaches 57/120 items and 0/60 pairs",
         "r6 result": "258/300",
         "challenge Qwen": "132/180",
@@ -596,6 +621,9 @@ def validate_manuscript_claims(tex: str) -> None:
         "historical interface": "obsolete frozen service interface",
         "causal boundary": "401 lane provides no causal comparison",
         "public challenge boundary": "measures robustness on known cases",
+        "commit-frozen challenge": (
+            "commit-frozen before calls according to retained workflow receipts"
+        ),
         "external audit scope": "screened 465 repository seeds and source-reviewed 11 candidates",
         "external Agent Governance result": "11/15 post-fix upstream tests pass",
         "external agentgateway result": "all 33 selected offline tests pass",
@@ -606,6 +634,7 @@ def validate_manuscript_claims(tex: str) -> None:
             "Stochastic fault detection and release sufficiency remain unmeasured"
         ),
         "review replay command": "python scripts/run\\_review\\_checks.py",
+        "replay boundary": "hosted calls are not reissued",
     }
     for label, needle in required.items():
         require_text(tex, needle, label)

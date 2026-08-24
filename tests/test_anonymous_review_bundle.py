@@ -147,18 +147,32 @@ def test_dual_endpoint_projection_replays_all_scheduled_items_without_payloads(
     assert len({(row["route_stack_id"], row["item_id"]) for row in rows}) == 1320
     assert (
         sum(
-            route["metrics"]["endpoint_difference"]["action_correct_items_outside_full_contract"]
+            route["metrics"]["endpoint_overlap"]["raw_strict_correct_items_outside_full_contract"]
             for route in aggregate["routes"]
         )
         == 49
     )
     assert (
         sum(
-            route["metrics"]["endpoint_difference"]["additional_action_correct_pairs"]
+            route["metrics"]["endpoint_overlap"]["raw_strict_correct_pairs_outside_full_contract"]
             for route in aggregate["routes"]
         )
         == 40
     )
+    qwen = next(
+        route
+        for route in aggregate["routes"]
+        if route["route_stack_id"] == "challenge-qwen-host-prompt"
+    )
+    assert qwen["metrics"]["raw_strict_action"]["correct_items"] == 128
+    assert qwen["metrics"]["raw_strict_action"]["correct_pairs"] == 46
+    assert qwen["metrics"]["registered_parser_provenance_counts"] == {
+        "NO_REGISTERED_ACTION": 32,
+        "REGISTERED_DIRECT_PARSE": 142,
+        "REGISTERED_SINGLE_OBJECT_EXTRACTION": 6,
+    }
+    assert all("raw_strict_action" in row for row in rows)
+    assert all("registered_parser_provenance" in row for row in rows)
     assert manifest["file_count"] == len(manifest["files"]) == 3
     assert '"raw_response_text"' not in rendered
     assert '"provider_response_id"' not in rendered

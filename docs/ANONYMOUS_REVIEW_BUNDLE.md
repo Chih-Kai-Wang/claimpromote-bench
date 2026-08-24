@@ -2,10 +2,10 @@
 
 ## Purpose
 
-The anonymous bundle is the paper's double-blind replay artifact. It combines the controlled
-benchmark, source-traceable revisions, and privacy-filtered model-service records needed to
-recompute every reported endpoint. Model inference is never invoked during bundle construction or
-review replay.
+The anonymous bundle is the paper's double-blind source-and-score replay artifact. It combines the
+controlled benchmark, source-traceable revisions, and privacy-filtered model-service records needed
+to recompute every reported endpoint. It does not reproduce hosted inference: model calls are never
+issued during bundle construction or review replay.
 
 The top-level `MANIFEST.json` derives its file count and SHA-256 map from the generated tree.
 Documentation therefore carries no fixed file total.
@@ -21,8 +21,8 @@ Documentation therefore carries no fixed file total.
 - the r6 reviewer release and coverage addendum;
 - the 90-pair balanced public challenge;
 - the authored SLSA migration study and three pinned local replications;
-- 1,320 content-free dual-endpoint item records that reconstruct strict-action and contract-action
-  metrics across ten route stacks;
+- 1,320 content-free endpoint-audit records that reconstruct raw-strict, registered-parser, and
+  full-contract action metrics across ten route stacks;
 - the finite policy-difference enumerator, suite reducer, transition and mutation certificates, and
   minimum-suite derivations.
 
@@ -35,8 +35,11 @@ objects, provider request and response identifiers, account identifiers, credent
 reasoning, author provenance, private commit identity, and Git history.
 
 The r6 metadata overlay corrects stale construction labels while preserving the byte-frozen source
-manifest. The dual-endpoint derivative records the exact extracted action and extraction class
-before response-content redaction, allowing metric replay within the release boundary.
+manifest. The endpoint derivative records raw-strict and registered-parser actions plus parser
+provenance before response-content redaction. The bundle includes the exact raw-strict parser and
+the historical route-parser source needed to inspect that distinction. No audited response contains
+a duplicate key. Frozen SLSA plans retain inert hashes for excluded exploratory runners; those
+scripts and their results contribute no manuscript metric.
 
 ## Reviewer command
 
@@ -49,14 +52,15 @@ python scripts/run_review_checks.py
 ```
 
 The default command validates source bindings, pair contracts, benchmark invariants, empirical
-aggregates, privacy receipts, selected tests, and Lean fixtures. `--python-only` runs the Python
-portion when Lean is unavailable.
+aggregates, endpoint provenance, privacy receipts, selected tests, and Lean fixtures.
+`--python-only` runs the Python portion when Lean is unavailable. The command performs deterministic
+source and score replay; it does not reissue hosted calls.
 
 ## Interpretation
 
 A successful replay establishes internal consistency among released source bytes, datasets,
 sanitized route records, validators, and manuscript statistics. The central model IDs share one
 provider/API and adapter configuration; provider-side serving internals remain opaque. The
-challenge was author-created and publicly frozen before calls. Authored SLSA labels encode the
-paper's policy mapping, the deterministic executor defines the policy ceiling, and Naive Bayes
-supplies a deliberately weak sanity control.
+challenge was author-created and commit-frozen before calls according to retained workflow
+receipts. Authored SLSA labels encode the paper's policy mapping, the deterministic executor defines
+the policy ceiling, and Naive Bayes supplies a deliberately weak sanity control.

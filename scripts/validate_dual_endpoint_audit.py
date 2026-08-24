@@ -80,7 +80,10 @@ def validate(root: Path = STUDY_ROOT) -> Json:
     aggregate = load_object(root / "aggregate.json")
     routes = aggregate.get("routes")
     if (
-        aggregate.get("status") != "COMPLETE_POST_HOC_DUAL_ENDPOINT_AUDIT"
+        aggregate.get("schema_version") != "1.1.0"
+        or set(aggregate.get("endpoint_definitions", {}))
+        != {"denominator_rule", "full_contract", "raw_strict_action", "registered_parser_action"}
+        or aggregate.get("status") != "COMPLETE_POST_HOC_DUAL_ENDPOINT_AUDIT"
         or not isinstance(routes, list)
         or len(routes) != 10
         or {str(row["route_stack_id"]) for row in routes if isinstance(row, dict)} != registered_ids
@@ -98,46 +101,68 @@ def validate(root: Path = STUDY_ROOT) -> Json:
             fail(f"route metrics are absent: {route_id}")
         items = int(metrics["scheduled_items"])
         pairs = int(metrics["scheduled_pairs"])
-        action = metrics["action_only"]
+        raw = metrics["raw_strict_action"]
+        registered = metrics["registered_parser_action"]
         contract = metrics["full_contract"]
-        difference = metrics["endpoint_difference"]
         if (
-            int(action["extractable_items"]) < int(contract["valid_items"])
-            or int(action["correct_items"]) < int(contract["action_correct_items"])
-            or int(action["covered_pairs"]) < int(contract["valid_pairs"])
-            or int(action["correct_pairs"]) < int(contract["action_correct_pairs"])
-        ):
-            fail(f"action-only endpoint is narrower than full contract: {route_id}")
-        if difference != {
-            "extractable_items_outside_full_contract": int(action["extractable_items"])
-            - int(contract["valid_items"]),
-            "action_correct_items_outside_full_contract": int(action["correct_items"])
-            - int(contract["action_correct_items"]),
-            "additional_action_correct_pairs": int(action["correct_pairs"])
-            - int(contract["action_correct_pairs"]),
-        }:
-            fail(f"endpoint difference arithmetic differs: {route_id}")
-        if (
-            _confusion_total(action["confusion"]) != items
+            _confusion_total(raw["confusion"]) != items
+            or _confusion_total(registered["confusion"]) != items
             or _confusion_total(contract["confusion"]) != items
-            or int(action["covered_pairs"]) > pairs
+            or int(raw["covered_pairs"]) > pairs
+            or int(registered["covered_pairs"]) > pairs
             or int(contract["valid_pairs"]) > pairs
         ):
             fail(f"confusion or pair totals differ: {route_id}")
-
-    expected_differences = {
-        "challenge-deepseek-flash-host-schema": (15, 6),
-        "challenge-qwen-host-prompt": (0, 0),
-        "slsa-deepseek-flash-host-schema": (2, 2),
-        "slsa-qwen-host-prompt": (32, 32),
-    }
-    for route_id, (items, pairs) in expected_differences.items():
-        difference = by_id[route_id]["metrics"]["endpoint_difference"]
         if (
-            difference["action_correct_items_outside_full_contract"] != items
-            or difference["additional_action_correct_pairs"] != pairs
+            int(registered["extractable_items"]) != int(contract["valid_items"])
+            or int(registered["correct_items"]) != int(contract["action_correct_items"])
+            or int(registered["covered_pairs"]) != int(contract["valid_pairs"])
+            or int(registered["correct_pairs"]) != int(contract["action_correct_pairs"])
         ):
-            fail(f"registered endpoint finding differs: {route_id}")
+            fail(f"registered parser and current full-contract records differ: {route_id}")
+        if sum(int(value) for value in metrics["raw_strict_source_counts"].values()) != items:
+            fail(f"raw-strict provenance total differs: {route_id}")
+        if (
+            sum(int(value) for value in metrics["registered_parser_provenance_counts"].values())
+            != items
+        ):
+            fail(f"registered-parser provenance total differs: {route_id}")
+
+    expected_raw_strict = {
+        "challenge-deepseek-flash-host-schema": (180, 105, 90, 19),
+        "challenge-qwen-host-prompt": (143, 128, 61, 46),
+        "slsa-deepseek-flash-host-schema": (110, 110, 51, 51),
+        "slsa-qwen-host-prompt": (120, 120, 60, 60),
+    }
+    for route_id, expected in expected_raw_strict.items():
+        raw = by_id[route_id]["metrics"]["raw_strict_action"]
+        observed = tuple(
+            int(raw[field])
+            for field in ("extractable_items", "correct_items", "covered_pairs", "correct_pairs")
+        )
+        if observed != expected:
+            fail(f"raw-strict endpoint finding differs: {route_id}")
+
+    overlap_totals = {
+        key: sum(int(route["metrics"]["endpoint_overlap"][key]) for route in routes)
+        for key in (
+            "raw_strict_extractable_outside_full_contract",
+            "raw_strict_correct_items_outside_full_contract",
+            "raw_strict_correct_pairs_outside_full_contract",
+            "full_contract_extractable_outside_raw_strict",
+            "full_contract_correct_items_outside_raw_strict",
+            "full_contract_correct_pairs_outside_raw_strict",
+        )
+    }
+    if overlap_totals != {
+        "raw_strict_extractable_outside_full_contract": 69,
+        "raw_strict_correct_items_outside_full_contract": 49,
+        "raw_strict_correct_pairs_outside_full_contract": 40,
+        "full_contract_extractable_outside_raw_strict": 452,
+        "full_contract_correct_items_outside_raw_strict": 329,
+        "full_contract_correct_pairs_outside_raw_strict": 78,
+    }:
+        fail("cross-endpoint overlap totals differ")
 
     for path in (root / "aggregate.json", root / "receipt.json", root / "artifact-manifest.json"):
         text = path.read_text(encoding="utf-8").lower()
@@ -147,14 +172,18 @@ def validate(root: Path = STUDY_ROOT) -> Json:
     return {
         "route_stacks": len(routes),
         "scheduled_items": sum(int(row["metrics"]["scheduled_items"]) for row in routes),
-        "action_correct_outside_contract": sum(
-            int(row["metrics"]["endpoint_difference"]["action_correct_items_outside_full_contract"])
-            for row in routes
-        ),
-        "action_correct_pairs_outside_contract": sum(
-            int(row["metrics"]["endpoint_difference"]["additional_action_correct_pairs"])
-            for row in routes
-        ),
+        "raw_strict_correct_outside_contract": overlap_totals[
+            "raw_strict_correct_items_outside_full_contract"
+        ],
+        "raw_strict_correct_pairs_outside_contract": overlap_totals[
+            "raw_strict_correct_pairs_outside_full_contract"
+        ],
+        "contract_correct_outside_raw_strict": overlap_totals[
+            "full_contract_correct_items_outside_raw_strict"
+        ],
+        "contract_correct_pairs_outside_raw_strict": overlap_totals[
+            "full_contract_correct_pairs_outside_raw_strict"
+        ],
     }
 
 
@@ -163,7 +192,7 @@ def main() -> int:
     print(
         "dual-endpoint-validation: "
         f"routes={report['route_stacks']} items={report['scheduled_items']} "
-        f"extra_correct={report['action_correct_outside_contract']}"
+        f"raw_strict_extra_correct={report['raw_strict_correct_outside_contract']}"
     )
     return 0
 
