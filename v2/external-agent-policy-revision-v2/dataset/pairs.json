@@ -1,0 +1,112 @@
+[
+  {
+    "changed": false,
+    "factor_id": "unaffected-documentation-control",
+    "family": "opa-agent-security-policy",
+    "member_ids": [
+      "agent-policy-opa-doc-edit-control-before",
+      "agent-policy-opa-doc-edit-control-after"
+    ],
+    "pair_id": "agent-policy-opa-doc-edit-control",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "exploitable-known-vulnerability-control",
+    "family": "opa-agent-security-policy",
+    "member_ids": [
+      "agent-policy-opa-flagged-known-vulnerability-control-before",
+      "agent-policy-opa-flagged-known-vulnerability-control-after"
+    ],
+    "pair_id": "agent-policy-opa-flagged-known-vulnerability-control",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "security-disclosure-routing",
+    "family": "opa-agent-security-policy",
+    "member_ids": [
+      "agent-policy-opa-new-vulnerability-before",
+      "agent-policy-opa-new-vulnerability-after"
+    ],
+    "pair_id": "agent-policy-opa-new-vulnerability",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "security-advisory-triage",
+    "family": "opa-agent-security-policy",
+    "member_ids": [
+      "agent-policy-opa-unflagged-advisory-before",
+      "agent-policy-opa-unflagged-advisory-after"
+    ],
+    "pair_id": "agent-policy-opa-unflagged-advisory",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "additive-hook-control",
+    "family": "woocommerce-agent-bc-policy",
+    "member_ids": [
+      "agent-policy-woo-additive-hook-control-before",
+      "agent-policy-woo-additive-hook-control-after"
+    ],
+    "pair_id": "agent-policy-woo-additive-hook-control",
+    "source_id": "woocommerce-agent-bc-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "public-hook-argument-removal",
+    "family": "woocommerce-agent-bc-policy",
+    "member_ids": [
+      "agent-policy-woo-hook-argument-removal-before",
+      "agent-policy-woo-hook-argument-removal-after"
+    ],
+    "pair_id": "agent-policy-woo-hook-argument-removal",
+    "source_id": "woocommerce-agent-bc-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "private-helper-control",
+    "family": "woocommerce-agent-bc-policy",
+    "member_ids": [
+      "agent-policy-woo-private-helper-control-before",
+      "agent-policy-woo-private-helper-control-after"
+    ],
+    "pair_id": "agent-policy-woo-private-helper-control",
+    "source_id": "woocommerce-agent-bc-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "public-symbol-rename",
+    "family": "woocommerce-agent-bc-policy",
+    "member_ids": [
+      "agent-policy-woo-public-symbol-rename-before",
+      "agent-policy-woo-public-symbol-rename-after"
+    ],
+    "pair_id": "agent-policy-woo-public-symbol-rename",
+    "source_id": "woocommerce-agent-bc-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "public-interface-required-method",
+    "family": "woocommerce-agent-bc-policy",
+    "member_ids": [
+      "agent-policy-woo-required-interface-method-before",
+      "agent-policy-woo-required-interface-method-after"
+    ],
+    "pair_id": "agent-policy-woo-required-interface-method",
+    "source_id": "woocommerce-agent-bc-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "unknown-bc-impact",
+    "family": "woocommerce-agent-bc-policy",
+    "member_ids": [
+      "agent-policy-woo-unknown-bc-impact-before",
+      "agent-policy-woo-unknown-bc-impact-after"
+    ],
+    "pair_id": "agent-policy-woo-unknown-bc-impact",
+    "source_id": "woocommerce-agent-bc-policy"
+  }
+]
