@@ -1,0 +1,221 @@
+{
+  "application_posts": 360,
+  "category_windows": {
+    "NETWORK": {
+      "count": 3,
+      "first_request_started_at_utc": "2026-08-25T19:21:10.194503Z",
+      "last_request_started_at_utc": "2026-08-25T19:21:10.196382Z"
+    },
+    "QUOTA_OR_BILLING_REJECTION": {
+      "count": 63,
+      "first_request_started_at_utc": "2026-08-25T19:49:27.881621Z",
+      "last_request_started_at_utc": "2026-08-25T19:49:44.282765Z"
+    },
+    "SERVER_5XX": {
+      "count": 6,
+      "first_request_started_at_utc": "2026-08-25T16:56:30.923807Z",
+      "last_request_started_at_utc": "2026-08-25T19:46:34.318229Z"
+    },
+    "TIMEOUT": {
+      "count": 4,
+      "first_request_started_at_utc": "2026-08-25T17:11:46.103525Z",
+      "last_request_started_at_utc": "2026-08-25T18:57:23.851052Z"
+    }
+  },
+  "client_retry_count": 0,
+  "correctness_fields_used": false,
+  "derived_at_utc": "2026-08-25T19:49:44.995600Z",
+  "free_form_transport_text_retained": false,
+  "gold_loaded": false,
+  "hidden_reasoning_retained": false,
+  "input_files_sha256": {
+    "execution-receipt.json": "sha256:fcb8f93ea45379c12d383ea9abf7807d6f9d5187302f3e5b3b83edc2df452797",
+    "opencode-go-glm-5.3-output-ablation-json-schema-4096.jsonl": "sha256:4c3b33c8c71dc25748e1b1e480cd4f2c9848ee7ee1ece2fa40edba6d6427c73f",
+    "opencode-go-glm-5.3-output-ablation-prompt-12288.jsonl": "sha256:0e21e769ac49d25bea3926b86ca8336cb1fde1c648f0dca89e1941d9457258ca",
+    "opencode-go-glm-5.3-output-ablation-prompt-4096.jsonl": "sha256:4768d031e1debefe0bad216996593351129513257a11cc529e98caff7432c19c",
+    "opencode-go-glm-5.3-output-ablation-prompt-8192.jsonl": "sha256:baa73111162704adabc8972d2b7a9c3e33eae827444b22d338cfafe0bae18cec",
+    "opencode-go-hy3-output-ablation-json-schema-4096.jsonl": "sha256:ef136c078bf6ca787e15d4c663f883dafbe522b95818e1242ef02678c3449e94",
+    "opencode-go-hy3-output-ablation-prompt-12288.jsonl": "sha256:6a1a862bb041e8d9ee70955ce9a0d76c8140b3268e122f68092056a0cab4e4df",
+    "opencode-go-hy3-output-ablation-prompt-4096.jsonl": "sha256:c4a7cd57c695bb6b98d8d3280c71ddfeda709e873bde0633eda18cc8f81a17fd",
+    "opencode-go-hy3-output-ablation-prompt-8192.jsonl": "sha256:4667cfbd6f9ee7418fcdc1fdac0d467aa8458ee388f2e32e5db0bd3b3814dd1e",
+    "opencode-go-qwen3.7-plus-output-ablation-json-schema-4096.jsonl": "sha256:fc551848239e522b1d67234fed749fcf1fbeded93cf03e9fe759fe1e80313f30",
+    "opencode-go-qwen3.7-plus-output-ablation-prompt-12288.jsonl": "sha256:566b47f59a0be5c24e470c4e6640dff4c0a1cf3b574e1f9b6a3304dd437cfb84",
+    "opencode-go-qwen3.7-plus-output-ablation-prompt-4096.jsonl": "sha256:2ab1b5c5458fdd30b6f6317d7cb9f1ac3b2b660b98c9a7b740afd802c590de3f",
+    "opencode-go-qwen3.7-plus-output-ablation-prompt-8192.jsonl": "sha256:7b0807faa892ce871e8c3dcf1bb4032df078d91f73c216e9ba43aaa4d6b1a15b",
+    "request-schedule.json": "sha256:9029868d2be73ea0b8c3a2a063ff84f95dd83ca1cc49ba1ca5fef82aa96b1e06"
+  },
+  "interpretation": "These posthoc categories describe transport outcomes for frozen cells. They preserve the endpoint, schedule, and end-to-end denominator and do not repair or rescore a response.",
+  "lanes": [
+    {
+      "condition_id": "json-schema-4096",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-json-schema-4096",
+      "model_requested": "glm-5.3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 6
+      }
+    },
+    {
+      "condition_id": "prompt-12288",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-prompt-12288",
+      "model_requested": "glm-5.3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "NETWORK": 1,
+        "QUOTA_OR_BILLING_REJECTION": 5
+      }
+    },
+    {
+      "condition_id": "prompt-4096",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-prompt-4096",
+      "model_requested": "glm-5.3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 5
+      }
+    },
+    {
+      "condition_id": "prompt-8192",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-prompt-8192",
+      "model_requested": "glm-5.3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 5
+      }
+    },
+    {
+      "condition_id": "json-schema-4096",
+      "lane_id": "opencode-go-hy3-output-ablation-json-schema-4096",
+      "model_requested": "hy3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 6
+      }
+    },
+    {
+      "condition_id": "prompt-12288",
+      "lane_id": "opencode-go-hy3-output-ablation-prompt-12288",
+      "model_requested": "hy3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "NETWORK": 1,
+        "QUOTA_OR_BILLING_REJECTION": 5
+      }
+    },
+    {
+      "condition_id": "prompt-4096",
+      "lane_id": "opencode-go-hy3-output-ablation-prompt-4096",
+      "model_requested": "hy3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 5
+      }
+    },
+    {
+      "condition_id": "prompt-8192",
+      "lane_id": "opencode-go-hy3-output-ablation-prompt-8192",
+      "model_requested": "hy3",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 5,
+        "SERVER_5XX": 1
+      }
+    },
+    {
+      "condition_id": "json-schema-4096",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-json-schema-4096",
+      "model_requested": "qwen3.7-plus",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 6,
+        "TIMEOUT": 1
+      }
+    },
+    {
+      "condition_id": "prompt-12288",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-prompt-12288",
+      "model_requested": "qwen3.7-plus",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "NETWORK": 1,
+        "QUOTA_OR_BILLING_REJECTION": 5,
+        "SERVER_5XX": 3
+      }
+    },
+    {
+      "condition_id": "prompt-4096",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-prompt-4096",
+      "model_requested": "qwen3.7-plus",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 5,
+        "SERVER_5XX": 1,
+        "TIMEOUT": 1
+      }
+    },
+    {
+      "condition_id": "prompt-8192",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-prompt-8192",
+      "model_requested": "qwen3.7-plus",
+      "scheduled_cells": 30,
+      "transport_failure_categories": {
+        "QUOTA_OR_BILLING_REJECTION": 5,
+        "SERVER_5XX": 1,
+        "TIMEOUT": 2
+      }
+    }
+  ],
+  "provider_response_identifiers_retained": false,
+  "raw_response_text_retained": false,
+  "registered_primary_contrast_quota_balance": [
+    {
+      "conditions": [
+        "prompt-4096",
+        "prompt-12288"
+      ],
+      "model_requested": "glm-5.3",
+      "quota_rejections_per_condition": [
+        5,
+        5
+      ],
+      "rejected_item_sets_equal": true
+    },
+    {
+      "conditions": [
+        "prompt-4096",
+        "prompt-12288"
+      ],
+      "model_requested": "hy3",
+      "quota_rejections_per_condition": [
+        5,
+        5
+      ],
+      "rejected_item_sets_equal": true
+    },
+    {
+      "conditions": [
+        "prompt-4096",
+        "prompt-12288"
+      ],
+      "model_requested": "qwen3.7-plus",
+      "quota_rejections_per_condition": [
+        5,
+        5
+      ],
+      "rejected_item_sets_equal": true
+    }
+  ],
+  "response_repair_or_rescoring_performed": false,
+  "scheduled_cells": 360,
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:b67c01884b5a56ba1e0234df1c98e877afc72973db8d75778e61675c29f8821b",
+  "status": "POSTHOC_CONTENT_FREE_TRANSPORT_DIAGNOSTIC",
+  "study_id": "claimpromotebench-output-contract-ablation-2026-08-v1",
+  "transport_failure_categories": {
+    "NETWORK": 3,
+    "QUOTA_OR_BILLING_REJECTION": 63,
+    "SERVER_5XX": 6,
+    "TIMEOUT": 4
+  },
+  "transport_failures": 76
+}

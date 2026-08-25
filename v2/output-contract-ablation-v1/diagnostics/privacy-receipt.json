@@ -1,0 +1,13 @@
+{
+  "account_markers_retained": false,
+  "credentials_retained": false,
+  "free_form_transport_text_retained": false,
+  "hidden_reasoning_retained": false,
+  "provider_response_identifiers_retained": false,
+  "raw_response_text_retained": false,
+  "scanned_file": "transport-diagnostics.json",
+  "scanned_file_sha256": "sha256:f1ebd12c0e67779c6d1ee830fde39ca0e8c6a1334d13a656f825f83053a51400",
+  "schema_version": "1.0.0",
+  "status": "CONTENT_FREE_TRANSPORT_DIAGNOSTIC_PRIVACY_PASS",
+  "study_id": "claimpromotebench-output-contract-ablation-2026-08-v1"
+}

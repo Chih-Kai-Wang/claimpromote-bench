@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from derive_output_contract_transport_diagnostics import classify_transport  # noqa: E402
 from review_gap_experiments import (  # noqa: E402
     MODELS,
     NONALLOW_CASES,
@@ -152,3 +153,11 @@ def test_runner_lane_publication_uses_frozen_selected_item_count() -> None:
     nonallow_schedule = json.loads((NONALLOW_ROOT / "request-schedule.json").read_text())
     assert expected_records_per_lane(output_schedule) == 30
     assert expected_records_per_lane(nonallow_schedule) == 16
+
+
+def test_output_contract_transport_diagnostic_uses_content_free_categories() -> None:
+    assert classify_transport("HTTP 402: usage limit reached") == "QUOTA_OR_BILLING_REJECTION"
+    assert classify_transport("HTTP 503: service unavailable") == "SERVER_5XX"
+    assert classify_transport("The read operation timed out") == "TIMEOUT"
+    assert classify_transport("connection reset by peer") == "NETWORK"
+    assert classify_transport("unrecognized transport failure") == "OTHER_TRANSPORT_ERROR"

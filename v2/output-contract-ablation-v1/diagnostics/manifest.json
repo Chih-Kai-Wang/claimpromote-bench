@@ -1,0 +1,12 @@
+{
+  "file_count": 3,
+  "files_sha256": {
+    "privacy-receipt.json": "sha256:56fa454aa5abfe3c883b5732642a1b3b618462dbe8b2248491c455d2047ea2bf",
+    "transport-diagnostics.json": "sha256:f1ebd12c0e67779c6d1ee830fde39ca0e8c6a1334d13a656f825f83053a51400"
+  },
+  "hashed_file_count": 2,
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:4f757037670022f27ed5c6db9c54893de459fc7ff9b67868d3ea0b9e15a3099b",
+  "status": "DYNAMIC_CONTENT_FREE_TRANSPORT_DIAGNOSTIC_MANIFEST",
+  "study_id": "claimpromotebench-output-contract-ablation-2026-08-v1"
+}
