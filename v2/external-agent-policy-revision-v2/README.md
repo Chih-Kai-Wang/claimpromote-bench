@@ -21,3 +21,21 @@ model-family ranking, or causal ablation.
 `study-plan.json`, `request-schedule.json`, `prompt-packet.json`, the source receipt, and the dataset
 form the frozen pre-inference record. Do not rerun or partially resume the schedule after execution.
 Only the privacy-safe `results/` derivative is eligible for an anonymous or future public artifact.
+
+## Completed result
+
+The frozen schedule completed all 480 cells with zero client retries. It produced 399 valid
+decisions and 81 terminal failures: 9 JSON-syntax, 46 semantic, and 26 transport failures. The
+predesignated first replication produced 132/160 valid decisions, 128/160 correct items, and 52/80
+correct pairs end to end. Among 55 complete pairs, 52 were correct. Changed-policy pairs account
+for 23/48 correct pairs end to end (23/26 conditional on both decisions); stable controls account
+for 29/32 (29/29 conditional). Three of the 26 complete changed-policy pairs returned the same
+action across policy versions.
+
+The route-level first-replication item scores range from 12/20 to 18/20 and pair scores from 4/10
+to 9/10. The rare `DEMOTE` item is recovered by six routes and missed by OX Alpha and Qwen Plus.
+Across all three repetitions, HY3 has the largest all-three correct count at 17/20 items and 7/10
+pairs. These are descriptive route-stack observations on ten frozen author-mapped pairs. The
+public result files omit prompts, raw responses, provider response identifiers, hidden reasoning,
+credentials, and account identifiers; `privacy-receipt.json` and the offline validator bind this
+claim to the released bytes.

@@ -1,0 +1,241 @@
+{
+  "application_posts": 480,
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-25T01:33:02.790679Z",
+  "credentials_retained": false,
+  "durable_request_intents": 480,
+  "durable_terminal_records": 480,
+  "frozen_plan_commit": "450892d7f92e091a0a68a9cd05b4da902cfe05a0",
+  "hidden_reasoning_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-glm-5.3-external-agent-policy-v2-r1.jsonl": "sha256:f2958f48b8038783fa14583c8fdb1df6ac9c94f67b9dca1c1c6e5c6393c7ea03",
+    "opencode-go-glm-5.3-external-agent-policy-v2-r2.jsonl": "sha256:cc1ecc4aa89247d59777b14cddf6d4281484193e092c59b8dc56a9748c405bc4",
+    "opencode-go-glm-5.3-external-agent-policy-v2-r3.jsonl": "sha256:7024946522642b74ea8581c00b8e60d16b4db1c37b729afc4fe0742ce9ebdd34",
+    "opencode-go-gpt-5.6-luna-external-agent-policy-v2-r1.jsonl": "sha256:75eb7250b97357fd9524eaccc21a03dd1fa90295669f4eed978f90ac75c64939",
+    "opencode-go-gpt-5.6-luna-external-agent-policy-v2-r2.jsonl": "sha256:df1a46d009027ba9c40fee944244cf7eae9e2bbd718d8e4a06e7f85789a90407",
+    "opencode-go-gpt-5.6-luna-external-agent-policy-v2-r3.jsonl": "sha256:88c1391fae1c1464049cc9d68e5f2f0ce88d2e85f07c1820ce8187a085782f47",
+    "opencode-go-hy3-external-agent-policy-v2-r1.jsonl": "sha256:69dd51d4a1d2236c093deff3018637d05e636e2e68a1a5a61fa8e967770f8d38",
+    "opencode-go-hy3-external-agent-policy-v2-r2.jsonl": "sha256:c595555c56397d4880b06ec67b3bca2a5a409240199bb3733c00bf22630f27bf",
+    "opencode-go-hy3-external-agent-policy-v2-r3.jsonl": "sha256:5fb35f2e4347efaae401da6fe4f942131e2cd738b86fd052af3819d0831f861a",
+    "opencode-go-kimi-k2.7-code-external-agent-policy-v2-r1.jsonl": "sha256:080b9d6895c7efd33ea7175adea9eb3c667ba57b4c425adf1fd5f07e2519762b",
+    "opencode-go-kimi-k2.7-code-external-agent-policy-v2-r2.jsonl": "sha256:d1e0f0e07c51df5b5501e0c0a010ca9c854e1f38ffb9c7c1eca2cfcf16263da7",
+    "opencode-go-kimi-k2.7-code-external-agent-policy-v2-r3.jsonl": "sha256:5382f9605aaa59578c91dcf166d688ab647739bd49950d9ccd5c6d9c8f44cef6",
+    "opencode-go-mimo-v2.5-pro-external-agent-policy-v2-r1.jsonl": "sha256:89a9b8b365f8beae0f184268eee854385918f4d066bcedd75845d7750c3ef59c",
+    "opencode-go-mimo-v2.5-pro-external-agent-policy-v2-r2.jsonl": "sha256:81ce76cae4c8ea3d2581225a2265311a8edf639bc513e500811745b1892dcb18",
+    "opencode-go-mimo-v2.5-pro-external-agent-policy-v2-r3.jsonl": "sha256:6f19e98ce87e5edd9131009178c35b1be6765c2cb9ce44be323e037fa115305a",
+    "opencode-go-minimax-m2.7-external-agent-policy-v2-r1.jsonl": "sha256:09bd402386a430c665d8b3e9393c681ccafbf6ca3f749ebeeb512ca287f50daf",
+    "opencode-go-minimax-m2.7-external-agent-policy-v2-r2.jsonl": "sha256:f79d17f62b7c3393ec1d46edee16d38dc310dfe347eaebda982cb066073892b7",
+    "opencode-go-minimax-m2.7-external-agent-policy-v2-r3.jsonl": "sha256:a55143036f5e08b2382e5e92609a2dcee0f4dcfc03a30df97fe7afd2a2f21f86",
+    "opencode-go-ox-alpha-free-external-agent-policy-v2-r1.jsonl": "sha256:d5e938e6c14c28441a669dcb718d2decf0e02c385581420e7676b9696480aca6",
+    "opencode-go-ox-alpha-free-external-agent-policy-v2-r2.jsonl": "sha256:87b0cbb5d09b6147ce2e891b0fea7848ac9c0df30cbfc7e5c74d05ce675105ee",
+    "opencode-go-ox-alpha-free-external-agent-policy-v2-r3.jsonl": "sha256:8601f2893a8cd96fc43b2b42437e45eeeb1670253c1f6127620bd129490a296e",
+    "opencode-go-qwen3.7-plus-external-agent-policy-v2-r1.jsonl": "sha256:98b5ff01c64f5d2351c1e5b8112afc6b94ae2f875513ff2f8ffec7cab27da591",
+    "opencode-go-qwen3.7-plus-external-agent-policy-v2-r2.jsonl": "sha256:953d63bff308ad1a57e9ad3af47118857ec946473e62d4c54532c79f83db82b4",
+    "opencode-go-qwen3.7-plus-external-agent-policy-v2-r3.jsonl": "sha256:6cab1c3b511bd326ee4ae710a6bc13a438ba80378e8de63eef33d63d0f51e30b"
+  },
+  "lanes": [
+    {
+      "configuration_id": "opencode-go-glm-5.3-external-agent-policy-v2",
+      "lane_id": "opencode-go-glm-5.3-external-agent-policy-v2-r1",
+      "parseable": 16,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-kimi-k2.7-code-external-agent-policy-v2",
+      "lane_id": "opencode-go-kimi-k2.7-code-external-agent-policy-v2-r1",
+      "parseable": 18,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 1
+    },
+    {
+      "configuration_id": "opencode-go-mimo-v2.5-pro-external-agent-policy-v2",
+      "lane_id": "opencode-go-mimo-v2.5-pro-external-agent-policy-v2-r1",
+      "parseable": 19,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-minimax-m2.7-external-agent-policy-v2",
+      "lane_id": "opencode-go-minimax-m2.7-external-agent-policy-v2-r1",
+      "parseable": 16,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-qwen3.7-plus-external-agent-policy-v2",
+      "lane_id": "opencode-go-qwen3.7-plus-external-agent-policy-v2-r1",
+      "parseable": 17,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-hy3-external-agent-policy-v2",
+      "lane_id": "opencode-go-hy3-external-agent-policy-v2-r1",
+      "parseable": 18,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-gpt-5.6-luna-external-agent-policy-v2",
+      "lane_id": "opencode-go-gpt-5.6-luna-external-agent-policy-v2-r1",
+      "parseable": 16,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-ox-alpha-free-external-agent-policy-v2",
+      "lane_id": "opencode-go-ox-alpha-free-external-agent-policy-v2-r1",
+      "parseable": 12,
+      "records": 20,
+      "replication": 1,
+      "transport_errors": 7
+    },
+    {
+      "configuration_id": "opencode-go-glm-5.3-external-agent-policy-v2",
+      "lane_id": "opencode-go-glm-5.3-external-agent-policy-v2-r2",
+      "parseable": 16,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-kimi-k2.7-code-external-agent-policy-v2",
+      "lane_id": "opencode-go-kimi-k2.7-code-external-agent-policy-v2-r2",
+      "parseable": 17,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 1
+    },
+    {
+      "configuration_id": "opencode-go-mimo-v2.5-pro-external-agent-policy-v2",
+      "lane_id": "opencode-go-mimo-v2.5-pro-external-agent-policy-v2-r2",
+      "parseable": 18,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-minimax-m2.7-external-agent-policy-v2",
+      "lane_id": "opencode-go-minimax-m2.7-external-agent-policy-v2-r2",
+      "parseable": 19,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-qwen3.7-plus-external-agent-policy-v2",
+      "lane_id": "opencode-go-qwen3.7-plus-external-agent-policy-v2-r2",
+      "parseable": 19,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-hy3-external-agent-policy-v2",
+      "lane_id": "opencode-go-hy3-external-agent-policy-v2-r2",
+      "parseable": 17,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-gpt-5.6-luna-external-agent-policy-v2",
+      "lane_id": "opencode-go-gpt-5.6-luna-external-agent-policy-v2-r2",
+      "parseable": 17,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-ox-alpha-free-external-agent-policy-v2",
+      "lane_id": "opencode-go-ox-alpha-free-external-agent-policy-v2-r2",
+      "parseable": 15,
+      "records": 20,
+      "replication": 2,
+      "transport_errors": 3
+    },
+    {
+      "configuration_id": "opencode-go-glm-5.3-external-agent-policy-v2",
+      "lane_id": "opencode-go-glm-5.3-external-agent-policy-v2-r3",
+      "parseable": 19,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-kimi-k2.7-code-external-agent-policy-v2",
+      "lane_id": "opencode-go-kimi-k2.7-code-external-agent-policy-v2-r3",
+      "parseable": 16,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 3
+    },
+    {
+      "configuration_id": "opencode-go-mimo-v2.5-pro-external-agent-policy-v2",
+      "lane_id": "opencode-go-mimo-v2.5-pro-external-agent-policy-v2-r3",
+      "parseable": 16,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 1
+    },
+    {
+      "configuration_id": "opencode-go-minimax-m2.7-external-agent-policy-v2",
+      "lane_id": "opencode-go-minimax-m2.7-external-agent-policy-v2-r3",
+      "parseable": 18,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-qwen3.7-plus-external-agent-policy-v2",
+      "lane_id": "opencode-go-qwen3.7-plus-external-agent-policy-v2-r3",
+      "parseable": 16,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-hy3-external-agent-policy-v2",
+      "lane_id": "opencode-go-hy3-external-agent-policy-v2-r3",
+      "parseable": 18,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-gpt-5.6-luna-external-agent-policy-v2",
+      "lane_id": "opencode-go-gpt-5.6-luna-external-agent-policy-v2-r3",
+      "parseable": 17,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-ox-alpha-free-external-agent-policy-v2",
+      "lane_id": "opencode-go-ox-alpha-free-external-agent-policy-v2-r3",
+      "parseable": 9,
+      "records": 20,
+      "replication": 3,
+      "transport_errors": 10
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 480,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": "sha256:664521675c284b25c05145b36deb44096f33f2246918a301a2bcf7a7a87e22c7",
+  "schedule_sha256": "sha256:8b68a067738b11a43e26ddda269f1664b992620c6fd141e199a5bfc9eafab395",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-25T00:39:59.100741Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-external-agent-policy-revision-2026-08-v2",
+  "terminal_journal_sha256": "sha256:d7d1d368fe95614c43f8c566222511802c4dfb37c627f46b2f4347d2b745dd4e"
+}
