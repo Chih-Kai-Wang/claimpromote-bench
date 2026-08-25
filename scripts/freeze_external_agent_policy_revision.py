@@ -410,8 +410,8 @@ def build_plan(catalog_path: Path, schedule_path: Path, schedule: Json) -> Json:
         "statistics": {
             "primary": (
                 "Replication-one end-to-end item accuracy, all-pair accuracy, changed-pair "
-                "accuracy, stable-control accuracy, decision coverage, confusion matrix, and "
-                "per-action recall."
+                "accuracy and action invariance, stable-control accuracy, decision coverage, "
+                "confusion matrix, and per-action recall."
             ),
             "secondary": (
                 "Pooled three-replication endpoints, per-replication endpoints, source-level "

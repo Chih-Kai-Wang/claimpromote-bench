@@ -105,12 +105,14 @@ def _pair_subset(
     covered = 0
     correct = 0
     exact = 0
+    same_action = 0
     for pair in selected:
         members = [str(value) for value in pair["member_ids"]]
         records = [record_by_id[item_id] for item_id in members]
         if not all(row["parse_status"] == "OK" for row in records):
             continue
         covered += 1
+        same_action += len({str(row["raw_decision"]["action"]) for row in records}) == 1
         correct += all(
             row["raw_decision"]["action"] == gold_by_id[item_id]["decision"]["action"]
             for item_id, row in zip(members, records, strict=True)
@@ -124,11 +126,14 @@ def _pair_subset(
         "covered_pairs": covered,
         "correct_action_pairs": correct,
         "exact_decision_pairs": exact,
+        "same_action_pairs": same_action,
         "pair_coverage": _rate(covered, len(selected)),
         "end_to_end_action_pair_accuracy": _rate(correct, len(selected)),
         "conditional_action_pair_accuracy": _rate(correct, covered),
         "end_to_end_exact_pair_accuracy": _rate(exact, len(selected)),
         "conditional_exact_pair_accuracy": _rate(exact, covered),
+        "end_to_end_same_action_pair_rate": _rate(same_action, len(selected)),
+        "conditional_same_action_pair_rate": _rate(same_action, covered),
     }
 
 
@@ -198,16 +203,20 @@ def combine_metrics(metrics: list[Json]) -> Json:
         covered = sum(int(row["covered_pairs"]) for row in rows)
         correct = sum(int(row["correct_action_pairs"]) for row in rows)
         exact = sum(int(row["exact_decision_pairs"]) for row in rows)
+        same_action = sum(int(row["same_action_pairs"]) for row in rows)
         return {
             "pairs": pairs,
             "covered_pairs": covered,
             "correct_action_pairs": correct,
             "exact_decision_pairs": exact,
+            "same_action_pairs": same_action,
             "pair_coverage": _rate(covered, pairs),
             "end_to_end_action_pair_accuracy": _rate(correct, pairs),
             "conditional_action_pair_accuracy": _rate(correct, covered),
             "end_to_end_exact_pair_accuracy": _rate(exact, pairs),
             "conditional_exact_pair_accuracy": _rate(exact, covered),
+            "end_to_end_same_action_pair_rate": _rate(same_action, pairs),
+            "conditional_same_action_pair_rate": _rate(same_action, covered),
         }
 
     source_ids = [str(row["source_id"]) for row in metrics[0]["source_metrics"]]
@@ -221,6 +230,7 @@ def combine_metrics(metrics: list[Json]) -> Json:
         covered = sum(int(row["covered_pairs"]) for row in rows)
         correct = sum(int(row["correct_action_pairs"]) for row in rows)
         exact = sum(int(row["exact_decision_pairs"]) for row in rows)
+        same_action = sum(int(row["same_action_pairs"]) for row in rows)
         source_metrics.append(
             {
                 "source_id": source_id,
@@ -228,11 +238,14 @@ def combine_metrics(metrics: list[Json]) -> Json:
                 "covered_pairs": covered,
                 "correct_action_pairs": correct,
                 "exact_decision_pairs": exact,
+                "same_action_pairs": same_action,
                 "pair_coverage": _rate(covered, pairs),
                 "end_to_end_action_pair_accuracy": _rate(correct, pairs),
                 "conditional_action_pair_accuracy": _rate(correct, covered),
                 "end_to_end_exact_pair_accuracy": _rate(exact, pairs),
                 "conditional_exact_pair_accuracy": _rate(exact, covered),
+                "end_to_end_same_action_pair_rate": _rate(same_action, pairs),
+                "conditional_same_action_pair_rate": _rate(same_action, covered),
             }
         )
     return {

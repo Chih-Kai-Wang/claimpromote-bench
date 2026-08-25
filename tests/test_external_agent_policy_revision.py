@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from analyze_external_agent_policy_revision import _pair_subset  # noqa: E402
 from external_agent_policy_revision import (  # noqa: E402
     CASES,
     CONFIGURATIONS,
@@ -84,6 +85,37 @@ def test_external_policy_prompt_has_distinct_complete_action_semantics() -> None
     assert "blocks it" in prompt
     assert "blocks or deprioritizes" not in prompt
     assert "ESCALATE, then HOLD, then DEMOTE, then ALLOW" in prompt
+
+
+def test_external_policy_pair_metrics_expose_version_invariant_actions() -> None:
+    pairs = [
+        {
+            "pair_id": "changed",
+            "source_id": "source",
+            "changed": True,
+            "member_ids": ["changed-before", "changed-after"],
+        },
+        {
+            "pair_id": "stable",
+            "source_id": "source",
+            "changed": False,
+            "member_ids": ["stable-before", "stable-after"],
+        },
+    ]
+    gold = {
+        "changed-before": {"decision": {"action": "ALLOW"}},
+        "changed-after": {"decision": {"action": "HOLD"}},
+        "stable-before": {"decision": {"action": "ALLOW"}},
+        "stable-after": {"decision": {"action": "ALLOW"}},
+    }
+    records = {
+        item_id: {"parse_status": "OK", "raw_decision": {"action": "ALLOW"}} for item_id in gold
+    }
+    changed = _pair_subset(pairs, gold, records, changed=True)
+    stable = _pair_subset(pairs, gold, records, changed=False)
+    assert changed["same_action_pairs"] == 1
+    assert changed["correct_action_pairs"] == 0
+    assert stable["same_action_pairs"] == stable["correct_action_pairs"] == 1
 
 
 def test_external_policy_schedule_is_complete_balanced_and_below_quota() -> None:
