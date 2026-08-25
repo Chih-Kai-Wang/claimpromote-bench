@@ -15,3 +15,16 @@ The study compares route configurations descriptively. It does not isolate model
 provider, API adapter, serving state, time, or output implementation, and it is not hidden-test or
 deployment evidence. Raw final responses remain in the private development repository. Only
 privacy-scanned terminal records and aggregates may enter an anonymous or future public bundle.
+
+The frozen schedule completed on 2026-08-25 with 630 terminal records from 630 application posts,
+zero client retries, and no partial resume. The privacy-safe derivative contains 319 valid
+decisions, 194 JSON syntax failures, 87 schema failures, eight semantic failures, and 22 transport
+failures. Of the 194 syntax failures, 193 ended at the route's length limit; 86 of the 87 schema
+failures also ended at a length or token limit. These are terminal route outcomes and remain
+incorrect in every end-to-end denominator.
+
+Analysis and result validation ran from a detached Git worktree at the frozen plan commit. The
+current branch had extended the freeze helper for the subsequent external-policy study while this
+schedule was running, so its runtime-source hash check correctly rejected the newer helper. The
+analyzer and both result validators are byte-identical to their frozen versions. The compatibility
+receipt records this boundary; no check was disabled and no request was reissued.

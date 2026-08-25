@@ -1,0 +1,214 @@
+{
+  "application_posts": 630,
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-25T00:20:30.974357Z",
+  "credentials_retained": false,
+  "durable_request_intents": 630,
+  "durable_terminal_records": 630,
+  "frozen_plan_commit": "d25172929bfea74a1bd48a44d75972e30834fadd",
+  "hidden_reasoning_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-glm-5.3-factor-v2-r1.jsonl": "sha256:9e4cfde473d3e999041b6f1794ddb7b232a872f16df8f852bf726f6c4dedb012",
+    "opencode-go-glm-5.3-factor-v2-r2.jsonl": "sha256:08497b9acb118b1f46da9a76a516f4a7727024dae49b7ad1b3e71a06471abf74",
+    "opencode-go-glm-5.3-factor-v2-r3.jsonl": "sha256:039d8d0f0c0f15cdc5d83953e1bb4d2b12123f3b3d2e36ca0327fe98f32c0463",
+    "opencode-go-gpt-5.6-luna-factor-v2-r1.jsonl": "sha256:f623760dca3ad9beac748de0b8e16575f8d2eecf1caeba65e7387d883541ac29",
+    "opencode-go-gpt-5.6-luna-factor-v2-r2.jsonl": "sha256:e16bba0519483b25cb8f4b84020b10d59cf7f390a4386fb3213d3962ee160ef9",
+    "opencode-go-gpt-5.6-luna-factor-v2-r3.jsonl": "sha256:390302c2e2c8f26838a2c632dcb37bb99ca4ef004056f61b0b4bff08051b6717",
+    "opencode-go-hy3-factor-v2-r1.jsonl": "sha256:39d3196133293aec3b997a364d1de2dce0af5aebf64c5c22d48bd44f933f15ac",
+    "opencode-go-hy3-factor-v2-r2.jsonl": "sha256:a7dd89ec07285082ce235fb54888dda9cea46e39654a4d44923b9b63db27623c",
+    "opencode-go-hy3-factor-v2-r3.jsonl": "sha256:9ef8e1ed9ff2575c6ccebdb0f35fbe5d77977938b5e3a1671c8d3f9added3d65",
+    "opencode-go-kimi-k2.7-code-factor-v2-r1.jsonl": "sha256:27de41a60a172bf1e68045686a7ffa4f9c0cb90b4399bbffca206281fbc875f8",
+    "opencode-go-kimi-k2.7-code-factor-v2-r2.jsonl": "sha256:decd1b1c51441404a792263ae1e6a9cca50edd6a87739e8f53c9ab4976c4633a",
+    "opencode-go-kimi-k2.7-code-factor-v2-r3.jsonl": "sha256:d9a3cbb15d233c71237af8701191c45e1f7bd927b227428131bf2d0a662a4feb",
+    "opencode-go-mimo-v2.5-pro-factor-v2-r1.jsonl": "sha256:03a5556fd90b48ae9d48ff6988c32cf181a3a71355708c5627de954034f582be",
+    "opencode-go-mimo-v2.5-pro-factor-v2-r2.jsonl": "sha256:b54e7d5c4dc56687018f397bf7821a9334edd7546017f41159db1361812943cf",
+    "opencode-go-mimo-v2.5-pro-factor-v2-r3.jsonl": "sha256:92191ac66243c56452cca52e80bfaf04adfdd9d7dce32bdf7d808903ba5302e3",
+    "opencode-go-minimax-m2.7-factor-v2-r1.jsonl": "sha256:93142395c25a2a20039117be91781d2b8d30a3c9fad4d1b7122fc5fc6d60d2c2",
+    "opencode-go-minimax-m2.7-factor-v2-r2.jsonl": "sha256:fc95626b1ba8c68488ed96a35c950e45906e0c409018c88dfc2a5c03d42f2174",
+    "opencode-go-minimax-m2.7-factor-v2-r3.jsonl": "sha256:789f56477a84a5b7110695e17331e5f3fbcb6405a796b9e5394a7a93cef16de6",
+    "opencode-go-qwen3.7-plus-factor-v2-r1.jsonl": "sha256:b1dca5b912370e536da8d2381e612cddfdeb6cf62aec95bccdb03d0939f65bed",
+    "opencode-go-qwen3.7-plus-factor-v2-r2.jsonl": "sha256:4993be4f8dae4fb179c7871370fd43736a86beb3a07e05b815ddf989ff808d91",
+    "opencode-go-qwen3.7-plus-factor-v2-r3.jsonl": "sha256:4d0f632e464527fe75e9ef6275f0cf5611cb57019dfeb1b6efde5b62c6d9b323"
+  },
+  "lanes": [
+    {
+      "configuration_id": "opencode-go-glm-5.3-factor-v2",
+      "lane_id": "opencode-go-glm-5.3-factor-v2-r1",
+      "parseable": 9,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-kimi-k2.7-code-factor-v2",
+      "lane_id": "opencode-go-kimi-k2.7-code-factor-v2-r1",
+      "parseable": 16,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-mimo-v2.5-pro-factor-v2",
+      "lane_id": "opencode-go-mimo-v2.5-pro-factor-v2-r1",
+      "parseable": 16,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-minimax-m2.7-factor-v2",
+      "lane_id": "opencode-go-minimax-m2.7-factor-v2-r1",
+      "parseable": 9,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-qwen3.7-plus-factor-v2",
+      "lane_id": "opencode-go-qwen3.7-plus-factor-v2-r1",
+      "parseable": 27,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 3
+    },
+    {
+      "configuration_id": "opencode-go-hy3-factor-v2",
+      "lane_id": "opencode-go-hy3-factor-v2-r1",
+      "parseable": 3,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-gpt-5.6-luna-factor-v2",
+      "lane_id": "opencode-go-gpt-5.6-luna-factor-v2-r1",
+      "parseable": 29,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-glm-5.3-factor-v2",
+      "lane_id": "opencode-go-glm-5.3-factor-v2-r2",
+      "parseable": 8,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-kimi-k2.7-code-factor-v2",
+      "lane_id": "opencode-go-kimi-k2.7-code-factor-v2-r2",
+      "parseable": 12,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 7
+    },
+    {
+      "configuration_id": "opencode-go-mimo-v2.5-pro-factor-v2",
+      "lane_id": "opencode-go-mimo-v2.5-pro-factor-v2-r2",
+      "parseable": 15,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 1
+    },
+    {
+      "configuration_id": "opencode-go-minimax-m2.7-factor-v2",
+      "lane_id": "opencode-go-minimax-m2.7-factor-v2-r2",
+      "parseable": 12,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-qwen3.7-plus-factor-v2",
+      "lane_id": "opencode-go-qwen3.7-plus-factor-v2-r2",
+      "parseable": 26,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 3
+    },
+    {
+      "configuration_id": "opencode-go-hy3-factor-v2",
+      "lane_id": "opencode-go-hy3-factor-v2-r2",
+      "parseable": 2,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-gpt-5.6-luna-factor-v2",
+      "lane_id": "opencode-go-gpt-5.6-luna-factor-v2-r2",
+      "parseable": 29,
+      "records": 30,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-glm-5.3-factor-v2",
+      "lane_id": "opencode-go-glm-5.3-factor-v2-r3",
+      "parseable": 9,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-kimi-k2.7-code-factor-v2",
+      "lane_id": "opencode-go-kimi-k2.7-code-factor-v2-r3",
+      "parseable": 13,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 2
+    },
+    {
+      "configuration_id": "opencode-go-mimo-v2.5-pro-factor-v2",
+      "lane_id": "opencode-go-mimo-v2.5-pro-factor-v2-r3",
+      "parseable": 17,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 1
+    },
+    {
+      "configuration_id": "opencode-go-minimax-m2.7-factor-v2",
+      "lane_id": "opencode-go-minimax-m2.7-factor-v2-r3",
+      "parseable": 8,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 2
+    },
+    {
+      "configuration_id": "opencode-go-qwen3.7-plus-factor-v2",
+      "lane_id": "opencode-go-qwen3.7-plus-factor-v2-r3",
+      "parseable": 27,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 3
+    },
+    {
+      "configuration_id": "opencode-go-hy3-factor-v2",
+      "lane_id": "opencode-go-hy3-factor-v2-r3",
+      "parseable": 3,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "configuration_id": "opencode-go-gpt-5.6-luna-factor-v2",
+      "lane_id": "opencode-go-gpt-5.6-luna-factor-v2-r3",
+      "parseable": 29,
+      "records": 30,
+      "replication": 3,
+      "transport_errors": 0
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 630,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": "sha256:d1ad4bce5da622a7e16be4e0a085684fee9b8daba12fec7a75127087a93a215c",
+  "schedule_sha256": "sha256:7c1888c136b8a131a7e536e030c12331781a538a911ea175c9bdb48b55360484",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-24T21:52:29.404734Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-v2-factor-complete-route-breadth-2026-08-v2",
+  "terminal_journal_sha256": "sha256:b43b01ffe5feb9d5c39b071af23bf31197bfb36e6672713122d10ef2a521ee4c"
+}
