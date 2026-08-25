@@ -3,7 +3,9 @@
 This file is the copy-ready metadata source for ICLR and arXiv. It does not authorize an upload.
 The author must compare every field with the final server-built preview.
 
-No OpenReview submission ID, arXiv ID, DOI, or archival identifier exists yet.
+The ICLR 2027 OpenReview submission was created on 2026-08-25 with note ID
+`8JTLEHqGRl` and submission number `4338`. No arXiv ID, DOI, or other archival identifier exists
+yet. See `docs/submissions/2026-08-25-iclr2027-openreview.md` for the private submission receipt.
 
 ## ICLR 2027 title
 
@@ -131,11 +133,14 @@ Use the complete AI Assistance Disclosure from the manuscript in venue forms.
 
 ## Account-side checklist
 
-- [ ] OpenReview profile, conflicts, author list, and institutional domains are current.
-- [ ] Title and abstract match the final anonymous PDF.
-- [ ] Venue topics match the paper's bounded scope.
-- [ ] Ethics and AI-use acknowledgements are complete.
-- [ ] Anonymous PDF and supplementary previews contain no identity or provenance leak.
+- [x] OpenReview profile, author list, and institutional domain were confirmed at submission time.
+  Conflict information remains an account-side responsibility throughout review.
+- [x] Title and abstract match the final anonymous PDF.
+- [x] The primary area and keywords match the paper's bounded scope.
+- [x] Ethics and AI-use acknowledgements are complete.
+- [x] The locally validated anonymous PDF and supplementary bundle were uploaded; OpenReview
+  exposed both attachment links and rendered the PDF. The authenticated server bytes were not
+  independently rehashed after upload.
 - [ ] The server-built PDF is downloaded and inspected page by page.
 - [ ] arXiv author, affiliation, title, abstract, categories, and source archive are verified.
 - [ ] No submission, merge, public release, or ready-for-review transition occurs without explicit
