@@ -1,18 +1,18 @@
 # ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision
 
-ClaimPromoteBench enumerates the behavioral difference between two caller-supplied executable
-policy evaluators and creates paired tests for a model-service boundary. Each pair holds the
-complete context fixed, changes only the policy version, and requires the prescribed action to
-change.
+ClaimPromoteBench turns versioned policy changes into paired tests for a model-service boundary.
+For executable policies, it enumerates the behavioral difference between two caller-supplied
+evaluators. For versioned prose, it binds immutable source versions to a declared action mapping.
+Changed pairs hold the request fixed and require the prescribed action to change; stable controls
+test whether the route reacts indiscriminately to a source update.
 
 The benchmark is a synthetic, policy-constrained evaluation. Its claims concern finite authored
 context grammars and time-stamped route stacks. A direct deterministic executor remains the
 preferred enforcement path when an application can call the policy itself.
 
-Six historical revisions across five public projects ground the failure model. Microsoft Agent
-Governance Toolkit and agentgateway add independently authored policy and guardrail-adapter faults
-at agent or model boundaries. These cases validate boundary-fault classes; they do not estimate
-deployment prevalence or naturalistic model interpretation.
+Eight public histories ground the tested fault classes. Two independently authored `AGENTS.md`
+revisions provide model-facing policy sources. The study authors map ten frozen scenarios to finite
+actions under the pinned source versions; no human annotation enters the evaluation.
 
 ## What the enumerator and reducer produce
 
@@ -53,8 +53,10 @@ terminal errors. Conditional metrics are reported beside the corresponding cover
 
 | Instrument | Evidence role | Size | Main certificate or result |
 |---|---|---:|---|
-| Gatekeeper revisions | central source-traceable policy study | 12 pairs | 2/2 rules, 2/2 edges, two-pair minimum |
-| Gatekeeper repeated routes | central model-service study | 144 calls | three repetitions on each of two routes |
+| OPA and Woo `AGENTS.md` revisions | external model-facing policy study | 10 pairs; 8 routes | changed and stable source-version tests |
+| Matched factor-complete routes | route-interface diagnostic | 15 pairs; 7 routes | full factor support and three repetitions |
+| Gatekeeper revisions | executable policy study | 12 pairs | 2/2 rules, 2/2 edges, two-pair minimum |
+| Gatekeeper repeated routes | executable-policy route study | 144 calls | three repetitions on each of two routes |
 | Trivy KCV0030 | independent policy-fault reproduction | 4 cases | inverted predicate, two transition directions |
 | Cosign Rego verifier | independent interface-fault reproduction | 6 cases | four documented verifier fault modes |
 | Agent Governance Toolkit | agent-policy interface reproduction | 2 cases | 11/15 parent versus 15/15 fixed upstream tests |
@@ -71,26 +73,36 @@ minimum-suite certificates are stored under:
 - `v2/sigstore-policy-verifier-revision-v1/`
 - `v2/agent-governance-policy-interface-revision-v1/`
 - `v2/external-evidence-audit-v1/`
+- `v2/external-agent-policy-revision-v2/`
 
-## Central repeated-route result
+## Model-facing policy result
 
-The Gatekeeper schedule contains 24 items per repetition, three repetitions per route, one request
-per cell, zero client retries, and a 180-second timeout.
+Two public `AGENTS.md` histories contribute six changed pairs and four stable controls. Eight hosted
+routes receive the same 20 items for three repetitions: 480 calls, one request per cell, and zero
+client retries.
 
-| Route | Raw-strict action | Full decision | Raw-strict pair | Full pair |
+| Scope | Valid | E2E item | E2E pair | Conditional item/pair |
 |---|---:|---:|---:|---:|
-| DeepSeek Flash | 53/72 | 52/72 | 21/36 | 20/36 |
-| Qwen | 10/72 | 10/72 | 0/36 | 0/36 |
+| Designated first replication | 132/160 | 128/160 | 52/80 | 128/132; 52/55 |
+| All three repetitions | 399/480 | 387/480 | 158/240 | 387/399; 158/169 |
 
-All 63 raw-strict actions match OPA. The remaining 81 cells comprise 12 read timeouts and 69
-serialization or output-envelope failures. The content-free diagnostic is
-`v2/upstream-policy-route-repetition-v1/diagnostics/failure-modes.json`.
+In the designated first replication, changed pairs score 23/48 end to end and 23/26 conditionally;
+stable controls score 29/32 and 29/29. The pooled 81 terminal failures comprise 26 server-side
+transport failures, nine length-terminated JSON failures, and 46 action/reason-code conflicts.
+Failed outputs never enter decision counts and remain errors in end-to-end denominators.
 
-The two model IDs use the same provider, base URL, OpenAI-compatible API, prompt-only output mode,
-and adapter settings. Provider-side serving internals are opaque. The results are descriptive route
-measurements.
+The matched factor diagnostic sends one balanced-challenge pair for each of 15 registered factors
+to seven routes. First-replication coverage spans 3/30 to 29/30 valid decisions and 0/15 to 11/15
+correct pairs. Across all 630 calls, a length or token limit accompanies 280/281 syntax and schema
+failures. These measurements describe complete route stacks; provider-side serving internals remain
+opaque.
 
 ## Auxiliary evidence-state results
+
+The executable-policy repetition sends 24 Gatekeeper items to two routes three times. Flash reaches
+53/72 raw-strict actions and 21/36 pairs; Qwen reaches 10/72 and 0/36. All 63 extracted actions match
+the executable oracle. The other cells comprise 12 read timeouts and 69 serialization or
+output-envelope failures.
 
 R6 Qwen returns 272/300 contract-valid decisions. Its end-to-end item/pair scores are 258/300 and
 113/150, compared with 258/272 and 113/123 conditional. The historical r6 Flash path returned HTTP

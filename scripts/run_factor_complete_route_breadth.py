@@ -243,7 +243,7 @@ def main() -> int:
     schedule_path = args.schedule.resolve()
     frozen_commit = args.frozen_plan_commit.lower()
     verify_frozen_plan(plan_path, frozen_commit)
-    validate_study(plan_path, schedule_path)
+    validate_study(plan_path, schedule_path, frozen_plan_commit=frozen_commit)
     plan = load_json(plan_path)
     schedule = load_json(schedule_path)
     packet = load_json(PACKET_PATH)

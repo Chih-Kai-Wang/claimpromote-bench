@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import re
+import subprocess
 import sys
 from collections import Counter
 from copy import deepcopy
@@ -36,13 +38,31 @@ from claimpromotebench.dataset import load_json, load_jsonl  # noqa: E402
 from claimpromotebench.hashing import canonical_json, sha256_bytes, sha256_file  # noqa: E402
 
 Json = dict[str, Any]
+_COMMIT_RE = re.compile(r"[0-9a-f]{40}")
 
 
 def fail(message: str) -> None:
     raise ValueError(f"factor-complete route-breadth validation: {message}")
 
 
-def validate_study(plan_path: Path, schedule_path: Path) -> Json:
+def git_blob_sha256(commit: str, relative: str) -> str:
+    result = subprocess.run(
+        ["git", "show", f"{commit}:{relative}"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        fail(f"cannot read frozen source from commit: {relative}")
+    return sha256_bytes(result.stdout)
+
+
+def validate_study(
+    plan_path: Path,
+    schedule_path: Path,
+    *,
+    frozen_plan_commit: str | None = None,
+) -> Json:
     plan = load_json(plan_path)
     schedule = load_json(schedule_path)
     packet = load_json(PACKET_PATH)
@@ -276,9 +296,28 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
     runtime_hashes = plan.get("runtime_source_sha256")
     if not isinstance(runtime_hashes, dict) or not runtime_hashes:
         fail("runtime source registry is missing")
-    for relative, expected_hash in runtime_hashes.items():
-        if sha256_file(ROOT / relative) != expected_hash:
-            fail(f"runtime source changed after freeze: {relative}")
+    changed_sources = [
+        relative
+        for relative, expected_hash in runtime_hashes.items()
+        if sha256_file(ROOT / relative) != expected_hash
+    ]
+    source_validation = "CURRENT_WORKTREE"
+    if changed_sources:
+        if frozen_plan_commit is None:
+            fail(f"runtime source changed after freeze: {changed_sources[0]}")
+        if _COMMIT_RE.fullmatch(frozen_plan_commit) is None:
+            fail(f"runtime source changed after freeze: {changed_sources[0]}")
+        for bound_path in (plan_path, schedule_path):
+            try:
+                relative = bound_path.relative_to(ROOT).as_posix()
+            except ValueError:
+                fail(f"frozen artifact is outside the repository: {bound_path}")
+            if git_blob_sha256(frozen_plan_commit, relative) != sha256_file(bound_path):
+                fail(f"frozen commit does not bind current artifact: {relative}")
+        for relative, expected_hash in runtime_hashes.items():
+            if git_blob_sha256(frozen_plan_commit, relative) != expected_hash:
+                fail(f"frozen commit source digest changed: {relative}")
+        source_validation = "FROZEN_COMMIT"
     return {
         "status": "FACTOR_COMPLETE_ROUTE_BREADTH_FREEZE_VALID",
         "study_id": STUDY_ID,
@@ -289,6 +328,7 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
         "cells": 630,
         "quota_upper_bound_usd": expected_upper,
         "schedule_sha256": observed_schedule_sha,
+        "runtime_source_validation": source_validation,
         "credentials_loaded": False,
     }
 
@@ -303,8 +343,17 @@ def main() -> int:
         type=Path,
         default=ROOT / "v2/factor-complete-route-breadth-v2/request-schedule.json",
     )
+    parser.add_argument("--frozen-plan-commit")
     args = parser.parse_args()
-    print(canonical_json(validate_study(args.plan.resolve(), args.schedule.resolve())))
+    print(
+        canonical_json(
+            validate_study(
+                args.plan.resolve(),
+                args.schedule.resolve(),
+                frozen_plan_commit=args.frozen_plan_commit,
+            )
+        )
+    )
     return 0
 
 

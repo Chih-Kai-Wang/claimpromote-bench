@@ -7,6 +7,7 @@ import hashlib
 import json
 import re
 import runpy
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +43,8 @@ GRAPH_ROUTES = (
     / "aggregate.json"
 )
 NATURALISTIC = ROOT / "v2" / "naturalistic-review-decision.json"
+FACTOR_COMPLETE = ROOT / "v2" / "factor-complete-route-breadth-v2" / "results"
+EXTERNAL_AGENT_POLICY = ROOT / "v2" / "external-agent-policy-revision-v2" / "results"
 
 CANONICAL_TITLE = (
     "ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision"
@@ -60,6 +63,15 @@ def load_object(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         fail(f"{label} must contain a JSON object")
     return value
+
+
+def load_jsonl(path: Path, label: str) -> list[dict[str, Any]]:
+    rows = [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
+    if any(not isinstance(row, dict) for row in rows):
+        fail(f"{label} must contain JSON objects")
+    return rows
 
 
 def sha256_hex(path: Path) -> str:
@@ -587,9 +599,136 @@ def validate_naturalistic() -> None:
     )
 
 
+def validate_current_route_studies() -> None:
+    factor = load_object(FACTOR_COMPLETE / "aggregate.json", "factor-complete aggregate")
+    factor_execution = load_object(
+        FACTOR_COMPLETE / "execution-receipt.json", "factor-complete execution receipt"
+    )
+    factor_privacy = load_object(
+        FACTOR_COMPLETE / "privacy-receipt.json", "factor-complete privacy receipt"
+    )
+    expect(factor.get("status"), "COMPLETE", "factor-complete status")
+    expect(nested(factor, "coverage.factors"), 15, "factor-complete factors")
+    expect(nested(factor, "execution.scheduled_model_item_cells"), 630, "factor calls")
+    expect(nested(factor, "execution.client_retries"), 0, "factor retries")
+    expect(
+        factor_execution.get("status"),
+        "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+        "factor execution status",
+    )
+    expect(factor_execution.get("durable_terminal_records"), 630, "factor terminal records")
+    expect(factor_privacy.get("credentials_retained"), False, "factor credential privacy")
+
+    first_rep_expected = {
+        "glm-5.3": (9, 9, 1),
+        "gpt-5.6-luna": (29, 26, 11),
+        "hy3": (3, 3, 0),
+        "kimi-k2.7-code": (16, 15, 4),
+        "mimo-v2.5-pro": (16, 11, 1),
+        "minimax-m2.7": (9, 7, 0),
+        "qwen3.7-plus": (27, 25, 10),
+    }
+    observed: dict[str, tuple[int, int, int]] = {}
+    pooled_status: Counter[str] = Counter()
+    for route in factor.get("new_configurations", []):
+        rep = next(row for row in route["per_replication"] if row["replication"] == 1)["metrics"]
+        observed[str(route["model_requested"])] = (
+            int(rep["parseable_items"]),
+            int(rep["correct_items"]),
+            int(rep["correct_pairs"]),
+        )
+        for status, count in route["pooled_three_replications"]["parse_status_counts"].items():
+            pooled_status[str(status)] += int(count)
+    expect(observed, first_rep_expected, "factor-complete first replication")
+    expect(
+        dict(pooled_status),
+        {
+            "JSON_SYNTAX_ERROR": 194,
+            "OK": 319,
+            "SCHEMA_ERROR": 87,
+            "SEMANTIC_ERROR": 8,
+            "TRANSPORT_ERROR": 22,
+        },
+        "factor-complete terminal taxonomy",
+    )
+    factor_rows = [
+        row
+        for path in sorted((FACTOR_COMPLETE / "runs").glob("*.jsonl"))
+        for row in load_jsonl(path, f"factor-complete run {path.name}")
+    ]
+    length_limited = sum(
+        row.get("parse_status") in {"JSON_SYNTAX_ERROR", "SCHEMA_ERROR"}
+        and row.get("finish_reason") in {"length", "max_tokens"}
+        for row in factor_rows
+    )
+    expect(length_limited, 280, "factor-complete output-limit failures")
+
+    external = load_object(EXTERNAL_AGENT_POLICY / "aggregate.json", "external-policy aggregate")
+    external_execution = load_object(
+        EXTERNAL_AGENT_POLICY / "execution-receipt.json", "external-policy execution receipt"
+    )
+    external_privacy = load_object(
+        EXTERNAL_AGENT_POLICY / "privacy-receipt.json", "external-policy privacy receipt"
+    )
+    expect(external.get("status"), "COMPLETE", "external-policy status")
+    expect(nested(external, "coverage.external_policy_sources"), 2, "external-policy sources")
+    expect(nested(external, "coverage.changed_pairs_per_replication"), 6, "changed pairs")
+    expect(nested(external, "coverage.stable_control_pairs_per_replication"), 4, "stable pairs")
+    expect(nested(external, "execution.scheduled_model_item_cells"), 480, "external calls")
+    expect(nested(external, "execution.client_retries"), 0, "external retries")
+    expect(
+        external_execution.get("status"),
+        "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+        "external execution status",
+    )
+    expect(external_execution.get("durable_terminal_records"), 480, "external terminal records")
+    expect(
+        external_privacy.get("status"),
+        "EXTERNAL_AGENT_POLICY_PUBLIC_PRIVACY_PASS",
+        "external privacy status",
+    )
+
+    totals: Counter[str] = Counter()
+    external_status: Counter[str] = Counter()
+    for route in external.get("configurations", []):
+        rep = next(row for row in route["per_replication"] if row["replication"] == 1)["metrics"]
+        for field in ("parseable_items", "correct_items", "correct_pairs", "covered_pairs"):
+            totals[field] += int(rep[field])
+        totals["changed_correct"] += int(rep["changed_pairs"]["correct_action_pairs"])
+        totals["changed_complete"] += int(rep["changed_pairs"]["covered_pairs"])
+        totals["changed_same"] += int(rep["changed_pairs"]["same_action_pairs"])
+        totals["stable_correct"] += int(rep["stable_control_pairs"]["correct_action_pairs"])
+        totals["stable_complete"] += int(rep["stable_control_pairs"]["covered_pairs"])
+        for status, count in route["failure_causes"]["parse_status_counts"].items():
+            external_status[str(status)] += int(count)
+    expect(
+        dict(totals),
+        {
+            "parseable_items": 132,
+            "correct_items": 128,
+            "correct_pairs": 52,
+            "covered_pairs": 55,
+            "changed_correct": 23,
+            "changed_complete": 26,
+            "changed_same": 3,
+            "stable_correct": 29,
+            "stable_complete": 29,
+        },
+        "external-policy first replication",
+    )
+    expect(
+        dict(external_status),
+        {"JSON_SYNTAX_ERROR": 9, "OK": 399, "SEMANTIC_ERROR": 46, "TRANSPORT_ERROR": 26},
+        "external-policy terminal taxonomy",
+    )
+
+
 def validate_manuscript_claims(tex: str) -> None:
     required = {
-        "synthetic scope": "study measures a synthetic model-service boundary",
+        "synthetic scope": (
+            "regression-testing protocol for synthetic, policy-constrained "
+            "evidence-state transitions"
+        ),
         "caller obligations": "Users remain responsible for policy parsing",
         "endpoint layers": (
             "raw-strict $\\rightarrow$ registered parser $\\rightarrow$ full contract "
@@ -599,9 +738,9 @@ def validate_manuscript_claims(tex: str) -> None:
         "weak Naive Bayes": "Naive Bayes control supplies a weak shortcut check",
         "Gatekeeper coverage": "2/2 changed rules",
         "Gatekeeper minimum": "two-pair witness",
-        "repeated Flash result": "DeepSeek Flash totals 53/72 raw-strict items and 21/36 pairs",
-        "repeated Qwen result": "Qwen totals 10/72 items and 0/36 pairs",
-        "semantic route boundary": "zero semantic action errors after raw-strict extraction",
+        "repeated Flash result": "Flash reaches 53/72 raw-strict items and 21/36 pairs",
+        "repeated Qwen result": "Qwen reaches 10/72 items and 0/36 pairs",
+        "semantic route boundary": "All 63 extracted actions match the executable oracle",
         "shared route configuration": "same provider, base URL",
         "failure taxonomy": "12 read timeouts, three fenced objects",
         "raw-strict outside contract": "49 actions and 40 pairs are correct",
@@ -619,19 +758,35 @@ def validate_manuscript_claims(tex: str) -> None:
         "challenge Flash": "90/180",
         "rare action": "4/30 \\demote, and Flash recovers 0/30",
         "historical interface": "obsolete service interface",
-        "causal boundary": "401 lane provides no causal comparison",
+        "causal boundary": (
+            "simultaneous changes in service and output stack preclude a causal comparison"
+        ),
         "public challenge boundary": "estimand is robustness on known cases",
         "pre-inference challenge": "fix its cases and labels before inference",
         "external source-screen scope": (
             "screen covered 465 repository seeds and inspected 11 candidates"
         ),
-        "external Agent Governance result": "11/15 post-fix upstream tests pass",
+        "external Agent Governance result": (
+            "fixed revision's 15 upstream tests against the Agent Governance Toolkit parent "
+            "yields 11 passes"
+        ),
         "external agentgateway result": "all 33 selected tests pass",
-        "naturalistic decision": "naturalistic validity requires such a case",
+        "external policy primary item result": "128/160 actions are correct",
+        "external policy primary pair result": (
+            "52/80 end-to-end and 52/55 conditional pair accuracy"
+        ),
+        "external changed pairs": "23/48 correct pairs end to end and 23/26 conditional",
+        "external stable controls": "29/32 correct pairs end to end and 29/29 conditional",
+        "external mapping authorship": "we authored the scenarios, precedence rule, action mapping",
+        "external annotation boundary": (
+            "author-constructed labels, making inter-annotator agreement inapplicable"
+        ),
+        "factor-complete result": "Decision coverage spans 3/30 to 29/30",
+        "factor-complete failure cause": "280/281 syntax and schema failures",
         "structural minimum boundary": (
             "Stochastic fault detection and release sufficiency remain unmeasured"
         ),
-        "replay boundary": "without reissuing hosted calls",
+        "replay boundary": "from the existing hosted records",
     }
     for label, needle in required.items():
         require_text(tex, needle, label)
@@ -682,6 +837,7 @@ def main() -> int:
     validate_auxiliary_results()
     validate_authored_graph()
     validate_naturalistic()
+    validate_current_route_studies()
     validate_manuscript_claims(tex)
     validate_style_receipt()
     print("paper-lint: PASS")

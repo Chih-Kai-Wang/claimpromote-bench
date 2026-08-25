@@ -209,12 +209,16 @@ def analyze(
     private_dir: Path,
     output_dir: Path,
 ) -> Json:
-    validate_study(plan_path, schedule_path)
     plan = load_json(plan_path)
     schedule = load_json(schedule_path)
     packet = load_json(PACKET_PATH)
     receipt_path = private_dir / "execution-receipt.json"
     receipt = load_json(receipt_path)
+    validate_study(
+        plan_path,
+        schedule_path,
+        frozen_plan_commit=str(receipt.get("frozen_plan_commit", "")),
+    )
     if (
         receipt.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
         or receipt.get("study_id") != STUDY_ID

@@ -3056,11 +3056,525 @@ def validate_public_model_breadth() -> Json:
     }
 
 
+def _rate(numerator: int, denominator: int) -> float | None:
+    return numerator / denominator if denominator else None
+
+
+def _validate_current_route_artifact(
+    root: Path,
+    *,
+    manifest_status: str,
+    expected_run_files: int,
+    expected_terminal_records: int,
+) -> tuple[Json, Json, dict[str, list[Json]]]:
+    manifest_path = root / "MANIFEST.json"
+    manifest = load_json(manifest_path)
+    if not isinstance(manifest, dict) or manifest.get("status") != manifest_status:
+        fail(f"{root.name}: manifest status changed")
+    files = manifest.get("files")
+    actual = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path != manifest_path
+    }
+    if not isinstance(files, dict) or manifest.get("file_count") != len(files) or files != actual:
+        fail(f"{root.name}: dynamic manifest changed")
+    scope = manifest.get("scope", {})
+    if (
+        scope.get("all_scheduled_terminal_outcomes_included") is not True
+        or scope.get("raw_response_text_included") is not False
+        or scope.get("raw_response_fingerprints_included") is not False
+        or scope.get("provider_response_identifiers_included") is not False
+        or scope.get("hidden_reasoning_included") is not False
+        or scope.get("private_freeze_commit_included") is not False
+        or scope.get("private_journal_digests_included") is not False
+    ):
+        fail(f"{root.name}: privacy scope changed")
+
+    aggregate_path = root / "results" / "aggregate.json"
+    execution_path = root / "results" / "execution-receipt.json"
+    privacy_path = root / "results" / "privacy-receipt.json"
+    aggregate = load_json(aggregate_path)
+    execution = load_json(execution_path)
+    privacy = load_json(privacy_path)
+    if not all(isinstance(value, dict) for value in (aggregate, execution, privacy)):
+        fail(f"{root.name}: result receipts are malformed")
+    lane_files = manifest.get("lane_files")
+    if not isinstance(lane_files, dict) or len(lane_files) != expected_run_files:
+        fail(f"{root.name}: lane-file map changed")
+    rows_by_lane: dict[str, list[Json]] = {}
+    run_hashes: Json = {}
+    terminal_records = 0
+    for lane_id, relative in sorted(lane_files.items()):
+        path = root / str(relative)
+        rows = load_jsonl(path)
+        if {str(row.get("lane_id")) for row in rows} != {str(lane_id)}:
+            fail(f"{root.name}: lane binding changed for {lane_id}")
+        for row in rows:
+            reject_hidden_reasoning(row, f"{root.name}/{lane_id}")
+            if (
+                row.get("frozen_plan_commit") != "0000000000000000000000000000000000000011"
+                or row.get("raw_response_text") is not None
+                or row.get("raw_response_sha256") is not None
+                or row.get("provider_response_id") is not None
+                or row.get("system_fingerprint") is not None
+            ):
+                fail(f"{root.name}: private route payload survived for {lane_id}")
+        rows_by_lane[str(lane_id)] = rows
+        terminal_records += len(rows)
+        run_hashes[path.name] = sha256_file(path)
+    if terminal_records != expected_terminal_records:
+        fail(f"{root.name}: terminal-record count changed")
+    if (
+        execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
+        or execution.get("frozen_plan_commit") != "0000000000000000000000000000000000000011"
+        or execution.get("lane_output_sha256") != run_hashes
+        or execution.get("source_journal_digests_included") is not False
+        or "request_intent_journal_sha256" in execution
+        or "terminal_journal_sha256" in execution
+        or privacy.get("public_run_files") != expected_run_files
+        or privacy.get("public_terminal_records") != expected_terminal_records
+        or privacy.get("public_run_sha256") != run_hashes
+        or privacy.get("files_scanned") != expected_run_files + 2
+        or privacy.get("aggregate_sha256") != sha256_file(aggregate_path)
+        or privacy.get("execution_receipt_sha256") != sha256_file(execution_path)
+        or privacy.get("raw_response_text_retained") is not False
+        or privacy.get("provider_response_identifiers_retained") is not False
+        or privacy.get("hidden_reasoning_retained") is not False
+        or privacy.get("account_identifiers_retained") is not False
+        or privacy.get("credentials_retained") is not False
+    ):
+        fail(f"{root.name}: execution or privacy receipt changed")
+    freeze = aggregate.get("freeze", {})
+    if (
+        freeze.get("frozen_plan_commit") != "0000000000000000000000000000000000000011"
+        or freeze.get("plan_sha256") != sha256_file(root / "study-plan.json")
+        or freeze.get("execution_receipt_sha256") != sha256_file(execution_path)
+    ):
+        fail(f"{root.name}: anonymous freeze binding changed")
+    return load_json(root / "study-plan.json"), aggregate, rows_by_lane
+
+
+def _stability_metrics(
+    records_by_replication: dict[int, list[Json]], gold: list[Json], pairs: list[Json]
+) -> Json:
+    gold_by_id = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+    by_replication = {
+        replication: {str(row["item_id"]): row for row in records}
+        for replication, records in records_by_replication.items()
+    }
+    all_valid = 0
+    same_action = 0
+    all_correct = 0
+    for item_id in sorted(gold_by_id):
+        rows = [by_replication[index][item_id] for index in (1, 2, 3)]
+        valid = all(row["parse_status"] == "OK" for row in rows)
+        if valid:
+            all_valid += 1
+            same_action += len({str(row["raw_decision"]["action"]) for row in rows}) == 1
+        all_correct += all(
+            row["parse_status"] == "OK"
+            and str(row["raw_decision"]["action"]) == gold_by_id[item_id]
+            for row in rows
+        )
+    all_valid_pairs = 0
+    all_correct_pairs = 0
+    factor_correct: Counter[str] = Counter()
+    factor_totals: Counter[str] = Counter()
+    for pair in pairs:
+        member_ids = [str(value) for value in pair["member_ids"]]
+        rows = [by_replication[index][item_id] for index in (1, 2, 3) for item_id in member_ids]
+        valid = all(row["parse_status"] == "OK" for row in rows)
+        correct = all(
+            row["parse_status"] == "OK"
+            and str(row["raw_decision"]["action"]) == gold_by_id[str(row["item_id"])]
+            for row in rows
+        )
+        all_valid_pairs += valid
+        all_correct_pairs += correct
+        factor = str(pair["factor_id"])
+        factor_totals[factor] += 1
+        factor_correct[factor] += correct
+    return {
+        "items": len(gold_by_id),
+        "all_three_valid_items": all_valid,
+        "all_three_valid_item_rate": _rate(all_valid, len(gold_by_id)),
+        "same_action_among_all_three_valid_items": same_action,
+        "same_action_rate_conditional_on_all_three_valid": _rate(same_action, all_valid),
+        "all_three_correct_items": all_correct,
+        "all_three_correct_item_rate": _rate(all_correct, len(gold_by_id)),
+        "pairs": len(pairs),
+        "all_three_valid_pairs": all_valid_pairs,
+        "all_three_valid_pair_rate": _rate(all_valid_pairs, len(pairs)),
+        "all_three_correct_pairs": all_correct_pairs,
+        "all_three_correct_pair_rate": _rate(all_correct_pairs, len(pairs)),
+        "factor_all_three_correct": [
+            {
+                "factor_id": factor,
+                "correct_pairs": factor_correct[factor],
+                "pairs": factor_totals[factor],
+            }
+            for factor in sorted(factor_totals)
+        ],
+    }
+
+
+def validate_factor_complete_route() -> Json:
+    root = EVIDENCE / "factor-complete-route"
+    plan, aggregate, rows_by_lane = _validate_current_route_artifact(
+        root,
+        manifest_status="ANONYMOUS_FACTOR_COMPLETE_ROUTE_EVIDENCE",
+        expected_run_files=21,
+        expected_terminal_records=630,
+    )
+    gold_all = load_jsonl(root / "dataset" / "gold.jsonl")
+    pairs_all = load_json(root / "dataset" / "pairs.json")
+    if not isinstance(pairs_all, list):
+        fail("factor-complete pair index is malformed")
+    selected_ids = {str(value) for value in plan["dataset"]["selected_item_ids"]}
+    selected_pairs = {str(value) for value in plan["dataset"]["selected_pair_ids"]}
+    gold = [row for row in gold_all if str(row["id"]) in selected_ids]
+    pairs = [row for row in pairs_all if str(row["pair_id"]) in selected_pairs]
+    if len(gold) != 30 or len(pairs) != 15:
+        fail("factor-complete selected support changed")
+    aggregate_rows = {str(row["configuration_id"]): row for row in aggregate["new_configurations"]}
+    lane_rows = {str(row["lane_id"]): row for row in plan["formal_lanes"]}
+    if len(aggregate_rows) != 7 or len(lane_rows) != 21:
+        fail("factor-complete route matrix changed")
+    parse_statuses: Counter[str] = Counter()
+    finish_by_status: Counter[tuple[str, str]] = Counter()
+    for configuration_id, archived in aggregate_rows.items():
+        per_replication: list[Json] = []
+        records_by_replication: dict[int, list[Json]] = {}
+        for replication in (1, 2, 3):
+            lane = next(
+                row
+                for row in lane_rows.values()
+                if row["configuration_id"] == configuration_id
+                and int(row["replication"]) == replication
+            )
+            lane_id = str(lane["lane_id"])
+            rows = rows_by_lane[lane_id]
+            if len(rows) != 30 or {str(row["item_id"]) for row in rows} != selected_ids:
+                fail(f"factor-complete lane coverage changed: {lane_id}")
+            metrics = derive_balanced_metrics(gold, pairs, rows)
+            reported = next(
+                row["metrics"]
+                for row in archived["per_replication"]
+                if int(row["replication"]) == replication
+            )
+            if not equivalent_json(metrics, reported):
+                fail(f"factor-complete per-replication metrics changed: {lane_id}")
+            per_replication.append(metrics)
+            records_by_replication[replication] = rows
+            parse_statuses.update(str(row["parse_status"]) for row in rows)
+            finish_by_status.update(
+                (str(row["parse_status"]), str(row.get("finish_reason") or "NONE")) for row in rows
+            )
+        if not equivalent_json(
+            combine_lane_metrics(per_replication), archived["pooled_three_replications"]
+        ):
+            fail(f"factor-complete pooled metrics changed: {configuration_id}")
+        if not equivalent_json(
+            _stability_metrics(records_by_replication, gold, pairs), archived["stability"]
+        ):
+            fail(f"factor-complete stability changed: {configuration_id}")
+    length_limited_syntax_or_schema = sum(
+        count
+        for (status, finish), count in finish_by_status.items()
+        if status in {"JSON_SYNTAX_ERROR", "SCHEMA_ERROR"}
+        and finish.lower() in {"length", "max_tokens"}
+    )
+    return {
+        "status": "FACTOR_COMPLETE_ROUTE_EVIDENCE_PASS",
+        "configurations": 7,
+        "replications": 3,
+        "terminal_records": 630,
+        "parse_status_counts": dict(sorted(parse_statuses.items())),
+        "length_limited_syntax_or_schema": length_limited_syntax_or_schema,
+    }
+
+
+def _external_pair_subset(
+    pairs: list[Json],
+    gold_by_id: dict[str, Json],
+    record_by_id: dict[str, Json],
+    *,
+    changed: bool | None = None,
+    source_id: str | None = None,
+) -> Json:
+    selected = [
+        pair
+        for pair in pairs
+        if (changed is None or bool(pair["changed"]) is changed)
+        and (source_id is None or pair["source_id"] == source_id)
+    ]
+    covered = correct = exact = same_action = 0
+    for pair in selected:
+        members = [str(value) for value in pair["member_ids"]]
+        records = [record_by_id[item_id] for item_id in members]
+        if not all(row["parse_status"] == "OK" for row in records):
+            continue
+        covered += 1
+        same_action += len({str(row["raw_decision"]["action"]) for row in records}) == 1
+        correct += all(
+            row["raw_decision"]["action"] == gold_by_id[item_id]["decision"]["action"]
+            for item_id, row in zip(members, records, strict=True)
+        )
+        exact += all(
+            row["raw_decision"] == gold_by_id[item_id]["decision"]
+            for item_id, row in zip(members, records, strict=True)
+        )
+    return {
+        "pairs": len(selected),
+        "covered_pairs": covered,
+        "correct_action_pairs": correct,
+        "exact_decision_pairs": exact,
+        "same_action_pairs": same_action,
+        "pair_coverage": _rate(covered, len(selected)),
+        "end_to_end_action_pair_accuracy": _rate(correct, len(selected)),
+        "conditional_action_pair_accuracy": _rate(correct, covered),
+        "end_to_end_exact_pair_accuracy": _rate(exact, len(selected)),
+        "conditional_exact_pair_accuracy": _rate(exact, covered),
+        "end_to_end_same_action_pair_rate": _rate(same_action, len(selected)),
+        "conditional_same_action_pair_rate": _rate(same_action, covered),
+    }
+
+
+def _derive_external_metrics(gold: list[Json], pairs: list[Json], records: list[Json]) -> Json:
+    base = derive_balanced_metrics(gold, pairs, records)
+    gold_by_id = {str(row["id"]): row for row in gold}
+    record_by_id = {str(row["item_id"]): row for row in records}
+    exact_items = sum(
+        row["parse_status"] == "OK"
+        and row["raw_decision"] == gold_by_id[str(row["item_id"])]["decision"]
+        for row in records
+    )
+    supported_actions = sorted({str(row["decision"]["action"]) for row in gold})
+    version_rows: list[Json] = []
+    for version in ("BEFORE", "AFTER"):
+        ids = {str(row["id"]) for row in gold if row["decision"]["policy_version"] == version}
+        valid = sum(record_by_id[item_id]["parse_status"] == "OK" for item_id in ids)
+        correct = sum(
+            record_by_id[item_id]["parse_status"] == "OK"
+            and record_by_id[item_id]["raw_decision"]["action"]
+            == gold_by_id[item_id]["decision"]["action"]
+            for item_id in ids
+        )
+        version_rows.append(
+            {
+                "policy_version": version,
+                "items": len(ids),
+                "parseable_items": valid,
+                "correct_action_items": correct,
+                "decision_coverage": _rate(valid, len(ids)),
+                "end_to_end_action_accuracy": _rate(correct, len(ids)),
+                "conditional_action_accuracy": _rate(correct, valid),
+            }
+        )
+    source_ids = sorted({str(pair["source_id"]) for pair in pairs})
+    return {
+        **base,
+        "exact_decision_items": exact_items,
+        "end_to_end_exact_decision_accuracy": _rate(exact_items, len(records)),
+        "conditional_exact_decision_accuracy": _rate(exact_items, base["parseable_items"]),
+        "supported_actions": supported_actions,
+        "supported_action_macro_recall": sum(
+            base["per_action"][action]["end_to_end_recall"] for action in supported_actions
+        )
+        / len(supported_actions),
+        "changed_pairs": _external_pair_subset(pairs, gold_by_id, record_by_id, changed=True),
+        "stable_control_pairs": _external_pair_subset(
+            pairs, gold_by_id, record_by_id, changed=False
+        ),
+        "source_metrics": [
+            {
+                "source_id": source_id,
+                **_external_pair_subset(pairs, gold_by_id, record_by_id, source_id=source_id),
+            }
+            for source_id in source_ids
+        ],
+        "policy_version_metrics": version_rows,
+    }
+
+
+def _combine_external_metrics(metrics: list[Json]) -> Json:
+    base = combine_lane_metrics(metrics)
+    supported_actions = list(metrics[0]["supported_actions"])
+
+    def combine_pair_field(name: str) -> Json:
+        rows = [row[name] for row in metrics]
+        pairs = sum(int(row["pairs"]) for row in rows)
+        covered = sum(int(row["covered_pairs"]) for row in rows)
+        correct = sum(int(row["correct_action_pairs"]) for row in rows)
+        exact = sum(int(row["exact_decision_pairs"]) for row in rows)
+        same_action = sum(int(row["same_action_pairs"]) for row in rows)
+        return {
+            "pairs": pairs,
+            "covered_pairs": covered,
+            "correct_action_pairs": correct,
+            "exact_decision_pairs": exact,
+            "same_action_pairs": same_action,
+            "pair_coverage": _rate(covered, pairs),
+            "end_to_end_action_pair_accuracy": _rate(correct, pairs),
+            "conditional_action_pair_accuracy": _rate(correct, covered),
+            "end_to_end_exact_pair_accuracy": _rate(exact, pairs),
+            "conditional_exact_pair_accuracy": _rate(exact, covered),
+            "end_to_end_same_action_pair_rate": _rate(same_action, pairs),
+            "conditional_same_action_pair_rate": _rate(same_action, covered),
+        }
+
+    source_metrics: list[Json] = []
+    for source_id in [str(row["source_id"]) for row in metrics[0]["source_metrics"]]:
+        rows = [
+            next(row for row in metric["source_metrics"] if row["source_id"] == source_id)
+            for metric in metrics
+        ]
+        pairs = sum(int(row["pairs"]) for row in rows)
+        covered = sum(int(row["covered_pairs"]) for row in rows)
+        correct = sum(int(row["correct_action_pairs"]) for row in rows)
+        exact = sum(int(row["exact_decision_pairs"]) for row in rows)
+        same_action = sum(int(row["same_action_pairs"]) for row in rows)
+        source_metrics.append(
+            {
+                "source_id": source_id,
+                "pairs": pairs,
+                "covered_pairs": covered,
+                "correct_action_pairs": correct,
+                "exact_decision_pairs": exact,
+                "same_action_pairs": same_action,
+                "pair_coverage": _rate(covered, pairs),
+                "end_to_end_action_pair_accuracy": _rate(correct, pairs),
+                "conditional_action_pair_accuracy": _rate(correct, covered),
+                "end_to_end_exact_pair_accuracy": _rate(exact, pairs),
+                "conditional_exact_pair_accuracy": _rate(exact, covered),
+                "end_to_end_same_action_pair_rate": _rate(same_action, pairs),
+                "conditional_same_action_pair_rate": _rate(same_action, covered),
+            }
+        )
+    exact_items = sum(int(row["exact_decision_items"]) for row in metrics)
+    return {
+        **base,
+        "exact_decision_items": exact_items,
+        "end_to_end_exact_decision_accuracy": _rate(exact_items, base["items"]),
+        "conditional_exact_decision_accuracy": _rate(exact_items, base["parseable_items"]),
+        "supported_actions": supported_actions,
+        "supported_action_macro_recall": sum(
+            base["per_action"][action]["end_to_end_recall"] for action in supported_actions
+        )
+        / len(supported_actions),
+        "changed_pairs": combine_pair_field("changed_pairs"),
+        "stable_control_pairs": combine_pair_field("stable_control_pairs"),
+        "source_metrics": source_metrics,
+    }
+
+
+def _external_failure_causes(records: list[Json]) -> Json:
+    status = Counter(str(row["parse_status"]) for row in records)
+    finish = Counter(
+        (str(row["parse_status"]), str(row.get("finish_reason") or "NONE")) for row in records
+    )
+    return {
+        "parse_status_counts": dict(sorted(status.items())),
+        "finish_reason_by_parse_status": [
+            {"parse_status": key[0], "finish_reason": key[1], "count": count}
+            for key, count in sorted(finish.items())
+        ],
+        "provider_error_text_released": False,
+        "raw_response_text_released": False,
+    }
+
+
+def validate_external_agent_policy() -> Json:
+    root = EVIDENCE / "external-agent-policy"
+    plan, aggregate, rows_by_lane = _validate_current_route_artifact(
+        root,
+        manifest_status="ANONYMOUS_EXTERNAL_AGENT_POLICY_EVIDENCE",
+        expected_run_files=24,
+        expected_terminal_records=480,
+    )
+    gold = load_jsonl(root / "dataset" / "gold.jsonl")
+    pairs = load_json(root / "dataset" / "pairs.json")
+    if not isinstance(pairs, list) or len(gold) != 20 or len(pairs) != 10:
+        fail("external agent-policy support changed")
+    item_ids = {str(row["id"]) for row in gold}
+    aggregate_rows = {str(row["configuration_id"]): row for row in aggregate["configurations"]}
+    lane_rows = {str(row["lane_id"]): row for row in plan["formal_lanes"]}
+    if len(aggregate_rows) != 8 or len(lane_rows) != 24:
+        fail("external agent-policy route matrix changed")
+    primary: Json = {}
+    for configuration_id, archived in aggregate_rows.items():
+        per_replication: list[Json] = []
+        records_by_replication: dict[int, list[Json]] = {}
+        configuration_records: list[Json] = []
+        for replication in (1, 2, 3):
+            lane = next(
+                row
+                for row in lane_rows.values()
+                if row["configuration_id"] == configuration_id
+                and int(row["replication"]) == replication
+            )
+            lane_id = str(lane["lane_id"])
+            rows = rows_by_lane[lane_id]
+            if len(rows) != 20 or {str(row["item_id"]) for row in rows} != item_ids:
+                fail(f"external agent-policy lane coverage changed: {lane_id}")
+            metrics = _derive_external_metrics(gold, pairs, rows)
+            reported = next(
+                row["metrics"]
+                for row in archived["per_replication"]
+                if int(row["replication"]) == replication
+            )
+            if not equivalent_json(metrics, reported):
+                fail(f"external agent-policy per-replication metrics changed: {lane_id}")
+            per_replication.append(metrics)
+            records_by_replication[replication] = rows
+            configuration_records.extend(rows)
+            if replication == 1:
+                primary[configuration_id] = {
+                    "parseable_items": metrics["parseable_items"],
+                    "correct_items": metrics["correct_items"],
+                    "correct_pairs": metrics["correct_pairs"],
+                    "changed_correct_pairs": metrics["changed_pairs"]["correct_action_pairs"],
+                    "changed_same_action_pairs": metrics["changed_pairs"]["same_action_pairs"],
+                    "stable_correct_pairs": metrics["stable_control_pairs"]["correct_action_pairs"],
+                }
+        if not equivalent_json(
+            _combine_external_metrics(per_replication), archived["pooled_three_replications"]
+        ):
+            fail(f"external agent-policy pooled metrics changed: {configuration_id}")
+        if not equivalent_json(
+            _stability_metrics(records_by_replication, gold, pairs), archived["stability"]
+        ):
+            fail(f"external agent-policy stability changed: {configuration_id}")
+        if not equivalent_json(
+            _external_failure_causes(configuration_records), archived["failure_causes"]
+        ):
+            fail(f"external agent-policy failure causes changed: {configuration_id}")
+    if (
+        aggregate.get("coverage", {}).get("external_policy_sources") != 2
+        or aggregate.get("coverage", {}).get("changed_pairs_per_replication") != 6
+        or aggregate.get("coverage", {}).get("stable_control_pairs_per_replication") != 4
+        or aggregate.get("label_definition", {}).get("human_annotators") != 0
+        or aggregate.get("label_definition", {}).get("agreement_statistic") is not None
+    ):
+        fail("external agent-policy interpretation boundary changed")
+    return {
+        "status": "EXTERNAL_AGENT_POLICY_EVIDENCE_PASS",
+        "sources": 2,
+        "configurations": 8,
+        "replications": 3,
+        "terminal_records": 480,
+        "primary_replication": primary,
+    }
+
+
 def main() -> int:
     result = {
         "status": "PASS",
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
+        "factor_complete_route": validate_factor_complete_route(),
+        "external_agent_policy": validate_external_agent_policy(),
         "slsa_portability": validate_slsa_portability(),
         "policy_switch": validate_policy_switch(),
         "local_model_replications": validate_local_model_replications(),

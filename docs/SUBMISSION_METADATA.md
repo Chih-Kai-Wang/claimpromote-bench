@@ -14,7 +14,7 @@ ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Po
 ## ICLR 2027 abstract
 
 ```text
-Executable policy revisions can change the required action for an unchanged input, yet model-service tests rarely isolate policy version. We introduce ClaimPromoteBench, which enumerates action-changing differences between two deterministic evaluators and converts them into paired route tests. It reports changed-rule and action-transition coverage, a cardinality-minimum structural suite, parser provenance, and failure-inclusive item and pair accuracy. We trace six revisions from five public projects and evaluate hosted routes on two Gatekeeper revisions. Across 144 calls, Qwen and DeepSeek Flash complete 0/36 and 21/36 raw-strict pairs. All 63 extracted actions agree with the Open Policy Agent oracle, locating the observed failures at the service or output interface. On an imbalanced evidence-state suite, Qwen reaches 113/150 pairs end to end and 113/123 conditional. An action-balanced challenge yields 48/90 and 13/90 full-contract pairs end to end for Qwen and Flash, versus 48/64 and 13/61 conditional, with DEMOTE recall of 4/30 and 0/30. Complete confusion matrices retain terminal failures. These results support source-traceable regression testing under finite executable policy changes. The study measures a synthetic model-service boundary; deployment frequency and naturalistic policy interpretation require field evidence.
+Versioned repository policies can change the required action for an unchanged request. We present ClaimPromoteBench, a regression-testing protocol for synthetic, policy-constrained evidence-state transitions. It converts finite policy differences into paired route tests and reports changed-rule and action-transition coverage, a cardinality-minimum structural suite, parser provenance, and failure-inclusive item and pair accuracy. Eight public revision histories anchor the tested fault classes. Two independently authored AGENTS.md changes provide model-facing policy sources; their ten author-mapped pairs were fixed before calls to eight hosted routes. The designated first replication yields 132/160 valid decisions, 128/160 correct items, and 52/80 correct pairs. Changed pairs score 23/48 end to end and 23/26 when both decisions are valid; stable controls score 29/32 and 29/29. A matched 15-factor diagnostic gives route-level pair accuracy from 0/15 to 11/15; 280/311 failures over three repetitions coincide with an output limit. Earlier evidence-state studies show why action balance matters: an imbalanced route reaches 258/300 items and 113/150 pairs, while a balanced challenge yields 132/180 and 90/180 items for two routes, with DEMOTE recalls of 4/30 and 0/30. The estimand is route conformance on frozen cases. Deployment incidence and downstream utility remain open.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -59,19 +59,28 @@ Joins finite action-changing differences between caller-supplied policy evaluato
 
 ## Main empirical findings
 
+- Two public `AGENTS.md` revisions contribute ten author-mapped pairs per replication: six changed
+  pairs and four stable controls. Upstream maintainers authored the policy text; the study authors
+  constructed the scenarios, precedence rule, action mapping, and labels before inference.
+- Eight hosted routes receive 480 scheduled calls over three repetitions with zero client retries.
+  The designated first replication yields 132/160 valid decisions, 128/160 correct actions, and
+  52/80 correct pairs. Changed pairs score 23/48 end to end and 23/26 conditionally; stable controls
+  score 29/32 and 29/29.
+- Across all three external-policy repetitions, routes produce 399/480 valid decisions, 387/480
+  correct actions, and 158/240 correct pairs. The 81 terminal failures comprise 26 server-side
+  transport failures, nine length-terminated JSON failures, and 46 action/reason-code conflicts.
+- A matched 15-factor diagnostic sends the same 30 items to seven routes for three repetitions,
+  totaling 630 calls. First-replication coverage spans 3/30 to 29/30 valid decisions and 0/15 to
+  11/15 correct pairs. Of 311 terminal failures, 280/281 syntax or schema failures carry a length
+  or token-limit signal.
 - Two exact Gatekeeper revisions yield 12 source-traceable pairs covering 2/2 changed rules and
-  2/2 observed action edges; a two-pair suite is jointly complete for the committed grammar.
-- Three repetitions per hosted route yield 53/72 raw-strict actions and 21/36 pairs for DeepSeek
-  Flash, versus 10/72 and 0/36 for Qwen. All 63 raw-strict actions are correct. Terminal failures are
-  12 read timeouts and 69 serialization or output-envelope failures. Both model IDs use the same
-  provider/API configuration; provider-side serving internals are opaque.
-- Trivy reproduces a real inverted policy predicate on four upstream cases. Cosign reproduces four
-  verifier-interface fault modes on six cases. Cosign remains a separate evidence class.
-- A frozen public-source audit screens 465 repository seeds and reviews 11 candidates at source
-  level. Microsoft Agent Governance Toolkit reproduces an agent-policy verdict gap (11/15 parent
-  versus 15/15 fixed upstream tests), and agentgateway passes 33/33 offline tests at the exact
-  Bedrock guardrail-adapter fix. The audit validates boundary faults, not prevalence or
-  naturalistic model interpretation.
+  2/2 observed action edges; a two-pair suite is jointly complete for the committed grammar. Three
+  repetitions yield 53/72 raw-strict actions and 21/36 pairs for Flash, versus 10/72 and 0/36 for
+  Qwen. All 63 extracted actions agree with the executable oracle.
+- Trivy reproduces an inverted policy predicate on four upstream cases. Cosign reproduces four
+  verifier-interface fault modes on six cases. A frozen public-source audit screens 465 repository
+  seeds and reviews 11 candidates. Microsoft Agent Governance Toolkit reproduces an agent-policy
+  verdict gap, and agentgateway passes 33/33 selected offline tests at the exact adapter fix.
 - The SLSA-inspired rule suite covers 12/12 changed rules and 6/10 reachable action edges; the graph
   suite covers 12/12 and 10/10. A ten-pair structural-coverage suite is jointly minimum for the
   committed candidate pool.

@@ -195,7 +195,7 @@ def validate_upstream_route_repetition() -> Json:
     if (
         aggregate.get("scheduled_cells") != 144
         or aggregate.get("client_retries") != 0
-        or aggregate.get("frozen_plan_commit") != "WITHHELD_PREINFERENCE_COMMIT"
+        or aggregate.get("frozen_plan_commit") != "0000000000000000000000000000000000000011"
         or aggregate.get("raw_or_invalid_response_content_in_aggregate") is not False
     ):
         fail("upstream repetition aggregate boundary differs")

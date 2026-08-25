@@ -40,7 +40,6 @@ def fail(message: str) -> None:
 
 
 def validate_results(plan_path: Path, schedule_path: Path, results_dir: Path) -> Json:
-    validate_study(plan_path, schedule_path)
     plan = load_json(plan_path)
     aggregate_path = results_dir / "aggregate.json"
     receipt_path = results_dir / "execution-receipt.json"
@@ -48,6 +47,11 @@ def validate_results(plan_path: Path, schedule_path: Path, results_dir: Path) ->
     aggregate = load_json(aggregate_path)
     receipt = load_json(receipt_path)
     privacy = load_json(privacy_path)
+    validate_study(
+        plan_path,
+        schedule_path,
+        frozen_plan_commit=str(receipt.get("frozen_plan_commit", "")),
+    )
     if (
         aggregate.get("status") != "COMPLETE"
         or aggregate.get("truth_status") != "COMPUTATIONAL"

@@ -67,9 +67,12 @@ SKIP_NAMES = {
     ".mypy_cache",
     ".pytest_cache",
     "__pycache__",
+    "journal",
+    "private-results",
     "work",
 }
 SKIP_FILES = {
+    "frozen-analysis-provenance.json",
     "review.py",
     "review_analysis.py",
     "SHA256SUMS",
@@ -172,7 +175,7 @@ PROVENANCE_REPLACEMENTS = {
     "057e785483eed14742e63817f81bea6add579c53": "0000000000000000000000000000000000000007",
     "f44b01eb97418d87aa6d7486fa785c0f49b9dda2": ("0000000000000000000000000000000000000008"),
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516": ("0000000000000000000000000000000000000009"),
-    "f2b4519816817c58a374b0459313d2bed609acf9": "WITHHELD_PREINFERENCE_COMMIT",
+    "f2b4519816817c58a374b0459313d2bed609acf9": "0000000000000000000000000000000000000011",
     LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
     GITHUB_RUNNER_ROOT: "/anonymous/workspace",
     MAC_WORKSPACE_ROOT: "/anonymous/workspace",
@@ -286,6 +289,15 @@ def load_object(path: Path) -> Json:
     return value
 
 
+def load_jsonl(path: Path) -> list[Json]:
+    rows = [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
+    if any(not isinstance(row, dict) for row in rows):
+        fail(f"expected JSON objects in {path.relative_to(ROOT)}")
+    return rows
+
+
 def apply_balanced_reporting_correction(aggregate: Json, correction: Json) -> Json:
     """Apply the receipted derived-metric correction without altering historical source files."""
 
@@ -372,6 +384,23 @@ def anonymize_provenance(value: Any) -> Any:
                 continue
             if key in {"provider_response_id", "provider_request_id"}:
                 cleaned[key] = None
+            elif key == "frozen_plan_commit":
+                # The private study commit proves pre-inference freezing in the source repository,
+                # but its object ID is searchable during double-blind review. Public upstream
+                # source commits use distinct keys and remain intact. Preserve earlier schema-valid
+                # pseudocommits assigned by study-specific projections.
+                mapped = anonymize_provenance(child)
+                if (
+                    isinstance(mapped, str)
+                    and re.fullmatch(r"[0-9a-f]{40}", mapped)
+                    and (
+                        mapped != child
+                        or mapped.startswith("00000000000000000000000000000000000000")
+                    )
+                ):
+                    cleaned[key] = mapped
+                else:
+                    cleaned[key] = "0000000000000000000000000000000000000011"
             else:
                 cleaned[key] = anonymize_provenance(child)
         return cleaned
@@ -410,8 +439,20 @@ def copy_anonymized_tree(source: Path, destination: Path) -> None:
         force_digest_change = source_digest in FORBIDDEN_TEXT
         if path.suffix.lower() in TEXT_SUFFIXES or path.name in TEXT_NAMES:
             source_text = path.read_text(encoding="utf-8")
-            if not force_digest_change and not any(
-                token in source_text for token in PROVENANCE_REPLACEMENTS
+            requires_structured_redaction = path.suffix in {".json", ".jsonl"} and any(
+                marker in source_text
+                for marker in (
+                    '"frozen_plan_commit"',
+                    '"provider_response_id"',
+                    '"provider_request_id"',
+                    '"reasoning_content"',
+                    '"thinking_content"',
+                )
+            )
+            if (
+                not force_digest_change
+                and not requires_structured_redaction
+                and not any(token in source_text for token in PROVENANCE_REPLACEMENTS)
             ):
                 shutil.copyfile(path, target)
                 continue
@@ -438,6 +479,153 @@ def copy_anonymized_tree(source: Path, destination: Path) -> None:
             target.write_text(text, encoding="utf-8")
         else:
             shutil.copyfile(path, target)
+
+
+def repair_current_route_study_anonymous_evidence(
+    destination: Path,
+    *,
+    manifest_status: str,
+    expected_run_files: int,
+    expected_terminal_records: int,
+    external_source_commits_included: bool,
+) -> None:
+    """Rebind a privacy-safe route study after withholding its private freeze commit."""
+
+    results = destination / "results"
+    aggregate_path = results / "aggregate.json"
+    execution_path = results / "execution-receipt.json"
+    privacy_path = results / "privacy-receipt.json"
+    plan_path = destination / "study-plan.json"
+    schedule_path = destination / "request-schedule.json"
+    required = (aggregate_path, execution_path, privacy_path, plan_path, schedule_path)
+    if any(not path.is_file() for path in required):
+        fail(f"current route study is incomplete: {destination.name}")
+
+    run_paths = sorted((results / "runs").glob("*.jsonl"))
+    if len(run_paths) != expected_run_files:
+        fail(f"current route study run-file count changed: {destination.name}")
+    run_hashes: Json = {}
+    terminal_records = 0
+    for path in run_paths:
+        rows = load_jsonl(path)
+        terminal_records += len(rows)
+        for row in rows:
+            _reject_hidden_reasoning(row, f"{destination.name}/{path.name}")
+            if (
+                row.get("frozen_plan_commit") != "0000000000000000000000000000000000000011"
+                or row.get("raw_response_text") is not None
+                or row.get("provider_response_id") is not None
+                or row.get("system_fingerprint") is not None
+            ):
+                fail(
+                    f"current route study privacy boundary changed: {destination.name}/{path.name}"
+                )
+            # A digest of withheld provider text remains a searchable response fingerprint and is
+            # unnecessary for recomputing the released endpoints.
+            row["raw_response_sha256"] = None
+        path.write_text(
+            "".join(f"{canonical_json(row)}\n" for row in rows),
+            encoding="utf-8",
+        )
+        run_hashes[path.name] = sha256_file(path)
+    if terminal_records != expected_terminal_records:
+        fail(f"current route study terminal-record count changed: {destination.name}")
+
+    execution = anonymize_provenance(load_object(execution_path))
+    execution["frozen_plan_commit"] = "0000000000000000000000000000000000000011"
+    execution["lane_output_sha256"] = run_hashes
+    execution.pop("request_intent_journal_sha256", None)
+    execution.pop("terminal_journal_sha256", None)
+    execution["source_journal_digests_included"] = False
+    write_json(execution_path, execution)
+
+    aggregate = anonymize_provenance(load_object(aggregate_path))
+    historical_anchors = aggregate.get("historical_anchors")
+    if isinstance(historical_anchors, list):
+        balanced_runs = destination.parent / "balanced-public-challenge" / "runs"
+        for anchor in historical_anchors:
+            if not isinstance(anchor, dict) or not isinstance(anchor.get("source_run_path"), str):
+                fail(f"current route study historical anchor is malformed: {destination.name}")
+            anchor_path = balanced_runs / Path(str(anchor["source_run_path"])).name
+            if not anchor_path.is_file():
+                fail(f"current route study historical anchor is missing: {anchor_path.name}")
+            anchor["source_run_path"] = f"../balanced-public-challenge/runs/{anchor_path.name}"
+            anchor["source_run_sha256"] = sha256_file(anchor_path)
+    freeze = aggregate.get("freeze")
+    if not isinstance(freeze, dict):
+        fail(f"current route study aggregate lacks freeze evidence: {destination.name}")
+    freeze["frozen_plan_commit"] = "0000000000000000000000000000000000000011"
+    freeze["plan_sha256"] = sha256_file(plan_path)
+    freeze["execution_receipt_sha256"] = sha256_file(execution_path)
+    write_json(aggregate_path, aggregate)
+
+    privacy = anonymize_provenance(load_object(privacy_path))
+    privacy["public_run_files"] = len(run_paths)
+    privacy["public_terminal_records"] = terminal_records
+    privacy["public_run_sha256"] = run_hashes
+    privacy["files_scanned"] = len(run_paths) + 2
+    privacy["aggregate_sha256"] = sha256_file(aggregate_path)
+    privacy["execution_receipt_sha256"] = sha256_file(execution_path)
+    privacy["raw_response_text_retained"] = False
+    privacy["provider_response_identifiers_retained"] = False
+    privacy["hidden_reasoning_retained"] = False
+    privacy["account_identifiers_retained"] = False
+    privacy["credentials_retained"] = False
+    write_json(privacy_path, privacy)
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest = {
+        "schema_version": "1.0.0-review",
+        "status": manifest_status,
+        "file_count": len(files),
+        "files": files,
+        "lane_files": {path.stem: f"results/runs/{path.name}" for path in run_paths},
+        "scope": {
+            "all_scheduled_terminal_outcomes_included": True,
+            "item_level_structured_decisions_included": True,
+            "raw_response_text_included": False,
+            "raw_response_fingerprints_included": False,
+            "free_form_provider_errors_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+            "private_freeze_commit_included": False,
+            "private_journal_digests_included": False,
+            "external_source_commits_included": external_source_commits_included,
+        },
+    }
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def build_factor_complete_route_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "factor-complete-route-breadth-v2"
+    copy_anonymized_tree(source, destination)
+    copy_tree(ROOT / "v2" / "balanced-public-challenge" / "dataset", destination / "dataset")
+    copy_file(
+        ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json",
+        destination / "prompt-packet.json",
+    )
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_FACTOR_COMPLETE_ROUTE_EVIDENCE",
+        expected_run_files=21,
+        expected_terminal_records=630,
+        external_source_commits_included=False,
+    )
+
+
+def build_external_agent_policy_anonymous_evidence(destination: Path) -> None:
+    copy_anonymized_tree(ROOT / "v2" / "external-agent-policy-revision-v2", destination)
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_EXTERNAL_AGENT_POLICY_EVIDENCE",
+        expected_run_files=24,
+        expected_terminal_records=480,
+        external_source_commits_included=True,
+    )
 
 
 def repair_capable_anonymous_evidence(root: Path) -> None:
@@ -2863,7 +3051,7 @@ def build_upstream_route_repetition_anonymous_evidence(destination: Path) -> Non
     results = destination / "results"
     aggregate_path = results / "aggregate.json"
     aggregate = load_object(aggregate_path)
-    if aggregate.get("frozen_plan_commit") != "WITHHELD_PREINFERENCE_COMMIT":
+    if aggregate.get("frozen_plan_commit") != "0000000000000000000000000000000000000011":
         fail("anonymous repetition aggregate retained its private preinference commit")
 
     privacy_path = results / "privacy-receipt.json"
@@ -3120,8 +3308,8 @@ This bundle provides deterministic source and score replay for the paper's polic
 benchmarks and retained model-service records. It never issues hosted calls. The evidence includes
 exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions; agentgateway test
 evidence; six sanitized Gatekeeper route repetitions; the imbalanced evidence-state suite and
-balanced challenge; the SLSA-inspired migration and local replications; and a privacy-filtered
-endpoint reanalysis.
+balanced challenge; two public `AGENTS.md` revisions; a factor-complete route study; the
+SLSA-inspired migration and local replications; and a privacy-filtered endpoint reanalysis.
 
 ## Reproduce the review environment
 
@@ -3148,6 +3336,11 @@ Python replay when Lean is unavailable.
   six sanitized 24-item result files used for the three-repetition analysis.
 - `evidence/fresh-confirmatory/` and `evidence/balanced-public-challenge/` reproduce the imbalanced
   suite's coverage addendum and balanced challenge.
+- `evidence/external-agent-policy/` binds two independently authored public `AGENTS.md` histories,
+  ten author-mapped pairs, and 480 terminal route records. Public upstream commits remain visible;
+  the private study commit is withheld.
+- `evidence/factor-complete-route/` retains 630 terminal records for one fixed pair per registered
+  factor across seven routes and three repetitions.
 - `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the SLSA-inspired
   migration and fixed-policy studies.
 - `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute
@@ -3165,8 +3358,8 @@ provenance. Each manifest derives its file count from the generated tree.
 The private construction seed is unnecessary for score recomputation and remains outside the
 bundle. A versioned metadata overlay supplies current terminology while preserving the source-bound
 manifest. The source screen covered 465 public repository seeds, inspected 11 candidates, and
-retained two boundary-fault cases with zero model calls. It found no external case in which a model
-interprets a changed executable policy.
+retained two executable boundary-fault cases with zero model calls. The separate model-facing study
+uses naturally occurring prose-policy revisions and author-defined action mappings.
 
 Exploratory outputs that contribute no manuscript metric are excluded. The central model IDs share
 one provider/API and adapter configuration, with opaque provider-side serving internals; cross-route
@@ -3704,6 +3897,15 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/dual-endpoint-audit/aggregate.json",
         "evidence/dual-endpoint-audit/items.jsonl",
         "evidence/dual-endpoint-audit/privacy-receipt.json",
+        "evidence/factor-complete-route/MANIFEST.json",
+        "evidence/factor-complete-route/results/aggregate.json",
+        "evidence/factor-complete-route/results/execution-receipt.json",
+        "evidence/factor-complete-route/results/privacy-receipt.json",
+        "evidence/external-agent-policy/MANIFEST.json",
+        "evidence/external-agent-policy/source-receipt.json",
+        "evidence/external-agent-policy/results/aggregate.json",
+        "evidence/external-agent-policy/results/execution-receipt.json",
+        "evidence/external-agent-policy/results/privacy-receipt.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -3793,6 +3995,8 @@ def write_manifest(bundle: Path) -> None:
         bundle / "evidence" / "upstream-policy-route-repetition"
     ).is_dir()
     dual_endpoint_included = (bundle / "evidence" / "dual-endpoint-audit").is_dir()
+    factor_complete_included = (bundle / "evidence" / "factor-complete-route").is_dir()
+    external_agent_policy_included = (bundle / "evidence" / "external-agent-policy").is_dir()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
     local_replication_root = bundle / "evidence" / "local-model-replications"
     local_slsa_included = (local_replication_root / "slsa").is_dir()
@@ -3839,6 +4043,13 @@ def write_manifest(bundle: Path) -> None:
             "dual_endpoint_summary_included": dual_endpoint_included,
             "dual_endpoint_item_level_records_included": dual_endpoint_included,
             "dual_endpoint_raw_response_text_included": False,
+            "factor_complete_route_summary_included": factor_complete_included,
+            "factor_complete_route_item_level_records_included": factor_complete_included,
+            "factor_complete_route_raw_response_text_included": False,
+            "external_agent_policy_summary_included": external_agent_policy_included,
+            "external_agent_policy_item_level_records_included": external_agent_policy_included,
+            "external_agent_policy_raw_response_text_included": False,
+            "external_agent_policy_public_source_commits_included": external_agent_policy_included,
             "local_model_replications_included": local_replications_included,
             "local_model_replication_item_level_records_included": local_replications_included,
             "local_model_replication_raw_generation_text_included": False,
@@ -3952,7 +4163,7 @@ def project_python_module(source_path: Path, roots: set[str], description: str) 
 def paper_balanced_analyzer() -> str:
     return project_python_module(
         ROOT / "scripts" / "analyze_balanced_public_challenge.py",
-        {"derive_reporting_metrics"},
+        {"combine_lane_metrics", "derive_reporting_metrics"},
         "Minimal balanced-challenge metrics used by the anonymous reviewer replay.",
     )
 
@@ -3965,6 +4176,8 @@ def paper_empirical_validator() -> str:
         {
             "validate_fresh_confirmatory",
             "validate_balanced_public_challenge",
+            "validate_external_agent_policy",
+            "validate_factor_complete_route",
             "validate_slsa_portability",
             "validate_local_model_replications",
         },
@@ -3977,6 +4190,8 @@ def main() -> int:
         "status": "PASS",
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
+        "factor_complete_route": validate_factor_complete_route(),
+        "external_agent_policy": validate_external_agent_policy(),
         "slsa_portability": validate_slsa_portability(),
         "local_model_replications": validate_local_model_replications(),
     }
@@ -4144,6 +4359,12 @@ def build(destination: Path) -> None:
         destination / "evidence" / "upstream-policy-route-repetition"
     )
     build_dual_endpoint_anonymous_evidence(destination / "evidence" / "dual-endpoint-audit")
+    build_factor_complete_route_anonymous_evidence(
+        destination / "evidence" / "factor-complete-route"
+    )
+    build_external_agent_policy_anonymous_evidence(
+        destination / "evidence" / "external-agent-policy"
+    )
     (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
     (destination / "README.md").write_text(review_readme(), encoding="utf-8")
     (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")

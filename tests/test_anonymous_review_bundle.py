@@ -115,7 +115,7 @@ def test_upstream_route_repetition_projection_is_complete_and_private(tmp_path: 
     assert len(rows) == 144
     assert sum(row["strict_action_correct"] for row in rows) == 63
     assert sum(row["full_decision_exact"] for row in rows) == 62
-    assert aggregate["frozen_plan_commit"] == "WITHHELD_PREINFERENCE_COMMIT"
+    assert aggregate["frozen_plan_commit"] == "0000000000000000000000000000000000000011"
     assert manifest["file_count"] == len(manifest["files"])
     assert manifest["scope"]["raw_response_text_included"] is False
     assert "f2b4519816817c58a374b0459313d2bed609acf9" not in rendered
@@ -248,6 +248,7 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
         "github_run_id": 32405565039,
         "fresh_confirmatory_run_id": 32453310192,
         "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+        "upstream_source": {"commit": "6f52916ab1025c26bddc2d5c6d1b19e95e6a4883"},
         "fresh_confirmatory_commit": "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
         "raw_response_text": '{"action":"ALLOW"}',
         "nested": [
@@ -263,6 +264,7 @@ def test_empirical_provenance_anonymizer_preserves_payload() -> None:
     assert cleaned["github_run_id"] == "anonymous-capable-final-qualified-run"
     assert cleaned["fresh_confirmatory_run_id"] == "anonymous-fresh-confirmatory-run"
     assert cleaned["frozen_plan_commit"] == "0000000000000000000000000000000000000002"
+    assert cleaned["upstream_source"]["commit"] == source["upstream_source"]["commit"]
     assert cleaned["fresh_confirmatory_commit"] == "0000000000000000000000000000000000000008"
     assert cleaned["raw_response_text"] == source["raw_response_text"]
     assert cleaned["nested"][1] == 99
@@ -398,7 +400,7 @@ def test_review_runner_checks_external_boundary_evidence() -> None:
     normalized = " ".join(readme.split())
     assert "source screen covered 465 public repository seeds" in normalized
     assert "inspected 11 candidates" in normalized
-    assert "retained two boundary-fault cases" in normalized
+    assert "retained two executable boundary-fault cases" in normalized
     assert "zero model calls" in normalized
 
 

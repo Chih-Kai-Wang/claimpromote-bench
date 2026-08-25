@@ -20,6 +20,7 @@ from factor_complete_route_breadth import (  # noqa: E402
     selected_item_ids,
     selected_pairs,
 )
+from validate_factor_complete_route_breadth import validate_study  # noqa: E402
 
 from claimpromotebench.dataset import load_json, load_jsonl  # noqa: E402
 
@@ -66,3 +67,13 @@ def test_schedule_is_complete_balanced_and_below_quota_bound() -> None:
     group_counts = Counter(int(row["group_index"]) for row in schedule["cells"])
     assert set(group_counts.values()) == {len(CONFIGURATIONS)}
     assert conservative_cost_upper_bound_usd() < 7.0 < 12.0
+
+
+def test_completed_study_binds_runtime_sources_at_frozen_commit() -> None:
+    study_root = ROOT / "v2" / "factor-complete-route-breadth-v2"
+    result = validate_study(
+        study_root / "study-plan.json",
+        study_root / "request-schedule.json",
+        frozen_plan_commit="d25172929bfea74a1bd48a44d75972e30834fadd",
+    )
+    assert result["runtime_source_validation"] == "FROZEN_COMMIT"
