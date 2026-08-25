@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anonymous.invalid/schemas/nonallow-policy-decision.schema.json",
+  "title": "NonAllowPolicyDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "policy_version", "action", "reason_codes"],
+  "properties": {
+    "case_id": {"type": "string", "pattern": "^nonallow-[a-z0-9-]+$"},
+    "policy_version": {"enum": ["BEFORE", "AFTER"]},
+    "action": {"enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]},
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "USER_ONLY_PUBLICATION",
+          "AI_GUIDELINES_REQUIRED",
+          "BC_IMPACT_REVIEW_REQUIRED",
+          "LOW_PRIORITY_TEST_OPTIMIZATION",
+          "NEW_SHIPPING_SURFACE_FORBIDDEN",
+          "SECURITY_REVIEW_REQUIRED"
+        ]
+      }
+    }
+  }
+}

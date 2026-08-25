@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "status": "UNSCORED_INTERFACE_SMOKE_COMPLETE",
+  "date_utc": "2026-08-25",
+  "provider": "OpenCode Go",
+  "endpoint": "https://opencode.ai/zen/go/v1/chat/completions",
+  "benchmark_prompts_used": false,
+  "benchmark_gold_used": false,
+  "model_output_content_retained": false,
+  "provider_response_identifiers_retained": false,
+  "hidden_reasoning_retained": false,
+  "credentials_retained": false,
+  "client_retries": 0,
+  "application_posts": 11,
+  "successful_application_posts": 8,
+  "unsuccessful_transport_posts": 3,
+  "successful_usage": {
+    "input_tokens": 189,
+    "output_tokens": 1156,
+    "host_usage_derived_quota_value_usd": 0.001734
+  },
+  "observations": [
+    {
+      "calls": 3,
+      "models": ["glm-5.3", "hy3", "qwen3.7-plus"],
+      "request_mode": "strict_json_schema_without_registered_user_agent",
+      "http_status": 403,
+      "interpretation": "Transport-interface smoke failure caused by omitting the User-Agent used by the registered direct-HTTP runner; no benchmark request was made."
+    },
+    {
+      "calls": 3,
+      "models": ["hy3"],
+      "request_modes": ["prompt_only", "json_object", "strict_json_schema"],
+      "http_status": 200,
+      "schema_valid_calls": 3,
+      "input_tokens": 54,
+      "output_tokens": 289
+    },
+    {
+      "calls": 2,
+      "models": ["glm-5.3", "qwen3.7-plus"],
+      "request_mode": "strict_json_schema",
+      "http_status": 200,
+      "schema_valid_calls": 2,
+      "input_tokens": 54,
+      "output_tokens": 354
+    },
+    {
+      "calls": 3,
+      "models": ["glm-5.3", "hy3", "qwen3.7-plus"],
+      "request_mode": "strict_json_schema_with_registered_sampling_parameters",
+      "requested_parameters": {"temperature": 0, "top_p": 1, "seed": 20260825},
+      "http_status": 200,
+      "schema_valid_calls": 3,
+      "returned_model_aliases_matched_requested_ids": true,
+      "input_tokens": 81,
+      "output_tokens": 513
+    }
+  ],
+  "design_use": "The successful schema-only calls justify preregistering a strict JSON-schema condition on all three routes. They are not pilot data, scored evidence, or a model-selection screen."
+}
