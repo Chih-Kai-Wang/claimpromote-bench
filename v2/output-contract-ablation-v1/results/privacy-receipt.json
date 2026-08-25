@@ -1,0 +1,25 @@
+{
+  "credentials_or_account_identifiers_found": false,
+  "file_sha256": {
+    "aggregate.json": "sha256:cf3d96f6db8eba62abd280316e152191a7fd9f0342cb15aac8d2be9768f1f7dc",
+    "execution-receipt.json": "sha256:eb41fdf5ec1a36cbea285bdeea809a09eb48e2cedc3f13ee96d669dcc5d7812d",
+    "runs/opencode-go-glm-5.3-output-ablation-json-schema-4096.jsonl": "sha256:16a6668af8546c373278499575b8cd1a10bdfeab940db514d16a4d558a4d20e0",
+    "runs/opencode-go-glm-5.3-output-ablation-prompt-12288.jsonl": "sha256:c54d7ee733d3e1eb397ff8a5ed45c2ee9113623359c23a71fb2c218ed4dc94ce",
+    "runs/opencode-go-glm-5.3-output-ablation-prompt-4096.jsonl": "sha256:02c6e2444e58064a696a1c29033ed31d7d030165255d2e04e34d5e6ef3573b65",
+    "runs/opencode-go-glm-5.3-output-ablation-prompt-8192.jsonl": "sha256:0c04f1ba3a8894d40eecca5c85a66b25a6c793218daacd160f2919991a78e508",
+    "runs/opencode-go-hy3-output-ablation-json-schema-4096.jsonl": "sha256:fa118bf70239ed4326196f882d35e0521b02a4bab15bdbe45839bcb81feabb17",
+    "runs/opencode-go-hy3-output-ablation-prompt-12288.jsonl": "sha256:21d30d79e2ba579702d328b28022d9b236af21726fdb0202964a20f1b55cadd2",
+    "runs/opencode-go-hy3-output-ablation-prompt-4096.jsonl": "sha256:e2c7538c0f77910cc8f99e2434295d05047f6f89b54b85ba583cd2686e457e17",
+    "runs/opencode-go-hy3-output-ablation-prompt-8192.jsonl": "sha256:0253cc0ea002c7c6f6c099efbc42bf2a0d48c63ad60f90851b3dec226186192b",
+    "runs/opencode-go-qwen3.7-plus-output-ablation-json-schema-4096.jsonl": "sha256:bb5615197e4b36ee44db15eaf41f359e694db9993fc64a7b563c430ef66bde1f",
+    "runs/opencode-go-qwen3.7-plus-output-ablation-prompt-12288.jsonl": "sha256:13fab7f93d00af783326d48a0ef6b6dceb5ed8f236fc480fc502b049586f2946",
+    "runs/opencode-go-qwen3.7-plus-output-ablation-prompt-4096.jsonl": "sha256:2923c70d86bc8831b85faf35cd5e2b4f52fbd32c49bf88d1c8a8647163d9a969",
+    "runs/opencode-go-qwen3.7-plus-output-ablation-prompt-8192.jsonl": "sha256:4eed50bd77f19008af905c663542fa13fb0ad2cbe6d6ed194f6e00bed34f48aa"
+  },
+  "files_scanned": 14,
+  "hidden_reasoning_retained": false,
+  "provider_response_identifiers_retained": false,
+  "raw_response_text_retained": false,
+  "schema_version": "1.0.0",
+  "status": "PASS"
+}

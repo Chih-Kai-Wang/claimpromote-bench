@@ -1,0 +1,134 @@
+{
+  "application_posts": 360,
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-25T19:49:44.995600Z",
+  "credentials_retained": false,
+  "durable_request_intents": 360,
+  "durable_terminal_records": 360,
+  "frozen_plan_commit": "a68cef65940988c79ca2a8df68ccee84a2efcddc",
+  "hidden_reasoning_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-glm-5.3-output-ablation-json-schema-4096.jsonl": "sha256:16a6668af8546c373278499575b8cd1a10bdfeab940db514d16a4d558a4d20e0",
+    "opencode-go-glm-5.3-output-ablation-prompt-12288.jsonl": "sha256:c54d7ee733d3e1eb397ff8a5ed45c2ee9113623359c23a71fb2c218ed4dc94ce",
+    "opencode-go-glm-5.3-output-ablation-prompt-4096.jsonl": "sha256:02c6e2444e58064a696a1c29033ed31d7d030165255d2e04e34d5e6ef3573b65",
+    "opencode-go-glm-5.3-output-ablation-prompt-8192.jsonl": "sha256:0c04f1ba3a8894d40eecca5c85a66b25a6c793218daacd160f2919991a78e508",
+    "opencode-go-hy3-output-ablation-json-schema-4096.jsonl": "sha256:fa118bf70239ed4326196f882d35e0521b02a4bab15bdbe45839bcb81feabb17",
+    "opencode-go-hy3-output-ablation-prompt-12288.jsonl": "sha256:21d30d79e2ba579702d328b28022d9b236af21726fdb0202964a20f1b55cadd2",
+    "opencode-go-hy3-output-ablation-prompt-4096.jsonl": "sha256:e2c7538c0f77910cc8f99e2434295d05047f6f89b54b85ba583cd2686e457e17",
+    "opencode-go-hy3-output-ablation-prompt-8192.jsonl": "sha256:0253cc0ea002c7c6f6c099efbc42bf2a0d48c63ad60f90851b3dec226186192b",
+    "opencode-go-qwen3.7-plus-output-ablation-json-schema-4096.jsonl": "sha256:bb5615197e4b36ee44db15eaf41f359e694db9993fc64a7b563c430ef66bde1f",
+    "opencode-go-qwen3.7-plus-output-ablation-prompt-12288.jsonl": "sha256:13fab7f93d00af783326d48a0ef6b6dceb5ed8f236fc480fc502b049586f2946",
+    "opencode-go-qwen3.7-plus-output-ablation-prompt-4096.jsonl": "sha256:2923c70d86bc8831b85faf35cd5e2b4f52fbd32c49bf88d1c8a8647163d9a969",
+    "opencode-go-qwen3.7-plus-output-ablation-prompt-8192.jsonl": "sha256:4eed50bd77f19008af905c663542fa13fb0ad2cbe6d6ed194f6e00bed34f48aa"
+  },
+  "lanes": [
+    {
+      "condition_id": "prompt-4096",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-prompt-4096",
+      "parseable": 4,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 5
+    },
+    {
+      "condition_id": "prompt-4096",
+      "lane_id": "opencode-go-hy3-output-ablation-prompt-4096",
+      "parseable": 3,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 5
+    },
+    {
+      "condition_id": "prompt-4096",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-prompt-4096",
+      "parseable": 22,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 7
+    },
+    {
+      "condition_id": "prompt-8192",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-prompt-8192",
+      "parseable": 15,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 5
+    },
+    {
+      "condition_id": "prompt-8192",
+      "lane_id": "opencode-go-hy3-output-ablation-prompt-8192",
+      "parseable": 18,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 6
+    },
+    {
+      "condition_id": "prompt-8192",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-prompt-8192",
+      "parseable": 20,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 8
+    },
+    {
+      "condition_id": "prompt-12288",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-prompt-12288",
+      "parseable": 18,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 6
+    },
+    {
+      "condition_id": "prompt-12288",
+      "lane_id": "opencode-go-hy3-output-ablation-prompt-12288",
+      "parseable": 22,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 6
+    },
+    {
+      "condition_id": "prompt-12288",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-prompt-12288",
+      "parseable": 21,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 9
+    },
+    {
+      "condition_id": "json-schema-4096",
+      "lane_id": "opencode-go-glm-5.3-output-ablation-json-schema-4096",
+      "parseable": 7,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 6
+    },
+    {
+      "condition_id": "json-schema-4096",
+      "lane_id": "opencode-go-hy3-output-ablation-json-schema-4096",
+      "parseable": 3,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 6
+    },
+    {
+      "condition_id": "json-schema-4096",
+      "lane_id": "opencode-go-qwen3.7-plus-output-ablation-json-schema-4096",
+      "parseable": 23,
+      "records": 30,
+      "replication": 1,
+      "transport_errors": 7
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 360,
+  "private_journal_hashes_withheld": true,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": null,
+  "schedule_sha256": "sha256:c71dced2a11ac7d801e6b4550487a02c6f36e629c8f9e8f9b3fbe1a9edd55b84",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-25T16:29:36.084926Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-output-contract-ablation-2026-08-v1",
+  "terminal_journal_sha256": null
+}
