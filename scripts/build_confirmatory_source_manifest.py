@@ -84,6 +84,7 @@ _POST_R6_NON_RUNTIME_PATHS = {
     "scripts/derive_policy_migration_mutation_audit.py",
     "scripts/analyze_policy_switch_hosted_replacement.py",
     "scripts/analyze_review_gap_experiments.py",
+    "scripts/analyze_review_gap_experiments_privacy_patch.py",
     "scripts/freeze_policy_switch_hosted_replacement.py",
     "scripts/freeze_review_gap_experiments.py",
     "scripts/run_policy_switch_hosted_replacement.py",

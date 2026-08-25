@@ -1,0 +1,30 @@
+{
+  "credentials_or_account_identifiers_found": false,
+  "file_sha256": {
+    "aggregate.json": "sha256:90e1124173da4235766b7880ae5b7511addb8f78cda844a09e2b89e0290f92dc",
+    "analysis-patch-receipt.json": "sha256:e1bb0a77e97e5e530f6a02096612efb5c2ff601e7de23e9e5dccf8ceacebd592",
+    "execution-receipt.json": "sha256:49c5921a48435e7ae9418de927237bd929d8d1994071a54a57ca6dc874a2dfd5",
+    "runs/opencode-go-glm-5.3-nonallow-case-only.jsonl": "sha256:357cf937992f9909f1406555cdf78873b6e7b09bc67800deae7b3e5ccdefd71f",
+    "runs/opencode-go-glm-5.3-nonallow-full-policy-r1.jsonl": "sha256:c6ae58b6436c944307fff1702e749188faa928756c4dc2eae1011d8749966556",
+    "runs/opencode-go-glm-5.3-nonallow-full-policy-r2.jsonl": "sha256:9b7540b1e7f231665f57ee3b5f259299f339e9e8c6661d9591b6c91c96c50075",
+    "runs/opencode-go-glm-5.3-nonallow-full-policy-r3.jsonl": "sha256:aa8873a370f6f492f67374feaa9f52fdf6e7ef725bcb968e0eadef80a9bcfb5f",
+    "runs/opencode-go-glm-5.3-nonallow-source-shuffled.jsonl": "sha256:a34fcf6622abd13338b1e8acb97bbd919ca8d0691c6e847fbe856ea939d1bfbf",
+    "runs/opencode-go-hy3-nonallow-case-only.jsonl": "sha256:7f9c761d0b1d7521711409ba38c5eabcee720039f63b0663d12da0b1d345886f",
+    "runs/opencode-go-hy3-nonallow-full-policy-r1.jsonl": "sha256:0020397929ee21735b5e0a6875b1b3651d081a314675bf060e351ca3d770e1e6",
+    "runs/opencode-go-hy3-nonallow-full-policy-r2.jsonl": "sha256:33f69da0e1e042b5b908211d951f9dc7b91f834999cee55f15c9942854b23f1d",
+    "runs/opencode-go-hy3-nonallow-full-policy-r3.jsonl": "sha256:c4e5793bbdab1c09b9d9bae00d89bf3d9e44becc464d57e54e812d9f6771ce56",
+    "runs/opencode-go-hy3-nonallow-source-shuffled.jsonl": "sha256:ae0a68d6f9835f501cf8e23dff744d455c6b320a85d7f6f4fd0653b95e435691",
+    "runs/opencode-go-qwen3.7-plus-nonallow-case-only.jsonl": "sha256:723a5fda67fd3177c0e21833f398a5019ca8b37160bc568a2c800abbcacbb3c9",
+    "runs/opencode-go-qwen3.7-plus-nonallow-full-policy-r1.jsonl": "sha256:fd242b5f676ceff25686dc15c2e20affa60b428602fd2027d1d0a8c600c9b71c",
+    "runs/opencode-go-qwen3.7-plus-nonallow-full-policy-r2.jsonl": "sha256:532a4bad6b172eec606706497dc11cc479b88b5585779ce4ae70ee02c4ffe0ba",
+    "runs/opencode-go-qwen3.7-plus-nonallow-full-policy-r3.jsonl": "sha256:957fefe57fc1082776e0fddc362091a05a3541f904c3858f36cd27f8b178ab96",
+    "runs/opencode-go-qwen3.7-plus-nonallow-source-shuffled.jsonl": "sha256:3086d2f3ae1858cfc5933a7f65c5f81067c01e7fb2796f26f1f655daf2b77bbd"
+  },
+  "files_scanned": 18,
+  "hidden_reasoning_retained": false,
+  "posthoc_privacy_patch_receipt": "analysis-patch-receipt.json",
+  "provider_response_identifiers_retained": false,
+  "raw_response_text_retained": false,
+  "schema_version": "1.0.0",
+  "status": "PASS"
+}

@@ -1,0 +1,161 @@
+{
+  "application_posts": 240,
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-25T16:26:39.769134Z",
+  "credentials_retained": false,
+  "durable_request_intents": 240,
+  "durable_terminal_records": 240,
+  "frozen_plan_commit": "a68cef65940988c79ca2a8df68ccee84a2efcddc",
+  "hidden_reasoning_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-glm-5.3-nonallow-case-only.jsonl": "sha256:357cf937992f9909f1406555cdf78873b6e7b09bc67800deae7b3e5ccdefd71f",
+    "opencode-go-glm-5.3-nonallow-full-policy-r1.jsonl": "sha256:c6ae58b6436c944307fff1702e749188faa928756c4dc2eae1011d8749966556",
+    "opencode-go-glm-5.3-nonallow-full-policy-r2.jsonl": "sha256:9b7540b1e7f231665f57ee3b5f259299f339e9e8c6661d9591b6c91c96c50075",
+    "opencode-go-glm-5.3-nonallow-full-policy-r3.jsonl": "sha256:aa8873a370f6f492f67374feaa9f52fdf6e7ef725bcb968e0eadef80a9bcfb5f",
+    "opencode-go-glm-5.3-nonallow-source-shuffled.jsonl": "sha256:a34fcf6622abd13338b1e8acb97bbd919ca8d0691c6e847fbe856ea939d1bfbf",
+    "opencode-go-hy3-nonallow-case-only.jsonl": "sha256:7f9c761d0b1d7521711409ba38c5eabcee720039f63b0663d12da0b1d345886f",
+    "opencode-go-hy3-nonallow-full-policy-r1.jsonl": "sha256:0020397929ee21735b5e0a6875b1b3651d081a314675bf060e351ca3d770e1e6",
+    "opencode-go-hy3-nonallow-full-policy-r2.jsonl": "sha256:33f69da0e1e042b5b908211d951f9dc7b91f834999cee55f15c9942854b23f1d",
+    "opencode-go-hy3-nonallow-full-policy-r3.jsonl": "sha256:c4e5793bbdab1c09b9d9bae00d89bf3d9e44becc464d57e54e812d9f6771ce56",
+    "opencode-go-hy3-nonallow-source-shuffled.jsonl": "sha256:ae0a68d6f9835f501cf8e23dff744d455c6b320a85d7f6f4fd0653b95e435691",
+    "opencode-go-qwen3.7-plus-nonallow-case-only.jsonl": "sha256:723a5fda67fd3177c0e21833f398a5019ca8b37160bc568a2c800abbcacbb3c9",
+    "opencode-go-qwen3.7-plus-nonallow-full-policy-r1.jsonl": "sha256:fd242b5f676ceff25686dc15c2e20affa60b428602fd2027d1d0a8c600c9b71c",
+    "opencode-go-qwen3.7-plus-nonallow-full-policy-r2.jsonl": "sha256:532a4bad6b172eec606706497dc11cc479b88b5585779ce4ae70ee02c4ffe0ba",
+    "opencode-go-qwen3.7-plus-nonallow-full-policy-r3.jsonl": "sha256:957fefe57fc1082776e0fddc362091a05a3541f904c3858f36cd27f8b178ab96",
+    "opencode-go-qwen3.7-plus-nonallow-source-shuffled.jsonl": "sha256:3086d2f3ae1858cfc5933a7f65c5f81067c01e7fb2796f26f1f655daf2b77bbd"
+  },
+  "lanes": [
+    {
+      "condition_id": "full-policy-r1",
+      "lane_id": "opencode-go-glm-5.3-nonallow-full-policy-r1",
+      "parseable": 15,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r1",
+      "lane_id": "opencode-go-hy3-nonallow-full-policy-r1",
+      "parseable": 12,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r1",
+      "lane_id": "opencode-go-qwen3.7-plus-nonallow-full-policy-r1",
+      "parseable": 15,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r2",
+      "lane_id": "opencode-go-glm-5.3-nonallow-full-policy-r2",
+      "parseable": 15,
+      "records": 16,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r2",
+      "lane_id": "opencode-go-hy3-nonallow-full-policy-r2",
+      "parseable": 13,
+      "records": 16,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r2",
+      "lane_id": "opencode-go-qwen3.7-plus-nonallow-full-policy-r2",
+      "parseable": 14,
+      "records": 16,
+      "replication": 2,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r3",
+      "lane_id": "opencode-go-glm-5.3-nonallow-full-policy-r3",
+      "parseable": 14,
+      "records": 16,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r3",
+      "lane_id": "opencode-go-hy3-nonallow-full-policy-r3",
+      "parseable": 11,
+      "records": 16,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "full-policy-r3",
+      "lane_id": "opencode-go-qwen3.7-plus-nonallow-full-policy-r3",
+      "parseable": 14,
+      "records": 16,
+      "replication": 3,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "case-only",
+      "lane_id": "opencode-go-glm-5.3-nonallow-case-only",
+      "parseable": 7,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "case-only",
+      "lane_id": "opencode-go-hy3-nonallow-case-only",
+      "parseable": 4,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "case-only",
+      "lane_id": "opencode-go-qwen3.7-plus-nonallow-case-only",
+      "parseable": 14,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "source-shuffled",
+      "lane_id": "opencode-go-glm-5.3-nonallow-source-shuffled",
+      "parseable": 1,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "source-shuffled",
+      "lane_id": "opencode-go-hy3-nonallow-source-shuffled",
+      "parseable": 0,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    },
+    {
+      "condition_id": "source-shuffled",
+      "lane_id": "opencode-go-qwen3.7-plus-nonallow-source-shuffled",
+      "parseable": 12,
+      "records": 16,
+      "replication": 1,
+      "transport_errors": 0
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 240,
+  "private_journal_hashes_withheld": true,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": null,
+  "schedule_sha256": "sha256:be2c1870e2e3866e25785d62f21f768e654bfaad6bd41059f8a7c0d3623a2c11",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-25T15:52:18.834761Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-nonallow-policy-controls-2026-08-v1",
+  "terminal_journal_sha256": null
+}
