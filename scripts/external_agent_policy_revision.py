@@ -282,6 +282,19 @@ _BASE_CONFIGURATIONS: tuple[Json, ...] = (
         "data_training": False,
         "data_retention_days": 30,
     },
+    {
+        "slug": "ox-alpha-free",
+        "model": "ox-alpha-free",
+        "model_family": "Undisclosed OX Alpha",
+        "model_identity_status": "UNDISCLOSED_STEALTH_MODEL",
+        "api_kind": "openai_compatible",
+        "input_usd_per_million": 0.0,
+        "cached_input_usd_per_million": 0.0,
+        "output_usd_per_million": 0.0,
+        "data_training": None,
+        "data_retention_days": None,
+        "billing_mode": "OFFICIAL_LIMITED_TIME_FREE_ROUTE",
+    },
 )
 
 
@@ -292,6 +305,10 @@ CONFIGURATIONS: tuple[Json, ...] = tuple(
     }
     for row in _BASE_CONFIGURATIONS
 )
+PAIRS_PER_REPLICATION = len(CASES)
+ITEMS_PER_REPLICATION = PAIRS_PER_REPLICATION * 2
+PLANNED_LANES = len(CONFIGURATIONS) * REPLICATIONS
+PLANNED_CELLS = PLANNED_LANES * ITEMS_PER_REPLICATION
 
 
 def source_by_id(source_id: str) -> Json:
@@ -336,7 +353,9 @@ def expanded_lanes() -> list[Json]:
                     "response_format": "prompt_only_json",
                     "allow_single_json_object_extraction": True,
                     "max_output_tokens": MAX_OUTPUT_TOKENS,
-                    "billing_mode": "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA",
+                    "billing_mode": configuration.get(
+                        "billing_mode", "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA"
+                    ),
                 }
             )
             lanes.append(lane)

@@ -28,6 +28,7 @@ from external_agent_policy_revision import (  # noqa: E402
     DATASET_ROOT,
     MAX_OUTPUT_TOKENS,
     PACKET_PATH,
+    PLANNED_CELLS,
     REPLICATIONS,
     RUN_SCHEMA,
     STUDY_ID,
@@ -315,10 +316,10 @@ def analyze(plan_path: Path, schedule_path: Path, private_dir: Path, output_dir:
         receipt.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
         or receipt.get("study_id") != STUDY_ID
         or receipt.get("schedule_sha256") != schedule["schedule_sha256"]
-        or receipt.get("planned_cells") != 420
-        or receipt.get("durable_request_intents") != 420
-        or receipt.get("durable_terminal_records") != 420
-        or receipt.get("application_posts") != 420
+        or receipt.get("planned_cells") != PLANNED_CELLS
+        or receipt.get("durable_request_intents") != PLANNED_CELLS
+        or receipt.get("durable_terminal_records") != PLANNED_CELLS
+        or receipt.get("application_posts") != PLANNED_CELLS
         or receipt.get("client_retry_count") != 0
         or receipt.get("partial_resume_used") is not False
         or receipt.get("credentials_retained") is not False
@@ -459,14 +460,14 @@ def analyze(plan_path: Path, schedule_path: Path, private_dir: Path, output_dir:
                 "unique_model_families": len({str(row["model_family"]) for row in CONFIGURATIONS}),
             },
             "execution": {
-                "scheduled_model_item_cells": 420,
-                "application_posts": 420,
+                "scheduled_model_item_cells": PLANNED_CELLS,
+                "application_posts": PLANNED_CELLS,
                 "client_retries": 0,
                 "partial_resume_used": False,
                 "concurrent_configuration_width": len(CONFIGURATIONS),
             },
             "budget": {
-                "billing_mode": "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA",
+                "billing_mode": "MIXED_PREEXISTING_SUBSCRIPTION_AND_LIMITED_TIME_FREE",
                 "incremental_cash_spend_usd": 0.0,
                 "host_usage_derived_quota_value_usd": (
                     sum(quota_values) if len(quota_values) == len(all_private_records) else None
@@ -506,8 +507,8 @@ def analyze(plan_path: Path, schedule_path: Path, private_dir: Path, output_dir:
         public_records = [
             row for path in sorted(runs_dir.glob("*.jsonl")) for row in load_jsonl(path)
         ]
-        if len(public_records) != 420:
-            fail("public derivative does not contain 420 records")
+        if len(public_records) != PLANNED_CELLS:
+            fail(f"public derivative does not contain {PLANNED_CELLS} records")
         if any(
             row.get("raw_response_text") is not None
             or row.get("provider_response_id") is not None

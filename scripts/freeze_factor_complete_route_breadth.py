@@ -94,10 +94,16 @@ def fetch_catalog(api_key: str) -> tuple[bytes, Json]:
     return raw, value
 
 
-def catalog_snapshot(raw: bytes, value: Json) -> Json:
+def catalog_snapshot(
+    raw: bytes, value: Json, *, selected_model_ids: list[str] | None = None
+) -> Json:
     rows = value["data"]
     model_ids = [str(row.get("id")) for row in rows if isinstance(row, dict)]
-    selected_ids = [str(row["model"]) for row in CONFIGURATIONS]
+    selected_ids = (
+        [str(row["model"]) for row in CONFIGURATIONS]
+        if selected_model_ids is None
+        else selected_model_ids
+    )
     selected_entries: list[Json] = []
     for model_id in selected_ids:
         matches = [row for row in rows if isinstance(row, dict) and row.get("id") == model_id]

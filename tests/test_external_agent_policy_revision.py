@@ -13,6 +13,8 @@ from external_agent_policy_revision import (  # noqa: E402
     CASES,
     CONFIGURATIONS,
     MAX_OUTPUT_TOKENS,
+    PLANNED_CELLS,
+    PLANNED_LANES,
     REPLICATIONS,
     SOURCES,
     conservative_cost_upper_bound_usd,
@@ -24,6 +26,7 @@ from factor_complete_route_breadth import (  # noqa: E402
     conservative_cost_upper_bound_usd as factor_complete_cost_upper_bound_usd,
 )
 from freeze_external_agent_policy_revision import prompt_for  # noqa: E402
+from freeze_factor_complete_route_breadth import catalog_snapshot  # noqa: E402
 from run_external_agent_policy_revision import diagnose  # noqa: E402
 
 from claimpromotebench.hashing import sha256_bytes  # noqa: E402
@@ -53,6 +56,10 @@ def _packet() -> dict[str, object]:
 def test_external_policy_cases_cover_changes_controls_and_actions() -> None:
     assert len(SOURCES) == 2
     assert len(CASES) == 10
+    assert len(CONFIGURATIONS) == 8
+    ox = next(row for row in CONFIGURATIONS if row["model"] == "ox-alpha-free")
+    assert ox["model_identity_status"] == "UNDISCLOSED_STEALTH_MODEL"
+    assert ox["billing_mode"] == "OFFICIAL_LIMITED_TIME_FREE_ROUTE"
     assert sum(bool(case["changed"]) for case in CASES) == 6
     assert sum(not bool(case["changed"]) for case in CASES) == 4
     assert {str(case["source_id"]) for case in CASES} == {
@@ -67,7 +74,7 @@ def test_external_policy_cases_cover_changes_controls_and_actions() -> None:
 
 def test_external_policy_routes_use_one_prompt_only_contract() -> None:
     lanes = expanded_lanes()
-    assert len(lanes) == len(CONFIGURATIONS) * REPLICATIONS == 21
+    assert len(lanes) == len(CONFIGURATIONS) * REPLICATIONS == PLANNED_LANES
     by_kind = {str(row["api_kind"]): row for row in lanes}
     chat = request_body(by_kind["openai_compatible"], "prompt")
     messages = request_body(by_kind["anthropic_messages"], "prompt")
@@ -77,6 +84,14 @@ def test_external_policy_routes_use_one_prompt_only_contract() -> None:
     assert responses["input"][0]["content"] == [{"type": "input_text", "text": "prompt"}]
     assert responses["max_output_tokens"] == MAX_OUTPUT_TOKENS
     assert all("response_format" not in body for body in (chat, messages, responses))
+
+
+def test_external_policy_catalog_snapshot_uses_its_eight_route_selection() -> None:
+    selected = [str(row["model"]) for row in CONFIGURATIONS]
+    catalog = {"data": [{"id": model_id, "object": "model"} for model_id in selected]}
+    snapshot = catalog_snapshot(b"catalog", catalog, selected_model_ids=selected)
+    assert snapshot["selected_model_ids"] == selected
+    assert "ox-alpha-free" in snapshot["selected_model_ids"]
 
 
 def test_external_policy_prompt_has_distinct_complete_action_semantics() -> None:
@@ -121,10 +136,10 @@ def test_external_policy_pair_metrics_expose_version_invariant_actions() -> None
 def test_external_policy_schedule_is_complete_balanced_and_below_quota() -> None:
     packet = _packet()
     schedule = schedule_payload({"formal_lanes": expanded_lanes()}, packet)
-    assert schedule["planned_cells"] == 420
+    assert schedule["planned_cells"] == PLANNED_CELLS
     assert schedule["planned_groups"] == 60
     assert schedule["planned_items_per_lane"] == 20
-    assert len({str(row["cell_id"]) for row in schedule["cells"]}) == 420
+    assert len({str(row["cell_id"]) for row in schedule["cells"]}) == PLANNED_CELLS
     assert set(Counter(str(row["lane_id"]) for row in schedule["cells"]).values()) == {20}
     assert set(Counter(int(row["group_index"]) for row in schedule["cells"]).values()) == {
         len(CONFIGURATIONS)

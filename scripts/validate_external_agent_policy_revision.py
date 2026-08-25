@@ -20,8 +20,11 @@ from external_agent_policy_revision import (  # noqa: E402
     CONFIGURATIONS,
     DATASET_ROOT,
     DECISION_SCHEMA,
+    ITEMS_PER_REPLICATION,
     MAX_OUTPUT_TOKENS,
     PACKET_PATH,
+    PLANNED_CELLS,
+    PLANNED_LANES,
     REPLICATIONS,
     SOURCES,
     STUDY_ID,
@@ -242,16 +245,16 @@ def validate_schedule(plan: Json, schedule: Json, packet: Json) -> None:
         or schedule.get("dataset_manifest_sha256") != packet["dataset_manifest_sha256"]
         or schedule.get("replications") != REPLICATIONS
         or schedule.get("planned_configurations") != len(CONFIGURATIONS)
-        or schedule.get("planned_lanes") != 21
-        or schedule.get("planned_items_per_lane") != 20
-        or schedule.get("planned_groups") != 60
-        or schedule.get("planned_cells") != 420
+        or schedule.get("planned_lanes") != PLANNED_LANES
+        or schedule.get("planned_items_per_lane") != ITEMS_PER_REPLICATION
+        or schedule.get("planned_groups") != ITEMS_PER_REPLICATION * REPLICATIONS
+        or schedule.get("planned_cells") != PLANNED_CELLS
         or schedule.get("application_posts_per_cell") != 1
         or schedule.get("client_retry_count") != 0
     ):
         fail("schedule identity or scope changed")
     cells = schedule.get("cells")
-    if not isinstance(cells, list) or len(cells) != 420:
+    if not isinstance(cells, list) or len(cells) != PLANNED_CELLS:
         fail("schedule cells are incomplete")
     lanes = {str(row["lane_id"]): row for row in plan["formal_lanes"]}
     packet_by_id = {str(row["item_id"]): row for row in packet["records"]}
@@ -318,8 +321,8 @@ def validate_schedule(plan: Json, schedule: Json, packet: Json) -> None:
         position_counts[expected_configuration][within] += 1
         cell_ids.add(str(cell["cell_id"]))
     if (
-        len(cell_ids) != 420
-        or set(lane_counts.values()) != {20}
+        len(cell_ids) != PLANNED_CELLS
+        or set(lane_counts.values()) != {ITEMS_PER_REPLICATION}
         or set(group_counts.values()) != {len(CONFIGURATIONS)}
         or any(
             max(counts.values()) - min(counts.values()) > 1 for counts in position_counts.values()
@@ -341,12 +344,12 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
         or plan.get("design", {}).get("author_policy_mapping") is not True
         or plan.get("design", {}).get("sources") != 2
         or plan.get("design", {}).get("pairs") != 10
-        or plan.get("design", {}).get("items_per_replication") != 20
+        or plan.get("design", {}).get("items_per_replication") != ITEMS_PER_REPLICATION
         or plan.get("design", {}).get("changed_pairs") != 6
         or plan.get("design", {}).get("stable_control_pairs") != 4
         or plan.get("design", {}).get("configurations") != len(CONFIGURATIONS)
         or plan.get("design", {}).get("replications_per_configuration") != REPLICATIONS
-        or plan.get("design", {}).get("planned_model_item_cells") != 420
+        or plan.get("design", {}).get("planned_model_item_cells") != PLANNED_CELLS
         or plan.get("design", {}).get("source_selection_uses_case_outputs") is not False
         or plan.get("design", {}).get("case_selection_uses_case_outputs") is not False
         or plan.get("design", {}).get("labels_use_case_outputs") is not False

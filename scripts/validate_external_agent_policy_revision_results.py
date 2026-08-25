@@ -23,6 +23,8 @@ from analyze_factor_complete_route_breadth import (  # noqa: E402
 )
 from external_agent_policy_revision import (  # noqa: E402
     CONFIGURATIONS,
+    PLANNED_CELLS,
+    PLANNED_LANES,
     REPLICATIONS,
     RUN_SCHEMA,
     STUDY_ID,
@@ -61,8 +63,8 @@ def validate_results(plan_path: Path, schedule_path: Path, results_dir: Path) ->
         != {"ALLOW": 14, "HOLD": 3, "DEMOTE": 1, "ESCALATE": 2}
         or aggregate.get("coverage", {}).get("configurations") != len(CONFIGURATIONS)
         or aggregate.get("coverage", {}).get("replications_per_configuration") != REPLICATIONS
-        or aggregate.get("execution", {}).get("scheduled_model_item_cells") != 420
-        or aggregate.get("execution", {}).get("application_posts") != 420
+        or aggregate.get("execution", {}).get("scheduled_model_item_cells") != PLANNED_CELLS
+        or aggregate.get("execution", {}).get("application_posts") != PLANNED_CELLS
         or aggregate.get("execution", {}).get("client_retries") != 0
         or aggregate.get("raw_prompts_or_responses_in_aggregate") is not False
         or aggregate.get("label_definition", {}).get("human_annotators") != 0
@@ -72,22 +74,22 @@ def validate_results(plan_path: Path, schedule_path: Path, results_dir: Path) ->
     if (
         receipt.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
         or receipt.get("study_id") != STUDY_ID
-        or receipt.get("planned_cells") != 420
-        or receipt.get("application_posts") != 420
+        or receipt.get("planned_cells") != PLANNED_CELLS
+        or receipt.get("application_posts") != PLANNED_CELLS
         or receipt.get("client_retry_count") != 0
         or receipt.get("partial_resume_used") is not False
         or receipt.get("credentials_retained") is not False
         or receipt.get("provider_response_identifiers_retained") is not False
         or receipt.get("hidden_reasoning_retained") is not False
         or receipt.get("private_lane_output_sha256_retained") is not False
-        or receipt.get("public_run_files") != 21
+        or receipt.get("public_run_files") != PLANNED_LANES
     ):
         fail("public execution receipt changed")
     if (
         privacy.get("status") != "EXTERNAL_AGENT_POLICY_PUBLIC_PRIVACY_PASS"
         or privacy.get("study_id") != STUDY_ID
-        or privacy.get("public_run_files") != 21
-        or privacy.get("public_terminal_records") != 420
+        or privacy.get("public_run_files") != PLANNED_LANES
+        or privacy.get("public_terminal_records") != PLANNED_CELLS
         or privacy.get("raw_response_text_retained") is not False
         or privacy.get("provider_response_identifiers_retained") is not False
         or privacy.get("hidden_reasoning_retained") is not False
@@ -156,7 +158,7 @@ def validate_results(plan_path: Path, schedule_path: Path, results_dir: Path) ->
             fail(f"stability metrics changed: {configuration_id}")
         if failure_cause_summary(configuration_records) != aggregate_row["failure_causes"]:
             fail(f"failure-cause summary changed: {configuration_id}")
-    if len(public_records) != 420:
+    if len(public_records) != PLANNED_CELLS:
         fail("public terminal-record count changed")
     if receipt.get("lane_output_sha256") != expected_hashes:
         fail("public run hashes changed")
@@ -166,7 +168,7 @@ def validate_results(plan_path: Path, schedule_path: Path, results_dir: Path) ->
     if privacy.get("files_scanned") != expected_scanned_files:
         fail("privacy file count is stale")
     reported_quota = aggregate.get("budget", {}).get("host_usage_derived_quota_value_usd")
-    if len(cost_values) == 420:
+    if len(cost_values) == PLANNED_CELLS:
         if (
             not isinstance(reported_quota, (int, float))
             or abs(float(reported_quota) - sum(cost_values)) > 1e-12

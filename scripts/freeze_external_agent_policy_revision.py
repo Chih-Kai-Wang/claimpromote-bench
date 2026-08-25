@@ -392,7 +392,9 @@ def build_plan(catalog_path: Path, schedule_path: Path, schedule: Json) -> Json:
         },
         "budget": {
             "authorization_scope": "USER_AUTHORIZED_AVAILABLE_OPENCODE_GO_USAGE",
-            "subscription_quota_only": True,
+            "subscription_quota_only": False,
+            "authorized_existing_go_routes_only": True,
+            "limited_time_free_route_included": True,
             "use_balance_after_subscription_limit": False,
             "workflow_initiated_purchase_or_recharge": False,
             "incremental_cash_cap_usd": 0.0,
@@ -445,7 +447,14 @@ def main() -> int:
     _, _, _, packet = build_dataset(source_receipt_path)
     catalog_raw, catalog = fetch_catalog(api_key)
     catalog_path = STUDY_ROOT / "catalog-snapshot.json"
-    write_new_json(catalog_path, catalog_snapshot(catalog_raw, catalog))
+    write_new_json(
+        catalog_path,
+        catalog_snapshot(
+            catalog_raw,
+            catalog,
+            selected_model_ids=[str(row["model"]) for row in CONFIGURATIONS],
+        ),
+    )
     provisional = {"formal_lanes": expanded_lanes()}
     schedule = schedule_payload(provisional, packet)
     schedule_path = STUDY_ROOT / "request-schedule.json"
