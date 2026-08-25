@@ -643,7 +643,7 @@ def test_submission_wrappers_preserve_canonical_reproducibility_disclosure() -> 
     combined = "".join(blocks)
 
     assert "binds policies, datasets, prompts, source tests" in combined
-    assert "without reissuing hosted calls" in combined
+    assert "from the existing hosted records" in combined
     assert "removes private service metadata and hidden reasoning" in combined
     assert "Generative AI assisted" in combined
     assert "run_review_checks.py" not in combined
