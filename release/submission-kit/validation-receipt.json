@@ -1,8 +1,8 @@
 {
   "anonymous_bundle": {
-    "manifest_file_count": 801,
-    "manifest_plus_self_file_count": 802,
-    "manifest_sha256": "7047cb94d557f78a172c933464a32e5be4b38b399e29ec6dac170c3aef78ab72",
+    "manifest_file_count": 967,
+    "manifest_plus_self_file_count": 968,
+    "manifest_sha256": "ea8c7c72bc8bb4c009bed1c1f108cb7d0ddf238e293fe5b3452adcc4ba324e12",
     "privacy_scope": {
       "agent_governance_source_evidence_included": true,
       "balanced_public_challenge_hidden_reasoning_included": false,
@@ -40,6 +40,14 @@
       "local_policy_transition_graph_summary_included": true,
       "local_slsa_replication_item_level_records_included": true,
       "local_slsa_replication_summary_included": true,
+      "nonallow_policy_controls_item_level_records_included": true,
+      "nonallow_policy_controls_public_source_commits_included": true,
+      "nonallow_policy_controls_raw_response_text_included": false,
+      "nonallow_policy_controls_summary_included": true,
+      "output_contract_ablation_item_level_records_included": true,
+      "output_contract_ablation_raw_response_text_included": false,
+      "output_contract_ablation_summary_included": true,
+      "output_contract_ablation_transport_diagnostic_included": true,
       "private_construction_seed_included": false,
       "provider_response_identifiers_included": false,
       "public_alpha_included": true,
@@ -58,28 +66,28 @@
       "upstream_route_repetition_summary_included": true
     },
     "verification": "PASS",
-    "zip_file_entries": 802
+    "zip_file_entries": 968
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 387559,
-      "sha256": "8e08979208e00f3383b51f4073173bd07ff19cbd3dfcc1f69c4f788732b21938"
+      "bytes": 404683,
+      "sha256": "745c1b6008c6cdb451832621f6bed55474c06d4bcb8045a4006451b135fbce73"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 2398151,
-      "sha256": "6c29c80fca2b4e33905304754d529f25a6309cacf4670d0d720fe40b866599eb"
+      "bytes": 2914830,
+      "sha256": "d42657ba3fcddaa45a812cd8b4b4102883785d05c80407b748ce7724db1555ff"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 24917,
-      "sha256": "3dac13476c4965c64a25e09c05fbb93f7ca17c403dd75d3e259f92e7d4365c0d"
+      "bytes": 27287,
+      "sha256": "2148ee181d20930a4ddcf849cfbb2f43589a3ec820652f1c044f457b6d792906"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 51945,
-      "sha256": "b23f3e214d66b4b172ece29d90b66ed62c6b277631d312d35e84f2d214563df7"
+      "bytes": 54327,
+      "sha256": "889ea785d468bad733a82e3d99be94dab67ff73e3f116625e3e02a469cbfa354"
     },
     "iclr2027.pdf": {
-      "bytes": 263770,
-      "sha256": "ccb67b171aa808365d02a2cacfb85c418474aacfc232ae65098e079b506bbaa8"
+      "bytes": 273490,
+      "sha256": "4bd7f70ac7e0e220ffa3fb8db6f16310915491f832faa8775ea3db83418e9b7d"
     }
   },
   "checks": {
@@ -91,7 +99,7 @@
     "visual_page_review": "PASS"
   },
   "environment": {
-    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
     "python": "3.12.13"
   },
   "schema_version": "1.0.0",
@@ -116,41 +124,42 @@
       "creator": "LaTeX with hyperref",
       "fonts": {
         "all_embedded": true,
-        "font_count": 26,
+        "font_count": 27,
         "fonts": [
-          "/AASIIF+CMTT8",
-          "/AGJSCJ+CMBX10",
-          "/BFFSKV+CMR17",
-          "/BQPKWI+CMR8",
+          "/AGNEIY+CMR7",
           "/BSTKNX+MSBM10",
           "/CLROKM+CMMI8",
           "/EUWOLL+CMBX9",
-          "/GKLZYZ+CMR10",
-          "/HJUSID+CMTT9",
+          "/GBPAZZ+CMBX8",
           "/IEICJG+CMSY10",
+          "/JOLSUR+CMR17",
+          "/KSMIOQ+CMBX10",
           "/LQBNTO+CMR12",
-          "/MHQCXC+CMBX7",
-          "/MNATLR+CMCSC10",
-          "/MRPRUI+CMR7",
+          "/NJCKEG+CMR10",
           "/NMBGRK+CMMI10",
           "/NNZZQI+CMTI10",
-          "/OERPAL+CMBX12",
+          "/POFRLQ+CMCSC10",
+          "/QDXMTJ+CMSY7",
+          "/QGLCZQ+CMTT9",
+          "/QHDPUU+CMTT12",
           "/QHFKYO+CMTI9",
           "/QQOUOM+CMMI7",
           "/QXVNND+CMSY8",
-          "/SDVCAT+CMSY7",
-          "/SWTYOA+CMTT10",
           "/TFVNFO+CMR6",
           "/TMTQIW+CMR9",
+          "/UGPVTL+CMTT10",
+          "/WATVRQ+CMTT8",
+          "/XCHAEX+CMR8",
+          "/YTNBGM+CMBX12",
           "/ZPGVCH+CMEX10",
           "/ZXILHJ+CMR5"
         ]
       },
       "named_author_and_affiliation_scan": "PASS",
       "page_size": "612 x 792 pts (letter)",
-      "pages": 14,
+      "pages": 18,
       "producer": "pdfTeX-1.40.29",
-      "visual_pages_inspected": 14
+      "visual_pages_inspected": 18
     },
     "iclr2027": {
       "anonymous_source_and_pdf_scan": "PASS",
@@ -162,16 +171,16 @@
         "fonts": [
           "/ALVSVR+NimbusSanL-Bold",
           "/BSTKNX+MSBM10",
+          "/DWYGYF+NimbusRomNo9L-Medi",
           "/FXTVSZ+CMR10",
           "/GUJQTI+NimbusRomNo9L-Regu",
           "/IEICJG+CMSY10",
           "/NMBGRK+CMMI10",
+          "/QDXMTJ+CMSY7",
           "/QQOUOM+CMMI7",
-          "/SDVCAT+CMSY7",
           "/SVZIZS+CMSY9",
           "/TFVNFO+CMR6",
           "/TSSONO+NimbusMonL-Regu",
-          "/UPVHQY+NimbusRomNo9L-Medi",
           "/VAQCDX+NimbusRomNo9L-ReguItal",
           "/WRMBHN+CMR9",
           "/YOISRB+CMR7",
@@ -183,12 +192,13 @@
       "main_text_page_limit": 9,
       "main_text_pages": 9,
       "page_size": "612 x 792 pts (letter)",
-      "pages": 17,
+      "pages": 20,
+      "pre_reference_exempt_statement_pages": 1,
       "producer": "pdfTeX-1.40.29",
-      "references_start_page": 10,
+      "references_start_page": 11,
       "style_receipt": "iclr-style-receipt.json",
       "style_template": "ICLR 2027 official style archive",
-      "visual_pages_inspected": 17
+      "visual_pages_inspected": 20
     }
   }
 }

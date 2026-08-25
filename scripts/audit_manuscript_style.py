@@ -196,7 +196,7 @@ def build_audit(
             "use": "negative editorial pattern filter, not detector evasion",
         },
         "method": {
-            "measurement_revision": "upstream-revision-three-endpoint-paper-v1",
+            "measurement_revision": "author-target-request-cap-paper-v4",
             "latex_tables_figures_and_display_math_excluded": True,
             "sentence_filter_alphanumeric_tokens_min_max": [5, 100],
             "pattern_scan": "case-insensitive regular expressions",

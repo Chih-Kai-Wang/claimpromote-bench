@@ -14,11 +14,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Source-Traceable Regression Tests for Model Services under Policy Revision"
+TITLE = r"\cpb: Paired Regression Tests for Versioned Agent Policies"
 ICLR_TITLE = (
-    r"\mbox{\textsc{ClaimPromoteBench}: Source-Traceable}\protect\\"
-    r"\mbox{Regression Tests for Model Services under}\protect\\"
-    r"\mbox{Policy Revision}"
+    r"\mbox{\textsc{ClaimPromoteBench}: Paired Regression}\protect\\"
+    r"\mbox{Tests for Versioned Agent Policies}"
 )
 
 ICLR_PUBLIC_IDENTIFIERS = (
@@ -154,6 +153,16 @@ def without_reproducibility_or_ai(body: str) -> str:
     return without_ai_disclosure(without_reproducibility(body))
 
 
+def iclr_appendix(appendix: str) -> str:
+    """Keep the complete-results heading with its first table in the ICLR layout."""
+
+    return appendix.replace(
+        r"\section{Complete Action-Level Results}",
+        "\\clearpage\n" + r"\section{Complete Action-Level Results}",
+        1,
+    )
+
+
 def iclr_tex(body: str, appendix: str = "", *, main_text_probe: bool = False) -> str:
     # ICLR excludes both the mandatory AI-use statement and the reproducibility statement from
     # the main-text page limit. The diagnostic probe removes exactly those sections and omits the
@@ -198,7 +207,9 @@ def iclr_tex(body: str, appendix: str = "", *, main_text_probe: bool = False) ->
             if main_text_probe
             else (
                 "\n\\clearpage\n{\\small\n\\bibliographystyle{iclr2027_conference}\n"
-                "\\bibliography{references}\n}\n\n" + appendix + "\n\\end{document}\n"
+                "\\bibliography{references}\n}\n\n"
+                + iclr_appendix(appendix)
+                + "\n\\end{document}\n"
             )
         )
     )

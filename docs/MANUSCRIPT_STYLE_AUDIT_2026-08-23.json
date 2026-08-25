@@ -1,6 +1,6 @@
 {
   "after": {
-    "abstract_submission_lint_tokens": 189,
+    "abstract_submission_lint_tokens": 186,
     "configured_pattern_findings": {
       "ai_lexicon": 0,
       "formulaic_pivot": 0,
@@ -11,14 +11,14 @@
       "throat_clearing": 0,
       "vague_importance": 0
     },
-    "manuscript_sha256": "c6184a09635592d0b17f6ce883ec40a2791ee4c631b37976eb7185b56931e810",
-    "prose_words": 3853,
-    "sentence_words_mean": 15.02,
-    "sentence_words_median": 14,
-    "sentence_words_over_40_percent": 0.7874,
-    "sentence_words_p90": 23.0,
-    "sentence_words_p95": 25.0,
-    "sentences": 254
+    "manuscript_sha256": "264d6347f5bffdc593cba178710ce93fe312829e71a7d21adcd8cecd001b166a",
+    "prose_words": 4514,
+    "sentence_words_mean": 15.04,
+    "sentence_words_median": 14.0,
+    "sentence_words_over_40_percent": 1.0135,
+    "sentence_words_p90": 24.0,
+    "sentence_words_p95": 26.0,
+    "sentences": 296
   },
   "before": {},
   "corpus_binding_sha256": "2821dd53d145feefc2473b09433ddd26866371788e9101965b9490213700713f",
@@ -37,7 +37,7 @@
       "LaTeX stripping and sentence segmentation are approximate",
       "metrics guide editing ranges and do not determine scientific quality"
     ],
-    "measurement_revision": "external-policy-and-factor-complete-paper-v2",
+    "measurement_revision": "author-target-request-cap-paper-v4",
     "pattern_scan": "case-insensitive regular expressions",
     "sentence_filter_alphanumeric_tokens_min_max": [
       5,
@@ -48,18 +48,17 @@
   "scientific_content_boundary": {
     "balanced_public_v1_rerun": false,
     "completed_singleton_workflows_rerun": false,
-    "external_agent_policy_model_calls": 480,
-    "external_agent_policy_pairs_per_replication": 10,
-    "external_agent_policy_sources": 2,
+    "excluded_resource_failure_model_calls_performed": 1260,
+    "excluded_resource_failure_model_rows_entered_manuscript": false,
+    "excluded_resource_failure_terminal_records_added": 1260,
     "existing_terminal_records_changed": false,
-    "factor_complete_model_calls": 630,
-    "invalid_terminal_outcomes_called_decisions": false,
-    "invalid_terminal_outcomes_entered_end_to_end_denominators": true,
     "metrics_changed": true,
-    "new_client_retries": 0,
-    "new_terminal_records": 1110,
     "paper_binding_validator": "scripts/lint_paper_submission.py",
-    "public_model_facing_mapping_is_author_mapping": true
+    "retained_scored_model_calls_performed": 1710,
+    "retained_scored_terminal_records_added": 1710,
+    "total_application_posts_during_revision": 2971,
+    "total_model_calls_performed": 2970,
+    "void_protocol_application_posts": 1
   },
   "status": "PASS"
 }

@@ -60,7 +60,10 @@ def test_release_receipt_records_the_iclr_page_boundary() -> None:
     assert iclr["pages"] >= iclr["references_start_page"]
     assert 1 <= iclr["main_text_pages"] <= 9
     assert iclr["main_text_page_limit"] == 9
-    assert iclr["references_start_page"] == iclr["main_text_pages"] + 1
+    assert iclr["pre_reference_exempt_statement_pages"] in {0, 1}
+    assert iclr["references_start_page"] == (
+        iclr["main_text_pages"] + iclr["pre_reference_exempt_statement_pages"] + 1
+    )
     assert iclr["style_template"] == "ICLR 2027 official style archive"
     assert iclr["style_receipt"] == "iclr-style-receipt.json"
 

@@ -1,13 +1,13 @@
 # Technical report
 
-`main.tex` is the canonical scientific manuscript for *ClaimPromoteBench: Source-Traceable
-Regression Tests for Model Services under Policy Revision*.
+`main.tex` is the canonical scientific manuscript for *ClaimPromoteBench: Paired Regression Tests
+for Versioned Agent Policies*.
 
-The central evidence combines two exact upstream Gatekeeper policy revisions with a 12-pair finite
-context set and three repeated executions on each of two hosted model IDs. Trivy, Cosign, Microsoft
-Agent Governance Toolkit, and agentgateway provide independent policy, verifier, and guardrail
-interface fault evidence. An SLSA-inspired migration stress-tests four-action transition coverage.
-The imbalanced suite and balanced challenge provide auxiliary evidence-state diagnostics.
+The central evidence combines source-pinned prose revisions, exact executable-policy differences,
+and route-level output contracts. A non-`ALLOW` extension tests stable restrictive actions and two
+changed pairs; a same-item comparison varies requested output cap and JSON-schema mode. Gatekeeper,
+Trivy, Cosign, Microsoft Agent Governance Toolkit, and agentgateway provide executable policy,
+verifier, and adapter evidence. Synthetic suites supply transition and action-balance diagnostics.
 
 Every scheduled call remains in end-to-end denominators. The manuscript separates raw-strict,
 registered-parser, contract-action, and full-decision endpoints. Failed response contents are

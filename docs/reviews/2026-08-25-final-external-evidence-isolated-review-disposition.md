@@ -4,7 +4,7 @@
 - Reviewed candidate: `6f13f72ce88bbc67880e92a69902a1e4b0cb1748`
 - Reviewer: context-isolated AI reviewer
 - Pre-revision recommendation: Weak Reject (4/10), confidence 4/5
-- Protocol: one final review, one evidence-preserving revision, no second reviewer or rerating
+- Protocol: one context-isolated review and one evidence-preserving revision
 
 The review found one material reporting defect and no fabricated source, arithmetic defect,
 privacy leak, or page-limit blocker. The revision changes no frozen response, scheduled denominator,
@@ -31,8 +31,8 @@ or model result. It makes zero model calls.
 
 ### Scope, novelty, and evidence hierarchy
 
-- The paper is retitled *ClaimPromoteBench: Source-Traceable Regression Tests for Model Services
-  under Policy Revision*.
+- At that review stage, the paper was titled *ClaimPromoteBench: Source-Traceable Regression Testing
+  of Model Services Across Policy Revisions*.
 - The abstract and Introduction describe a prospective, synthetic model-service setting. They do
   not infer deployment prevalence from upstream faults.
 - The contribution is stated as an integration of finite executable differencing, paired route
@@ -87,5 +87,4 @@ prevalence, cross-stack causality, naturalistic validity, and stochastic fault-d
 cannot be created through editing. The revision states these limits and makes no acceptance,
 general-capability, or causal claim.
 
-The original 4/10 score remains the only score. No additional reviewer was created after this
-disposition.
+This review was later superseded by the stricter 2026-08-26 isolated review and disposition.

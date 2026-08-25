@@ -10,13 +10,13 @@ yet. See `docs/submissions/2026-08-25-iclr2027-openreview.md` for the private su
 ## ICLR 2027 title
 
 ```text
-ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision
+ClaimPromoteBench: Paired Regression Tests for Versioned Agent Policies
 ```
 
 ## ICLR 2027 abstract
 
 ```text
-Versioned repository policies can change the required action for an unchanged request. We present ClaimPromoteBench, a regression-testing protocol for synthetic, policy-constrained evidence-state transitions. It converts finite policy differences into paired route tests and reports changed-rule and action-transition coverage, a cardinality-minimum structural suite, parser provenance, and failure-inclusive item and pair accuracy. Eight public revision histories anchor the tested fault classes. Two independently authored AGENTS.md changes provide model-facing policy sources; their ten author-mapped pairs were fixed before calls to eight hosted routes. The designated first replication yields 132/160 valid decisions, 128/160 correct items, and 52/80 correct pairs. Changed pairs score 23/48 end to end and 23/26 when both decisions are valid; stable controls score 29/32 and 29/29. A matched 15-factor diagnostic gives route-level pair accuracy from 0/15 to 11/15; 280/311 failures over three repetitions coincide with an output limit. Earlier evidence-state studies show why action balance matters: an imbalanced route reaches 258/300 items and 113/150 pairs, while a balanced challenge yields 132/180 and 90/180 items for two routes, with DEMOTE recalls of 4/30 and 0/30. The estimand is route conformance on frozen cases. Deployment incidence and downstream utility remain open.
+Repository policies are versioned inputs to coding agents, yet evaluations usually score versions independently. We present ClaimPromoteBench, a paired regression protocol that binds two policy versions, an unchanged case, and a target action relation. For finite executable policies, it enumerates action-changing contexts and derives cardinality-minimum suites with relative rule and transition coverage. For prose policies, targets are declared author mappings, not policy-owner ground truth. Route records retain transport, syntax, schema, and semantic failures in end-to-end denominators. Eight public histories illustrate the supported fault classes. On ten author-mapped pairs from two AGENTS.md revisions, eight hosted routes yield 128/160 item agreements and 52/80 pair agreements. In a prespecified non-ALLOW extension, every valid item agrees with its author target; incomplete outputs leave 50/54 stable pairs but only 6/18 changed pairs complete. On selected routes, a same-item request-cap comparison changes complete target-agreeing pairs from 0/15 to 7/15 and 0/15 to 9/15, with one call per cell. The protocol supports auditable frozen-case regression tests. The executable studies also retain exact action confusion matrices and source-bound verification receipts. Deployment validity and model-family effects remain unmeasured.
 ```
 
 The ICLR upload must use the anonymous PDF and anonymous supplementary ZIP. Author identity,
@@ -26,7 +26,7 @@ stay out of both files.
 ## arXiv title
 
 ```text
-ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision
+ClaimPromoteBench: Paired Regression Tests for Versioned Agent Policies
 ```
 
 ## arXiv abstract
@@ -65,16 +65,24 @@ Joins finite action-changing differences between caller-supplied policy evaluato
   pairs and four stable controls. Upstream maintainers authored the policy text; the study authors
   constructed the scenarios, precedence rule, action mapping, and labels before inference.
 - Eight hosted routes receive 480 scheduled calls over three repetitions with zero client retries.
-  The designated first replication yields 132/160 valid decisions, 128/160 correct actions, and
-  52/80 correct pairs. Changed pairs score 23/48 end to end and 23/26 conditionally; stable controls
+  The designated first replication yields 132/160 valid decisions, 128/160 author-target action
+  agreements, and 52/80 pair agreements. Changed pairs reach 23/48 end to end and 23/26 conditionally; stable controls
   score 29/32 and 29/29.
 - Across all three external-policy repetitions, routes produce 399/480 valid decisions, 387/480
-  correct actions, and 158/240 correct pairs. The 81 terminal failures comprise 26 server-side
+  author-target action agreements, and 158/240 pair agreements. The 81 terminal failures comprise 26 server-side
   transport failures, nine length-terminated JSON failures, and 46 action/reason-code conflicts.
-- A matched 15-factor diagnostic sends the same 30 items to seven routes for three repetitions,
-  totaling 630 calls. First-replication coverage spans 3/30 to 29/30 valid decisions and 0/15 to
-  11/15 correct pairs. Of 311 terminal failures, 280/281 syntax or schema failures carry a length
-  or token-limit signal.
+- A prespecified, commit-frozen non-`ALLOW` extension contributes eight author-mapped pairs from
+  four public source records. Every valid item agrees with its author target. Stable outcomes are
+  50 target-agreeing, zero complete-disagreeing, and four incomplete pairs; changed outcomes are
+  6, 0, and 12. Always-`ALLOW` scores 0/8 pairs; copy-before scores 6/8.
+- A 360-call same-item comparison crosses three selected routes with prompt-only caps of 4096,
+  8192, and 12288 tokens and strict JSON schema at 4096. It uses one call per cell. The primary
+  4096-to-12288 contrast changes complete target-agreeing pairs from 0/15 to 7/15, 0/15 to 9/15,
+  and 7/15 to 7/15. All conditions retain their 30-item
+  and 15-pair denominators.
+- A content-free transport diagnostic classifies 63 late quota-or-billing rejections, six server
+  errors, four timeouts, and three network errors. Each route has the same five quota-rejected item
+  IDs in both conditions of the primary contrast. No cell was retried or replaced.
 - Two exact Gatekeeper revisions yield 12 source-traceable pairs covering 2/2 changed rules and
   2/2 observed action edges; a two-pair suite is jointly complete for the committed grammar. Three
   repetitions yield 53/72 raw-strict actions and 21/36 pairs for Flash, versus 10/72 and 0/36 for
@@ -110,6 +118,10 @@ Joins finite action-changing differences between caller-supplied policy evaluato
 ```text
 An anonymized supplementary bundle contains the finite policy-difference enumerator and suite reducer, exact source-validation inputs and receipts, frozen paired datasets, prompt packets, content-free terminal records, parser provenance, analysis code, complete confusion matrices, and privacy receipts needed for deterministic source and score replay. It does not reissue hosted calls. Its manifest derives file counts from the generated tree. It excludes raw failed responses, free-form errors, provider response identifiers, hidden reasoning, account identity, author-identifying provenance, private construction seeds, and generated caches.
 ```
+
+Replay begins with released parsed decisions and content-free terminal records. Raw response text
+and raw-response hashes are absent, so an external reviewer cannot independently re-adjudicate the
+raw-output-to-parser transformation or provider error messages.
 
 ### Public preprint version
 

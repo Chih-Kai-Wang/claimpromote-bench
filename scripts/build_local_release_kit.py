@@ -240,6 +240,8 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "dual_endpoint_raw_response_text_included",
         "factor_complete_route_raw_response_text_included",
         "external_agent_policy_raw_response_text_included",
+        "nonallow_policy_controls_raw_response_text_included",
+        "output_contract_ablation_raw_response_text_included",
         "local_model_replication_raw_generation_text_included",
         "local_model_weights_included",
     }
@@ -269,6 +271,12 @@ def validate_bundle(bundle: Path) -> tuple[Json, list[Path]]:
         "external_agent_policy_summary_included",
         "external_agent_policy_item_level_records_included",
         "external_agent_policy_public_source_commits_included",
+        "nonallow_policy_controls_summary_included",
+        "nonallow_policy_controls_item_level_records_included",
+        "nonallow_policy_controls_public_source_commits_included",
+        "output_contract_ablation_summary_included",
+        "output_contract_ablation_item_level_records_included",
+        "output_contract_ablation_transport_diagnostic_included",
         "local_model_replications_included",
         "local_model_replication_item_level_records_included",
         "local_slsa_replication_summary_included",
@@ -310,7 +318,9 @@ def write_readme(path: Path, receipt: Json) -> None:
         "anonymous ICLR PDF and source, the named arXiv PDF and source, and the anonymous reviewer "
         "bundle. No OpenReview or arXiv upload was performed.\n\n"
         f"- ICLR PDF: {submission['iclr2027']['pages']} pages; main-text probe "
-        f"{submission['iclr2027']['main_text_pages']} pages; references start on physical page "
+        f"{submission['iclr2027']['main_text_pages']} pages; pre-reference exempt statements "
+        f"occupy {submission['iclr2027']['pre_reference_exempt_statement_pages']} page(s); "
+        "references start on physical page "
         f"{submission['iclr2027']['references_start_page']}.\n"
         f"- arXiv PDF: {submission['arxiv']['pages']} pages.\n"
         f"- Anonymous manifest: {bundle['manifest_file_count']} listed files plus the manifest; "
@@ -358,8 +368,14 @@ def build(args: argparse.Namespace) -> Json:
     probe_info = pdf_info(submission / "iclr2027-maintext-probe.pdf")
     arxiv_info = pdf_info(submission / "arxiv.pdf")
     iclr_references_start = first_heading_page(submission / "iclr2027.pdf", "REFERENCES")
+    exempt_statement_pages = iclr_references_start - probe_info["pages"] - 1
     if probe_info["pages"] > 9:
         fail(f"ICLR main text exceeds nine pages: {probe_info['pages']}")
+    if exempt_statement_pages not in {0, 1}:
+        fail(
+            "ICLR pre-reference reproducibility and AI-use statements must occupy at most one "
+            f"page, found {exempt_statement_pages}"
+        )
     if not args.visual_qa_complete:
         fail("release packaging requires explicit --visual-qa-complete after page-by-page review")
 
@@ -458,6 +474,7 @@ def build(args: argparse.Namespace) -> Json:
                     **iclr_info,
                     "main_text_pages": probe_info["pages"],
                     "main_text_page_limit": 9,
+                    "pre_reference_exempt_statement_pages": exempt_statement_pages,
                     "references_start_page": iclr_references_start,
                     "style_template": "ICLR 2027 official style archive",
                     "style_receipt": "iclr-style-receipt.json",

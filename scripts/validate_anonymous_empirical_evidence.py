@@ -7,6 +7,7 @@ import hashlib
 import json
 import math
 import re
+import statistics
 from collections import Counter
 from copy import deepcopy
 from pathlib import Path
@@ -3216,6 +3217,455 @@ def _stability_metrics(
             }
             for factor in sorted(factor_totals)
         ],
+    }
+
+
+def _review_gap_supported_action_metrics(metrics: Json) -> Json:
+    value = deepcopy(metrics)
+    supported = [
+        action
+        for action in value["confusion_matrix"]["row_order"]
+        if int(value["per_action"][action]["gold_instances"]) > 0
+    ]
+    if not supported:
+        fail("review-gap metric set has no gold-supported action")
+    value["supported_action_order"] = supported
+    value["supported_balanced_action_recall"] = statistics.fmean(
+        float(value["per_action"][action]["end_to_end_recall"]) for action in supported
+    )
+    value["supported_conditional_balanced_action_recall"] = statistics.fmean(
+        float(value["per_action"][action]["conditional_recall"]) for action in supported
+    )
+    value["supported_macro_f1"] = statistics.fmean(
+        float(value["per_action"][action]["end_to_end_f1"]) for action in supported
+    )
+    value["supported_conditional_macro_f1"] = statistics.fmean(
+        float(value["per_action"][action]["conditional_f1"]) for action in supported
+    )
+    return value
+
+
+def _review_gap_subset_metrics(
+    gold: list[Json], pairs: list[Json], records: list[Json], *, changed: bool
+) -> Json:
+    selected_pairs = [row for row in pairs if bool(row["changed"]) is changed]
+    selected_ids = {str(value) for row in selected_pairs for value in row["member_ids"]}
+    return _review_gap_supported_action_metrics(
+        derive_balanced_metrics(
+            [row for row in gold if str(row["id"]) in selected_ids],
+            selected_pairs,
+            [row for row in records if str(row["item_id"]) in selected_ids],
+        )
+    )
+
+
+def _review_gap_fake_records(gold: list[Json], pairs: list[Json], mode: str) -> list[Json]:
+    gold_actions = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+    if mode == "ALWAYS_ALLOW":
+        predictions = {item_id: "ALLOW" for item_id in gold_actions}
+    elif mode == "COPY_BEFORE_ACTION_TO_AFTER":
+        predictions: dict[str, str] = {}
+        for pair in pairs:
+            members = [str(value) for value in pair["member_ids"]]
+            before = next(value for value in members if value.endswith("-before"))
+            for member in members:
+                predictions[member] = gold_actions[before]
+    else:
+        fail(f"unknown review-gap offline control: {mode}")
+    return [
+        {
+            "item_id": item_id,
+            "parse_status": "OK",
+            "raw_decision": {"action": predictions[item_id]},
+        }
+        for item_id in sorted(predictions)
+    ]
+
+
+def _review_gap_all_three(
+    rows_by_lane: dict[str, list[Json]], lanes: list[Json], gold: list[Json], pairs: list[Json]
+) -> Json:
+    gold_actions = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+    by_model: list[Json] = []
+    for model in sorted({str(row["model"]) for row in lanes}):
+        selected = [
+            row
+            for row in lanes
+            if row["model"] == model and str(row["condition_id"]).startswith("full-policy-r")
+        ]
+        if len(selected) != 3:
+            fail(f"non-ALLOW full-policy replication coverage changed: {model}")
+        by_replication = {
+            int(row["replication"]): {
+                str(record["item_id"]): record for record in rows_by_lane[str(row["lane_id"])]
+            }
+            for row in selected
+        }
+        correct_items = sum(
+            all(
+                by_replication[replication][item_id]["parse_status"] == "OK"
+                and by_replication[replication][item_id]["raw_decision"]["action"] == action
+                for replication in (1, 2, 3)
+            )
+            for item_id, action in gold_actions.items()
+        )
+        correct_pairs = sum(
+            all(
+                by_replication[replication][item_id]["parse_status"] == "OK"
+                and by_replication[replication][item_id]["raw_decision"]["action"]
+                == gold_actions[item_id]
+                for replication in (1, 2, 3)
+                for item_id in [str(value) for value in pair["member_ids"]]
+            )
+            for pair in pairs
+        )
+        by_model.append(
+            {
+                "model_requested": model,
+                "all_three_correct_items": correct_items,
+                "items": len(gold_actions),
+                "all_three_correct_pairs": correct_pairs,
+                "pairs": len(pairs),
+            }
+        )
+    return {"by_model": by_model}
+
+
+def validate_nonallow_policy_controls() -> Json:
+    root = EVIDENCE / "nonallow-policy-controls"
+    plan, aggregate, rows_by_lane = _validate_current_route_artifact(
+        root,
+        manifest_status="ANONYMOUS_NONALLOW_POLICY_CONTROLS_EVIDENCE",
+        expected_run_files=15,
+        expected_terminal_records=240,
+    )
+    gold = load_jsonl(root / "dataset" / "gold.jsonl")
+    pairs = load_json(root / "dataset" / "pairs.json")
+    mapping = load_json(root / "mapping-audit.json")
+    if (
+        not isinstance(pairs, list)
+        or not isinstance(mapping, dict)
+        or len(gold) != 16
+        or len(pairs) != 8
+        or Counter(str(row["decision"]["action"]) for row in gold)
+        != Counter({"HOLD": 6, "ESCALATE": 6, "DEMOTE": 4})
+        or sum(bool(row["changed"]) for row in pairs) != 2
+        or mapping.get("model_outputs_used") is not False
+        or mapping.get("policy_owner_labels") != 0
+        or mapping.get("human_annotators") != 0
+        or mapping.get("agreement_statistic") is not None
+    ):
+        fail("non-ALLOW support or author-mapping boundary changed")
+    lanes = plan.get("formal_lanes")
+    aggregate_lanes = {
+        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
+    }
+    if not isinstance(lanes, list) or len(lanes) != 15 or set(aggregate_lanes) != set(rows_by_lane):
+        fail("non-ALLOW lane matrix changed")
+
+    lane_metrics: dict[str, Json] = {}
+    for lane_id, records in rows_by_lane.items():
+        if len(records) != 16 or len({str(row["item_id"]) for row in records}) != 16:
+            fail(f"non-ALLOW lane coverage changed: {lane_id}")
+        metrics = _review_gap_supported_action_metrics(
+            derive_balanced_metrics(gold, pairs, records)
+        )
+        archived = aggregate_lanes[lane_id]
+        run_path = root / "results" / "runs" / f"{lane_id}.jsonl"
+        if not equivalent_json(metrics, archived.get("metrics")) or archived.get(
+            "run_sha256"
+        ) != sha256_file(run_path):
+            fail(f"non-ALLOW lane metrics changed: {lane_id}")
+        lane_metrics[lane_id] = metrics
+
+    controls = aggregate.get("nonallow_policy_controls")
+    if not isinstance(controls, dict):
+        fail("non-ALLOW aggregate controls are malformed")
+    expected_primary: list[Json] = []
+    expected_secondary: list[Json] = []
+    expected_negative: list[Json] = []
+    for model in sorted({str(row["model"]) for row in lanes}):
+        model_lanes = [row for row in lanes if row["model"] == model]
+        first_lane = next(row for row in model_lanes if row["condition_id"] == "full-policy-r1")
+        first_id = str(first_lane["lane_id"])
+        first_records = rows_by_lane[first_id]
+        expected_secondary.append(
+            {
+                **aggregate_lanes[first_id],
+                "stable_controls": _review_gap_subset_metrics(
+                    gold, pairs, first_records, changed=False
+                ),
+                "changed_pairs": _review_gap_subset_metrics(
+                    gold, pairs, first_records, changed=True
+                ),
+            }
+        )
+        full_lanes = [
+            row for row in model_lanes if str(row["condition_id"]).startswith("full-policy-r")
+        ]
+        expected_primary.append(
+            {
+                "model_requested": model,
+                "metrics": _review_gap_supported_action_metrics(
+                    combine_lane_metrics([lane_metrics[str(row["lane_id"])] for row in full_lanes])
+                ),
+                "stable_controls": _review_gap_supported_action_metrics(
+                    combine_lane_metrics(
+                        [
+                            _review_gap_subset_metrics(
+                                gold,
+                                pairs,
+                                rows_by_lane[str(row["lane_id"])],
+                                changed=False,
+                            )
+                            for row in full_lanes
+                        ]
+                    )
+                ),
+                "changed_pairs": _review_gap_supported_action_metrics(
+                    combine_lane_metrics(
+                        [
+                            _review_gap_subset_metrics(
+                                gold,
+                                pairs,
+                                rows_by_lane[str(row["lane_id"])],
+                                changed=True,
+                            )
+                            for row in full_lanes
+                        ]
+                    )
+                ),
+            }
+        )
+        expected_negative.extend(
+            aggregate_lanes[str(row["lane_id"])]
+            for row in model_lanes
+            if row["condition_id"] in {"case-only", "source-shuffled"}
+        )
+    expected_offline: list[Json] = []
+    for mode in ("ALWAYS_ALLOW", "COPY_BEFORE_ACTION_TO_AFTER"):
+        records = _review_gap_fake_records(gold, pairs, mode)
+        expected_offline.append(
+            {
+                "baseline": mode,
+                "label": "DETERMINISTIC_OFFLINE_CONTROL_NOT_A_LEARNED_BASELINE",
+                "metrics": _review_gap_supported_action_metrics(
+                    derive_balanced_metrics(gold, pairs, records)
+                ),
+                "stable_controls": _review_gap_subset_metrics(gold, pairs, records, changed=False),
+                "changed_pairs": _review_gap_subset_metrics(gold, pairs, records, changed=True),
+            }
+        )
+    if (
+        not equivalent_json(expected_primary, controls.get("primary_pooled_three_replications"))
+        or not equivalent_json(expected_secondary, controls.get("secondary_replication_one"))
+        or not equivalent_json(expected_negative, controls.get("negative_controls_one_replication"))
+        or not equivalent_json(expected_offline, controls.get("offline_baselines"))
+        or not equivalent_json(
+            _review_gap_all_three(rows_by_lane, lanes, gold, pairs),
+            controls.get("all_three_correct"),
+        )
+        or controls.get("label_provenance")
+        != (
+            "Author policy mapping; no policy-owner labels, human annotators, "
+            "or agreement statistic."
+        )
+    ):
+        fail("non-ALLOW pooled, control, or baseline aggregate changed")
+    pooled = controls["primary_pooled_three_replications"]
+    return {
+        "status": "NONALLOW_POLICY_CONTROLS_EVIDENCE_PASS",
+        "pairs": 8,
+        "terminal_records": 240,
+        "parseable_records": sum(
+            int(row["metrics"]["parseable_items"]) for row in aggregate["lanes"]
+        ),
+        "primary_correct_items": {
+            str(row["model_requested"]): int(row["metrics"]["correct_items"]) for row in pooled
+        },
+    }
+
+
+def _output_contract_comparisons(
+    rows: list[Json], rows_by_lane: dict[str, list[Json]], gold: list[Json], pairs: list[Json]
+) -> list[Json]:
+    baseline = next(row for row in rows if row["condition_id"] == "prompt-4096")
+    baseline_records = {str(row["item_id"]): row for row in rows_by_lane[str(baseline["lane_id"])]}
+    gold_actions = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+    comparisons: list[Json] = []
+    for row in sorted(rows, key=lambda value: str(value["condition_id"])):
+        current = {str(value["item_id"]): value for value in rows_by_lane[str(row["lane_id"])]}
+        wins = losses = pair_wins = pair_losses = 0
+        for item_id, action in gold_actions.items():
+            base_correct = (
+                baseline_records[item_id]["parse_status"] == "OK"
+                and baseline_records[item_id]["raw_decision"]["action"] == action
+            )
+            current_correct = (
+                current[item_id]["parse_status"] == "OK"
+                and current[item_id]["raw_decision"]["action"] == action
+            )
+            wins += current_correct and not base_correct
+            losses += base_correct and not current_correct
+        for pair in pairs:
+            member_ids = [str(value) for value in pair["member_ids"]]
+            base_pair_correct = all(
+                baseline_records[item_id]["parse_status"] == "OK"
+                and baseline_records[item_id]["raw_decision"]["action"] == gold_actions[item_id]
+                for item_id in member_ids
+            )
+            current_pair_correct = all(
+                current[item_id]["parse_status"] == "OK"
+                and current[item_id]["raw_decision"]["action"] == gold_actions[item_id]
+                for item_id in member_ids
+            )
+            pair_wins += current_pair_correct and not base_pair_correct
+            pair_losses += base_pair_correct and not current_pair_correct
+        comparisons.append(
+            {
+                "condition_id": row["condition_id"],
+                "correct_item_delta_vs_prompt_4096": int(row["metrics"]["correct_items"])
+                - int(baseline["metrics"]["correct_items"]),
+                "paired_item_wins": wins,
+                "paired_item_losses": losses,
+                "correct_pair_delta_vs_prompt_4096": int(row["metrics"]["correct_pairs"])
+                - int(baseline["metrics"]["correct_pairs"]),
+                "paired_pair_wins": pair_wins,
+                "paired_pair_losses": pair_losses,
+                "registered_primary_contrast": row["condition_id"] == "prompt-12288",
+            }
+        )
+    return comparisons
+
+
+def validate_output_contract_ablation() -> Json:
+    root = EVIDENCE / "output-contract-ablation"
+    plan, aggregate, rows_by_lane = _validate_current_route_artifact(
+        root,
+        manifest_status="ANONYMOUS_OUTPUT_CONTRACT_ABLATION_EVIDENCE",
+        expected_run_files=12,
+        expected_terminal_records=360,
+    )
+    gold_all = load_jsonl(root / "dataset" / "gold.jsonl")
+    pairs_all = load_json(root / "dataset" / "pairs.json")
+    selected_ids = {str(value) for value in plan.get("dataset", {}).get("selected_item_ids", [])}
+    gold = [row for row in gold_all if str(row["id"]) in selected_ids]
+    pairs = (
+        [row for row in pairs_all if all(str(value) in selected_ids for value in row["member_ids"])]
+        if isinstance(pairs_all, list)
+        else pairs_all
+    )
+    lanes = plan.get("formal_lanes")
+    aggregate_lanes = {
+        str(row.get("lane_id")): row for row in aggregate.get("lanes", []) if isinstance(row, dict)
+    }
+    if (
+        not isinstance(pairs, list)
+        or not isinstance(lanes, list)
+        or len(gold) != 30
+        or len(pairs) != 15
+        or len(lanes) != 12
+        or set(aggregate_lanes) != set(rows_by_lane)
+    ):
+        fail("output-contract support or lane matrix changed")
+    transport_total = 0
+    parseable_total = 0
+    for lane_id, records in rows_by_lane.items():
+        if len(records) != 30 or len({str(row["item_id"]) for row in records}) != 30:
+            fail(f"output-contract lane coverage changed: {lane_id}")
+        metrics = derive_balanced_metrics(gold, pairs, records)
+        archived = aggregate_lanes[lane_id]
+        run_path = root / "results" / "runs" / f"{lane_id}.jsonl"
+        finish_counts = Counter(str(row.get("finish_reason")) for row in records)
+        length_count = sum(
+            isinstance(row.get("finish_reason"), str)
+            and any(token in str(row["finish_reason"]).lower() for token in ("length", "token"))
+            for row in records
+        )
+        if (
+            not equivalent_json(metrics, archived.get("metrics"))
+            or archived.get("run_sha256") != sha256_file(run_path)
+            or archived.get("route_diagnostics", {}).get("finish_reason_counts")
+            != dict(sorted(finish_counts.items()))
+            or archived.get("route_diagnostics", {}).get("length_termination_count") != length_count
+        ):
+            fail(f"output-contract lane metrics or diagnostics changed: {lane_id}")
+        transport_total += int(metrics["parse_status_counts"].get("TRANSPORT_ERROR", 0))
+        parseable_total += int(metrics["parseable_items"])
+
+    by_model = aggregate.get("output_contract_ablation", {}).get("by_model")
+    if not isinstance(by_model, list) or len(by_model) != 3:
+        fail("output-contract by-model aggregate changed")
+    for model_row in by_model:
+        model = str(model_row["model_requested"])
+        expected_conditions = sorted(
+            [row for row in aggregate_lanes.values() if row["model_requested"] == model],
+            key=lambda row: str(row["condition_id"]),
+        )
+        if not equivalent_json(
+            expected_conditions, model_row.get("conditions")
+        ) or not equivalent_json(
+            _output_contract_comparisons(expected_conditions, rows_by_lane, gold, pairs),
+            model_row.get("paired_comparisons"),
+        ):
+            fail(f"output-contract paired comparison changed: {model}")
+
+    diagnostic = load_json(root / "diagnostics" / "transport-diagnostics.json")
+    privacy = load_json(root / "diagnostics" / "privacy-receipt.json")
+    manifest = load_json(root / "diagnostics" / "manifest.json")
+    if not all(isinstance(value, dict) for value in (diagnostic, privacy, manifest)):
+        fail("output-contract diagnostic receipt is malformed")
+    validate_self_digest(diagnostic, "self_digest", "output-contract transport diagnostic")
+    validate_self_digest(manifest, "self_digest", "output-contract diagnostic manifest")
+    expected_inputs = {
+        "execution-receipt.json": sha256_file(root / "results" / "execution-receipt.json"),
+        **{
+            path.name: sha256_file(path)
+            for path in sorted((root / "results" / "runs").glob("*.jsonl"))
+        },
+        "request-schedule.json": sha256_file(root / "request-schedule.json"),
+    }
+    expected_diagnostic_files = {
+        "privacy-receipt.json": sha256_file(root / "diagnostics" / "privacy-receipt.json"),
+        "transport-diagnostics.json": sha256_file(
+            root / "diagnostics" / "transport-diagnostics.json"
+        ),
+    }
+    if (
+        diagnostic.get("input_files_sha256") != expected_inputs
+        or diagnostic.get("transport_failures") != transport_total
+        or diagnostic.get("transport_failure_categories")
+        != {"NETWORK": 3, "QUOTA_OR_BILLING_REJECTION": 63, "SERVER_5XX": 6, "TIMEOUT": 4}
+        or any(
+            row.get("quota_rejections_per_condition") != [5, 5]
+            or row.get("rejected_item_sets_equal") is not True
+            for row in diagnostic.get("registered_primary_contrast_quota_balance", [])
+        )
+        or privacy.get("status") != "CONTENT_FREE_TRANSPORT_DIAGNOSTIC_PRIVACY_PASS"
+        or privacy.get("scanned_file_sha256")
+        != expected_diagnostic_files["transport-diagnostics.json"]
+        or any(
+            privacy.get(field) is not False
+            for field in (
+                "raw_response_text_retained",
+                "free_form_transport_text_retained",
+                "credentials_retained",
+                "account_markers_retained",
+                "provider_response_identifiers_retained",
+                "hidden_reasoning_retained",
+            )
+        )
+        or manifest.get("files_sha256") != expected_diagnostic_files
+        or manifest.get("hashed_file_count") != len(expected_diagnostic_files)
+        or manifest.get("file_count") != len(expected_diagnostic_files) + 1
+    ):
+        fail("output-contract transport diagnostic or privacy chain changed")
+    return {
+        "status": "OUTPUT_CONTRACT_ABLATION_EVIDENCE_PASS",
+        "conditions": 4,
+        "terminal_records": 360,
+        "parseable_records": parseable_total,
+        "transport_failures": transport_total,
     }
 
 

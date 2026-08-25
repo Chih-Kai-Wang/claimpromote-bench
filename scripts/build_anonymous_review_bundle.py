@@ -133,6 +133,7 @@ FORBIDDEN_TEXT = {
     "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b",
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
     "f2b4519816817c58a374b0459313d2bed609acf9",
+    "a68cef65940988c79ca2a8df68ccee84a2efcddc",
     LOCAL_WORKSPACE_ROOT,
     GITHUB_RUNNER_ROOT,
     MAC_WORKSPACE_ROOT,
@@ -176,6 +177,7 @@ PROVENANCE_REPLACEMENTS = {
     "f44b01eb97418d87aa6d7486fa785c0f49b9dda2": ("0000000000000000000000000000000000000008"),
     "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516": ("0000000000000000000000000000000000000009"),
     "f2b4519816817c58a374b0459313d2bed609acf9": "0000000000000000000000000000000000000011",
+    "a68cef65940988c79ca2a8df68ccee84a2efcddc": "0000000000000000000000000000000000000011",
     LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
     GITHUB_RUNNER_ROOT: "/anonymous/workspace",
     MAC_WORKSPACE_ROOT: "/anonymous/workspace",
@@ -540,6 +542,22 @@ def repair_current_route_study_anonymous_evidence(
     write_json(execution_path, execution)
 
     aggregate = anonymize_provenance(load_object(aggregate_path))
+
+    def rebind_run_digests(value: Any) -> None:
+        if isinstance(value, dict):
+            lane_id = value.get("lane_id")
+            if isinstance(lane_id, str) and "run_sha256" in value:
+                filename = f"{lane_id}.jsonl"
+                if filename not in run_hashes:
+                    fail(f"aggregate references an unknown lane: {destination.name}/{lane_id}")
+                value["run_sha256"] = run_hashes[filename]
+            for child in value.values():
+                rebind_run_digests(child)
+        elif isinstance(value, list):
+            for child in value:
+                rebind_run_digests(child)
+
+    rebind_run_digests(aggregate)
     historical_anchors = aggregate.get("historical_anchors")
     if isinstance(historical_anchors, list):
         balanced_runs = destination.parent / "balanced-public-challenge" / "runs"
@@ -600,6 +618,55 @@ def repair_current_route_study_anonymous_evidence(
     write_json(destination / "MANIFEST.json", manifest)
 
 
+def repair_output_contract_transport_diagnostics(destination: Path) -> None:
+    """Rebind the content-free diagnostic to the anonymous terminal records."""
+
+    diagnostics = destination / "diagnostics"
+    report_path = diagnostics / "transport-diagnostics.json"
+    privacy_path = diagnostics / "privacy-receipt.json"
+    manifest_path = diagnostics / "manifest.json"
+    if any(not path.is_file() for path in (report_path, privacy_path, manifest_path)):
+        fail("output-contract transport diagnostic is incomplete")
+
+    report = load_object(report_path)
+    run_paths = sorted((destination / "results" / "runs").glob("*.jsonl"))
+    report["input_files_sha256"] = {
+        "execution-receipt.json": sha256_file(destination / "results" / "execution-receipt.json"),
+        **{path.name: sha256_file(path) for path in run_paths},
+        "request-schedule.json": sha256_file(destination / "request-schedule.json"),
+    }
+    report["self_digest"] = sha256_text(
+        canonical_json({key: value for key, value in report.items() if key != "self_digest"})
+    )
+    write_json(report_path, report)
+
+    privacy = load_object(privacy_path)
+    privacy["scanned_file_sha256"] = sha256_file(report_path)
+    write_json(privacy_path, privacy)
+
+    manifest = load_object(manifest_path)
+    manifest["files_sha256"] = {
+        "privacy-receipt.json": sha256_file(privacy_path),
+        "transport-diagnostics.json": sha256_file(report_path),
+    }
+    manifest["hashed_file_count"] = len(manifest["files_sha256"])
+    manifest["file_count"] = len(manifest["files_sha256"]) + 1
+    manifest["self_digest"] = sha256_text(
+        canonical_json({key: value for key, value in manifest.items() if key != "self_digest"})
+    )
+    write_json(manifest_path, manifest)
+
+    top_manifest_path = destination / "MANIFEST.json"
+    top_manifest = load_object(top_manifest_path)
+    top_manifest["files"] = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path != top_manifest_path
+    }
+    top_manifest["file_count"] = len(top_manifest["files"])
+    write_json(top_manifest_path, top_manifest)
+
+
 def build_factor_complete_route_anonymous_evidence(destination: Path) -> None:
     source = ROOT / "v2" / "factor-complete-route-breadth-v2"
     copy_anonymized_tree(source, destination)
@@ -626,6 +693,34 @@ def build_external_agent_policy_anonymous_evidence(destination: Path) -> None:
         expected_terminal_records=480,
         external_source_commits_included=True,
     )
+
+
+def build_nonallow_policy_controls_anonymous_evidence(destination: Path) -> None:
+    copy_anonymized_tree(ROOT / "v2" / "nonallow-policy-controls-v1", destination)
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_NONALLOW_POLICY_CONTROLS_EVIDENCE",
+        expected_run_files=15,
+        expected_terminal_records=240,
+        external_source_commits_included=True,
+    )
+
+
+def build_output_contract_ablation_anonymous_evidence(destination: Path) -> None:
+    copy_anonymized_tree(ROOT / "v2" / "output-contract-ablation-v1", destination)
+    copy_tree(ROOT / "v2" / "balanced-public-challenge" / "dataset", destination / "dataset")
+    copy_file(
+        ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json",
+        destination / "prompt-packet.json",
+    )
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_OUTPUT_CONTRACT_ABLATION_EVIDENCE",
+        expected_run_files=12,
+        expected_terminal_records=360,
+        external_source_commits_included=False,
+    )
+    repair_output_contract_transport_diagnostics(destination)
 
 
 def repair_capable_anonymous_evidence(root: Path) -> None:
@@ -3309,7 +3404,8 @@ benchmarks and retained model-service records. It never issues hosted calls. The
 exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions; agentgateway test
 evidence; six sanitized Gatekeeper route repetitions; the imbalanced evidence-state suite and
 balanced challenge; two public `AGENTS.md` revisions; a factor-complete route study; the
-SLSA-inspired migration and local replications; and a privacy-filtered endpoint reanalysis.
+non-ALLOW policy controls; an output-contract ablation; the SLSA-inspired migration and local
+replications; and a privacy-filtered endpoint reanalysis.
 
 ## Reproduce the review environment
 
@@ -3341,6 +3437,10 @@ Python replay when Lean is unavailable.
   the private study commit is withheld.
 - `evidence/factor-complete-route/` retains 630 terminal records for one fixed pair per registered
   factor across seven routes and three repetitions.
+- `evidence/nonallow-policy-controls/` binds eight source-traceable non-ALLOW pairs, 240 terminal
+  route records, and deterministic shortcut controls.
+- `evidence/output-contract-ablation/` retains 360 terminal records across registered output caps
+  and schema modes, plus a content-free transport diagnostic.
 - `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the SLSA-inspired
   migration and fixed-policy studies.
 - `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute
@@ -3906,6 +4006,19 @@ def verify_bundle(bundle: Path) -> None:
         "evidence/external-agent-policy/results/aggregate.json",
         "evidence/external-agent-policy/results/execution-receipt.json",
         "evidence/external-agent-policy/results/privacy-receipt.json",
+        "evidence/nonallow-policy-controls/MANIFEST.json",
+        "evidence/nonallow-policy-controls/mapping-audit.json",
+        "evidence/nonallow-policy-controls/source-receipt.json",
+        "evidence/nonallow-policy-controls/results/aggregate.json",
+        "evidence/nonallow-policy-controls/results/execution-receipt.json",
+        "evidence/nonallow-policy-controls/results/privacy-receipt.json",
+        "evidence/output-contract-ablation/MANIFEST.json",
+        "evidence/output-contract-ablation/results/aggregate.json",
+        "evidence/output-contract-ablation/results/execution-receipt.json",
+        "evidence/output-contract-ablation/results/privacy-receipt.json",
+        "evidence/output-contract-ablation/diagnostics/manifest.json",
+        "evidence/output-contract-ablation/diagnostics/privacy-receipt.json",
+        "evidence/output-contract-ablation/diagnostics/transport-diagnostics.json",
         "evidence/local-model-replications/MANIFEST.json",
         "evidence/local-model-replications/model-catalog.json",
         "evidence/local-model-replications/model-snapshot-receipt.json",
@@ -3997,6 +4110,8 @@ def write_manifest(bundle: Path) -> None:
     dual_endpoint_included = (bundle / "evidence" / "dual-endpoint-audit").is_dir()
     factor_complete_included = (bundle / "evidence" / "factor-complete-route").is_dir()
     external_agent_policy_included = (bundle / "evidence" / "external-agent-policy").is_dir()
+    nonallow_policy_controls_included = (bundle / "evidence" / "nonallow-policy-controls").is_dir()
+    output_contract_ablation_included = (bundle / "evidence" / "output-contract-ablation").is_dir()
     local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
     local_replication_root = bundle / "evidence" / "local-model-replications"
     local_slsa_included = (local_replication_root / "slsa").is_dir()
@@ -4050,6 +4165,22 @@ def write_manifest(bundle: Path) -> None:
             "external_agent_policy_item_level_records_included": external_agent_policy_included,
             "external_agent_policy_raw_response_text_included": False,
             "external_agent_policy_public_source_commits_included": external_agent_policy_included,
+            "nonallow_policy_controls_summary_included": nonallow_policy_controls_included,
+            "nonallow_policy_controls_item_level_records_included": (
+                nonallow_policy_controls_included
+            ),
+            "nonallow_policy_controls_raw_response_text_included": False,
+            "nonallow_policy_controls_public_source_commits_included": (
+                nonallow_policy_controls_included
+            ),
+            "output_contract_ablation_summary_included": output_contract_ablation_included,
+            "output_contract_ablation_item_level_records_included": (
+                output_contract_ablation_included
+            ),
+            "output_contract_ablation_transport_diagnostic_included": (
+                output_contract_ablation_included
+            ),
+            "output_contract_ablation_raw_response_text_included": False,
             "local_model_replications_included": local_replications_included,
             "local_model_replication_item_level_records_included": local_replications_included,
             "local_model_replication_raw_generation_text_included": False,
@@ -4178,6 +4309,8 @@ def paper_empirical_validator() -> str:
             "validate_balanced_public_challenge",
             "validate_external_agent_policy",
             "validate_factor_complete_route",
+            "validate_nonallow_policy_controls",
+            "validate_output_contract_ablation",
             "validate_slsa_portability",
             "validate_local_model_replications",
         },
@@ -4191,6 +4324,8 @@ def main() -> int:
         "fresh_confirmatory": validate_fresh_confirmatory(),
         "balanced_public_challenge": validate_balanced_public_challenge(),
         "factor_complete_route": validate_factor_complete_route(),
+        "nonallow_policy_controls": validate_nonallow_policy_controls(),
+        "output_contract_ablation": validate_output_contract_ablation(),
         "external_agent_policy": validate_external_agent_policy(),
         "slsa_portability": validate_slsa_portability(),
         "local_model_replications": validate_local_model_replications(),
@@ -4364,6 +4499,12 @@ def build(destination: Path) -> None:
     )
     build_external_agent_policy_anonymous_evidence(
         destination / "evidence" / "external-agent-policy"
+    )
+    build_nonallow_policy_controls_anonymous_evidence(
+        destination / "evidence" / "nonallow-policy-controls"
+    )
+    build_output_contract_ablation_anonymous_evidence(
+        destination / "evidence" / "output-contract-ablation"
     )
     (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
     (destination / "README.md").write_text(review_readme(), encoding="utf-8")

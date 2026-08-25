@@ -45,11 +45,14 @@ GRAPH_ROUTES = (
 NATURALISTIC = ROOT / "v2" / "naturalistic-review-decision.json"
 FACTOR_COMPLETE = ROOT / "v2" / "factor-complete-route-breadth-v2" / "results"
 EXTERNAL_AGENT_POLICY = ROOT / "v2" / "external-agent-policy-revision-v2" / "results"
-
-CANONICAL_TITLE = (
-    "ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision"
+NONALLOW_CONTROLS = ROOT / "v2" / "nonallow-policy-controls-v1" / "results"
+OUTPUT_CONTRACT = ROOT / "v2" / "output-contract-ablation-v1" / "results"
+OUTPUT_TRANSPORT = (
+    ROOT / "v2" / "output-contract-ablation-v1" / "diagnostics" / "transport-diagnostics.json"
 )
-TEX_TITLE = r"\cpb: Source-Traceable Regression Tests for Model Services under Policy Revision"
+
+CANONICAL_TITLE = "ClaimPromoteBench: Paired Regression Tests for Versioned Agent Policies"
+TEX_TITLE = r"\cpb: Paired Regression Tests for Versioned Agent Policies"
 
 
 def fail(message: str) -> None:
@@ -722,13 +725,106 @@ def validate_current_route_studies() -> None:
         "external-policy terminal taxonomy",
     )
 
+    nonallow = load_object(NONALLOW_CONTROLS / "aggregate.json", "non-ALLOW aggregate")
+    nonallow_execution = load_object(
+        NONALLOW_CONTROLS / "execution-receipt.json", "non-ALLOW execution receipt"
+    )
+    nonallow_privacy = load_object(
+        NONALLOW_CONTROLS / "privacy-receipt.json", "non-ALLOW privacy receipt"
+    )
+    expect(nonallow.get("status"), "COMPLETE", "non-ALLOW status")
+    expect(nested(nonallow, "execution.scheduled_cells"), 240, "non-ALLOW calls")
+    expect(nested(nonallow, "execution.client_retries"), 0, "non-ALLOW retries")
+    expect(
+        nonallow_execution.get("status"),
+        "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+        "non-ALLOW execution status",
+    )
+    expect(nonallow_execution.get("durable_terminal_records"), 240, "non-ALLOW records")
+    expect(nonallow_privacy.get("status"), "PASS", "non-ALLOW privacy")
+
+    nonallow_expected = {
+        "glm-5.3": (44, 44, 20, 18, 2, 15, 12, 17),
+        "hy3": (36, 36, 15, 14, 1, 11, 12, 13),
+        "qwen3.7-plus": (43, 43, 21, 18, 3, 15, 12, 16),
+    }
+    nonallow_observed = {
+        str(row["model_requested"]): (
+            int(row["metrics"]["parseable_items"]),
+            int(row["metrics"]["correct_items"]),
+            int(row["metrics"]["correct_pairs"]),
+            int(row["stable_controls"]["correct_pairs"]),
+            int(row["changed_pairs"]["correct_pairs"]),
+            int(row["metrics"]["per_action"]["HOLD"]["correct"]),
+            int(row["metrics"]["per_action"]["DEMOTE"]["correct"]),
+            int(row["metrics"]["per_action"]["ESCALATE"]["correct"]),
+        )
+        for row in nonallow["nonallow_policy_controls"]["primary_pooled_three_replications"]
+    }
+    expect(nonallow_observed, nonallow_expected, "non-ALLOW full-policy results")
+
+    output = load_object(OUTPUT_CONTRACT / "aggregate.json", "output-contract aggregate")
+    output_execution = load_object(
+        OUTPUT_CONTRACT / "execution-receipt.json", "output-contract execution receipt"
+    )
+    output_privacy = load_object(
+        OUTPUT_CONTRACT / "privacy-receipt.json", "output-contract privacy receipt"
+    )
+    expect(output.get("status"), "COMPLETE", "output-contract status")
+    expect(nested(output, "execution.scheduled_cells"), 360, "output-contract calls")
+    expect(nested(output, "execution.client_retries"), 0, "output-contract retries")
+    expect(
+        output_execution.get("status"),
+        "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+        "output-contract execution status",
+    )
+    expect(output_execution.get("durable_terminal_records"), 360, "output-contract records")
+    expect(output_privacy.get("status"), "PASS", "output-contract privacy")
+
+    output_expected = {
+        ("glm-5.3", "prompt-4096"): (4, 4, 0, 21),
+        ("glm-5.3", "prompt-8192"): (15, 15, 6, 10),
+        ("glm-5.3", "prompt-12288"): (18, 18, 7, 6),
+        ("glm-5.3", "json-schema-4096"): (7, 7, 2, 17),
+        ("hy3", "prompt-4096"): (3, 3, 0, 22),
+        ("hy3", "prompt-8192"): (18, 18, 7, 6),
+        ("hy3", "prompt-12288"): (22, 22, 9, 2),
+        ("hy3", "json-schema-4096"): (3, 3, 0, 21),
+        ("qwen3.7-plus", "prompt-4096"): (22, 18, 7, 0),
+        ("qwen3.7-plus", "prompt-8192"): (20, 17, 5, 0),
+        ("qwen3.7-plus", "prompt-12288"): (21, 19, 7, 0),
+        ("qwen3.7-plus", "json-schema-4096"): (23, 13, 2, 0),
+    }
+    output_observed = {
+        (str(lane["model_requested"]), str(lane["condition_id"])): (
+            int(lane["metrics"]["parseable_items"]),
+            int(lane["metrics"]["correct_items"]),
+            int(lane["metrics"]["correct_pairs"]),
+            int(lane["route_diagnostics"]["length_termination_count"]),
+        )
+        for lane in output["lanes"]
+    }
+    expect(output_observed, output_expected, "output-contract route conditions")
+
+    transport = load_object(OUTPUT_TRANSPORT, "output transport diagnostic")
+    expect(
+        transport.get("transport_failure_categories"),
+        {"NETWORK": 3, "QUOTA_OR_BILLING_REJECTION": 63, "SERVER_5XX": 6, "TIMEOUT": 4},
+        "output transport categories",
+    )
+    expect(
+        [
+            row["rejected_item_sets_equal"]
+            for row in transport["registered_primary_contrast_quota_balance"]
+        ],
+        [True, True, True],
+        "output primary quota balance",
+    )
+
 
 def validate_manuscript_claims(tex: str) -> None:
     required = {
-        "synthetic scope": (
-            "regression-testing protocol for synthetic, policy-constrained "
-            "evidence-state transitions"
-        ),
+        "synthetic scope": "evaluates synthetic, policy-constrained evidence-state transitions",
         "caller obligations": "Users remain responsible for policy parsing",
         "endpoint layers": (
             "raw-strict $\\rightarrow$ registered parser $\\rightarrow$ full contract "
@@ -746,47 +842,61 @@ def validate_manuscript_claims(tex: str) -> None:
         "raw-strict outside contract": "49 actions and 40 pairs are correct",
         "contract outside raw-strict": ("including 329 correct actions and 78 correct pairs"),
         "challenge parser provenance": (
-            "registered parser accepts six fenced objects, including four correct actions and two "
-            "correct pairs"
+            "balanced-challenge parser accepts six fenced Qwen objects, including four correct "
+            "actions and two correct pairs"
         ),
         "challenge raw-strict score": (
-            "Raw-strict scores are therefore 128/180 items and 46/90 pairs"
+            "Qwen therefore scores 128/180 items and 46/90 pairs under raw-strict parsing"
         ),
         "profile-blind control": "profile-blind control reaches 57/120 items and 0/60 pairs",
         "r6 result": "258/300",
         "challenge Qwen": "132/180",
         "challenge Flash": "90/180",
-        "rare action": "4/30 \\demote, and Flash recovers 0/30",
-        "historical interface": "obsolete service interface",
-        "causal boundary": (
-            "simultaneous changes in service and output stack preclude a causal comparison"
-        ),
+        "rare action": "Their \\demote{} recalls are 4/30 and 0/30",
+        "historical interface": "historical Flash lane is excluded from model evidence",
+        "causal boundary": "does not estimate a model-family, policy-reasoning, or",
         "public challenge boundary": "estimand is robustness on known cases",
         "pre-inference challenge": "fix its cases and labels before inference",
         "external source-screen scope": (
-            "screen covered 465 repository seeds and inspected 11 candidates"
+            "fixed query screened 465 public repository seeds and inspected 11 model--policy "
+            "candidates"
         ),
         "external Agent Governance result": (
             "fixed revision's 15 upstream tests against the Agent Governance Toolkit parent "
             "yields 11 passes"
         ),
         "external agentgateway result": "all 33 selected tests pass",
-        "external policy primary item result": "128/160 actions are correct",
+        "external policy primary item result": "128/160 actions agree with author targets",
         "external policy primary pair result": (
-            "52/80 end-to-end and 52/55 conditional pair accuracy"
+            "52/80 end-to-end and 52/55 conditional pair agreement"
         ),
-        "external changed pairs": "23/48 correct pairs end to end and 23/26 conditional",
-        "external stable controls": "29/32 correct pairs end to end and 29/29 conditional",
-        "external mapping authorship": "we authored the scenarios, precedence rule, action mapping",
+        "external changed pairs": "23/48 target-agreeing pairs end to end and 23/26 conditional",
+        "external stable controls": "29/32 pairs end to end and 29/29 conditional",
+        "external mapping authorship": (
+            "we authored the scenarios, finite actions, precedence rule, action mapping"
+        ),
         "external annotation boundary": (
-            "author-constructed labels, making inter-annotator agreement inapplicable"
+            "human agreement and policy-owner validity were not measured"
         ),
-        "factor-complete result": "Decision coverage spans 3/30 to 29/30",
-        "factor-complete failure cause": "280/281 syntax and schema failures",
+        "non-ALLOW stable controls": "stable restrictive-action controls score 50/54 pairs",
+        "non-ALLOW decomposition": (
+            "50 agreeing, zero complete-disagreeing, and four incomplete stable pairs"
+        ),
+        "non-ALLOW validity boundary": "not an isolated policy-use effect",
+        "Always-ALLOW control": "scores 0/16 items and 0/8 pairs",
+        "request-cap comparison": (
+            "complete target-agreeing pairs change from 0/15 to 7/15 for GLM"
+        ),
+        "request-cap selection": "routes were selected after an earlier screen",
+        "request-cap replication": "each cell receives one call",
+        "output-contract quota boundary": "classifies 63 as quota-or-billing rejections",
+        "prose target boundary": "not policy-owner ground truth",
+        "PolicyBank relation": "PolicyBank introduces controlled policy gaps",
+        "ReguSim relation": "ReguSim separates stated reasoning",
         "structural minimum boundary": (
             "Stochastic fault detection and release sufficiency remain unmeasured"
         ),
-        "replay boundary": "from the existing hosted records",
+        "replay boundary": "cannot be independently re-adjudicated",
     }
     for label, needle in required.items():
         require_text(tex, needle, label)

@@ -16,7 +16,7 @@
 \newcommand{\demote}{\texttt{DEMOTE}}
 \newcommand{\escalate}{\texttt{ESCALATE}}
 
-\title{\cpb: Source-Traceable Regression Tests for Model Services under Policy Revision}
+\title{\cpb: Paired Regression Tests for Versioned Agent Policies}
 \author{Anonymous Author(s)}
 \date{}
 
@@ -25,21 +25,20 @@
 \maketitle
 
 \begin{abstract}
-Versioned repository policies can change the required action for an unchanged request. We present
-\cpb, a regression-testing protocol for synthetic, policy-constrained evidence-state transitions.
-It converts finite policy differences into paired route tests and reports changed-rule and
-action-transition coverage, a cardinality-minimum structural suite, parser provenance, and
-failure-inclusive item and pair accuracy. Eight public revision histories anchor the tested fault
-classes. Two independently authored \texttt{AGENTS.md} changes provide model-facing policy sources;
-their ten author-mapped pairs were fixed before calls to eight hosted routes. The designated first
-replication yields 132/160 valid decisions, 128/160 correct items, and 52/80 correct pairs. Changed
-pairs score 23/48 end to end and 23/26 when both decisions are valid; stable controls score 29/32
-and 29/29. A matched 15-factor diagnostic gives route-level pair accuracy from 0/15 to 11/15;
-280/311 failures over three repetitions coincide with an output limit. Earlier evidence-state
-studies show why action balance matters: an imbalanced route reaches 258/300 items and 113/150
-pairs, while a balanced challenge yields 132/180 and 90/180 items for two routes, with \demote{}
-recalls of 4/30 and 0/30. The estimand is route conformance on frozen cases. Deployment incidence
-and downstream utility remain open.
+Repository policies are versioned inputs to coding agents, yet evaluations usually score versions
+independently. We present \cpb, a paired regression protocol that binds two policy versions, an
+unchanged case, and a target action relation. For finite executable policies, it enumerates
+action-changing contexts and derives cardinality-minimum suites with relative rule and transition
+coverage. For prose policies, targets are declared author mappings, not policy-owner ground truth.
+Route records retain transport, syntax, schema, and semantic failures in end-to-end denominators.
+Eight public histories illustrate the supported fault classes. On ten author-mapped pairs from two
+\texttt{AGENTS.md} revisions, eight hosted routes yield 128/160 item agreements and 52/80 pair
+agreements. In a prespecified non-\allow{} extension, every valid item agrees with its author target;
+incomplete outputs leave 50/54 stable pairs but only 6/18 changed pairs complete. On selected
+routes, a same-item request-cap comparison changes complete target-agreeing pairs from 0/15 to 7/15
+and 0/15 to 9/15, with one call per cell. The protocol supports auditable frozen-case regression
+tests. The executable studies also retain exact action confusion matrices and source-bound
+verification receipts. Deployment validity and model-family effects remain unmeasured.
 \end{abstract}
 
 \section{Introduction}
@@ -57,15 +56,17 @@ an interface break \cite{opa2026agentssecurity,woocommerce2026agentsbc}. Other h
 executable admission policy, verifier semantics, or guardrail adapters
 \cite{gatekeeper2020flexvolume,gatekeeper2021selector,aquasecurity2024trivy,sigstore2022rego,
 microsoft2026agentgovernance,agentgateway2026bedrock}. In each case, source version belongs in the
-test fixture because it determines the expected downstream action.
+test fixture because it determines an executable target or informs a declared prose mapping.
 
-Existing context-file studies vary file presence or construction strategy. Policy-differencing and
-behavioral-testing methods produce change witnesses, while structured-output benchmarks measure
-interface completion. The missing test object joins these layers: the same case under two source
-versions, the prescribed action transition, and the complete model-service route that must deliver
-it.
+Existing context-file studies vary file presence or construction strategy. GuideBench tests
+synthetic guideline updates, and TDAD tests evolution of author-supplied specifications
+\cite{diao2025guidebench,rehan2026tdad}. Policy-differencing methods produce change witnesses;
+structured-output benchmarks measure interface completion. \cpb joins an immutable upstream
+revision, an unchanged case, its executable or author-declared target relation, and the
+model-service route that must deliver both decisions.
 
-\cpb builds this object. For executable policies, it enumerates a declared finite context set,
+\cpb evaluates synthetic, policy-constrained evidence-state transitions and frozen author mappings
+of prose revisions. For executable policies, it enumerates a declared finite context set,
 retains action-changing contexts, certifies changed-rule and directed-transition coverage, and
 selects a cardinality-minimum structural suite. For prose policy, it binds immutable source versions
 to an explicit author mapping. A \emph{route} includes the model identifier, provider, API adapter,
@@ -74,17 +75,17 @@ end-to-end item and pair metrics; conditional metrics describe the subset that p
 decisions. Users remain responsible for policy parsing, grammar synthesis, rule-change discovery,
 and witness inference.
 
-The resulting object is a version-control analogue of a behavioral regression test. A source diff
-defines the expected action transition, the paired case tests whether the route follows that
-transition, and a stable control tests whether the route reacts indiscriminately to source change.
-This joint object is absent from context-file evaluation, policy differencing, and structured-output
-testing in isolation.
+The result is a behavioral regression test indexed by source version. A changed pair tests a
+declared action transition; a stable pair tests whether an unrelated source change perturbs the
+action. For prose cases, scores measure agreement with the study authors' frozen mapping. Neither
+item agreement nor completion alone identifies both failure modes.
 
-The evaluation combines three forms of evidence. Eight public histories establish source-level
-fault classes. Two external \texttt{AGENTS.md} revisions test model-facing version sensitivity on
-eight routes. Synthetic evidence-state instruments isolate 15 policy factors, action imbalance,
-parser choice, and repeated route stability. The deterministic policy executor is the definitional
-policy ceiling. Learned routes and a weak Naive Bayes control are empirical measurements.
+The evaluation uses eight public histories, two model-facing \texttt{AGENTS.md} revisions, and
+synthetic evidence-state instruments. A prespecified, commit-frozen non-\allow{} extension tests all three
+restrictive actions and includes case-only, source-shuffled, Always-\allow{}, and copy-before
+controls. A second prespecified study compares request caps and JSON-schema mode on three fixed routes.
+The deterministic executor is the definitional policy ceiling; the Naive Bayes control remains a
+weak shortcut check.
 
 The contributions are:
 \begin{enumerate}[leftmargin=*]
@@ -92,12 +93,13 @@ The contributions are:
   certificates and a cardinality-minimum structural suite;
   \item a route-level scoring protocol that separates raw-strict, registered-parser,
   contract-action, and exact-decision endpoints while preserving complete denominators; and
-  \item a source-traceable evaluation over eight upstream histories, external model-facing policy
-  revisions, repeated hosted routes, and action-balanced evidence-state diagnostics.
+  \item source-traceable route evidence over eight upstream histories, including non-\allow{}
+  controls and a same-item request-cap comparison.
 \end{enumerate}
 The finite enumerator uses established semantic-differencing and set-cover machinery. The technical
-contribution is their integration with version-bound route records, parser provenance, and
-failure-inclusive endpoints.
+contribution is their integration with immutable source pairs, stable and changed cases,
+failure-inclusive route records, and relative structural certificates; we do not claim a new
+learning or suite-reduction algorithm.
 
 \section{Related Work}
 
@@ -107,7 +109,7 @@ measure their presence against task completion, latency, token use, and tool beh
 \cite{mohsenimofidi2026context,chatlatanagulchai2025agentreadmes,lulla2026agentsmd,
 gloaguen2026agentsmd,khatri2026contextfiles}. Their controlled coordinate is usually context-file
 presence or construction strategy. We hold the route and case fixed, vary a naturally occurring
-policy version, and score the action transition prescribed by its changed clauses.
+policy version, and score an executable target or a provenance-qualified author mapping.
 
 \paragraph{Behavioral tests, contrasts, and metamorphic relations.}
 CheckList organizes behavioral tests by capability, and contrast sets probe local decision
@@ -127,7 +129,7 @@ suite reduction supply established adequacy machinery
 under a fixed application task \cite{ma2024promptregression}. \cpb uses the policy version as the
 controlled coordinate and carries each witness through a model-service contract.
 
-\paragraph{Rule and specification following.}
+\paragraph{Specification following.}
 RuleArena and SpecEval test rule-governed and specification-following behavior
 \cite{zhou2025rulearena,ahmed2025speceval}. GuideBench includes guideline updates, and TDAD studies
 specification evolution with hidden tests and semantic mutants
@@ -135,10 +137,34 @@ specification evolution with hidden tests and semantic mutants
 rules \cite{datla2025policytotests}. Policy-document benchmarks study comprehension,
 internalization, request compliance, and evolving moderation rules
 \cite{bao2026policyllm,liu2026policyinternalization,cisneros2026policycompliance,
-mullick2023evolving,ji2026argus}. COMPASS and augmented policy training study organization-specific policy
-alignment and guardrail generalization
-\cite{choi2026compass,liu2026augmentedpolicy}. Our endpoint is the action prescribed by a registered
-source revision on a fixed case.
+mullick2023evolving,ji2026argus}. COMPASS studies organization-specific alignment; augmented policy
+training targets guardrail generalization
+\cite{choi2026compass,liu2026augmentedpolicy}. PolicyBank introduces controlled policy gaps and a
+human oracle to separate policy alignment from execution; ReguSim separates stated reasoning,
+attempted action, enforcement, and monitoring evidence
+\cite{choi2026policybank,luo2026regusim}. Our endpoint is route completion and target agreement on a
+fixed case indexed by source version.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\caption{Closest evaluation objects. ``Author map'' denotes a target declared by benchmark authors,
+without policy-owner validation.}
+\label{tab:related-matrix}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Work & Revision object & Target authority & Evaluated failure layer \\
+\midrule
+GuideBench & synthetic guidelines & benchmark/human & model response \\
+TDAD & author specification & executable tests & agent and tests \\
+PolicyBank & controlled policy gaps & human oracle & alignment/execution \\
+ReguSim & visible financial rules & executable constraints & action/enforcement \\
+Prompt regression & service version & application tests & service behavior \\
+\cpb & upstream/finite policy & oracle or author map & complete route \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{Structured output and selective prediction.}
 Grammar-constrained decoding and incremental parsing improve syntactic validity
@@ -190,13 +216,44 @@ For versioned prose, we replace the executable oracle with a declared mapping
 $M_v(c)\in\mathcal A$ from a pinned source version and case to a finite action. Source authorship,
 case authorship, and mapping authorship are recorded separately. A changed pair satisfies
 $M_0(c)\neq M_1(c)$; a stable control satisfies equality. These pairs test source-version
-sensitivity under the declared mapping. Rule-coverage and minimum-suite claims apply only where an
+sensitivity under the declared mapping. Their outcomes are target-agreement measurements, not
+estimates of policy-owner intent. Rule-coverage and minimum-suite claims apply only where an
 executable evaluator and registered witnesses define the coverage universe.
+
+Table~\ref{tab:worked-example} gives a complete prose-policy example. Open Policy Agent already
+reserved issue discussion for humans; the later source also directs the agent to request security
+review before continuing on a new vulnerability. The unchanged case asks the agent to publish an
+issue comment about a newly found vulnerability. Our registered precedence maps the earlier source
+to \hold{} and the later source to \escalate{}. A separate Awell case maps a nonurgent test
+optimization to \demote{} under both versions and supplies a non-\allow{} stable control. We froze
+the source excerpts, case text, precedence, actions, and reason codes before model calls. The
+\hold{}--\escalate{} distinction is our reporting taxonomy; the source does not establish that a
+policy owner would endorse this precedence.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Worked source-bound pairs. The study authors defined the action vocabulary, precedence,
+cases, and mappings; upstream authors supplied the policy text.}
+\label{tab:worked-example}
+\begin{tabular}{@{}p{0.15\linewidth}p{0.32\linewidth}p{0.21\linewidth}p{0.19\linewidth}@{}}
+\toprule
+Pair & Unchanged case & Source evidence & Mapped relation \\
+\midrule
+OPA changed & Publish an issue comment for a newly found vulnerability & New source requires user
+security review before work continues & \hold$\rightarrow$\escalate{} \\
+Awell stable & Consolidate registration tests after a 25-second run & Both sources call the
+optimization nonurgent & \demote$\rightarrow$\demote{} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Parser and contract endpoints}
 
-For scheduled item $x$, let $y(x)=\pi_P(c)$; let $r(x)$ be the action parsed directly from retained
-raw text; let $p(x)$ be the action recorded by the route-specific registered parser; let $v(x)$
+For scheduled item $x$, let $y(x)$ be the executable-oracle action or, for prose, the declared
+author target; let $r(x)$ be the action parsed directly from retained raw text; let $p(x)$ be the
+action recorded by the route-specific registered parser; let $v(x)$
 indicate full output-contract validity; and let $d(x)$ be the parsed structured decision. The
 raw-strict parser accepts exactly one duplicate-free top-level JSON object and performs zero fence or
 substring extraction, repair, coercion, or non-standard constant handling. Registered parsers retain
@@ -209,7 +266,9 @@ C_C(x)&=\mathbb 1[v(x)=1]\mathbb 1[p(x)=y(x)], &&\text{contract action},\\
 C_F(x)&=\mathbb 1[v(x)=1]\mathbb 1[d(x)=d^*(x)], &&\text{full decision}.
 \end{align*}
 The task-specific contract contains five fields for Gatekeeper and six fields for the evidence-state
-tasks. Pair correctness is the product of the two member indicators for the selected endpoint.
+tasks. Pair success is the product of the two member indicators for the selected endpoint. We call
+this correctness only when $y$ comes from an executable or synthetic oracle; prose results report
+agreement with an author target.
 End-to-end metrics divide by every scheduled item or pair. Conditional item metrics divide by items
 for which the selected parser or contract succeeds; conditional pair metrics require both members to
 succeed. Transport, syntax, schema, and semantic failures are terminal route outcomes. They appear
@@ -244,8 +303,16 @@ vulnerability-triage guidance, and WooCommerce Services adds backward-compatibil
 interface break. We pin each change and parent, verify source and license hashes, and retain the
 maintainer review record. Ten author-constructed cases yield six action-changing pairs and four
 stable controls. Upstream maintainers authored the policy text; we authored the scenarios, finite
-actions, precedence rule, and labels. All were commit-frozen before replacement inference. The
-study uses author-constructed labels, making inter-annotator agreement inapplicable.
+actions, precedence rule, action mapping, and labels. All were commit-frozen before replacement
+inference. These mappings are test targets rather than validated oracles; human agreement and
+policy-owner validity were not measured.
+
+A prespecified, commit-frozen extension removes \allow{} from the target support. It binds eight pairs to four
+source-version records from Open Policy Agent, WooCommerce Services, and Awell: two stable pairs
+each for \hold, \demote, and \escalate{}, plus two \hold$\rightarrow$\escalate{} pairs. Each of the
+16 item mappings includes the pinned source excerpt and an author rationale. The mapping audit
+records zero human annotators, zero policy-owner labels, and no agreement statistic. Model outputs
+played no role in source or label selection.
 
 Executable histories supply exact source checks. Open Policy Agent 1.19.1 reproduces two
 Gatekeeper changes on 12 contexts derived from upstream tests. We map zero violations to \allow{}
@@ -269,7 +336,7 @@ convenience sample establishes concrete boundary faults; prevalence remains unme
 \toprule
 Layer & Source or instrument & Role & Scope \\
 \midrule
-External prose policy & OPA and Woo \texttt{AGENTS.md} & model-facing version test & 10 pairs; 8 routes \\
+External prose policy & OPA, Woo, Awell & model-facing version tests & 18 pairs; 3--8 routes \\
 Executable policy & Gatekeeper and Trivy & exact policy differences & 16 cases; 4 edges \\
 Boundary faults & Cosign, Agent Governance, agentgateway & verifier and adapter validity & 6, 2, 33 cases \\
 Synthetic structure & SLSA-inspired migration & rule and edge coverage & 60 pairs; min. 10 \\
@@ -283,14 +350,31 @@ Evidence state & imbalanced, balanced, factor-complete & action and route diagno
 The model-facing study sends the ten \texttt{AGENTS.md} pairs to eight hosted routes for three
 repetitions, totaling 480 scheduled calls. Every request includes the complete pinned policy file.
 Primary endpoints use the first repetition: coverage, item and pair accuracy, changed-pair action
-invariance, stable-control accuracy, action recall, and the full confusion matrix. Repeated results
+invariance, stable-control agreement, action recall, and the full confusion matrix. For prose cases,
+the stored accuracy fields are reported as author-target agreement. Repeated results
 measure within-route stability.
 
-The matched factor diagnostic selects the lexicographically first balanced-challenge pair for each
-of 15 registered factors. Seven routes receive the same 30 items for three repetitions, totaling
-630 scheduled calls. Selection uses factor identifiers and precedes every route output. Each cell permits one
-request and zero client retries. The two historical balanced-challenge routes are recomputed on the
-same subset without new calls.
+The non-\allow{} extension sends 16 items to GLM 5.3, HY3, and Qwen 3.7 Plus through one endpoint.
+The full-policy condition has three prespecified repetitions; case-only and unmatched
+source-shuffled controls have one. Strict JSON schema, a 1536-token requested cap, temperature 0,
+top-$p$ 1, and seed 20260825 are fixed across 240 calls. Always-\allow{} and copy-before are
+deterministic offline controls, not learned baselines. The negative controls remain exploratory
+because source substitution also changes prompt content and completion behavior.
+
+The request-cap comparison uses the same three routes and the lexicographically first pair
+for each of 15 registered balanced-challenge factors. It crosses the 30 fixed items with prompt-only
+caps of 4096, 8192, and 12288 tokens and strict JSON schema at 4096, totaling 360 calls. Conditions
+rotate by item; each group sends the same item and condition to all three routes. Temperature,
+top-$p$, seed, endpoint, prompt, parser, and adapter remain fixed. The primary contrast is the exact
+same-item change from prompt-4096 to prompt-12288 for each route. The endpoint may count hidden
+reasoning and visible text against one cap, so we call \texttt{finish\_reason=length} request-cap
+exhaustion. The routes were selected after an earlier screen found frequent length failures; each
+cell receives one call. We report exact counts without population or provider-independent inference.
+
+Both extensions allow one application request per cell, zero client retries, and no partial resume.
+The server's internal retry behavior is unobservable. Every one of the 600 scheduled calls reached a
+terminal state. The study plans, schedules, data, prompts, schemas, catalog snapshots, and runtime
+sources were frozen at commit \texttt{a68cef6} before inference.
 
 Prior instruments provide depth and controls. A Gatekeeper study repeats 24 items three times on
 two routes sharing the same provider, base URL, API, prompt-only mode, and adapter settings. A
@@ -339,20 +423,20 @@ balanced action recall 0.328.
 
 Table~\ref{tab:external-routes} reports the designated first replication on the two public
 \texttt{AGENTS.md} revisions. Across eight routes, 132/160 scheduled items produce valid decisions,
-128/160 actions are correct, and 121/160 exact decisions match both action and registered reason
-codes. Of 80 pairs, 55 are complete and 52 are correct, giving 52/80 end-to-end and 52/55
-conditional pair accuracy.
+128/160 actions agree with author targets, and 121/160 exact decisions match both the target action
+and registered reason codes. Of 80 pairs, 55 are complete and 52 agree on both members, giving
+52/80 end-to-end and 52/55 conditional pair agreement.
 
 \begin{table}[H]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{2.6pt}
-\caption{External policy revisions, first replication. Changed and stable columns retain their
-6- and 4-pair denominators. Conditional item/pair scores use valid items or complete pairs.}
+\caption{External policy revisions, first replication. Scores are agreement with author targets.
+Changed and stable columns retain their 6- and 4-pair denominators.}
 \label{tab:external-routes}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Route & Valid & E2E item & E2E pair & Changed & Stable & Cond. item/pair \\
+Route & Valid & Item agr. & Pair agr. & Changed & Stable & Cond. item/pair \\
 \midrule
 GLM 5.3 & 16/20 & 16/20 & 6/10 & 2/6 & 4/4 & 16/16; 6/6 \\
 Luna 5.6 & 16/20 & 16/20 & 6/10 & 3/6 & 3/4 & 16/16; 6/6 \\
@@ -366,56 +450,89 @@ Qwen 3.7 Plus & 17/20 & 15/20 & 6/10 & 2/6 & 4/4 & 15/17; 6/8 \\
 \end{tabular}
 \end{table}
 
-The changed-policy subset contributes 23/48 correct pairs end to end and 23/26 conditional on both
-decisions. Three of the 26 complete changed pairs return the same action across source versions.
-Stable controls contribute 29/32 correct pairs end to end and 29/29 conditional, so successful
-routes usually preserve the action when the mapped policy outcome is unchanged. Six routes recover
-the single \demote{} item; OX Alpha and Qwen Plus miss it. Across all three repetitions, 387/480
-items and 158/240 pairs are correct end to end, compared with 387/399 items and 158/169 complete
-pairs conditionally. The 81 terminal failures comprise 26 server-side transport failures, nine
+The changed subset contributes 23/48 target-agreeing pairs end to end and 23/26 conditional on both
+decisions. Three complete changed pairs return the same action across source versions. Stable
+controls contribute 29/32 pairs end to end and 29/29 conditional. Across all three repetitions,
+387/480 items and 158/240 pairs agree with the mapping, compared with 387/399 valid items and
+158/169 complete pairs. The 81 terminal failures comprise 26 server-side transport failures, nine
 length-terminated JSON failures, and 46 outputs whose action conflicts with their reason codes.
-Decision counts include valid outputs only; the end-to-end denominator remains 480.
+These counts establish agreement with one frozen interpretation, not policy-owner validity.
 
-\subsection{Matched factor-complete routes}
+\subsection{Non-\allow{} policy controls}
 
-Table~\ref{tab:factor-routes} reports the predesignated first replication. Decision coverage spans
-3/30 to 29/30, end-to-end item accuracy spans 3/30 to 26/30, and pair accuracy spans 0/15 to 11/15.
-The two historical anchors, executed earlier under different route states, reach 23/30 items and
-8/15 pairs for Qwen Max and 14/30 items and 2/15 pairs for Flash. They are temporal anchors from an
-earlier service state.
+Table~\ref{tab:nonallow-routes} aggregates the three full-policy repetitions. All 48 scheduled
+items per route remain in the item denominator, and all 24 pairs remain in each pair denominator.
+Across routes, stable restrictive-action controls score 50/54 pairs, whereas the two changed
+\hold$\rightarrow$\escalate{} cases score 6/18. Every valid item agrees with its author target:
+stable cases contain 104 valid-agreeing and four incomplete items, while changed cases contain 19
+valid-agreeing and 17 incomplete items. At pair level, the decomposition is 50 agreeing, zero
+complete-disagreeing, and four incomplete stable pairs versus 6, 0, and 12 changed pairs. The gap is
+therefore a completion difference on two author-constructed cases, not an isolated policy-use effect.
 
 \begin{table}[H]
 \centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\caption{Factor-complete first replication. Conditional scores use valid items or complete pairs;
-all other columns retain the full 30-item or 15-pair denominator.}
-\label{tab:factor-routes}
-\begin{tabular}{@{}lrrrr@{}}
+\scriptsize
+\setlength{\tabcolsep}{2.7pt}
+\caption{Non-\allow{} full-policy results over three repetitions. Scores are agreement with author
+targets; action columns give end-to-end recall.}
+\label{tab:nonallow-routes}
+\begin{tabular}{@{}lrrrrrrrr@{}}
 \toprule
-Route & Valid & E2E item & E2E pair & Conditional item / pair \\
+Route & Valid & E2E item & E2E pair & Stable & Changed & \hold{} & \demote{} & \escalate{} \\
 \midrule
-GLM 5.3 & 9/30 & 9/30 & 1/15 & 9/9; 1/1 \\
-Luna 5.6 & 29/30 & 26/30 & 11/15 & 26/29; 11/14 \\
-HY3 & 3/30 & 3/30 & 0/15 & 3/3; -- \\
-Kimi K2.7 Code & 16/30 & 15/30 & 4/15 & 15/16; 4/5 \\
-MiMo 2.5 Pro & 16/30 & 11/30 & 1/15 & 11/16; 1/5 \\
-MiniMax 2.7 & 9/30 & 7/30 & 0/15 & 7/9; 0/2 \\
-Qwen 3.7 Plus & 27/30 & 25/30 & 10/15 & 25/27; 10/12 \\
+GLM 5.3 & 44/48 & 44/48 & 20/24 & 18/18 & 2/6 & 15/18 & 12/12 & 17/18 \\
+HY3 & 36/48 & 36/48 & 15/24 & 14/18 & 1/6 & 11/18 & 12/12 & 13/18 \\
+Qwen 3.7 Plus & 43/48 & 43/48 & 21/24 & 18/18 & 3/6 & 15/18 & 12/12 & 16/18 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Across three repetitions, Luna produces 87/90 valid decisions, 79/90 correct items, and 34/45
-correct pairs; Qwen Plus produces 80/90, 69/90, and 26/45. Their all-three correct-pair counts are
-8/15 and 5/15. The remaining routes complete at most 48/90 decisions and at most 6/45 pairs. Of 311
-terminal failures, 194 are JSON syntax failures, 87 schema failures, eight semantic failures, and
-22 transport failures. A length or token limit accompanies 280/281 syntax and schema failures.
-This concentration attributes the dominant loss to the tested route contract and output ceiling.
-Conditional columns describe only the surviving subset; the end-to-end columns define route
-performance.
-Among the five \demote{} items, Luna recovers 3/5 and Qwen Plus 2/5; the other five routes recover
-0/5. Appendix~\ref{app:complete-results} gives every action recall and confusion cell.
+The deterministic Always-\allow{} control scores 0/16 items and 0/8 pairs. Copy-before scores
+14/16 items and 6/8 pairs because it solves every stable pair and neither changed pair. The first
+full-policy repetition scores 7/8, 5/8, and 7/8 pairs for GLM, HY3, and Qwen. The corresponding
+case-only results are 3/8, 0/8, and 5/8; unmatched source shuffling gives 0/8, 0/8, and 4/8. These
+prompt controls also change completion rates, so they do not identify reliance on the policy text.
+
+\subsection{Request-cap comparison}
+
+Table~\ref{tab:output-contract} reports the prespecified same-item cap contrast on the selected
+routes. From 4096 to 12288 tokens, complete target-agreeing pairs change from 0/15 to 7/15 for GLM
+and from 0/15 to 9/15 for HY3, alongside 15 and 20 fewer length terminations. Qwen has no length
+terminations and remains at 7/15 pairs. This one-call-per-cell comparison measures completion under
+two inference budgets; it does not isolate policy reasoning.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.7pt}
+\caption{Primary request-cap contrast. V/A/P gives valid decisions, target-agreeing items, and
+target-agreeing pairs; fixed denominators are 30/30/15.}
+\label{tab:output-contract}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Route & 4096 V/A/P & 12288 V/A/P & Cond. pair & Length term. \\
+\midrule
+GLM & 4/4/0 & 18/18/7 & --; 7/7 & 21; 6 \\
+HY3 & 3/3/0 & 22/22/9 & --; 9/9 & 22; 2 \\
+Qwen+ & 22/18/7 & 21/19/7 & 7/9; 7/9 & 0; 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At strict JSON schema and 4096 tokens, GLM, HY3, and Qwen produce 7, 3, and 23 valid decisions;
+their end-to-end item/pair scores are 7/30; 2/15, 3/30; 0/15, and 13/30; 2/15. Conditional scores
+are 7/7; 2/2, 3/3; --, and 13/23; 2/11. The full four-condition table appears in
+Appendix~\ref{tab:output-all-conditions}.
+
+The run records 76 transport failures. A posthoc, content-free diagnostic classifies 63 as
+quota-or-billing rejections during the final 17 seconds, six as server errors, four as timeouts,
+and three as network errors. For the registered 4096-versus-12288 contrast, each route has five
+quota-rejected items in both conditions, with identical item IDs. Keeping those cells in both
+denominators balances that quota category in the primary contrast but does not balance the other
+transport failures or remove temporal service confounding. The study supports route-configuration
+descriptions for these selected calls; it does not estimate a model-family, policy-reasoning, or
+provider-independent effect. Appendix~\ref{app:complete-results} gives every action recall and
+confusion cell.
 
 \subsection{Executable-policy route repetitions}
 
@@ -436,145 +553,89 @@ historical local routes whose registered parsers used deterministic single-objec
 Neither endpoint contains the other, and each answers a different integration question.
 
 On the SLSA Qwen route, raw-strict action yields 120/120 items and 60/60 pairs, while the full
-contract yields 88/120 and 28/60. On the balanced Qwen challenge, the registered parser accepts six
-fenced objects, including four correct actions and two correct pairs, that raw-strict parsing rejects.
-Raw-strict scores are therefore 128/180 items and 46/90 pairs, compared with 132/180 and 48/90
-under the full contract. The balanced Flash route changes from 105/180 and 19/90 under raw-strict
-parsing to 90/180 and 13/90 under the contract. Registered-parser actions and full-contract actions
-coincide in these records because a parser-owned decision is retained only after contract
-validation.
+contract yields 88/120 and 28/60. The registered balanced-challenge parser accepts six fenced Qwen
+objects, including four correct actions and two correct pairs. Qwen therefore scores 128/180 items
+and 46/90 pairs under raw-strict parsing, versus 132/180 and 48/90 under the contract. Flash changes
+from 105/180 and 19/90 to 90/180 and 13/90.
 
-\begin{table}[H]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\caption{Auxiliary item/pair metrics. All raw and contract scores are end to end; the last column is
-conditional on contract validity. ``--'' marks unavailable retained raw text.}
-\label{tab:aux}
-\begin{tabular}{@{}p{0.20\linewidth}rrrr@{}}
-\toprule
-Route & Reg. valid & Raw item/pair & Contract item/pair & Cond. item/pair \\
-\midrule
-Imbalanced Qwen & 272/300 & -- & 258/300; 113/150 & 258/272; 113/123 \\
-Challenge Qwen & 148/180 & 128/180; 46/90 & 132/180; 48/90 & 132/148; 48/64 \\
-Challenge Flash & 146/180 & 105/180; 19/90 & 90/180; 13/90 & 90/146; 13/61 \\
-SLSA Qwen & 88/120 & 120/120; 60/60 & 88/120; 28/60 & 88/88; 28/28 \\
-SLSA Flash & 108/120 & 110/120; 51/60 & 108/120; 49/60 & 108/108; 49/49 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\caption{End-to-end contract-action recall by gold action.}
-\label{tab:key-recall}
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-Route & \allow{} & \hold{} & \demote{} & \escalate{} \\
-\midrule
-Imbalanced Qwen & 143/150 & 110/134 & 0/8 & 5/8 \\
-Challenge Qwen & 79/90 & 26/30 & 4/30 & 23/30 \\
-Challenge Flash & 68/90 & 9/30 & 0/30 & 13/30 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Action support changes the diagnosis. Table~\ref{tab:key-recall} gives end-to-end contract-action
-recall. The imbalanced suite has eight examples for each rare action; Qwen recovers 0/8 \demote{}
-and 5/8 \escalate. The balanced challenge increases each non-\allow{} action to 30 cases: Qwen
-recovers 4/30 \demote, and Flash recovers 0/30. The complete confusion matrices in
-Appendix~\ref{app:complete-results} retain terminal failures in every row.
+The imbalanced Qwen route produces 272/300 valid decisions and scores 258/300 items and 113/150
+pairs end to end, versus 258/272 and 113/123 conditionally. Its \demote{} and \escalate{} recalls
+are 0/8 and 5/8. On the balanced challenge, Qwen produces 148/180 valid decisions and scores
+132/180 items and 48/90 pairs, versus 132/148 and 48/64 conditionally; Flash produces 146/180 and
+scores 90/180 and 13/90, versus 90/146 and 13/61. Their \demote{} recalls are 4/30 and 0/30.
+Appendix~\ref{app:complete-results} reports all action recalls and confusion cells with terminal
+failures retained.
 
 \section{Discussion}
 
-\paragraph{Policy revision becomes a regression coordinate.}
-The two \texttt{AGENTS.md} histories supply independently authored policy changes that can alter the
-prescribed action for a fixed scenario. Binding the source version, scenario, declared action, and
-route record creates a test that can be replayed after either the policy or service stack changes.
-Among complete first-replication pairs, 23/26 changed pairs follow the declared transition and 29/29
-stable controls preserve the declared action. The three invariant changed pairs show the diagnostic
-value of pairing even when item accuracy is high. Executable policies add exact rule and transition
-certificates. Prose policies retain source traceability while leaving the action mapping with the
-study author or policy owner.
+\paragraph{Policy version is a regression coordinate.}
+Among complete first-replication \texttt{AGENTS.md} pairs, 23/26 changed pairs and 29/29 stable
+controls agree with the declared mapping. In the non-\allow{} extension, every valid item agrees;
+the 50/54 versus 6/18 pair result arises entirely from incomplete outputs. Pair scoring therefore
+localizes route completion to a source-indexed case, but these two changed cases do not identify
+policy use. Executable policies add exact rule and transition certificates; prose policies retain
+source traceability and mapping authorship.
 
-\paragraph{A route has two failure surfaces.}
-The model must select the prescribed action and complete the service contract. All 63 extracted
-Gatekeeper actions agree with the executable oracle, while transport and serialization failures
-remove many complete pairs. In the factor diagnostic, output limits accompany 280/281 syntax and
-schema failures. The external study adds a third interface fault: 46 outputs pair an action with
-inconsistent reason codes. Conditional accuracy isolates action choice after interface completion;
-end-to-end accuracy measures the delivered route. Parser, contract, output ceiling, and denominator
-therefore belong in a deployment-facing test specification.
+\paragraph{Completion depends on the request cap.}
+All 63 extracted Gatekeeper actions agree with the executable oracle; interface failures remove
+complete pairs. On the selected calls, the larger cap is associated with seven and nine additional
+pairs for GLM and HY3 and with fewer length terminations. Qwen has no pair gain or length
+termination. Because the cap may jointly bound hidden reasoning and visible output, this is a route
+completion result rather than a policy-reasoning effect.
 
 \paragraph{Pairs and action balance expose complementary shortcuts.}
-The profile-blind control completes 0/60 SLSA-inspired pairs because it ignores the policy profile.
-The imbalanced evidence-state suite assigns only eight items to each rare action and obscures weak
-\demote{} behavior behind frequent \allow{} and \hold{} cases. The balanced challenge and matched
-factor study make that failure visible. Pair accuracy tests joint version sensitivity, action recall
-tests label-specific behavior, and the terminal column measures interface completion.
+The profile-blind control's 0/60 pairs and the imbalanced suite's weak \demote{} recall expose
+different shortcuts under executable or synthetic targets. Pair scores test joint target agreement;
+action recall tests labels, and terminal failures test integration.
 
 \paragraph{Prospective use.}
-A policy owner can register changed and stable cases before merging a source revision, run them
-against candidate service routes, and retain the frozen records as a release receipt. Fully
-structured inputs should use a deterministic executor, which defines the policy ceiling in this
-study. Prose policies require an explicit mapping and independent review appropriate to the
-deployment. The Naive Bayes result serves only as a weak shortcut check.
-Deployment utility remains an empirical question for the adopting system.
+Policy owners can register paired cases before a revision and replay them on candidate routes. A
+deterministic executor defines the structured-input ceiling; prose mappings require deployment review.
 
 \section{Limitations}
 
-The external study contains two policy revisions and ten author-constructed pairs. Upstream
-maintainers authored the source text; we authored the scenarios, precedence rule, action mapping,
-and labels. Human annotation, deployment telemetry, and prevalence estimation remain outside this
-study. It measures frozen-case conformance to the declared mapping. A field study with
-policy-owner labels and observed downstream consequences would establish operational validity.
+The prose evidence comprises 18 author-mapped pairs. Only two extension pairs change, both
+\hold$\rightarrow$\escalate{}, and none has \allow{} as its target. Maintainers wrote the policies;
+we wrote the cases, action taxonomy, precedence, and targets. Human and policy-owner labels,
+agreement, telemetry, and prevalence are absent. Both source versions already require stopping;
+our \hold{}--\escalate{} distinction is not an independently validated change in permitted behavior.
 
-The remaining histories form a convenience sample of policy, verifier, and adapter faults. The
-fixed source screen covered 465 repository seeds and inspected 11 candidates. Synthetic instruments
-provide controlled action and factor support; the distribution of repository policies and user
-requests remains unmeasured.
+Study plans, schedules, and input hashes precede calls in the private repository history. The
+anonymous bundle redacts the private commit identity, so blind reviewers can verify internal
+bindings but cannot independently timestamp the pre-inference freeze until de-anonymization.
 
-Every structural certificate is relative to a finite context set and registered witnesses. Missing
-contexts can hide behavior, and incorrect witnesses invalidate rule coverage. Minimum-suite
-optimality covers the declared rule and edge universe; stochastic fault-detection power and release
-sufficiency remain unmeasured. Trivy uses a documented compatibility helper for historical Rego;
-Cosign isolates verifier logic under a fixed policy.
+The other histories are a convenience sample. Structural certificates depend on finite contexts and
+registered witnesses; omissions invalidate coverage. Minimum suites certify only the declared
+universe. Stochastic detection power, release sufficiency, and prevalence remain unmeasured.
 
-Hosted results identify route configurations, which combine a provider-defined model identifier,
-prompt, API adapter, output constraint, service state, and time. Serving internals are opaque, and
-most breadth routes share one provider. The comparisons support route-level descriptions;
-model-family rankings and causal ablations remain unsupported. The factor-complete historical anchors ran at a
-different time and serve only as temporal references. OX Alpha is a provider-designated stealth
-route: its underlying model identity and data-retention and training terms were undisclosed at
-freeze time.
+Each hosted route binds a model identifier, provider, adapter, prompt, output constraint, service
+state, and time; opaque internals preclude model-family rankings and provider-independent effects.
+The request-cap routes were selected after a screen for length failures and receive one call per
+cell. The cap may jointly constrain hidden reasoning and visible output. The same five
+quota-rejected IDs appear in both primary conditions per route, but 13 other transport failures are
+not balanced. Prompt controls do not isolate policy use. OX Alpha's model identity and data terms
+were undisclosed.
 
-The historical Flash lane for the imbalanced suite used an obsolete service interface: all 300
-requests returned HTTP 401 before model output. Later Flash routes establish that the newer service
-paths execute. The simultaneous changes in service and output stack preclude a causal comparison.
-The balanced challenge was frozen before inference and estimates robustness on known public cases.
-Policy retrieval, ambiguous-source adjudication, evidence extraction, and downstream utility remain
-outside the evaluation.
+A historical Flash lane is excluded from model evidence because all 300 calls returned HTTP 401
+before model output; later routes establish only their own executability. The public challenge
+covers frozen cases. Policy retrieval, source adjudication, evidence extraction, and downstream
+utility remain outside scope.
 
 \section{Conclusion}
 
-\cpb treats policy version as a first-class regression input. It binds source revisions to paired
-cases, prescribed action transitions, parser provenance, complete denominators, and, for finite
-executable policies, exact structural certificates. Public \texttt{AGENTS.md} revisions extend the
-protocol to independently authored model-facing policy text. Their paired cases expose both
-version-sensitive behavior and three invariant changed-pair observations. Controlled instruments
-reveal rare-action and interface failures that item accuracy alone can conceal. The artifact supports auditable
-pre-merge and pre-deployment checks with a narrow estimand: route conformance on frozen cases. A
-deterministic executor remains the definitional policy ceiling for structured inputs. Field studies
-with policy-owner labels and downstream outcomes are the next step toward deployment claims.
+\cpb binds source revisions to paired cases, action transitions, parser provenance, complete
+denominators, and finite structural certificates. The prose studies measure agreement with frozen
+author targets; the request-cap comparison measures route completion on selected calls. The
+artifact supports auditable checks on frozen cases. Deterministic execution remains the
+definitional ceiling; policy-owner labels and field outcomes are required for deployment claims.
 
 \section{Reproducibility Statement}
 
 The released artifact binds policies, datasets, prompts, source tests, route configurations, and
-parser implementations. Its deterministic replay recomputes source bindings, coverage, minimum
-suites, endpoint metrics, action recalls, and confusion matrices from the existing hosted records.
-The anonymous bundle removes private service metadata and hidden reasoning.
+parsers. Replay starts from released parsed decisions and content-free terminal records, then
+recomputes source bindings, suites, endpoints, recalls, and confusion matrices. Raw response text,
+raw-response hashes, provider response IDs, private service metadata, and hidden reasoning are
+absent, so parsing and provider messages cannot be independently re-adjudicated.
 
 \section{AI Assistance Disclosure}
 
@@ -639,18 +700,174 @@ DeepSeek Flash & 3 & 19/24 & 19/24 & 8/12 & 8/12 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
+\setlength{\tabcolsep}{2.7pt}
+\caption{All output-contract conditions. Conditional scores use valid items or complete pairs;
+end-to-end scores retain 30-item and 15-pair denominators. ``Len.'' counts request-cap exhaustion.}
+\label{tab:output-all-conditions}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Route & Condition & Valid & E2E item/pair & Cond. item/pair & Len. \\
+\midrule
+GLM & prompt-4096 & 4/30 & 4/30; 0/15 & 4/4; -- & 21 \\
+GLM & prompt-8192 & 15/30 & 15/30; 6/15 & 15/15; 6/6 & 10 \\
+GLM & prompt-12288 & 18/30 & 18/30; 7/15 & 18/18; 7/7 & 6 \\
+GLM & schema-4096 & 7/30 & 7/30; 2/15 & 7/7; 2/2 & 17 \\
+\midrule
+HY3 & prompt-4096 & 3/30 & 3/30; 0/15 & 3/3; -- & 22 \\
+HY3 & prompt-8192 & 18/30 & 18/30; 7/15 & 18/18; 7/7 & 6 \\
+HY3 & prompt-12288 & 22/30 & 22/30; 9/15 & 22/22; 9/9 & 2 \\
+HY3 & schema-4096 & 3/30 & 3/30; 0/15 & 3/3; -- & 21 \\
+\midrule
+Qwen+ & prompt-4096 & 22/30 & 18/30; 7/15 & 18/22; 7/9 & 0 \\
+Qwen+ & prompt-8192 & 20/30 & 17/30; 5/15 & 17/20; 5/7 & 0 \\
+Qwen+ & prompt-12288 & 21/30 & 19/30; 7/15 & 19/21; 7/9 & 0 \\
+Qwen+ & schema-4096 & 23/30 & 13/30; 2/15 & 13/23; 2/11 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Non-\allow{} full-policy confusion counts pooled over three repetitions. Columns A, H,
+D, E, and \texttt{N} denote predicted actions and terminal route failure.}
+\label{tab:nonallow-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Target & A & H & D & E & \texttt{N} \\
+\midrule
+GLM & \hold{} & 0&15&0&0&3 \\
+GLM & \demote{} & 0&0&12&0&0 \\
+GLM & \escalate{} & 0&0&0&17&1 \\
+\midrule
+HY3 & \hold{} & 0&11&0&0&7 \\
+HY3 & \demote{} & 0&0&12&0&0 \\
+HY3 & \escalate{} & 0&0&0&13&5 \\
+\midrule
+Qwen+ & \hold{} & 0&15&0&0&3 \\
+Qwen+ & \demote{} & 0&0&12&0&0 \\
+Qwen+ & \escalate{} & 0&0&0&16&2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{GLM output-contract confusion counts. Every condition retains 30 scheduled items.}
+\label{tab:output-glm-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Target & A & H & D & E & \texttt{N} \\
+\midrule
+prompt-4096 & \allow{} & 3&0&0&0&12 \\
+ & \hold{} & 0&1&0&0&4 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\midrule
+prompt-8192 & \allow{} & 8&0&0&0&7 \\
+ & \hold{} & 0&4&0&0&1 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&3&2 \\
+\midrule
+prompt-12288 & \allow{} & 10&0&0&0&5 \\
+ & \hold{} & 0&4&0&0&1 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+schema-4096 & \allow{} & 5&0&0&0&10 \\
+ & \hold{} & 0&2&0&0&3 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{HY3 output-contract confusion counts. Every condition retains 30 scheduled items.}
+\label{tab:output-hy3-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Target & A & H & D & E & \texttt{N} \\
+\midrule
+prompt-4096 & \allow{} & 3&0&0&0&12 \\
+ & \hold{} & 0&0&0&0&5 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\midrule
+prompt-8192 & \allow{} & 10&0&0&0&5 \\
+ & \hold{} & 0&2&0&0&3 \\
+ & \demote{} & 0&0&2&0&3 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+prompt-12288 & \allow{} & 12&0&0&0&3 \\
+ & \hold{} & 0&3&0&0&2 \\
+ & \demote{} & 0&0&3&0&2 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+schema-4096 & \allow{} & 3&0&0&0&12 \\
+ & \hold{} & 0&0&0&0&5 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Qwen 3.7 Plus output-contract confusion counts. Every condition retains 30 scheduled
+items.}
+\label{tab:output-qwen-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Target & A & H & D & E & \texttt{N} \\
+\midrule
+prompt-4096 & \allow{} & 11&0&0&0&4 \\
+ & \hold{} & 0&2&0&0&3 \\
+ & \demote{} & 2&1&1&0&1 \\
+ & \escalate{} & 1&0&0&4&0 \\
+\midrule
+prompt-8192 & \allow{} & 10&0&0&1&4 \\
+ & \hold{} & 0&3&0&0&2 \\
+ & \demote{} & 1&1&0&0&3 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+prompt-12288 & \allow{} & 10&0&0&2&3 \\
+ & \hold{} & 0&3&0&0&2 \\
+ & \demote{} & 0&0&2&0&3 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+schema-4096 & \allow{} & 10&1&0&0&4 \\
+ & \hold{} & 2&2&0&0&1 \\
+ & \demote{} & 2&1&0&0&2 \\
+ & \escalate{} & 3&1&0&1&0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
 \setlength{\tabcolsep}{2.3pt}
-\caption{External policy-revision first-replication confusion matrices. \texttt{N} is a terminal
-route failure; every row retains its full gold support.}
+\caption{External policy-revision first-replication confusion matrices. Columns A, H, D, E, and
+\texttt{N} denote \allow{}, \hold{}, \demote{}, \escalate{}, and terminal route failure;
+every row retains its full target support.}
 \label{tab:external-confusion}
 \begin{minipage}[t]{0.49\textwidth}
 \centering
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Route & Target & A & H & D & E & \texttt{N} \\
 \midrule
 GLM & \allow{} & 12&0&0&0&2 \\
 GLM & \hold{} & 0&1&0&0&2 \\
@@ -678,7 +895,7 @@ Kimi & \escalate{} & 0&0&0&2&0 \\
 \centering
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Route & Target & A & H & D & E & \texttt{N} \\
 \midrule
 MiMo & \allow{} & 13&0&0&1&0 \\
 MiMo & \hold{} & 0&2&0&0&1 \\
@@ -704,9 +921,9 @@ Qwen+ & \escalate{} & 0&0&0&2&0 \\
 \end{minipage}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{4pt}
 \caption{End-to-end action recall for every route summarized in the main text. ``--'' marks actions
 outside a task's label set.}
@@ -730,6 +947,21 @@ External MiMo 2.5, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
 External MiniMax 2.7, rep. 1 & 11/14 & 1/3 & 1/1 & 2/2 \\
 External OX Alpha, rep. 1 & 10/14 & 1/3 & 0/1 & 1/2 \\
 External Qwen 3.7+, rep. 1 & 11/14 & 2/3 & 0/1 & 2/2 \\
+Non-\allow{} GLM, 3 reps. & -- & 15/18 & 12/12 & 17/18 \\
+Non-\allow{} HY3, 3 reps. & -- & 11/18 & 12/12 & 13/18 \\
+Non-\allow{} Qwen+, 3 reps. & -- & 15/18 & 12/12 & 16/18 \\
+Output GLM, prompt-4096 & 3/15 & 1/5 & 0/5 & 0/5 \\
+Output GLM, prompt-8192 & 8/15 & 4/5 & 0/5 & 3/5 \\
+Output GLM, prompt-12288 & 10/15 & 4/5 & 0/5 & 4/5 \\
+Output GLM, schema-4096 & 5/15 & 2/5 & 0/5 & 0/5 \\
+Output HY3, prompt-4096 & 3/15 & 0/5 & 0/5 & 0/5 \\
+Output HY3, prompt-8192 & 10/15 & 2/5 & 2/5 & 4/5 \\
+Output HY3, prompt-12288 & 12/15 & 3/5 & 3/5 & 4/5 \\
+Output HY3, schema-4096 & 3/15 & 0/5 & 0/5 & 0/5 \\
+Output Qwen+, prompt-4096 & 11/15 & 2/5 & 1/5 & 4/5 \\
+Output Qwen+, prompt-8192 & 10/15 & 3/5 & 0/5 & 4/5 \\
+Output Qwen+, prompt-12288 & 10/15 & 3/5 & 2/5 & 4/5 \\
+Output Qwen+, schema-4096 & 10/15 & 2/5 & 0/5 & 1/5 \\
 Factor GLM 5.3, rep. 1 & 7/15 & 1/5 & 0/5 & 1/5 \\
 Factor Luna 5.6, rep. 1 & 14/15 & 4/5 & 3/5 & 5/5 \\
 Factor HY3, rep. 1 & 3/15 & 0/5 & 0/5 & 0/5 \\
@@ -747,16 +979,16 @@ Graph Phi-4, contract & 21/36 & 5/24 & 0/24 & 1/36 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \caption{Factor-complete first-replication confusion matrices. \texttt{N} is a terminal route
-failure. Every row retains its full gold support.}
+failure. Every row retains its full target support.}
 \label{tab:factor-confusion}
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Route & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
 GLM & \allow{} & 7&0&0&0&8 \\
 GLM & \hold{} & 0&1&0&0&4 \\
@@ -796,13 +1028,13 @@ Qwen+ & \escalate{} & 0&0&0&4&1 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \caption{Gatekeeper aggregate raw-strict confusion counts over three repetitions (left) and
-SLSA-inspired transition-graph contract-action confusion counts (right). \texttt{N} marks the
-endpoint's terminal failure category.}
+SLSA-inspired transition-graph contract-action confusion counts (right). Columns A, H, D, E, and
+\texttt{N} denote \allow{}, \hold{}, \demote{}, \escalate{}, and terminal route failure.}
 \label{tab:gate-confusion}
 \label{tab:graph-confusion}
 \begin{minipage}[t]{0.31\textwidth}
@@ -810,7 +1042,7 @@ endpoint's terminal failure category.}
 \textbf{Gatekeeper}\par\smallskip
 \begin{tabular}{@{}llrrr@{}}
 \toprule
-Route & Gold & \allow{} & \hold{} & \texttt{N} \\
+Route & Target & A & H & \texttt{N} \\
 \midrule
 Qwen & \allow{} & 4 & 0 & 32 \\
 Qwen & \hold{} & 0 & 6 & 30 \\
@@ -824,7 +1056,7 @@ Flash & \hold{} & 0 & 21 & 15 \\
 \textbf{SLSA-inspired graph}\par\smallskip
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Route & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Route & Target & A & H & D & E & \texttt{N} \\
 \midrule
 Mistral & \allow{} & 9 & 8 & 0 & 9 & 10 \\
 Mistral & \hold{} & 2 & 18 & 0 & 4 & 0 \\
@@ -840,16 +1072,16 @@ Phi-4 & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
 \end{minipage}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \caption{Imbalanced-suite and balanced-challenge full-contract confusion counts. Columns are terminal predicted
 actions; \texttt{N} is a contract failure.}
 \label{tab:evidence-confusion}
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Configuration & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
 Imbalanced Qwen & \allow{} & 143 & 0 & 0 & 0 & 7 \\
 Imbalanced Qwen & \hold{} & 4 & 110 & 0 & 2 & 18 \\
@@ -871,14 +1103,14 @@ Challenge Flash & \escalate{} & 0 & 3 & 0 & 13 & 14 \\
 
 \begin{table}[H]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \caption{Balanced-challenge raw-strict action confusion counts. \texttt{N} marks a
 terminal extraction failure.}
 \label{tab:challenge-strict-confusion}
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Configuration & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Configuration & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
 Challenge Qwen & \allow{} & 77 & 0 & 0 & 0 & 13 \\
 Challenge Qwen & \hold{} & 0 & 26 & 1 & 0 & 3 \\
@@ -891,18 +1123,13 @@ Challenge Flash & \demote{} & 25 & 3 & 2 & 0 & 0 \\
 Challenge Flash & \escalate{} & 0 & 3 & 2 & 25 & 0 \\
 \bottomrule
 \end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3.5pt}
+\par\bigskip
 \caption{SLSA-inspired raw-strict and contract-action confusion counts. \texttt{N} is the endpoint's
 terminal failure category.}
 \label{tab:slsa-confusion}
 \begin{tabular}{@{}lllrrrrr@{}}
 \toprule
-Route & Endpoint & Gold & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+Route & Endpoint & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
 \midrule
 Qwen & raw-strict & \allow{} & 60&0&0&0&0 \\
 Qwen & raw-strict & \hold{} & 0&20&0&0&0 \\
