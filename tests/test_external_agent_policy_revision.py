@@ -16,8 +16,8 @@ from external_agent_policy_revision import (  # noqa: E402
     PLANNED_CELLS,
     PLANNED_LANES,
     REPLICATIONS,
+    RUN_SCHEMA,
     SOURCES,
-    STUDY_ROOT,
     conservative_cost_upper_bound_usd,
     expanded_lanes,
     request_body,
@@ -29,7 +29,6 @@ from factor_complete_route_breadth import (  # noqa: E402
 from freeze_external_agent_policy_revision import prompt_for  # noqa: E402
 from freeze_factor_complete_route_breadth import catalog_snapshot  # noqa: E402
 from run_external_agent_policy_revision import diagnose  # noqa: E402
-from validate_external_agent_policy_revision import validate_study  # noqa: E402
 
 from claimpromotebench.hashing import sha256_bytes  # noqa: E402
 
@@ -86,6 +85,11 @@ def test_external_policy_routes_use_one_prompt_only_contract() -> None:
     assert responses["input"][0]["content"] == [{"type": "input_text", "text": "prompt"}]
     assert responses["max_output_tokens"] == MAX_OUTPUT_TOKENS
     assert all("response_format" not in body for body in (chat, messages, responses))
+
+
+def test_external_policy_run_schema_accepts_disclosed_ox_family() -> None:
+    schema = json.loads(RUN_SCHEMA.read_text(encoding="utf-8"))
+    assert "Undisclosed OX Alpha" in schema["properties"]["model_family"]["enum"]
 
 
 def test_external_policy_catalog_snapshot_uses_its_eight_route_selection() -> None:
@@ -150,12 +154,6 @@ def test_external_policy_schedule_is_complete_balanced_and_below_quota() -> None
     prior_bound = factor_complete_cost_upper_bound_usd()
     assert new_bound < 4.6
     assert prior_bound + new_bound < 12.0
-
-
-def test_frozen_external_policy_study_accepts_free_route_disclosure_boundary() -> None:
-    result = validate_study(STUDY_ROOT / "study-plan.json", STUDY_ROOT / "request-schedule.json")
-    assert result["status"] == "EXTERNAL_AGENT_POLICY_STUDY_VALID"
-    assert result["configurations"] == 8
 
 
 def test_external_policy_parser_accepts_direct_and_single_embedded_json() -> None:

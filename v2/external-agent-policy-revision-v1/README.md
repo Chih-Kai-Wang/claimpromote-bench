@@ -22,3 +22,12 @@ remain unknown and are recorded as such.
 were frozen before any case output. Do not rerun or partially resume the schedule after execution.
 The privacy-safe `results/` derivative is the only route-output directory eligible for an anonymous
 or future public artifact.
+
+The v1 attempt is void. Its first request group exposed a local schema omission: the deliberately
+disclosed `Undisclosed OX Alpha` family was absent from the shared run-record enum. Eight request
+intents and three terminal records were durably written before the runner stopped; no execution
+receipt or result derivative exists. The attempt was never resumed, its outputs were not inspected
+or scored, and it is excluded from every paper endpoint. `void-attempt-receipt.json` binds the
+failure evidence. A separately frozen v2 replacement preserves the cases, prompts, routes,
+replications, and no-retry rule while correcting the schema and accounting for this attempt in its
+quota bound.

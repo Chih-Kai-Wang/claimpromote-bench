@@ -35,8 +35,13 @@ from external_agent_policy_revision import (  # noqa: E402
     source_license_path,
     source_snapshot_path,
 )
+from factor_complete_route_breadth import (  # noqa: E402
+    conservative_cost_upper_bound_usd as factor_complete_cost_upper_bound_usd,
+)
 from freeze_external_agent_policy_revision import (  # noqa: E402
+    PREDECESSOR_VOID_RECEIPT,
     RUNTIME_SOURCES,
+    predecessor_void_receipt,
     prompt_for,
     source_by_case,
 )
@@ -409,10 +414,34 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
             or lane.get("output_usd_per_million") != 0.0
         ):
             fail(f"OX Alpha disclosure boundary changed: {lane.get('lane_id')}")
-    budget = plan.get("budget", {})
+    predecessor = predecessor_void_receipt()
+    replacement = plan.get("replacement_for", {})
     if (
-        budget.get("new_schedule_quota_value_upper_bound_usd")
-        != conservative_cost_upper_bound_usd()
+        replacement.get("study_id") != predecessor["study_id"]
+        or replacement.get("frozen_plan_commit") != predecessor["frozen_plan_commit"]
+        or replacement.get("void_receipt_path")
+        != PREDECESSOR_VOID_RECEIPT.relative_to(ROOT).as_posix()
+        or replacement.get("void_receipt_sha256") != sha256_file(PREDECESSOR_VOID_RECEIPT)
+        or replacement.get("cause") != predecessor["cause"]
+        or replacement.get("model_output_content_inspected") is not False
+        or replacement.get("model_outputs_used_for_replacement_design") is not False
+        or replacement.get("allowed_design_changes") != predecessor["replacement_boundary"]
+    ):
+        fail("replacement provenance changed")
+    budget = plan.get("budget", {})
+    new_bound = conservative_cost_upper_bound_usd()
+    prior_bound = factor_complete_cost_upper_bound_usd()
+    predecessor_bound = (
+        new_bound
+        * int(predecessor["application_posts_upper_bound"])
+        / int(predecessor["planned_cells"])
+    )
+    if (
+        budget.get("new_schedule_quota_value_upper_bound_usd") != new_bound
+        or budget.get("preceding_factor_complete_upper_bound_usd") != prior_bound
+        or budget.get("predecessor_void_attempt_upper_bound_usd") != predecessor_bound
+        or budget.get("combined_five_hour_upper_bound_usd")
+        != new_bound + prior_bound + predecessor_bound
         or not isinstance(budget.get("combined_five_hour_upper_bound_usd"), (int, float))
         or float(budget["combined_five_hour_upper_bound_usd"]) >= 12.0
         or budget.get("incremental_cash_cap_usd") != 0.0

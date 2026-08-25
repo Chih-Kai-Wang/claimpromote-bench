@@ -50,7 +50,7 @@ Json = dict[str, Any]
 
 RUNTIME_SOURCES = (
     "v2/schemas/agent-policy-decision.schema.json",
-    "v2/schemas/stronger-model-run-record.schema.json",
+    "v2/schemas/external-agent-policy-run-record.schema.json",
     "scripts/analyze_balanced_public_challenge.py",
     "scripts/analyze_external_agent_policy_revision.py",
     "scripts/external_agent_policy_revision.py",
@@ -61,6 +61,8 @@ RUNTIME_SOURCES = (
     "scripts/validate_external_agent_policy_revision.py",
     "scripts/validate_external_agent_policy_revision_results.py",
 )
+PREDECESSOR_ROOT = ROOT / "v2" / "external-agent-policy-revision-v1"
+PREDECESSOR_VOID_RECEIPT = PREDECESSOR_ROOT / "void-attempt-receipt.json"
 
 
 def fail(message: str) -> NoReturn:
@@ -95,6 +97,26 @@ def write_new_jsonl(path: Path, values: list[Json]) -> None:
         path,
         b"".join((canonical_json(value) + "\n").encode("utf-8") for value in values),
     )
+
+
+def predecessor_void_receipt() -> Json:
+    receipt = json.loads(PREDECESSOR_VOID_RECEIPT.read_text(encoding="utf-8"))
+    if (
+        receipt.get("status") != "VOID_INFRASTRUCTURE_ABORT_NO_RESUME"
+        or receipt.get("study_id") != "claimpromotebench-external-agent-policy-revision-2026-08-v1"
+        or receipt.get("frozen_plan_commit") != "4aff56984d306b5fc98f7b34b5909e46d4442ba9"
+        or receipt.get("planned_cells") != 480
+        or receipt.get("durable_request_intents") != 8
+        or receipt.get("durable_terminal_records") != 3
+        or receipt.get("application_posts_upper_bound") != 8
+        or receipt.get("model_output_content_inspected") is not False
+        or receipt.get("model_outputs_used_for_replacement_design") is not False
+        or receipt.get("requests_reissued_under_v1") != 0
+        or receipt.get("scored_terminal_records") != 0
+        or receipt.get("result_derivative_created") is not False
+    ):
+        fail("predecessor void-attempt boundary changed")
+    return receipt
 
 
 def fetch_bytes(url: str) -> bytes:
@@ -313,7 +335,13 @@ def build_dataset(source_receipt_path: Path) -> tuple[Json, list[Json], list[Jso
 def build_plan(catalog_path: Path, schedule_path: Path, schedule: Json) -> Json:
     new_bound = conservative_cost_upper_bound_usd()
     prior_bound = factor_complete_cost_upper_bound_usd()
-    if new_bound + prior_bound >= 12.0:
+    predecessor = predecessor_void_receipt()
+    predecessor_bound = (
+        new_bound
+        * int(predecessor["application_posts_upper_bound"])
+        / int(predecessor["planned_cells"])
+    )
+    if new_bound + prior_bound + predecessor_bound >= 12.0:
         fail("combined five-hour conservative quota bound is not below the official limit")
     source_receipt_path = STUDY_ROOT / "source-receipt.json"
     return {
@@ -331,6 +359,16 @@ def build_plan(catalog_path: Path, schedule_path: Path, schedule: Json) -> Json:
             "not a deployment-effect estimate, prevalence study, human-label study, hidden test, "
             "model-family ranking, or causal ablation."
         ),
+        "replacement_for": {
+            "study_id": predecessor["study_id"],
+            "frozen_plan_commit": predecessor["frozen_plan_commit"],
+            "void_receipt_path": PREDECESSOR_VOID_RECEIPT.relative_to(ROOT).as_posix(),
+            "void_receipt_sha256": sha256_file(PREDECESSOR_VOID_RECEIPT),
+            "cause": predecessor["cause"],
+            "model_output_content_inspected": False,
+            "model_outputs_used_for_replacement_design": False,
+            "allowed_design_changes": predecessor["replacement_boundary"],
+        },
         "design": {
             "sources": len(SOURCES),
             "pairs": len(CASES),
@@ -407,7 +445,8 @@ def build_plan(catalog_path: Path, schedule_path: Path, schedule: Json) -> Json:
             "max_output_tokens_per_call": MAX_OUTPUT_TOKENS,
             "new_schedule_quota_value_upper_bound_usd": new_bound,
             "preceding_factor_complete_upper_bound_usd": prior_bound,
-            "combined_five_hour_upper_bound_usd": new_bound + prior_bound,
+            "predecessor_void_attempt_upper_bound_usd": predecessor_bound,
+            "combined_five_hour_upper_bound_usd": (new_bound + prior_bound + predecessor_bound),
         },
         "statistics": {
             "primary": (

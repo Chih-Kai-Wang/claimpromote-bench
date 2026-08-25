@@ -9,15 +9,15 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-STUDY_ROOT = ROOT / "v2" / "external-agent-policy-revision-v1"
+STUDY_ROOT = ROOT / "v2" / "external-agent-policy-revision-v2"
 SOURCE_ROOT = STUDY_ROOT / "sources"
 DATASET_ROOT = STUDY_ROOT / "dataset"
 PACKET_PATH = STUDY_ROOT / "prompt-packet.json"
-RUN_SCHEMA = ROOT / "v2" / "schemas" / "stronger-model-run-record.schema.json"
+RUN_SCHEMA = ROOT / "v2" / "schemas" / "external-agent-policy-run-record.schema.json"
 DECISION_SCHEMA = ROOT / "v2" / "schemas" / "agent-policy-decision.schema.json"
 CATALOG_URL = "https://opencode.ai/zen/go/v1/models"
 BASE_URL = "https://opencode.ai/zen/go/v1"
-STUDY_ID = "claimpromotebench-external-agent-policy-revision-2026-08-v1"
+STUDY_ID = "claimpromotebench-external-agent-policy-revision-2026-08-v2"
 REPLICATIONS = 3
 MAX_OUTPUT_TOKENS = 4096
 CONSERVATIVE_INPUT_TOKENS = 5000
@@ -301,7 +301,7 @@ _BASE_CONFIGURATIONS: tuple[Json, ...] = (
 CONFIGURATIONS: tuple[Json, ...] = tuple(
     {
         **{key: value for key, value in row.items() if key != "slug"},
-        "configuration_id": f"opencode-go-{row['slug']}-external-agent-policy-v1",
+        "configuration_id": f"opencode-go-{row['slug']}-external-agent-policy-v2",
     }
     for row in _BASE_CONFIGURATIONS
 )
