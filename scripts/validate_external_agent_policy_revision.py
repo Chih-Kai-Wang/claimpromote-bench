@@ -384,6 +384,12 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
     if lanes != expanded_lanes():
         fail("formal lane declarations changed")
     for lane in lanes:
+        is_ox_alpha = lane.get("model") == "ox-alpha-free"
+        expected_billing_mode = (
+            "OFFICIAL_LIMITED_TIME_FREE_ROUTE"
+            if is_ox_alpha
+            else "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA"
+        )
         if (
             lane.get("provider") != "OpenCode Go"
             or lane.get("base_url") != BASE_URL
@@ -391,9 +397,18 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
             or lane.get("response_format") != "prompt_only_json"
             or lane.get("allow_single_json_object_extraction") is not True
             or lane.get("max_output_tokens") != MAX_OUTPUT_TOKENS
-            or lane.get("billing_mode") != "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA"
+            or lane.get("billing_mode") != expected_billing_mode
         ):
             fail(f"lane contract changed: {lane.get('lane_id')}")
+        if is_ox_alpha and (
+            lane.get("model_identity_status") != "UNDISCLOSED_STEALTH_MODEL"
+            or lane.get("data_training") is not None
+            or lane.get("data_retention_days") is not None
+            or lane.get("input_usd_per_million") != 0.0
+            or lane.get("cached_input_usd_per_million") != 0.0
+            or lane.get("output_usd_per_million") != 0.0
+        ):
+            fail(f"OX Alpha disclosure boundary changed: {lane.get('lane_id')}")
     budget = plan.get("budget", {})
     if (
         budget.get("new_schedule_quota_value_upper_bound_usd")
@@ -401,7 +416,8 @@ def validate_study(plan_path: Path, schedule_path: Path) -> Json:
         or not isinstance(budget.get("combined_five_hour_upper_bound_usd"), (int, float))
         or float(budget["combined_five_hour_upper_bound_usd"]) >= 12.0
         or budget.get("incremental_cash_cap_usd") != 0.0
-        or budget.get("subscription_quota_only") is not True
+        or budget.get("subscription_quota_only") is not False
+        or budget.get("limited_time_free_route_included") is not True
         or budget.get("use_balance_after_subscription_limit") is not False
         or budget.get("workflow_initiated_purchase_or_recharge") is not False
     ):

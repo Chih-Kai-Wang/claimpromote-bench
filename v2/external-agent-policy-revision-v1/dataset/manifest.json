@@ -1,0 +1,20 @@
+{
+  "changed_pairs": 6,
+  "decision_schema_path": "v2/schemas/agent-policy-decision.schema.json",
+  "decision_schema_sha256": "sha256:b242701951586bd7a52b7a6fe732bc1d2177b31d17c82497c1ffb620ddda2262",
+  "deployment_outcome_claimed": false,
+  "gold_sha256": "sha256:f3995134c49863585e87b55509eb6324b65a6a730992f39085a7c3122fef8335",
+  "inputs_sha256": "sha256:7eab72479dc4374f89b1d26f7a327eb03fbd9745f6e41a7b041d9f7b004ee0f6",
+  "items": 20,
+  "label_provenance": "Deterministic author policy mapping fixed before case model calls; no upstream or human annotation and no inter-annotator agreement.",
+  "model_outputs_used_for_selection_or_labels": false,
+  "pairs": 10,
+  "pairs_sha256": "sha256:ddc4480182169d7608975c899e1a008c709d2fba666be3222922c4b280b9d46c",
+  "schema_version": "1.0.0",
+  "source_count": 2,
+  "source_receipt_path": "v2/external-agent-policy-revision-v1/source-receipt.json",
+  "source_receipt_sha256": "sha256:38afcf60c55681188cc5fa11a5ee5bbdf8e2b0fb19344b7e10b951c47be78103",
+  "stable_control_pairs": 4,
+  "status": "FROZEN_BEFORE_CASE_MODEL_OUTPUTS",
+  "study_id": "claimpromotebench-external-agent-policy-revision-2026-08-v1"
+}

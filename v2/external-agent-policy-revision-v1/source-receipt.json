@@ -1,0 +1,77 @@
+{
+  "credentials_used_or_retained": false,
+  "fetched_at_utc": "2026-08-25T00:29:22.451384Z",
+  "model_calls": 0,
+  "prevalence_claimed": false,
+  "receipt_sha256": "sha256:4a43e9677d0e1f2e1722dfd1ce8065b6d567a9b589ac6291712f5c94a75748b7",
+  "schema_version": "1.0.0",
+  "selection_method": "Convenience selection by explicit model-facing policy change, immutable public history, concrete maintainer rationale, reconstructable action question, and usable license. Selection did not inspect case model outputs.",
+  "source_count": 2,
+  "sources": [
+    {
+      "change_rationale": "The merged change states that the new guidance explains false positives.",
+      "change_url": "https://github.com/open-policy-agent/opa/commit/6f52916ab1025c26bddc2d5c6d1b19e95e6a4883",
+      "license": {
+        "path": "v2/external-agent-policy-revision-v1/sources/opa-agent-security-policy-LICENSE.txt",
+        "raw_url": "https://raw.githubusercontent.com/open-policy-agent/opa/6f52916ab1025c26bddc2d5c6d1b19e95e6a4883/LICENSE",
+        "sha256": "sha256:c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+        "spdx": "Apache-2.0"
+      },
+      "path": "AGENTS.md",
+      "repository": "open-policy-agent/opa",
+      "review_url": "https://github.com/open-policy-agent/opa/pull/8754",
+      "snapshots": {
+        "after": {
+          "commit": "6f52916ab1025c26bddc2d5c6d1b19e95e6a4883",
+          "path": "v2/external-agent-policy-revision-v1/sources/opa-agent-security-policy-after.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/open-policy-agent/opa/6f52916ab1025c26bddc2d5c6d1b19e95e6a4883/AGENTS.md",
+          "sha256": "sha256:2b9cb0ff34fce47ac71aff9a5cd04b44090480711a517011847cdc4a2ff34e6c",
+          "utf8_bytes": 2217
+        },
+        "before": {
+          "commit": "e7909e1875ae382e6f7b4ea6542e95990a764e0c",
+          "path": "v2/external-agent-policy-revision-v1/sources/opa-agent-security-policy-before.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/open-policy-agent/opa/e7909e1875ae382e6f7b4ea6542e95990a764e0c/AGENTS.md",
+          "sha256": "sha256:27cef9693e030bca4f41b51d09b9e2fc6fcc3148d56368e06223d2450849be2f",
+          "utf8_bytes": 1863
+        }
+      },
+      "source_authors_independent_of_study_author": true,
+      "source_id": "opa-agent-security-policy",
+      "source_selected_before_case_model_outputs": true
+    },
+    {
+      "change_rationale": "The merged change adds agent backward-compatibility guardrails and records the published-interface failure that motivated them.",
+      "change_url": "https://github.com/Automattic/woocommerce-services/commit/2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7",
+      "license": {
+        "path": "v2/external-agent-policy-revision-v1/sources/woocommerce-agent-bc-policy-LICENSE.txt",
+        "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7/LICENSE.md",
+        "sha256": "sha256:f5dbc8865e0acf45e8ce9f2b1e3942f63c7d16a22ba2d0a762bf9eea774bd013",
+        "spdx": "GPL-2.0"
+      },
+      "path": "AGENTS.md",
+      "repository": "Automattic/woocommerce-services",
+      "review_url": "https://github.com/Automattic/woocommerce-services/pull/2976",
+      "snapshots": {
+        "after": {
+          "commit": "2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7",
+          "path": "v2/external-agent-policy-revision-v1/sources/woocommerce-agent-bc-policy-after.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7/AGENTS.md",
+          "sha256": "sha256:a11905586aac24ffcad9e92d7101e5d142f3f8347bd82f1e0afd99edec407b92",
+          "utf8_bytes": 9474
+        },
+        "before": {
+          "commit": "7429d3412895756ee3dba699f7a11dd65b727fe8",
+          "path": "v2/external-agent-policy-revision-v1/sources/woocommerce-agent-bc-policy-before.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/7429d3412895756ee3dba699f7a11dd65b727fe8/AGENTS.md",
+          "sha256": "sha256:28345ff4d88dde3b1a4217eeb7acc8a220cdf463b37ff7cf62affb29caabeee5",
+          "utf8_bytes": 3788
+        }
+      },
+      "source_authors_independent_of_study_author": true,
+      "source_id": "woocommerce-agent-bc-policy",
+      "source_selected_before_case_model_outputs": true
+    }
+  ],
+  "status": "PINNED_EXTERNAL_AGENT_POLICY_SOURCES_VERIFIED"
+}
