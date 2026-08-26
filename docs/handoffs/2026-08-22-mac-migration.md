@@ -1,5 +1,10 @@
 # ClaimPromoteBench Mac migration handoff — 2026-08-22
 
+> **Superseded for current state:** read
+> `docs/handoffs/2026-08-26-codex-conversation-migration.md` first. In particular, an ICLR 2027
+> OpenReview submission now exists, and the current GitHub release candidate is newer than the
+> uploaded artifacts recorded at submission time.
+
 This handoff is self-contained in GitHub. Do not depend on the former Windows checkout, Codex
 attachments, `work/` directories, browser state, or local credentials.
 
