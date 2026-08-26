@@ -5,7 +5,10 @@ The author must compare every field with the final server-built preview.
 
 The ICLR 2027 OpenReview submission was created on 2026-08-25 with note ID
 `8JTLEHqGRl` and submission number `4338`. No arXiv ID, DOI, or other archival identifier exists
-yet. See `docs/submissions/2026-08-25-iclr2027-openreview.md` for the private submission receipt.
+yet. The title, abstract, PDF, and anonymous supplementary bundle were revised on 2026-08-26 with
+explicit author confirmation. See `docs/submissions/2026-08-25-iclr2027-openreview.md` for the
+original private submission receipt and
+`docs/submissions/2026-08-26-iclr2027-openreview-revision.md` for the revision receipt.
 
 ## ICLR 2027 title
 
@@ -151,8 +154,9 @@ Use the complete AI Assistance Disclosure from the manuscript in venue forms.
 - [x] The primary area and keywords match the paper's bounded scope.
 - [x] Ethics and AI-use acknowledgements are complete.
 - [x] The locally validated anonymous PDF and supplementary bundle were uploaded; OpenReview
-  exposed both attachment links and rendered the PDF. The authenticated server bytes were not
-  independently rehashed after upload.
+  exposed both attachment links and rendered the revised 20-page PDF with the revised anonymous
+  title and abstract. The authenticated revised server bytes were not independently rehashed
+  after upload.
 - [ ] The server-built PDF is downloaded and inspected page by page.
 - [ ] arXiv author, affiliation, title, abstract, categories, and source archive are verified.
 - [ ] No submission, merge, public release, or ready-for-review transition occurs without explicit

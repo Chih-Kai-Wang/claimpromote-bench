@@ -35,7 +35,8 @@ existed is obsolete.
 - OpenReview note: `8JTLEHqGRl`
 - Submission number: `4338`
 - Submission date: 2026-08-25 (Asia/Taipei)
-- Private receipt: `docs/submissions/2026-08-25-iclr2027-openreview.md`
+- Original private receipt: `docs/submissions/2026-08-25-iclr2027-openreview.md`
+- Authorized revision receipt: `docs/submissions/2026-08-26-iclr2027-openreview-revision.md`
 - Title at submission time:
   `ClaimPromoteBench: Source-Traceable Regression Tests for Model Services under Policy Revision`
 - Submitted PDF SHA-256:
@@ -55,11 +56,12 @@ Current release hashes are:
 - anonymous review ZIP:
   `d42657ba3fcddaa45a812cd8b4b4102883785d05c80407b748ce7724db1555ff`
 
-Therefore the OpenReview attachments and metadata recorded at submission time are older than the
-current GitHub release candidate. The server-built PDF has not been independently downloaded and
-rehashed. The next agent must not infer that OpenReview already contains the current title,
-abstract, PDF, or supplement. Updating OpenReview is an external mutation and requires explicit
-user authorization.
+On 2026-08-26 the author explicitly approved and finally confirmed an OpenReview revision. The
+server now displays the current title and abstract and records new PDF and supplementary attachment
+identifiers. The authenticated PDF viewer showed the revised anonymous first page and 20-page
+count. The browser did not expose the revised attachment bytes for independent post-upload hashes,
+so the revision receipt binds the uploaded local hashes and server identifiers without claiming
+byte-for-byte server hashes.
 
 No arXiv identifier, DOI, public code release, repository visibility change, PR merge, or PR
 ready-for-review transition has been recorded.
@@ -279,10 +281,8 @@ independently re-adjudicate the original raw-output-to-parser transformation or 
 4. Confirm PRIVATE visibility, PR 20 open/draft state, the OpenReview receipt, and a clean worktree.
 5. Treat GitHub as authoritative. Do not depend on the previous Codex event log, browser state,
    `/tmp`, untracked build directories, or Keychain contents.
-6. First unresolved publication task: determine whether the user explicitly wants the current
-   title, abstract, PDF, and anonymous supplement uploaded to the existing OpenReview submission.
-   Before any update, compare server fields and attachments with the committed receipt and current
-   hashes, preview the exact changes, and obtain clear authorization.
+6. Confirm the OpenReview revision receipt and current server-visible title before any further
+   external mutation. Do not repeat or replace the revised attachments without fresh authorization.
 7. Do not upload to arXiv or publish code until separately authorized and the venue's anonymity and
    timing requirements have been checked against current official instructions.
 8. If manuscript or bundle inputs change, rebuild both PDFs, both source archives, the anonymous
