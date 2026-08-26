@@ -1,0 +1,12 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "450892d7f92e091a0a68a9cd05b4da902cfe05a0",
+  "hidden_reasoning_retained": false,
+  "planned_cells": 480,
+  "provider_response_identifiers_retained": false,
+  "schedule_sha256": "sha256:8b68a067738b11a43e26ddda269f1664b992620c6fd141e199a5bfc9eafab395",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-25T00:39:59.100741Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-external-agent-policy-revision-2026-08-v2"
+}

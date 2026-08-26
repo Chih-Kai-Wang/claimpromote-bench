@@ -1,0 +1,38 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-23T11:02:49.412359Z",
+  "credentials_retained": false,
+  "durable_request_intents": 240,
+  "durable_terminal_records": 240,
+  "frozen_plan_commit": "b3e1397259ca7df478af33c83e653e95b77497f5",
+  "hidden_reasoning_blocks_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-deepseek-v4-flash-policy-switch-v1.jsonl": "sha256:6a3756585150ce4cd215804c24c70e3f5a68dd5d626e1ca6340d6bd5cdf1ed9a",
+    "opencode-go-qwen3.7-max-policy-switch-v1.jsonl": "sha256:3e2173cc78d82c6bc16fd1a1759665c3ecc158c4a28955b7d2db0a6ea4b5d836"
+  },
+  "lanes": [
+    {
+      "lane_id": "opencode-go-qwen3.7-max-policy-switch-v1",
+      "records": 120,
+      "transport_errors": 58,
+      "valid_decisions": 51
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-flash-policy-switch-v1",
+      "records": 120,
+      "transport_errors": 57,
+      "valid_decisions": 62
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 240,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": "sha256:15a74a9eda16c0ecd70d018d39ae2205f0ee6faa0e4f3504356689672b1a4fa7",
+  "schedule_sha256": "sha256:86d164987095b49091fb722f5c7e3a0fb84a8370dcce1b9ee337cd0e42abb5cb",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T10:06:17.774768Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-policy-profile-switch-2026-08-v1",
+  "terminal_journal_sha256": "sha256:555841c757a5714a699fd316d278478329954fbee53cf7d66091a20ca334a739"
+}

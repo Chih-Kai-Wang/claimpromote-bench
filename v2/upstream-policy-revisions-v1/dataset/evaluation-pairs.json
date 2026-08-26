@@ -1,0 +1,260 @@
+[
+  {
+    "action_transition": "ALLOW->HOLD",
+    "changed_rule": "FLEXVOLUME_DRIVER",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "driver_families": [
+        "example"
+      ],
+      "flexvolume_count": 1,
+      "has_non_flexvolume": false
+    },
+    "member_ids": [
+      "upr-flex-01-a",
+      "upr-flex-01-b"
+    ],
+    "migration_id": "flexvolume-empty-allowlist-blocks-all",
+    "new_id": "upr-flex-01-a",
+    "old_id": "upr-flex-01-b",
+    "pair_id": "upr-flex-01"
+  },
+  {
+    "action_transition": "ALLOW->HOLD",
+    "changed_rule": "FLEXVOLUME_DRIVER",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "driver_families": [
+        "example"
+      ],
+      "flexvolume_count": 1,
+      "has_non_flexvolume": false
+    },
+    "member_ids": [
+      "upr-flex-02-a",
+      "upr-flex-02-b"
+    ],
+    "migration_id": "flexvolume-empty-allowlist-blocks-all",
+    "new_id": "upr-flex-02-a",
+    "old_id": "upr-flex-02-b",
+    "pair_id": "upr-flex-02"
+  },
+  {
+    "action_transition": "ALLOW->HOLD",
+    "changed_rule": "FLEXVOLUME_DRIVER",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "driver_families": [
+        "example"
+      ],
+      "flexvolume_count": 2,
+      "has_non_flexvolume": false
+    },
+    "member_ids": [
+      "upr-flex-03-a",
+      "upr-flex-03-b"
+    ],
+    "migration_id": "flexvolume-empty-allowlist-blocks-all",
+    "new_id": "upr-flex-03-b",
+    "old_id": "upr-flex-03-a",
+    "pair_id": "upr-flex-03"
+  },
+  {
+    "action_transition": "ALLOW->HOLD",
+    "changed_rule": "FLEXVOLUME_DRIVER",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "driver_families": [
+        "vendor"
+      ],
+      "flexvolume_count": 3,
+      "has_non_flexvolume": false
+    },
+    "member_ids": [
+      "upr-flex-04-a",
+      "upr-flex-04-b"
+    ],
+    "migration_id": "flexvolume-empty-allowlist-blocks-all",
+    "new_id": "upr-flex-04-a",
+    "old_id": "upr-flex-04-b",
+    "pair_id": "upr-flex-04"
+  },
+  {
+    "action_transition": "ALLOW->HOLD",
+    "changed_rule": "FLEXVOLUME_DRIVER",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "driver_families": [
+        "vendor"
+      ],
+      "flexvolume_count": 1,
+      "has_non_flexvolume": true
+    },
+    "member_ids": [
+      "upr-flex-05-a",
+      "upr-flex-05-b"
+    ],
+    "migration_id": "flexvolume-empty-allowlist-blocks-all",
+    "new_id": "upr-flex-05-a",
+    "old_id": "upr-flex-05-b",
+    "pair_id": "upr-flex-05"
+  },
+  {
+    "action_transition": "ALLOW->HOLD",
+    "changed_rule": "FLEXVOLUME_DRIVER",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "driver_families": [
+        "vendor"
+      ],
+      "flexvolume_count": 2,
+      "has_non_flexvolume": true
+    },
+    "member_ids": [
+      "upr-flex-06-a",
+      "upr-flex-06-b"
+    ],
+    "migration_id": "flexvolume-empty-allowlist-blocks-all",
+    "new_id": "upr-flex-06-b",
+    "old_id": "upr-flex-06-a",
+    "pair_id": "upr-flex-06"
+  },
+  {
+    "action_transition": "HOLD->ALLOW",
+    "changed_rule": "UNIQUE_SERVICE_SELECTOR",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "inventory_api_version": "networking.k8s.io/v1",
+      "inventory_kind": "NetworkPolicy",
+      "name_relation": "SAME",
+      "namespace_relation": "SAME"
+    },
+    "member_ids": [
+      "upr-unique-01-a",
+      "upr-unique-01-b"
+    ],
+    "migration_id": "unique-service-selector-kind-filter",
+    "new_id": "upr-unique-01-b",
+    "old_id": "upr-unique-01-a",
+    "pair_id": "upr-unique-01"
+  },
+  {
+    "action_transition": "HOLD->ALLOW",
+    "changed_rule": "UNIQUE_SERVICE_SELECTOR",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "inventory_api_version": "v1",
+      "inventory_kind": "ConfigMap",
+      "name_relation": "DIFFERENT",
+      "namespace_relation": "SAME"
+    },
+    "member_ids": [
+      "upr-unique-02-a",
+      "upr-unique-02-b"
+    ],
+    "migration_id": "unique-service-selector-kind-filter",
+    "new_id": "upr-unique-02-b",
+    "old_id": "upr-unique-02-a",
+    "pair_id": "upr-unique-02"
+  },
+  {
+    "action_transition": "HOLD->ALLOW",
+    "changed_rule": "UNIQUE_SERVICE_SELECTOR",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "inventory_api_version": "v1",
+      "inventory_kind": "Secret",
+      "name_relation": "SAME",
+      "namespace_relation": "DIFFERENT"
+    },
+    "member_ids": [
+      "upr-unique-03-a",
+      "upr-unique-03-b"
+    ],
+    "migration_id": "unique-service-selector-kind-filter",
+    "new_id": "upr-unique-03-b",
+    "old_id": "upr-unique-03-a",
+    "pair_id": "upr-unique-03"
+  },
+  {
+    "action_transition": "HOLD->ALLOW",
+    "changed_rule": "UNIQUE_SERVICE_SELECTOR",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "inventory_api_version": "v1",
+      "inventory_kind": "Pod",
+      "name_relation": "DIFFERENT",
+      "namespace_relation": "DIFFERENT"
+    },
+    "member_ids": [
+      "upr-unique-04-a",
+      "upr-unique-04-b"
+    ],
+    "migration_id": "unique-service-selector-kind-filter",
+    "new_id": "upr-unique-04-b",
+    "old_id": "upr-unique-04-a",
+    "pair_id": "upr-unique-04"
+  },
+  {
+    "action_transition": "HOLD->ALLOW",
+    "changed_rule": "UNIQUE_SERVICE_SELECTOR",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "inventory_api_version": "networking.k8s.io/v1",
+      "inventory_kind": "Ingress",
+      "name_relation": "SAME",
+      "namespace_relation": "SAME"
+    },
+    "member_ids": [
+      "upr-unique-05-a",
+      "upr-unique-05-b"
+    ],
+    "migration_id": "unique-service-selector-kind-filter",
+    "new_id": "upr-unique-05-a",
+    "old_id": "upr-unique-05-b",
+    "pair_id": "upr-unique-05"
+  },
+  {
+    "action_transition": "HOLD->ALLOW",
+    "changed_rule": "UNIQUE_SERVICE_SELECTOR",
+    "controlled_json_pointers": [
+      "/model_visible/policy_source"
+    ],
+    "factors": {
+      "inventory_api_version": "v1",
+      "inventory_kind": "ResourceQuota",
+      "name_relation": "DIFFERENT",
+      "namespace_relation": "DIFFERENT"
+    },
+    "member_ids": [
+      "upr-unique-06-a",
+      "upr-unique-06-b"
+    ],
+    "migration_id": "unique-service-selector-kind-filter",
+    "new_id": "upr-unique-06-b",
+    "old_id": "upr-unique-06-a",
+    "pair_id": "upr-unique-06"
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "candidate_pairs": 12,
+  "changed_rules": [
+    "FLEXVOLUME_DRIVER",
+    "UNIQUE_SERVICE_SELECTOR"
+  ],
+  "contexts_per_transition": {
+    "ALLOW->HOLD": 6,
+    "HOLD->ALLOW": 6
+  },
+  "factor_level_support": {
+    "flexvolume-empty-allowlist-blocks-all": {
+      "driver_families": [
+        "[\"example\"]",
+        "[\"vendor\"]"
+      ],
+      "flexvolume_count": [
+        "1",
+        "2",
+        "3"
+      ],
+      "has_non_flexvolume": [
+        "false",
+        "true"
+      ]
+    },
+    "unique-service-selector-kind-filter": {
+      "inventory_api_version": [
+        "\"networking.k8s.io/v1\"",
+        "\"v1\""
+      ],
+      "inventory_kind": [
+        "\"ConfigMap\"",
+        "\"Ingress\"",
+        "\"NetworkPolicy\"",
+        "\"Pod\"",
+        "\"ResourceQuota\"",
+        "\"Secret\""
+      ],
+      "name_relation": [
+        "\"DIFFERENT\"",
+        "\"SAME\""
+      ],
+      "namespace_relation": [
+        "\"DIFFERENT\"",
+        "\"SAME\""
+      ]
+    }
+  },
+  "migrations": {
+    "flexvolume-empty-allowlist-blocks-all": 6,
+    "unique-service-selector-kind-filter": 6
+  },
+  "reachable_action_edges": [
+    "ALLOW->HOLD",
+    "HOLD->ALLOW"
+  ],
+  "schema_version": "1.0.0",
+  "scope": "Complete relative to the committed twelve-context finite grammar, two upstream revision rules, and two observed old-to-new action edges."
+}

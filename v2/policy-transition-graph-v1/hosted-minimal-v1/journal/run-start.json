@@ -1,0 +1,10 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "8ed87749fa64bc8cbcd1ddae871710e3a01d4607",
+  "planned_cells": 40,
+  "schedule_sha256": "sha256:d08574cd8bf0f6d2337480f91ab8d7ea57e167ae59d33a3371616473f8abb8f2",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T15:09:58.006003Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-minimal-policy-migration-hosted-2026-08-v1"
+}

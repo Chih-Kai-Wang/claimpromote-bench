@@ -1,0 +1,337 @@
+name: capable-model hidden extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type RUN_CAPABLE_HIDDEN_V1 to execute the frozen no-retry study
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capable-hidden-v1
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: require explicit capable-hidden trigger
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate trigger and frozen plan state
+        run: |
+          set -euo pipefail
+          case '${{ github.event_name }}' in
+            workflow_dispatch)
+              test '${{ inputs.confirm }}' = 'RUN_CAPABLE_HIDDEN_V1'
+              ;;
+            push)
+              test "$GITHUB_REF_NAME" = 'agent/iclr2027-v2-low-cost-study'
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          plan = json.loads(Path('v2/capable-hidden-study-plan.json').read_text())
+          assert plan['status'] == 'FROZEN_BEFORE_SCORED_INFERENCE'
+          assert plan['truth_status'] == 'OPEN'
+          assert plan['amendment']['new_model_outputs_seen_before_initial_freeze'] is False
+          assert plan['transport_amendment']['status'] == 'FROZEN_BEFORE_REEXECUTION'
+          assert plan['dataset']['instances'] == 300
+          assert len(plan['routing']['required_full_lanes']) == 7
+          print('CAPABLE_HIDDEN_TRIGGER_VALID')
+          PY
+
+  run:
+    name: ${{ matrix.lane }}
+    needs: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 7
+      matrix:
+        lane:
+          - opencode-go-qwen3.7-max
+          - opencode-go-glm-5.2
+          - opencode-go-deepseek-v4-pro
+          - bai-deepseek-v4-flash-primary
+          - opencode-go-deepseek-v4-flash-matched
+          - opencode-go-hy3
+          - opencode-go-muse-spark-1.2-contributor
+    steps:
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check out the original hidden-commitment source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 8d9b3f5c831f432cf6b321e6402724c4f52bb3e1
+          path: work/v1-commitment-source
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Materialize private hidden seed without logging it
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CPB_V1_HIDDEN_SEED:-}" ]; then
+            echo '::error::CPB_V1_HIDDEN_SEED is not configured'
+            exit 1
+          fi
+          if ! printf '%s' "$CPB_V1_HIDDEN_SEED" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo '::error::CPB_V1_HIDDEN_SEED must be exactly 64 hexadecimal characters'
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+
+      - name: Reconstruct and reverify the existing hidden commitment
+        run: |
+          set -euo pipefail
+          python work/v1-commitment-source/scripts/build_v1_dataset.py \
+            --split test \
+            --out work/capable-hidden-study/hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
+          python work/v1-commitment-source/scripts/validate_v1_plan.py \
+            --test-dir work/capable-hidden-study/hidden >/dev/null
+          python work/v1-commitment-source/scripts/freeze_prompt_manifest.py \
+            --dataset work/capable-hidden-study/hidden \
+            --out work/capable-hidden-study/v1-prompt-manifest.json >/dev/null
+          python work/v1-commitment-source/scripts/make_hidden_test_commitment.py \
+            --dataset work/capable-hidden-study/hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
+            --prompt-manifest work/capable-hidden-study/v1-prompt-manifest.json \
+            --out work/capable-hidden-study/recomputed-commitment.json >/dev/null
+          diff -u \
+            configs/v1-hidden-test-commitment.json \
+            work/capable-hidden-study/recomputed-commitment.json >/dev/null
+          echo 'EXISTING_HIDDEN_COMMITMENT_REPRODUCED'
+
+      - name: Build deterministic hidden prompt packet
+        run: |
+          set -euo pipefail
+          python scripts/build_stronger_model_packet.py \
+            --dataset work/capable-hidden-study/hidden \
+            --plan v2/capable-hidden-study-plan.json \
+            --out work/capable-hidden-study/packet.json >/dev/null
+          python scripts/validate_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json >/dev/null
+          echo 'CAPABLE_HIDDEN_PACKET_BOUND'
+
+      - name: Execute accuracy-blind transport pilot
+        env:
+          OPENCODE_GO_API_KEY: ${{ secrets.OPENCODE_GO_API_KEY }}
+          BAI_API_KEY: ${{ secrets.BAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/capable-hidden-study/runs work/capable-hidden-study/analysis
+          python scripts/run_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            --lane-id '${{ matrix.lane }}' \
+            --phase pilot \
+            --frozen-plan-commit "$GITHUB_SHA" \
+            --timeout 600 \
+            --out 'work/capable-hidden-study/runs/${{ matrix.lane }}-pilot.jsonl' >/dev/null
+          python scripts/analyze_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            --run 'work/capable-hidden-study/runs/${{ matrix.lane }}-pilot.jsonl' \
+            --out 'work/capable-hidden-study/analysis/${{ matrix.lane }}-pilot.json' >/dev/null
+
+      - name: Enforce transport-only continuation gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('work/capable-hidden-study/analysis/${{ matrix.lane }}-pilot.json')
+          result = json.loads(path.read_text())
+          gate = result['continuation_gate']
+          assert gate['accuracy_used_by_gate'] is False
+          assert gate['action_distribution_used_by_gate'] is False
+          if gate['decision'] != 'GO':
+              raise SystemExit('CAPABLE_HIDDEN_PILOT_STOP')
+          print('CAPABLE_HIDDEN_PILOT_GO')
+          PY
+
+      - name: Execute one complete no-retry hidden pass
+        env:
+          OPENCODE_GO_API_KEY: ${{ secrets.OPENCODE_GO_API_KEY }}
+          BAI_API_KEY: ${{ secrets.BAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          python scripts/run_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            --lane-id '${{ matrix.lane }}' \
+            --phase full \
+            --frozen-plan-commit "$GITHUB_SHA" \
+            --pilot-run 'work/capable-hidden-study/runs/${{ matrix.lane }}-pilot.jsonl' \
+            --timeout 600 \
+            --out 'work/capable-hidden-study/runs/${{ matrix.lane }}-full.jsonl' >/dev/null
+          python scripts/analyze_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            --run 'work/capable-hidden-study/runs/${{ matrix.lane }}-full.jsonl' \
+            --out 'work/capable-hidden-study/analysis/${{ matrix.lane }}-full.json' >/dev/null
+          echo 'CAPABLE_HIDDEN_FULL_COMPLETE'
+
+      - name: Upload item-level lane evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cpb-capable-hidden-${{ matrix.lane }}
+          path: |
+            work/capable-hidden-study/packet.json
+            work/capable-hidden-study/runs/${{ matrix.lane }}-*.jsonl*
+            work/capable-hidden-study/analysis/${{ matrix.lane }}-*.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Destroy private seed material
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+
+  aggregate:
+    name: validate and aggregate all capable hidden records
+    needs: run
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check out the original hidden-commitment source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 8d9b3f5c831f432cf6b321e6402724c4f52bb3e1
+          path: work/v1-commitment-source
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Download all lane evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: cpb-capable-hidden-*
+          path: work/capable-hidden-study/collected
+
+      - name: Reconstruct reviewer-release dataset without exposing the seed
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          python work/v1-commitment-source/scripts/build_v1_dataset.py \
+            --split test \
+            --out work/capable-hidden-study/hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
+          python work/v1-commitment-source/scripts/freeze_prompt_manifest.py \
+            --dataset work/capable-hidden-study/hidden \
+            --out work/capable-hidden-study/v1-prompt-manifest.json >/dev/null
+          python work/v1-commitment-source/scripts/make_hidden_test_commitment.py \
+            --dataset work/capable-hidden-study/hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
+            --prompt-manifest work/capable-hidden-study/v1-prompt-manifest.json \
+            --out work/capable-hidden-study/recomputed-commitment.json >/dev/null
+          diff -u \
+            configs/v1-hidden-test-commitment.json \
+            work/capable-hidden-study/recomputed-commitment.json >/dev/null
+          python scripts/build_stronger_model_packet.py \
+            --dataset work/capable-hidden-study/hidden \
+            --plan v2/capable-hidden-study-plan.json \
+            --out work/capable-hidden-study/packet.json >/dev/null
+
+      - name: Validate all raw records and recompute every aggregate
+        run: |
+          set -euo pipefail
+          mapfile -t runs < <(find work/capable-hidden-study/collected -type f -name '*.jsonl' | sort)
+          mapfile -t full_runs < <(find work/capable-hidden-study/collected -type f -name '*-full.jsonl' | sort)
+          mapfile -t full_analyses < <(find work/capable-hidden-study/collected -type f -name '*-full.json' | sort)
+          test "${#runs[@]}" -eq 14
+          test "${#full_runs[@]}" -eq 7
+          test "${#full_analyses[@]}" -eq 7
+          validate_args=()
+          for path in "${runs[@]}"; do validate_args+=(--run "$path"); done
+          python scripts/validate_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            "${validate_args[@]}" >/dev/null
+          aggregate_args=()
+          for path in "${full_runs[@]}"; do aggregate_args+=(--run "$path"); done
+          for path in "${full_analyses[@]}"; do aggregate_args+=(--analysis "$path"); done
+          python scripts/aggregate_capable_hidden_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            "${aggregate_args[@]}" \
+            --out work/capable-hidden-study/capable-hidden-study.json >/dev/null
+          echo 'CAPABLE_HIDDEN_MATRIX_RECOMPUTED_FROM_ITEM_RECORDS'
+
+      - name: Assemble reviewer-visible raw evidence
+        run: |
+          set -euo pipefail
+          mkdir -p \
+            work/capable-hidden-study/reviewer-evidence/dataset \
+            work/capable-hidden-study/reviewer-evidence/runs \
+            work/capable-hidden-study/reviewer-evidence/analysis
+          cp -R work/capable-hidden-study/hidden/. \
+            work/capable-hidden-study/reviewer-evidence/dataset/
+          cp work/capable-hidden-study/packet.json \
+            work/capable-hidden-study/reviewer-evidence/prompt-packet.json
+          cp v2/capable-hidden-study-plan.json \
+            work/capable-hidden-study/reviewer-evidence/study-plan.json
+          cp work/capable-hidden-study/capable-hidden-study.json \
+            work/capable-hidden-study/reviewer-evidence/aggregate.json
+          find work/capable-hidden-study/collected -type f -name '*.jsonl' \
+            -exec cp {} work/capable-hidden-study/reviewer-evidence/runs/ \;
+          find work/capable-hidden-study/collected -type f -name '*.json' \
+            -exec cp {} work/capable-hidden-study/reviewer-evidence/analysis/ \;
+
+      - name: Upload complete capable-hidden evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-capable-hidden-complete
+          path: work/capable-hidden-study/reviewer-evidence
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Destroy private seed material
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"

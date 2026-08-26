@@ -1,0 +1,41 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-23T20:27:21.232402Z",
+  "credentials_retained": false,
+  "durable_request_intents": 240,
+  "durable_terminal_records": 240,
+  "frozen_plan_commit": "e3231de232c3864728d63d9a38c7dff3fd47f726",
+  "hidden_reasoning_blocks_retained": false,
+  "lane_output_sha256": {
+    "local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2.jsonl": "sha256:44b4b40aebdc55fce0a88ac3b469d2cef974ce92d184e00c7001e28a364cea80",
+    "local-mlx-phi-4-policy-transition-graph-v2.jsonl": "sha256:cb530c1379d72efed6b102e800e39accc4d4dccfef6bdb1512d61235598cd781"
+  },
+  "lanes": [
+    {
+      "lane_id": "local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2",
+      "records": 120,
+      "runtime_errors": 0,
+      "valid_decisions": 71
+    },
+    {
+      "lane_id": "local-mlx-phi-4-policy-transition-graph-v2",
+      "records": 120,
+      "runtime_errors": 3,
+      "valid_decisions": 43
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 240,
+  "prior_ineligible_application_invocations": 1,
+  "provider_response_identifiers_retained": false,
+  "replacement_version": 2,
+  "request_intent_journal_sha256": "sha256:94b26807331d89871e0fd5c1e5542ba5c833c2c5ba5d82ee7b56bc9308fa7c8d",
+  "schedule_sha256": "sha256:bbae8a8395228a2b84d95b3449e559572d1c86127c863dd9b729066ef39a7294",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T15:55:03.763808Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-policy-transition-graph-local-model-replication-2026-08-v2",
+  "terminal_journal_sha256": "sha256:0ab781d3412feb0ba48f609a785079b7098472ac0cf465b0a70d20a576a6675c",
+  "void_attempt_receipt_sha256": "sha256:fd03cbe9d85fce23a5d9412f5d488fbb414ab0b2dd79d358851c0948f29706ae"
+}

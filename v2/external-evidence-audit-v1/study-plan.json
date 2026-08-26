@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "external-evidence-audit-v1",
+  "status": "FROZEN_BEFORE_FORMAL_SEARCH",
+  "frozen_at_utc": "2026-08-24T15:55:30Z",
+  "parent_commit": "c0838d26091e5e54bfc5e98cc31bf539060b9e80",
+  "purpose": "Search public independently authored sources for traceable instances of a versioned executable policy at a model-mediated decision boundary.",
+  "model_calls": 0,
+  "credential_policy": "Use authenticated GitHub read access without recording tokens, cookies, account identifiers, private repository results, or credentials.",
+  "formal_search_boundary": {
+    "starts_after_this_plan_is_committed": true,
+    "prior_searches": "Exploratory scoping only. A source seen during scoping is eligible only if it is returned by a frozen formal query or an explicitly declared citation-chain expansion.",
+    "source_types": [
+      "public GitHub repositories",
+      "public commits, issues, pull requests, releases, and tests",
+      "official product or project documentation",
+      "archival primary research publications"
+    ],
+    "github_result_limit_per_query": 100,
+    "deduplication_key": "repository full name, then fixed commit and path",
+    "freeze_coordinates": [
+      "repository",
+      "commit SHA",
+      "path or issue identifier",
+      "retrieval time",
+      "source URL"
+    ]
+  },
+  "repository_queries": [
+    "llm opa in:name,description,readme",
+    "llm rego in:name,description,readme",
+    "openai opa in:name,description,readme",
+    "langchain rego in:name,description,readme",
+    "bedrock guardrail in:name,description,readme",
+    "nemo guardrails application in:name,description,readme"
+  ],
+  "code_queries": [
+    "ApplyGuardrail guardrailVersion",
+    "guardrailIdentifier guardrailVersion invoke_model",
+    "LLMRails RailsConfig",
+    "ChatOpenAI rego",
+    "openai rego",
+    "anthropic rego",
+    "OPA_URL openai",
+    "open policy agent langchain"
+  ],
+  "citation_chain_rule": "For every repository returned by a frozen query, follow only its own README, documentation, commit history, releases, issues, pull requests, tests, and directly cited upstream source. Record each expansion and its relationship to the seed result.",
+  "inclusion_criteria": {
+    "I1_public_fixed_source": "The evidence is public and can be fixed to a commit, release, issue, archival publication, or versioned official document.",
+    "I2_model_service_path": "Executable code or authoritative system documentation establishes a model or model-service call in the relevant decision path.",
+    "I3_versioned_policy": "The path consumes, selects, or enforces an identifiable executable policy, guardrail, rule configuration, or immutable policy version.",
+    "I4_downstream_action": "The path produces or gates a finite downstream action, such as allow, block, hold, route, escalate, or tool execution.",
+    "I5_historical_change_or_fault": "A time-stamped revision, bug, issue, regression test, or release note establishes a behavioral policy or interface change.",
+    "I6_replayable_or_auditable": "The old and new behavior, test, or failure can be replayed or independently audited without private credentials or unverifiable claims.",
+    "I7_provenance_and_license": "Authorship, source coordinates, and license or quotation boundary permit the proposed artifact use."
+  },
+  "outcome_classes": {
+    "QUALIFYING_ROUTE_REVISION": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+    "ARCHITECTURE_ONLY": ["I1", "I2", "I3", "I4", "I7"],
+    "POLICY_REVISION_ONLY": ["I1", "I3", "I4", "I5", "I6", "I7"],
+    "EXCLUDED": "Fails the minimum criteria for all three retained evidence classes."
+  },
+  "screening_rules": {
+    "all_formal_seed_results_receive_a_registry_row": true,
+    "all_exclusions_receive_reasons": true,
+    "papers_and_vendor_docs_do_not_substitute_for_source_level_route_evidence": true,
+    "examples_and_tutorials_are_architecture_only_unless_history_and_operational_consequence_are_independently_traceable": true,
+    "stars_popularity_and_search_rank_are_not_validity_evidence": true,
+    "author_policy_mapping_is_labeled_as_author_mapping": true,
+    "human_annotators": 0,
+    "agreement_statistic": null
+  },
+  "decision_rule": {
+    "go": "At least one QUALIFYING_ROUTE_REVISION is found and survives fixed-source replay or audit.",
+    "limited_go": "No complete route revision is found, but independent architecture and policy-revision evidence are both found. Report the two evidence classes separately and retain the deployment-incidence limitation.",
+    "no_go": "No qualifying route revision and no defensible complementary evidence chain are found. Do not run model calls or claim external validation."
+  },
+  "post_freeze_model_budget": {
+    "enabled_only_after_go": true,
+    "scored_call_formula": "eligible revision cases * 2 policy states * 2 frozen routes * 3 repetitions",
+    "maximum_scored_calls_without_a_new_frozen_amendment": 240,
+    "quota_reserve_fraction": 0.2,
+    "client_retries": 0,
+    "pilot_calls_are_non_scored_and_must_use_separate_fixtures": true
+  }
+}

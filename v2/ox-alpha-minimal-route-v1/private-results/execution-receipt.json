@@ -1,0 +1,22 @@
+{
+  "application_posts": 20,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-24T07:27:04.638829Z",
+  "credentials_retained": false,
+  "durable_terminal_records": 20,
+  "frozen_plan_commit": "7f30dfb59bf74d751cf78fca0c9e020abb2546ea",
+  "hidden_reasoning_retained": false,
+  "incremental_cash_cost_usd": 0.0,
+  "partial_resume_used": false,
+  "planned_cells": 20,
+  "provider_response_ids_retained": false,
+  "route_output_file": "opencode-go-ox-alpha-free-minimal-route-v1.jsonl",
+  "route_output_sha256": "sha256:9169056f77496a5cacd92556391be6858da5e9cbf4865bed82545d3d0f79b3fe",
+  "schedule_sha256": "sha256:89030543f0e1d97c73c6126068e77663c8dc693502b4ee7a721e98dbbc7fb70f",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-24T07:12:36.854917Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-ox-alpha-minimal-route-2026-08-v1",
+  "transport_errors": 3,
+  "valid_decisions": 13
+}

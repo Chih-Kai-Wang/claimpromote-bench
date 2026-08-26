@@ -1,0 +1,103 @@
+{
+  "deep_screened_candidates": [
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": true, "I6": true, "I7": true},
+      "fixed_review_head": "b5705588883fac48b88cbe6fd0bd7d48c798453e",
+      "outcome": "QUALIFYING_ROUTE_REVISION",
+      "repository": "microsoft/agent-governance-toolkit",
+      "selected_change": "e87b74530e1cbae54d5e90bc1b45ecf5c8911b28",
+      "source_check": "../agent-governance-policy-interface-revision-v1/source-validation-receipt.json",
+      "scope": "A deterministic Rego policy point surrounding agent model/tool lifecycle events. It supplies external boundary-fault evidence, not model-policy interpretation or deployment prevalence."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": true, "I6": true, "I7": true},
+      "fixed_review_head": "c54c78df751d613e22c58ea097781f7f31a939eb",
+      "outcome": "QUALIFYING_ROUTE_REVISION",
+      "repository": "agentgateway/agentgateway",
+      "selected_change": "82ab009fbb5996716e72a1fd5e5c4d4a13fa30eb",
+      "source_check": "source-checks/agentgateway-bedrock-guardrail.json",
+      "scope": "A public LLM gateway applies an explicit Bedrock guardrail identifier/version and maps service outcomes to mask or reject actions. Exact change-commit offline tests pass; no service call was made."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": true, "I6": false, "I7": true},
+      "fixed_review_head": "079f8d0e5a33264032173c74beb7f534de0248ae",
+      "outcome": "ARCHITECTURE_ONLY",
+      "repository": "Lelu-ai/lelu",
+      "selected_change": "e06fddb1a198b4d04ad3594d9631a09cbe0adafe",
+      "scope": "The commit changes bulk-export handling from default allow to human review in an agent authorization path, but it adds no fixed upstream regression fixture that independently replays the reported live-sandbox failure."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": true, "I6": false, "I7": true},
+      "fixed_review_head": "27b94b84f6cf555bfde5817deae323ee8cb00cea",
+      "outcome": "ARCHITECTURE_ONLY",
+      "repository": "eqtylab/cupcake",
+      "selected_change": "2c12e3748d2e2bcc0cb028bbc7327d2422366e05",
+      "scope": "OPA/Rego gates coding-agent actions and one adapter fix preserves Claude allow semantics. The selected change is an adapter response-contract change, not a fixed historical policy revision suitable for the audit endpoint."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": true, "I6": false, "I7": true},
+      "fixed_review_head": "0c112c2b2633246d676d6c28f9b140896c00d8d1",
+      "outcome": "ARCHITECTURE_ONLY",
+      "repository": "LuD1161/agentjail",
+      "scope": "The project places Rego decisions around coding-agent actions and records many policy changes, but the audit did not isolate a self-contained upstream old/new regression fixture before its stopping rule was met."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": false, "I5": false, "I6": false, "I7": true},
+      "fixed_review_head": "9dd03d0f48c13c3908d69928f66cfa60cd2fb36b",
+      "outcome": "ARCHITECTURE_ONLY",
+      "repository": "IBM/smith",
+      "scope": "The research prototype uses models to generate and test OPA policies. Its committed examples do not establish an independently operated historical action boundary for this audit."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": false, "I6": false, "I7": true},
+      "fixed_review_head": "bbeabb97d8a9cab9e78ded0488116a6007263701",
+      "outcome": "ARCHITECTURE_ONLY",
+      "repository": "aatakansalar/yaml-opa-llm-guardrails",
+      "scope": "A two-commit demonstration compiles YAML LLM-output rules to Rego. No historical fault or independently traceable revision is available."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": false, "I6": false, "I7": true},
+      "fixed_review_head": "16416ebb604de76490f983a7c51050ad9fca6ee1",
+      "outcome": "ARCHITECTURE_ONLY",
+      "repository": "octelium/octelium",
+      "scope": "The mature gateway combines policy enforcement with AI/MCP traffic, but no fixed model-policy behavioral revision was isolated in the formal review window."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": false, "I6": false, "I7": false},
+      "fixed_review_head": "2297872517dc73bc36a23565a3e53880724dd356",
+      "outcome": "EXCLUDED",
+      "repository": "4ymaneBH/Governed-Data-Analyst-Agent-for-slack",
+      "scope": "The repository contains an agent, OPA policies, and finite authorization actions, but no repository license or qualifying historical revision was found."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": false, "I6": false, "I7": false},
+      "fixed_review_head": "c605c672b8dd6ffae6b5e127a8ab157a8599b469",
+      "outcome": "EXCLUDED",
+      "repository": "9AVTAR/AgentGuardian-",
+      "scope": "The four-commit repository has an OPA backend but no license, historical fault, or replayable revision."
+    },
+    {
+      "criteria": {"I1": true, "I2": true, "I3": true, "I4": true, "I5": false, "I6": false, "I7": false},
+      "fixed_review_head": "6278bd7ad32744767ee5d4bc22e5d22da435b0bf",
+      "outcome": "EXCLUDED",
+      "repository": "fabiobrz/quarkus-langchain4j-opa-guards",
+      "scope": "The repository is an unlicensed demonstration of OPA prompt-injection guards and supplies no qualifying historical revision."
+    }
+  ],
+  "metadata_screen": {
+    "code_seeds_excluded_as_token_collisions": 10,
+    "not_advanced_after_metadata_screen": 454,
+    "reason": "The frozen hits did not themselves establish the joint model-path, versioned-policy, finite-action, and historical-change evidence required for source-level review.",
+    "repository_seeds": 465,
+    "source_level_reviewed": 11
+  },
+  "outcome_counts": {
+    "ARCHITECTURE_ONLY": 6,
+    "EXCLUDED": 3,
+    "POLICY_REVISION_ONLY": 0,
+    "QUALIFYING_ROUTE_REVISION": 2
+  },
+  "schema_version": "1.0.0",
+  "selection_boundary": "This is a fixed-query discovery audit with a source-level review of explicit joint model/policy candidates. It is not a random or exhaustive repository-prevalence sample.",
+  "study_id": "external-evidence-audit-v1"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "selection_salt": "claimpromotebench-v2-naturalistic-candidates-v1",
+  "candidate_target_per_source": 12,
+  "sources": [
+    {
+      "source_id": "core-bench-train",
+      "repository": "siegelz/core-bench",
+      "commit": "e32a2980e72fe6eb04ee04eb749458f570625663",
+      "path": "benchmark/dataset/core_train.json",
+      "repository_license": "MIT",
+      "redistribution_mode": "METADATA_POINTERS_ONLY_UNLESS_CASE_LICENSE_VERIFIED",
+      "eligible_field": "Computer Science",
+      "status": "APPROVED_FOR_CANDIDATE_SAMPLING"
+    },
+    {
+      "source_id": "scienceagentbench-public",
+      "repository": "OSU-NLP-Group/ScienceAgentBench",
+      "commit": "c26e151ed601ba109dc4d35e057ff8e73fec469d",
+      "path": null,
+      "repository_license": "MIT",
+      "redistribution_mode": "POINTER_ONLY",
+      "status": "APPROVED_FOR_MANUAL_POINTER_CURATION",
+      "note": "Do not redistribute the project's restricted unzipped benchmark data."
+    },
+    {
+      "source_id": "popper-public",
+      "repository": "snap-stanford/POPPER",
+      "commit": null,
+      "path": null,
+      "repository_license": null,
+      "redistribution_mode": "NONE_UNTIL_VERIFIED",
+      "status": "NOT_CLEARED_FOR_INGESTION"
+    }
+  ]
+}

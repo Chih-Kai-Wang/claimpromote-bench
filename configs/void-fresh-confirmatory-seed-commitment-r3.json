@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+  "status": "VOID_AFTER_SINGLE_SEED_DERIVATION_BEFORE_FRESH_DATASET_OR_MODEL_CALL",
+  "source_c0_commit": "4af39c95faea13d644ca2125d8aa714876ef3033",
+  "source_seed_commitment_commit": "64fc865cb10be4ae155d30fe84443ad6cef51993",
+  "preregistration_sha256": "sha256:03c69c4fefc15b1857eaec17c87372f45d41de139bfec97a50d355f11c56b156",
+  "private_salt_sha256": "sha256:994241f3b07459807c4a5f9a2a256d4e5ec0a9bb45b84953e58cfc8cab65ba73",
+  "contains_private_salt_bytes": false,
+  "drand": {
+    "network": "quicknet",
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "round": 31490637,
+    "round_time_utc": "2026-08-21T01:21:15Z"
+  },
+  "derived_seed_sha256": "sha256:d95f9c33adc0b0861fe845863f6624b5193b908b1b54a2b06bcb8d469e4e2cac",
+  "seed_derivation_receipt_sha256": "sha256:b620381651a1a6980667068040f62cec652417db9e1ae1e9acc8a6bcccf97383",
+  "void_reason": {
+    "first_attempt_run": 32436029914,
+    "first_attempt_failure": "missing local output directory before seed derivation",
+    "second_attempt_run": 32436208542,
+    "second_attempt_failure": "obsolete full v1 prompt-manifest identity comparison",
+    "diagnostic_run": 32436396661,
+    "dataset_rebuild_passed": true,
+    "dataset_validation_passed": true,
+    "current_ledger_prompt_hashes_match_released_model_facing_packet": "300/300_POSITION_EXACT",
+    "full_commitment_only_differences": [
+      "commitment_sha256",
+      "prompt_manifest_sha256"
+    ],
+    "fresh_dataset_built": false,
+    "model_post_intents": 0,
+    "model_calls": 0,
+    "cost_usd": 0.0
+  },
+  "superseded_by": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4",
+  "alternate_salt_seed_or_round_used_within_r3": false,
+  "rejection_sampling_used_within_r3": false
+}

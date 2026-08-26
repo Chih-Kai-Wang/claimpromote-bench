@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "status": "CREDENTIAL_AUTHENTICATED_MODEL_CATALOG_SNAPSHOT",
+  "recorded_at_utc": "2026-08-22T20:27:58Z",
+  "endpoint": "https://opencode.ai/zen/go/v1/models",
+  "http_status": 200,
+  "account_identifiers_retained": false,
+  "provider_response_identifiers_retained": false,
+  "credentials_retained": false,
+  "model_count": 29,
+  "model_ids": [
+    "deepseek-v4-flash",
+    "deepseek-v4-flash-vision-exp",
+    "deepseek-v4-pro",
+    "glm-5",
+    "glm-5.1",
+    "glm-5.2",
+    "glm-5.3",
+    "gpt-5.6-luna",
+    "grok-4.5",
+    "hy3",
+    "hy3-preview",
+    "kimi-k2.5",
+    "kimi-k2.6",
+    "kimi-k2.7-code",
+    "kimi-k3",
+    "mimo-v2-omni",
+    "mimo-v2-pro",
+    "mimo-v2.5",
+    "mimo-v2.5-pro",
+    "minimax-m2.5",
+    "minimax-m2.7",
+    "minimax-m3",
+    "muse-spark-1.2-contributor",
+    "ox-alpha-free",
+    "qwen3.5-plus",
+    "qwen3.6-plus",
+    "qwen3.7-max",
+    "qwen3.7-plus",
+    "qwen3.8-max"
+  ],
+  "selection_policy_source": "https://opencode.ai/docs/go/",
+  "selection_policy_accessed_at_utc": "2026-08-22T20:27:58Z",
+  "selected_model_ids": [
+    "qwen3.8-max",
+    "deepseek-v4-pro",
+    "glm-5.3",
+    "kimi-k3",
+    "mimo-v2.5-pro",
+    "minimax-m3",
+    "hy3"
+  ],
+  "selection_rule": "One previously unevaluated current text model from each of seven distinct listed families, restricted to configurations reported as not used for training with zero-day retention at freeze time.",
+  "exclusions": {
+    "previously_evaluated_on_same_public_items": [
+      "qwen3.7-max",
+      "deepseek-v4-flash"
+    ],
+    "nonzero_retention": [
+      "gpt-5.6-luna",
+      "grok-4.5"
+    ],
+    "training_or_not_zdr": [
+      "muse-spark-1.2-contributor"
+    ],
+    "vision_or_preview_variant": [
+      "deepseek-v4-flash-vision-exp",
+      "hy3-preview",
+      "mimo-v2-omni"
+    ],
+    "same_family_not_selected": "All remaining catalog entries were excluded before outputs to keep one configuration per selected family."
+  }
+}

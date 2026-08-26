@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:claimpromotebench:upstream-policy-decision:1",
+  "title": "UpstreamPolicyDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "violation_count", "subject", "rule_id", "witnesses"],
+  "properties": {
+    "action": {"enum": ["ALLOW", "HOLD"]},
+    "violation_count": {"type": "integer", "minimum": 0},
+    "subject": {"$ref": "#/$defs/resource"},
+    "rule_id": {
+      "enum": ["NONE", "UNIQUE_SERVICE_SELECTOR", "FLEXVOLUME_DRIVER"]
+    },
+    "witnesses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/resource"}
+    }
+  },
+  "$defs": {
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "namespace", "name"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "namespace": {"type": "string"},
+        "name": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

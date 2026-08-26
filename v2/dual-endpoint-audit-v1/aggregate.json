@@ -1,0 +1,1575 @@
+{
+  "endpoint_definitions": {
+    "denominator_rule": "Every scheduled item and pair remains in both end-to-end denominators.",
+    "full_contract": "The frozen parser marked the six-field output syntax-, schema-, and semantics-valid; action conformance is then scored.",
+    "raw_strict_action": "Exact four-class action parsed directly from one duplicate-free top-level JSON object in retained raw response text. No fence or substring extraction, repair, coercion, or non-standard constant is accepted.",
+    "registered_parser_action": "Four-class action in the object emitted by each frozen route's registered parser. Parser provenance distinguishes direct parsing from deterministic single-object extraction."
+  },
+  "interpretation": "This offline audit separates raw-strict action parsing, each route's registered parser policy, and complete output-contract conformance. Registered parsers follow their frozen duplicate-key and object-extraction policies; no duplicate key occurs in the audited responses. The audit changes no frozen record or model call.",
+  "routes": [
+    {
+      "evidence_role": "AUXILIARY_PUBLIC_ROBUSTNESS",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 0,
+          "full_contract_correct_pairs_outside_raw_strict": 0,
+          "full_contract_extractable_outside_raw_strict": 0,
+          "raw_strict_correct_items_outside_full_contract": 15,
+          "raw_strict_correct_pairs_outside_full_contract": 6,
+          "raw_strict_extractable_outside_full_contract": 34
+        },
+        "full_contract": {
+          "action_correct_items": 90,
+          "action_correct_pairs": 13,
+          "conditional_action_accuracy": 0.6164383561643836,
+          "conditional_action_pair_accuracy": 0.21311475409836064,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 68,
+              "DEMOTE": 0,
+              "ESCALATE": 8,
+              "HOLD": 4,
+              "NO_VALID_CONTRACT": 10
+            },
+            "DEMOTE": {
+              "ALLOW": 25,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 3,
+              "NO_VALID_CONTRACT": 2
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 13,
+              "HOLD": 3,
+              "NO_VALID_CONTRACT": 14
+            },
+            "HOLD": {
+              "ALLOW": 13,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 9,
+              "NO_VALID_CONTRACT": 8
+            }
+          },
+          "end_to_end_action_accuracy": 0.5,
+          "end_to_end_action_pair_accuracy": 0.14444444444444443,
+          "item_validity": 0.8111111111111111,
+          "pair_validity": 0.6777777777777778,
+          "valid_items": 146,
+          "valid_pairs": 61
+        },
+        "parse_status_counts": {
+          "OK": 146,
+          "SEMANTIC_ERROR": 34
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": 0.5833333333333334,
+          "conditional_pair_accuracy": 0.2111111111111111,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 68,
+              "DEMOTE": 5,
+              "ESCALATE": 13,
+              "HOLD": 4,
+              "NO_RAW_STRICT_ACTION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 25,
+              "DEMOTE": 2,
+              "ESCALATE": 0,
+              "HOLD": 3,
+              "NO_RAW_STRICT_ACTION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 2,
+              "ESCALATE": 25,
+              "HOLD": 3,
+              "NO_RAW_STRICT_ACTION": 0
+            },
+            "HOLD": {
+              "ALLOW": 13,
+              "DEMOTE": 7,
+              "ESCALATE": 0,
+              "HOLD": 10,
+              "NO_RAW_STRICT_ACTION": 0
+            }
+          },
+          "correct_items": 105,
+          "correct_pairs": 19,
+          "covered_pairs": 90,
+          "end_to_end_item_accuracy": 0.5833333333333334,
+          "end_to_end_pair_accuracy": 0.2111111111111111,
+          "extractable_items": 180,
+          "item_coverage": 1.0,
+          "pair_coverage": 1.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_JSON": 180
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.6164383561643836,
+          "conditional_pair_accuracy": 0.21311475409836064,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 68,
+              "DEMOTE": 0,
+              "ESCALATE": 8,
+              "HOLD": 4,
+              "NO_REGISTERED_ACTION": 10
+            },
+            "DEMOTE": {
+              "ALLOW": 25,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 3,
+              "NO_REGISTERED_ACTION": 2
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 13,
+              "HOLD": 3,
+              "NO_REGISTERED_ACTION": 14
+            },
+            "HOLD": {
+              "ALLOW": 13,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 9,
+              "NO_REGISTERED_ACTION": 8
+            }
+          },
+          "correct_items": 90,
+          "correct_pairs": 13,
+          "covered_pairs": 61,
+          "end_to_end_item_accuracy": 0.5,
+          "end_to_end_pair_accuracy": 0.14444444444444443,
+          "extractable_items": 146,
+          "item_coverage": 0.8111111111111111,
+          "pair_coverage": 0.6777777777777778
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 34,
+          "REGISTERED_DIRECT_PARSE": 146
+        },
+        "scheduled_items": 180,
+        "scheduled_pairs": 90
+      },
+      "route_stack_id": "challenge-deepseek-flash-host-schema",
+      "run_sha256": "sha256:ae5a4664d77853267a7d253bc6f7fe02d6f858837eea47a80f2ffd854636a81b",
+      "task_id": "balanced-public-challenge"
+    },
+    {
+      "evidence_role": "AUXILIARY_PUBLIC_ROBUSTNESS",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 4,
+          "full_contract_correct_pairs_outside_raw_strict": 2,
+          "full_contract_extractable_outside_raw_strict": 6,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 1
+        },
+        "full_contract": {
+          "action_correct_items": 132,
+          "action_correct_pairs": 48,
+          "conditional_action_accuracy": 0.8918918918918919,
+          "conditional_action_pair_accuracy": 0.75,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 79,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 11
+            },
+            "DEMOTE": {
+              "ALLOW": 8,
+              "DEMOTE": 4,
+              "ESCALATE": 4,
+              "HOLD": 4,
+              "NO_VALID_CONTRACT": 10
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 23,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 7
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 26,
+              "NO_VALID_CONTRACT": 4
+            }
+          },
+          "end_to_end_action_accuracy": 0.7333333333333333,
+          "end_to_end_action_pair_accuracy": 0.5333333333333333,
+          "item_validity": 0.8222222222222222,
+          "pair_validity": 0.7111111111111111,
+          "valid_items": 148,
+          "valid_pairs": 64
+        },
+        "parse_status_counts": {
+          "OK": 148,
+          "SEMANTIC_ERROR": 1,
+          "TRANSPORT_ERROR": 31
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": 0.8951048951048951,
+          "conditional_pair_accuracy": 0.7540983606557377,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 77,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 13
+            },
+            "DEMOTE": {
+              "ALLOW": 7,
+              "DEMOTE": 3,
+              "ESCALATE": 4,
+              "HOLD": 3,
+              "NO_RAW_STRICT_ACTION": 13
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 22,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 8
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 1,
+              "ESCALATE": 0,
+              "HOLD": 26,
+              "NO_RAW_STRICT_ACTION": 3
+            }
+          },
+          "correct_items": 128,
+          "correct_pairs": 46,
+          "covered_pairs": 61,
+          "end_to_end_item_accuracy": 0.7111111111111111,
+          "end_to_end_pair_accuracy": 0.5111111111111111,
+          "extractable_items": 143,
+          "item_coverage": 0.7944444444444444,
+          "pair_coverage": 0.6777777777777778
+        },
+        "raw_strict_source_counts": {
+          "NO_RAW_RESPONSE": 31,
+          "RAW_STRICT_JSON": 143,
+          "RAW_STRICT_REJECTED": 6
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.8918918918918919,
+          "conditional_pair_accuracy": 0.75,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 79,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 11
+            },
+            "DEMOTE": {
+              "ALLOW": 8,
+              "DEMOTE": 4,
+              "ESCALATE": 4,
+              "HOLD": 4,
+              "NO_REGISTERED_ACTION": 10
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 23,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 7
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 26,
+              "NO_REGISTERED_ACTION": 4
+            }
+          },
+          "correct_items": 132,
+          "correct_pairs": 48,
+          "covered_pairs": 64,
+          "end_to_end_item_accuracy": 0.7333333333333333,
+          "end_to_end_pair_accuracy": 0.5333333333333333,
+          "extractable_items": 148,
+          "item_coverage": 0.8222222222222222,
+          "pair_coverage": 0.7111111111111111
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 32,
+          "REGISTERED_DIRECT_PARSE": 142,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 6
+        },
+        "scheduled_items": 180,
+        "scheduled_pairs": 90
+      },
+      "route_stack_id": "challenge-qwen-host-prompt",
+      "run_sha256": "sha256:e13a560c7ce5027aad6a0dcfdf862b3f181a07e49059ef1a9f87bc0ab6475949",
+      "task_id": "balanced-public-challenge"
+    },
+    {
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 40,
+          "full_contract_correct_pairs_outside_raw_strict": 10,
+          "full_contract_extractable_outside_raw_strict": 71,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 0
+        },
+        "full_contract": {
+          "action_correct_items": 40,
+          "action_correct_pairs": 10,
+          "conditional_action_accuracy": 0.5633802816901409,
+          "conditional_action_pair_accuracy": 0.3225806451612903,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 9,
+              "DEMOTE": 0,
+              "ESCALATE": 9,
+              "HOLD": 8,
+              "NO_VALID_CONTRACT": 10
+            },
+            "DEMOTE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 21
+            },
+            "ESCALATE": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 13,
+              "HOLD": 3,
+              "NO_VALID_CONTRACT": 18
+            },
+            "HOLD": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 4,
+              "HOLD": 18,
+              "NO_VALID_CONTRACT": 0
+            }
+          },
+          "end_to_end_action_accuracy": 0.3333333333333333,
+          "end_to_end_action_pair_accuracy": 0.16666666666666666,
+          "item_validity": 0.5916666666666667,
+          "pair_validity": 0.5166666666666667,
+          "valid_items": 71,
+          "valid_pairs": 31
+        },
+        "parse_status_counts": {
+          "OK": 71,
+          "SEMANTIC_ERROR": 49
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": null,
+          "conditional_pair_accuracy": null,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 36
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 24
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 36
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 24
+            }
+          },
+          "correct_items": 0,
+          "correct_pairs": 0,
+          "covered_pairs": 0,
+          "end_to_end_item_accuracy": 0.0,
+          "end_to_end_pair_accuracy": 0.0,
+          "extractable_items": 0,
+          "item_coverage": 0.0,
+          "pair_coverage": 0.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_REJECTED": 120
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.5633802816901409,
+          "conditional_pair_accuracy": 0.3225806451612903,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 9,
+              "DEMOTE": 0,
+              "ESCALATE": 9,
+              "HOLD": 8,
+              "NO_REGISTERED_ACTION": 10
+            },
+            "DEMOTE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 21
+            },
+            "ESCALATE": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 13,
+              "HOLD": 3,
+              "NO_REGISTERED_ACTION": 18
+            },
+            "HOLD": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 4,
+              "HOLD": 18,
+              "NO_REGISTERED_ACTION": 0
+            }
+          },
+          "correct_items": 40,
+          "correct_pairs": 10,
+          "covered_pairs": 31,
+          "end_to_end_item_accuracy": 0.3333333333333333,
+          "end_to_end_pair_accuracy": 0.16666666666666666,
+          "extractable_items": 71,
+          "item_coverage": 0.5916666666666667,
+          "pair_coverage": 0.5166666666666667
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 49,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 71
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "graph-mistral-local-4bit",
+      "run_sha256": "sha256:44b4b40aebdc55fce0a88ac3b469d2cef974ce92d184e00c7001e28a364cea80",
+      "task_id": "policy-transition-graph"
+    },
+    {
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 27,
+          "full_contract_correct_pairs_outside_raw_strict": 2,
+          "full_contract_extractable_outside_raw_strict": 43,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 0
+        },
+        "full_contract": {
+          "action_correct_items": 27,
+          "action_correct_pairs": 2,
+          "conditional_action_accuracy": 0.627906976744186,
+          "conditional_action_pair_accuracy": 0.25,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 21,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 15
+            },
+            "DEMOTE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 12,
+              "NO_VALID_CONTRACT": 9
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 1,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 35
+            },
+            "HOLD": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 5,
+              "NO_VALID_CONTRACT": 18
+            }
+          },
+          "end_to_end_action_accuracy": 0.225,
+          "end_to_end_action_pair_accuracy": 0.03333333333333333,
+          "item_validity": 0.35833333333333334,
+          "pair_validity": 0.13333333333333333,
+          "valid_items": 43,
+          "valid_pairs": 8
+        },
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 23,
+          "OK": 43,
+          "SCHEMA_ERROR": 2,
+          "SEMANTIC_ERROR": 49,
+          "TRANSPORT_ERROR": 3
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": null,
+          "conditional_pair_accuracy": null,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 36
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 24
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 36
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 24
+            }
+          },
+          "correct_items": 0,
+          "correct_pairs": 0,
+          "covered_pairs": 0,
+          "end_to_end_item_accuracy": 0.0,
+          "end_to_end_pair_accuracy": 0.0,
+          "extractable_items": 0,
+          "item_coverage": 0.0,
+          "pair_coverage": 0.0
+        },
+        "raw_strict_source_counts": {
+          "NO_RAW_RESPONSE": 3,
+          "RAW_STRICT_REJECTED": 117
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.627906976744186,
+          "conditional_pair_accuracy": 0.25,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 21,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 15
+            },
+            "DEMOTE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 12,
+              "NO_REGISTERED_ACTION": 9
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 1,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 35
+            },
+            "HOLD": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 5,
+              "NO_REGISTERED_ACTION": 18
+            }
+          },
+          "correct_items": 27,
+          "correct_pairs": 2,
+          "covered_pairs": 8,
+          "end_to_end_item_accuracy": 0.225,
+          "end_to_end_pair_accuracy": 0.03333333333333333,
+          "extractable_items": 43,
+          "item_coverage": 0.35833333333333334,
+          "pair_coverage": 0.13333333333333333
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 77,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 43
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "graph-phi4-local-4bit",
+      "run_sha256": "sha256:cb530c1379d72efed6b102e800e39accc4d4dccfef6bdb1512d61235598cd781",
+      "task_id": "policy-transition-graph"
+    },
+    {
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 0,
+          "full_contract_correct_pairs_outside_raw_strict": 0,
+          "full_contract_extractable_outside_raw_strict": 0,
+          "raw_strict_correct_items_outside_full_contract": 2,
+          "raw_strict_correct_pairs_outside_full_contract": 2,
+          "raw_strict_extractable_outside_full_contract": 2
+        },
+        "full_contract": {
+          "action_correct_items": 108,
+          "action_correct_pairs": 49,
+          "conditional_action_accuracy": 1.0,
+          "conditional_action_pair_accuracy": 1.0,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 59,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 1
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 15,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 5
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 17,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 3
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 17,
+              "NO_VALID_CONTRACT": 3
+            }
+          },
+          "end_to_end_action_accuracy": 0.9,
+          "end_to_end_action_pair_accuracy": 0.8166666666666667,
+          "item_validity": 0.9,
+          "pair_validity": 0.8166666666666667,
+          "valid_items": 108,
+          "valid_pairs": 49
+        },
+        "parse_status_counts": {
+          "OK": 108,
+          "SEMANTIC_ERROR": 2,
+          "TRANSPORT_ERROR": 10
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": 1.0,
+          "conditional_pair_accuracy": 1.0,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 59,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 1
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 17,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 3
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 17,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 3
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 17,
+              "NO_RAW_STRICT_ACTION": 3
+            }
+          },
+          "correct_items": 110,
+          "correct_pairs": 51,
+          "covered_pairs": 51,
+          "end_to_end_item_accuracy": 0.9166666666666666,
+          "end_to_end_pair_accuracy": 0.85,
+          "extractable_items": 110,
+          "item_coverage": 0.9166666666666666,
+          "pair_coverage": 0.85
+        },
+        "raw_strict_source_counts": {
+          "NO_RAW_RESPONSE": 10,
+          "RAW_STRICT_JSON": 110
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 1.0,
+          "conditional_pair_accuracy": 1.0,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 59,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 1
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 15,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 5
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 17,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 3
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 17,
+              "NO_REGISTERED_ACTION": 3
+            }
+          },
+          "correct_items": 108,
+          "correct_pairs": 49,
+          "covered_pairs": 49,
+          "end_to_end_item_accuracy": 0.9,
+          "end_to_end_pair_accuracy": 0.8166666666666667,
+          "extractable_items": 108,
+          "item_coverage": 0.9,
+          "pair_coverage": 0.8166666666666667
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 12,
+          "REGISTERED_DIRECT_PARSE": 108
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "slsa-deepseek-flash-host-schema",
+      "run_sha256": "sha256:d892d6d2ae788e0f3cd7d54522529c14271523b60c0674292ef121bd4d79b994",
+      "task_id": "slsa-fixed-policy"
+    },
+    {
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 91,
+          "full_contract_correct_pairs_outside_raw_strict": 31,
+          "full_contract_extractable_outside_raw_strict": 94,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 0
+        },
+        "full_contract": {
+          "action_correct_items": 91,
+          "action_correct_pairs": 31,
+          "conditional_action_accuracy": 0.9680851063829787,
+          "conditional_action_pair_accuracy": 0.9117647058823529,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 2,
+              "NO_VALID_CONTRACT": 18
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 12,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 8
+            },
+            "HOLD": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 19,
+              "NO_VALID_CONTRACT": 0
+            }
+          },
+          "end_to_end_action_accuracy": 0.7583333333333333,
+          "end_to_end_action_pair_accuracy": 0.5166666666666667,
+          "item_validity": 0.7833333333333333,
+          "pair_validity": 0.5666666666666667,
+          "valid_items": 94,
+          "valid_pairs": 34
+        },
+        "parse_status_counts": {
+          "OK": 94,
+          "SEMANTIC_ERROR": 26
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": null,
+          "conditional_pair_accuracy": null,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 60
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            }
+          },
+          "correct_items": 0,
+          "correct_pairs": 0,
+          "covered_pairs": 0,
+          "end_to_end_item_accuracy": 0.0,
+          "end_to_end_pair_accuracy": 0.0,
+          "extractable_items": 0,
+          "item_coverage": 0.0,
+          "pair_coverage": 0.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_REJECTED": 120
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.9680851063829787,
+          "conditional_pair_accuracy": 0.9117647058823529,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 2,
+              "NO_REGISTERED_ACTION": 18
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 12,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 8
+            },
+            "HOLD": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 19,
+              "NO_REGISTERED_ACTION": 0
+            }
+          },
+          "correct_items": 91,
+          "correct_pairs": 31,
+          "covered_pairs": 34,
+          "end_to_end_item_accuracy": 0.7583333333333333,
+          "end_to_end_pair_accuracy": 0.5166666666666667,
+          "extractable_items": 94,
+          "item_coverage": 0.7833333333333333,
+          "pair_coverage": 0.5666666666666667
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 26,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 94
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "slsa-mistral-local-4bit",
+      "run_sha256": "sha256:e87d544b0b60ee65abeef5ce5adcb3c635bfe637639f11beb59c55a09773f636",
+      "task_id": "slsa-fixed-policy"
+    },
+    {
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 83,
+          "full_contract_correct_pairs_outside_raw_strict": 23,
+          "full_contract_extractable_outside_raw_strict": 102,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 0
+        },
+        "full_contract": {
+          "action_correct_items": 83,
+          "action_correct_pairs": 23,
+          "conditional_action_accuracy": 0.8137254901960784,
+          "conditional_action_pair_accuracy": 0.5476190476190477,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 4,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 16
+            },
+            "ESCALATE": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 19,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 0
+            },
+            "HOLD": {
+              "ALLOW": 14,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 4,
+              "NO_VALID_CONTRACT": 2
+            }
+          },
+          "end_to_end_action_accuracy": 0.6916666666666667,
+          "end_to_end_action_pair_accuracy": 0.38333333333333336,
+          "item_validity": 0.85,
+          "pair_validity": 0.7,
+          "valid_items": 102,
+          "valid_pairs": 42
+        },
+        "parse_status_counts": {
+          "OK": 102,
+          "SEMANTIC_ERROR": 18
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": null,
+          "conditional_pair_accuracy": null,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 60
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            }
+          },
+          "correct_items": 0,
+          "correct_pairs": 0,
+          "covered_pairs": 0,
+          "end_to_end_item_accuracy": 0.0,
+          "end_to_end_pair_accuracy": 0.0,
+          "extractable_items": 0,
+          "item_coverage": 0.0,
+          "pair_coverage": 0.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_REJECTED": 120
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.8137254901960784,
+          "conditional_pair_accuracy": 0.5476190476190477,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 4,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 16
+            },
+            "ESCALATE": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 19,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 0
+            },
+            "HOLD": {
+              "ALLOW": 14,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 4,
+              "NO_REGISTERED_ACTION": 2
+            }
+          },
+          "correct_items": 83,
+          "correct_pairs": 23,
+          "covered_pairs": 42,
+          "end_to_end_item_accuracy": 0.6916666666666667,
+          "end_to_end_pair_accuracy": 0.38333333333333336,
+          "extractable_items": 102,
+          "item_coverage": 0.85,
+          "pair_coverage": 0.7
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 18,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 102
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "slsa-phi4-local-4bit",
+      "run_sha256": "sha256:de8604c599a20a948ed58990e6c20dd23bc1f070876fd1eb0d532f9623fb956f",
+      "task_id": "slsa-fixed-policy"
+    },
+    {
+      "evidence_role": "AUXILIARY_FIXED_POLICY",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 0,
+          "full_contract_correct_pairs_outside_raw_strict": 0,
+          "full_contract_extractable_outside_raw_strict": 0,
+          "raw_strict_correct_items_outside_full_contract": 32,
+          "raw_strict_correct_pairs_outside_full_contract": 32,
+          "raw_strict_extractable_outside_full_contract": 32
+        },
+        "full_contract": {
+          "action_correct_items": 88,
+          "action_correct_pairs": 28,
+          "conditional_action_accuracy": 1.0,
+          "conditional_action_pair_accuracy": 1.0,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 1,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 19
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 7,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 13
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_VALID_CONTRACT": 0
+            }
+          },
+          "end_to_end_action_accuracy": 0.7333333333333333,
+          "end_to_end_action_pair_accuracy": 0.4666666666666667,
+          "item_validity": 0.7333333333333333,
+          "pair_validity": 0.4666666666666667,
+          "valid_items": 88,
+          "valid_pairs": 28
+        },
+        "parse_status_counts": {
+          "OK": 88,
+          "SEMANTIC_ERROR": 32
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": 1.0,
+          "conditional_pair_accuracy": 1.0,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 20,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 0
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 20,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 0
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_RAW_STRICT_ACTION": 0
+            }
+          },
+          "correct_items": 120,
+          "correct_pairs": 60,
+          "covered_pairs": 60,
+          "end_to_end_item_accuracy": 1.0,
+          "end_to_end_pair_accuracy": 1.0,
+          "extractable_items": 120,
+          "item_coverage": 1.0,
+          "pair_coverage": 1.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_JSON": 120
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 1.0,
+          "conditional_pair_accuracy": 1.0,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 60,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 0
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 1,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 19
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 7,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 13
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 20,
+              "NO_REGISTERED_ACTION": 0
+            }
+          },
+          "correct_items": 88,
+          "correct_pairs": 28,
+          "covered_pairs": 28,
+          "end_to_end_item_accuracy": 0.7333333333333333,
+          "end_to_end_pair_accuracy": 0.4666666666666667,
+          "extractable_items": 88,
+          "item_coverage": 0.7333333333333333,
+          "pair_coverage": 0.4666666666666667
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 32,
+          "REGISTERED_DIRECT_PARSE": 88
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "slsa-qwen-host-prompt",
+      "run_sha256": "sha256:1232b0b1c33908eb4fc9996032dfd71469b8e885752141050f7c31af82436263",
+      "task_id": "slsa-fixed-policy"
+    },
+    {
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 38,
+          "full_contract_correct_pairs_outside_raw_strict": 6,
+          "full_contract_extractable_outside_raw_strict": 77,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 0
+        },
+        "full_contract": {
+          "action_correct_items": 38,
+          "action_correct_pairs": 6,
+          "conditional_action_accuracy": 0.4935064935064935,
+          "conditional_action_pair_accuracy": 0.18181818181818182,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 16,
+              "DEMOTE": 0,
+              "ESCALATE": 15,
+              "HOLD": 13,
+              "NO_VALID_CONTRACT": 16
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 10,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 7
+            },
+            "HOLD": {
+              "ALLOW": 8,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 12,
+              "NO_VALID_CONTRACT": 0
+            }
+          },
+          "end_to_end_action_accuracy": 0.31666666666666665,
+          "end_to_end_action_pair_accuracy": 0.1,
+          "item_validity": 0.6416666666666667,
+          "pair_validity": 0.55,
+          "valid_items": 77,
+          "valid_pairs": 33
+        },
+        "parse_status_counts": {
+          "OK": 77,
+          "SEMANTIC_ERROR": 43
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": null,
+          "conditional_pair_accuracy": null,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 60
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            }
+          },
+          "correct_items": 0,
+          "correct_pairs": 0,
+          "covered_pairs": 0,
+          "end_to_end_item_accuracy": 0.0,
+          "end_to_end_pair_accuracy": 0.0,
+          "extractable_items": 0,
+          "item_coverage": 0.0,
+          "pair_coverage": 0.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_REJECTED": 120
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.4935064935064935,
+          "conditional_pair_accuracy": 0.18181818181818182,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 16,
+              "DEMOTE": 0,
+              "ESCALATE": 15,
+              "HOLD": 13,
+              "NO_REGISTERED_ACTION": 16
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 3,
+              "DEMOTE": 0,
+              "ESCALATE": 10,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 7
+            },
+            "HOLD": {
+              "ALLOW": 8,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 12,
+              "NO_REGISTERED_ACTION": 0
+            }
+          },
+          "correct_items": 38,
+          "correct_pairs": 6,
+          "covered_pairs": 33,
+          "end_to_end_item_accuracy": 0.31666666666666665,
+          "end_to_end_pair_accuracy": 0.1,
+          "extractable_items": 77,
+          "item_coverage": 0.6416666666666667,
+          "pair_coverage": 0.55
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 43,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 77
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "switch-mistral-local-4bit",
+      "run_sha256": "sha256:8f4318811849f73b731d2b7f24478266ffdf9f96641285deea844803d88c3355",
+      "task_id": "policy-switch"
+    },
+    {
+      "evidence_role": "CENTRAL_AUTHORED_MIGRATION",
+      "metrics": {
+        "endpoint_overlap": {
+          "full_contract_correct_items_outside_raw_strict": 46,
+          "full_contract_correct_pairs_outside_raw_strict": 4,
+          "full_contract_extractable_outside_raw_strict": 59,
+          "raw_strict_correct_items_outside_full_contract": 0,
+          "raw_strict_correct_pairs_outside_full_contract": 0,
+          "raw_strict_extractable_outside_full_contract": 0
+        },
+        "full_contract": {
+          "action_correct_items": 46,
+          "action_correct_pairs": 4,
+          "conditional_action_accuracy": 0.7796610169491526,
+          "conditional_action_pair_accuracy": 0.2857142857142857,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 38,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 22
+            },
+            "DEMOTE": {
+              "ALLOW": 4,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 9,
+              "NO_VALID_CONTRACT": 7
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 2,
+              "HOLD": 0,
+              "NO_VALID_CONTRACT": 18
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 6,
+              "NO_VALID_CONTRACT": 14
+            }
+          },
+          "end_to_end_action_accuracy": 0.38333333333333336,
+          "end_to_end_action_pair_accuracy": 0.06666666666666667,
+          "item_validity": 0.49166666666666664,
+          "pair_validity": 0.23333333333333334,
+          "valid_items": 59,
+          "valid_pairs": 14
+        },
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 25,
+          "OK": 59,
+          "SCHEMA_ERROR": 9,
+          "SEMANTIC_ERROR": 27
+        },
+        "raw_strict_action": {
+          "conditional_item_accuracy": null,
+          "conditional_pair_accuracy": null,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 60
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_RAW_STRICT_ACTION": 20
+            }
+          },
+          "correct_items": 0,
+          "correct_pairs": 0,
+          "covered_pairs": 0,
+          "end_to_end_item_accuracy": 0.0,
+          "end_to_end_pair_accuracy": 0.0,
+          "extractable_items": 0,
+          "item_coverage": 0.0,
+          "pair_coverage": 0.0
+        },
+        "raw_strict_source_counts": {
+          "RAW_STRICT_REJECTED": 120
+        },
+        "registered_parser_action": {
+          "conditional_item_accuracy": 0.7796610169491526,
+          "conditional_pair_accuracy": 0.2857142857142857,
+          "confusion": {
+            "ALLOW": {
+              "ALLOW": 38,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 22
+            },
+            "DEMOTE": {
+              "ALLOW": 4,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 9,
+              "NO_REGISTERED_ACTION": 7
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 2,
+              "HOLD": 0,
+              "NO_REGISTERED_ACTION": 18
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 6,
+              "NO_REGISTERED_ACTION": 14
+            }
+          },
+          "correct_items": 46,
+          "correct_pairs": 4,
+          "covered_pairs": 14,
+          "end_to_end_item_accuracy": 0.38333333333333336,
+          "end_to_end_pair_accuracy": 0.06666666666666667,
+          "extractable_items": 59,
+          "item_coverage": 0.49166666666666664,
+          "pair_coverage": 0.23333333333333334
+        },
+        "registered_parser_provenance_counts": {
+          "NO_REGISTERED_ACTION": 61,
+          "REGISTERED_SINGLE_OBJECT_EXTRACTION": 59
+        },
+        "scheduled_items": 120,
+        "scheduled_pairs": 60
+      },
+      "route_stack_id": "switch-phi4-local-4bit",
+      "run_sha256": "sha256:8958eb132c722b7909f75eab10c01229e83064340b3c52c8f66e5f872a46572d",
+      "task_id": "policy-switch"
+    }
+  ],
+  "schema_version": "1.1.0",
+  "status": "COMPLETE_POST_HOC_DUAL_ENDPOINT_AUDIT"
+}

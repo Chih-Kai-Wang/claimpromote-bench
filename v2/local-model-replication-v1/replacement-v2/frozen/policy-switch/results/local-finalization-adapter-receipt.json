@@ -1,0 +1,18 @@
+{
+  "generic_finalizer_sha256": "sha256:9dad7b72c5091c4ac58a843044cfc19d4d285a8f494ac849094352b7f0e18e73",
+  "local_run_schema_sha256": "sha256:ad4878733e40fbc001787fbc16e395b3719f986e5f774d829cd6d1232f7deda3",
+  "replacement_version": 2,
+  "result_receipt_sha256": "sha256:3d1026b2abfd557894520d9a4e09acc24417916ac7700b756ddff4ca14e2072c",
+  "schema_version": "1.0.0",
+  "scope": {
+    "metrics_changed": false,
+    "model_calls_performed": 0,
+    "post_execution_only": true,
+    "source_schema_constant_rebound_to_frozen_local_schema": true,
+    "structured_decisions_changed": false,
+    "terminal_records_changed": false
+  },
+  "self_digest": "sha256:7990d88fc3d24a6ddc07ba3f211d8b8278d5f7a7feaf487189d5d5fff81b0602",
+  "status": "LOCAL_SCHEMA_POST_EXECUTION_SEAL_VALIDATED",
+  "study_id": "claimpromotebench-policy-switch-local-model-replication-2026-08-v2"
+}

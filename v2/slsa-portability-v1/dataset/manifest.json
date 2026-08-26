@@ -1,0 +1,118 @@
+{
+  "data_file_sha256": {
+    "development-gold.jsonl": "sha256:021cf461493cdfbf455b37531f255c6afc2c62ba77aa135ce929998bbe4b7ae2",
+    "development-items.jsonl": "sha256:108e096f110653189bf6521ab1b261d3f84d4dd47b96e948011614493951cdfa",
+    "development-pairs.json": "sha256:44737adae62d4e35efa97c219fc898c7df3af5ce94ab1477e274e20c0ad6feb1",
+    "evaluation-gold.jsonl": "sha256:c34c7896d4ebb009b8812298d1e8bcc6746566c3dc1781453bbb48eb7b852bc5",
+    "evaluation-items.jsonl": "sha256:84304363e0d751babe4238121ffc7258b9125761bfbfb088a852c596124df778",
+    "evaluation-pairs.json": "sha256:967e9f65dc9c3a72f157f5b42ec357242c7a0c24b0da2e1113413bfdc29b907a"
+  },
+  "dataset_fingerprint": "sha256:097e62b0570914d6c75eacc05f7e3d88eb17b106e128b1906ada2f70081f5d3b",
+  "decision_schema_sha256": "sha256:654db2a57694a0754a248a506df29934da7282d01946044067233fee64e22dcc",
+  "development": {
+    "action_counts": {
+      "ALLOW": 36,
+      "DEMOTE": 12,
+      "ESCALATE": 12,
+      "HOLD": 12
+    },
+    "factors": 12,
+    "items": 72,
+    "pairs": 36
+  },
+  "evaluation": {
+    "action_counts": {
+      "ALLOW": 60,
+      "DEMOTE": 20,
+      "ESCALATE": 20,
+      "HOLD": 20
+    },
+    "factors": 12,
+    "items": 120,
+    "pairs": 60
+  },
+  "factor_inventory": [
+    {
+      "controlled_field": "provenance_present",
+      "factor_id": "candidate_provenance_presence",
+      "family": "candidate_admission",
+      "invalid_action": "HOLD"
+    },
+    {
+      "controlled_field": "envelope_signature_verified",
+      "factor_id": "candidate_signature_verification",
+      "family": "candidate_admission",
+      "invalid_action": "HOLD"
+    },
+    {
+      "controlled_field": "subject_digest_matches",
+      "factor_id": "candidate_subject_binding",
+      "family": "candidate_admission",
+      "invalid_action": "HOLD"
+    },
+    {
+      "controlled_field": "build_level_verified",
+      "factor_id": "candidate_build_level",
+      "family": "candidate_admission",
+      "invalid_action": "HOLD"
+    },
+    {
+      "controlled_field": "provenance_present",
+      "factor_id": "current_provenance_presence",
+      "family": "current_basis",
+      "invalid_action": "DEMOTE"
+    },
+    {
+      "controlled_field": "envelope_signature_verified",
+      "factor_id": "current_signature_verification",
+      "family": "current_basis",
+      "invalid_action": "DEMOTE"
+    },
+    {
+      "controlled_field": "subject_digest_matches",
+      "factor_id": "current_subject_binding",
+      "family": "current_basis",
+      "invalid_action": "DEMOTE"
+    },
+    {
+      "controlled_field": "builder_id_matches_policy",
+      "factor_id": "current_builder_trust",
+      "family": "current_basis",
+      "invalid_action": "DEMOTE"
+    },
+    {
+      "controlled_field": "authenticated_conflicts",
+      "factor_id": "authenticated_source_revision_conflict",
+      "family": "authenticated_conflict",
+      "invalid_action": "ESCALATE"
+    },
+    {
+      "controlled_field": "authenticated_conflicts",
+      "factor_id": "authenticated_build_parameters_conflict",
+      "family": "authenticated_conflict",
+      "invalid_action": "ESCALATE"
+    },
+    {
+      "controlled_field": "authenticated_conflicts",
+      "factor_id": "authenticated_vsa_policy_conflict",
+      "family": "authenticated_conflict",
+      "invalid_action": "ESCALATE"
+    },
+    {
+      "controlled_field": "authenticated_conflicts",
+      "factor_id": "authenticated_verification_result_conflict",
+      "family": "authenticated_conflict",
+      "invalid_action": "ESCALATE"
+    }
+  ],
+  "interpretation_boundary": "This dataset evaluates conformance to the published author policy. It does not certify SLSA compliance, software security, or external policy consensus.",
+  "packet_file_sha256": "sha256:cff4df823e3c2bcc56f18e70177a22bdaa6dd5ce94f0266392699979a738fde8",
+  "packet_sha256": "sha256:864ff22b02bfe6686da1d771b4fabf2d07711569b47d4f893adff292b9459d29",
+  "pair_contract": "Each pair changes one model-visible verifier field.",
+  "policy_scope": "AUTHOR_OPERATIONALIZATION_GROUNDED_IN_SLSA_AND_IN_TOTO",
+  "policy_sha256": "sha256:52adedd71d9a0d54dd8cdc0c67471c2b898619194940512c4e82bc3015731af7",
+  "schema_version": "1.0.0",
+  "source_registry_sha256": "sha256:22e1b3f0ae76d11826cb57fcc7899d6dee1f052496ae21a456054ae0d494edee",
+  "status": "SYNTHETIC_POLICY_PORTABILITY_DATASET",
+  "study_id": "claimpromotebench-slsa-policy-portability-2026-08-v1"
+}

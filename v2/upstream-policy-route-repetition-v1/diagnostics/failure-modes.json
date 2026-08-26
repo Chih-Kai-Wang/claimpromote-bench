@@ -1,0 +1,104 @@
+{
+  "correctness_fields_used": false,
+  "derived_at_utc": "2026-08-24T12:31:46.169378Z",
+  "gold_loaded": false,
+  "hidden_reasoning_retained": false,
+  "input_files_sha256": {
+    "execution-receipt.json": "sha256:7fdce3200bf424d4a8fc90c96cb67d4d25f7a1a5505bdc16e2b0afb173127148",
+    "opencode-go-deepseek-v4-flash-upstream-repeat-v1-r1.jsonl": "sha256:9d8369fe029b7e2bb4bad650680fb1e0e3d1a2b4fd2b492644e31049f579ec4d",
+    "opencode-go-deepseek-v4-flash-upstream-repeat-v1-r2.jsonl": "sha256:f934b893c21f104c1358ae9bf83e16dc1e842097fc1aa258b77de00e7bb02cac",
+    "opencode-go-deepseek-v4-flash-upstream-repeat-v1-r3.jsonl": "sha256:761fb42423f00d59ef83aa250de67911243ee3f8acbc3e179d04ad3620b53cda",
+    "opencode-go-qwen3.7-max-upstream-repeat-v1-r1.jsonl": "sha256:26262322f11373eb333a6fcd0afb10c44aa6a6ea6da67b6a13e2a6b3e6eed437",
+    "opencode-go-qwen3.7-max-upstream-repeat-v1-r2.jsonl": "sha256:3cc409c1462896d924db91c3b9bccb266de7d21030a1d1f15d1d724a8cbebd08",
+    "opencode-go-qwen3.7-max-upstream-repeat-v1-r3.jsonl": "sha256:dea6ed55634d8573637e04ef2dbec717127803f0b8b3fc907b399aab5b61b9a9"
+  },
+  "interpretation": "Categories explain the terminal protocol status of frozen cells. They preserve the original endpoint and denominator and perform no response repair or rescoring.",
+  "lanes": [
+    {
+      "by_repetition": [
+        {
+          "failure_mode_counts": {
+            "CONTRACT_VALID": 15,
+            "LENGTH_TERMINATED_NON_JSON": 1,
+            "MARKDOWN_CODE_FENCE": 3,
+            "NON_JSON_PREFIX_OR_ENVELOPE": 1,
+            "READ_TIMEOUT": 4
+          },
+          "repetition": 1,
+          "scheduled_cells": 24
+        },
+        {
+          "failure_mode_counts": {
+            "CONTRACT_VALID": 19,
+            "READ_TIMEOUT": 5
+          },
+          "repetition": 2,
+          "scheduled_cells": 24
+        },
+        {
+          "failure_mode_counts": {
+            "CONTRACT_VALID": 19,
+            "NON_JSON_PREFIX_OR_ENVELOPE": 2,
+            "READ_TIMEOUT": 3
+          },
+          "repetition": 3,
+          "scheduled_cells": 24
+        }
+      ],
+      "failure_mode_counts": {
+        "CONTRACT_VALID": 53,
+        "LENGTH_TERMINATED_NON_JSON": 1,
+        "MARKDOWN_CODE_FENCE": 3,
+        "NON_JSON_PREFIX_OR_ENVELOPE": 3,
+        "READ_TIMEOUT": 12
+      },
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "model_requested": "deepseek-v4-flash",
+      "scheduled_cells": 72
+    },
+    {
+      "by_repetition": [
+        {
+          "failure_mode_counts": {
+            "CONTRACT_VALID": 3,
+            "MARKDOWN_CODE_FENCE": 21
+          },
+          "repetition": 1,
+          "scheduled_cells": 24
+        },
+        {
+          "failure_mode_counts": {
+            "CONTRACT_VALID": 2,
+            "MARKDOWN_CODE_FENCE": 22
+          },
+          "repetition": 2,
+          "scheduled_cells": 24
+        },
+        {
+          "failure_mode_counts": {
+            "CONTRACT_VALID": 5,
+            "MARKDOWN_CODE_FENCE": 19
+          },
+          "repetition": 3,
+          "scheduled_cells": 24
+        }
+      ],
+      "failure_mode_counts": {
+        "CONTRACT_VALID": 10,
+        "MARKDOWN_CODE_FENCE": 62
+      },
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "model_requested": "qwen3.7-max",
+      "scheduled_cells": 72
+    }
+  ],
+  "provider_response_identifiers_retained": false,
+  "raw_response_text_retained": false,
+  "response_repair_or_rescoring_performed": false,
+  "scheduled_cells": 144,
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:1f6e73e9faf8c51ecc390c00559c7fff18ec623ae2be618e2ce29d11f30ca3c7",
+  "status": "POSTHOC_CONTENT_FREE_OUTPUT_SHAPE_DIAGNOSTIC",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1",
+  "transport_error_text_retained": false
+}

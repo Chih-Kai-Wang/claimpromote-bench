@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "stages": [
+    {
+      "attempt_history_path": "../attempt-history/run-32402993463",
+      "frozen_plan_commit": "300dc094852e74c8139344248b25a4d637a94c7c",
+      "plan_path": "stage-1-initial/v2/capable-hidden-study-plan.json",
+      "runner_path": "stage-1-initial/scripts/run_stronger_model_study.py",
+      "stage": "INITIAL_ACCEPTED_REQUEST"
+    },
+    {
+      "attempt_history_path": "../attempt-history/run-32403718086",
+      "frozen_plan_commit": "119e475953e50218fc62abd2163eef04cbad4e23",
+      "plan_path": "stage-2-transport-amended/v2/capable-hidden-study-plan.json",
+      "runner_path": "stage-2-transport-amended/scripts/run_stronger_model_study.py",
+      "stage": "TRANSPORT_AMENDED"
+    },
+    {
+      "attempt_history_path": "../attempt-history/run-32405565039",
+      "frozen_plan_commit": "b86ee1e1d28db8a390344d28582af88e26970560",
+      "plan_path": "stage-3-final-adapter/v2/capable-hidden-study-plan.json",
+      "runner_path": "stage-3-final-adapter/scripts/run_stronger_model_study.py",
+      "stage": "FINAL_ADAPTER"
+    }
+  ]
+}

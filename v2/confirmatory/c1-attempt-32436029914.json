@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r3",
+  "status": "FAIL_CLOSED_BEFORE_SEED_DERIVATION",
+  "github_run_id": 32436029914,
+  "github_job_id": 96637313266,
+  "head_commit": "87c608a889dc4eb2f6f159312cf0e1be535624db",
+  "started_at_utc": "2026-08-21T01:21:57Z",
+  "failed_at_utc": "2026-08-21T01:22:11Z",
+  "failed_step": "Fetch and cryptographically verify the precommitted future beacon",
+  "failure": {
+    "type": "LOCAL_OUTPUT_DIRECTORY_ABSENT",
+    "error_code": "ENOENT",
+    "path": "work/confirmatory-verified-beacon.json",
+    "beacon_fetch_and_cryptographic_comparison_completed_before_write": true
+  },
+  "bound_beacon_round": 31490637,
+  "same_salt_and_round_required_on_relaunch": true,
+  "alternate_salt_seed_or_round_used": false,
+  "seed_derivation_step": "SKIPPED",
+  "fresh_seed_derived": false,
+  "fresh_dataset_built": false,
+  "model_post_intents": 0,
+  "model_calls": 0,
+  "cost_usd": 0.0,
+  "relaunch_boundary": "Permitted only because no seed was derived and no model POST intent exists; the relaunch must use the identical C0 plan, salt, and beacon round."
+}

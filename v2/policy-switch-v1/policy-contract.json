@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "claimpromotebench-slsa-profile-switch-v1",
+  "status": "AUTHOR_COUNTERFACTUAL_POLICY_PROFILES",
+  "base_policy_path": "v2/slsa-portability-v1/policy-contract.json",
+  "source_registry_path": "v2/slsa-portability-v1/source-registry.json",
+  "interpretation_boundary": "SLSA 1.2 and in-toto Attestation 1.2 ground the evidence fields. The authors define both counterfactual profiles, their transition rules, and every label. Neither profile is a SLSA certification or deployment recommendation.",
+  "action_precedence": [
+    "DEMOTE",
+    "ESCALATE",
+    "HOLD",
+    "ALLOW"
+  ],
+  "profile_order": [
+    "POLICY_BLUE",
+    "POLICY_AMBER"
+  ],
+  "profiles": {
+    "POLICY_AMBER": {
+      "enforced_boolean_fields": [
+        "envelope_signature_verified",
+        "attester_recognized",
+        "source_uri_matches",
+        "policy_digest_matches"
+      ],
+      "escalated_conflict_codes": [
+        "BUILD_PARAMETERS_CONFLICT",
+        "VERIFICATION_RESULT_CONFLICT"
+      ]
+    },
+    "POLICY_BLUE": {
+      "enforced_boolean_fields": [
+        "provenance_present",
+        "subject_digest_matches",
+        "builder_id_matches_policy",
+        "source_ref_matches"
+      ],
+      "escalated_conflict_codes": [
+        "SOURCE_REVISION_CONFLICT",
+        "VSA_POLICY_CONFLICT"
+      ]
+    }
+  },
+  "pair_contract": "Both members contain byte-identical evidence and states. Only active_policy_profile changes, and the definitional action must change.",
+  "shortcut_hypothesis": "A classifier that cannot observe the active profile receives identical features for both members and therefore cannot answer any action-changing pair completely.",
+  "reason_order_source": "v2/slsa-portability-v1/policy-contract.json"
+}

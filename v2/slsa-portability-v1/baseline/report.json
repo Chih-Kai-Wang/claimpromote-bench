@@ -1,0 +1,31 @@
+{
+  "algorithm": "sklearn.ensemble.RandomForestClassifier",
+  "configuration": {
+    "all_other_parameters": "scikit-learn defaults",
+    "class_weight": "balanced_subsample",
+    "n_estimators": 500,
+    "n_jobs": 1,
+    "random_state": 20260823
+  },
+  "development_action_counts": {
+    "ALLOW": 36,
+    "DEMOTE": 12,
+    "ESCALATE": 12,
+    "HOLD": 12
+  },
+  "development_gold_sha256": "sha256:021cf461493cdfbf455b37531f255c6afc2c62ba77aa135ce929998bbe4b7ae2",
+  "development_items": 72,
+  "development_items_sha256": "sha256:108e096f110653189bf6521ab1b261d3f84d4dd47b96e948011614493951cdfa",
+  "evaluation_gold_loaded": false,
+  "evaluation_items_sha256": "sha256:84304363e0d751babe4238121ffc7258b9125761bfbfb088a852c596124df778",
+  "evaluation_predictions": 120,
+  "feature_boundary": "Flattened model-visible state and verifier fields only; excludes IDs, pair/factor metadata, policy-oracle calls, evaluation labels, and model outputs.",
+  "feature_count": 25,
+  "model_outputs_loaded": false,
+  "predictions_sha256": "sha256:49c9b08d6c515fa136668bb8ac0a5907444c14ce1218bceb74ff30c494f08653",
+  "schema_version": "1.0.0",
+  "scikit_learn_version": "1.9.0",
+  "status": "FROZEN_POLICY_BLIND_STRUCTURED_ACTION_BASELINE",
+  "training_accuracy": 1.0,
+  "training_correct": 72
+}

@@ -1,0 +1,33 @@
+{
+  "failure_rule": "Every service, syntax, schema, semantic, quota, and adapter failure remains incorrect in the scheduled end-to-end denominator.",
+  "free_form_error_text_included": false,
+  "lanes": {
+    "opencode-go-deepseek-v4-flash-policy-switch-v1": {
+      "parse_status_counts": {
+        "OK": 62,
+        "SEMANTIC_ERROR": 1,
+        "TRANSPORT_ERROR": 57
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {
+        "QUOTA_OR_RATE_LIMIT": 57
+      }
+    },
+    "opencode-go-qwen3.7-max-policy-switch-v1": {
+      "parse_status_counts": {
+        "OK": 51,
+        "SEMANTIC_ERROR": 11,
+        "TRANSPORT_ERROR": 58
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {
+        "QUOTA_OR_RATE_LIMIT": 57,
+        "SERVER": 1
+      }
+    }
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:f1a3b1baa203129bb7ffec1eb7a6fdbc3c187eb31a838f472c451d2be9b07af2",
+  "status": "COMPLETE_FROZEN_FAILURE_TAXONOMY",
+  "study_id": "claimpromotebench-policy-profile-switch-2026-08-v1"
+}

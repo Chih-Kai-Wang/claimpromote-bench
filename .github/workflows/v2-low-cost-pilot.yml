@@ -1,0 +1,231 @@
+name: v2 low-cost pilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/iclr2027-v2-low-cost-study
+    paths:
+      - "v2/pilot-trigger-2026-08-20.txt"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v2-low-cost-pilot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pilot:
+    name: ${{ matrix.short }} free vs constrained
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - short: qwen3-0.6b
+            repo: Qwen/Qwen3-0.6B-GGUF
+            revision: ef4088322893040952513f532f736ddeab518403
+            file: Qwen3-0.6B-Q8_0.gguf
+            config: configs/models/qwen3-0.6b.json
+          - short: qwen3-1.7b
+            repo: Qwen/Qwen3-1.7B-GGUF
+            revision: 90862c4b9d2787eaed51d12237eafdfe7c5f6077
+            file: Qwen3-1.7B-Q8_0.gguf
+            config: configs/models/qwen3-1.7b.json
+    steps:
+      - name: Check out benchmark
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark and download client
+        run: python -m pip install -e . "huggingface_hub>=0.34,<2"
+
+      - name: Check out frozen llama.cpp runtime
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ggml-org/llama.cpp
+          ref: de699957b92f490efebad149665b0dccf127eaff
+          path: llama.cpp
+          fetch-depth: 1
+
+      - name: Build llama-server
+        run: |
+          cmake -S llama.cpp -B llama.cpp/build \
+            -DGGML_NATIVE=OFF \
+            -DLLAMA_CURL=OFF \
+            -DLLAMA_BUILD_TESTS=OFF \
+            -DLLAMA_BUILD_EXAMPLES=OFF
+          cmake --build llama.cpp/build --config Release -j 4 --target llama-server
+
+      - name: Download frozen model artifact
+        env:
+          HF_REPO: ${{ matrix.repo }}
+          HF_REVISION: ${{ matrix.revision }}
+          HF_FILE: ${{ matrix.file }}
+        run: |
+          mkdir -p models
+          python - <<'PY'
+          import os
+          from huggingface_hub import hf_hub_download
+
+          hf_hub_download(
+              repo_id=os.environ["HF_REPO"],
+              revision=os.environ["HF_REVISION"],
+              filename=os.environ["HF_FILE"],
+              local_dir="models",
+          )
+          PY
+
+      - name: Verify model bytes, runtime, and hardware
+        run: >-
+          python scripts/preflight_v1_models.py
+          --model-dir models
+          --llama-dir llama.cpp
+          --model-config ${{ matrix.config }}
+          --out work/preflight-${{ matrix.short }}.json
+
+      - name: Start frozen llama-server
+        run: |
+          mkdir -p work/v2-runs
+          nohup ./llama.cpp/build/bin/llama-server \
+            -m models/${{ matrix.file }} \
+            --host 127.0.0.1 \
+            --port 8080 \
+            -c 8192 \
+            -np 1 \
+            -t 4 \
+            -tb 4 \
+            > work/server-${{ matrix.short }}.log 2>&1 &
+          echo $! > work/server.pid
+          ready=0
+          for _ in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:8080/health >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ready" != "1" ]; then
+            cat work/server-${{ matrix.short }}.log
+            exit 1
+          fi
+
+      - name: Run identical-prompt free and constrained decoding
+        shell: bash
+        run: |
+          set -euo pipefail
+          for mode in free json_schema; do
+            python scripts/run_llama_v2_pilot.py \
+              --dataset data/alpha \
+              --model-config ${{ matrix.config }} \
+              --preflight work/preflight-${{ matrix.short }}.json \
+              --decoding-mode "$mode" \
+              --seed 104729 \
+              --timeout 300 \
+              --out "work/v2-runs/${{ matrix.short }}-${mode}.jsonl"
+          done
+
+      - name: Analyze coverage, pair sensitivity, and gate behavior
+        run: >-
+          python scripts/analyze_v2_pilot.py
+          --dataset data/alpha
+          --runs
+          work/v2-runs/${{ matrix.short }}-free.jsonl
+          work/v2-runs/${{ matrix.short }}-json_schema.jsonl
+          --out work/v2-study-${{ matrix.short }}.json
+
+      - name: Upload complete raw-response evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: claimpromotebench-v2-pilot-${{ matrix.short }}
+          path: |
+            work/preflight-${{ matrix.short }}.json
+            work/v2-runs/${{ matrix.short }}-*.jsonl
+            work/v2-study-${{ matrix.short }}.json
+            work/server-${{ matrix.short }}.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish-summary:
+    name: publish public-safe aggregate summary
+    needs: pilot
+    if: ${{ always() && needs.pilot.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out v2 branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: agent/iclr2027-v2-low-cost-study
+
+      - name: Download this run's pilot artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: claimpromotebench-v2-pilot-*
+          path: work/v2-collected
+          merge-multiple: true
+
+      - name: Build public-safe summary
+        env:
+          RUN_ID: ${{ github.run_id }}
+          SOURCE_HEAD_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          studies = []
+          for path in sorted(Path("work/v2-collected").glob("v2-study-*.json")):
+              value = json.loads(path.read_text(encoding="utf-8"))
+              studies.append({"source_file": path.name, "study": value})
+          if len(studies) != 2:
+              raise SystemExit(f"expected two model study summaries, found {len(studies)}")
+          payload = {
+              "schema_version": "1.0.0",
+              "status": "COMPLETE_PUBLIC_SAFE_SUMMARY",
+              "workflow_run_id": int(os.environ["RUN_ID"]),
+              "source_head_sha": os.environ["SOURCE_HEAD_SHA"],
+              "protocol": {
+                  "pairs": 20,
+                  "instances": 40,
+                  "seed": 104729,
+                  "models": ["Qwen/Qwen3-0.6B", "Qwen/Qwen3-1.7B"],
+                  "decoding_modes": ["free", "json_schema"],
+                  "paid_api_calls": 0,
+                  "raw_responses_published": False,
+              },
+              "studies": studies,
+              "interpretation_boundary": (
+                  "This is a post-v1 public alpha pilot. It diagnoses output-interface and "
+                  "controlled-pair behavior and is not preregistered v1 hidden evidence."
+              ),
+          }
+          out_dir = Path("v2/pilot-results")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          run_path = out_dir / f"run-{os.environ['RUN_ID']}.json"
+          text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+          run_path.write_text(text, encoding="utf-8")
+          (out_dir / "latest.json").write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit public-safe summary
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v2/pilot-results
+          git commit -m "v2: publish pilot summary run ${RUN_ID}"
+          git push origin HEAD:agent/iclr2027-v2-low-cost-study

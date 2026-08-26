@@ -1,0 +1,204 @@
+{
+  "anonymous_bundle": {
+    "manifest_file_count": 967,
+    "manifest_plus_self_file_count": 968,
+    "manifest_sha256": "924e9e894e0bbfaf102f2250449fdfad676f0c4503b036349730ff9dbe41cb45",
+    "privacy_scope": {
+      "agent_governance_source_evidence_included": true,
+      "balanced_public_challenge_hidden_reasoning_included": false,
+      "balanced_public_challenge_item_level_records_included": true,
+      "balanced_public_challenge_raw_response_text_included": false,
+      "balanced_public_challenge_summary_included": true,
+      "capable_hidden_evidence_included": false,
+      "dual_endpoint_item_level_records_included": true,
+      "dual_endpoint_raw_response_text_included": false,
+      "dual_endpoint_summary_included": true,
+      "external_agent_policy_item_level_records_included": true,
+      "external_agent_policy_public_source_commits_included": true,
+      "external_agent_policy_raw_response_text_included": false,
+      "external_agent_policy_summary_included": true,
+      "external_boundary_evidence_audit_included": true,
+      "factor_complete_route_item_level_records_included": true,
+      "factor_complete_route_raw_response_text_included": false,
+      "factor_complete_route_summary_included": true,
+      "fresh_confirmatory_hidden_reasoning_included": false,
+      "fresh_confirmatory_item_level_records_included": true,
+      "fresh_confirmatory_raw_response_text_included": false,
+      "fresh_confirmatory_summary_included": true,
+      "gpt54_public_development_evidence_included": false,
+      "human_subject_study_records_included": false,
+      "item_level_empirical_records_included": true,
+      "legacy_v1_evidence_included": false,
+      "local_minimum_policy_migration_gate_included": true,
+      "local_model_replication_item_level_records_included": true,
+      "local_model_replication_raw_generation_text_included": false,
+      "local_model_replications_included": true,
+      "local_model_weights_included": false,
+      "local_policy_switch_item_level_records_included": true,
+      "local_policy_switch_summary_included": true,
+      "local_policy_transition_graph_item_level_records_included": true,
+      "local_policy_transition_graph_summary_included": true,
+      "local_slsa_replication_item_level_records_included": true,
+      "local_slsa_replication_summary_included": true,
+      "nonallow_policy_controls_item_level_records_included": true,
+      "nonallow_policy_controls_public_source_commits_included": true,
+      "nonallow_policy_controls_raw_response_text_included": false,
+      "nonallow_policy_controls_summary_included": true,
+      "output_contract_ablation_item_level_records_included": true,
+      "output_contract_ablation_raw_response_text_included": false,
+      "output_contract_ablation_summary_included": true,
+      "output_contract_ablation_transport_diagnostic_included": true,
+      "private_construction_seed_included": false,
+      "provider_response_identifiers_included": false,
+      "public_alpha_included": true,
+      "public_pilot_evidence_included": false,
+      "public_repository_identity_included": false,
+      "reviewer_release_hidden_data_included": true,
+      "sigstore_source_evidence_included": true,
+      "slsa_portability_item_level_records_included": true,
+      "slsa_portability_raw_response_text_included": false,
+      "slsa_portability_summary_included": true,
+      "slsa_portability_void_raw_records_included": false,
+      "trivy_source_evidence_included": true,
+      "upstream_gatekeeper_source_evidence_included": true,
+      "upstream_route_repetition_item_level_records_included": true,
+      "upstream_route_repetition_raw_response_text_included": false,
+      "upstream_route_repetition_summary_included": true
+    },
+    "verification": "PASS",
+    "zip_file_entries": 968
+  },
+  "artifacts": {
+    "arxiv.pdf": {
+      "bytes": 406113,
+      "sha256": "23ec52ae9eca3c1f43825e4c482c28b1846d0b0a8111d29a96ebbbeb1cfedb4d"
+    },
+    "claimpromotebench-anonymous-review-bundle.zip": {
+      "bytes": 2915112,
+      "sha256": "993ae8db14547e7dcde38241874c9924403affc02d1298217e3fdd08eabcb9cd"
+    },
+    "claimpromotebench-arxiv-source.zip": {
+      "bytes": 27460,
+      "sha256": "ea5ea1aa89f7503d35afe1153e9171a6c8cd46234191ccde0a802f0498f1b981"
+    },
+    "claimpromotebench-iclr2027-source.zip": {
+      "bytes": 54500,
+      "sha256": "db349b9fcb3bd42aa1fcb11fe0462fb1bc2e617286293bc70edb02de9aa386ac"
+    },
+    "iclr2027.pdf": {
+      "bytes": 273885,
+      "sha256": "c48b21fe2ec723425cd15cfb164e791eeb2a384d71c52107b2b8050144336222"
+    }
+  },
+  "checks": {
+    "arxiv_identity": "PASS",
+    "bundle_manifest_and_privacy": "PASS",
+    "iclr_anonymity": "PASS",
+    "latex_logs": "PASS",
+    "pdf_fonts_embedded": "PASS",
+    "visual_page_review": "PASS"
+  },
+  "environment": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.13"
+  },
+  "schema_version": "1.0.0",
+  "source_archives": {
+    "arxiv_entries": [
+      "arxiv.tex",
+      "references.bib"
+    ],
+    "iclr2027_entries": [
+      "fancyhdr.sty",
+      "iclr2027.tex",
+      "iclr2027_conference.bst",
+      "iclr2027_conference.sty",
+      "natbib.sty",
+      "references.bib"
+    ]
+  },
+  "status": "PASS",
+  "submission": {
+    "arxiv": {
+      "author_metadata": "",
+      "creator": "LaTeX with hyperref",
+      "fonts": {
+        "all_embedded": true,
+        "font_count": 27,
+        "fonts": [
+          "/BSTKNX+MSBM10",
+          "/CLROKM+CMMI8",
+          "/EUWOLL+CMBX9",
+          "/EXSQAR+CMR10",
+          "/GBPAZZ+CMBX8",
+          "/GUWOKV+CMR7",
+          "/IEICJG+CMSY10",
+          "/JOLSUR+CMR17",
+          "/KSMIOQ+CMBX10",
+          "/LBJETQ+CMR8",
+          "/LQBNTO+CMR12",
+          "/NMBGRK+CMMI10",
+          "/NNZZQI+CMTI10",
+          "/POFRLQ+CMCSC10",
+          "/QDXMTJ+CMSY7",
+          "/QGLCZQ+CMTT9",
+          "/QHDPUU+CMTT12",
+          "/QHFKYO+CMTI9",
+          "/QQOUOM+CMMI7",
+          "/QXVNND+CMSY8",
+          "/TFVNFO+CMR6",
+          "/UGPVTL+CMTT10",
+          "/WATVRQ+CMTT8",
+          "/YNTFXT+CMR9",
+          "/YTNBGM+CMBX12",
+          "/ZPGVCH+CMEX10",
+          "/ZXILHJ+CMR5"
+        ]
+      },
+      "named_author_and_affiliation_scan": "PASS",
+      "page_size": "612 x 792 pts (letter)",
+      "pages": 18,
+      "producer": "pdfTeX-1.40.29",
+      "visual_pages_inspected": 18
+    },
+    "iclr2027": {
+      "anonymous_source_and_pdf_scan": "PASS",
+      "author_metadata": "",
+      "creator": "LaTeX with hyperref",
+      "fonts": {
+        "all_embedded": true,
+        "font_count": 18,
+        "fonts": [
+          "/ALVSVR+NimbusSanL-Bold",
+          "/BSTKNX+MSBM10",
+          "/DWYGYF+NimbusRomNo9L-Medi",
+          "/FXTVSZ+CMR10",
+          "/GUJQTI+NimbusRomNo9L-Regu",
+          "/IEICJG+CMSY10",
+          "/NMBGRK+CMMI10",
+          "/QDXMTJ+CMSY7",
+          "/QQOUOM+CMMI7",
+          "/SVZIZS+CMSY9",
+          "/TFVNFO+CMR6",
+          "/TSSONO+NimbusMonL-Regu",
+          "/VAQCDX+NimbusRomNo9L-ReguItal",
+          "/WRMBHN+CMR9",
+          "/YOISRB+CMR7",
+          "/ZPGVCH+CMEX10",
+          "/ZXILHJ+CMR5",
+          "/ZZYNEO+CMMI9"
+        ]
+      },
+      "main_text_page_limit": 9,
+      "main_text_pages": 9,
+      "page_size": "612 x 792 pts (letter)",
+      "pages": 20,
+      "pre_reference_exempt_statement_pages": 1,
+      "producer": "pdfTeX-1.40.29",
+      "references_start_page": 11,
+      "style_receipt": "iclr-style-receipt.json",
+      "style_template": "ICLR 2027 official style archive",
+      "visual_pages_inspected": 20
+    }
+  }
+}

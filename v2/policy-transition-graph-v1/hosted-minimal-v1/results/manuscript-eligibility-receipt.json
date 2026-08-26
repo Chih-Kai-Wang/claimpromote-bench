@@ -1,0 +1,32 @@
+{
+  "classification": {
+    "eligible_for_route_conformance_reporting": false,
+    "explicit_resource_exhaustion_errors": 40,
+    "minimum_persistent_tail_cells": 20,
+    "parse_status_counts": {
+      "TRANSPORT_ERROR": 40
+    },
+    "persistent_exhaustion_trigger_sequence": 0,
+    "transport_status_counts": {
+      "ERROR": 40
+    }
+  },
+  "decision": {
+    "all_40_terminal_outcomes_considered": true,
+    "conditional_success_subset_selected": false,
+    "hosted_route_rows_enter_manuscript": false
+  },
+  "free_form_error_text_included": false,
+  "new_model_calls_performed_for_receipt": 0,
+  "rule_frozen_before_inference": "Ordinary service, syntax, schema, semantic, adapter, and rate-limit failures remain incorrect in the complete 40-cell end-to-end denominator. If a terminal provider error explicitly states that the shared subscription quota or usage allowance is exhausted, at least 20 scheduled cells remain, and every later cell is a transport failure, the complete hosted minimum-suite study is ineligible for route-conformance reporting. In that case, retain only a redacted full-study exclusion receipt; never select a successful subset.",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:ba1dba413aa277cbf4963313b475a7c1a472680ae15f9258721280c499d2bb22",
+  "source_bindings": {
+    "execution_receipt_sha256": "sha256:97800f5a364681481595369bd257efc13a798529e6a829097763f4ae2ff4926d",
+    "plan_sha256": "sha256:4c152e5ce75e0289fe0876a5d9c456cb4c1b15bdce420cd7d23df4440d6713cd",
+    "schedule_sha256": "sha256:d6d499e2ec6878bcce618807b37a81d553fce45d38bb212ff947d838c4e79395",
+    "terminal_journal_sha256": "sha256:35a5ce25ebda007f7c4a9b6407f659406ac9dd82579b48ad4af580dfdf7f1f3e"
+  },
+  "status": "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION",
+  "study_id": "claimpromotebench-minimal-policy-migration-hosted-2026-08-v1"
+}

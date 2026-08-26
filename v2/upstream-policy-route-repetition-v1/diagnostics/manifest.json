@@ -1,0 +1,12 @@
+{
+  "file_count": 3,
+  "files_sha256": {
+    "failure-modes.json": "sha256:3be302396a0bbc098e76f4d9c1a0c46a0adc6c8490d3cc0da9236d84994f106f",
+    "privacy-receipt.json": "sha256:b5b3d4edf97e88addc78b9a91d727517caf60020698825dd211fdd86d8fb1a2b"
+  },
+  "hashed_file_count": 2,
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:d73c77bd663458577d41b78e76cd1233c285dfe75bc892baa1c29bfbe439cadc",
+  "status": "DYNAMIC_CONTENT_FREE_DIAGNOSTIC_MANIFEST",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}

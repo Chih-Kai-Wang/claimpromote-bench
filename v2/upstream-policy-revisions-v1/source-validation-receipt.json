@@ -1,0 +1,246 @@
+{
+  "credentials_retained": false,
+  "finite_grammar_oracle_evaluations": [
+    {
+      "action": "HOLD",
+      "item_id": "upr-flex-01-a",
+      "pair_id": "upr-flex-01",
+      "revision": "new",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-flex-01-b",
+      "pair_id": "upr-flex-01",
+      "revision": "old",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-flex-02-a",
+      "pair_id": "upr-flex-02",
+      "revision": "new",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-flex-02-b",
+      "pair_id": "upr-flex-02",
+      "revision": "old",
+      "violation_count": 0
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-flex-03-a",
+      "pair_id": "upr-flex-03",
+      "revision": "old",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-flex-03-b",
+      "pair_id": "upr-flex-03",
+      "revision": "new",
+      "violation_count": 2
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-flex-04-a",
+      "pair_id": "upr-flex-04",
+      "revision": "new",
+      "violation_count": 3
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-flex-04-b",
+      "pair_id": "upr-flex-04",
+      "revision": "old",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-flex-05-a",
+      "pair_id": "upr-flex-05",
+      "revision": "new",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-flex-05-b",
+      "pair_id": "upr-flex-05",
+      "revision": "old",
+      "violation_count": 0
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-flex-06-a",
+      "pair_id": "upr-flex-06",
+      "revision": "old",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-flex-06-b",
+      "pair_id": "upr-flex-06",
+      "revision": "new",
+      "violation_count": 2
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-unique-01-a",
+      "pair_id": "upr-unique-01",
+      "revision": "old",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-unique-01-b",
+      "pair_id": "upr-unique-01",
+      "revision": "new",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-unique-02-a",
+      "pair_id": "upr-unique-02",
+      "revision": "old",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-unique-02-b",
+      "pair_id": "upr-unique-02",
+      "revision": "new",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-unique-03-a",
+      "pair_id": "upr-unique-03",
+      "revision": "old",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-unique-03-b",
+      "pair_id": "upr-unique-03",
+      "revision": "new",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-unique-04-a",
+      "pair_id": "upr-unique-04",
+      "revision": "old",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-unique-04-b",
+      "pair_id": "upr-unique-04",
+      "revision": "new",
+      "violation_count": 0
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-unique-05-a",
+      "pair_id": "upr-unique-05",
+      "revision": "new",
+      "violation_count": 0
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-unique-05-b",
+      "pair_id": "upr-unique-05",
+      "revision": "old",
+      "violation_count": 1
+    },
+    {
+      "action": "HOLD",
+      "item_id": "upr-unique-06-a",
+      "pair_id": "upr-unique-06",
+      "revision": "old",
+      "violation_count": 1
+    },
+    {
+      "action": "ALLOW",
+      "item_id": "upr-unique-06-b",
+      "pair_id": "upr-unique-06",
+      "revision": "new",
+      "violation_count": 0
+    }
+  ],
+  "model_calls": 0,
+  "opa_runtime": {
+    "binary_sha256": "sha256:805ce3f336154150bef73bafa2dab8806631851bccc7cae95bef46ffabdf8fc3",
+    "build_commit": "54896f9f28515d14b31a93e6ef5737bb85866e30",
+    "go_version": "go1.26.6",
+    "platform": "darwin/arm64",
+    "rego_version": "v1",
+    "version": "1.19.1"
+  },
+  "registry_sha256": "sha256:c7176e5c69aa6e084c93062556ac59163a554755b123e0fc8d23bcaed9b2c1fc",
+  "schema_version": "1.0.0",
+  "source_bytes_match_registry": true,
+  "sources": [
+    {
+      "diff_coordinates": {
+        "changed_new_lines": [],
+        "changed_old_lines": [
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "operations": [
+          {
+            "new_lines_1_based": [],
+            "old_lines_1_based": [
+              7,
+              8,
+              9,
+              10,
+              11
+            ],
+            "operation": "delete"
+          }
+        ]
+      },
+      "migration_id": "flexvolume-empty-allowlist-blocks-all",
+      "new_sha256": "sha256:6d562d5130ca390ae2b82ea3dd0c6c45cce1bff1543b885f876cb9ba8bbe2e37",
+      "old_sha256": "sha256:07812de7a9afd64d5775790e280d30fcf93613b73cb62448ab0652d758bd8781",
+      "upstream_change_commit": "102bd7704077cb8f22967b2a75aba2aed4046b02",
+      "upstream_change_url": "https://github.com/open-policy-agent/gatekeeper-library/commit/102bd7704077cb8f22967b2a75aba2aed4046b02",
+      "upstream_regression_test": "library/pod-security-policy/flexvolume-drivers/src_test.rego::test_input_flexvolume_empty_params"
+    },
+    {
+      "diff_coordinates": {
+        "changed_new_lines": [
+          32
+        ],
+        "changed_old_lines": [
+          32
+        ],
+        "operations": [
+          {
+            "new_lines_1_based": [
+              32
+            ],
+            "old_lines_1_based": [
+              32
+            ],
+            "operation": "replace"
+          }
+        ]
+      },
+      "migration_id": "unique-service-selector-kind-filter",
+      "new_sha256": "sha256:3e8eff971f17916a19c60a896b679672b56d4daea0e29479209bdc1b4bf9284a",
+      "old_sha256": "sha256:99c7a8fdd7ccc5b628083cfad3d415cd50bcc44f7c95ec6b2dc211c4aacc1ec6",
+      "upstream_change_commit": "749ebacafb023738aa95ce468b0503a88d3e2d75",
+      "upstream_change_url": "https://github.com/open-policy-agent/gatekeeper-library/commit/749ebacafb023738aa95ce468b0503a88d3e2d75",
+      "upstream_regression_test": "src/general/uniqueserviceselector/src_test.rego::test_no_service_selector"
+    }
+  ],
+  "status": "OPA_EXECUTION_REPRODUCED_BOTH_UPSTREAM_BEHAVIOR_CHANGES"
+}

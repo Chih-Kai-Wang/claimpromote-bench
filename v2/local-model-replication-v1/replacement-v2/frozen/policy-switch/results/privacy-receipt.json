@@ -1,0 +1,35 @@
+{
+  "anonymous_free_form_error_text_allowed": false,
+  "anonymous_raw_final_response_text_allowed": false,
+  "credentials_included": false,
+  "dynamic_file_count_required": true,
+  "hidden_reasoning_fields_included": false,
+  "private_raw_final_response_text_retained": true,
+  "provider_response_identifiers_included": false,
+  "schema_version": "1.0.0",
+  "secret_pattern_findings": {
+    "anthropic_response_id": 0,
+    "bearer_credential": 0,
+    "exact_supplied_credential": 0,
+    "github_token": 0,
+    "google_api_key": 0,
+    "hidden_reasoning_blocks": 0,
+    "hidden_reasoning_fields": 0,
+    "hidden_reasoning_text_keys": 0,
+    "openai_response_id": 0,
+    "openai_style_secret": 0,
+    "private_key_header": 0,
+    "provider_response_identifiers": 0
+  },
+  "self_digest": "sha256:2e9b6fd290bd652cc034b7508eab4fbff5719e505fade7a841ac0f0393993bfa",
+  "source_repository_or_commit_identity_allowed_in_anonymous_derivative": false,
+  "status": "PRIVATE_RESULTS_VALIDATED_ANONYMOUS_DERIVATIVE_REQUIRED",
+  "study_id": "claimpromotebench-policy-switch-local-model-replication-2026-08-v2",
+  "terminal_records_validated": 240,
+  "validated_file_sha256": {
+    "aggregate.json": "sha256:44138a27add19da76629f59ebd619536f929bec20820801b39cc04f9dffecd85",
+    "execution-receipt.json": "sha256:362d65d453fc63d0f7946471b21f83bd3f050bda7f2bc84b30c76a7dc8fb6ac4",
+    "local-mlx-mistral-small-3.2-24b-policy-switch-v2.jsonl": "sha256:8f4318811849f73b731d2b7f24478266ffdf9f96641285deea844803d88c3355",
+    "local-mlx-phi-4-policy-switch-v2.jsonl": "sha256:8958eb132c722b7909f75eab10c01229e83064340b3c52c8f66e5f872a46572d"
+  }
+}

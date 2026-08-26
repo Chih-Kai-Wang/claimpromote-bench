@@ -6,6 +6,7 @@ on:
   pull_request:
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -20,6 +21,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -42,6 +45,16 @@ jobs:
         run: git diff --exit-code
       - name: Validate dataset and oracle labels
         run: python -m claimpromotebench validate data/alpha
+      - name: Audit controlled-pair contracts
+        run: >-
+          python scripts/audit_public_pair_contracts.py
+          --dataset data/alpha
+          --out work/public-pair-contract-audit.json
+      - name: Require published pair-contract report to reproduce exactly
+        run: >-
+          diff -u
+          release/public-pair-contract-audit.json
+          work/public-pair-contract-audit.json
       - name: Audit non-semantic shortcuts
         run: >-
           python -m claimpromotebench.shortcuts
@@ -62,32 +75,6 @@ jobs:
           python -m claimpromotebench.contributions
           --root contributions
           --out work/contributions.json
-      - name: Recompute closed external audit v1
-        run: |
-          rm -rf work/external-review-v1
-          python scripts/build_external_review_v1.py build --out work/external-review-v1
-          python scripts/build_external_review_v1.py analyze \
-            --package work/external-review-v1 \
-            --submission external-audit/v1/submissions/reviewer-01-submission.json \
-            --submission external-audit/v1/submissions/reviwer-02-submission.json \
-            --out work/external-audit-report-v1.json
-          diff -u \
-            external-audit/v1/external-audit-report-v1.json \
-            work/external-audit-report-v1.json
-      - name: Validate published independent reviews
-        run: >-
-          python -m claimpromotebench.review validate-root
-          --dataset data/alpha
-          --root reviews
-          --allow-empty
-          --out work/reviews.json
-      - name: Recompute published review agreement gates
-        run: >-
-          python -m claimpromotebench.review_analysis validate-root
-          --dataset data/alpha
-          --root reviews
-          --allow-empty
-          --out work/review-analysis.json
       - name: Test with branch coverage
         run: python -m pytest --cov --cov-branch --cov-report=term-missing --cov-fail-under=80
 
@@ -99,6 +86,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -180,6 +169,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -190,3 +181,63 @@ jobs:
         run: python -m pip install -e ".[test]"
       - name: Run compatibility tests
         run: python -m pytest -q
+
+  v2-source-discovery:
+    name: discover canonical v2 pilot source
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/iclr2027-v2-low-cost-study'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CANONICAL_TRIGGER_SHA: f998a05fec36b84e59230fe241f1e9961647ad2e
+    steps:
+      - name: Query and freeze observable source-run diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work
+          gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/actions/runs" \
+            -f branch="${GITHUB_HEAD_REF}" \
+            -f per_page=100 \
+            > work/branch-runs.json
+          jq --arg sha "$CANONICAL_TRIGGER_SHA" '
+            [
+              .workflow_runs[]
+              | select(.path == ".github/workflows/v2-low-cost-pilot.yml")
+              | {
+                  id,
+                  name,
+                  path,
+                  event,
+                  status,
+                  conclusion,
+                  run_attempt,
+                  head_branch,
+                  head_sha,
+                  created_at,
+                  updated_at,
+                  html_url,
+                  artifacts_url
+                }
+            ] as $candidates
+            | [$candidates[] | select(.head_sha == $sha)] as $matches
+            | {
+                schema_version: "1.0.0",
+                canonical_trigger_sha: $sha,
+                exact_match_count: ($matches | length),
+                exact_matches: $matches,
+                branch_workflow_candidates: $candidates
+              }
+          ' work/branch-runs.json > work/v2-pilot-source-discovery.json
+          cat work/v2-pilot-source-discovery.json
+
+      - name: Upload source-run diagnostics
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v2-pilot-source-ci-discovery
+          path: work/v2-pilot-source-discovery.json
+          if-no-files-found: error
+          retention-days: 30

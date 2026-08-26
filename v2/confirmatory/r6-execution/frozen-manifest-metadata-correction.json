@@ -1,0 +1,41 @@
+{
+  "affected_fields": {
+    "identifier_namespace": {
+      "frozen_value": "PRIVATE_SEED_KEYED_OPAQUE_CFM_R5",
+      "interpretation": "STALE_NON_OPERATIVE_GENERATOR_LABEL",
+      "observed_item_identifier_pattern": "v1-test-cfo-NNN-[a|b]",
+      "observed_pair_identifier_pattern": "v1-test-cfo-NNN"
+    },
+    "model_experiments": {
+      "frozen_value": "PENDING",
+      "interpretation": "CONSTRUCTION_TIME_SNAPSHOT_BEFORE_MODEL_EXECUTION"
+    },
+    "release_status": {
+      "frozen_value": "PRIVATE_CONFIRMATORY_TEST_UNCOMMITTED",
+      "interpretation": "CONSTRUCTION_TIME_SNAPSHOT_BEFORE_C1_COMMITMENT"
+    },
+    "test_manifest_commitment": {
+      "frozen_value": "PENDING",
+      "interpretation": "CONSTRUCTION_TIME_SNAPSHOT_BEFORE_C1_COMMITMENT"
+    }
+  },
+  "control_boundary": {
+    "affected_dataset_content": false,
+    "affected_inference": false,
+    "affected_parser": false,
+    "affected_prompt_or_schedule": false,
+    "affected_scoring_or_baselines": false,
+    "identifier_namespace_field_controls_identifier_generation": false
+  },
+  "coverage_check": {
+    "item_ids_matching_observed_pattern": 300,
+    "pair_ids_matching_observed_pattern": 150
+  },
+  "preservation_rule": "The frozen construction manifest remains byte-identical because its SHA-256 is bound by C1, C2, and the scored analysis. Current commitment, execution, C2, and release states are carried by their later receipts.",
+  "schema_version": "1.0.0",
+  "scientific_impact": "NONE",
+  "self_digest": "sha256:ba08bb629e6c6a2163053ebd9def17af3b65ba8543c959594bfc04cd355c1da1",
+  "source_manifest_path": "release/reviewer-evidence-source/fresh-confirmatory/dataset/manifest.json",
+  "source_manifest_sha256": "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de",
+  "status": "FROZEN_CONSTRUCTION_MANIFEST_METADATA_CORRECTION_OVERLAY"
+}

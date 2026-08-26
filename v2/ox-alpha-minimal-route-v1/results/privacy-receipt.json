@@ -1,0 +1,14 @@
+{
+  "credentials_retained": false,
+  "files_scanned": 1,
+  "private_route_records_eligible_for_anonymous_release": false,
+  "public_aggregate_contains_account_identifier": false,
+  "public_aggregate_contains_hidden_reasoning": false,
+  "public_aggregate_contains_provider_response_ids": false,
+  "public_aggregate_contains_raw_response_text": false,
+  "public_aggregate_sha256": "sha256:dcec091bed715448fed4699dcb4db15c928ed007bff37fe676322fd1c3f11938",
+  "scanned_payload_sha256": "sha256:9169056f77496a5cacd92556391be6858da5e9cbf4865bed82545d3d0f79b3fe",
+  "schema_version": "1.0.0",
+  "status": "OX_ALPHA_ROUTE_PUBLIC_AGGREGATE_PRIVACY_PASS",
+  "study_id": "claimpromotebench-ox-alpha-minimal-route-2026-08-v1"
+}

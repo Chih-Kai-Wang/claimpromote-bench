@@ -1,0 +1,84 @@
+name: v2 naturalistic candidate freeze
+
+on:
+  push:
+    branches:
+      - agent/iclr2027-v2-low-cost-study
+    paths:
+      - "v2/naturalistic-sources.json"
+      - "scripts/build_v2_naturalistic_candidates.py"
+      - "scripts/validate_v2_naturalistic_candidates.py"
+      - ".github/workflows/v2-naturalistic-candidate-freeze.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v2-naturalistic-candidate-freeze-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  freeze:
+    name: build and freeze pointer-only candidates
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.15"
+
+      - name: Build twice and require deterministic bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work
+          python scripts/build_v2_naturalistic_candidates.py \
+            --out work/naturalistic-candidates-a.json
+          python scripts/build_v2_naturalistic_candidates.py \
+            --out work/naturalistic-candidates-b.json
+          cmp work/naturalistic-candidates-a.json work/naturalistic-candidates-b.json
+
+      - name: Validate unlabeled pointer-only boundary
+        run: >-
+          python scripts/validate_v2_naturalistic_candidates.py
+          --pool work/naturalistic-candidates-a.json
+          --out work/naturalistic-candidate-validation.json
+
+      - name: Stage frozen candidate pool
+        run: |
+          cp work/naturalistic-candidates-a.json v2/naturalistic-candidates.json
+          python scripts/validate_v2_naturalistic_candidates.py \
+            --pool v2/naturalistic-candidates.json
+
+      - name: Commit deterministic candidate pool when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- v2/naturalistic-candidates.json)" ]; then
+            echo "Frozen candidate pool is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v2/naturalistic-candidates.json
+          git commit -m "v2: freeze naturalistic candidate pool"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload candidate evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v2-naturalistic-candidates
+          path: |
+            work/naturalistic-candidates-a.json
+            work/naturalistic-candidate-validation.json
+          if-no-files-found: error
+          retention-days: 30

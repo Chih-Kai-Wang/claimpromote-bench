@@ -1,0 +1,18 @@
+{
+  "baseline_prediction_sha256": {
+    "policy_aware-predictions.jsonl": "sha256:3d9d5a4dcf87b2dc05eac05810db35b315d2b4150dc28f173332ce0c0315171f",
+    "profile_blind-predictions.jsonl": "sha256:494c959131739a35fadaaed4561555c5498147acae89a1a116aa5875658bc5ac"
+  },
+  "baseline_report_sha256": "sha256:6b96c979cbafa3ff337904f28b01197ee2bdbacadc53d571cfc99d5865d2243a",
+  "basis": "Static reachability analysis of the published policy executor and profile contracts, not accuracy from this evaluation.",
+  "dataset_manifest_sha256": "sha256:74db5b754619a65a12f202c908de4467e0ec166d078693f0f07b42a942dc1c23",
+  "design_decision": "Cover all ten semantically reachable directed nonself action transitions with six contexts each and certify the two impossible HOLD/DEMOTE directions.",
+  "evaluation_gold_used_to_train_comparators": false,
+  "known_prior_results": "Earlier hosted policy-switch routes were already known to be resource-confounded and excluded. An unrelated local SLSA run was active. Neither supplied an edge, label, prompt, or outcome to this graph construction.",
+  "outcomes_used_to_choose_edges_or_contexts": false,
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:67b70e5f70624e90dc455cd83de850c83c4fca145a6e1049bbc1d20bb547b485",
+  "status": "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION",
+  "transition_coverage_sha256": "sha256:bb02a0165b3be0db63dc842442b93fa25d4bd37aa9a45bdeff1b502d6331df83",
+  "transition_graph_model_calls_before_freeze": 0
+}

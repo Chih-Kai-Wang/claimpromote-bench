@@ -1,0 +1,3 @@
+ClaimPromoteBench v1 synthetic evidence fixture.
+object=a00dd62d7afe57272f4c
+This artifact is benchmark evidence, not an asserted research result.

@@ -1,0 +1,902 @@
+[
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_provenance_presence",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-001-a",
+      "slsa-eva-001-b"
+    ],
+    "pair_id": "slsa-eva-001",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_presence",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-002-a",
+      "slsa-eva-002-b"
+    ],
+    "pair_id": "slsa-eva-002",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_provenance_presence",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-003-a",
+      "slsa-eva-003-b"
+    ],
+    "pair_id": "slsa-eva-003",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_presence",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-004-a",
+      "slsa-eva-004-b"
+    ],
+    "pair_id": "slsa-eva-004",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_presence",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-005-a",
+      "slsa-eva-005-b"
+    ],
+    "pair_id": "slsa-eva-005",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_verification",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-006-a",
+      "slsa-eva-006-b"
+    ],
+    "pair_id": "slsa-eva-006",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_verification",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-007-a",
+      "slsa-eva-007-b"
+    ],
+    "pair_id": "slsa-eva-007",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_verification",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-008-a",
+      "slsa-eva-008-b"
+    ],
+    "pair_id": "slsa-eva-008",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_signature_verification",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-009-a",
+      "slsa-eva-009-b"
+    ],
+    "pair_id": "slsa-eva-009",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_signature_verification",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-010-a",
+      "slsa-eva-010-b"
+    ],
+    "pair_id": "slsa-eva-010",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_subject_binding",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-011-a",
+      "slsa-eva-011-b"
+    ],
+    "pair_id": "slsa-eva-011",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_binding",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-012-a",
+      "slsa-eva-012-b"
+    ],
+    "pair_id": "slsa-eva-012",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_binding",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-013-a",
+      "slsa-eva-013-b"
+    ],
+    "pair_id": "slsa-eva-013",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_binding",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-014-a",
+      "slsa-eva-014-b"
+    ],
+    "pair_id": "slsa-eva-014",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_subject_binding",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-015-a",
+      "slsa-eva-015-b"
+    ],
+    "pair_id": "slsa-eva-015",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/build_level_verified",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_build_level",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-016-a",
+      "slsa-eva-016-b"
+    ],
+    "pair_id": "slsa-eva-016",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/build_level_verified",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_build_level",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-017-a",
+      "slsa-eva-017-b"
+    ],
+    "pair_id": "slsa-eva-017",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/build_level_verified",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_build_level",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-018-a",
+      "slsa-eva-018-b"
+    ],
+    "pair_id": "slsa-eva-018",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/build_level_verified",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_build_level",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-019-a",
+      "slsa-eva-019-b"
+    ],
+    "pair_id": "slsa-eva-019",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/build_level_verified",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_build_level",
+    "family": "candidate_admission",
+    "member_ids": [
+      "slsa-eva-020-a",
+      "slsa-eva-020-b"
+    ],
+    "pair_id": "slsa-eva-020",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_provenance_presence",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-021-a",
+      "slsa-eva-021-b"
+    ],
+    "pair_id": "slsa-eva-021",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_provenance_presence",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-022-a",
+      "slsa-eva-022-b"
+    ],
+    "pair_id": "slsa-eva-022",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_provenance_presence",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-023-a",
+      "slsa-eva-023-b"
+    ],
+    "pair_id": "slsa-eva-023",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_provenance_presence",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-024-a",
+      "slsa-eva-024-b"
+    ],
+    "pair_id": "slsa-eva-024",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/provenance_present",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_provenance_presence",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-025-a",
+      "slsa-eva-025-b"
+    ],
+    "pair_id": "slsa-eva-025",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_signature_verification",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-026-a",
+      "slsa-eva-026-b"
+    ],
+    "pair_id": "slsa-eva-026",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_signature_verification",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-027-a",
+      "slsa-eva-027-b"
+    ],
+    "pair_id": "slsa-eva-027",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_signature_verification",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-028-a",
+      "slsa-eva-028-b"
+    ],
+    "pair_id": "slsa-eva-028",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_signature_verification",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-029-a",
+      "slsa-eva-029-b"
+    ],
+    "pair_id": "slsa-eva-029",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/envelope_signature_verified",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_signature_verification",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-030-a",
+      "slsa-eva-030-b"
+    ],
+    "pair_id": "slsa-eva-030",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_subject_binding",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-031-a",
+      "slsa-eva-031-b"
+    ],
+    "pair_id": "slsa-eva-031",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_subject_binding",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-032-a",
+      "slsa-eva-032-b"
+    ],
+    "pair_id": "slsa-eva-032",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_subject_binding",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-033-a",
+      "slsa-eva-033-b"
+    ],
+    "pair_id": "slsa-eva-033",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_subject_binding",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-034-a",
+      "slsa-eva-034-b"
+    ],
+    "pair_id": "slsa-eva-034",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/subject_digest_matches",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_subject_binding",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-035-a",
+      "slsa-eva-035-b"
+    ],
+    "pair_id": "slsa-eva-035",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/builder_id_matches_policy",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_builder_trust",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-036-a",
+      "slsa-eva-036-b"
+    ],
+    "pair_id": "slsa-eva-036",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/builder_id_matches_policy",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_trust",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-037-a",
+      "slsa-eva-037-b"
+    ],
+    "pair_id": "slsa-eva-037",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/builder_id_matches_policy",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_trust",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-038-a",
+      "slsa-eva-038-b"
+    ],
+    "pair_id": "slsa-eva-038",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/builder_id_matches_policy",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_trust",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-039-a",
+      "slsa-eva-039-b"
+    ],
+    "pair_id": "slsa-eva-039",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/builder_id_matches_policy",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_trust",
+    "family": "current_basis",
+    "member_ids": [
+      "slsa-eva-040-a",
+      "slsa-eva-040-b"
+    ],
+    "pair_id": "slsa-eva-040",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_source_revision_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-041-a",
+      "slsa-eva-041-b"
+    ],
+    "pair_id": "slsa-eva-041",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_source_revision_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-042-a",
+      "slsa-eva-042-b"
+    ],
+    "pair_id": "slsa-eva-042",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_source_revision_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-043-a",
+      "slsa-eva-043-b"
+    ],
+    "pair_id": "slsa-eva-043",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_source_revision_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-044-a",
+      "slsa-eva-044-b"
+    ],
+    "pair_id": "slsa-eva-044",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_source_revision_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-045-a",
+      "slsa-eva-045-b"
+    ],
+    "pair_id": "slsa-eva-045",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_build_parameters_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-046-a",
+      "slsa-eva-046-b"
+    ],
+    "pair_id": "slsa-eva-046",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_build_parameters_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-047-a",
+      "slsa-eva-047-b"
+    ],
+    "pair_id": "slsa-eva-047",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_build_parameters_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-048-a",
+      "slsa-eva-048-b"
+    ],
+    "pair_id": "slsa-eva-048",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_build_parameters_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-049-a",
+      "slsa-eva-049-b"
+    ],
+    "pair_id": "slsa-eva-049",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_build_parameters_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-050-a",
+      "slsa-eva-050-b"
+    ],
+    "pair_id": "slsa-eva-050",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_vsa_policy_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-051-a",
+      "slsa-eva-051-b"
+    ],
+    "pair_id": "slsa-eva-051",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_vsa_policy_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-052-a",
+      "slsa-eva-052-b"
+    ],
+    "pair_id": "slsa-eva-052",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_vsa_policy_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-053-a",
+      "slsa-eva-053-b"
+    ],
+    "pair_id": "slsa-eva-053",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_vsa_policy_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-054-a",
+      "slsa-eva-054-b"
+    ],
+    "pair_id": "slsa-eva-054",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_vsa_policy_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-055-a",
+      "slsa-eva-055-b"
+    ],
+    "pair_id": "slsa-eva-055",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_verification_result_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-056-a",
+      "slsa-eva-056-b"
+    ],
+    "pair_id": "slsa-eva-056",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_verification_result_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-057-a",
+      "slsa-eva-057-b"
+    ],
+    "pair_id": "slsa-eva-057",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_verification_result_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-058-a",
+      "slsa-eva-058-b"
+    ],
+    "pair_id": "slsa-eva-058",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "authenticated_verification_result_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-059-a",
+      "slsa-eva-059-b"
+    ],
+    "pair_id": "slsa-eva-059",
+    "split": "evaluation"
+  },
+  {
+    "controlled_path": "/evidence/0/observed/authenticated_conflicts",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "authenticated_verification_result_conflict",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "slsa-eva-060-a",
+      "slsa-eva-060-b"
+    ],
+    "pair_id": "slsa-eva-060",
+    "split": "evaluation"
+  }
+]

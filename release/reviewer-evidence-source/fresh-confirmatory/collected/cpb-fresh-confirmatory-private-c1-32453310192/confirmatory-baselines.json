@@ -1,0 +1,3632 @@
+{
+  "action_order": [
+    "ALLOW",
+    "HOLD",
+    "DEMOTE",
+    "ESCALATE"
+  ],
+  "contains_test_gold": false,
+  "feature_module_sha256": "sha256:c9647e7e34b4e3bb93ce1646f99e7e507277f6178c1bda55440d7c2e2293dbf8",
+  "method_specs": {
+    "public_dev_majority": "Equivalent to always-ALLOW on the frozen public dev set; descriptive sanity check.",
+    "public_dev_stratified_prior": "Descriptive SHA-256 prompt-hash allocation using fixed public-dev class shares; not a confirmatory comparator.",
+    "public_dev_text_nb": "C0-frozen four-class multinomial NB; alpha=1; identifier-normalized prompt unigram+bigram counts."
+  },
+  "packet_sha256": "sha256:4263ec938879c8f426157afca80e24b209ad617a3410127b0e951a446523ccaf",
+  "predictions_sha256": "sha256:e0fe8e6e8bcb40b0d9e05cfdc1b4f60bb8c23074ff6454b0532a18e95275dcd5",
+  "predictor_sha256": "sha256:b7bc891fb3488c985392dd3e3f82d3de97d591c25fbdb5d4cd75663f7a6719a1",
+  "public_dev_action_counts": {
+    "ALLOW": 50,
+    "DEMOTE": 2,
+    "ESCALATE": 2,
+    "HOLD": 46
+  },
+  "public_dev_manifest_sha256": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
+  "reads_test_dataset": false,
+  "reads_test_gold": false,
+  "records": [
+    {
+      "item_id": "v1-test-cfo-001-a",
+      "pair_id": "v1-test-cfo-001",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8e443c40a1cc75e561710a6497e511de3fb0567343f52650c0f35016035d73cd"
+    },
+    {
+      "item_id": "v1-test-cfo-001-b",
+      "pair_id": "v1-test-cfo-001",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f5929c609b347ca28cfc0e252a52555e845e1ffa1b1f0cb15f0047439ca18235"
+    },
+    {
+      "item_id": "v1-test-cfo-002-a",
+      "pair_id": "v1-test-cfo-002",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c43c6ae0a0f78406af290b3eb7300ba824c59ad7126a64cc28ac764e24afc3d0"
+    },
+    {
+      "item_id": "v1-test-cfo-002-b",
+      "pair_id": "v1-test-cfo-002",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f88182af1316fcbe84ef75d407525c5bd84b34bbbfe24a6cc8dec79bc4209cfb"
+    },
+    {
+      "item_id": "v1-test-cfo-003-a",
+      "pair_id": "v1-test-cfo-003",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:76b287ba2973f27a375b940abc0ec501aec02025cacd102365d5e1fc9011477b"
+    },
+    {
+      "item_id": "v1-test-cfo-003-b",
+      "pair_id": "v1-test-cfo-003",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:71260cb9452143c97afc198e430e6a6cf781658a0120a22656d58787f6af3ddd"
+    },
+    {
+      "item_id": "v1-test-cfo-004-a",
+      "pair_id": "v1-test-cfo-004",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a223b547f9fc10ccbebce8e90a766845f635f153d3804244fec74693739e10c7"
+    },
+    {
+      "item_id": "v1-test-cfo-004-b",
+      "pair_id": "v1-test-cfo-004",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b85a4ae73fcf83a60e1b8153698ff68100c29003becd06129b1277891bc36b62"
+    },
+    {
+      "item_id": "v1-test-cfo-005-a",
+      "pair_id": "v1-test-cfo-005",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0eda12c535a46d7bb6e8548fc229f48290c07a4342c6c42d2ad2a75d133779f6"
+    },
+    {
+      "item_id": "v1-test-cfo-005-b",
+      "pair_id": "v1-test-cfo-005",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dd7d239244a9ce7bb9ffbb8fd3626452ae942cab2005b67502d849457f0d0a9f"
+    },
+    {
+      "item_id": "v1-test-cfo-006-a",
+      "pair_id": "v1-test-cfo-006",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8f3ef67594cc82f8a44f23c6d04d597002c740bff9b03c6fd9915de6df610401"
+    },
+    {
+      "item_id": "v1-test-cfo-006-b",
+      "pair_id": "v1-test-cfo-006",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6d89f323c25c75ebdf2d7ecefa2f8c5b56b5518cbb8eeaf4d190d1a87b2f4e7a"
+    },
+    {
+      "item_id": "v1-test-cfo-007-a",
+      "pair_id": "v1-test-cfo-007",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:03344386ecd4e7c38dbaf28d381c423867f2fd4546e23bea693e2eed9ebe6f26"
+    },
+    {
+      "item_id": "v1-test-cfo-007-b",
+      "pair_id": "v1-test-cfo-007",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8237e3877bb7041383ddea5a611cc865ec753e6e822c405a12257e08dfd9a81c"
+    },
+    {
+      "item_id": "v1-test-cfo-008-a",
+      "pair_id": "v1-test-cfo-008",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:07d42bc1fc11d85a0572d53b122159a6160f41b4a79ae2021d3ec895e15c3774"
+    },
+    {
+      "item_id": "v1-test-cfo-008-b",
+      "pair_id": "v1-test-cfo-008",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:92e547872e054ff4d48c78659244861e5fbd4af8de92b5ffd4d70cb4b0c3b5e1"
+    },
+    {
+      "item_id": "v1-test-cfo-009-a",
+      "pair_id": "v1-test-cfo-009",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9b388e3d8e7418a33de9fa86681d73ae861da945e18c2c55d463f89e58b38b5d"
+    },
+    {
+      "item_id": "v1-test-cfo-009-b",
+      "pair_id": "v1-test-cfo-009",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:05052702c020e44ee5733155ed5530a01e75f08935c5a0f6d71eae70b98bdd60"
+    },
+    {
+      "item_id": "v1-test-cfo-010-a",
+      "pair_id": "v1-test-cfo-010",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:7a221a4c696dd9968454daaac59e96f675c70c42fcafe9d2e5bc78b5922221d2"
+    },
+    {
+      "item_id": "v1-test-cfo-010-b",
+      "pair_id": "v1-test-cfo-010",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f1fed6d06c27d0e6f40ae68096a23c2f03e192eb5d93e0552018eb7aed80d13f"
+    },
+    {
+      "item_id": "v1-test-cfo-011-a",
+      "pair_id": "v1-test-cfo-011",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:78eeca267e64b01cef72127b9a37eac33f4222ffc6faeecfc3dca3758a0145fa"
+    },
+    {
+      "item_id": "v1-test-cfo-011-b",
+      "pair_id": "v1-test-cfo-011",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:17bff131ac9caed3f716d1ae87b9ece247e9d50fd135b543b9fad3ecb691806e"
+    },
+    {
+      "item_id": "v1-test-cfo-012-a",
+      "pair_id": "v1-test-cfo-012",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:de9b4fe9fa3fb8e2ccd851cb240cfbefb3bd2cce554b474742769a09a5eecbdb"
+    },
+    {
+      "item_id": "v1-test-cfo-012-b",
+      "pair_id": "v1-test-cfo-012",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:603eca274d084cfdb638792ee85333dd3fda1c3c339a941e10ceb7c8bb00bf50"
+    },
+    {
+      "item_id": "v1-test-cfo-013-a",
+      "pair_id": "v1-test-cfo-013",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dd1bf011dfcd12aae07a94adb72a75bc52860f5bf0b715b1a56fbb0e1309f71d"
+    },
+    {
+      "item_id": "v1-test-cfo-013-b",
+      "pair_id": "v1-test-cfo-013",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:7eef581fdf9ebad576989f876008f091fc139c08bc382f5ade308293f0cd0b02"
+    },
+    {
+      "item_id": "v1-test-cfo-014-a",
+      "pair_id": "v1-test-cfo-014",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7645fbdae11b090a7fd512dfd11b47dd386f205f3f6965162be0b05fbc828415"
+    },
+    {
+      "item_id": "v1-test-cfo-014-b",
+      "pair_id": "v1-test-cfo-014",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:64efea5450564916b91d70c45e67367052696e7a1253cc60dea0124ca9ea64e8"
+    },
+    {
+      "item_id": "v1-test-cfo-015-a",
+      "pair_id": "v1-test-cfo-015",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:258771e0417de445635c48e414ea929f2c696327f39bb0891b9fb8f9f21a9e3e"
+    },
+    {
+      "item_id": "v1-test-cfo-015-b",
+      "pair_id": "v1-test-cfo-015",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:778462b9cc7e60020ffc9109dd96b7ac83464e0b7621dbb39d166852597de44b"
+    },
+    {
+      "item_id": "v1-test-cfo-016-a",
+      "pair_id": "v1-test-cfo-016",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e80c89d0c4e4edf9dba7368f5139af471a5b7a923b5bfd3eaba9f615e4243de6"
+    },
+    {
+      "item_id": "v1-test-cfo-016-b",
+      "pair_id": "v1-test-cfo-016",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1611c297840de7103f64f31e1b4549e6fa7049049b14a92f63e42993945fa2f9"
+    },
+    {
+      "item_id": "v1-test-cfo-017-a",
+      "pair_id": "v1-test-cfo-017",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4b23e6cd20ea9acc399a53f28c7aa81fe2c9bb2de94aa3a1fa1b5fb560f27be0"
+    },
+    {
+      "item_id": "v1-test-cfo-017-b",
+      "pair_id": "v1-test-cfo-017",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a1cd738cb09c2ab40c4d82f6a6a8839decb4f3ac115f336b0a735aca3a4c48dd"
+    },
+    {
+      "item_id": "v1-test-cfo-018-a",
+      "pair_id": "v1-test-cfo-018",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:29d93c85ecaf2dc6cfcc61032456b955af1cfab4cb996ee021dad55d4b6f929d"
+    },
+    {
+      "item_id": "v1-test-cfo-018-b",
+      "pair_id": "v1-test-cfo-018",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3dd06868fa6efec3424e50b8673c84713aba259a699229eb3cc99afb646ef214"
+    },
+    {
+      "item_id": "v1-test-cfo-019-a",
+      "pair_id": "v1-test-cfo-019",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3c36e24274682bfd0e4af67ad7d941a2a6374bf1e1f69b3c2b6c2720eda60f5e"
+    },
+    {
+      "item_id": "v1-test-cfo-019-b",
+      "pair_id": "v1-test-cfo-019",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f583ead23d4fd695f898be8e86581b9750dc8a893b55b07fb3c0514ce677b079"
+    },
+    {
+      "item_id": "v1-test-cfo-020-a",
+      "pair_id": "v1-test-cfo-020",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a296f0875d59ba49fb54cb789a1fee678f43a62f6fc3b8af4606bb051406e395"
+    },
+    {
+      "item_id": "v1-test-cfo-020-b",
+      "pair_id": "v1-test-cfo-020",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b221b763c8c274b0ec0853c4f1f8f350f5b7b689e014f2d2f9ee914ebe2e7ff9"
+    },
+    {
+      "item_id": "v1-test-cfo-021-a",
+      "pair_id": "v1-test-cfo-021",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:bf733d22089e6d990b551c423707c6063333bb1a25f9f1d30ffdb42ccb58814a"
+    },
+    {
+      "item_id": "v1-test-cfo-021-b",
+      "pair_id": "v1-test-cfo-021",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:13d37798db9176e96465abf2a41418efc93fcd5db8e6c47ebfafdb193b9a9e3f"
+    },
+    {
+      "item_id": "v1-test-cfo-022-a",
+      "pair_id": "v1-test-cfo-022",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5a59fe797cbfacec67f8945d172c1e04489f2517d9ffae0a046f2ca897de788e"
+    },
+    {
+      "item_id": "v1-test-cfo-022-b",
+      "pair_id": "v1-test-cfo-022",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:94f611fe7e81b8dddd7f8132bfa8f8204e65d81ee7e6506cf7629471ac0b9db5"
+    },
+    {
+      "item_id": "v1-test-cfo-023-a",
+      "pair_id": "v1-test-cfo-023",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ceaa5c67bc3131311fe3879f28547fec124b408bb99fcda99082e9867dd70000"
+    },
+    {
+      "item_id": "v1-test-cfo-023-b",
+      "pair_id": "v1-test-cfo-023",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:aaa9ea40625713648306a33f88b257f0431c68e26be19d105a15b69b1a4b5eed"
+    },
+    {
+      "item_id": "v1-test-cfo-024-a",
+      "pair_id": "v1-test-cfo-024",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:559713e2d94370e8ad2a5642318a82dba8cb7412a5f42e97001604d287a3f7cf"
+    },
+    {
+      "item_id": "v1-test-cfo-024-b",
+      "pair_id": "v1-test-cfo-024",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9bed16054513942175dc6a9e4da190875eb7a8f1fd31483d000df2d6e0d8af3c"
+    },
+    {
+      "item_id": "v1-test-cfo-025-a",
+      "pair_id": "v1-test-cfo-025",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1e89fe955b2b79bbb2e311c56500cd89bf3f1347117dd80c3d849231e49c20ff"
+    },
+    {
+      "item_id": "v1-test-cfo-025-b",
+      "pair_id": "v1-test-cfo-025",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4330bd7e00258620382c57318697cad86ff0ea5c06c5804a8d603c05697841c8"
+    },
+    {
+      "item_id": "v1-test-cfo-026-a",
+      "pair_id": "v1-test-cfo-026",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:017af65db88fea4de96fab8990b07ba8dc18f0f5ad896b0558d60d0c54265bbe"
+    },
+    {
+      "item_id": "v1-test-cfo-026-b",
+      "pair_id": "v1-test-cfo-026",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f2a85133b6a5ed098addb37e300bfbd9223eb18adf4e1d4ffdc860c7fa1d5814"
+    },
+    {
+      "item_id": "v1-test-cfo-027-a",
+      "pair_id": "v1-test-cfo-027",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:58b91a623ba4c19981606a941f60709a8d3a27a5105af047f5ef13ecbea6a6e8"
+    },
+    {
+      "item_id": "v1-test-cfo-027-b",
+      "pair_id": "v1-test-cfo-027",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5ec35c5262ac77b29fb0892bae61560d6724f22d15d3b4bf3e3696a69c2d8cd9"
+    },
+    {
+      "item_id": "v1-test-cfo-028-a",
+      "pair_id": "v1-test-cfo-028",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fe0478052a52454d021e97b0f33c5d6ded68f0c9e586afba01ef96ce784852e1"
+    },
+    {
+      "item_id": "v1-test-cfo-028-b",
+      "pair_id": "v1-test-cfo-028",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4a6af8831a27532b9f5403a9fd92f330fc3c043565ad68c674fcfb99126e1b36"
+    },
+    {
+      "item_id": "v1-test-cfo-029-a",
+      "pair_id": "v1-test-cfo-029",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f44005efe498a89490926c6652f1f6e171dd53674980c144fa058f31f0a61b78"
+    },
+    {
+      "item_id": "v1-test-cfo-029-b",
+      "pair_id": "v1-test-cfo-029",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f900f939a4306c5030c1d98bed3e1ee10219a615fdd52dd8fae8247d3a116ddd"
+    },
+    {
+      "item_id": "v1-test-cfo-030-a",
+      "pair_id": "v1-test-cfo-030",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c0d02261192490c9ef4bc69f8424e6f283b0917afbde31a85dc72d511103d65b"
+    },
+    {
+      "item_id": "v1-test-cfo-030-b",
+      "pair_id": "v1-test-cfo-030",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0da2ad5987b098cdf89b717d7944d76977f7a9f45cccf29936852e5729d89f14"
+    },
+    {
+      "item_id": "v1-test-cfo-031-a",
+      "pair_id": "v1-test-cfo-031",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:02eb858a76fcc54a3dd55a18354a642c19664c200aff45a839cee0c89bc37be0"
+    },
+    {
+      "item_id": "v1-test-cfo-031-b",
+      "pair_id": "v1-test-cfo-031",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7bb0eff5000ecc8f8f16a21c2b7a39b391b2fc474e27830e068d3ccf9a041703"
+    },
+    {
+      "item_id": "v1-test-cfo-032-a",
+      "pair_id": "v1-test-cfo-032",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f83a2fdb1842ba8bf46bb6c05eabe3165373f4697069e318d3314b60677888b8"
+    },
+    {
+      "item_id": "v1-test-cfo-032-b",
+      "pair_id": "v1-test-cfo-032",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:2854a542810f61ae488745cd3b6ccafd2580f7846448e865d9bf430b26170af1"
+    },
+    {
+      "item_id": "v1-test-cfo-033-a",
+      "pair_id": "v1-test-cfo-033",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fe31adeebdb00846c911394da4683733a626963e420ec130b307d094589587b3"
+    },
+    {
+      "item_id": "v1-test-cfo-033-b",
+      "pair_id": "v1-test-cfo-033",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:13d3598c829c44becc4fe8bf96e71f38f6a7415d97c9a56455ba0af61bb53b7d"
+    },
+    {
+      "item_id": "v1-test-cfo-034-a",
+      "pair_id": "v1-test-cfo-034",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a1f528f2763d34391a75db19290a70a54363806172c7f415d5091e8e36cef04a"
+    },
+    {
+      "item_id": "v1-test-cfo-034-b",
+      "pair_id": "v1-test-cfo-034",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:038e792fe61810a94b66797c47d7a69c55c8e45687bfe75a49510ecf0a76f792"
+    },
+    {
+      "item_id": "v1-test-cfo-035-a",
+      "pair_id": "v1-test-cfo-035",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dd6e7255d2f78c0b23aeaf4ee7218d12c8ab0af77b4e465fe852f76f8844ac9f"
+    },
+    {
+      "item_id": "v1-test-cfo-035-b",
+      "pair_id": "v1-test-cfo-035",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9fbcdc3d087ee9b2b1e5aefbd61dea2ac8314c9d8ed5d41dea2a62a51594617b"
+    },
+    {
+      "item_id": "v1-test-cfo-036-a",
+      "pair_id": "v1-test-cfo-036",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c607e576fe0d3f69e301ed9b1b9d0d80d4e9b2644e0cff5a8ff408f51a7f092c"
+    },
+    {
+      "item_id": "v1-test-cfo-036-b",
+      "pair_id": "v1-test-cfo-036",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d08588d12100aba0f08f1413281d732312b9100e6418500c8f23aa59b70ca739"
+    },
+    {
+      "item_id": "v1-test-cfo-037-a",
+      "pair_id": "v1-test-cfo-037",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ec9b105637ba076253e1395c71e1b6443e60eabaf245d9f8037ca8b507d04d8d"
+    },
+    {
+      "item_id": "v1-test-cfo-037-b",
+      "pair_id": "v1-test-cfo-037",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a3cc2945954778ad154dad318f3443d78888bfbc99a98d516a37edbd2e371f81"
+    },
+    {
+      "item_id": "v1-test-cfo-038-a",
+      "pair_id": "v1-test-cfo-038",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c1efe6e7df55d13c1c7cf307959740de05cc0a1d52362f5f907b308152ef386a"
+    },
+    {
+      "item_id": "v1-test-cfo-038-b",
+      "pair_id": "v1-test-cfo-038",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6449b62006346768f06dcc631fff22080f7be64d76f6ad1cc61d14dcbe355729"
+    },
+    {
+      "item_id": "v1-test-cfo-039-a",
+      "pair_id": "v1-test-cfo-039",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:752c308281e9aa0445f69c88cac2b048ffb95bcf0a840da0ec6b3a6d261217bf"
+    },
+    {
+      "item_id": "v1-test-cfo-039-b",
+      "pair_id": "v1-test-cfo-039",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:39a34e010daa3aff3f2f426669130ccf873027c6711c67a9f22692a2f85fd75f"
+    },
+    {
+      "item_id": "v1-test-cfo-040-a",
+      "pair_id": "v1-test-cfo-040",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:771b97d0ecea4350841a7a2937af8bd9ebbf493ca0f1666015c06d95f3d422d8"
+    },
+    {
+      "item_id": "v1-test-cfo-040-b",
+      "pair_id": "v1-test-cfo-040",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ededacc10b06d18453c72e40ac4210178b6558654c3a442e30d83050c17e3124"
+    },
+    {
+      "item_id": "v1-test-cfo-041-a",
+      "pair_id": "v1-test-cfo-041",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:52a982a0616148cc968165c375c24c54900ef4c5355d98bea4006eef35657816"
+    },
+    {
+      "item_id": "v1-test-cfo-041-b",
+      "pair_id": "v1-test-cfo-041",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2b911a3445f29a18c76a563f581bef9694876e094176faaefe454ba0c86547df"
+    },
+    {
+      "item_id": "v1-test-cfo-042-a",
+      "pair_id": "v1-test-cfo-042",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:66f17fc56e6363faae454211bfef72310dcb707dfd22f0253f6bdfbb83ef4049"
+    },
+    {
+      "item_id": "v1-test-cfo-042-b",
+      "pair_id": "v1-test-cfo-042",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:39cb44f4e7948d4fa12a67e7a453d39bece25888b6cded23c8a6e8252fa50fee"
+    },
+    {
+      "item_id": "v1-test-cfo-043-a",
+      "pair_id": "v1-test-cfo-043",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6f8b30142feee4469816c7a8763e653ce9332502b36cd2771adc38b8a466c6b6"
+    },
+    {
+      "item_id": "v1-test-cfo-043-b",
+      "pair_id": "v1-test-cfo-043",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:21ab84b8d93d87d77c5f5850a4ce170a037a5edcfb4207051542e631a4c1b940"
+    },
+    {
+      "item_id": "v1-test-cfo-044-a",
+      "pair_id": "v1-test-cfo-044",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f2a0ef60752f250118f85e7df03557cf373535097dffc48faf8bab2b98180b67"
+    },
+    {
+      "item_id": "v1-test-cfo-044-b",
+      "pair_id": "v1-test-cfo-044",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b28ad14166d991284aa6257ac488f980b63befca6caa4a4933c8b48e7cea18f5"
+    },
+    {
+      "item_id": "v1-test-cfo-045-a",
+      "pair_id": "v1-test-cfo-045",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4ba1da37f24ee06e6112707e2326ef92d450bac0da1b89d5d9f7e1df505e6a75"
+    },
+    {
+      "item_id": "v1-test-cfo-045-b",
+      "pair_id": "v1-test-cfo-045",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:defd30b9664ec5913c8530ff032e719d9dc5c39dd2ef8e76589221f18614c26b"
+    },
+    {
+      "item_id": "v1-test-cfo-046-a",
+      "pair_id": "v1-test-cfo-046",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c7f2d13fcc8ce25d71ece4316a25286791b8a0823c5696c6d7dbd56b0cd46699"
+    },
+    {
+      "item_id": "v1-test-cfo-046-b",
+      "pair_id": "v1-test-cfo-046",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a5fca63eae2559ee5b9c65743ee5f896bef9c1c3f33ed8b6c24392a70a87fa55"
+    },
+    {
+      "item_id": "v1-test-cfo-047-a",
+      "pair_id": "v1-test-cfo-047",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a37f91b90b4520c25c191d25de5430800080aef81a322d6d823ddf7e76c391b3"
+    },
+    {
+      "item_id": "v1-test-cfo-047-b",
+      "pair_id": "v1-test-cfo-047",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ef27c1a16c2c116b9efc0dec7d8a63143b3bb30af788bb87351909b09303d390"
+    },
+    {
+      "item_id": "v1-test-cfo-048-a",
+      "pair_id": "v1-test-cfo-048",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5437f697774262bb17800b1005d414b36a904d4d1ea2c77d2b79076a255cbbaa"
+    },
+    {
+      "item_id": "v1-test-cfo-048-b",
+      "pair_id": "v1-test-cfo-048",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:247803ebb129f24e1c8368eb23ef39b5764be8d9e3e843034bb6f3f2a908b0d9"
+    },
+    {
+      "item_id": "v1-test-cfo-049-a",
+      "pair_id": "v1-test-cfo-049",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:e23a0473ecf824bddb282e0a0bc05e951ff3d9220c691743d636a85091178beb"
+    },
+    {
+      "item_id": "v1-test-cfo-049-b",
+      "pair_id": "v1-test-cfo-049",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f9f45656eb44bb3c6ba3d4e3169e8ab41cc1d60540e66fac2259458a5688c35b"
+    },
+    {
+      "item_id": "v1-test-cfo-050-a",
+      "pair_id": "v1-test-cfo-050",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f88997e40d1c90bc8e6fb45a4920af3e857628d48e088bf70b0267f9d685d281"
+    },
+    {
+      "item_id": "v1-test-cfo-050-b",
+      "pair_id": "v1-test-cfo-050",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ac28726089da3141885fd519ec8006313be8801b941a694e15cc616252649024"
+    },
+    {
+      "item_id": "v1-test-cfo-051-a",
+      "pair_id": "v1-test-cfo-051",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5c827004559f8b99d9c6577e6a15db9941195a2c5ea98dc5ebf08d8fdb769663"
+    },
+    {
+      "item_id": "v1-test-cfo-051-b",
+      "pair_id": "v1-test-cfo-051",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:760a0784fe6374722d7f0501448f5b346101fc49439c5987bd890fed44bc4e3c"
+    },
+    {
+      "item_id": "v1-test-cfo-052-a",
+      "pair_id": "v1-test-cfo-052",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:05b8c4e69d7126449ed5f95920cc486d9c2cfe1bb20424bd56f3888ea48ecb5a"
+    },
+    {
+      "item_id": "v1-test-cfo-052-b",
+      "pair_id": "v1-test-cfo-052",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d70b9eed40592aa5b8c646c3c6e546bab1a8a6711a81a8254ac189c6dadd7f5c"
+    },
+    {
+      "item_id": "v1-test-cfo-053-a",
+      "pair_id": "v1-test-cfo-053",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8aa996040228f01c27c8b78ae024ae6e2bfef66b784e347e2f98f30a4e94ff70"
+    },
+    {
+      "item_id": "v1-test-cfo-053-b",
+      "pair_id": "v1-test-cfo-053",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8bddcb601c1e07f465b120417e65f8a133d0bde35030b8a9b9ccce23b01ee7fc"
+    },
+    {
+      "item_id": "v1-test-cfo-054-a",
+      "pair_id": "v1-test-cfo-054",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:8dce9e72e10a737881e9e5bef64e4b6c879ba206cebb7a55759eb76394eb0ee2"
+    },
+    {
+      "item_id": "v1-test-cfo-054-b",
+      "pair_id": "v1-test-cfo-054",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c74612140d59c0b4223c547a13792f076c4dd1b8af516218a1c7de2647fded69"
+    },
+    {
+      "item_id": "v1-test-cfo-055-a",
+      "pair_id": "v1-test-cfo-055",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6b04035b9de127339fee3e2d8cffe888f4572fc2e5f43ff79e57a5f35e126a0d"
+    },
+    {
+      "item_id": "v1-test-cfo-055-b",
+      "pair_id": "v1-test-cfo-055",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:07ea71ce82fe17f4b3f990d284c0b57f171e4c7e36315334ae85b89256274794"
+    },
+    {
+      "item_id": "v1-test-cfo-056-a",
+      "pair_id": "v1-test-cfo-056",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:670bad81067a2552affeb7d1689024d9e359beae5503a1888fda701957f043b5"
+    },
+    {
+      "item_id": "v1-test-cfo-056-b",
+      "pair_id": "v1-test-cfo-056",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9669906be17d9cc04b263bc5078c3ad71691b480044bc6b8a914365a4a8d2efe"
+    },
+    {
+      "item_id": "v1-test-cfo-057-a",
+      "pair_id": "v1-test-cfo-057",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fee0a8f39c7993b2345d7516e839cb21b0803dd2e42d7f4546e7a445751f6819"
+    },
+    {
+      "item_id": "v1-test-cfo-057-b",
+      "pair_id": "v1-test-cfo-057",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:65063c85e7c31e4ffef303b332b7d9122312adadc01edb2a6f4bdfa41c8b1acb"
+    },
+    {
+      "item_id": "v1-test-cfo-058-a",
+      "pair_id": "v1-test-cfo-058",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:1201a5c694dc2d21d6c3265fa6bbfc7b44e52703c9b6d0a009827e8b12406c96"
+    },
+    {
+      "item_id": "v1-test-cfo-058-b",
+      "pair_id": "v1-test-cfo-058",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d56439a69fce0d13872ac05ee5f09ba369b5a1488d659e61abaf3001c1ee4a1c"
+    },
+    {
+      "item_id": "v1-test-cfo-059-a",
+      "pair_id": "v1-test-cfo-059",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:02983561034f783af90cf7a59c077f91e9a95757fcead13c8107ed9f82d32c07"
+    },
+    {
+      "item_id": "v1-test-cfo-059-b",
+      "pair_id": "v1-test-cfo-059",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4830dc55d05282dad0274afe64736914e7b376f6df0434b940d53746a0fbf2ea"
+    },
+    {
+      "item_id": "v1-test-cfo-060-a",
+      "pair_id": "v1-test-cfo-060",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4ff5a51751fc8f1711558ed51ac57c3df78acaa74e902548246d812047bfdfba"
+    },
+    {
+      "item_id": "v1-test-cfo-060-b",
+      "pair_id": "v1-test-cfo-060",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6284d4bfe497860ef21476967b4b837e7b58f4a164300eed11d99443725a92f5"
+    },
+    {
+      "item_id": "v1-test-cfo-061-a",
+      "pair_id": "v1-test-cfo-061",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c3c4c37641fbd2654a1789fa887b159ab10301da550da248012c0223e9ab8a74"
+    },
+    {
+      "item_id": "v1-test-cfo-061-b",
+      "pair_id": "v1-test-cfo-061",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:2002c9e9d7b861005c5e9feeedd91efdc747cab5e03eb4bd81ccca9ff8933ecd"
+    },
+    {
+      "item_id": "v1-test-cfo-062-a",
+      "pair_id": "v1-test-cfo-062",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c916b7feccac1ceeb6734771f265130278f1e4326f488a72651f1090094d2c32"
+    },
+    {
+      "item_id": "v1-test-cfo-062-b",
+      "pair_id": "v1-test-cfo-062",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dd790bc9a73ddd83817d1e42c1ee41c61b31f3a9a7cb1dbf17ab9b6cdefe3a0a"
+    },
+    {
+      "item_id": "v1-test-cfo-063-a",
+      "pair_id": "v1-test-cfo-063",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6b6b3f22bb0f8622010542f753dd6e06ed8a29b6194363e05fe0f2f34aebb0e0"
+    },
+    {
+      "item_id": "v1-test-cfo-063-b",
+      "pair_id": "v1-test-cfo-063",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6cbc5d999c50a03b2d7da14f1f0ded636caa9d02c366dc1f3aac6c9afa477757"
+    },
+    {
+      "item_id": "v1-test-cfo-064-a",
+      "pair_id": "v1-test-cfo-064",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a25ba2d3dad64eb187572057cc50f02c0e6c6d48ec540600974f29246bd79de8"
+    },
+    {
+      "item_id": "v1-test-cfo-064-b",
+      "pair_id": "v1-test-cfo-064",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c757f6402babfd13dc151fdfb9c4f2bddcc341af8caceb8d0bdf887cdc2e8c08"
+    },
+    {
+      "item_id": "v1-test-cfo-065-a",
+      "pair_id": "v1-test-cfo-065",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8eea7a941ef0019240791941f4cff627d1e95b5493af93dacd54b4b93eb6600c"
+    },
+    {
+      "item_id": "v1-test-cfo-065-b",
+      "pair_id": "v1-test-cfo-065",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0adf0e8035b552ced42846ce4364cd6034bf7ae6d22b758fb4e7604e94db3872"
+    },
+    {
+      "item_id": "v1-test-cfo-066-a",
+      "pair_id": "v1-test-cfo-066",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f9c8403cff31233774aefe66ffdca9cbe3d30f58099f70912261f33241615e23"
+    },
+    {
+      "item_id": "v1-test-cfo-066-b",
+      "pair_id": "v1-test-cfo-066",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4aada46e3d6c5357222e07d2d70fbeddb67f78ba11c0fd6dc299dbc41e88189a"
+    },
+    {
+      "item_id": "v1-test-cfo-067-a",
+      "pair_id": "v1-test-cfo-067",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:19d3dd8162cf6f8da8955278a72102ac0c06ed537db74a53cc7c3618d12526aa"
+    },
+    {
+      "item_id": "v1-test-cfo-067-b",
+      "pair_id": "v1-test-cfo-067",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:bf2b755289ff49e427c8c613267b4ca9aaa49d104b64b40f0fc1fbc1f18f74b2"
+    },
+    {
+      "item_id": "v1-test-cfo-068-a",
+      "pair_id": "v1-test-cfo-068",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:21bc3eaba07ee1d5edcc4dce5a18b3b67bebf919815e0bb0bd10c6721c1cee6b"
+    },
+    {
+      "item_id": "v1-test-cfo-068-b",
+      "pair_id": "v1-test-cfo-068",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a8af53c52c82154a6712a18bbb81559d8540605852ce9aa7659f4417869a54d7"
+    },
+    {
+      "item_id": "v1-test-cfo-069-a",
+      "pair_id": "v1-test-cfo-069",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ceb5be9ec0e1ad36efa8f764c84f8f26fe67a2861b7b0b9e01adabde2a7130a4"
+    },
+    {
+      "item_id": "v1-test-cfo-069-b",
+      "pair_id": "v1-test-cfo-069",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:471c73e8a3cd127e56196adcf71f1a596e5f2fc0c64961a7aee4bd184b97985e"
+    },
+    {
+      "item_id": "v1-test-cfo-070-a",
+      "pair_id": "v1-test-cfo-070",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6c30423357b78909f9031fe7f149c74dc515a642b2eab4d3b55ade20197248d1"
+    },
+    {
+      "item_id": "v1-test-cfo-070-b",
+      "pair_id": "v1-test-cfo-070",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c62d1b8595343d12a1a11907c0cc1d1bd5a51a77e194ac57646b9437e7d1176c"
+    },
+    {
+      "item_id": "v1-test-cfo-071-a",
+      "pair_id": "v1-test-cfo-071",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:eff50f41761b79bf00421be7e17f9dd2ef045bed1845985240262452549c28ec"
+    },
+    {
+      "item_id": "v1-test-cfo-071-b",
+      "pair_id": "v1-test-cfo-071",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8cdf3e1785cc31d1febda1f3acd33fe3f5a089a522077d05e3d27a5ebe40b6d5"
+    },
+    {
+      "item_id": "v1-test-cfo-072-a",
+      "pair_id": "v1-test-cfo-072",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a0e52075d47a605cdf46dc7994dc7fc55172da39da7c385f53fb63c2eb708d06"
+    },
+    {
+      "item_id": "v1-test-cfo-072-b",
+      "pair_id": "v1-test-cfo-072",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6edf15387a5351c8ecbe8517f33f1804233e265e0b1d3abdd6acaf6abb400f67"
+    },
+    {
+      "item_id": "v1-test-cfo-073-a",
+      "pair_id": "v1-test-cfo-073",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fb3367e7b88334057bcea41071c7715aa80d418beaf3ecae9f8ee36b67cd63dd"
+    },
+    {
+      "item_id": "v1-test-cfo-073-b",
+      "pair_id": "v1-test-cfo-073",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:cdbc78fe077d4419784f6628783cf94acf0419be52516ab31591fdbfdb554fdb"
+    },
+    {
+      "item_id": "v1-test-cfo-074-a",
+      "pair_id": "v1-test-cfo-074",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:bbe9773c308901e3bc6923421a9f5277393e4b8df75ae827b59c9148c57cf942"
+    },
+    {
+      "item_id": "v1-test-cfo-074-b",
+      "pair_id": "v1-test-cfo-074",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0ceb1e545be73d8423184419f7c522915ce782c69953bba2a6243060887214e2"
+    },
+    {
+      "item_id": "v1-test-cfo-075-a",
+      "pair_id": "v1-test-cfo-075",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:40aff903789787d83c479c2eeff512de7e61a84e507446386c445ca77c4c3ab9"
+    },
+    {
+      "item_id": "v1-test-cfo-075-b",
+      "pair_id": "v1-test-cfo-075",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d7d56ffe473c644887ad08f00e7b8b23f3fa6b659630dcdb743025aaf690fb1d"
+    },
+    {
+      "item_id": "v1-test-cfo-076-a",
+      "pair_id": "v1-test-cfo-076",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f7b29e87804d904f5903642648f7bded9eafa6c7da19b52b783f00bc1c8b67d0"
+    },
+    {
+      "item_id": "v1-test-cfo-076-b",
+      "pair_id": "v1-test-cfo-076",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9257311fc4ba54925794eba0ce102811bb865c423eb31f590b85acd8dd12593e"
+    },
+    {
+      "item_id": "v1-test-cfo-077-a",
+      "pair_id": "v1-test-cfo-077",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7d8979e04c7fba28a84016c85ab37ad1c049b0577774203fd786660db86b202d"
+    },
+    {
+      "item_id": "v1-test-cfo-077-b",
+      "pair_id": "v1-test-cfo-077",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:57995f85d0dec3915a07f01effa16e6a3e3a4e241e2073105834795d79c7bcfc"
+    },
+    {
+      "item_id": "v1-test-cfo-078-a",
+      "pair_id": "v1-test-cfo-078",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:67943836a2044b6977869c183519ba97504906084afae260a52393f3607eb58e"
+    },
+    {
+      "item_id": "v1-test-cfo-078-b",
+      "pair_id": "v1-test-cfo-078",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6350d11fb5f9acce7a5a586e749e003005f5eb60fd169d841e77ea93c26f7ad0"
+    },
+    {
+      "item_id": "v1-test-cfo-079-a",
+      "pair_id": "v1-test-cfo-079",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:77afaee0d6b23c37e050d2c3c63d881c53da6ca1ebf3d1b08ecf3ea0310e4af5"
+    },
+    {
+      "item_id": "v1-test-cfo-079-b",
+      "pair_id": "v1-test-cfo-079",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:78970a80572ac34771214a6eee0bb38b32afb92142bd9683e45f748d0d80f1f5"
+    },
+    {
+      "item_id": "v1-test-cfo-080-a",
+      "pair_id": "v1-test-cfo-080",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3b9d1df1fb933123aaf7c609ff4319f322f2ccca4f6eebc039fcc77deeba1c07"
+    },
+    {
+      "item_id": "v1-test-cfo-080-b",
+      "pair_id": "v1-test-cfo-080",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:04b0fa4fd3ce8de15dde0d335ce3ed549075d62c35854aa99f4b28bf096f7968"
+    },
+    {
+      "item_id": "v1-test-cfo-081-a",
+      "pair_id": "v1-test-cfo-081",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:acabd765705736207aba9355131f7e5119ad404644cde61eebd6ba214f3072c2"
+    },
+    {
+      "item_id": "v1-test-cfo-081-b",
+      "pair_id": "v1-test-cfo-081",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:809e551698015284aab0b86b6a498ea2400e00f61e8d41ab3d99afcdb848a5a3"
+    },
+    {
+      "item_id": "v1-test-cfo-082-a",
+      "pair_id": "v1-test-cfo-082",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:86243a497813693b76fc6bbce607fca75dbf202ffe40738d29864abc04959ecf"
+    },
+    {
+      "item_id": "v1-test-cfo-082-b",
+      "pair_id": "v1-test-cfo-082",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c399b0cf7d481b12d2604fdc0b4656ad94fa4b66eb9e694a6911c80565f6f0c8"
+    },
+    {
+      "item_id": "v1-test-cfo-083-a",
+      "pair_id": "v1-test-cfo-083",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6a11f9de154003e3055b63e80647a0f2555c3f852c0988f0c0df391180fa6245"
+    },
+    {
+      "item_id": "v1-test-cfo-083-b",
+      "pair_id": "v1-test-cfo-083",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c192b949a5daf504c64d6a949ce83602394c06babce352bce38cbde09f8545f3"
+    },
+    {
+      "item_id": "v1-test-cfo-084-a",
+      "pair_id": "v1-test-cfo-084",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4c477b136f273a6cff9ee304c18946aa4d9f6b8a48e45ae922ce6f354210f599"
+    },
+    {
+      "item_id": "v1-test-cfo-084-b",
+      "pair_id": "v1-test-cfo-084",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4e77fe3a7e6a574af1bff1c618eafd6527652e8bf6dd584b07ea76732b2249bd"
+    },
+    {
+      "item_id": "v1-test-cfo-085-a",
+      "pair_id": "v1-test-cfo-085",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fff98da1fdd90fb388e2b7f1edd7e37f01626bd2a066169e93be447354ca9560"
+    },
+    {
+      "item_id": "v1-test-cfo-085-b",
+      "pair_id": "v1-test-cfo-085",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6d5b621c14674ad9246f579a3b68c20ec0f7fbed63684cc5e687808eeab5544b"
+    },
+    {
+      "item_id": "v1-test-cfo-086-a",
+      "pair_id": "v1-test-cfo-086",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9310b4fd926d7ae4234076a9eb0cb53dfba1440cfad8df9143620df6e734c0e7"
+    },
+    {
+      "item_id": "v1-test-cfo-086-b",
+      "pair_id": "v1-test-cfo-086",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0bca4e764b9e2288f4e777aebb796472e1209366e21d14981b0efb7222b986e6"
+    },
+    {
+      "item_id": "v1-test-cfo-087-a",
+      "pair_id": "v1-test-cfo-087",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a92da65e529666ef1bec427b12f33e0ec9f53df9455a5b9811e4a758ba6f91f2"
+    },
+    {
+      "item_id": "v1-test-cfo-087-b",
+      "pair_id": "v1-test-cfo-087",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3ec93a4a9bcbc1eb12d0cb9a80ffd1ffb2944daf92c3954f2d78f8dbcc64b776"
+    },
+    {
+      "item_id": "v1-test-cfo-088-a",
+      "pair_id": "v1-test-cfo-088",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:905b5c945a66f3dcbff2f34e6249c29eca095d5881a7b6cee1692cda3c1f2627"
+    },
+    {
+      "item_id": "v1-test-cfo-088-b",
+      "pair_id": "v1-test-cfo-088",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:009e9c54770a9fc0b2f8309cf3beab8757fae196d4f2392508bc1e7a09102482"
+    },
+    {
+      "item_id": "v1-test-cfo-089-a",
+      "pair_id": "v1-test-cfo-089",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0c4607e87e17787a51b814bd669a6a118bd440e01a2fa94957d650b0b78799ff"
+    },
+    {
+      "item_id": "v1-test-cfo-089-b",
+      "pair_id": "v1-test-cfo-089",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6764f2bb15604dcb2bbbce8825fc1dec1fe5a0c17d23afcb4fa62e4f377c8597"
+    },
+    {
+      "item_id": "v1-test-cfo-090-a",
+      "pair_id": "v1-test-cfo-090",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:fc8b47fa7b0ef01dde7d70a5e52b51c706f23ccf43f5013be24a958127804ecd"
+    },
+    {
+      "item_id": "v1-test-cfo-090-b",
+      "pair_id": "v1-test-cfo-090",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:ed64bb57273d49bd81a43e7a39a04817d84f3257061793d86f95a1481778580f"
+    },
+    {
+      "item_id": "v1-test-cfo-091-a",
+      "pair_id": "v1-test-cfo-091",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:521d891ffb4014dcd70ac1e26d0fc5fd60b8ecd7cb2867326155ca5501481754"
+    },
+    {
+      "item_id": "v1-test-cfo-091-b",
+      "pair_id": "v1-test-cfo-091",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f830a31a45cb33911cb6bbf95153261eb328f09b4f6044816f8db9c861b6c3a1"
+    },
+    {
+      "item_id": "v1-test-cfo-092-a",
+      "pair_id": "v1-test-cfo-092",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f9d5ad695c306653e1dad55816cb621c207255dc8328b7b8d827ba494bb70b37"
+    },
+    {
+      "item_id": "v1-test-cfo-092-b",
+      "pair_id": "v1-test-cfo-092",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:76b151028e2c0fdc7fa796ed599b19e1a4c1d011b8bfd1207d62656ec4b5f092"
+    },
+    {
+      "item_id": "v1-test-cfo-093-a",
+      "pair_id": "v1-test-cfo-093",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:873db3b41247063e3ad19168a3d6099a3641275f880aa554b50dd4ebad1d10ba"
+    },
+    {
+      "item_id": "v1-test-cfo-093-b",
+      "pair_id": "v1-test-cfo-093",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:74518a73d10a8035d6fae643da615751c1351855d4f67a2a2a9c8f86d62b724f"
+    },
+    {
+      "item_id": "v1-test-cfo-094-a",
+      "pair_id": "v1-test-cfo-094",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a9551693fb91fc5ed2a74f0668c166c9c602608aa44cac4da288a8a47daa86a4"
+    },
+    {
+      "item_id": "v1-test-cfo-094-b",
+      "pair_id": "v1-test-cfo-094",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:bd89fb4632a2e6a69afed2775abc55c275af52f6e657ab83edee716313b51cf0"
+    },
+    {
+      "item_id": "v1-test-cfo-095-a",
+      "pair_id": "v1-test-cfo-095",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:291048d8bf21a2054414bbeb9cdc8170aa910fdf55bfae41609dd50bfd625836"
+    },
+    {
+      "item_id": "v1-test-cfo-095-b",
+      "pair_id": "v1-test-cfo-095",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:582054dc412b79201933b0a6f82d552ad6ae3cb9cf8591287f12d83dedcad4e1"
+    },
+    {
+      "item_id": "v1-test-cfo-096-a",
+      "pair_id": "v1-test-cfo-096",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:8e77b8bb1ff15302f85e0916dffd12e24761bf7dd436cfff37912e9e86c26d08"
+    },
+    {
+      "item_id": "v1-test-cfo-096-b",
+      "pair_id": "v1-test-cfo-096",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9d026815afee743846c00834c2f6294f49ec6f30db36509b7b0c983d05481018"
+    },
+    {
+      "item_id": "v1-test-cfo-097-a",
+      "pair_id": "v1-test-cfo-097",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:69babc804c67925a54aaa46d5d799771c4cce1f3e5dfddb52a8d752e9cbcc2a5"
+    },
+    {
+      "item_id": "v1-test-cfo-097-b",
+      "pair_id": "v1-test-cfo-097",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:969cc80cb7e69fdda8f631df9e4462ccfa2b072068c59e3f0a8a15937e9c8d97"
+    },
+    {
+      "item_id": "v1-test-cfo-098-a",
+      "pair_id": "v1-test-cfo-098",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7e7f72106d2a85312640b509ee067ea80b4741409112e097dfff5a6815ed4d4d"
+    },
+    {
+      "item_id": "v1-test-cfo-098-b",
+      "pair_id": "v1-test-cfo-098",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7b0a35e58a80cd46612ed3600e8e4eadda775fc795338d943da12607e0e440fa"
+    },
+    {
+      "item_id": "v1-test-cfo-099-a",
+      "pair_id": "v1-test-cfo-099",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:953647ef7d14841d78035a03ab3a8ce91ee80a58965ab79b32bab934fa5765d8"
+    },
+    {
+      "item_id": "v1-test-cfo-099-b",
+      "pair_id": "v1-test-cfo-099",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f2cef182c86a37b5b7485ce1e36489ab6cae3c1a2174b9a4de25f389215c0ff3"
+    },
+    {
+      "item_id": "v1-test-cfo-100-a",
+      "pair_id": "v1-test-cfo-100",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:def5170525c5393ee1fe6763fd6fdc023c387337ba6a2521a526400e074b467e"
+    },
+    {
+      "item_id": "v1-test-cfo-100-b",
+      "pair_id": "v1-test-cfo-100",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dc82e43033ba2871ba3ef865365b75e36fdc062c3f65741a8346b7f44caf0181"
+    },
+    {
+      "item_id": "v1-test-cfo-101-a",
+      "pair_id": "v1-test-cfo-101",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c1f21d0de470d0ef6a4617a33da064f3fb8411c007fc781f9529295e36df706e"
+    },
+    {
+      "item_id": "v1-test-cfo-101-b",
+      "pair_id": "v1-test-cfo-101",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:ed2f7c98f97ffbcf17dd60de130f33463a1e1e51188292b0ab5211dcadd8f921"
+    },
+    {
+      "item_id": "v1-test-cfo-102-a",
+      "pair_id": "v1-test-cfo-102",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:dd3e4b0a441967864563a985cdf94d998be3db60e1e48e703d6d83142a1f7515"
+    },
+    {
+      "item_id": "v1-test-cfo-102-b",
+      "pair_id": "v1-test-cfo-102",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8b0f3d9ea3fc9518786fcd46f98c557659b97893dde9e78a3442de19f37e9057"
+    },
+    {
+      "item_id": "v1-test-cfo-103-a",
+      "pair_id": "v1-test-cfo-103",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f726167d4789214565e4f2ec7c91542167e6e962d5f6a7eb7abbf3b6b6c8bd3b"
+    },
+    {
+      "item_id": "v1-test-cfo-103-b",
+      "pair_id": "v1-test-cfo-103",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:dcbfee1fe4c4f930778ed6fc9e1e8669269671252836d780d30704c381895a9d"
+    },
+    {
+      "item_id": "v1-test-cfo-104-a",
+      "pair_id": "v1-test-cfo-104",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:895570f42df82d17fdac67072af8341c106b7dd450b0b7cd46dbbbdf099033e0"
+    },
+    {
+      "item_id": "v1-test-cfo-104-b",
+      "pair_id": "v1-test-cfo-104",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6448c814e1e4cfea445a9c3d73409b92c44ee0bb1c3f2c232e170a3855039189"
+    },
+    {
+      "item_id": "v1-test-cfo-105-a",
+      "pair_id": "v1-test-cfo-105",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9d2c5c64995fd2881f1479221a7dcd21cb0613f811bea805cdfeb6897fc2b816"
+    },
+    {
+      "item_id": "v1-test-cfo-105-b",
+      "pair_id": "v1-test-cfo-105",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9c99dcab0ff437e03ac1454745051462b63ef608b7b7f477e0d807d8926de29e"
+    },
+    {
+      "item_id": "v1-test-cfo-106-a",
+      "pair_id": "v1-test-cfo-106",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c94f452328a9fce901a980703aba720164ab002b0859a7305557eafcf8e01b26"
+    },
+    {
+      "item_id": "v1-test-cfo-106-b",
+      "pair_id": "v1-test-cfo-106",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3980a394216fb3ee0e2235e16ae59593ba7ce0d0859c82092709be0f189bf622"
+    },
+    {
+      "item_id": "v1-test-cfo-107-a",
+      "pair_id": "v1-test-cfo-107",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8897e9ffcb73a9a3f1218bf3795723ee03bf5977fd0f20d9576db70b90148eb2"
+    },
+    {
+      "item_id": "v1-test-cfo-107-b",
+      "pair_id": "v1-test-cfo-107",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:50ce7bdb08a1a8c84592340f2da53e7d5f1c48fb6468002735ae3647fa12aa82"
+    },
+    {
+      "item_id": "v1-test-cfo-108-a",
+      "pair_id": "v1-test-cfo-108",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1a9cdbe928e69a7cbf5de791f5371044a179e5f1b88a9ec9f25899c1fc95ba5d"
+    },
+    {
+      "item_id": "v1-test-cfo-108-b",
+      "pair_id": "v1-test-cfo-108",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:32c6f2493b6d72ea42f3ea2095895cdaa08b89c7fe8bd3c5aa718bc5c0746cec"
+    },
+    {
+      "item_id": "v1-test-cfo-109-a",
+      "pair_id": "v1-test-cfo-109",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3122ea4dc8765b9c6b057ade9e96773e0d9ba72c683044465c1b1f131066d9d0"
+    },
+    {
+      "item_id": "v1-test-cfo-109-b",
+      "pair_id": "v1-test-cfo-109",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3375fd735d1e7d79e2d29f15109c3e1677e2f1f5c7113e65556e0c62b12373e0"
+    },
+    {
+      "item_id": "v1-test-cfo-110-a",
+      "pair_id": "v1-test-cfo-110",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2e681dedda9799cbe463ea03d71ffd831ea2a3e7258671a217951893b33f874a"
+    },
+    {
+      "item_id": "v1-test-cfo-110-b",
+      "pair_id": "v1-test-cfo-110",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:28dbf8bfff6b13fd8d15447077fa7023c764b819d7fe8eb5d7594ba1ca8a9a92"
+    },
+    {
+      "item_id": "v1-test-cfo-111-a",
+      "pair_id": "v1-test-cfo-111",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:519eed0f2d7b9fb8b2d75d7393e2c29098fbc31c7668f7c5cf6dcd6febba391d"
+    },
+    {
+      "item_id": "v1-test-cfo-111-b",
+      "pair_id": "v1-test-cfo-111",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8ba138ae6143a6be393649b1265f62a9fab4f9ee1fcc69b1319a99b192e91edc"
+    },
+    {
+      "item_id": "v1-test-cfo-112-a",
+      "pair_id": "v1-test-cfo-112",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ae3eff765826511a18553bbece28394cdf0960de107dacba210c5fd0914a4713"
+    },
+    {
+      "item_id": "v1-test-cfo-112-b",
+      "pair_id": "v1-test-cfo-112",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:855872478a1ed850384f17b19a3fe1a1f6717e6bf6a9c639679eb84ba51a5802"
+    },
+    {
+      "item_id": "v1-test-cfo-113-a",
+      "pair_id": "v1-test-cfo-113",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ac06c82614462b99bb4cca270a035d280203f1b76cbf3354e5d4e54558a5bbfd"
+    },
+    {
+      "item_id": "v1-test-cfo-113-b",
+      "pair_id": "v1-test-cfo-113",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b7bd5e4419a538996dc9ef78478ac102fd8c7421afb99196ce83db21e664349c"
+    },
+    {
+      "item_id": "v1-test-cfo-114-a",
+      "pair_id": "v1-test-cfo-114",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:ca22e78186483dc12b174f5ea2a2bfe0e9757ee6601b5092796ccc6b8e148448"
+    },
+    {
+      "item_id": "v1-test-cfo-114-b",
+      "pair_id": "v1-test-cfo-114",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:053d8cc926e6fb839590a8d26fc2b72e5556d0560f1051b15ed731d7afb51cca"
+    },
+    {
+      "item_id": "v1-test-cfo-115-a",
+      "pair_id": "v1-test-cfo-115",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ca0e81b9fc6c18eb95d86617867a0282eb5c67f085eff665b5f5b32388135ce5"
+    },
+    {
+      "item_id": "v1-test-cfo-115-b",
+      "pair_id": "v1-test-cfo-115",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a47b447264859e703d0d75b859c7dc31002df785afa49083eed6c3f14481ad63"
+    },
+    {
+      "item_id": "v1-test-cfo-116-a",
+      "pair_id": "v1-test-cfo-116",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d156709c1fc3d95eb909d25384ba27a5e3925a7fd2354132b15b3062d2345270"
+    },
+    {
+      "item_id": "v1-test-cfo-116-b",
+      "pair_id": "v1-test-cfo-116",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:74135ffa0c3210902c74a703e91d2511b80265a7c2a78c21a6f96bbc4299504c"
+    },
+    {
+      "item_id": "v1-test-cfo-117-a",
+      "pair_id": "v1-test-cfo-117",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fb21b01895fbecceb781bb9edae3bd16b671a352e89d44010ee642cfebc18556"
+    },
+    {
+      "item_id": "v1-test-cfo-117-b",
+      "pair_id": "v1-test-cfo-117",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:55572f6b1d7da05819327c086877be2aa365d69737f96dfebf23e5a0b7cd1614"
+    },
+    {
+      "item_id": "v1-test-cfo-118-a",
+      "pair_id": "v1-test-cfo-118",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:83d73982aff5b866598488b95fdf9409d15f9785c3f65998ea913460f15335d2"
+    },
+    {
+      "item_id": "v1-test-cfo-118-b",
+      "pair_id": "v1-test-cfo-118",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a74895e60e3383331a9da5d40982b8eb2ce9220422922b1b090ec134d113f049"
+    },
+    {
+      "item_id": "v1-test-cfo-119-a",
+      "pair_id": "v1-test-cfo-119",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e0d002114441384d3936b7bc4cd006c946d901ddbf49f52a7a5f1c6e201efd87"
+    },
+    {
+      "item_id": "v1-test-cfo-119-b",
+      "pair_id": "v1-test-cfo-119",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:cc6c8e5ef6afb1763b898f8407ae1c5752192db802bc2af829e8ed2a0d4bcb63"
+    },
+    {
+      "item_id": "v1-test-cfo-120-a",
+      "pair_id": "v1-test-cfo-120",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:861a43a47100dda9f64887e99422a49e2d1abb096caac81fb4174b41452f9e87"
+    },
+    {
+      "item_id": "v1-test-cfo-120-b",
+      "pair_id": "v1-test-cfo-120",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f3b10d541d402d6f617c4517e92fb85ae98c6ae409f6b2f6c054b8362e82af91"
+    },
+    {
+      "item_id": "v1-test-cfo-121-a",
+      "pair_id": "v1-test-cfo-121",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c095920ef9ba5447859abf371c6520226eb779497242d02fb09456eb6a9249be"
+    },
+    {
+      "item_id": "v1-test-cfo-121-b",
+      "pair_id": "v1-test-cfo-121",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a64d396b891947eff9eb0022dfd441df7ce53059a3b4a3006ec06c6233de5348"
+    },
+    {
+      "item_id": "v1-test-cfo-122-a",
+      "pair_id": "v1-test-cfo-122",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2f9c5da9758287cca9a0f69b0f57cde758a412dc3a6cc5fdf6ade4ce12923d08"
+    },
+    {
+      "item_id": "v1-test-cfo-122-b",
+      "pair_id": "v1-test-cfo-122",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6c9307d81517a679c974ba65b9cb51c8bd952c95338b3cadbc6f860fe414223a"
+    },
+    {
+      "item_id": "v1-test-cfo-123-a",
+      "pair_id": "v1-test-cfo-123",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2103c1272867930306bc0f6276f80c84b94ab96cea42de6e40848d59ae2a6a62"
+    },
+    {
+      "item_id": "v1-test-cfo-123-b",
+      "pair_id": "v1-test-cfo-123",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:083d47f13eb29fe5e82687f9bb0d329c6cfd80d895eabb3258d2b7a44f01f662"
+    },
+    {
+      "item_id": "v1-test-cfo-124-a",
+      "pair_id": "v1-test-cfo-124",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6dc94e71899b8d0094b91e2dc4b268c64ede02c709eaf70fb1ec9216bca751d9"
+    },
+    {
+      "item_id": "v1-test-cfo-124-b",
+      "pair_id": "v1-test-cfo-124",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c3c69320c23c66e61910601b1ca4a802ec0582269748a7c593118641ae1a21a1"
+    },
+    {
+      "item_id": "v1-test-cfo-125-a",
+      "pair_id": "v1-test-cfo-125",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e773febaf5e0d4a29a3c6a2db122d59b2aa9bf88babead2e1966de1b627d034d"
+    },
+    {
+      "item_id": "v1-test-cfo-125-b",
+      "pair_id": "v1-test-cfo-125",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:17ca7df7351239c63aa35f95e85e54fdb46864bfe7274ff234e510803767ae32"
+    },
+    {
+      "item_id": "v1-test-cfo-126-a",
+      "pair_id": "v1-test-cfo-126",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5b0ab9e2bbcaf52c3da4eb48402a1da23126c5601a952ad18c8aec0324e69c90"
+    },
+    {
+      "item_id": "v1-test-cfo-126-b",
+      "pair_id": "v1-test-cfo-126",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:09073f8d790d5e3307302af0f0ae13927f9de0db04478db4e28d5f965e7bcd01"
+    },
+    {
+      "item_id": "v1-test-cfo-127-a",
+      "pair_id": "v1-test-cfo-127",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c9252894c32a079cb290cda19d6708f7d0b9dbdbe147deaeb185dca94f3fccba"
+    },
+    {
+      "item_id": "v1-test-cfo-127-b",
+      "pair_id": "v1-test-cfo-127",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1c31e830cc1ba3087b880e6b2a32d4ae01b85f4f1f83aab24b384e8e187ebb37"
+    },
+    {
+      "item_id": "v1-test-cfo-128-a",
+      "pair_id": "v1-test-cfo-128",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7c9fe067c232963b884582c87cd632e39f9e43df10ac5ec9f16f8ad2dd905fa7"
+    },
+    {
+      "item_id": "v1-test-cfo-128-b",
+      "pair_id": "v1-test-cfo-128",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5434555e0572221b0c259b06ab09135ac6f302631254faa7981a9a7cfff56d10"
+    },
+    {
+      "item_id": "v1-test-cfo-129-a",
+      "pair_id": "v1-test-cfo-129",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:361b0364b631080ed6c7324b5b0d78aca554165fde8ee143c107149a408c7083"
+    },
+    {
+      "item_id": "v1-test-cfo-129-b",
+      "pair_id": "v1-test-cfo-129",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8c2e0fe3f556414f724145ea9a5d631a98c7d36002e666a934c62fd32a4b526f"
+    },
+    {
+      "item_id": "v1-test-cfo-130-a",
+      "pair_id": "v1-test-cfo-130",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1855b4378dd0692b62f669aea453b5d01081b8f197edc4adfa36168ddf7cde02"
+    },
+    {
+      "item_id": "v1-test-cfo-130-b",
+      "pair_id": "v1-test-cfo-130",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:85848ea468c3ae7fa325423132b6deb3f127c6e457bfae6aacad95e132294852"
+    },
+    {
+      "item_id": "v1-test-cfo-131-a",
+      "pair_id": "v1-test-cfo-131",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c99b6167e02119dd9dc01993a35d40b6470f21821bd346212c8a34bfb0685dc5"
+    },
+    {
+      "item_id": "v1-test-cfo-131-b",
+      "pair_id": "v1-test-cfo-131",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:63c21884305c6848a8f4f4ed26aeb507c5bb3ea4b84d595bd9dc2ecfe9896d2a"
+    },
+    {
+      "item_id": "v1-test-cfo-132-a",
+      "pair_id": "v1-test-cfo-132",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fc2e198e7bf5ebb70b21cd6ba307ec020e16cef7585efef14057f197969d6889"
+    },
+    {
+      "item_id": "v1-test-cfo-132-b",
+      "pair_id": "v1-test-cfo-132",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a625b2838d56f5340cdb57f7475203d3594b1f76ede1035cc794ac3ec46e97dc"
+    },
+    {
+      "item_id": "v1-test-cfo-133-a",
+      "pair_id": "v1-test-cfo-133",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ee373ca7ca99a941872dbf9c5e8bbbc78e9948ab6937415ea4357dab80567d47"
+    },
+    {
+      "item_id": "v1-test-cfo-133-b",
+      "pair_id": "v1-test-cfo-133",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:902e64a6749a381a7286aa312aef472c8c4c658065f100624c6c9b1cc4e24e37"
+    },
+    {
+      "item_id": "v1-test-cfo-134-a",
+      "pair_id": "v1-test-cfo-134",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:df01ad3452b4e9efa7921a7dc64d4176a7fc9d0d214543a58781bc1f25742f6e"
+    },
+    {
+      "item_id": "v1-test-cfo-134-b",
+      "pair_id": "v1-test-cfo-134",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:067389dea37208b712c713f18c10e8fcf2c827d05bb607a178ed67e757df522f"
+    },
+    {
+      "item_id": "v1-test-cfo-135-a",
+      "pair_id": "v1-test-cfo-135",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:418fb5421b4666a99f3b68e9ec9e9586ceb9c62031b55bf79fe9c804edd631d3"
+    },
+    {
+      "item_id": "v1-test-cfo-135-b",
+      "pair_id": "v1-test-cfo-135",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b34a2a5f4435eea8a888a3127bd0b85954c93f3655d9d8ba437496c97c153afc"
+    },
+    {
+      "item_id": "v1-test-cfo-136-a",
+      "pair_id": "v1-test-cfo-136",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a3eafb8fe8de91383ebdfc237d4016973b429f5fc0611c0f6f44ec22825774e5"
+    },
+    {
+      "item_id": "v1-test-cfo-136-b",
+      "pair_id": "v1-test-cfo-136",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:86310e65545f5360df9fd11c153874f421587332a234a6675c35c66cef91e427"
+    },
+    {
+      "item_id": "v1-test-cfo-137-a",
+      "pair_id": "v1-test-cfo-137",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3329ce91ef7a5765fc966889d54c15e179bf3f6467c4e1eabae44c03ecaf1e17"
+    },
+    {
+      "item_id": "v1-test-cfo-137-b",
+      "pair_id": "v1-test-cfo-137",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a88e8460ac08614e5280a31aa878378c52ed7f43a10d3de6ec02e3db8853bed9"
+    },
+    {
+      "item_id": "v1-test-cfo-138-a",
+      "pair_id": "v1-test-cfo-138",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:851c6d0fb8ef661e2fb53f6c6f93659c71c28bee855f936d04749d77454cadfb"
+    },
+    {
+      "item_id": "v1-test-cfo-138-b",
+      "pair_id": "v1-test-cfo-138",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d46ac4e5431fadced5e45333cd907de101144ff4b09f8dd876edf4d2ed99aa32"
+    },
+    {
+      "item_id": "v1-test-cfo-139-a",
+      "pair_id": "v1-test-cfo-139",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3a3d4c98fa5083f8f6889f3114462375b87e0cd4c6ca8fc79f3355d14103e3e6"
+    },
+    {
+      "item_id": "v1-test-cfo-139-b",
+      "pair_id": "v1-test-cfo-139",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fea014b2f303e100e8fe3651b54df747d532bbced7ee39fbc182a6407c28346b"
+    },
+    {
+      "item_id": "v1-test-cfo-140-a",
+      "pair_id": "v1-test-cfo-140",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:aa722c9f2b850bdff8b51295cbef3d9ae2c68ba5096860cbecf72461ee6d022f"
+    },
+    {
+      "item_id": "v1-test-cfo-140-b",
+      "pair_id": "v1-test-cfo-140",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:44d9447f438f00f54f7ef02aee55c8536deff0168fa59ab1a2c52464c264b8de"
+    },
+    {
+      "item_id": "v1-test-cfo-141-a",
+      "pair_id": "v1-test-cfo-141",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f81e607c78ab098deab60bd1379b70775dd4b422590bdbb3d1bf79a0cd9dd7c0"
+    },
+    {
+      "item_id": "v1-test-cfo-141-b",
+      "pair_id": "v1-test-cfo-141",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:297527bf61046d08e928fc0b455456eea1d045ad41c241d58d722956f62f38d5"
+    },
+    {
+      "item_id": "v1-test-cfo-142-a",
+      "pair_id": "v1-test-cfo-142",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4a222137088237fad8c0e04b0755f78e4af0d93a1eb629dfc87799950dc793c8"
+    },
+    {
+      "item_id": "v1-test-cfo-142-b",
+      "pair_id": "v1-test-cfo-142",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:55597697109806373c1cc42bd739ec02a1eaccecc4123314ec6ddc070f33884e"
+    },
+    {
+      "item_id": "v1-test-cfo-143-a",
+      "pair_id": "v1-test-cfo-143",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3856eadafab51dc9c0ceea8c9d23b15d717e8433427a767f00ed565269cde92d"
+    },
+    {
+      "item_id": "v1-test-cfo-143-b",
+      "pair_id": "v1-test-cfo-143",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fd84cc704fd9d42a1c3cfec9dc86b3476b5b3cdf89f75fcd72b658f57d9113bb"
+    },
+    {
+      "item_id": "v1-test-cfo-144-a",
+      "pair_id": "v1-test-cfo-144",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:889b319e33134298b93a3341106bee6b72f8a9f188c2b6e469d2d71cb7bcb90d"
+    },
+    {
+      "item_id": "v1-test-cfo-144-b",
+      "pair_id": "v1-test-cfo-144",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e92638c8e9c90e88a91d73735b6b68111aca75e435939e8f15fb9d0593b1d1ad"
+    },
+    {
+      "item_id": "v1-test-cfo-145-a",
+      "pair_id": "v1-test-cfo-145",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1896455b4e674be835abe0accb5a1cf9fcc162754c6d0e8850180e6226b94573"
+    },
+    {
+      "item_id": "v1-test-cfo-145-b",
+      "pair_id": "v1-test-cfo-145",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9097b2bddf98e366be66580295b3ab4a801029aa2a64aa0f31288d643f4404d0"
+    },
+    {
+      "item_id": "v1-test-cfo-146-a",
+      "pair_id": "v1-test-cfo-146",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:09341323a3c8c809d93bb3b15301e991bdb89d8831c3815e2895b4cbb325465d"
+    },
+    {
+      "item_id": "v1-test-cfo-146-b",
+      "pair_id": "v1-test-cfo-146",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:875f623cf223205ead49cc64ef4ff7270480382fecb0c5ab53e4ee19470fa734"
+    },
+    {
+      "item_id": "v1-test-cfo-147-a",
+      "pair_id": "v1-test-cfo-147",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:89e24452ef28a0bbfa6e68b111e541374d23a219922f0571167dca76be7fa6a1"
+    },
+    {
+      "item_id": "v1-test-cfo-147-b",
+      "pair_id": "v1-test-cfo-147",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c8e0a10a86390ba006249e7cbef01f8963d4db9e413d41412c4650b28446cff9"
+    },
+    {
+      "item_id": "v1-test-cfo-148-a",
+      "pair_id": "v1-test-cfo-148",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:20fb81f280169819ec9394e37600cbbc5a93e869e48b6ccd928f0114eeea126c"
+    },
+    {
+      "item_id": "v1-test-cfo-148-b",
+      "pair_id": "v1-test-cfo-148",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:17fd518357f759dcc5059b238362203614df34fe70f57b2d58c4be00730b630e"
+    },
+    {
+      "item_id": "v1-test-cfo-149-a",
+      "pair_id": "v1-test-cfo-149",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f1b98476ffa80d74d885cdbc3036534a3c5cd76004fb5b8353def1a33c70b938"
+    },
+    {
+      "item_id": "v1-test-cfo-149-b",
+      "pair_id": "v1-test-cfo-149",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4d0080d7673a4c079745f8a94fe0817c4b6f5dbb35781ebf2bd42c8ad09749d0"
+    },
+    {
+      "item_id": "v1-test-cfo-150-a",
+      "pair_id": "v1-test-cfo-150",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:da10e68dfecaefac6c38c36167a901e89886fc742429d06ad029e367503ad19f"
+    },
+    {
+      "item_id": "v1-test-cfo-150-b",
+      "pair_id": "v1-test-cfo-150",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:662ad11e2f40b76161835a4f7e7b03b6fdfa8966d2bffdce9095ec6e9d008f45"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "shallow_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"
+}

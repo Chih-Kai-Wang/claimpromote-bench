@@ -1,0 +1,34 @@
+{
+  "change_commit": "e4defae1e4c6e346104f41e70489503069ad1b90",
+  "change_url": "https://github.com/aquasecurity/trivy-checks/commit/e4defae1e4c6e346104f41e70489503069ad1b90",
+  "compatibility_boundary": {
+    "adaptation": "INSERT_IMPORT_DATA_LIB_RESULT_ONCE",
+    "compat_source_sha256": "sha256:11fe6b95bc8883e9c50866514c35bd1e5ee711cc5da90cbb0a653ec16875f772",
+    "purpose": "Construct the host-provided result payload after the upstream predicate matches.",
+    "upstream_policy_bytes_modified_on_disk": false
+  },
+  "credentials_retained": false,
+  "library_sha256": "sha256:9db29f1c102a9aa51300d228716e41d810bf7c72834ade2286df47fda6edfbaa",
+  "model_calls": 0,
+  "new_source_sha256": "sha256:bfcff4dabdaf1410df81f21249979dcb9175702cf04630ad284311f05d74c704",
+  "old_commit": "f37551204c6c6e731ccdc0b5ade0a74cf3f556b1",
+  "old_source_sha256": "sha256:29664ef7c43eef7c7cd019886dbcf69c8bf58546e5889b016c059df4e431969a",
+  "opa_runtime": {
+    "binary_sha256": "sha256:805ce3f336154150bef73bafa2dab8806631851bccc7cae95bef46ffabdf8fc3",
+    "build_commit": "54896f9f28515d14b31a93e6ef5737bb85866e30",
+    "platform": "darwin/arm64",
+    "rego_version": "v1",
+    "version": "1.19.1"
+  },
+  "repository": "https://github.com/aquasecurity/trivy-checks",
+  "schema_version": "1.0.0",
+  "source_bytes_match_registry": true,
+  "status": "HISTORICAL_TRIVY_POLICY_FAULT_REPRODUCED",
+  "test_source_sha256": "sha256:f042d86d152543823da4bd1121af292588929090f672ad37c7ac5826f3249421",
+  "upstream_test_names": [
+    "test_encryption_provider_config_is_set",
+    "test_encryption_provider_config_is_not_set",
+    "test_encryption_provider_config_is_set_args",
+    "test_encryption_provider_config_is_not_set_args"
+  ]
+}

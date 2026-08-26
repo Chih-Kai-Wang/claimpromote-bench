@@ -1,0 +1,13 @@
+{
+  "frozen_analyzer_sha256": "sha256:782d1384ac310972460004bb4f818c8fade67d4fa845d265780ea1e08ff988f7",
+  "hidden_reasoning_retained": false,
+  "original_false_positive_literals": [
+    "USER_ONLY_PUBLICATION"
+  ],
+  "provider_response_identifiers_retained": false,
+  "raw_prompts_or_responses_retained": false,
+  "schema_version": "1.0.0",
+  "scope": "ACCOUNT_IDENTIFIER_DETECTION_ONLY",
+  "scoring_or_metrics_code_changed": false,
+  "status": "POSTHOC_PRIVACY_REGEX_FALSE_POSITIVE_FIX"
+}

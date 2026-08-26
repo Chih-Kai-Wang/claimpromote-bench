@@ -1,0 +1,146 @@
+{
+  "c2": {
+    "analysis_before_receipt": false,
+    "gold_loaded_before_receipt": false,
+    "receipt_self_digest": "sha256:1e5219507584b788864cd5244b24009ff47174ca401bc60be7dde7c6a0f6d42a",
+    "sealed_cells": 600,
+    "terminal_record_count": 600
+  },
+  "deepseek_flash_service_configuration": {
+    "application_posts": 300,
+    "client_retries": 0,
+    "decision_coverage": 0.0,
+    "http_401_records": 300,
+    "model_capability_interpretation": "NON_EVALUABLE_NO_MODEL_OUTPUT",
+    "model_outputs": 0,
+    "registered_hypothesis": "UNSUPPORTED",
+    "result_classification": "AUTHENTICATION_OR_CLIENT_SERVICE_CONFIGURATION_FAILURE",
+    "root_cause": "NOT_ESTABLISHED",
+    "runner_lineage_observation": "The frozen r6 runner forwarded the credential verbatim in Authorization, whereas the earlier OpenAI-compatible adapter prepended Bearer. This mismatch may explain the 401 responses but is not proven as the unique cause."
+  },
+  "interpretation_boundaries": [
+    "The Qwen result concerns one time-stamped OpenCode Go service configuration, not fixed model weights or a provider-independent architecture.",
+    "The exact test evaluates a zero-difference exchangeability null. The registered 10 percentage-point threshold is a separate point-estimate gate, not a tested confidence-margin claim.",
+    "The frozen public-dev text Naive Bayes comparator is shallow and weak on DEMOTE and ESCALATE; superiority does not imply state of the art performance or superiority over strong baselines.",
+    "The DeepSeek Flash lane is an operational failure and not an estimate of DeepSeek model accuracy.",
+    "The registered two-hypothesis Holm family was retained, including the unsupported Flash hypothesis.",
+    "The composition bootstrap is benchmark-composition sensitivity, not repeated-call model uncertainty.",
+    "No causal comparison between model or provider stacks is supported."
+  ],
+  "known_reporting_defects": {
+    "frozen_dataset_manifest_metadata": {
+      "correction_overlay": "v2/confirmatory/r6-execution/frozen-manifest-metadata-correction.json",
+      "correction_overlay_self_digest": "sha256:ba08bb629e6c6a2163053ebd9def17af3b65ba8543c959594bfc04cd355c1da1",
+      "scientific_impact": "NONE",
+      "status": "DISCLOSED_FROZEN_CONSTRUCTION_STAGE_METADATA_DEFECT"
+    },
+    "provider_hidden_thinking_retention": {
+      "scientific_impact": "NONE",
+      "status": "CORRECTED_IN_POST_C2_ALLOWLIST_PUBLICATION_DERIVATIVE"
+    }
+  },
+  "public_release": {
+    "artifact_id": 9450144937,
+    "artifact_name": "claimpromotebench-fresh-confirmatory-public-release",
+    "artifact_zip_sha256": "sha256:1a0c65307b7c00938f124cfb8541af641414b6111b5f880e40bf2a716f9f892a",
+    "head_commit": "8ef845926c710d72fc17ebc77ace87ef8af94eaf",
+    "hidden_reasoning_present": false,
+    "post_c2_redaction_receipt_sha256": "sha256:c2ce7ee6a1b7878049bf70ca402f1d931076bcff58f492328dfee13a908b4bf8",
+    "public_provider_envelopes_allowlisted": true,
+    "removed_thinking_blocks_including_raw_and_c2_copies": 550,
+    "scientific_analysis_payload_byte_identical": true,
+    "source_to_derived_row_hashes_verified": true,
+    "unique_redacted_model_item_cells": 275,
+    "workflow_run_id": 32492002031
+  },
+  "qwen_service_configuration": {
+    "application_posts": 300,
+    "balanced_action_recall": 0.599807213930348,
+    "client_retries": 0,
+    "composition_sensitivity_95pct": {
+      "item_accuracy": [
+        0.7543085184102863,
+        0.9479181719653179
+      ],
+      "pair_accuracy": [
+        0.5792674596827935,
+        0.9028603411513859
+      ]
+    },
+    "conditional_false_promotion_rate": 0.0930232558139535,
+    "conditional_valid_promotion_rate": 1.0,
+    "decision_coverage": 0.906666666666667,
+    "end_to_end_false_promotion_rate": 0.08,
+    "end_to_end_item_accuracy": 0.86,
+    "end_to_end_pair_accuracy": 0.753333333333333,
+    "end_to_end_valid_promotion_rate": 0.953333333333333,
+    "failures_counted_incorrect_without_retry": {
+      "http_500": 14,
+      "http_503": 1,
+      "semantic_invalid": 3,
+      "timeout": 10
+    },
+    "macro_f1": 0.626502732240437,
+    "per_action": {
+      "ALLOW": {
+        "correct": 143,
+        "recall": 0.9533333333333334,
+        "support": 150
+      },
+      "DEMOTE": {
+        "correct": 0,
+        "recall": 0.0,
+        "support": 8
+      },
+      "ESCALATE": {
+        "correct": 5,
+        "recall": 0.625,
+        "support": 8
+      },
+      "HOLD": {
+        "correct": 110,
+        "recall": 0.8208955223880597,
+        "support": 134
+      }
+    },
+    "provider_reported_usage_for_275_http_200_responses": {
+      "input_tokens": 662053,
+      "output_token_count_above_requested_max_tokens": 261,
+      "output_tokens": 613618,
+      "total_tokens": 1275671
+    },
+    "reference_quota_value_usd": 6.2572675,
+    "reference_quota_value_scope": "POSTHOC_ESTIMATE_FROM_PROVIDER_REPORTED_USAGE_FOR_275_HTTP_200_RESPONSES_NOT_CASH_SPEND_OR_COMPLETE_BILL",
+    "registered_hypothesis": "SUPPORTED",
+    "requested_max_tokens": 1536,
+    "requested_max_tokens_interpretation": "CLIENT_PARAMETER_NOT_A_VERIFIED_GENERATION_OR_BILLING_CAP",
+    "superiority_test_vs_public_dev_text_nb": {
+      "accuracy_difference": 0.24666666666666667,
+      "additional_correct_items": 74,
+      "baseline_accuracy": 0.613333333333333,
+      "holm_adjusted_p": 1.032699183755085e-15,
+      "nonzero_pair_differences": 94,
+      "one_sided_exact_p": 5.163495918775425e-16,
+      "pair_block_wins": 84,
+      "pair_block_losses": 10
+    },
+    "valid_decisions": 272
+  },
+  "review_disposition": {
+    "dual_model_confirmation": "NO_GO",
+    "public_artifact": "GO",
+    "qwen_scoped_scientific_result": "GO",
+    "scientific_rc_ready": true
+  },
+  "schema_version": "1.0.0",
+  "scored_execution": {
+    "completed_at_utc": "2026-08-21T09:35:36Z",
+    "head_commit": "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
+    "run_attempt": 1,
+    "started_at_utc": "2026-08-21T06:10:12Z",
+    "workflow_run_id": 32453310192
+  },
+  "status": "R6_QWEN_CONFIRMATORY_SUPPORTED_FLASH_MODEL_EFFICACY_NON_EVALUABLE",
+  "study_result_sha256": "sha256:292870c85c9c0ae165329ca5c31a1c403d43033d72aaf3f60ccb052703c1fc27",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6"
+}

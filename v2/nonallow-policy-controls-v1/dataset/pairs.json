@@ -1,0 +1,82 @@
+[
+  {
+    "changed": false,
+    "factor_id": "nonurgent-import-graph-optimization",
+    "member_ids": [
+      "nonallow-awell-import-graph-optimization-control-before",
+      "nonallow-awell-import-graph-optimization-control-after"
+    ],
+    "pair_id": "nonallow-awell-import-graph-optimization-control",
+    "source_id": "awell-score-authoring-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "nonurgent-registration-optimization",
+    "member_ids": [
+      "nonallow-awell-registration-optimization-control-before",
+      "nonallow-awell-registration-optimization-control-after"
+    ],
+    "pair_id": "nonallow-awell-registration-optimization-control",
+    "source_id": "awell-score-authoring-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "user-only-publication",
+    "member_ids": [
+      "nonallow-opa-ai-issue-comment-control-before",
+      "nonallow-opa-ai-issue-comment-control-after"
+    ],
+    "pair_id": "nonallow-opa-ai-issue-comment-control",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "required-ai-guidelines",
+    "member_ids": [
+      "nonallow-opa-guidelines-control-before",
+      "nonallow-opa-guidelines-control-after"
+    ],
+    "pair_id": "nonallow-opa-guidelines-control",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "security-review-over-publication-hold",
+    "member_ids": [
+      "nonallow-opa-security-comment-change-before",
+      "nonallow-opa-security-comment-change-after"
+    ],
+    "pair_id": "nonallow-opa-security-comment-change",
+    "source_id": "opa-agent-security-policy"
+  },
+  {
+    "changed": true,
+    "factor_id": "forbidden-shipping-unknown-impact",
+    "member_ids": [
+      "nonallow-woo-shipping-unknown-change-before",
+      "nonallow-woo-shipping-unknown-change-after"
+    ],
+    "pair_id": "nonallow-woo-shipping-unknown-change",
+    "source_id": "woocommerce-agent-bc-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "unknown-hook-bc-impact",
+    "member_ids": [
+      "nonallow-woo-unknown-hook-impact-control-before",
+      "nonallow-woo-unknown-hook-impact-control-after"
+    ],
+    "pair_id": "nonallow-woo-unknown-hook-impact-control",
+    "source_id": "woocommerce-agent-test-environment-policy"
+  },
+  {
+    "changed": false,
+    "factor_id": "unknown-method-bc-impact",
+    "member_ids": [
+      "nonallow-woo-unknown-method-impact-control-before",
+      "nonallow-woo-unknown-method-impact-control-after"
+    ],
+    "pair_id": "nonallow-woo-unknown-method-impact-control",
+    "source_id": "woocommerce-agent-test-environment-policy"
+  }
+]

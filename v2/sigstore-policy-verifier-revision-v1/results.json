@@ -1,0 +1,109 @@
+{
+  "fault_mode_support": {
+    "DENY_TRUE_ACCEPTED": 2,
+    "NONTRUE_RESULT_ACCEPTED": 1,
+    "QUERY_TARGET_CHANGES_PRECEDENCE": 2,
+    "UNDEFINED_RESULT_ACCEPTED": 1
+  },
+  "results": [
+    {
+      "case_id": "sigstore-01",
+      "fault_mode": "UNDEFINED_RESULT_ACCEPTED",
+      "new_action": "HOLD",
+      "new_query_observation": {
+        "defined": false,
+        "value": null
+      },
+      "old_action": "ALLOW",
+      "old_query_observation": {
+        "defined": false,
+        "value": null
+      },
+      "transition": "ALLOW->HOLD"
+    },
+    {
+      "case_id": "sigstore-02",
+      "fault_mode": "NONTRUE_RESULT_ACCEPTED",
+      "new_action": "HOLD",
+      "new_query_observation": {
+        "defined": true,
+        "value": false
+      },
+      "old_action": "ALLOW",
+      "old_query_observation": {
+        "defined": false,
+        "value": null
+      },
+      "transition": "ALLOW->HOLD"
+    },
+    {
+      "case_id": "sigstore-03",
+      "fault_mode": "DENY_TRUE_ACCEPTED",
+      "new_action": "HOLD",
+      "new_query_observation": {
+        "defined": false,
+        "value": null
+      },
+      "old_action": "ALLOW",
+      "old_query_observation": {
+        "defined": true,
+        "value": true
+      },
+      "transition": "ALLOW->HOLD"
+    },
+    {
+      "case_id": "sigstore-04",
+      "fault_mode": "DENY_TRUE_ACCEPTED",
+      "new_action": "HOLD",
+      "new_query_observation": {
+        "defined": false,
+        "value": null
+      },
+      "old_action": "ALLOW",
+      "old_query_observation": {
+        "defined": true,
+        "value": true
+      },
+      "transition": "ALLOW->HOLD"
+    },
+    {
+      "case_id": "sigstore-05",
+      "fault_mode": "QUERY_TARGET_CHANGES_PRECEDENCE",
+      "new_action": "ALLOW",
+      "new_query_observation": {
+        "defined": true,
+        "value": true
+      },
+      "old_action": "HOLD",
+      "old_query_observation": {
+        "defined": true,
+        "value": [
+          "legacy type denial"
+        ]
+      },
+      "transition": "HOLD->ALLOW"
+    },
+    {
+      "case_id": "sigstore-06",
+      "fault_mode": "QUERY_TARGET_CHANGES_PRECEDENCE",
+      "new_action": "ALLOW",
+      "new_query_observation": {
+        "defined": true,
+        "value": true
+      },
+      "old_action": "HOLD",
+      "old_query_observation": {
+        "defined": true,
+        "value": [
+          "legacy predicate denial"
+        ]
+      },
+      "transition": "HOLD->ALLOW"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "transition_support": {
+    "ALLOW->HOLD": 4,
+    "HOLD->ALLOW": 2
+  }
+}

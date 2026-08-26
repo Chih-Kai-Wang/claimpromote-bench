@@ -1,0 +1,7 @@
+name = "claimpromote_formal_alpha"
+version = "0.1.0"
+defaultTargets = ["ClaimPromoteFormal"]
+srcDir = "artifacts"
+
+[[lean_lib]]
+name = "ClaimPromoteFormal"

@@ -1,0 +1,902 @@
+[
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "envelope_signature_verified"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->HOLD",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "allow_to_hold",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-001-a",
+      "ptg-dev-001-b"
+    ],
+    "pair_id": "ptg-dev-001",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "attester_recognized"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->HOLD",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "allow_to_hold",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-002-a",
+      "ptg-dev-002-b"
+    ],
+    "pair_id": "ptg-dev-002",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "source_uri_matches"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->HOLD",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "allow_to_hold",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-003-a",
+      "ptg-dev-003-b"
+    ],
+    "pair_id": "ptg-dev-003",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "attester_recognized"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->DEMOTE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "allow_to_demote",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-004-a",
+      "ptg-dev-004-b"
+    ],
+    "pair_id": "ptg-dev-004",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "source_uri_matches"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->DEMOTE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "allow_to_demote",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-005-a",
+      "ptg-dev-005-b"
+    ],
+    "pair_id": "ptg-dev-005",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "policy_digest_matches"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->DEMOTE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "allow_to_demote",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-006-a",
+      "ptg-dev-006-b"
+    ],
+    "pair_id": "ptg-dev-006",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "BUILD_PARAMETERS_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "allow_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-007-a",
+      "ptg-dev-007-b"
+    ],
+    "pair_id": "ptg-dev-007",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "VERIFICATION_RESULT_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "allow_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-008-a",
+      "ptg-dev-008-b"
+    ],
+    "pair_id": "ptg-dev-008",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "BUILD_PARAMETERS_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "none",
+        "rule": null
+      }
+    },
+    "blue_to_amber_transition": "ALLOW->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "allow_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-009-a",
+      "ptg-dev-009-b"
+    ],
+    "pair_id": "ptg-dev-009",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "source_ref_matches"
+      }
+    },
+    "blue_to_amber_transition": "HOLD->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "hold_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-010-a",
+      "ptg-dev-010-b"
+    ],
+    "pair_id": "ptg-dev-010",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "provenance_present"
+      }
+    },
+    "blue_to_amber_transition": "HOLD->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "hold_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-011-a",
+      "ptg-dev-011-b"
+    ],
+    "pair_id": "ptg-dev-011",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "subject_digest_matches"
+      }
+    },
+    "blue_to_amber_transition": "HOLD->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "hold_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-012-a",
+      "ptg-dev-012-b"
+    ],
+    "pair_id": "ptg-dev-012",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "BUILD_PARAMETERS_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "provenance_present"
+      }
+    },
+    "blue_to_amber_transition": "HOLD->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "HOLD"
+    ],
+    "factor_id": "hold_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-013-a",
+      "ptg-dev-013-b"
+    ],
+    "pair_id": "ptg-dev-013",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "VERIFICATION_RESULT_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "subject_digest_matches"
+      }
+    },
+    "blue_to_amber_transition": "HOLD->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "HOLD"
+    ],
+    "factor_id": "hold_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-014-a",
+      "ptg-dev-014-b"
+    ],
+    "pair_id": "ptg-dev-014",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "BUILD_PARAMETERS_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "builder_id_matches_policy"
+      }
+    },
+    "blue_to_amber_transition": "HOLD->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ESCALATE"
+    ],
+    "factor_id": "hold_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-015-a",
+      "ptg-dev-015-b"
+    ],
+    "pair_id": "ptg-dev-015",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "subject_digest_matches"
+      }
+    },
+    "blue_to_amber_transition": "DEMOTE->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "demote_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-016-a",
+      "ptg-dev-016-b"
+    ],
+    "pair_id": "ptg-dev-016",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "builder_id_matches_policy"
+      }
+    },
+    "blue_to_amber_transition": "DEMOTE->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "demote_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-017-a",
+      "ptg-dev-017-b"
+    ],
+    "pair_id": "ptg-dev-017",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "source_ref_matches"
+      }
+    },
+    "blue_to_amber_transition": "DEMOTE->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "demote_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-018-a",
+      "ptg-dev-018-b"
+    ],
+    "pair_id": "ptg-dev-018",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "BUILD_PARAMETERS_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "builder_id_matches_policy"
+      }
+    },
+    "blue_to_amber_transition": "DEMOTE->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ESCALATE"
+    ],
+    "factor_id": "demote_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-019-a",
+      "ptg-dev-019-b"
+    ],
+    "pair_id": "ptg-dev-019",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "VERIFICATION_RESULT_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "source_ref_matches"
+      }
+    },
+    "blue_to_amber_transition": "DEMOTE->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "DEMOTE"
+    ],
+    "factor_id": "demote_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-020-a",
+      "ptg-dev-020-b"
+    ],
+    "pair_id": "ptg-dev-020",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "authenticated_conflict",
+        "rule": "BUILD_PARAMETERS_CONFLICT"
+      },
+      "POLICY_BLUE": {
+        "kind": "boolean_field",
+        "rule": "provenance_present"
+      }
+    },
+    "blue_to_amber_transition": "DEMOTE->ESCALATE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "DEMOTE"
+    ],
+    "factor_id": "demote_to_escalate",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-021-a",
+      "ptg-dev-021-b"
+    ],
+    "pair_id": "ptg-dev-021",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "VSA_POLICY_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "escalate_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-022-a",
+      "ptg-dev-022-b"
+    ],
+    "pair_id": "ptg-dev-022",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "SOURCE_REVISION_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "escalate_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-023-a",
+      "ptg-dev-023-b"
+    ],
+    "pair_id": "ptg-dev-023",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "none",
+        "rule": null
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "VSA_POLICY_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->ALLOW",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "escalate_to_allow",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-024-a",
+      "ptg-dev-024-b"
+    ],
+    "pair_id": "ptg-dev-024",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "envelope_signature_verified"
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "SOURCE_REVISION_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->HOLD",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "HOLD"
+    ],
+    "factor_id": "escalate_to_hold",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-025-a",
+      "ptg-dev-025-b"
+    ],
+    "pair_id": "ptg-dev-025",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "attester_recognized"
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "VSA_POLICY_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->HOLD",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ESCALATE"
+    ],
+    "factor_id": "escalate_to_hold",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-026-a",
+      "ptg-dev-026-b"
+    ],
+    "pair_id": "ptg-dev-026",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "source_uri_matches"
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "SOURCE_REVISION_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->HOLD",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "HOLD"
+    ],
+    "factor_id": "escalate_to_hold",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-027-a",
+      "ptg-dev-027-b"
+    ],
+    "pair_id": "ptg-dev-027",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "attester_recognized"
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "VSA_POLICY_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->DEMOTE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "DEMOTE"
+    ],
+    "factor_id": "escalate_to_demote",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-028-a",
+      "ptg-dev-028-b"
+    ],
+    "pair_id": "ptg-dev-028",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "source_uri_matches"
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "SOURCE_REVISION_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->DEMOTE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ESCALATE"
+    ],
+    "factor_id": "escalate_to_demote",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-029-a",
+      "ptg-dev-029-b"
+    ],
+    "pair_id": "ptg-dev-029",
+    "split": "development"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_rules": {
+      "POLICY_AMBER": {
+        "kind": "boolean_field",
+        "rule": "policy_digest_matches"
+      },
+      "POLICY_BLUE": {
+        "kind": "authenticated_conflict",
+        "rule": "VSA_POLICY_CONFLICT"
+      }
+    },
+    "blue_to_amber_transition": "ESCALATE->DEMOTE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "DEMOTE"
+    ],
+    "factor_id": "escalate_to_demote",
+    "family": "directed_policy_action_transition",
+    "member_ids": [
+      "ptg-dev-030-a",
+      "ptg-dev-030-b"
+    ],
+    "pair_id": "ptg-dev-030",
+    "split": "development"
+  }
+]

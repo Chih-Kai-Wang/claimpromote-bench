@@ -1,0 +1,12 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "d25172929bfea74a1bd48a44d75972e30834fadd",
+  "hidden_reasoning_retained": false,
+  "planned_cells": 630,
+  "provider_response_identifiers_retained": false,
+  "schedule_sha256": "sha256:7c1888c136b8a131a7e536e030c12331781a538a911ea175c9bdb48b55360484",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-24T21:52:29.404734Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-v2-factor-complete-route-breadth-2026-08-v2"
+}

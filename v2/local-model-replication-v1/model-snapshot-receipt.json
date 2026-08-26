@@ -1,0 +1,141 @@
+{
+  "catalog_sha256": "sha256:127f20cb3740176480ddba8debbcc722c319edc58b1f96840ba0e68244664586",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:6c01c7d5c66fdd9fc5359528d33b2cf528435656c0d27f2f18c9ab0b5d91dfc8",
+  "snapshots": [
+    {
+      "file_count": 12,
+      "files": [
+        {
+          "path": ".gitattributes",
+          "sha256": "sha256:34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+          "size_bytes": 1570
+        },
+        {
+          "path": "README.md",
+          "sha256": "sha256:1ec1696bc0df30fbf0cbabb438c392eebe6070c89476a32f5df5e3a533909d7f",
+          "size_bytes": 1332
+        },
+        {
+          "path": "chat_template.jinja",
+          "sha256": "sha256:d99c0a28fd4eebd7ba2cc0309651f6d7c5486024989bc42f6bb4cc558d553689",
+          "size_bytes": 415
+        },
+        {
+          "path": "config.json",
+          "sha256": "sha256:0f9f2c41325bb88c630b49f754e7539a78a890e43709809b06f86b3726a962f2",
+          "size_bytes": 1081
+        },
+        {
+          "path": "generation_config.json",
+          "sha256": "sha256:ac52ac4e326beae33b9dd33f5fca0301fc563e34becfe98ee210ee2b853d93bb",
+          "size_bytes": 135
+        },
+        {
+          "path": "model-00001-of-00003.safetensors",
+          "sha256": "sha256:b14ef6edd1fab31b052054c71f7c3f41f387a43e02f1c3eb99a627f162f6bbb2",
+          "size_bytes": 5285177419
+        },
+        {
+          "path": "model-00002-of-00003.safetensors",
+          "sha256": "sha256:e61504f270c677da853c0b09e7a2d9745f8e964cc3bb12956732535d972db7b7",
+          "size_bytes": 5314713098
+        },
+        {
+          "path": "model-00003-of-00003.safetensors",
+          "sha256": "sha256:f01eb88b488cf2e2291b8e3ab116039ab13d35546c36c58196420fe9ed59c2be",
+          "size_bytes": 2660302214
+        },
+        {
+          "path": "model.safetensors.index.json",
+          "sha256": "sha256:8f585f22a31efe4c005dafc116b3905f3e52ed31c99598b23e8b242bfe736eca",
+          "size_bytes": 93273
+        },
+        {
+          "path": "special_tokens_map.json",
+          "sha256": "sha256:5bc5d1c106bf86895473568ef5211f3fde8415e6fdee039223d6db8ca52cbe01",
+          "size_bytes": 21311
+        },
+        {
+          "path": "tokenizer.json",
+          "sha256": "sha256:b76085f9923309d873994d444989f7eb6ec074b06f25b58f1e8d7b7741070949",
+          "size_bytes": 17078037
+        },
+        {
+          "path": "tokenizer_config.json",
+          "sha256": "sha256:70b26ab59c2c959a0dee2b0f6146a2e9d3c2b61b3995d6d584eb975f522b4c92",
+          "size_bytes": 198055
+        }
+      ],
+      "model_repo": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit",
+      "model_revision": "2a1d5eabfc504747bdc24178394821a1efc0edde",
+      "snapshot_digest": "sha256:1eba010a84b917d126ba1d4f3ce45e0ea4c1a0101feacff957188dd2ccbb7777",
+      "total_bytes": 13277587940
+    },
+    {
+      "file_count": 11,
+      "files": [
+        {
+          "path": ".gitattributes",
+          "sha256": "sha256:11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+          "size_bytes": 1519
+        },
+        {
+          "path": "README.md",
+          "sha256": "sha256:3dbd4f3c34abf83ab27d63254ece23183a8c6780371bcb13e755f8de985f869e",
+          "size_bytes": 1049
+        },
+        {
+          "path": "config.json",
+          "sha256": "sha256:69badac846fa36cef2a373a79361dea3ee8e986d5b5e51ca68465e2eb8377456",
+          "size_bytes": 996
+        },
+        {
+          "path": "merges.txt",
+          "sha256": "sha256:b6fe424e334903f7fb84d3a106d9730455f4744b9fe3c21ee136d97a00e72502",
+          "size_bytes": 916646
+        },
+        {
+          "path": "model-00001-of-00002.safetensors",
+          "sha256": "sha256:e0c113a12a77b1f2af50d94f4aeb9d3864c07d6460839734b59dd85b393d920e",
+          "size_bytes": 5310465802
+        },
+        {
+          "path": "model-00002-of-00002.safetensors",
+          "sha256": "sha256:0eeb8fb23fccf450934834d3682ef30b617425dcc43f9f3f777fa2704c8b77c8",
+          "size_bytes": 2936168109
+        },
+        {
+          "path": "model.safetensors.index.json",
+          "sha256": "sha256:776a5f4af5e7ed3f3f7ec8321f0614a9e81d3ed34d5b4e446b73d7e0270bed8a",
+          "size_bytes": 49296
+        },
+        {
+          "path": "special_tokens_map.json",
+          "sha256": "sha256:d295aea4a3c6976aeb7696b1dc6929f8840fe3ecb92a12d4d66a82a202376545",
+          "size_bytes": 464
+        },
+        {
+          "path": "tokenizer.json",
+          "sha256": "sha256:c612e57b2763204798271c0cdc14a373a565e6a371f1bfbd44e385a8391c9884",
+          "size_bytes": 7153083
+        },
+        {
+          "path": "tokenizer_config.json",
+          "sha256": "sha256:6bd125241a1393acab3c4f8d5ffad626682ad09f5f850470297081c3aa76c4ad",
+          "size_bytes": 17715
+        },
+        {
+          "path": "vocab.json",
+          "sha256": "sha256:741943243bd0035a8082ef0ccc09ef62e7ce7ec2f2f053aeedd808dba1c2ffc5",
+          "size_bytes": 1612637
+        }
+      ],
+      "model_repo": "mlx-community/phi-4-4bit",
+      "model_revision": "fc0f8f23d369dc29b55cad1d65cb5bf0dcbee910",
+      "snapshot_digest": "sha256:ff5023e3f977ab13f0dff71d92b4c7ad97669ef859069666a84e841d44a4718a",
+      "total_bytes": 8256387316
+    }
+  ],
+  "status": "PINNED_LOCAL_MODEL_SNAPSHOTS_VALIDATED"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "status": "CRYPTOGRAPHICALLY_VERIFIED_MULTI_RELAY_AGREEMENT",
+  "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+  "public_key": "83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bcb5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a",
+  "scheme_id": "bls-unchained-g1-rfc9380",
+  "round": 31492908,
+  "randomness": "b366a9e6ef15c7c7e0c40ee040d3f4be20740c05e72f276b82d23952c4322d31",
+  "signature": "856fd6765dfe62875107cee31b511a71b5acdf165b0ddd6d44a746f168f6c0d6c47597c5aa346a3cee6c1bd382ab9f5e",
+  "previous_signature": null,
+  "relays": [
+    "https://api.drand.sh",
+    "https://api2.drand.sh",
+    "https://drand.cloudflare.com"
+  ],
+  "agreeing_relays": 3,
+  "verification": {
+    "library": "drand-client",
+    "version": "1.4.2",
+    "disable_beacon_verification": false,
+    "chain_verification_parameters_hardcoded_from_commitment": true
+  }
+}

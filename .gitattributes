@@ -1,3 +1,3 @@
 * text=auto eol=lf
 *.pdf binary
-
+v2/nonallow-policy-controls-v1/sources/*-LICENSE.txt whitespace=-blank-at-eof

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "status": "BYTE_IDENTICAL_DISPATCH_ALIASES_ONLY",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
+  "reason": "GitHub workflow_dispatch requires the workflow path to have a registered ID on the default branch. The canonical confirmatory paths are new on the draft PR branch, so two retired registered paths carry byte-identical copies solely as dispatch aliases. r6 replaces void zero-POST r5 with a new C0 and executable subscription-only authorization; the alias files add no behavior beyond their canonical r6 counterparts.",
+  "c0_plan_sha256": "sha256:a93dc958abe1854134fdbb90e402b5c06063d9244ae4efa7653932a2ee07b4e9",
+  "aliases": [
+    {
+      "purpose": "C1_FREEZE_WITHOUT_MODEL_CALLS",
+      "canonical_path": ".github/workflows/confirmatory-hidden-freeze.yml",
+      "canonical_sha256": "sha256:412ee0a1f374bade4d10a822511a0086f7f841facc25311c5c1108bea7aba22b",
+      "dispatch_alias_path": ".github/workflows/prepare-review-alpha.yml",
+      "dispatch_alias_sha256": "sha256:412ee0a1f374bade4d10a822511a0086f7f841facc25311c5c1108bea7aba22b",
+      "registered_workflow_id": 335467504
+    },
+    {
+      "purpose": "SCORED_CONFIRMATORY_STUDY",
+      "canonical_path": ".github/workflows/confirmatory-hidden-study.yml",
+      "canonical_sha256": "sha256:2d306eb00b617e6d365adc9d7faf6c8e61509253afa9cac5eb057bda5040eb15",
+      "dispatch_alias_path": ".github/workflows/apply-solo-pilot.yml",
+      "dispatch_alias_sha256": "sha256:2d306eb00b617e6d365adc9d7faf6c8e61509253afa9cac5eb057bda5040eb15",
+      "registered_workflow_id": 335516192
+    }
+  ],
+  "canonical_workflow_bytes_changed_from_r5": true,
+  "canonical_workflow_change_scope": "C0 and C1 validate the fixed client-side subscription authorization. Before Python startup, Git-only guards prove C0-to-C1-source ancestry with an exact seed-only diff and C1-source-to-HEAD ancestry with only registered public C1 JSON evidence; exact CPython 3.11.16 dependencies are hash-locked. The scored workflow uses a serialized repository-wide singleton dispatch and every job rejects reruns, while a separate credential-free preflight independently reconstructs every exact request before model credential injection. Frozen model-facing adapters, hypotheses, and primary statistics are otherwise unchanged.",
+  "dispatch_alias_adds_protocol_semantics": false,
+  "prior_confirmatory_model_post_count": 0,
+  "model_calls_before_alias_commit": 0
+}

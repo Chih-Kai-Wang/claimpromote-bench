@@ -1,0 +1,87 @@
+name: v2 workflow observer
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/v2-workflow-observer.yml"
+      - ".github/workflows/v2-pilot-artifact-recovery.yml"
+      - ".github/workflows/v2-naturalistic-candidate-freeze.yml"
+      - "v2/pilot-recovery-run-id.txt"
+      - "v2/naturalistic-sources.json"
+      - "scripts/aggregate_v2_pilot_artifacts.py"
+      - "scripts/build_v2_naturalistic_candidates.py"
+      - "scripts/validate_v2_naturalistic_candidates.py"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: v2-workflow-observer-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  observe:
+    name: expose push-workflow status
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RECOVERY_TRIGGER_SHA: 724a567bce05b7f58955ba669b843ee3d0698eb9
+    steps:
+      - name: Query recovery and naturalistic freeze runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work
+          gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/actions/runs" \
+            -f branch="${GITHUB_HEAD_REF}" \
+            -f per_page=100 \
+            > work/branch-runs.json
+          jq --arg recovery_sha "$RECOVERY_TRIGGER_SHA" '
+            def compact:
+              {
+                id,
+                name,
+                path,
+                event,
+                status,
+                conclusion,
+                run_attempt,
+                head_sha,
+                created_at,
+                updated_at,
+                html_url,
+                artifacts_url
+              };
+            {
+              schema_version: "1.0.0",
+              recovery_trigger_sha: $recovery_sha,
+              recovery_runs: [
+                .workflow_runs[]
+                | select(.path == ".github/workflows/v2-pilot-artifact-recovery.yml")
+                | compact
+              ],
+              exact_recovery_runs: [
+                .workflow_runs[]
+                | select(.path == ".github/workflows/v2-pilot-artifact-recovery.yml")
+                | select(.head_sha == $recovery_sha)
+                | compact
+              ],
+              naturalistic_freeze_runs: [
+                .workflow_runs[]
+                | select(.path == ".github/workflows/v2-naturalistic-candidate-freeze.yml")
+                | compact
+              ]
+            }
+          ' work/branch-runs.json > work/v2-push-workflow-status.json
+          cat work/v2-push-workflow-status.json
+
+      - name: Upload observer record
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-v2-workflow-observer
+          path: work/v2-push-workflow-status.json
+          if-no-files-found: error
+          retention-days: 30

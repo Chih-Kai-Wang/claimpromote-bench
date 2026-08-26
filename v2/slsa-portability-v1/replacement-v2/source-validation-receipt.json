@@ -1,0 +1,29 @@
+{
+  "credentials_loaded": false,
+  "dataset_fingerprint": "sha256:25297fbfb7aa80c77022568c51d336b53e6c05e97f1e51c661b5f59f7d1fdce9",
+  "development": {
+    "action_counts": {
+      "ALLOW": 36,
+      "DEMOTE": 12,
+      "ESCALATE": 12,
+      "HOLD": 12
+    },
+    "factors": 12,
+    "items": 72,
+    "pairs": 36
+  },
+  "evaluation": {
+    "action_counts": {
+      "ALLOW": 60,
+      "DEMOTE": 20,
+      "ESCALATE": 20,
+      "HOLD": 20
+    },
+    "factors": 12,
+    "items": 120,
+    "pairs": 60
+  },
+  "policy_count_added": 1,
+  "status": "SLSA_PORTABILITY_FREEZE_VALID",
+  "upstream_sources_verified": true
+}

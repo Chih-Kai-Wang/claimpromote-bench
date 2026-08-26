@@ -1,0 +1,28 @@
+{
+  "failure_rule": "Every local runtime, syntax, schema, and semantic failure remains incorrect in the scheduled end-to-end denominator.",
+  "free_form_error_text_included": false,
+  "lanes": {
+    "local-mlx-mistral-small-3.2-24b-policy-switch-v2": {
+      "parse_status_counts": {
+        "OK": 77,
+        "SEMANTIC_ERROR": 43
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {}
+    },
+    "local-mlx-phi-4-policy-switch-v2": {
+      "parse_status_counts": {
+        "JSON_SYNTAX_ERROR": 25,
+        "OK": 59,
+        "SCHEMA_ERROR": 9,
+        "SEMANTIC_ERROR": 27
+      },
+      "terminal_records": 120,
+      "transport_failure_categories": {}
+    }
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:00fee9a4ee382b044aa974ef51ba4b79ab16e7458f33c83b1228ed3bd5042d7f",
+  "status": "COMPLETE_FROZEN_FAILURE_TAXONOMY",
+  "study_id": "claimpromotebench-policy-switch-local-model-replication-2026-08-v2"
+}

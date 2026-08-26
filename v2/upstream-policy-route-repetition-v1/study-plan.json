@@ -1,0 +1,131 @@
+{
+  "budget": {
+    "billing_mode": "PREEXISTING_OPENCODE_GO_ALLOWANCE",
+    "planned_calls_by_model": {
+      "deepseek-v4-flash": 72,
+      "qwen3.7-max": 72
+    },
+    "planned_calls_total": 144,
+    "workflow_initiated_purchase_or_recharge": false
+  },
+  "catalog_snapshot": {
+    "file_sha256": "sha256:c6bcdebc5d3d3dca5a7014b143e8fa26aa543701b7c40a678482e970576830d9",
+    "path": "v2/upstream-policy-route-repetition-v1/catalog-snapshot.json",
+    "self_digest": "sha256:fbc809a365852179cf6863a8624afddd02e0ca3890c7f3c65df80b0a0d98ccfa"
+  },
+  "design": {
+    "endpoints": {
+      "contract_action": "Require syntax, schema, and semantic validity before comparing action.",
+      "full_decision_exact": "Require the complete decision to equal gold after witness-order normalization.",
+      "strict_action": "Extract ALLOW or HOLD only from a strict top-level JSON object and compare it with the gold action."
+    },
+    "lane_order_interleaved_within_item": true,
+    "pair_rule": "Both members must be correct at the corresponding item endpoint.",
+    "repeat_agreement_unit": "The three terminal outcomes for one lane and item.",
+    "repetitions": 3,
+    "same_prompt_packet_each_repetition": true,
+    "selection_uses_new_outputs": false
+  },
+  "execution": {
+    "application_posts_per_cell": 1,
+    "base_lane_order": [
+      "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "opencode-go-deepseek-v4-flash-upstream-repeat-v1"
+    ],
+    "client_retry_count": 0,
+    "default_timeout_seconds": 180.0,
+    "failure_rule": "Every scheduled service, availability, syntax, schema, and semantic failure remains incorrect in its complete 24-item repetition denominator. Each cell permits one application POST and zero client retries. Interrupted execution is ineligible and cannot resume; successful subsets cannot replace a scheduled repetition.",
+    "minimum_global_request_interval_seconds": 0.25,
+    "partial_resume": "FORBIDDEN",
+    "planned_application_posts": 144,
+    "schedule_path": "v2/upstream-policy-route-repetition-v1/request-schedule.json",
+    "schedule_sha256": "sha256:e4776de2f0677267eaa4c26decc7d7b7e76863e474bb928bf25952d9005ba066"
+  },
+  "formal_lanes": [
+    {
+      "allow_single_json_object_extraction": false,
+      "api_kind": "openai_compatible",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "billing_mode": "PREEXISTING_OPENCODE_GO_ALLOWANCE",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "max_output_tokens": 512,
+      "model": "qwen3.7-max",
+      "model_family": "Qwen",
+      "provider": "OpenCode Go",
+      "response_format": "prompt_only_exact_json",
+      "sampling_parameters_sent": []
+    },
+    {
+      "allow_single_json_object_extraction": false,
+      "api_kind": "openai_compatible",
+      "auth_env": "OPENCODE_GO_API_KEY",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "billing_mode": "PREEXISTING_OPENCODE_GO_ALLOWANCE",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "max_output_tokens": 512,
+      "model": "deepseek-v4-flash",
+      "model_family": "DeepSeek",
+      "provider": "OpenCode Go",
+      "response_format": "prompt_only_exact_json",
+      "sampling_parameters_sent": []
+    }
+  ],
+  "frozen_at_utc": "2026-08-24T10:53:09.284816Z",
+  "interpretation_boundary": "Results describe these time-stamped model-service routes and frozen historical revision contexts. Cross-route differences are descriptive. Population reliability, model-family ranking, and causal service-ablation claims remain outside scope.",
+  "purpose": "Measure action, output-contract, and complete-decision behavior across three exact repetitions of two existing service routes on traceable historical policy revisions.",
+  "research_role": "TIME_STAMPED_WITHIN_ROUTE_REPETITION_ON_HISTORICAL_REVISIONS",
+  "response_contract": {
+    "code_fence_or_substring_repair": false,
+    "decision_schema_sha256": "sha256:d24686b11df4f0bc106c9e54119658f8a4cb0441bdc783786e3e9f4e4345693f",
+    "duplicate_keys_rejected": true,
+    "record_schema_sha256": "sha256:6e2277678e95a1cd8ec071576a9de3606a2b9be5882f844fc79a6543747b9f20",
+    "strict_top_level_json_only": true
+  },
+  "runtime_source_sha256": {
+    "pyproject.toml": "sha256:0fa9fc911fa1dee10981eae318dd32d55acb6fe35d8e5eff32aa0e8c5d3cef3f",
+    "scripts/analyze_upstream_policy_route_repetition.py": "sha256:e9615d9028a90fa4b46d9f50fa36ce8350cb3759e015b4fdab270bddb3e1644d",
+    "scripts/freeze_upstream_policy_route_repetition.py": "sha256:fc945e2d270b220284e49f1d89c79df7525d4441a9490255350c42b170de42f6",
+    "scripts/frozen_run_io.py": "sha256:3cf34c355ed31eafd8ad856e93970dbf56234c3621ff3d3bbd22aeaabd290ebb",
+    "scripts/openai_compatible_call.py": "sha256:4b706466c68ed12ba9f3f2facb7f773c8fd5c80de39d7efde01db255655c9706",
+    "scripts/run_upstream_policy_route_repetition.py": "sha256:b561bc068821c99d2d4d8021cb43d3361a054c4d2a72b9e21b1f1143964a4962",
+    "scripts/upstream_policy_revision.py": "sha256:61950b2b757a1a4f2abe11b4e8654cff2d225ef3effde02789c89c88e1a24183",
+    "scripts/upstream_route_repetition.py": "sha256:71d94bf4e44fccf3101b543b9ef7d22ce2ee4df04af710fad37d581c037f176b",
+    "scripts/validate_upstream_policy_revision_study.py": "sha256:7d47e31120b4fdc2bceb475528e7754af1ab2929bffea462308e0a848d88e469",
+    "scripts/validate_upstream_policy_route_repetition.py": "sha256:0ae83b7dc8fadde70491d1076cadc60c06de5d6812f9135d3fc937032a38c1dd",
+    "scripts/validate_upstream_policy_route_repetition_results.py": "sha256:4eb18289cdbf92391576ada9036cfcdf745fbca24e37ad0a644c7a921aa710bc",
+    "src/claimpromotebench/dataset.py": "sha256:8b91fc03431ae266f6d8bf52c431793ba2c5f6bec8596fd58ad0b4fa7cb0eb23",
+    "src/claimpromotebench/errors.py": "sha256:769e9a84e8ec95e9c93f7e1c718afb1fb7558842ab473f8b4d6be3458a4b9193",
+    "src/claimpromotebench/hashing.py": "sha256:190d1d8a67cb1ee6a9631f7661ff22429e1f80cec0bd010c944d596021c063fb",
+    "v2/schemas/upstream-policy-decision.schema.json": "sha256:d24686b11df4f0bc106c9e54119658f8a4cb0441bdc783786e3e9f4e4345693f",
+    "v2/schemas/upstream-policy-route-repetition-record.schema.json": "sha256:6e2277678e95a1cd8ec071576a9de3606a2b9be5882f844fc79a6543747b9f20",
+    "v2/upstream-policy-revisions-v1/artifact-manifest.json": "sha256:94e40891e468959a46b0e070b5739b05971504f7cd0c3e9330d2f96581ff1b09",
+    "v2/upstream-policy-revisions-v1/dataset/evaluation-gold.jsonl": "sha256:40b313b7e7c8745c113d5e47eb49ba61c2a83d5596467d9384e7eba2aa97a804",
+    "v2/upstream-policy-revisions-v1/dataset/evaluation-pairs.json": "sha256:f6ecc4ee02ffdc986b206d6f6e10172338cbf28d978884e8a5db4ac75aadd264",
+    "v2/upstream-policy-revisions-v1/dataset/evaluation-prompt-packet.json": "sha256:789237633e1d136efe87ed133886c92759bfa2a6e9203ed06ca84b4a5c8d2197"
+  },
+  "schema_version": "1.0.0",
+  "selection_receipt": {
+    "file_sha256": "sha256:2f8a601242d5fd1f995516bea46e969ef98db1f3ae80cb47bcd2fdff045cff67",
+    "path": "v2/upstream-policy-route-repetition-v1/selection-receipt.json",
+    "self_digest": "sha256:b4aac622b1300cd20efb14cd12aef5e1ba2c4e074fe3729fe11301ae7b733c4b"
+  },
+  "source": {
+    "artifact_manifest_path": "v2/upstream-policy-revisions-v1/artifact-manifest.json",
+    "artifact_manifest_sha256": "sha256:94e40891e468959a46b0e070b5739b05971504f7cd0c3e9330d2f96581ff1b09",
+    "gold_file_sha256": "sha256:40b313b7e7c8745c113d5e47eb49ba61c2a83d5596467d9384e7eba2aa97a804",
+    "gold_path": "v2/upstream-policy-revisions-v1/dataset/evaluation-gold.jsonl",
+    "historical_revisions": 2,
+    "items": 24,
+    "packet_file_sha256": "sha256:789237633e1d136efe87ed133886c92759bfa2a6e9203ed06ca84b4a5c8d2197",
+    "packet_path": "v2/upstream-policy-revisions-v1/dataset/evaluation-prompt-packet.json",
+    "packet_sha256": "sha256:0f8782f024d87e5e6c37dd1da08c8cab7224cbce9b4a8fda47e5cd5e5c99da35",
+    "pairs": 12,
+    "pairs_file_sha256": "sha256:f6ecc4ee02ffdc986b206d6f6e10172338cbf28d978884e8a5db4ac75aadd264",
+    "pairs_path": "v2/upstream-policy-revisions-v1/dataset/evaluation-pairs.json",
+    "source_gold_locked_before_route_outputs": true,
+    "study_root": "v2/upstream-policy-revisions-v1"
+  },
+  "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}

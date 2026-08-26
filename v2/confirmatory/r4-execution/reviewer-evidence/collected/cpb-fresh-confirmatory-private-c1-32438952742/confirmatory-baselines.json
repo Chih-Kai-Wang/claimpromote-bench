@@ -1,0 +1,3632 @@
+{
+  "action_order": [
+    "ALLOW",
+    "HOLD",
+    "DEMOTE",
+    "ESCALATE"
+  ],
+  "contains_test_gold": false,
+  "feature_module_sha256": "sha256:c9647e7e34b4e3bb93ce1646f99e7e507277f6178c1bda55440d7c2e2293dbf8",
+  "method_specs": {
+    "public_dev_majority": "Equivalent to always-ALLOW on the frozen public dev set; descriptive sanity check.",
+    "public_dev_stratified_prior": "Descriptive SHA-256 prompt-hash allocation using fixed public-dev class shares; not a confirmatory comparator.",
+    "public_dev_text_nb": "C0-frozen four-class multinomial NB; alpha=1; identifier-normalized prompt unigram+bigram counts."
+  },
+  "packet_sha256": "sha256:841d2d01635bff7184ff1f8516ee16e5e16d876ea3895358473240a3826b963e",
+  "predictions_sha256": "sha256:5e3579ddaedb63c5009942bb30180c0d76bd575387f009c142ce4f81accefe5f",
+  "predictor_sha256": "sha256:b7bc891fb3488c985392dd3e3f82d3de97d591c25fbdb5d4cd75663f7a6719a1",
+  "public_dev_action_counts": {
+    "ALLOW": 50,
+    "DEMOTE": 2,
+    "ESCALATE": 2,
+    "HOLD": 46
+  },
+  "public_dev_manifest_sha256": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
+  "reads_test_dataset": false,
+  "reads_test_gold": false,
+  "records": [
+    {
+      "item_id": "v1-test-cfm-001-a",
+      "pair_id": "v1-test-cfm-001",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3d4b754e29fe0419291b94db06ae0ed31a9d1f822e1053ac0727f709f3cf9dbd"
+    },
+    {
+      "item_id": "v1-test-cfm-001-b",
+      "pair_id": "v1-test-cfm-001",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:68a631e81c8857fad7abffe74fd7e7b95724601f3cc0560b7e368623c348e2e9"
+    },
+    {
+      "item_id": "v1-test-cfm-002-a",
+      "pair_id": "v1-test-cfm-002",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b81601111cb89b81cc72aa1ed62e498c45c93eaefae240a7cdc820f8810e4ed7"
+    },
+    {
+      "item_id": "v1-test-cfm-002-b",
+      "pair_id": "v1-test-cfm-002",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8e2bd8730ea0307b4aa94decc0b03b75dacc8b272998af1c7968eb9511a7fa55"
+    },
+    {
+      "item_id": "v1-test-cfm-003-a",
+      "pair_id": "v1-test-cfm-003",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a051072c88fcef35f9767de2b6cdf8de70c69c1b4b6bbed91902f6906d7dc0a1"
+    },
+    {
+      "item_id": "v1-test-cfm-003-b",
+      "pair_id": "v1-test-cfm-003",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7958a117f610c8dba35f3e74cdd31248fd5baed3a36520b4e7f3780dc1ff2c8d"
+    },
+    {
+      "item_id": "v1-test-cfm-004-a",
+      "pair_id": "v1-test-cfm-004",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:243d367544c8953a93a4c88521d70c712ace9edbf4840094a755351866fba350"
+    },
+    {
+      "item_id": "v1-test-cfm-004-b",
+      "pair_id": "v1-test-cfm-004",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:db2eecb5d55b8fd4341e1c2c2b67106416535b3471b53f79e2ed0e3deaf66b3b"
+    },
+    {
+      "item_id": "v1-test-cfm-005-a",
+      "pair_id": "v1-test-cfm-005",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:75f40ea34e4393a6d0ce5838a020f2db7f00b84782a7449f53a50a293695aee5"
+    },
+    {
+      "item_id": "v1-test-cfm-005-b",
+      "pair_id": "v1-test-cfm-005",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5e1ba550c18c07adf71b090347f80b1d785a5a47b1157859334e240bc031424b"
+    },
+    {
+      "item_id": "v1-test-cfm-006-a",
+      "pair_id": "v1-test-cfm-006",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b98593cf8d0c8e355fdbb070eada72b11734c81f94f1f0e409958a773e3cbc1d"
+    },
+    {
+      "item_id": "v1-test-cfm-006-b",
+      "pair_id": "v1-test-cfm-006",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8320190b6dea3e159a6aa5620acec1bcb35fe09fa45f058262ef1953c5664341"
+    },
+    {
+      "item_id": "v1-test-cfm-007-a",
+      "pair_id": "v1-test-cfm-007",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:56af3b70395642924f90cf667d867d6a62a618324af2915dba7e29a1372434d1"
+    },
+    {
+      "item_id": "v1-test-cfm-007-b",
+      "pair_id": "v1-test-cfm-007",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b97d55354dfb56f747f9906f9d5263264a45234d914654ea90c0fc948f4ae333"
+    },
+    {
+      "item_id": "v1-test-cfm-008-a",
+      "pair_id": "v1-test-cfm-008",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:44e01c069a57fcb47052a58ecd19aec1fc41525dbf2b307f10095b776e4f818f"
+    },
+    {
+      "item_id": "v1-test-cfm-008-b",
+      "pair_id": "v1-test-cfm-008",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e8aaf6c1ad1544498ca7344f34cd9d2c07716cef8d123379773cd87e82ecccc2"
+    },
+    {
+      "item_id": "v1-test-cfm-009-a",
+      "pair_id": "v1-test-cfm-009",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3e49c83bc59d76f238b69cc1d61a6e1871f2268943526967480e495220d01341"
+    },
+    {
+      "item_id": "v1-test-cfm-009-b",
+      "pair_id": "v1-test-cfm-009",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3026a06b5e3b2c23dcce97b5b84069da4820bf49b5030cbb8b58fbb64d8616cb"
+    },
+    {
+      "item_id": "v1-test-cfm-010-a",
+      "pair_id": "v1-test-cfm-010",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4bf13365f28d4b5526c697a6313222425359b6a0c0c3c5b8ed6fb5a42ee784eb"
+    },
+    {
+      "item_id": "v1-test-cfm-010-b",
+      "pair_id": "v1-test-cfm-010",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:dc5bef0503f778c68e278d2d9e0f1e74c8a2c37b638503635668302aa6e4823e"
+    },
+    {
+      "item_id": "v1-test-cfm-011-a",
+      "pair_id": "v1-test-cfm-011",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d42562cc41f203a84f00f5b5d2733b3704e60a4a0c25a106f7de4fcd2c4f32a2"
+    },
+    {
+      "item_id": "v1-test-cfm-011-b",
+      "pair_id": "v1-test-cfm-011",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:faf47204ee10665f5424f11e3f39911379d72697aeef986f1a8fb0588eb5ab30"
+    },
+    {
+      "item_id": "v1-test-cfm-012-a",
+      "pair_id": "v1-test-cfm-012",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2ed06b8a0e10aed8a2e98ffaacf416191cb571f3d6807e9e04fa04f753225582"
+    },
+    {
+      "item_id": "v1-test-cfm-012-b",
+      "pair_id": "v1-test-cfm-012",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1d790c285bb38b08fc993408a6725c3f0eb689640a317b1ce7b8a05b4805b73f"
+    },
+    {
+      "item_id": "v1-test-cfm-013-a",
+      "pair_id": "v1-test-cfm-013",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6b7bd7630f54c6b9382e2587ff23d34a3650e4f685bc300c6f45cdb52975a106"
+    },
+    {
+      "item_id": "v1-test-cfm-013-b",
+      "pair_id": "v1-test-cfm-013",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:58fc9b1ee5cb310c3803d2f0b1cdf44a2e6e96d3fe154d4d6a0b53bff9f90776"
+    },
+    {
+      "item_id": "v1-test-cfm-014-a",
+      "pair_id": "v1-test-cfm-014",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ae86da8f51a0fa8a37a0fc14317a1880f513a5af09cbacab81a083ef562f2976"
+    },
+    {
+      "item_id": "v1-test-cfm-014-b",
+      "pair_id": "v1-test-cfm-014",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:7defb42baf54f30024d1370fa7f160e1c375198942ac0812d3f2783c26e637f3"
+    },
+    {
+      "item_id": "v1-test-cfm-015-a",
+      "pair_id": "v1-test-cfm-015",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:82f1484d8ed3800fa76045d9b9e06b34d09ab09278f1affa972eb1e53eff96d3"
+    },
+    {
+      "item_id": "v1-test-cfm-015-b",
+      "pair_id": "v1-test-cfm-015",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:69fb53528656b725807136f8abfe529e48ae2c48866efec890a7fc9acb3238d7"
+    },
+    {
+      "item_id": "v1-test-cfm-016-a",
+      "pair_id": "v1-test-cfm-016",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:32f5fbcc2f3bc653ea8b4cfcda6086566e6eccfd0c29403e5d0c4dbe7b4ec42d"
+    },
+    {
+      "item_id": "v1-test-cfm-016-b",
+      "pair_id": "v1-test-cfm-016",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c1a7e12960371e505f8634a6bc377e0a6fb81c1f8f04298c61438e42438753ff"
+    },
+    {
+      "item_id": "v1-test-cfm-017-a",
+      "pair_id": "v1-test-cfm-017",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:bd5d1d8237ae0850f7c306dad4b73189e57ef3999ee9b28b34a26a83e552ac0a"
+    },
+    {
+      "item_id": "v1-test-cfm-017-b",
+      "pair_id": "v1-test-cfm-017",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9f3cdfefb0f9ebddd7c23bf06f1834d1de588549a0f5a29437a24fa80b0d8210"
+    },
+    {
+      "item_id": "v1-test-cfm-018-a",
+      "pair_id": "v1-test-cfm-018",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a6269aaa4c9f1b196aee8466b8224575fce4805bdc42dbde61a02ec547d0ee6c"
+    },
+    {
+      "item_id": "v1-test-cfm-018-b",
+      "pair_id": "v1-test-cfm-018",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2ab269a18dab49d0d2e5c96a0ae09814c601c9a8c9380aa3b9d1a1fad4b0459e"
+    },
+    {
+      "item_id": "v1-test-cfm-019-a",
+      "pair_id": "v1-test-cfm-019",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:98c65f8b222640d9271b55719dd025cdc7db95d6df73558169dba21ca6ad45d2"
+    },
+    {
+      "item_id": "v1-test-cfm-019-b",
+      "pair_id": "v1-test-cfm-019",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:557e2ebddbbcb011f60ca0a7d2a8bf613d343dc406755c0caf161d9a4a7635fd"
+    },
+    {
+      "item_id": "v1-test-cfm-020-a",
+      "pair_id": "v1-test-cfm-020",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:57c2611df13e2b1c774247ef6300c665121ab1a01f2a6860e2b9f085126277e8"
+    },
+    {
+      "item_id": "v1-test-cfm-020-b",
+      "pair_id": "v1-test-cfm-020",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:10f4df86cc805302164ff691967fdacf36a00e31dd7a7d882cc9cfd38994756d"
+    },
+    {
+      "item_id": "v1-test-cfm-021-a",
+      "pair_id": "v1-test-cfm-021",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5a198a1a4c60314609da84c14bf23ec064cf4a27e9791003d035f417b520f6e5"
+    },
+    {
+      "item_id": "v1-test-cfm-021-b",
+      "pair_id": "v1-test-cfm-021",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4c1dabd882969d459c0da2b7ce75a20ffc2a175b17cf2d7ef9180ac1eca6d18e"
+    },
+    {
+      "item_id": "v1-test-cfm-022-a",
+      "pair_id": "v1-test-cfm-022",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f17ad9d9063d2bbc281346b0515989b4d9e06219ea27061731956891695761df"
+    },
+    {
+      "item_id": "v1-test-cfm-022-b",
+      "pair_id": "v1-test-cfm-022",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:07d9d3b9b8105a0072354876892cf96aa741f68ccfbfd122f58b86653c071392"
+    },
+    {
+      "item_id": "v1-test-cfm-023-a",
+      "pair_id": "v1-test-cfm-023",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9356d92488df53f2b2d91419de17bd184e9c96e2114de2206a7f3ffdac0b0782"
+    },
+    {
+      "item_id": "v1-test-cfm-023-b",
+      "pair_id": "v1-test-cfm-023",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c79f201cfe8f65e9bad5dd29dae860de6317429573704d3c8b785adc8e4e8683"
+    },
+    {
+      "item_id": "v1-test-cfm-024-a",
+      "pair_id": "v1-test-cfm-024",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b38626de124ba137acef8eb6a2d1e2f15d285822b5aef082464e04520ccc1e18"
+    },
+    {
+      "item_id": "v1-test-cfm-024-b",
+      "pair_id": "v1-test-cfm-024",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6ffd906d93908a12e443ce67025dc0f7f8a9936c46012e858ff6262007f29ec7"
+    },
+    {
+      "item_id": "v1-test-cfm-025-a",
+      "pair_id": "v1-test-cfm-025",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f8bd1dec2ed034ecde3bdc5646dcc7738c44320507e78c34ab87df69ff986b45"
+    },
+    {
+      "item_id": "v1-test-cfm-025-b",
+      "pair_id": "v1-test-cfm-025",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d9ffcc2d3eca985dc849de3ab6dd97f1971ff1741f5082a81a2fe387608292b4"
+    },
+    {
+      "item_id": "v1-test-cfm-026-a",
+      "pair_id": "v1-test-cfm-026",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5aa024c0dc82e3bee190cf59f7001e35cbad1f12159a798ecc79d798a2d38702"
+    },
+    {
+      "item_id": "v1-test-cfm-026-b",
+      "pair_id": "v1-test-cfm-026",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:31ecc41fa0c90beb18f54ce6cfc5d3cda516b4ebbcd42fca41d2018f662bd920"
+    },
+    {
+      "item_id": "v1-test-cfm-027-a",
+      "pair_id": "v1-test-cfm-027",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0ff7c489cbb1f8f22bfce9750f6576f6ab57a50469faf2c7b48b24a4d3f89ee5"
+    },
+    {
+      "item_id": "v1-test-cfm-027-b",
+      "pair_id": "v1-test-cfm-027",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1d1a7bb8b3a33a371bdb7c65df2a695b067458f7ead7a066e44219d18fcc958a"
+    },
+    {
+      "item_id": "v1-test-cfm-028-a",
+      "pair_id": "v1-test-cfm-028",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:39691b2e6e0b196853cb99d410a1d894f10ddc097f45dc7f96b577e4f57a75af"
+    },
+    {
+      "item_id": "v1-test-cfm-028-b",
+      "pair_id": "v1-test-cfm-028",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5d4fe36376f5ed92ffd67ee328959ae4f4cf7246324bd9a11f16b7ecc5644248"
+    },
+    {
+      "item_id": "v1-test-cfm-029-a",
+      "pair_id": "v1-test-cfm-029",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:ebca50396394ca4b466c876b33c1fde33965802b88483da21da533d0b1bbc428"
+    },
+    {
+      "item_id": "v1-test-cfm-029-b",
+      "pair_id": "v1-test-cfm-029",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a0c5ac49beeeb5d396393249527a1fa40afb59d104b166bab1b36c623ca4b90e"
+    },
+    {
+      "item_id": "v1-test-cfm-030-a",
+      "pair_id": "v1-test-cfm-030",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c23b417d5444783756eeac182c8db00476d0bb6af3f6c3e2d170bd2cfba4fcdc"
+    },
+    {
+      "item_id": "v1-test-cfm-030-b",
+      "pair_id": "v1-test-cfm-030",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:88897fe643b6cc03315660a717f29d323a81a6bc7f0762b09b52d05071d52280"
+    },
+    {
+      "item_id": "v1-test-cfm-031-a",
+      "pair_id": "v1-test-cfm-031",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:02fa562bff759cd36581d4f0670bbb1a523676365349f28b407a1f9cd2ccd369"
+    },
+    {
+      "item_id": "v1-test-cfm-031-b",
+      "pair_id": "v1-test-cfm-031",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:929d8ff1e8360b3c56778ac0171ee61fd19939747660a72772af5229e380c659"
+    },
+    {
+      "item_id": "v1-test-cfm-032-a",
+      "pair_id": "v1-test-cfm-032",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4b02203966caf5093824e253f2e15e59f8d0762ae86dab865b5ac3f70cc2abd4"
+    },
+    {
+      "item_id": "v1-test-cfm-032-b",
+      "pair_id": "v1-test-cfm-032",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3f6ad1e4a956a4efa14f22c452fe2a56c4ec79bb214b27d31ccba6eae1817b80"
+    },
+    {
+      "item_id": "v1-test-cfm-033-a",
+      "pair_id": "v1-test-cfm-033",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:194057b2328eb9b5b5acf75310299ef81dbc14f39e2f39e5b7b8c6fc67f7e67e"
+    },
+    {
+      "item_id": "v1-test-cfm-033-b",
+      "pair_id": "v1-test-cfm-033",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3d520fa4a84c5079f17986841d8bbe27f5ac0709f4e5e7133e2aa365bb6cbc54"
+    },
+    {
+      "item_id": "v1-test-cfm-034-a",
+      "pair_id": "v1-test-cfm-034",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:7ac38a9e07ae4add6affd29175fc1fe6d84fe86314a79385090acdd9c4240ea2"
+    },
+    {
+      "item_id": "v1-test-cfm-034-b",
+      "pair_id": "v1-test-cfm-034",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:199864100b0d034068e7965d5d4e8119687df17c6cfa8a05dc6f39476f46c633"
+    },
+    {
+      "item_id": "v1-test-cfm-035-a",
+      "pair_id": "v1-test-cfm-035",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3d4885a800f281a259ddfbc92aeb0b11329533b291b129fb7c4b04ee8b7ec266"
+    },
+    {
+      "item_id": "v1-test-cfm-035-b",
+      "pair_id": "v1-test-cfm-035",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dc83cdb9e4fa47673743d4510de087bf62677b594b3056553fd4b0bb6a35fdc8"
+    },
+    {
+      "item_id": "v1-test-cfm-036-a",
+      "pair_id": "v1-test-cfm-036",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c49f75104b2c1e0a2c196523f6e63d41739981a6844686230937f39add6f383b"
+    },
+    {
+      "item_id": "v1-test-cfm-036-b",
+      "pair_id": "v1-test-cfm-036",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:01033b0697e30ddc18d6192b54fc5517e96227c33c403a40ffefad25ac08c271"
+    },
+    {
+      "item_id": "v1-test-cfm-037-a",
+      "pair_id": "v1-test-cfm-037",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6d3304de301fcd6310273f76025630d9e34b50a89e04ab564b5876e670aba5e5"
+    },
+    {
+      "item_id": "v1-test-cfm-037-b",
+      "pair_id": "v1-test-cfm-037",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:58f8a944217d1fd9bf85d66b9ff47a6838bd4c8e19c25fbdfe66cea2feff0b9f"
+    },
+    {
+      "item_id": "v1-test-cfm-038-a",
+      "pair_id": "v1-test-cfm-038",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d5b876efa4d5dfb61128bf01b94d924e9c63bcb680b9d7133f9e50b7a2152b07"
+    },
+    {
+      "item_id": "v1-test-cfm-038-b",
+      "pair_id": "v1-test-cfm-038",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:eb602edbe8eece634b625f858ba079894ff2e0747cd032b57255d8b8a47627ec"
+    },
+    {
+      "item_id": "v1-test-cfm-039-a",
+      "pair_id": "v1-test-cfm-039",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:202eba327439f8f44a80910c1f07813e37657ba11142e7407456f624516d085f"
+    },
+    {
+      "item_id": "v1-test-cfm-039-b",
+      "pair_id": "v1-test-cfm-039",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6c5393f512bcd6742fcdbc113986acef1df6d6b29ab597bc902acc855d53c947"
+    },
+    {
+      "item_id": "v1-test-cfm-040-a",
+      "pair_id": "v1-test-cfm-040",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c307b018086f27ae5e91a213756ae21f97884187b6fcae1db080abd3157dca73"
+    },
+    {
+      "item_id": "v1-test-cfm-040-b",
+      "pair_id": "v1-test-cfm-040",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:24066840ec85405ccb2f7da187d7f8f9a3e44b8bdf68a03ba238a542203e58e6"
+    },
+    {
+      "item_id": "v1-test-cfm-041-a",
+      "pair_id": "v1-test-cfm-041",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:59a749d5d6da9d88d2c71a970f749f5b9488e607affb6338fccfff669bcc200d"
+    },
+    {
+      "item_id": "v1-test-cfm-041-b",
+      "pair_id": "v1-test-cfm-041",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:833bd1c8cda28a12b04d277b56bed789cfba765daf6013e33c60f201a41e81ea"
+    },
+    {
+      "item_id": "v1-test-cfm-042-a",
+      "pair_id": "v1-test-cfm-042",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f98b6fa6cfaee2904f14b6aafdbcee134eb11094e046b55c5cf4ede91a13e43b"
+    },
+    {
+      "item_id": "v1-test-cfm-042-b",
+      "pair_id": "v1-test-cfm-042",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:fff4d928c5e6bff97ade2edf1387b2a3b0369d5356e87fce8aba69c3faddb6fd"
+    },
+    {
+      "item_id": "v1-test-cfm-043-a",
+      "pair_id": "v1-test-cfm-043",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c93a54a752d2d29cd2ee873824b0dd161fc290be7ddfe3fd5376fdc10e387e37"
+    },
+    {
+      "item_id": "v1-test-cfm-043-b",
+      "pair_id": "v1-test-cfm-043",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:bad734c746e7c8097a09279b4b5fa45db4dc4ff5bd68677f78cf36a3b7b06693"
+    },
+    {
+      "item_id": "v1-test-cfm-044-a",
+      "pair_id": "v1-test-cfm-044",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f17c94365cba1bbfdaa6e318fb806a7a9cc535381b52501615dfc518b32d297a"
+    },
+    {
+      "item_id": "v1-test-cfm-044-b",
+      "pair_id": "v1-test-cfm-044",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dc51f61fe5b48101d5e0f97b106a35be7fae746d7d8ff2b5b02de1ed37ff9239"
+    },
+    {
+      "item_id": "v1-test-cfm-045-a",
+      "pair_id": "v1-test-cfm-045",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:bfdc3c01da7f0c77582bc584c576c0f509423d3086b3a5c5f6af815ad35aa179"
+    },
+    {
+      "item_id": "v1-test-cfm-045-b",
+      "pair_id": "v1-test-cfm-045",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d5f93ac371b808d06b3beb8008e4a20384d821637d2dd39f334f56a3fc0de6cd"
+    },
+    {
+      "item_id": "v1-test-cfm-046-a",
+      "pair_id": "v1-test-cfm-046",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:eb2f48f0e594cec1daa146285bc51394dda53192284878cb4f1a8856bdf3f999"
+    },
+    {
+      "item_id": "v1-test-cfm-046-b",
+      "pair_id": "v1-test-cfm-046",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5bedb2f892766b933e77ccf4c16a789c768a4e66136800b7a70ce594d2a06b07"
+    },
+    {
+      "item_id": "v1-test-cfm-047-a",
+      "pair_id": "v1-test-cfm-047",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:7e07d283931f6f0ffcb97b791910a48133de2239bc1cc5f918f7899c80627b3f"
+    },
+    {
+      "item_id": "v1-test-cfm-047-b",
+      "pair_id": "v1-test-cfm-047",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b0efd4a4114d32800127c9315860994aa454b3dc8282d1c5067f4bc5e1ddff04"
+    },
+    {
+      "item_id": "v1-test-cfm-048-a",
+      "pair_id": "v1-test-cfm-048",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d8a5590acd04bde6c4c5a0390a5a191c84ac55fa54d826ffaa0422c05249ce50"
+    },
+    {
+      "item_id": "v1-test-cfm-048-b",
+      "pair_id": "v1-test-cfm-048",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:d0ee595405c5e0ffb5c31036818fd350bfc67ce4fd874c7614ef0f9b3e4f2261"
+    },
+    {
+      "item_id": "v1-test-cfm-049-a",
+      "pair_id": "v1-test-cfm-049",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0680155bc99305118f67e3d7f6070d9943385fa9c887075630965d1269be9844"
+    },
+    {
+      "item_id": "v1-test-cfm-049-b",
+      "pair_id": "v1-test-cfm-049",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3f3916ec2559bfdb188c67c4dce4424d2437fd6446f566da2661c200d6012329"
+    },
+    {
+      "item_id": "v1-test-cfm-050-a",
+      "pair_id": "v1-test-cfm-050",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a23362a769174a93464d037ae1c0e93c3233f63db3bc5926ee7d515d269ddc74"
+    },
+    {
+      "item_id": "v1-test-cfm-050-b",
+      "pair_id": "v1-test-cfm-050",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:42d588dfc31cf8cdbc24ca5eb6fd852c3dbc37ead4567c13fe0ece592215faec"
+    },
+    {
+      "item_id": "v1-test-cfm-051-a",
+      "pair_id": "v1-test-cfm-051",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:523377823284d5967e12f6e0db4762006ddbf7b6bc23e2ca26f4d67bb9eea9fb"
+    },
+    {
+      "item_id": "v1-test-cfm-051-b",
+      "pair_id": "v1-test-cfm-051",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:86bdb7dc6cb07843df0471f3f1540947b0139725fb9fcacf52d65d463aab59f2"
+    },
+    {
+      "item_id": "v1-test-cfm-052-a",
+      "pair_id": "v1-test-cfm-052",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:397bbc34a3604eda7d79fefd666853059d08c453cf674d24f7e4ac53a397d575"
+    },
+    {
+      "item_id": "v1-test-cfm-052-b",
+      "pair_id": "v1-test-cfm-052",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0e01ddb85a3b06f0fdc104b8f67ad0e2a3ba96fb8b08376be36d5209ec52badc"
+    },
+    {
+      "item_id": "v1-test-cfm-053-a",
+      "pair_id": "v1-test-cfm-053",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8b98ac4da883dff81e098c66a127e7c825b02ba0e38201e764eb68d6344a1ec7"
+    },
+    {
+      "item_id": "v1-test-cfm-053-b",
+      "pair_id": "v1-test-cfm-053",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0b63d20811374752db0a96960b43f2c06454f446af4450347063206c67944f66"
+    },
+    {
+      "item_id": "v1-test-cfm-054-a",
+      "pair_id": "v1-test-cfm-054",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:df94715d8287f8c0b3aa91ae8f845154d5922e67b69e7f8496f29c2f4348877d"
+    },
+    {
+      "item_id": "v1-test-cfm-054-b",
+      "pair_id": "v1-test-cfm-054",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:69bf56a549e34fb0ed744936f5c8271f28e28971aaf802ad7243929a17d56bf2"
+    },
+    {
+      "item_id": "v1-test-cfm-055-a",
+      "pair_id": "v1-test-cfm-055",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e93feaf3bfbc9996dd34f53289427b755b5531676e62398b6d5aa321f8afcfdb"
+    },
+    {
+      "item_id": "v1-test-cfm-055-b",
+      "pair_id": "v1-test-cfm-055",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:98176e7ca6d2e1fa2b29072c760a3e312dd63ec32864c5113aff867d43a856ee"
+    },
+    {
+      "item_id": "v1-test-cfm-056-a",
+      "pair_id": "v1-test-cfm-056",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:8a3460e7aec6b66f563ee3982dd70f42a12d5aab9671b3e6a2d50e55c9e2dbf0"
+    },
+    {
+      "item_id": "v1-test-cfm-056-b",
+      "pair_id": "v1-test-cfm-056",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:361510a5e13c304afaf0cb1a43960b6edd9437c0c7ad90ea9c11a2d50340f558"
+    },
+    {
+      "item_id": "v1-test-cfm-057-a",
+      "pair_id": "v1-test-cfm-057",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:2c19106fd283dc8c64dcb989a3e2c6ea55f44c0e9c0c481b195eff203cf24d43"
+    },
+    {
+      "item_id": "v1-test-cfm-057-b",
+      "pair_id": "v1-test-cfm-057",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:75599155bc8298207933217bf159a382f03b63583e6713144d960771fb81f248"
+    },
+    {
+      "item_id": "v1-test-cfm-058-a",
+      "pair_id": "v1-test-cfm-058",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:66f689e0a0dff3d91154482a967a56a6cf329d2ccb14f9535849df779c48348f"
+    },
+    {
+      "item_id": "v1-test-cfm-058-b",
+      "pair_id": "v1-test-cfm-058",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:dce2fd0e5a7664e7ee751928ec7014f1d4946a756f7f35aa0651384d95a5eb8f"
+    },
+    {
+      "item_id": "v1-test-cfm-059-a",
+      "pair_id": "v1-test-cfm-059",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7b02c481ca304fc966548fcda30e538ef524954b23d08303e39608b7be40fe5d"
+    },
+    {
+      "item_id": "v1-test-cfm-059-b",
+      "pair_id": "v1-test-cfm-059",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:27b25682f6526b447d496c5961f6c06b446188cb58fd2a64a5cbc63cc9cc77e3"
+    },
+    {
+      "item_id": "v1-test-cfm-060-a",
+      "pair_id": "v1-test-cfm-060",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6886668248a8db56fc8a4bf1d0d9cc07b8713a93eaca128f7508c91e55bce689"
+    },
+    {
+      "item_id": "v1-test-cfm-060-b",
+      "pair_id": "v1-test-cfm-060",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8d6a6af88c146696bb06bc660ffef32421f5e4f4541843e77569159557c8a7b2"
+    },
+    {
+      "item_id": "v1-test-cfm-061-a",
+      "pair_id": "v1-test-cfm-061",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:980d7fa54aa168f7f3a551818f75b49942ffc238ac20c14f890c0f22c17a9d1e"
+    },
+    {
+      "item_id": "v1-test-cfm-061-b",
+      "pair_id": "v1-test-cfm-061",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2ca39c93026f120a506f8029c87301695024e469eb50a6881927f570ba61cab2"
+    },
+    {
+      "item_id": "v1-test-cfm-062-a",
+      "pair_id": "v1-test-cfm-062",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:84c28807f9923424b0ee9291a04639b91fc8ca0cfc6abed8a202cddfca051ad2"
+    },
+    {
+      "item_id": "v1-test-cfm-062-b",
+      "pair_id": "v1-test-cfm-062",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5ea31d1e7ee452a4df276efac8837cff95679884698dfb2b9f5dabe397383709"
+    },
+    {
+      "item_id": "v1-test-cfm-063-a",
+      "pair_id": "v1-test-cfm-063",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:be3252e3f1c998d0108fce8df04d3964c9f3324d53d859aa746f854d48a1369d"
+    },
+    {
+      "item_id": "v1-test-cfm-063-b",
+      "pair_id": "v1-test-cfm-063",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:8387d31fb1d0c712cce02fafc02e315429c536f6ceb1514fb1090bed32ac73bd"
+    },
+    {
+      "item_id": "v1-test-cfm-064-a",
+      "pair_id": "v1-test-cfm-064",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:44a81f24ad1451d7e2cd475c8a16f65b57a96210ade7a1885e23f72583fe7949"
+    },
+    {
+      "item_id": "v1-test-cfm-064-b",
+      "pair_id": "v1-test-cfm-064",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:92b06b498e85cdfadd7b1b40dac50c857ce50c539562403ffb163bacbe757a25"
+    },
+    {
+      "item_id": "v1-test-cfm-065-a",
+      "pair_id": "v1-test-cfm-065",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:65a0995bfd6d349e847925710a671474e7377eab201a151913567323d2fe59f7"
+    },
+    {
+      "item_id": "v1-test-cfm-065-b",
+      "pair_id": "v1-test-cfm-065",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:bd923bf9a196ab76e816d63f9e9df59fdcaa93222055adc40003e1f690765f42"
+    },
+    {
+      "item_id": "v1-test-cfm-066-a",
+      "pair_id": "v1-test-cfm-066",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0a7486869b6ea10174ec15e7c81a07cbccc4087a00899deef09a973b3dcd4cfe"
+    },
+    {
+      "item_id": "v1-test-cfm-066-b",
+      "pair_id": "v1-test-cfm-066",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7bc3df70a26316770e0bd10771ecafe96ba60f8905879b49e3fd81fc78bc5370"
+    },
+    {
+      "item_id": "v1-test-cfm-067-a",
+      "pair_id": "v1-test-cfm-067",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:339964ec2376a1b2229297c497111f2e7f7c4eb02db108ecf9bf1070b92350d4"
+    },
+    {
+      "item_id": "v1-test-cfm-067-b",
+      "pair_id": "v1-test-cfm-067",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:15595848904ce55fcb988c23a9cdc07d56e1e72b0a15d0bd0c3c44ef76dfc79e"
+    },
+    {
+      "item_id": "v1-test-cfm-068-a",
+      "pair_id": "v1-test-cfm-068",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a2ab254828cfa553ba89465999d4a53da92ef3da1f8ad4b4c9c8548e49420e35"
+    },
+    {
+      "item_id": "v1-test-cfm-068-b",
+      "pair_id": "v1-test-cfm-068",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5b1e975a6b10b9e137d403830ba39bf54f9621531e1d1bb0bdcdac2d4f23c668"
+    },
+    {
+      "item_id": "v1-test-cfm-069-a",
+      "pair_id": "v1-test-cfm-069",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:7630bfd6fcb38d6a8dff91fe485ea633fb7a6d1070b05e9becf69415f7e16a06"
+    },
+    {
+      "item_id": "v1-test-cfm-069-b",
+      "pair_id": "v1-test-cfm-069",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:ad919605aa017f8b8d06484043806fbedc77d3f34a965f32e726599b134b0bcd"
+    },
+    {
+      "item_id": "v1-test-cfm-070-a",
+      "pair_id": "v1-test-cfm-070",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5ae3af54be88e137cb50488b96a1aaf6b01f58dadadb729e90d6c80ea3653caf"
+    },
+    {
+      "item_id": "v1-test-cfm-070-b",
+      "pair_id": "v1-test-cfm-070",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ce1cf31ab7553ea9e9365196a983b4c5c2bc583c0933267b590548fe0570105d"
+    },
+    {
+      "item_id": "v1-test-cfm-071-a",
+      "pair_id": "v1-test-cfm-071",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:211078abf00b6fff724984796f24487be9a70f7599a1091a4a85f94396ce347b"
+    },
+    {
+      "item_id": "v1-test-cfm-071-b",
+      "pair_id": "v1-test-cfm-071",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0133fd5d5f2546be65b63bb193dbee361622885b60c90037294d0b51631f6061"
+    },
+    {
+      "item_id": "v1-test-cfm-072-a",
+      "pair_id": "v1-test-cfm-072",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:dd84bd1db74c3e9de536a3c885e2e223256a00a53306347effd00c962a0d218a"
+    },
+    {
+      "item_id": "v1-test-cfm-072-b",
+      "pair_id": "v1-test-cfm-072",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:70cd8ae2cfa92d431236383f108971926a4a2aeebd05dae48a0526f0d6a65b87"
+    },
+    {
+      "item_id": "v1-test-cfm-073-a",
+      "pair_id": "v1-test-cfm-073",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:91f9b3757aa219851e911d07aa8ba567d5203fe43d021a658f456e207de28b99"
+    },
+    {
+      "item_id": "v1-test-cfm-073-b",
+      "pair_id": "v1-test-cfm-073",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6be0e4b7bfd8762125b4c9c3ff40c07c790674cf07af832a19ac6289fabcc33f"
+    },
+    {
+      "item_id": "v1-test-cfm-074-a",
+      "pair_id": "v1-test-cfm-074",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3fe3c09ec91e56aefbbd6cc3d21bf07420bcdc6d97348247a71222f9da6f52ec"
+    },
+    {
+      "item_id": "v1-test-cfm-074-b",
+      "pair_id": "v1-test-cfm-074",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e82f116e776957307c9a64379b6ae104e9cd197b46c416fb95a793bd275ad90e"
+    },
+    {
+      "item_id": "v1-test-cfm-075-a",
+      "pair_id": "v1-test-cfm-075",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b0348c61496aea31677a8551f5d0c246363784e293d70aa2d854d2db728d5155"
+    },
+    {
+      "item_id": "v1-test-cfm-075-b",
+      "pair_id": "v1-test-cfm-075",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:61b3be75bef9178fae78df38ee1b7d95bbd01f3370052be67e93461427fc49aa"
+    },
+    {
+      "item_id": "v1-test-cfm-076-a",
+      "pair_id": "v1-test-cfm-076",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:fbbbedbaa42c6018e58de3fe0a4463c2c673f10bd10dc8fc49794b03cd55228a"
+    },
+    {
+      "item_id": "v1-test-cfm-076-b",
+      "pair_id": "v1-test-cfm-076",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b138120fa00aa991c276fe962f1c9f46f07aa6bf70b6b4d693ac4991371a6518"
+    },
+    {
+      "item_id": "v1-test-cfm-077-a",
+      "pair_id": "v1-test-cfm-077",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f9b3f0245d58914ed96952306b6450baf3aa59702deae91a5b7f7b395086182c"
+    },
+    {
+      "item_id": "v1-test-cfm-077-b",
+      "pair_id": "v1-test-cfm-077",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:41b96c3fa6c29d59666267da74d1a1ddae4c96a158d6e8f894f5355fb477c97d"
+    },
+    {
+      "item_id": "v1-test-cfm-078-a",
+      "pair_id": "v1-test-cfm-078",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b0060a0607fbc8c7be4d43e0a7d3e4b62e29507b4ecc3c3cec70b760b8562198"
+    },
+    {
+      "item_id": "v1-test-cfm-078-b",
+      "pair_id": "v1-test-cfm-078",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7b243dbc00e495c273b8664ce2550582124645ef792e72f3675094be3da5323c"
+    },
+    {
+      "item_id": "v1-test-cfm-079-a",
+      "pair_id": "v1-test-cfm-079",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2d1caa94e58f8e14d85e2bb9931672324bc65125de312226e37d7dbc2a569dff"
+    },
+    {
+      "item_id": "v1-test-cfm-079-b",
+      "pair_id": "v1-test-cfm-079",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0ada116ed5c60d16823597966768477d155d19d886e75b673f06d25e436ba378"
+    },
+    {
+      "item_id": "v1-test-cfm-080-a",
+      "pair_id": "v1-test-cfm-080",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c1d1e1a4ec66af782700fca344071e4deb0cee8d94d4724108433b183a9753ca"
+    },
+    {
+      "item_id": "v1-test-cfm-080-b",
+      "pair_id": "v1-test-cfm-080",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:dd34f4c593d87d9d99d74de95e3a8d5dc38bad422feccfcb469a91c318631ee7"
+    },
+    {
+      "item_id": "v1-test-cfm-081-a",
+      "pair_id": "v1-test-cfm-081",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:1ab28f6fb051768ac5182e3a2e82564378640156526224f1dddb98d9560b6f8c"
+    },
+    {
+      "item_id": "v1-test-cfm-081-b",
+      "pair_id": "v1-test-cfm-081",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b35a093ddc31f803b65760cbbd753a13107ce150175c0e84fb2743e58ecae7ee"
+    },
+    {
+      "item_id": "v1-test-cfm-082-a",
+      "pair_id": "v1-test-cfm-082",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:ecaf60e165316babb8abc36d429fd6cc188e53154ceb7025afe258473eaf3373"
+    },
+    {
+      "item_id": "v1-test-cfm-082-b",
+      "pair_id": "v1-test-cfm-082",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a3673e7cf81fc45d26399a85f9b2442a9c949ee33977e8c585931385657cd83f"
+    },
+    {
+      "item_id": "v1-test-cfm-083-a",
+      "pair_id": "v1-test-cfm-083",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9d641a3552960f4a39f449ff1647bd376cecb05bf0b938d95ef9106382e8bc94"
+    },
+    {
+      "item_id": "v1-test-cfm-083-b",
+      "pair_id": "v1-test-cfm-083",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:2cedc3be1f38d104a8b45c70f54bf7255779dd227e6234bbf3ac829e0a909b8e"
+    },
+    {
+      "item_id": "v1-test-cfm-084-a",
+      "pair_id": "v1-test-cfm-084",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3a3ff1ec990f4f1efd9144faec349512a00bb86ece481364c0b574a76d5ba963"
+    },
+    {
+      "item_id": "v1-test-cfm-084-b",
+      "pair_id": "v1-test-cfm-084",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2671073e30ec0a70505d26de407fcd2cd5259255c34177707403942ccf3e1d0c"
+    },
+    {
+      "item_id": "v1-test-cfm-085-a",
+      "pair_id": "v1-test-cfm-085",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8eb8f39ec154db8cb07ba6c7aeafcda94a579e4ef3204bc09b73c6ad3343f968"
+    },
+    {
+      "item_id": "v1-test-cfm-085-b",
+      "pair_id": "v1-test-cfm-085",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b030698f3a8973da19776338d1ea4f4ad601d614865a7854c611ac35c152f137"
+    },
+    {
+      "item_id": "v1-test-cfm-086-a",
+      "pair_id": "v1-test-cfm-086",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ea3a59a2b15c370f302947b7994e585df7db473057c632bb336403f01af97d2e"
+    },
+    {
+      "item_id": "v1-test-cfm-086-b",
+      "pair_id": "v1-test-cfm-086",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f30341e12dfd35de36454a8d764e9b8619e72b896620424c4b213d05b2c6c6ba"
+    },
+    {
+      "item_id": "v1-test-cfm-087-a",
+      "pair_id": "v1-test-cfm-087",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b4f3a3a6ccc5ba2425d64e73bda61eb36e2d82a60685d8e951e27303824d97ed"
+    },
+    {
+      "item_id": "v1-test-cfm-087-b",
+      "pair_id": "v1-test-cfm-087",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f92ca8a52e9a65ff6655cbca771a03fc37d93813478ef478a6fb1275a273d090"
+    },
+    {
+      "item_id": "v1-test-cfm-088-a",
+      "pair_id": "v1-test-cfm-088",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4ffeb264419a5bcb9f8c5bbeeef9fa81683db6e59644f36f098a5194602bd17b"
+    },
+    {
+      "item_id": "v1-test-cfm-088-b",
+      "pair_id": "v1-test-cfm-088",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:072fc62c34050f3865f0631b5f6799c0d3f83116d96edc5030d2631507ecc51b"
+    },
+    {
+      "item_id": "v1-test-cfm-089-a",
+      "pair_id": "v1-test-cfm-089",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5be983c169cc082c45ed29d70f7341e2289a3b5998e5d7879a268a26a8b0a682"
+    },
+    {
+      "item_id": "v1-test-cfm-089-b",
+      "pair_id": "v1-test-cfm-089",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c34a572c16a3041671e2fad0ee0656de652f94328181f638de933a15b73a2b4d"
+    },
+    {
+      "item_id": "v1-test-cfm-090-a",
+      "pair_id": "v1-test-cfm-090",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3f38bb903425143767c5b69a9e6d47f6c806e4f063be4157e30dcb507dfa80ab"
+    },
+    {
+      "item_id": "v1-test-cfm-090-b",
+      "pair_id": "v1-test-cfm-090",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:314e478245081d8c2899bce16f91b49c2dca2279c0a1488ee3318f36a4faebb1"
+    },
+    {
+      "item_id": "v1-test-cfm-091-a",
+      "pair_id": "v1-test-cfm-091",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c6751f7f1b46771089d3b844f6b53f6eb08c89a817e85140b350063315c22612"
+    },
+    {
+      "item_id": "v1-test-cfm-091-b",
+      "pair_id": "v1-test-cfm-091",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b1806f310e4b8a84307231fc81efe0ba0bb9bba3ecedb6afc3aa165783df92ed"
+    },
+    {
+      "item_id": "v1-test-cfm-092-a",
+      "pair_id": "v1-test-cfm-092",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:1c99a1fcebf949a2d2b696e1443a8e7d09df6ff3e2349e299ccffe7038e925bc"
+    },
+    {
+      "item_id": "v1-test-cfm-092-b",
+      "pair_id": "v1-test-cfm-092",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3e9af41a3d3a479293cbb2fe108ffc25c25e6be48ad81d21067031535c529256"
+    },
+    {
+      "item_id": "v1-test-cfm-093-a",
+      "pair_id": "v1-test-cfm-093",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f402fff83edc68bd6ecdd70c4837cc91331f412d1d6e2bf12f9c0354d3c1123e"
+    },
+    {
+      "item_id": "v1-test-cfm-093-b",
+      "pair_id": "v1-test-cfm-093",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:78d4ad64857b02396a9158b7a275b51f81187934b968135b587a4e6e7a9b4f15"
+    },
+    {
+      "item_id": "v1-test-cfm-094-a",
+      "pair_id": "v1-test-cfm-094",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ca9ed555eea1726603ac3ff3db968c22aa1ede7671037512f28fe90ad8836760"
+    },
+    {
+      "item_id": "v1-test-cfm-094-b",
+      "pair_id": "v1-test-cfm-094",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:14ef003b06a67f30ccfdbe382a633e40eda1b5a389e8a4705a175d9fce6ea729"
+    },
+    {
+      "item_id": "v1-test-cfm-095-a",
+      "pair_id": "v1-test-cfm-095",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0187de116a7422cc4b513364a1a98841172ac6c2b0312cdee61a5cdf697118c5"
+    },
+    {
+      "item_id": "v1-test-cfm-095-b",
+      "pair_id": "v1-test-cfm-095",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c7385f14002663150cb8b8d125ea082de70a497951c982f360fbeadb4baf8e82"
+    },
+    {
+      "item_id": "v1-test-cfm-096-a",
+      "pair_id": "v1-test-cfm-096",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5b6babea72d4e04866b811abff79cf51e86ba6713ed0355da330ed98a408a87d"
+    },
+    {
+      "item_id": "v1-test-cfm-096-b",
+      "pair_id": "v1-test-cfm-096",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:3adf03eaf39e9fdcfbc032d21d231f4f41cff05f5fc0f762b702704ec2b555d9"
+    },
+    {
+      "item_id": "v1-test-cfm-097-a",
+      "pair_id": "v1-test-cfm-097",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a15608eb4d0e0f5645724d7d27101301f6b0b635d7db2f80c309e9b0edf08461"
+    },
+    {
+      "item_id": "v1-test-cfm-097-b",
+      "pair_id": "v1-test-cfm-097",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6a6c933c9a906161a6135e8d087763b08052b10d23fa891cd3c002202a66fa80"
+    },
+    {
+      "item_id": "v1-test-cfm-098-a",
+      "pair_id": "v1-test-cfm-098",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fa9d8a64ef92d1548bfc8bda26007e6fff062219049dd71120a36816d2fa4d78"
+    },
+    {
+      "item_id": "v1-test-cfm-098-b",
+      "pair_id": "v1-test-cfm-098",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a1f007a1b9662ddd57f320e81a2104e556153433d3de95ebd6517814aeb770c5"
+    },
+    {
+      "item_id": "v1-test-cfm-099-a",
+      "pair_id": "v1-test-cfm-099",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9f9a09143bba280034a21e5359e92ca2055dd6f35d03a7db92353a7f971a84d9"
+    },
+    {
+      "item_id": "v1-test-cfm-099-b",
+      "pair_id": "v1-test-cfm-099",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ad673f47324678ae66640a6cb31478d8cb8c8fe9c4cb412f6f2f1b18c758bced"
+    },
+    {
+      "item_id": "v1-test-cfm-100-a",
+      "pair_id": "v1-test-cfm-100",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7e35244a0b62b5f20dd3120c806285acbd227e9b52c5b5d6c437ed3f7b5493f8"
+    },
+    {
+      "item_id": "v1-test-cfm-100-b",
+      "pair_id": "v1-test-cfm-100",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:fd230abc9732420ed2e2730cd659c16eaa8a6267a1056a3ab5803f92975415f5"
+    },
+    {
+      "item_id": "v1-test-cfm-101-a",
+      "pair_id": "v1-test-cfm-101",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:65b5ad2d4d885ec084ce907ae4641e254537673b382d4512e446483736187c18"
+    },
+    {
+      "item_id": "v1-test-cfm-101-b",
+      "pair_id": "v1-test-cfm-101",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5a7040cad584624001a2be85763e2efe412c47c84ad03716089c808f823953c0"
+    },
+    {
+      "item_id": "v1-test-cfm-102-a",
+      "pair_id": "v1-test-cfm-102",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:323d5603c97ac2082862d1dca594d4e001b23f23c77ad2a93f8d8332505519b9"
+    },
+    {
+      "item_id": "v1-test-cfm-102-b",
+      "pair_id": "v1-test-cfm-102",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0239ea21e43dc5665b166f0095a8ee2b81cb46ef6d6b8333529f27c6aa8da03d"
+    },
+    {
+      "item_id": "v1-test-cfm-103-a",
+      "pair_id": "v1-test-cfm-103",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:743f373726ea76305a4dd8cf5050d50bc3d545fcb3ceba43a83809ac4be7d845"
+    },
+    {
+      "item_id": "v1-test-cfm-103-b",
+      "pair_id": "v1-test-cfm-103",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f21f50588676d84c647b3d2f6266f57472f9edba538c99b2693149c202dfe593"
+    },
+    {
+      "item_id": "v1-test-cfm-104-a",
+      "pair_id": "v1-test-cfm-104",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e95d15992ee03096b9f45f5702330a14b420d88310728e59d730e1464d65b0e0"
+    },
+    {
+      "item_id": "v1-test-cfm-104-b",
+      "pair_id": "v1-test-cfm-104",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:41172fec19e82059f842796f1d76a62e2378821a5a2bd48bcd9f72e68f1cbe35"
+    },
+    {
+      "item_id": "v1-test-cfm-105-a",
+      "pair_id": "v1-test-cfm-105",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:819eadb63cfc01c942b3d854200e673ec04cf7b3a33ad550837c4fb57566b059"
+    },
+    {
+      "item_id": "v1-test-cfm-105-b",
+      "pair_id": "v1-test-cfm-105",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:99718112575b3711804bff361f222d1d26ec19b0486a09b173ebc65159b7cb6c"
+    },
+    {
+      "item_id": "v1-test-cfm-106-a",
+      "pair_id": "v1-test-cfm-106",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:79b5d13951dd10bfed3409726c36f3c417a0e754c9382ebfef404c578dca869f"
+    },
+    {
+      "item_id": "v1-test-cfm-106-b",
+      "pair_id": "v1-test-cfm-106",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:802f2b58d337bd772b4846bd6d47a951607198601707eb5e07927c31f5220a45"
+    },
+    {
+      "item_id": "v1-test-cfm-107-a",
+      "pair_id": "v1-test-cfm-107",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e2414b9687e82b0ae7bb3d56f9d6e6380adb772793c3c70ebbb008e1015c304e"
+    },
+    {
+      "item_id": "v1-test-cfm-107-b",
+      "pair_id": "v1-test-cfm-107",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:9c8b7701c57ef9757f5619e1371baa0c995c743a1d8eaa91125413dbff87c2f6"
+    },
+    {
+      "item_id": "v1-test-cfm-108-a",
+      "pair_id": "v1-test-cfm-108",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:852bb9e1aa349ab2d9cba95e31f088f1029211cfb5417f1a0407529a2034924c"
+    },
+    {
+      "item_id": "v1-test-cfm-108-b",
+      "pair_id": "v1-test-cfm-108",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:89b07e30f1debc51a276f3a97a1bd48466014ab3331ec4b4fd29ddb3960e01d0"
+    },
+    {
+      "item_id": "v1-test-cfm-109-a",
+      "pair_id": "v1-test-cfm-109",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:69b391cf29da066ccac6b4785d688a6ac3e0dee0e9fae400ba04dae2c15a9eb6"
+    },
+    {
+      "item_id": "v1-test-cfm-109-b",
+      "pair_id": "v1-test-cfm-109",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e2587b7dd98fb7aab040ff41d566592b60f92c0a47e129a1df31aefc00474dba"
+    },
+    {
+      "item_id": "v1-test-cfm-110-a",
+      "pair_id": "v1-test-cfm-110",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:4ee62066bcde0cd254a71ed9cac23fe463fe9b9395c4ee89f1128560da482f19"
+    },
+    {
+      "item_id": "v1-test-cfm-110-b",
+      "pair_id": "v1-test-cfm-110",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9b8f5165b9c86080d6e88e9ed14aec2959613e56498fa532f04713a2c3980841"
+    },
+    {
+      "item_id": "v1-test-cfm-111-a",
+      "pair_id": "v1-test-cfm-111",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:a58c61a286c61135dc5a49066a7fdc517735203a64a4cff3f2e7fe9027f6f77e"
+    },
+    {
+      "item_id": "v1-test-cfm-111-b",
+      "pair_id": "v1-test-cfm-111",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:c1ad3b9b2244c125d137f60786b3eaaa25130f50bc1399827f30fbd4f24515bf"
+    },
+    {
+      "item_id": "v1-test-cfm-112-a",
+      "pair_id": "v1-test-cfm-112",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:2bd612fd46d1c29722dce6a67f3f23cfffa69930c05dd610089eef73549e3be1"
+    },
+    {
+      "item_id": "v1-test-cfm-112-b",
+      "pair_id": "v1-test-cfm-112",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ef3def439286bfd8271a45f0a4e9d3719f05aba98be1e8d87a944145ab9300d7"
+    },
+    {
+      "item_id": "v1-test-cfm-113-a",
+      "pair_id": "v1-test-cfm-113",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5ef571ae7b663d49bbe8832efafe544fc529f3f56e3ec41d5071968b4051c891"
+    },
+    {
+      "item_id": "v1-test-cfm-113-b",
+      "pair_id": "v1-test-cfm-113",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:b57fc99f8c05663d70b0681dab1ad050081e94c8f3661c2b77c4babbd0582acc"
+    },
+    {
+      "item_id": "v1-test-cfm-114-a",
+      "pair_id": "v1-test-cfm-114",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:99be86ba0d23e09c21af30a88046f45117c4900a2a58baa2f86618413140fb71"
+    },
+    {
+      "item_id": "v1-test-cfm-114-b",
+      "pair_id": "v1-test-cfm-114",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c3aaa06a4d8107e8eb5359199b3ea30120afc5bf3d40f426d45a7569a7666fd8"
+    },
+    {
+      "item_id": "v1-test-cfm-115-a",
+      "pair_id": "v1-test-cfm-115",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:16e3d6a5a073f94d1ec88680ed100770b02453bd2334e2f631471fe98133d929"
+    },
+    {
+      "item_id": "v1-test-cfm-115-b",
+      "pair_id": "v1-test-cfm-115",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e8edb279e12e5017f359b71ec627bbb0b430907c972ac86e6fc2fa1921f56626"
+    },
+    {
+      "item_id": "v1-test-cfm-116-a",
+      "pair_id": "v1-test-cfm-116",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:75d71be38aa8e06de4f292821f4fd80323c1621673759d8a85aa8cf0d10f60ff"
+    },
+    {
+      "item_id": "v1-test-cfm-116-b",
+      "pair_id": "v1-test-cfm-116",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2808fcafe7ec8c840194ead1bafab86769fb3b7e728d3992efec2078b2a06eb9"
+    },
+    {
+      "item_id": "v1-test-cfm-117-a",
+      "pair_id": "v1-test-cfm-117",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3c6bfa1bcd650230c0db5e7736104436c4bb5fc3349304cabd04a5e02c323fd7"
+    },
+    {
+      "item_id": "v1-test-cfm-117-b",
+      "pair_id": "v1-test-cfm-117",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:62a7a12307b902d1075f2033f613f13ac6383a0bac7d52b99cd8a0722d8f1909"
+    },
+    {
+      "item_id": "v1-test-cfm-118-a",
+      "pair_id": "v1-test-cfm-118",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:195c3cbad8d78d41cf767b1b058e6e60181fd53f3ef96feb0337a4679cfe1a2a"
+    },
+    {
+      "item_id": "v1-test-cfm-118-b",
+      "pair_id": "v1-test-cfm-118",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:82268b72bdbe4f19380986b42f9b7adc90bea6a35c0f1235b5d1eff61f82ac04"
+    },
+    {
+      "item_id": "v1-test-cfm-119-a",
+      "pair_id": "v1-test-cfm-119",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:566d5761acd68116f617ca6e0318de2fdafbd6f4aa445d21e53fae328817a08c"
+    },
+    {
+      "item_id": "v1-test-cfm-119-b",
+      "pair_id": "v1-test-cfm-119",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f441aa76aafc5894300af0599a7f44a46acb0469fb413a2c7998a63a6bf38a1e"
+    },
+    {
+      "item_id": "v1-test-cfm-120-a",
+      "pair_id": "v1-test-cfm-120",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:fb60307906d3a16f2f1c7073e2212d626f51e4cfbdf4e35121535959a6c4e155"
+    },
+    {
+      "item_id": "v1-test-cfm-120-b",
+      "pair_id": "v1-test-cfm-120",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0fe318bc4f20249db2fd649231e475a13ef1624208eaadb9297341b22375b8ee"
+    },
+    {
+      "item_id": "v1-test-cfm-121-a",
+      "pair_id": "v1-test-cfm-121",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4ddefee2c364f91316ab1d4f0f41e764f784d789b240253be69583a2b18df296"
+    },
+    {
+      "item_id": "v1-test-cfm-121-b",
+      "pair_id": "v1-test-cfm-121",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0df641b8dc7989d359f031ef6787eed08654944f9ece92b4ae0c19b626b9af7c"
+    },
+    {
+      "item_id": "v1-test-cfm-122-a",
+      "pair_id": "v1-test-cfm-122",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:326f0ea11dc510d7253d983a5304c7efbbc6e1e28016309330f62dc5b2112543"
+    },
+    {
+      "item_id": "v1-test-cfm-122-b",
+      "pair_id": "v1-test-cfm-122",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e021f30187d40dd49024920899fdef3fcc67d2baa37b34eef4c12f8993c9c323"
+    },
+    {
+      "item_id": "v1-test-cfm-123-a",
+      "pair_id": "v1-test-cfm-123",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:576d16a5548acff3f9465f6368561800a9910540fa21504e37596f8ddd6009a6"
+    },
+    {
+      "item_id": "v1-test-cfm-123-b",
+      "pair_id": "v1-test-cfm-123",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ca5b6a5ea28085a666b2d819944e7f4b1c27b5be2a4890b27488c3aa964787b5"
+    },
+    {
+      "item_id": "v1-test-cfm-124-a",
+      "pair_id": "v1-test-cfm-124",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5be4c4f932f5fcce5755fcb0bff83d65ef49ee53aaef55f38689b1edfe153950"
+    },
+    {
+      "item_id": "v1-test-cfm-124-b",
+      "pair_id": "v1-test-cfm-124",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:6719ed4ee54ce1ff71d754dd4a7b1b4e477d49adf56b9b7e42bfe96c2cad35b2"
+    },
+    {
+      "item_id": "v1-test-cfm-125-a",
+      "pair_id": "v1-test-cfm-125",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2dfa51d886f09fa476ec65292b92cb68d42ac6cbcad9c9c44f5b4e81751831e7"
+    },
+    {
+      "item_id": "v1-test-cfm-125-b",
+      "pair_id": "v1-test-cfm-125",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:5da11767e3dd93f17d6b1dfc729b8af1a838d4460255c59d8eb8a3a85951a581"
+    },
+    {
+      "item_id": "v1-test-cfm-126-a",
+      "pair_id": "v1-test-cfm-126",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:e3edaed9b090fd4620d9a096cb9361940f0379171314449603ad3e26c68e6cdd"
+    },
+    {
+      "item_id": "v1-test-cfm-126-b",
+      "pair_id": "v1-test-cfm-126",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3cb52a3375346468cb1819270c1dbbcf85afd32419adbbd0142a64903c8ad838"
+    },
+    {
+      "item_id": "v1-test-cfm-127-a",
+      "pair_id": "v1-test-cfm-127",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:3abb53acfeea6cf9c7d0bd4a8a9a1126fecaf37aff524c3a2abb78ac02a59236"
+    },
+    {
+      "item_id": "v1-test-cfm-127-b",
+      "pair_id": "v1-test-cfm-127",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f9218210d5b9c3b1be5d60b82e558b726061c1004290846b46f656c7b069a218"
+    },
+    {
+      "item_id": "v1-test-cfm-128-a",
+      "pair_id": "v1-test-cfm-128",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f4e0f07d224704f679aaaa62bad3fe81509a8584d31e4eda6c63fe1393b40a3d"
+    },
+    {
+      "item_id": "v1-test-cfm-128-b",
+      "pair_id": "v1-test-cfm-128",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:18258e239bb3d8074414839a8195f8cb948d4062c0547381cb2305c28159f1de"
+    },
+    {
+      "item_id": "v1-test-cfm-129-a",
+      "pair_id": "v1-test-cfm-129",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:c196e6b6c912a656d21ddd74b781a27a50f599e1fff433d06706c220ec95b9f7"
+    },
+    {
+      "item_id": "v1-test-cfm-129-b",
+      "pair_id": "v1-test-cfm-129",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "DEMOTE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9844f748e1cd60e3895eb4ba3ac2d6e3f146e6e14328ee84c538f1f8a044a57d"
+    },
+    {
+      "item_id": "v1-test-cfm-130-a",
+      "pair_id": "v1-test-cfm-130",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:7556ca5ad98d1c8b670e84aa2baccca406f010c027f32d424b1f0f6a6060e6c1"
+    },
+    {
+      "item_id": "v1-test-cfm-130-b",
+      "pair_id": "v1-test-cfm-130",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:2298449468b009d2b51f9d1962f9de0a1d1739011078b954ffd80e34fd153e4b"
+    },
+    {
+      "item_id": "v1-test-cfm-131-a",
+      "pair_id": "v1-test-cfm-131",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:fde34b836a57aac9d6993e91b6e71e433f2a8c7a47f36e4e64d38fb15f027626"
+    },
+    {
+      "item_id": "v1-test-cfm-131-b",
+      "pair_id": "v1-test-cfm-131",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:5a0f2e90123ef282601a9a2a244d08b0de086c366fd5ea6edb897b150cf1e3e8"
+    },
+    {
+      "item_id": "v1-test-cfm-132-a",
+      "pair_id": "v1-test-cfm-132",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:8f7bc09aad6727f6da22035a3b2984464e5d1eca1a42debdf0677378b3d34950"
+    },
+    {
+      "item_id": "v1-test-cfm-132-b",
+      "pair_id": "v1-test-cfm-132",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9cac598a7719836f1bae9bb64546170232791eed1cab3396d35fef594730f9bd"
+    },
+    {
+      "item_id": "v1-test-cfm-133-a",
+      "pair_id": "v1-test-cfm-133",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:847817e34a67b99af9393e56f6b0d8190a436af00dee0ce49888fe9bb3609251"
+    },
+    {
+      "item_id": "v1-test-cfm-133-b",
+      "pair_id": "v1-test-cfm-133",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:30f07ad8950f35a37a8a7dc599e7521b533cb7253e9b426ced70bfc616061f8a"
+    },
+    {
+      "item_id": "v1-test-cfm-134-a",
+      "pair_id": "v1-test-cfm-134",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8706c4a1b0fabf2b02e537912b93f0192ef68b5f6193affffc5115a17cd460b4"
+    },
+    {
+      "item_id": "v1-test-cfm-134-b",
+      "pair_id": "v1-test-cfm-134",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4e7adaf9bbec66f5c9bbab6367a1a386434411d0d35182e1ac4b421e48d81fc6"
+    },
+    {
+      "item_id": "v1-test-cfm-135-a",
+      "pair_id": "v1-test-cfm-135",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:0a969210e0af8abe2c703483a4598bdbb8850875b9a1cb4426608898101c9ef4"
+    },
+    {
+      "item_id": "v1-test-cfm-135-b",
+      "pair_id": "v1-test-cfm-135",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:16e3b453484f730504ce892f5adb32b5677cf46fddff14977ed80b9cb8ea2a00"
+    },
+    {
+      "item_id": "v1-test-cfm-136-a",
+      "pair_id": "v1-test-cfm-136",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:a1afbfcbb0a90bfb7e746cf5d7dc65df52798ddd48b266d19d139fefc81cc7ec"
+    },
+    {
+      "item_id": "v1-test-cfm-136-b",
+      "pair_id": "v1-test-cfm-136",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:94504a1795b1eaa5ed0181d20766f4abcf3f361910539f2f6a48244463a49d47"
+    },
+    {
+      "item_id": "v1-test-cfm-137-a",
+      "pair_id": "v1-test-cfm-137",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:b0b1f01f93df3b326acd81c5444457a07814fb91ce56a6332c9e2b9947432a67"
+    },
+    {
+      "item_id": "v1-test-cfm-137-b",
+      "pair_id": "v1-test-cfm-137",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d081344883b5f2f8fda04d437cc584ff3995545c20d5bad843f741cfceab10aa"
+    },
+    {
+      "item_id": "v1-test-cfm-138-a",
+      "pair_id": "v1-test-cfm-138",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:bb752f691329e9170257b41b44b1e48933c5f848392ff561fd1dd4f1065ea1f0"
+    },
+    {
+      "item_id": "v1-test-cfm-138-b",
+      "pair_id": "v1-test-cfm-138",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:56b210e599e7200c155dc37035becafa0aa11296334349eef5caa866167e8e83"
+    },
+    {
+      "item_id": "v1-test-cfm-139-a",
+      "pair_id": "v1-test-cfm-139",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:671bc795dbc943b265599fd2891976d6379bb2391710205e4f16a40db01da358"
+    },
+    {
+      "item_id": "v1-test-cfm-139-b",
+      "pair_id": "v1-test-cfm-139",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:79f9cd28dbc8ec479903a2aa58d3358e2feb5abc727c66b784a8d89cfd2646b3"
+    },
+    {
+      "item_id": "v1-test-cfm-140-a",
+      "pair_id": "v1-test-cfm-140",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:54288486b28807c8f3f03838d3060d9cde9076ebb2eeb5ec467ec5c7b76ab518"
+    },
+    {
+      "item_id": "v1-test-cfm-140-b",
+      "pair_id": "v1-test-cfm-140",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:0a408f046d51587d006d3d931555ed260dc6c7e46e0c8172cf5ce464fd1c1cef"
+    },
+    {
+      "item_id": "v1-test-cfm-141-a",
+      "pair_id": "v1-test-cfm-141",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:4bf3dbe27f1a40ad7644df96184c589b087cb0e417bac12e205595d41e42c399"
+    },
+    {
+      "item_id": "v1-test-cfm-141-b",
+      "pair_id": "v1-test-cfm-141",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:bf01a42e6371966590891231250d8e898197227c46d9df1a8e5882fc207fec86"
+    },
+    {
+      "item_id": "v1-test-cfm-142-a",
+      "pair_id": "v1-test-cfm-142",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:593016f0a482d7a040bc2928fd83cc09b3144bcd209545d2bdd41956ea1d75e7"
+    },
+    {
+      "item_id": "v1-test-cfm-142-b",
+      "pair_id": "v1-test-cfm-142",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:853b659aeecce558cfeea3e209569417a45f8d0a6626b808792d3b73b283c353"
+    },
+    {
+      "item_id": "v1-test-cfm-143-a",
+      "pair_id": "v1-test-cfm-143",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:34c51794935bbabbd9f9de71aaaab48d3202fd7d39d728f3d61e1cf8e2452a32"
+    },
+    {
+      "item_id": "v1-test-cfm-143-b",
+      "pair_id": "v1-test-cfm-143",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:6b8ed99ce3ebaaa5c4bb77bb0e760a33e522d7c2a0034de1ca4cad0f908716de"
+    },
+    {
+      "item_id": "v1-test-cfm-144-a",
+      "pair_id": "v1-test-cfm-144",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:331fca333bb6f67f30d172c958ae8f09aa5c462e75be5e445f8fd22fc02368e2"
+    },
+    {
+      "item_id": "v1-test-cfm-144-b",
+      "pair_id": "v1-test-cfm-144",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:05665cd0aed3f0e962f860ab1dc44885136a2a3d8f2b3e2786ab2639942e870b"
+    },
+    {
+      "item_id": "v1-test-cfm-145-a",
+      "pair_id": "v1-test-cfm-145",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:53177d203a451d055ae6d770af7cdd4019c211a4fb38365f71d9997ee416c8e3"
+    },
+    {
+      "item_id": "v1-test-cfm-145-b",
+      "pair_id": "v1-test-cfm-145",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:107b61647d4267871d2b97e0d8fe5c82354b6f8703c6005985349f12a2933ad0"
+    },
+    {
+      "item_id": "v1-test-cfm-146-a",
+      "pair_id": "v1-test-cfm-146",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:918f02f0334e56cd5614eceb08d34a5a80cad6f196cd1d19874d59d466bb15fb"
+    },
+    {
+      "item_id": "v1-test-cfm-146-b",
+      "pair_id": "v1-test-cfm-146",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ESCALATE",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9652977f281e31def45b8c9bc8d9b997aabec17eda3f601198905348e93d4301"
+    },
+    {
+      "item_id": "v1-test-cfm-147-a",
+      "pair_id": "v1-test-cfm-147",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:9ced7c33dde84f3372a666f8fa71bd1d042318c6b2d40df2b1de4119eb616c4c"
+    },
+    {
+      "item_id": "v1-test-cfm-147-b",
+      "pair_id": "v1-test-cfm-147",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:8b73b9dbcfbbae9f605abbf296eb33c4463fa9f5b6aa22ad77735506af726adb"
+    },
+    {
+      "item_id": "v1-test-cfm-148-a",
+      "pair_id": "v1-test-cfm-148",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:f1a65bb25898a62625ccc23dcf7ddd3cc94d513de21688708b3e35b04b899a68"
+    },
+    {
+      "item_id": "v1-test-cfm-148-b",
+      "pair_id": "v1-test-cfm-148",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ef22ddccc698e6276477be16aa0f2601afd5235440d25474a37d7482fe1dfb3d"
+    },
+    {
+      "item_id": "v1-test-cfm-149-a",
+      "pair_id": "v1-test-cfm-149",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:f15346622460143fac6066839d0ac5ddeef99ca0a9cabb0b5393a4cb5b51d6cd"
+    },
+    {
+      "item_id": "v1-test-cfm-149-b",
+      "pair_id": "v1-test-cfm-149",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "ALLOW"
+      },
+      "prompt_sha256": "sha256:d67535e15b703e1b4f2a61c2524b9ee413f5ab09de97bdb7c1ab889bd70325ba"
+    },
+    {
+      "item_id": "v1-test-cfm-150-a",
+      "pair_id": "v1-test-cfm-150",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "ALLOW",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:ef3db9d45e5e91aaf5341381dd43324557faa9b5e4cb8fcaa466a608ac6b0125"
+    },
+    {
+      "item_id": "v1-test-cfm-150-b",
+      "pair_id": "v1-test-cfm-150",
+      "predictions": {
+        "always_allow": "ALLOW",
+        "always_hold": "HOLD",
+        "public_dev_majority": "ALLOW",
+        "public_dev_stratified_prior": "HOLD",
+        "public_dev_text_nb": "HOLD"
+      },
+      "prompt_sha256": "sha256:bba5153ff3c1a14c58a3e38a0f0b1dcbafdb39215056a007b802c61913c8827b"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "shallow_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
+}

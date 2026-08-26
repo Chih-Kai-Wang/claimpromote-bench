@@ -58,6 +58,7 @@ FORMAL_CLAIMS: dict[str, tuple[str, str, str]] = {
 }
 
 _V1_PAIR = re.compile(r"^v1-(dev|test)-formal-([0-9]{3})$")
+_CONFIRMATORY_PAIR = re.compile(r"^v1-test-(?:cfm|cfn|cfo)-([0-9]{3})$")
 _V1_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
     (
         "For every natural number n, n + 0 = n.",
@@ -105,6 +106,116 @@ _V1_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
     ),
 )
 
+_CONFIRMATORY_FORMAL_TEMPLATES: tuple[tuple[str, str], ...] = (
+    (
+        "Every proposition implies itself.",
+        "theorem {name} (p : Prop) : p → p := fun h => h",
+    ),
+    (
+        "A conjunction implies its left proposition.",
+        "theorem {name} (p q : Prop) : p ∧ q → p := fun h => h.1",
+    ),
+    (
+        "A conjunction implies its right proposition.",
+        "theorem {name} (p q : Prop) : p ∧ q → q := fun h => h.2",
+    ),
+    (
+        "Two established propositions establish their conjunction.",
+        "theorem {name} (p q : Prop) : p → q → p ∧ q := fun hp hq => ⟨hp, hq⟩",
+    ),
+    (
+        "A proposition implies its disjunction with any second proposition.",
+        "theorem {name} (p q : Prop) : p → Or p q := fun hp => Or.inl hp",
+    ),
+    (
+        "A second proposition implies its disjunction with any first proposition.",
+        "theorem {name} (p q : Prop) : q → Or p q := fun hq => Or.inr hq",
+    ),
+    (
+        "If either of two propositions implies a third, their disjunction implies the third.",
+        "theorem {name} (p q r : Prop) : (p → r) → (q → r) → Or p q → r := "
+        "fun hp hq h => h.elim hp hq",
+    ),
+    (
+        "A left-associated triple conjunction implies the corresponding right-associated one.",
+        "theorem {name} (p q r : Prop) : (p ∧ q) ∧ r → p ∧ (q ∧ r) := "
+        "fun h => ⟨h.1.1, ⟨h.1.2, h.2⟩⟩",
+    ),
+    (
+        "A right-associated triple conjunction implies the corresponding left-associated one.",
+        "theorem {name} (p q r : Prop) : p ∧ (q ∧ r) → (p ∧ q) ∧ r := "
+        "fun h => ⟨⟨h.1, h.2.1⟩, h.2.2⟩",
+    ),
+    (
+        "A left-associated triple disjunction implies the corresponding right-associated one.",
+        """theorem {name} (p q r : Prop) : Or (Or p q) r → Or p (Or q r) :=
+  fun h => h.elim (fun hpq => hpq.elim Or.inl (fun hq => Or.inr (Or.inl hq)))
+    (fun hr => Or.inr (Or.inr hr))""",
+    ),
+    (
+        "A right-associated triple disjunction implies the corresponding left-associated one.",
+        """theorem {name} (p q r : Prop) : Or p (Or q r) → Or (Or p q) r :=
+  fun h => h.elim (fun hp => Or.inl (Or.inl hp))
+    (fun hqr => hqr.elim (fun hq => Or.inl (Or.inr hq)) Or.inr)""",
+    ),
+    (
+        "Implication is transitive across an intermediate proposition.",
+        "theorem {name} (p q r : Prop) : (p → q) → (q → r) → p → r := "
+        "fun hpq hqr hp => hqr (hpq hp)",
+    ),
+    (
+        "Falsehood implies every proposition.",
+        "theorem {name} (p : Prop) : False → p := False.elim",
+    ),
+    (
+        "Every proposition implies truth.",
+        "theorem {name} (p : Prop) : p → True := fun _ => True.intro",
+    ),
+    (
+        "A proposition conjoined with itself is equivalent to that proposition.",
+        "theorem {name} (p : Prop) : p ∧ p ↔ p := ⟨fun h => h.1, fun h => ⟨h, h⟩⟩",
+    ),
+    (
+        "A proposition disjoined with itself is equivalent to that proposition.",
+        "theorem {name} (p : Prop) : Or p p ↔ p := "
+        "⟨fun h => h.elim (fun hp => hp) (fun hp => hp), fun h => Or.inl h⟩",
+    ),
+    (
+        "A proposition conjoined with falsehood is equivalent to falsehood.",
+        "theorem {name} (p : Prop) : p ∧ False ↔ False := ⟨fun h => h.2, fun h => False.elim h⟩",
+    ),
+    (
+        "A proposition disjoined with truth is equivalent to truth.",
+        "theorem {name} (p : Prop) : Or p True ↔ True := "
+        "⟨fun _ => True.intro, fun _ => Or.inr True.intro⟩",
+    ),
+    (
+        "Equal natural numbers have equal successors.",
+        "theorem {name} (a b : Nat) : a = b → Nat.succ a = Nat.succ b := "
+        "fun h => congrArg Nat.succ h",
+    ),
+    (
+        "Equal successors of natural numbers have equal predecessors.",
+        "theorem {name} (a b : Nat) : Nat.succ a = Nat.succ b → a = b := fun h => Nat.succ.inj h",
+    ),
+    (
+        "Equality of natural numbers composes through an intermediate number.",
+        "theorem {name} (a b c : Nat) : a = b → b = c → a = c := fun hab hbc => Eq.trans hab hbc",
+    ),
+    (
+        "Equality of natural numbers can be reversed.",
+        "theorem {name} (a b : Nat) : a = b → b = a := fun h => Eq.symm h",
+    ),
+    (
+        "A conjunction of two consecutive equalities implies their composite equality.",
+        "theorem {name} (a b c : Nat) : a = b ∧ b = c → a = c := fun h => Eq.trans h.1 h.2",
+    ),
+    (
+        "Equality of natural numbers is equivalent to its reverse equality.",
+        "theorem {name} (a b : Nat) : a = b ↔ b = a := ⟨fun h => Eq.symm h, fun h => Eq.symm h⟩",
+    ),
+)
+
 _MARKER = re.compile(r"^CPB_([A-Z0-9_]+)=(.+)$", re.MULTILINE)
 Runner = Callable[[Path, Path], dict[str, Any]]
 
@@ -124,12 +235,31 @@ def _v1_spec(pair_id: str) -> tuple[str, str, str] | None:
     return claim, module, declaration_template.format(name=theorem_name)
 
 
+def _confirmatory_spec(pair_id: str) -> tuple[str, str, str] | None:
+    match = _CONFIRMATORY_PAIR.fullmatch(pair_id)
+    if match is None:
+        return None
+    number_text = match.group(1)
+    number = int(number_text)
+    if number < 1:
+        raise DatasetIntegrityError(f"invalid confirmatory formal pair number: {pair_id}")
+    claim, declaration_template = _CONFIRMATORY_FORMAL_TEMPLATES[
+        (number - 1) % len(_CONFIRMATORY_FORMAL_TEMPLATES)
+    ]
+    module = f"V1Confirmatory{number_text}"
+    theorem_name = f"v1confirmatory{number_text}"
+    return claim, module, declaration_template.format(name=theorem_name)
+
+
 def _formal_spec(pair_id: str) -> tuple[str, str, str]:
     if pair_id in FORMAL_CLAIMS:
         return FORMAL_CLAIMS[pair_id]
     v1 = _v1_spec(pair_id)
     if v1 is not None:
         return v1
+    confirmatory = _confirmatory_spec(pair_id)
+    if confirmatory is not None:
+        return confirmatory
     raise DatasetIntegrityError(f"unknown formal pair: {pair_id}")
 
 

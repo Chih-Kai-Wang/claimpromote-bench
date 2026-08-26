@@ -1,0 +1,265 @@
+{
+  "adequacy": {
+    "changed_rules_covered": 12,
+    "contexts_per_edge": 1,
+    "reachable_edges_covered": 10,
+    "selected_items": 20,
+    "selected_pairs": 10
+  },
+  "classification": "COMPLETE_ROUTE_SMOKE_GATE_FAIL",
+  "design": "PREINFERENCE_FROZEN_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY",
+  "evidence_ceiling": "TIME_STAMPED_ROUTE_SMOKE_ONLY",
+  "execution": {
+    "application_posts": 20,
+    "client_retries": 0,
+    "incremental_cash_cost_usd": 0.0,
+    "token_totals": {
+      "cached_input_tokens": null,
+      "input_tokens": null,
+      "output_tokens": null,
+      "reasoning_tokens": null,
+      "total_tokens": null
+    }
+  },
+  "failure_rule": "All service, availability, syntax, schema, semantic, adapter, and rate-limit failures remain incorrect in the complete 20-item end-to-end denominator. No successful subset may replace the scheduled route. An interrupted run is ineligible and may not resume.",
+  "freeze": {
+    "catalog_snapshot_sha256": "sha256:9055606c672c972fe2cfb77871c58b6ef282ff4855b97df494135f2b7b8da0d0",
+    "dataset_fingerprint": "sha256:cf3ece1b05948214cfb60292cb655eb860c92276fd6f0c5c2a36c7618586fa13",
+    "execution_receipt_sha256": "sha256:c72339b263a38f8867becebfc2c9baa47d1406f689eee131e7d6692798b87c4b",
+    "frozen_plan_commit": "7f30dfb59bf74d751cf78fca0c9e020abb2546ea",
+    "minimum_suite_sha256": "sha256:911fedf5de57dbad9728a0b1725324416d5553c34cb9aa17864129b468fe996b",
+    "packet_sha256": "sha256:bd155db5ce07c80ecb667eec725bf0f4e2ebe53059a636626f47955721458845",
+    "plan_sha256": "sha256:42f442d84a451ea318dfdd4269b38ddbb4b433e9e07196f4a30237df569a296f",
+    "route_output_sha256": "sha256:9169056f77496a5cacd92556391be6858da5e9cbf4865bed82545d3d0f79b3fe",
+    "schedule_sha256": "sha256:89030543f0e1d97c73c6126068e77663c8dc693502b4ee7a721e98dbbc7fb70f"
+  },
+  "identity_boundary": "Ox Alpha is a stealth label. This study makes no claim about its developer, weights, architecture, or model family.",
+  "interpretation": "The route was evaluated once on a deterministic ten-pair structural witness with one context per reachable edge. The result is a route-level smoke test, not a model-family ranking, reliability estimate, or independent policy replication.",
+  "metrics": {
+    "balanced_action_recall": 0.6458333333333334,
+    "conditional_balanced_action_recall": 1.0,
+    "conditional_item_accuracy": 1.0,
+    "conditional_macro_f1": 1.0,
+    "conditional_pair_accuracy": 1.0,
+    "confusion_matrix": {
+      "column_order": [
+        "ALLOW",
+        "HOLD",
+        "DEMOTE",
+        "ESCALATE",
+        "NO_VALID_DECISION"
+      ],
+      "column_semantics": "raw model action or absence of a valid decision",
+      "counts": {
+        "ALLOW": {
+          "ALLOW": 5,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NO_VALID_DECISION": 1
+        },
+        "DEMOTE": {
+          "ALLOW": 0,
+          "DEMOTE": 1,
+          "ESCALATE": 0,
+          "HOLD": 0,
+          "NO_VALID_DECISION": 3
+        },
+        "ESCALATE": {
+          "ALLOW": 0,
+          "DEMOTE": 0,
+          "ESCALATE": 3,
+          "HOLD": 0,
+          "NO_VALID_DECISION": 3
+        },
+        "HOLD": {
+          "ALLOW": 0,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 4,
+          "NO_VALID_DECISION": 0
+        }
+      },
+      "row_order": [
+        "ALLOW",
+        "HOLD",
+        "DEMOTE",
+        "ESCALATE"
+      ],
+      "row_semantics": "gold action"
+    },
+    "correct_items": 13,
+    "correct_pairs": 6,
+    "covered_pairs": 6,
+    "decision_coverage": 0.65,
+    "end_to_end_item_accuracy": 0.65,
+    "end_to_end_pair_accuracy": 0.6,
+    "factor_metrics": [
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_id": "allow_to_demote",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 1.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_id": "allow_to_escalate",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 1.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_id": "allow_to_hold",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 1.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "demote_to_allow",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 0.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "demote_to_escalate",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 0.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "escalate_to_allow",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 0.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "escalate_to_demote",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 0.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_id": "escalate_to_hold",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 1.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_id": "hold_to_allow",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 1.0,
+        "pairs": 1
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 1.0,
+        "factor_id": "hold_to_escalate",
+        "family": "directed_policy_action_transition",
+        "pair_coverage": 1.0,
+        "pairs": 1
+      }
+    ],
+    "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+    "items": 20,
+    "macro_f1": 0.7439393939393939,
+    "pair_coverage": 0.6,
+    "pairs": 10,
+    "parse_status_counts": {
+      "JSON_SYNTAX_ERROR": 1,
+      "OK": 13,
+      "SEMANTIC_ERROR": 3,
+      "TRANSPORT_ERROR": 3
+    },
+    "parseable_items": 13,
+    "per_action": {
+      "ALLOW": {
+        "conditional_f1": 1.0,
+        "conditional_recall": 1.0,
+        "correct": 5,
+        "end_to_end_f1": 0.9090909090909091,
+        "end_to_end_recall": 0.8333333333333334,
+        "gold_instances": 6,
+        "parseable_gold_instances": 5,
+        "precision": 1.0,
+        "predicted_instances": 5
+      },
+      "DEMOTE": {
+        "conditional_f1": 1.0,
+        "conditional_recall": 1.0,
+        "correct": 1,
+        "end_to_end_f1": 0.4,
+        "end_to_end_recall": 0.25,
+        "gold_instances": 4,
+        "parseable_gold_instances": 1,
+        "precision": 1.0,
+        "predicted_instances": 1
+      },
+      "ESCALATE": {
+        "conditional_f1": 1.0,
+        "conditional_recall": 1.0,
+        "correct": 3,
+        "end_to_end_f1": 0.6666666666666666,
+        "end_to_end_recall": 0.5,
+        "gold_instances": 6,
+        "parseable_gold_instances": 3,
+        "precision": 1.0,
+        "predicted_instances": 3
+      },
+      "HOLD": {
+        "conditional_f1": 1.0,
+        "conditional_recall": 1.0,
+        "correct": 4,
+        "end_to_end_f1": 1.0,
+        "end_to_end_recall": 1.0,
+        "gold_instances": 4,
+        "parseable_gold_instances": 4,
+        "precision": 1.0,
+        "predicted_instances": 4
+      }
+    }
+  },
+  "model_identity_status": "UNDISCLOSED_STEALTH_MODEL",
+  "raw_model_outputs_in_public_aggregate": false,
+  "route_label": "OpenCode Go / Ox Alpha Free",
+  "schema_version": "1.0.0",
+  "status": "COMPLETE",
+  "strict_smoke_gate_pass": false,
+  "study_id": "claimpromotebench-ox-alpha-minimal-route-2026-08-v1"
+}

@@ -1,0 +1,475 @@
+name: fresh confirmatory service study
+run-name: claimpromotebench-r6-scored-singleton
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type RUN_FRESH_CONFIRMATORY_V1 to spend the frozen subscription quota once
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  PYTHONPATH: src
+
+concurrency:
+  group: fresh-confirmatory-scored-r6
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: reproduce C1 private inference inputs without model calls
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Require the explicit first-attempt trigger
+        run: |
+          set -euo pipefail
+          test '${{ inputs.confirm }}' = 'RUN_FRESH_CONFIRMATORY_V1'
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Prove this is the only r6 scored workflow dispatch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mapfile -t singleton_runs < <(
+            gh api --method GET --paginate \
+              "repos/$GITHUB_REPOSITORY/actions/runs" \
+              -f event=workflow_dispatch \
+              -f per_page=100 \
+              --jq '.workflow_runs[] | select(.display_title == "claimpromotebench-r6-scored-singleton") | .id'
+          )
+          test "${#singleton_runs[@]}" -eq 1
+          test "${singleton_runs[0]}" = "$GITHUB_RUN_ID"
+
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Prove the post-C1 source diff contains public JSON evidence only
+        run: |
+          set -euo pipefail
+          source_c0_commit=$(jq -er '.source_c0_commit | select(test("^[0-9a-f]{40}$"))' \
+            configs/fresh-confirmatory-seed-commitment.json)
+          source_commit=$(jq -er '.source_commit | select(test("^[0-9a-f]{40}$"))' \
+            configs/fresh-confirmatory-hidden-commitment.json)
+          git cat-file -e "$source_c0_commit^{commit}"
+          git cat-file -e "$source_commit^{commit}"
+          git merge-base --is-ancestor "$source_c0_commit" "$source_commit"
+          git merge-base --is-ancestor "$source_commit" "$GITHUB_SHA"
+          mapfile -t c0_to_c1_paths < <(
+            git diff --name-only "$source_c0_commit" "$source_commit"
+          )
+          test "${#c0_to_c1_paths[@]}" -eq 1
+          test "${c0_to_c1_paths[0]}" = 'configs/fresh-confirmatory-seed-commitment.json'
+          mapfile -t changed_paths < <(git diff --name-only "$source_commit" "$GITHUB_SHA")
+          test "${#changed_paths[@]}" -ge 1
+          found_active_commitment=false
+          for path in "${changed_paths[@]}"; do
+            case "$path" in
+              configs/fresh-confirmatory-hidden-commitment.json)
+                found_active_commitment=true
+                ;;
+              v2/confirmatory/c1-r6/*.json)
+                ;;
+              *)
+                echo "::error::post-C1 source change is not public r6 JSON evidence: $path"
+                exit 1
+                ;;
+            esac
+          done
+          test "$found_active_commitment" = true
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+          cache: pip
+          cache-dependency-path: tools/confirmatory-python311.lock
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "20.19.4"
+          cache: npm
+          cache-dependency-path: tools/drand/package-lock.json
+
+      - name: Install frozen dependencies
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: \
+            -r tools/confirmatory-python311.lock
+          npm ci --prefix tools/drand --ignore-scripts --no-audit --no-fund
+
+      - name: Validate C0 and the subscription-only authorization before salt access
+        run: python scripts/validate_confirmatory_c0.py --require-seed-commitment
+
+      - name: Reproduce the precommitted seed
+        env:
+          CPB_CONFIRMATORY_PRIVATE_SALT: ${{ secrets.CPB_CONFIRMATORY_PRIVATE_SALT }}
+        run: |
+          set -euo pipefail
+          if ! printf '%s' "${CPB_CONFIRMATORY_PRIVATE_SALT:-}" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo '::error::CPB_CONFIRMATORY_PRIVATE_SALT is missing or malformed'
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_CONFIRMATORY_PRIVATE_SALT" > "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
+          node tools/drand/fetch_verified_beacon.mjs \
+            configs/fresh-confirmatory-seed-commitment.json \
+            work/verified-beacon.json
+          python scripts/derive_confirmatory_seed.py \
+            --salt-file "$RUNNER_TEMP/cpb-confirmatory-salt.hex" \
+            --commitment configs/fresh-confirmatory-seed-commitment.json \
+            --verified-beacon work/verified-beacon.json \
+            --seed-out "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
+            --receipt-out work/seed-receipt.json >/dev/null
+
+      - name: Rebuild and bind C1 inputs
+        run: |
+          set -euo pipefail
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --confirmatory-rekey \
+            --out work/confirmatory-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" >/dev/null
+          python scripts/validate_v1_plan.py --test-dir work/confirmatory-hidden >/dev/null
+          python scripts/build_stronger_model_packet.py \
+            --dataset work/confirmatory-hidden \
+            --plan v2/fresh-confirmatory-study-plan.json \
+            --out work/confirmatory-packet.json >/dev/null
+          python scripts/predict_confirmatory_baselines.py \
+            --model v2/confirmatory/public-dev-text-nb-v1.json \
+            --packet work/confirmatory-packet.json \
+            --plan v2/fresh-confirmatory-study-plan.json \
+            --out work/confirmatory-baselines.json >/dev/null
+          python scripts/build_confirmatory_c1.py \
+            --packet work/confirmatory-packet.json \
+            --baselines work/confirmatory-baselines.json \
+            --plan v2/fresh-confirmatory-study-plan.json \
+            --schedule-out work/confirmatory-request-schedule.json \
+            --receipt-out work/recomputed-c1-receipt.json >/dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from claimpromotebench.hashing import sha256_file
+
+          root = Path('.')
+          frozen = json.loads((root / 'configs/fresh-confirmatory-hidden-commitment.json').read_text())
+          c1 = json.loads((root / 'work/recomputed-c1-receipt.json').read_text())
+          seed = json.loads((root / 'work/seed-receipt.json').read_text())
+          assert c1 == frozen['c1_receipt']
+          authorization = c1['subscription_authorization']
+          assert authorization['status'] == 'SUBSCRIPTION_AUTHORIZATION_GATE_PASS'
+          assert authorization['incremental_cash_cap_usd'] == 0.0
+          assert authorization['schedule_cells_verified'] == 600
+          assert seed == frozen['seed_derivation_receipt']
+          assert sha256_file(root / 'work/confirmatory-hidden/manifest.json') == frozen['dataset_manifest_sha256']
+          for name, digest in frozen['dataset_components'].items():
+              assert sha256_file(root / 'work/confirmatory-hidden' / name) == digest
+          print('C1_EXACTLY_REPRODUCED')
+          PY
+
+      - name: Remove all gold-bearing and seed-bearing files before inference
+        run: |
+          set -euo pipefail
+          rm -rf work/confirmatory-hidden
+          rm -f "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
+          rm -f "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex"
+          test ! -e work/confirmatory-hidden/gold.jsonl
+          test ! -e "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex"
+
+      - name: Upload private C1 inference-only inputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cpb-fresh-confirmatory-private-c1-${{ github.run_id }}
+          path: |
+            work/confirmatory-packet.json
+            work/confirmatory-baselines.json
+            work/confirmatory-request-schedule.json
+            work/recomputed-c1-receipt.json
+            work/seed-receipt.json
+            work/verified-beacon.json
+          if-no-files-found: error
+          retention-days: 30
+
+  preflight:
+    name: preflight frozen C1 without model credentials
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Forbid every workflow rerun
+        run: test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Check out the complete frozen-source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+
+      - name: Install hash-locked runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Download the private C1 inference-only inputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: cpb-fresh-confirmatory-private-c1-${{ github.run_id }}
+          path: work/c1
+
+      - name: Verify source, subscription authorization, and all 600 request hashes
+        run: |
+          set -euo pipefail
+          test -z "${OPENCODE_GO_API_KEY:-}"
+          test -z "${OPENROUTER_API_KEY:-}"
+          source_commit=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('configs/fresh-confirmatory-hidden-commitment.json').read_text())['source_commit'])
+          PY
+          )
+          git cat-file -e "$source_commit^{commit}"
+          git show "$source_commit:v2/fresh-confirmatory-study-plan.json" >/dev/null
+          for lane in opencode-go-qwen3.7-max opencode-go-deepseek-v4-flash-matched; do
+            python scripts/run_confirmatory_service_study.py \
+              --packet work/c1/confirmatory-packet.json \
+              --baselines work/c1/confirmatory-baselines.json \
+              --schedule work/c1/confirmatory-request-schedule.json \
+              --plan v2/fresh-confirmatory-study-plan.json \
+              --commitment configs/fresh-confirmatory-hidden-commitment.json \
+              --lane-id "$lane" \
+              --frozen-plan-commit "$source_commit" \
+              --journal "work/preflight/$lane-journal.jsonl" \
+              --out "work/preflight/$lane-run.jsonl" \
+              --preflight-only
+          done
+          test ! -e work/preflight
+
+  run:
+    name: one POST per cell — ${{ matrix.lane }}
+    needs: [prepare, preflight]
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        lane:
+          - opencode-go-qwen3.7-max
+          - opencode-go-deepseek-v4-flash-matched
+    steps:
+      - name: Forbid every workflow rerun before credential injection
+        run: test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+          cache: pip
+          cache-dependency-path: tools/confirmatory-python311.lock
+
+      - name: Install hash-locked runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Download the private C1 inference-only inputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: cpb-fresh-confirmatory-private-c1-${{ github.run_id }}
+          path: work/c1
+
+      - name: Execute the frozen lane with no pilot, redirect, resume, or client retry
+        env:
+          OPENCODE_GO_API_KEY: ${{ secrets.OPENCODE_GO_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -z "${OPENROUTER_API_KEY:-}"
+          source_commit=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('configs/fresh-confirmatory-hidden-commitment.json').read_text())['source_commit'])
+          PY
+          )
+          python scripts/run_confirmatory_service_study.py \
+            --packet work/c1/confirmatory-packet.json \
+            --schedule work/c1/confirmatory-request-schedule.json \
+            --plan v2/fresh-confirmatory-study-plan.json \
+            --commitment configs/fresh-confirmatory-hidden-commitment.json \
+            --lane-id '${{ matrix.lane }}' \
+            --frozen-plan-commit "$source_commit" \
+            --journal 'work/run/${{ matrix.lane }}-journal.jsonl' \
+            --out 'work/run/${{ matrix.lane }}-run.jsonl'
+
+      - name: Upload every durable intent and response record
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cpb-fresh-confirmatory-lane-${{ matrix.lane }}-${{ github.run_id }}
+          path: |
+            work/run/${{ matrix.lane }}-journal.jsonl
+            work/run/${{ matrix.lane }}-run.jsonl*
+          if-no-files-found: warn
+          retention-days: 30
+
+  c2:
+    name: seal all 600 outcomes before gold unblinding
+    if: always()
+    needs: [prepare, run]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Forbid every workflow rerun
+        run: test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+
+      - name: Install hash-locked runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Download C1 and every available lane artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: cpb-fresh-confirmatory-*-${{ github.run_id }}
+          path: work/collected
+
+      - name: Seal missing, ambiguous, and completed cells without gold
+        run: |
+          set -euo pipefail
+          schedule=$(find work/collected -type f -name 'confirmatory-request-schedule.json' -print -quit)
+          test -n "$schedule"
+          mapfile -t journals < <(find work/collected -type f -name '*-journal.jsonl' | sort)
+          mapfile -t runs < <(find work/collected -type f \( -name '*-run.jsonl' -o -name '*-run.jsonl.partial' \) | sort)
+          args=()
+          for path in "${journals[@]}"; do args+=(--journal "$path"); done
+          for path in "${runs[@]}"; do args+=(--run "$path"); done
+          python scripts/finalize_confirmatory_c2.py \
+            --schedule "$schedule" \
+            "${args[@]}" \
+            --out-dir work/c2/complete \
+            --receipt-out work/c2/c2-receipt.json
+
+      - name: Upload the gold-free C2 seal
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cpb-fresh-confirmatory-c2-${{ github.run_id }}
+          path: work/c2
+          if-no-files-found: error
+          retention-days: 30
+
+  analyze:
+    name: unblind only after C2 and recompute the preregistered analysis
+    if: always()
+    needs: [prepare, run, c2]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Forbid every workflow rerun
+        run: test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Check out frozen source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python and Node
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+          cache: pip
+          cache-dependency-path: tools/confirmatory-python311.lock
+
+      - name: Install hash-locked runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Download C1, C2, and raw lane evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: cpb-fresh-confirmatory-*-${{ github.run_id }}
+          path: work/reviewer-release/collected
+
+      - name: Reconstruct gold only after the C2 receipt exists
+        env:
+          CPB_CONFIRMATORY_PRIVATE_SALT: ${{ secrets.CPB_CONFIRMATORY_PRIVATE_SALT }}
+        run: |
+          set -euo pipefail
+          c2_receipt=$(find work/reviewer-release/collected -type f -name 'c2-receipt.json' -print -quit)
+          test -n "$c2_receipt"
+          python - <<PY
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path('$c2_receipt').read_text())
+          assert receipt['commitment_stage'] == 'C2_BEFORE_GOLD_UNBLINDING_OR_ANALYSIS'
+          assert receipt['planned_cells'] == 600 == receipt['sealed_cells']
+          assert receipt['contains_gold_labels'] is False
+          PY
+          umask 077
+          printf '%s' "$CPB_CONFIRMATORY_PRIVATE_SALT" > "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
+          beacon=$(find work/reviewer-release/collected -type f -name 'verified-beacon.json' -print -quit)
+          python scripts/derive_confirmatory_seed.py \
+            --salt-file "$RUNNER_TEMP/cpb-confirmatory-salt.hex" \
+            --commitment configs/fresh-confirmatory-seed-commitment.json \
+            --verified-beacon "$beacon" \
+            --seed-out "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" \
+            --receipt-out work/reviewer-release/recomputed-seed-receipt.json >/dev/null
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --confirmatory-rekey \
+            --out work/reviewer-release/dataset \
+            --seed-file "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex" >/dev/null
+          python scripts/validate_v1_plan.py --test-dir work/reviewer-release/dataset >/dev/null
+
+      - name: Run the frozen confirmatory statistics
+        run: |
+          set -euo pipefail
+          packet=$(find work/reviewer-release/collected -type f -name 'confirmatory-packet.json' -print -quit)
+          baselines=$(find work/reviewer-release/collected -type f -name 'confirmatory-baselines.json' -print -quit)
+          mapfile -t complete_runs < <(find work/reviewer-release/collected -type f -name '*-c2-complete.jsonl' | sort)
+          test "${#complete_runs[@]}" -eq 2
+          args=()
+          for path in "${complete_runs[@]}"; do args+=(--run "$path"); done
+          python scripts/analyze_confirmatory_hidden_study.py \
+            --test-dataset work/reviewer-release/dataset \
+            --packet "$packet" \
+            --plan v2/fresh-confirmatory-study-plan.json \
+            --baselines "$baselines" \
+            "${args[@]}" \
+            --out work/reviewer-release/confirmatory-analysis.json
+
+      - name: Upload the complete post-inference reviewer evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-fresh-confirmatory-reviewer-evidence
+          path: work/reviewer-release
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Destroy private salt and derived seed
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP/cpb-confirmatory-salt.hex"
+          rm -f "$RUNNER_TEMP/cpb-confirmatory-derived-seed.hex"

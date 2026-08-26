@@ -1,0 +1,110 @@
+name: confirmatory C1 prior-reconstruction diagnostic
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type DIAGNOSE_C1_PRIOR_RECONSTRUCTION to run no-model hash diagnostics
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    name: locate the fail-closed prior reconstruction mismatch
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Require explicit diagnostic trigger
+        run: test '${{ inputs.confirm }}' = 'DIAGNOSE_C1_PRIOR_RECONSTRUCTION'
+
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Materialize only the prior hidden seed without logging it
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          if ! printf '%s' "${CPB_V1_HIDDEN_SEED:-}" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo '::error::CPB_V1_HIDDEN_SEED is missing or malformed'
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-prior-hidden-seed.hex"
+
+      - name: Rebuild prior dataset
+        run: |
+          set -euo pipefail
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --out work/prior-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-prior-hidden-seed.hex" >/dev/null
+          echo PRIOR_DATASET_REBUILD_PASS
+
+      - name: Validate prior dataset
+        run: |
+          set -euo pipefail
+          python scripts/validate_v1_plan.py --test-dir work/prior-hidden >/dev/null
+          echo PRIOR_DATASET_VALIDATION_PASS
+
+      - name: Rebuild prior prompt manifest
+        run: |
+          set -euo pipefail
+          python scripts/freeze_prompt_manifest.py \
+            --dataset work/prior-hidden \
+            --out work/prior-prompt-manifest.json >/dev/null
+          echo PRIOR_PROMPT_MANIFEST_PASS
+
+      - name: Rebuild prior public commitment
+        run: |
+          set -euo pipefail
+          python scripts/make_hidden_test_commitment.py \
+            --dataset work/prior-hidden \
+            --seed-file "$RUNNER_TEMP/cpb-prior-hidden-seed.hex" \
+            --prompt-manifest work/prior-prompt-manifest.json \
+            --out work/recomputed-prior-commitment.json >/dev/null
+          echo PRIOR_COMMITMENT_REBUILD_PASS
+
+      - name: Report only public commitment hash differences
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          expected = json.loads(Path('configs/v1-hidden-test-commitment.json').read_text())
+          observed = json.loads(Path('work/recomputed-prior-commitment.json').read_text())
+          differing = {
+              key: {'expected': expected.get(key), 'observed': observed.get(key)}
+              for key in sorted(set(expected) | set(observed))
+              if expected.get(key) != observed.get(key)
+          }
+          print(json.dumps({
+              'status': 'PRIOR_COMMITMENT_MATCH' if not differing else 'PRIOR_COMMITMENT_MISMATCH',
+              'differing_public_fields': differing,
+              'contains_hidden_rows': False,
+              'contains_seed_bytes': False,
+              'model_calls': 0,
+          }, sort_keys=True))
+          if differing:
+              raise SystemExit(1)
+          PY
+
+      - name: Destroy diagnostic private files
+        if: always()
+        run: |
+          rm -rf work/prior-hidden
+          rm -f work/prior-prompt-manifest.json work/recomputed-prior-commitment.json
+          rm -f "$RUNNER_TEMP/cpb-prior-hidden-seed.hex"

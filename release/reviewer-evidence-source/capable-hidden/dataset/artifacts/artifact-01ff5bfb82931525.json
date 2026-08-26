@@ -1,0 +1,49 @@
+{
+  "arithmetic": "EXACT_RATIONAL",
+  "artifact_kind": "CPB_EXACT_RATIONAL_GRID",
+  "claim_scope": "FINITE_GRID_ONLY",
+  "observed": {
+    "maximum": "4",
+    "minimum": "15/4",
+    "predicate_holds": true,
+    "repetition_digests": [
+      "sha256:a533e7dbabdd2b557ee67cb267c3a9739b50454a48b5397f99b000b35874e14a",
+      "sha256:520ed41d989461f4a082ff922ccb71b1c32535af59b7bea885e10ef8186e65b7",
+      "sha256:4dfac68694908988c90f3969336ab4ef5ab20a91798b7750f9572fcc162d2170"
+    ],
+    "values": [
+      "4",
+      "61/16",
+      "15/4",
+      "61/16",
+      "4"
+    ]
+  },
+  "preregistered": true,
+  "program": {
+    "coefficients": [
+      "4",
+      "-1",
+      "1"
+    ],
+    "domain": {
+      "lower": "0",
+      "upper": "1"
+    },
+    "grid": [
+      "0",
+      "1/4",
+      "1/2",
+      "3/4",
+      "1"
+    ],
+    "predicate": {
+      "relation": ">=",
+      "threshold": "0"
+    }
+  },
+  "protocol_id": "cpb-exact-grid-v1",
+  "protocol_version": "1.0.0",
+  "repetitions": 3,
+  "schema_version": "1.0.0"
+}

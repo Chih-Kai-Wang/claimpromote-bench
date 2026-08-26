@@ -1,0 +1,43 @@
+{
+  "completed_at_utc": "2026-08-24T16:17:06Z",
+  "credentials_retained": false,
+  "deep_screened_candidates": 11,
+  "formal_code_seeds": 10,
+  "formal_repository_seeds": 465,
+  "human_annotators": 0,
+  "model_calls": 0,
+  "naturalistic_model_policy_interpretation_cases": 0,
+  "outcome_counts": {
+    "ARCHITECTURE_ONLY": 6,
+    "EXCLUDED": 3,
+    "POLICY_REVISION_ONLY": 0,
+    "QUALIFYING_ROUTE_REVISION": 2
+  },
+  "qualified_evidence": [
+    {
+      "evidence_class": "DETERMINISTIC_AGENT_POLICY_INTERFACE_FAULT",
+      "repository": "microsoft/agent-governance-toolkit",
+      "revision": "e87b74530e1cbae54d5e90bc1b45ecf5c8911b28",
+      "validation": "Exact parent/fixed Rego bytes and post-fix upstream tests; OPA 1.19.1 produces 11/15 versus 15/15."
+    },
+    {
+      "evidence_class": "VERSIONED_MODEL_GATEWAY_GUARDRAIL_INTERFACE_FAULT",
+      "repository": "agentgateway/agentgateway",
+      "revision": "82ab009fbb5996716e72a1fd5e5c4d4a13fa30eb",
+      "validation": "Exact change commit compiled with Rust 1.98.0; 33 selected offline tests passed and no Bedrock call was sent."
+    }
+  ],
+  "quota_decision": "Do not spend hosted-model quota on these cases. Both validate deterministic enforcement or guardrail-interface faults; neither supplies a naturalistic case in which a model interprets an executable policy revision.",
+  "schema_version": "1.0.0",
+  "sha256": {
+    "candidate_registry": "sha256:f15a40fbb1be21d99638b7bfa29b80ea3bdd5829a9bcf50c7432cf49c8d18565",
+    "formal_search_seeds": "sha256:e4f6b402b3e3c745d5fec5398b467d48b4484496f427ffbde658df2d97d900de",
+    "microsoft_source_receipt": "sha256:56ca680324b57ea2426562683e42f3dc6db49b42f99d5875816df470f36dcb53",
+    "agentgateway_source_check": "sha256:f249019d14092f005b7d6813de7f82a2bd26dd3d7a3ad72cf6df374fec1c4351",
+    "study_plan": "sha256:e7dfd33c928a1f9dfcf37835088c7a39c8f5c4bcb5750f8adcf17f830b153581"
+  },
+  "status": "GO_FOR_EXTERNAL_BOUNDARY_FAULT_EVIDENCE__NO_GO_FOR_NATURALISTIC_MODEL_POLICY_INTERPRETATION",
+  "study_id": "external-evidence-audit-v1",
+  "valid_claim": "Public independently authored systems exhibit executable policy and versioned guardrail interface faults at agent/model boundaries.",
+  "withheld_claim": "The audit does not estimate deployment prevalence and does not externally validate a route in which a model itself interprets the changed executable policy."
+}

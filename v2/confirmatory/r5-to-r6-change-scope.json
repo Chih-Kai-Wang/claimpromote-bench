@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.0",
+  "from_study": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "to_study": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
+  "r5_terminal_status": "VOID_PRE_POST_C0_IMPLEMENTATION_MISMATCH",
+  "r5_void_receipt_file_sha256": "sha256:dce581cc845b93e6a6857ea1621e6389e3773386bd829e4919a870ff0b301d0b",
+  "r5_model_post_count": 0,
+  "r5_model_output_count": 0,
+  "r5_subscription_quota_consumed": false,
+  "r5_hidden_rows_prompts_or_gold_inspected": false,
+  "r5_prompt_hash_recovery_only": true,
+  "r5_prompt_hash_recovery_run_receipt_file_sha256": "sha256:7f935a4fa18f0f4e9d5322cf6040afa6a1a78b4a134a59b36d0e7fe609c881c5",
+  "changes": {
+    "budget_and_authorization_contract": {
+      "changed": true,
+      "r5_problem": "r5 registered per-lane token-USD bounds and a stop-before-first-POST rule, but C1 emitted no bound and the runner implemented no corresponding gate.",
+      "r6_scope": "The token-USD operational cap is removed. The user-authorized full preexisting OpenCode Go subscription quota is limited by a machine-verifiable fixed request contract: exactly 600 planned application POSTs, 300 per lane, max_tokens 1536 per POST, incremental_cash_cap_usd 0, no client purchase or recharge path, no cash-balance or alternate-provider fallback, and no retry on quota exhaustion. Provider-internal billing is not independently observable; provider-reported usage and quota-value rates are posthoc descriptive only.",
+      "r6_authorization_validator_sha256": "sha256:47579b4c60ec9e58cc2d91102e3cec0c63d89e93078b68a0e28a0a17be29d359",
+      "pre_post_token_cost_gate": "NOT_APPLICABLE",
+      "incremental_cash_cap_usd": 0.0
+    },
+    "c1_builder": {
+      "changed": true,
+      "r5_sha256": "sha256:048d86d3017193cd8e71e38a3ffe35721307c9ec6c28ef2f84abc5e837512d06",
+      "r6_sha256": "sha256:269b9d582a6a0bdb4332a288c930ede5f6242575522b8e22c67cdaef9d63fb1c",
+      "scope": "C1 constructs all request bodies without importing the scored runner and validates the authorization contract over every exact request body. Missing cells, altered prompt text, full response schema, order, max_tokens, retries, cash fallback, alternate-provider fallback, or a non-subscription route fail C1."
+    },
+    "gold_free_runner": {
+      "changed": true,
+      "r5_sha256": "sha256:fdd625a486b4367dd876c6d2f7560be36443c3e309d1f61fe858d647d069dc30",
+      "r6_sha256": "sha256:205c74238fc90df5772e8a3f4fd926929533632b5a9c89cc0a00b66eeed27d00",
+      "scope": "The runner imports neither the C1 builder nor its authorization validator. It independently reconstructs prompt hashes, full request bodies, schema, sequence, headers, and the authorization receipt before reading OPENCODE_GO_API_KEY or writing POST_INTENT. Actual provider usage remains posthoc descriptive and never controls continuation."
+    },
+    "workflows": {
+      "changed": true,
+      "r5_c1_workflow_sha256": "sha256:97d42ee3b60eac40462185dc7205bcf4c5f46de1da7bfb72c1d9482477a5cbe5",
+      "r6_c1_workflow_sha256": "sha256:412ee0a1f374bade4d10a822511a0086f7f841facc25311c5c1108bea7aba22b",
+      "r5_scored_workflow_sha256": "sha256:2b9113b5e0defebf4919e923f6112ed46015376d70b58b0cfb1351ac333ede11",
+      "r6_scored_workflow_sha256": "sha256:2d306eb00b617e6d365adc9d7faf6c8e61509253afa9cac5eb057bda5040eb15",
+      "scope": "Both workflows perform a Git-only source-diff guard before Python startup, install exact hash-locked runtime distributions without an editable project install, and validate C0 authorization before secret access. The scored guard independently proves C0-to-C1-source ancestry with exactly the seed commitment changed, then C1-source-to-HEAD ancestry with only registered public C1 JSON evidence changed; it does not trust a hand-authored C1 source_commit. The scored workflow has a repository-wide serialized singleton dispatch gate, retains a separate credential-free preflight, and explicitly forbids OpenRouter fallback. Any malformed or duplicate r6 scored dispatch permanently consumes or fail-closes the version."
+    },
+    "dataset_generator": {
+      "changed": true,
+      "r5_sha256": "sha256:a448e8b44a73d55b385b08a12ff8b918ce911c7a8e5f05ed4d39e6d5265e0e3a",
+      "r6_sha256": "sha256:59cf54eb13f7124a1ac501cfc5d1d2acd721eaa909ba088c74e3e1f261cc7c3f",
+      "scope": "Only the opaque confirmatory pair-ID namespace changes from v1-test-cfn-NNN to v1-test-cfo-NNN. Factor selection, valid and invalid construction, invalid actions, evidence semantics, and counts are unchanged."
+    },
+    "formal_identifier_parser": {
+      "changed": true,
+      "r5_sha256": "sha256:b4139fdd0e44de9064cc55ce70ee66b3c73f8e4876a34a368d11cb1b26065ff7",
+      "r6_sha256": "sha256:514daf4e3ae35eb50f03b2fd9cefca865874b49d38ab37a00590fc474cf6e5d8",
+      "scope": "The parser adds the new cfo namespace while retaining cfm and cfn; theorem statements and all 24 Lean proof templates are unchanged. r6 is a new seed assignment within the same formal template bank, not a new formal template bank."
+    },
+    "runtime_source_and_dependencies": {
+      "changed": true,
+      "runtime_manifest_builder_sha256": "sha256:0e37abb7152d32b566060524a96771d8fcb2958f1c2bb75afdd5a3f061da7f28",
+      "python311_hash_lock_file_sha256": "sha256:08b0d271e4b9810ef52b6a8c4ea88d603a043de6ad88604f6a0517932078a805",
+      "scope": "An exact runtime manifest covers every Python file and typing marker under the root src tree including claimpromotebench/__init__.py and statistics.py, every Python file under the root scripts runtime tree, all JSON files under the root schemas and policies trees, both canonical and alias workflows, every fixed repo input actually read by C1/scored execution including configs/decoding-v1.json, and the hash-locked CPython 3.11.16 Linux runtime dependencies. setup.py plus root/src sitecustomize.py and usercustomize.py are forbidden before C0. Tests, historical release snapshots, and unused v2 schemas are outside PYTHONPATH and the execution chain; the two-stage pre-Python Git guard still forbids changing them after C0. The validator rejects missing, added, or changed runtime files; post-C0 Git differences are restricted to the seed commitment followed by registered public C1 JSON evidence."
+    },
+    "c2_request_accounting": {
+      "changed": true,
+      "r5_finalizer_sha256": "sha256:280de8663d0cfa3e6dfe1ee377b9e0b3a983bb610426ba1ee4ef6707db2015d9",
+      "r6_finalizer_sha256": "sha256:5d4e31d6d8ee668b5965b52320dfc6807b0246a65473d3e1907f80be8425fceb",
+      "scope": "A recovered response proves one application POST. An intent without a response and a cell with no recovered ephemeral journal are conservatively reported as UNKNOWN_0_OR_1_POST, scored incorrect, and never retried; r6 does not infer zero POST from artifact absence after possible runner loss."
+    },
+    "prior_prompt_denylist": {
+      "changed": true,
+      "r5_count": 600,
+      "r6_count": 900,
+      "r6_file_sha256": "sha256:148b0f0386881d72092dccf947ff573c601045ade0d1028563dcbaf880f2c8f3",
+      "r6_denylist_sha256": "sha256:1b6614a39feb003fc7bfc8bf81bd0325a30502615b5e51642454ac586de3ea16",
+      "scope": "r6 rejects exact overlap against original v1, opened r4, and the hash-only recovery of void zero-POST r5. No r5 prompt text, item ID, row, or gold label was released."
+    },
+    "prompt_renderer_and_model_facing_request_semantics": {
+      "changed": false,
+      "prompt_renderer_sha256": "sha256:9764f2d9b294a2050df5f9e811f6c8892d732618183ef4a50713ecf01f04d121",
+      "provider_neutral_control_suffix_changed": false,
+      "model_aliases_changed": false,
+      "endpoints_changed": false,
+      "api_kinds_changed": false,
+      "response_format_modes_changed": false,
+      "max_output_tokens_changed": false,
+      "timeouts_or_pacing_changed": false
+    },
+    "decision_parser": {
+      "changed": false,
+      "sha256": "sha256:fa2c90c74e428c70c58bac422c171446eb38fefef1bb5dd1d7b3dd649adc7688"
+    },
+    "public_only_baseline_hypotheses_and_statistics": {
+      "changed": false,
+      "analysis_script_sha256": "sha256:d010f706841313577a3867f50a315462b8fa406998b90a1f84754b743834aba1",
+      "c2_finalizer_sha256": "sha256:5d4e31d6d8ee668b5965b52320dfc6807b0246a65473d3e1907f80be8425fceb",
+      "hypotheses_changed": false,
+      "minimum_effect_changed": false,
+      "holm_family_changed": false,
+      "power_assumptions_changed": false
+    },
+    "deterministic_gate": {
+      "used_during_inference_changed": false,
+      "used_during_inference": false
+    }
+  },
+  "interpretation": "r6 is not a repair, continuation, or rerun of r5. It is a new hidden confirmatory version with a new C0, salt, future beacon, seed, dataset, and C1. The scientific comparison is held fixed while the unimplemented r5 budget rule is replaced prospectively by an executable fixed subscription authorization.",
+  "change_scope_sha256": "sha256:229cbc56121fe899805295df08828a8735be3d28458ec05296993f1af8d128e4"
+}

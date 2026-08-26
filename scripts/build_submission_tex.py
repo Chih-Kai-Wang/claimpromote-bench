@@ -3,8 +3,8 @@
 
 The canonical technical-report/main.tex remains the source of scientific content. This script
 extracts the body and places it under venue-specific wrappers so the ICLR submission can remain
-anonymous while the arXiv preprint carries author identity. No quantitative result is recomputed
-or edited here.
+anonymous while the arXiv preprint carries author identity. Quantitative results pass through
+unchanged.
 """
 
 from __future__ import annotations
@@ -14,35 +14,54 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "technical-report"
-TITLE = r"\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents"
+TITLE = r"\cpb: Paired Regression Tests for Versioned Agent Policies"
+ICLR_TITLE = (
+    r"\mbox{\textsc{ClaimPromoteBench}: Paired Regression}\protect\\"
+    r"\mbox{Tests for Versioned Agent Policies}"
+)
 
-AI_DISCLOSURE = r"""\section{AI Assistance Disclosure}
-
-Generative AI tools were used as assistants during literature search, research planning and
-methodological discussion, early code drafting and debugging, analysis checks and result
-interpretation, and parts of manuscript drafting and editing. The author chose the research
-question, defined the benchmark policy and experimental protocol, made the final study and
-analysis decisions, checked the reported results against the released artifacts, checked the
-references, and is responsible for the final manuscript and submission. The quantitative results
-reported in this paper come from the validated study artifacts. AI systems are not listed as
-authors and were not used as independent human reviewers.
-
-"""
-
-ICLR_REPRODUCIBILITY = r"""\section{Reproducibility and Artifact Policy}
-
-The hidden set and exact model prompts were fixed and committed before scored inference. A later
-recovery procedure reconstructed that same dataset and prompt identity, validated all 24 original
-and 24 normalized runs, and produced the 7,200-record aggregate without querying either model
-again. For double-blind review, public repository identifiers and searchable provenance hashes
-are omitted from this submission. An anonymized review bundle can include the fixed manifests,
-run outputs, and recovery record; the public preprint and release retain the exact identifiers.
-
-The raw hidden seed is not included in the public or review artifacts. Any future change to labels,
-policy rules, prompts, controlled factors, or hidden-test bytes is treated as a new benchmark
-version rather than a change to v1.
-
-"""
+ICLR_PUBLIC_IDENTIFIERS = (
+    "wangzhikai",
+    "32255636879",
+    "32274814703",
+    "32291482079",
+    "aa5268dc",
+    "8d9b3f5c",
+    "e2b09f30",
+    "3eb5b534",
+    "83dbee49",
+    "eb2af5fc",
+    "20904dd1",
+    "abfc25e9",
+    "3634ce85",
+    "8dd8d488",
+    "ba6ba305",
+    "0054a4d7",
+    "41480fba",
+    "f2bb2e97",
+    "32402699174",
+    "32402993463",
+    "32403718086",
+    "32405565039",
+    "32421292779",
+    "32453310192",
+    "119e4759",
+    "b86ee1e1",
+    "cc67096b",
+    "8775a8f9",
+    "05d9921c",
+    "300dc094",
+    "32509532820",
+    "9460301513",
+    "1901e471",
+    "3746403e",
+    "057e7854",
+    "f44b01eb",
+    "8821e710",
+    "e3823dbc",
+    "7f30dfb5",
+    "cac4cdab",
+)
 
 
 def canonical_body() -> str:
@@ -51,12 +70,8 @@ def canonical_body() -> str:
     bib_start = source.rindex(r"\bibliographystyle")
     body = source[body_start:bib_start].rstrip() + "\n\n"
 
-    ai_start = body.index(r"\section{AI Assistance Disclosure}")
-    conclusion_start = body.index(r"\section{Conclusion}", ai_start)
-    body = body[:ai_start] + AI_DISCLOSURE + body[conclusion_start:]
-
     # Keep exact identities in public repository/provenance records while avoiding long
-    # monospace strings in venue-formatted prose. These substitutions never alter study data.
+    # monospace strings in venue-formatted prose. These substitutions preserve study data.
     replacements = {
         r"\texttt{aa5268dcde2aa44f8eabf0246631efbca27de7e5}": r"\texttt{aa5268dc...de7e5}",
         r"\texttt{8d9b3f5c831f432cf6b321e6402724c4f52bb3e1}": r"\texttt{8d9b3f5c...bb3e1}",
@@ -64,93 +79,121 @@ def canonical_body() -> str:
         r"\texttt{3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664}": (
             r"\texttt{3eb5b534...e8bfe664}"
         ),
+        r"\texttt{eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5}": (
+            r"\texttt{eb2af5fc...04199e5}"
+        ),
     }
     for old, new in replacements.items():
         body = body.replace(old, new)
     return body
 
 
-def anonymize_for_iclr(body: str) -> str:
-    """Remove searchable public provenance while preserving the scientific protocol."""
+def canonical_appendix() -> str:
+    source = (REPORT / "main.tex").read_text(encoding="utf-8")
+    bibliography = r"\bibliography{references}"
+    bibliography_end = source.rindex(bibliography) + len(bibliography)
+    document_end = source.rindex(r"\end{document}")
+    appendix = source[bibliography_end:document_end].strip()
+    if appendix and not appendix.startswith(r"\appendix"):
+        raise ValueError("canonical post-bibliography content must begin with \\appendix")
+    return appendix + ("\n" if appendix else "")
 
-    repro_start = body.index(r"\section{Reproducibility and Artifact Policy}")
-    ai_start = body.index(r"\section{AI Assistance Disclosure}", repro_start)
-    body = body[:repro_start] + ICLR_REPRODUCIBILITY + body[ai_start:]
+
+def anonymous_iclr_body(body: str) -> str:
+    """Remove public repository provenance that could reveal the author during review."""
 
     replacements = {
-        r"the inference source is workflow run \texttt{32255636879}.": (
-            "scored inference began only after the hidden set and exact prompts were fixed."
-        ),
-        r"Recovery run \texttt{32274814703} then validated": (
-            "The recovery procedure then validated"
-        ),
-        r"\texttt{32255636879}": r"\texttt{[anonymized-source-run]}",
-        r"\texttt{32274814703}": r"\texttt{[anonymized-recovery-run]}",
-        r"\texttt{aa5268dc...de7e5}": r"\texttt{[anonymized]}",
-        r"\texttt{8d9b3f5c...bb3e1}": r"\texttt{[anonymized]}",
-        r"\texttt{e2b09f30...f2877}": r"\texttt{[anonymized]}",
-        r"\texttt{3eb5b534...e8bfe664}": r"\texttt{[anonymized]}",
+        r"workflow run \texttt{32255636879}": "the frozen scored workflow",
+        r"Recovery run \texttt{32274814703}": "The artifact-only recovery workflow",
+        r"recovery run \texttt{32274814703}": "the artifact-only recovery workflow",
+        r"workflow run \texttt{32291482079}": "the public pilot workflow",
+        r"\texttt{32255636879}": "the frozen scored workflow",
+        r"\texttt{32274814703}": "the artifact-only recovery workflow",
+        r"\texttt{32291482079}": "the public pilot workflow",
+        r"\texttt{aa5268dc...de7e5}": "the frozen scoring source",
+        r"\texttt{8d9b3f5c...bb3e1}": "the hidden commitment source",
+        r"\texttt{e2b09f30...f2877}": "the artifact-only recovery source",
+        r"\texttt{3eb5b534...e8bfe664}": "a frozen recovered-study digest",
+        r"\texttt{83dbee49...25c0b264e}": "a frozen public-pilot digest",
+        r"\texttt{eb2af5fc...04199e5}": "a frozen public-pilot digest",
     }
+    anonymous = body
     for old, new in replacements.items():
-        body = body.replace(old, new)
+        anonymous = anonymous.replace(old, new)
 
-    sensitive_fragments = (
-        "32255636879",
-        "32274814703",
-        "aa5268dc",
-        "8d9b3f5c",
-        "e2b09f30",
-        "3eb5b534",
-        "f0909172434",
-    )
-    leaks = [fragment for fragment in sensitive_fragments if fragment.lower() in body.lower()]
-    if leaks:
-        raise ValueError(f"ICLR body still contains searchable provenance: {leaks}")
-    return body
+    # Every manuscript citation is parenthetical. The official ICLR style gives bare \cite a
+    # textual author-year rendering, which produces constructions such as "papers Author et al."
+    # in otherwise parenthetical prose. Keep arXiv's numeric citations unchanged and use natbib's
+    # explicit parenthetical command only in the ICLR wrapper.
+    anonymous = anonymous.replace(r"\cite{", r"\citep{")
+
+    leaked = [identifier for identifier in ICLR_PUBLIC_IDENTIFIERS if identifier in anonymous]
+    if leaked:
+        raise ValueError(f"ICLR body retains public provenance identifiers: {leaked}")
+    return anonymous
 
 
-def shared_commands() -> str:
-    return r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
-\newcommand{\allow}{\texttt{ALLOW}}
-\newcommand{\hold}{\texttt{HOLD}}
-\newcommand{\demote}{\texttt{DEMOTE}}
-\newcommand{\escalate}{\texttt{ESCALATE}}
-"""
+def without_section(body: str, heading: str) -> str:
+    section_start = body.index(rf"\section{{{heading}}}")
+    next_section = body.find(r"\section{", section_start + 1)
+    if next_section < 0:
+        return body[:section_start]
+    return body[:section_start] + body[next_section:]
 
 
 def without_ai_disclosure(body: str) -> str:
-    ai_start = body.index(r"\section{AI Assistance Disclosure}")
-    conclusion_start = body.index(r"\section{Conclusion}", ai_start)
-    return body[:ai_start] + body[conclusion_start:]
+    return without_section(body, "AI Assistance Disclosure")
 
 
-def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
-    # ICLR excludes the mandatory AI-use statement from the main-text page limit. The diagnostic
-    # probe removes only that section; it retains the complete scientific narrative and omits
-    # the bibliography below.
-    anonymous_body = anonymize_for_iclr(body)
-    body_for_output = without_ai_disclosure(anonymous_body) if main_text_probe else anonymous_body
+def without_reproducibility(body: str) -> str:
+    return without_section(body, "Reproducibility Statement")
 
-    bibliography_tail = (
-        "\n\\bibliographystyle{iclr2027_conference}\n"
-        "\\bibliography{references}\n\n"
-        "\\end{document}\n"
+
+def without_reproducibility_or_ai(body: str) -> str:
+    return without_ai_disclosure(without_reproducibility(body))
+
+
+def iclr_appendix(appendix: str) -> str:
+    """Keep the complete-results heading with its first table in the ICLR layout."""
+
+    return appendix.replace(
+        r"\section{Complete Action-Level Results}",
+        "\\clearpage\n" + r"\section{Complete Action-Level Results}",
+        1,
     )
+
+
+def iclr_tex(body: str, appendix: str = "", *, main_text_probe: bool = False) -> str:
+    # ICLR excludes both the mandatory AI-use statement and the reproducibility statement from
+    # the main-text page limit. The diagnostic probe removes exactly those sections and omits the
+    # bibliography; it otherwise keeps the full scientific text, including limitations and the
+    # conclusion. The full wrapper keeps the canonical disclosure and reproducibility prose;
+    # anonymous_iclr_body changes only citations and explicit public provenance identifiers.
+    body_for_output = anonymous_iclr_body(body)
+    if main_text_probe:
+        body_for_output = without_reproducibility_or_ai(body_for_output)
+
     return (
         r"""\documentclass{article}
 \usepackage{iclr2027_conference,times}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \usepackage{xspace}
 
 """
-        + shared_commands()
+        + r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
+\newcommand{\allow}{\texttt{ALLOW}}
+\newcommand{\hold}{\texttt{HOLD}}
+\newcommand{\demote}{\texttt{DEMOTE}}
+\newcommand{\escalate}{\texttt{ESCALATE}}
+"""
         + "\n"
-        + rf"\title{{{TITLE}}}"
+        + rf"\title{{{ICLR_TITLE}}}"
         + "\n"
         + r"\author{Anonymous authors}"
         + "\n\n"
@@ -159,32 +202,47 @@ def iclr_tex(body: str, *, main_text_probe: bool = False) -> str:
         + r"\maketitle"
         + "\n\n"
         + body_for_output
-        + ("\n\\end{document}\n" if main_text_probe else bibliography_tail)
+        + (
+            "\n\\end{document}\n"
+            if main_text_probe
+            else (
+                "\n\\clearpage\n{\\small\n\\bibliographystyle{iclr2027_conference}\n"
+                "\\bibliography{references}\n}\n\n"
+                + iclr_appendix(appendix)
+                + "\n\\end{document}\n"
+            )
+        )
     )
 
 
-def arxiv_tex(body: str) -> str:
-    author = (
-        r"\author{Chih-Kai Wang\\Department of Mathematics and Information Education\\"
-        r"National Taipei University of Education}"
-    )
+def arxiv_tex(body: str, appendix: str = "") -> str:
     return (
         r"""\documentclass[10pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \usepackage{xspace}
 
 """
-        + shared_commands()
+        + r"""\newcommand{\cpb}{\textsc{ClaimPromoteBench}\xspace}
+\newcommand{\allow}{\texttt{ALLOW}}
+\newcommand{\hold}{\texttt{HOLD}}
+\newcommand{\demote}{\texttt{DEMOTE}}
+\newcommand{\escalate}{\texttt{ESCALATE}}
+"""
         + "\n"
         + rf"\title{{{TITLE}}}"
         + "\n"
-        + author
+        + (
+            r"\author{Chih-Kai Wang\\"
+            r"Department of Mathematics and Information Education\\"
+            r"National Taipei University of Education}"
+        )
         + "\n"
         + r"\date{}"
         + "\n\n"
@@ -193,7 +251,10 @@ def arxiv_tex(body: str) -> str:
         + r"\maketitle"
         + "\n\n"
         + body
-        + "\n\\bibliographystyle{plain}\n\\bibliography{references}\n\n\\end{document}\n"
+        + (
+            "\n{\\small\n\\bibliographystyle{plain}\n"
+            "\\bibliography{references}\n}\n\n" + appendix + "\n\\end{document}\n"
+        )
     )
 
 
@@ -205,12 +266,13 @@ def main() -> int:
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     body = canonical_body()
+    appendix = canonical_appendix()
 
-    (out / "iclr2027.tex").write_text(iclr_tex(body), encoding="utf-8")
+    (out / "iclr2027.tex").write_text(iclr_tex(body, appendix), encoding="utf-8")
     (out / "iclr2027-maintext-probe.tex").write_text(
         iclr_tex(body, main_text_probe=True), encoding="utf-8"
     )
-    (out / "arxiv.tex").write_text(arxiv_tex(body), encoding="utf-8")
+    (out / "arxiv.tex").write_text(arxiv_tex(body, appendix), encoding="utf-8")
     (out / "references.bib").write_bytes((REPORT / "references.bib").read_bytes())
     print(f"generated submission sources in {out}")
     return 0

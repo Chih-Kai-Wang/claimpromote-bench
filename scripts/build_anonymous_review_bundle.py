@@ -1,0 +1,4553 @@
+#!/usr/bin/env python3
+"""Build an anonymized reviewer bundle for double-blind evaluation.
+
+The bundle contains benchmark code/data plus reviewer-release empirical records. It excludes Git
+history, author metadata, public repository links, workflow IDs, searchable provenance hashes, the
+private construction seed, and human-subject records. The builder fails if an identity token
+survives staging.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import importlib.util
+import json
+import re
+import shutil
+from copy import deepcopy
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+TEXT_SUFFIXES = {
+    ".cff",
+    ".json",
+    ".jsonl",
+    ".go",
+    ".lean",
+    ".md",
+    ".py",
+    ".rego",
+    ".sh",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
+TEXT_NAMES = {"LICENSE"}
+FORBIDDEN_CREDENTIAL_PATTERNS = {
+    "private-key header": re.compile(r"-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----"),
+    "OpenAI-style secret": re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b"),
+    "Google API key": re.compile(r"\bAIza[0-9A-Za-z_-]{30,}\b"),
+    "GitHub token": re.compile(r"\b(?:github_pat_|gh[pousr]_)[A-Za-z0-9_]{20,}\b"),
+    "bearer credential": re.compile(r"\bBearer\s+[A-Za-z0-9._~-]{24,}\b", re.IGNORECASE),
+}
+FORBIDDEN_PROVIDER_RESPONSE_PATTERNS = {
+    "Anthropic-style response ID": re.compile(r"\bmsg_[0-9a-f-]{16,}\b", re.IGNORECASE),
+    "OpenAI-style response ID": re.compile(
+        r"\b(?:chatcmpl-|resp_)[A-Za-z0-9_-]{10,}\b", re.IGNORECASE
+    ),
+}
+SENSITIVE_PROVENANCE_REPLACEMENTS = {
+    "provider account identifier": (
+        re.compile(
+            r"\buser_(?=[A-Za-z0-9_-]{20,64}\b)"
+            r"(?=[A-Za-z0-9_-]*[A-Z])(?=[A-Za-z0-9_-]*[a-z])"
+            r"(?=[A-Za-z0-9_-]*[0-9])[A-Za-z0-9_-]+\b"
+        ),
+        "anonymous-provider-account",
+    ),
+}
+SKIP_NAMES = {
+    ".git",
+    ".github",
+    ".lake",
+    ".mypy_cache",
+    ".pytest_cache",
+    "__pycache__",
+    "journal",
+    "private-results",
+    "work",
+}
+SKIP_FILES = {
+    "frozen-analysis-provenance.json",
+    "review.py",
+    "review_analysis.py",
+    "SHA256SUMS",
+}
+SKIP_SUFFIXES = {".log", ".pyc", ".pyo"}
+LOCAL_WORKSPACE_ROOT = (
+    "C:\\Users\\user\\Documents\\Codex\\2026-08-20\\files-pasted-by-the-user-github"
+    "\\work\\claimpromote-bench"
+)
+GITHUB_RUNNER_ROOT = "/home/runner/work/claimpromote-bench/claimpromote-bench"
+MAC_WORKSPACE_ROOT = "/Users/wangzhikai/Documents/ChatGPT/claimpromotebranch投稿/claimpromote-bench"
+FORBIDDEN_TEXT = {
+    "Chih-Kai Wang",
+    "Wang, Chih-Kai",
+    "National Taipei University of Education",
+    "f0909172434",
+    "wangzhikai",
+    "f0909172434@gmail.com",
+    "github.com/f0909172434",
+    "paper/v1-submission-prep",
+    "agent/iclr2027-v2-low-cost-study",
+    "32255636879",
+    "32274814703",
+    "32291482079",
+    "32297818154",
+    "32402699174",
+    "32402993463",
+    "32403718086",
+    "32405565039",
+    "32453310192",
+    "32509532820",
+    "9460301513",
+    "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664",
+    "83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e",
+    "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5",
+    "abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91",
+    "f998a05fec36b84e59230fe241f1e9961647ad2e",
+    "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1",
+    "aa5268dcde2aa44f8eabf0246631efbca27de7e5",
+    "e2b09f30b0573cf7bcb244eef1917691755f2877",
+    "22126629f3584ec2fbbb8e7b77c34faea67d833c",
+    "3634ce85785e9b516abc519711fff12388307331",
+    "2212662",
+    "3634ce8",
+    "8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a",
+    "ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355",
+    "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7",
+    "41480fba50bccfb955007a487dd0370f23daa876e82cd55a8d6601d0df64a9c8",
+    "f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4",
+    "119e475953e50218fc62abd2163eef04cbad4e23",
+    "b86ee1e1d28db8a390344d28582af88e26970560",
+    "cc67096ba0a91866ab442647b9f82301dd6cb317",
+    "300dc094852e74c8139344248b25a4d637a94c7c",
+    "1901e471bdf94f434f9671708b93599a106b1543",
+    "3746403ea8784a95ae2cb1c66ee1b95e4a67ad42",
+    "057e785483eed14742e63817f81bea6add579c53",
+    "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
+    "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b",
+    "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
+    "f2b4519816817c58a374b0459313d2bed609acf9",
+    "a68cef65940988c79ca2a8df68ccee84a2efcddc",
+    LOCAL_WORKSPACE_ROOT,
+    GITHUB_RUNNER_ROOT,
+    MAC_WORKSPACE_ROOT,
+}
+
+PROVENANCE_REPLACEMENTS = {
+    "Chih-Kai Wang": "Anonymous Authors",
+    "Wang, Chih-Kai": "Anonymous Authors",
+    "National Taipei University of Education": "Anonymous Institution",
+    "f0909172434@gmail.com": "anonymous@example.invalid",
+    "github.com/f0909172434": "anonymous.invalid/repository",
+    "f0909172434": "anonymous-owner",
+    "wangzhikai": "anonymous-local-user",
+    "paper/v1-submission-prep": "anonymous-base-branch",
+    "agent/iclr2027-v2-low-cost-study": "anonymous-study-branch",
+    "32255636879": "anonymous-v1-source-run",
+    "32274814703": "anonymous-v1-recovery-run",
+    "32291482079": "anonymous-public-pilot-run",
+    "32297818154": "anonymous-public-pilot-recovery-run",
+    "32402699174": "anonymous-capable-preflight-run",
+    "32402993463": "anonymous-capable-transport-run",
+    "32403718086": "anonymous-capable-first-qualified-run",
+    "32405565039": "anonymous-capable-final-qualified-run",
+    "32453310192": "anonymous-fresh-confirmatory-run",
+    "32509532820": "anonymous-balanced-challenge-run",
+    "9460301513": "anonymous-balanced-challenge-artifact",
+    "8d9b3f5c831f432cf6b321e6402724c4f52bb3e1": "anonymous-hidden-commitment",
+    "aa5268dcde2aa44f8eabf0246631efbca27de7e5": "anonymous-v1-scored-source",
+    "e2b09f30b0573cf7bcb244eef1917691755f2877": "anonymous-v1-recovery-source",
+    "22126629f3584ec2fbbb8e7b77c34faea67d833c": ("0000000000000000000000000000000000000003"),
+    "3634ce85785e9b516abc519711fff12388307331": ("0000000000000000000000000000000000000004"),
+    "2212662": "anonymous-followup-plan-a",
+    "3634ce8": "anonymous-followup-plan-b",
+    "119e475953e50218fc62abd2163eef04cbad4e23": ("0000000000000000000000000000000000000001"),
+    "b86ee1e1d28db8a390344d28582af88e26970560": ("0000000000000000000000000000000000000002"),
+    "cc67096ba0a91866ab442647b9f82301dd6cb317": ("anonymous-capable-collection-source"),
+    "300dc094852e74c8139344248b25a4d637a94c7c": ("0000000000000000000000000000000000000000"),
+    "1901e471bdf94f434f9671708b93599a106b1543": ("0000000000000000000000000000000000000005"),
+    "3746403ea8784a95ae2cb1c66ee1b95e4a67ad42": ("0000000000000000000000000000000000000006"),
+    "057e785483eed14742e63817f81bea6add579c53": "0000000000000000000000000000000000000007",
+    "f44b01eb97418d87aa6d7486fa785c0f49b9dda2": ("0000000000000000000000000000000000000008"),
+    "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516": ("0000000000000000000000000000000000000009"),
+    "f2b4519816817c58a374b0459313d2bed609acf9": "0000000000000000000000000000000000000011",
+    "a68cef65940988c79ca2a8df68ccee84a2efcddc": "0000000000000000000000000000000000000011",
+    LOCAL_WORKSPACE_ROOT: "/anonymous/workspace",
+    GITHUB_RUNNER_ROOT: "/anonymous/workspace",
+    MAC_WORKSPACE_ROOT: "/anonymous/workspace",
+    "3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664": (
+        "anonymous-v1-study-digest"
+    ),
+    "83dbee4923bca6a0d1908083172190d7b81e2a5e9613c22e4929cfa25c0b264e": (
+        "anonymous-public-pilot-digest"
+    ),
+    "eb2af5fcfce8466306a208a707e0046b389f2fd656d25d549f784acfc04199e5": (
+        "anonymous-public-pilot-reporting-digest"
+    ),
+    "abfc25e9a01018bdc269b683cbf54ca423264f62cacbbfee0d504ef10beb6f91": (
+        "anonymous-capable-exploratory-reporting-digest"
+    ),
+    "f998a05fec36b84e59230fe241f1e9961647ad2e": "anonymous-public-pilot-source",
+    "8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a": (
+        "anonymous-followup-digest-a"
+    ),
+    "ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355": (
+        "anonymous-followup-digest-b"
+    ),
+    "0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7": (
+        "anonymous-followup-digest-c"
+    ),
+    "41480fba50bccfb955007a487dd0370f23daa876e82cd55a8d6601d0df64a9c8": (
+        "anonymous-followup-digest-d"
+    ),
+    "f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4": (
+        "anonymous-followup-digest-e"
+    ),
+    "8821e710f867df95a932e9ce7cc4f3514a4995a6576d53bc0b5a71a84ee99b9b": (
+        "anonymous-balanced-challenge-artifact-digest"
+    ),
+}
+NUMERIC_PROVENANCE_REPLACEMENTS = {
+    int(source): replacement
+    for source, replacement in PROVENANCE_REPLACEMENTS.items()
+    if source.isdigit()
+}
+
+Json = dict[str, Any]
+
+FRESH_CONFIRMATORY_ROW_FIELDS = (
+    "actual_cost_usd",
+    "application_post_count",
+    "client_retry_count",
+    "deterministic_gate_applied",
+    "evidence_ceiling",
+    "finish_reason",
+    "http_status",
+    "item_id",
+    "lane_id",
+    "latency_ms",
+    "model_requested",
+    "model_returned",
+    "network_error",
+    "pair_id",
+    "parse_detail",
+    "parse_status",
+    "provider_service",
+    "raw_decision",
+    "raw_final_text",
+    "raw_final_text_sha256",
+    "redirect_followed",
+    "sequence",
+    "usage",
+)
+
+
+def fail(message: str) -> None:
+    raise SystemExit(f"anonymous-review-bundle: {message}")
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return "sha256:" + digest.hexdigest()
+
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+
+
+def sha256_text(value: str) -> str:
+    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def write_json(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def write_jsonl(path: Path, rows: list[Json]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(f"{canonical_json(row)}\n" for row in rows),
+        encoding="utf-8",
+    )
+
+
+def load_object(path: Path) -> Json:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        fail(f"expected JSON object: {path.relative_to(ROOT)}")
+    return value
+
+
+def load_jsonl(path: Path) -> list[Json]:
+    rows = [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
+    if any(not isinstance(row, dict) for row in rows):
+        fail(f"expected JSON objects in {path.relative_to(ROOT)}")
+    return rows
+
+
+def apply_balanced_reporting_correction(aggregate: Json, correction: Json) -> Json:
+    """Apply the receipted derived-metric correction without altering historical source files."""
+
+    payload = deepcopy(correction)
+    observed_receipt_sha = payload.pop("receipt_sha256", None)
+    if observed_receipt_sha != sha256_text(canonical_json(payload)):
+        fail("balanced challenge reporting-correction self-digest changed")
+    if (
+        correction.get("status") != "REPORTING_CORRECTION"
+        or correction.get("metric_convention")
+        != "FIXED_FOUR_CLASS_MACRO_F1_WITH_ZERO_DIVISION_EQUAL_TO_ZERO"
+        or correction.get("scope", {}).get("model_calls_performed") != 0
+        or correction.get("scope", {}).get("raw_or_terminal_records_changed") is not False
+        or correction.get("scope", {}).get("primary_endpoints_changed") is not False
+    ):
+        fail("balanced challenge reporting-correction boundary changed")
+    bindings = correction.get("source_bindings")
+    if not isinstance(bindings, dict):
+        fail("balanced challenge reporting-correction bindings are missing")
+    for relative, expected in bindings.items():
+        source = ROOT / str(relative)
+        if not source.is_file() or sha256_file(source) != expected:
+            fail(f"balanced challenge reporting-correction binding changed: {relative}")
+
+    corrected = deepcopy(aggregate)
+    lanes = {
+        str(lane.get("lane_id")): lane.get("metrics")
+        for lane in corrected.get("lanes", [])
+        if isinstance(lane, dict) and isinstance(lane.get("metrics"), dict)
+    }
+    affected = correction.get("affected_lanes")
+    if not isinstance(affected, dict) or set(affected) != {"opencode-go-deepseek-v4-flash-matched"}:
+        fail("balanced challenge reporting-correction lane set changed")
+    for lane_id, change in affected.items():
+        metrics = lanes.get(lane_id)
+        if not isinstance(metrics, dict) or not isinstance(change, dict):
+            fail(f"balanced challenge reporting-correction lane is malformed: {lane_id}")
+        historical = change.get("historical")
+        replacement = change.get("corrected")
+        if not isinstance(historical, dict) or not isinstance(replacement, dict):
+            fail(f"balanced challenge reporting-correction values are malformed: {lane_id}")
+        demote = metrics.get("per_action", {}).get("DEMOTE")
+        if not isinstance(demote, dict):
+            fail(f"balanced challenge DEMOTE metrics are missing: {lane_id}")
+        observed = {
+            "conditional_macro_f1": metrics.get("conditional_macro_f1"),
+            "macro_f1": metrics.get("macro_f1"),
+            "per_action.DEMOTE.conditional_f1": demote.get("conditional_f1"),
+            "per_action.DEMOTE.end_to_end_f1": demote.get("end_to_end_f1"),
+            "per_action.DEMOTE.precision": demote.get("precision"),
+        }
+        if observed != historical:
+            fail(f"balanced challenge historical correction values changed: {lane_id}")
+        metrics["conditional_macro_f1"] = replacement["conditional_macro_f1"]
+        metrics["macro_f1"] = replacement["macro_f1"]
+        demote["conditional_f1"] = replacement["per_action.DEMOTE.conditional_f1"]
+        demote["end_to_end_f1"] = replacement["per_action.DEMOTE.end_to_end_f1"]
+        demote["precision"] = replacement["per_action.DEMOTE.precision"]
+    return corrected
+
+
+def strip_schema_ids(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: strip_schema_ids(child) for key, child in value.items() if key != "$id"}
+    if isinstance(value, list):
+        return [strip_schema_ids(child) for child in value]
+    return value
+
+
+def anonymize_provenance(value: Any) -> Any:
+    """Replace searchable repository provenance while preserving empirical payloads."""
+
+    if isinstance(value, dict):
+        hidden_reasoning_keys = {
+            "reasoning_content",
+            "thinking",
+            "thinking_content",
+            "thought",
+            "thoughts",
+        }
+        cleaned: Json = {}
+        for key, child in value.items():
+            if key in hidden_reasoning_keys:
+                continue
+            if key in {"provider_response_id", "provider_request_id"}:
+                cleaned[key] = None
+            elif key == "frozen_plan_commit":
+                # The private study commit proves pre-inference freezing in the source repository,
+                # but its object ID is searchable during double-blind review. Public upstream
+                # source commits use distinct keys and remain intact. Preserve earlier schema-valid
+                # pseudocommits assigned by study-specific projections.
+                mapped = anonymize_provenance(child)
+                if (
+                    isinstance(mapped, str)
+                    and re.fullmatch(r"[0-9a-f]{40}", mapped)
+                    and (
+                        mapped != child
+                        or mapped.startswith("00000000000000000000000000000000000000")
+                    )
+                ):
+                    cleaned[key] = mapped
+                else:
+                    cleaned[key] = "0000000000000000000000000000000000000011"
+            else:
+                cleaned[key] = anonymize_provenance(child)
+        return cleaned
+    if isinstance(value, list):
+        return [anonymize_provenance(child) for child in value]
+    if isinstance(value, int) and value in NUMERIC_PROVENANCE_REPLACEMENTS:
+        return NUMERIC_PROVENANCE_REPLACEMENTS[value]
+    if isinstance(value, str):
+        cleaned = value
+        for source, replacement in sorted(
+            PROVENANCE_REPLACEMENTS.items(), key=lambda row: len(row[0]), reverse=True
+        ):
+            cleaned = cleaned.replace(source, replacement)
+        for pattern, replacement in SENSITIVE_PROVENANCE_REPLACEMENTS.values():
+            cleaned = pattern.sub(replacement, cleaned)
+        return cleaned
+    return value
+
+
+def copy_anonymized_tree(source: Path, destination: Path) -> None:
+    """Copy a reviewer-evidence tree while removing searchable provenance values."""
+
+    if not source.is_dir():
+        fail(f"missing empirical evidence source: {source.relative_to(ROOT)}")
+    for path in sorted(source.rglob("*")):
+        relative = path.relative_to(source)
+        if should_skip(relative):
+            continue
+        anonymous_relative = Path(str(anonymize_provenance(relative.as_posix())))
+        target = destination / anonymous_relative
+        if path.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        source_digest = sha256_file(path).removeprefix("sha256:")
+        force_digest_change = source_digest in FORBIDDEN_TEXT
+        if path.suffix.lower() in TEXT_SUFFIXES or path.name in TEXT_NAMES:
+            source_text = path.read_text(encoding="utf-8")
+            requires_structured_redaction = path.suffix in {".json", ".jsonl"} and any(
+                marker in source_text
+                for marker in (
+                    '"frozen_plan_commit"',
+                    '"provider_response_id"',
+                    '"provider_request_id"',
+                    '"reasoning_content"',
+                    '"thinking_content"',
+                )
+            )
+            if (
+                not force_digest_change
+                and not requires_structured_redaction
+                and not any(token in source_text for token in PROVENANCE_REPLACEMENTS)
+            ):
+                shutil.copyfile(path, target)
+                continue
+        if path.suffix == ".json":
+            value = anonymize_provenance(json.loads(source_text))
+            if force_digest_change and isinstance(value, dict):
+                value["anonymous_source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+            target.write_text(
+                json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+        elif path.suffix == ".jsonl":
+            rows = [
+                anonymize_provenance(json.loads(line))
+                for line in source_text.splitlines()
+                if line.strip()
+            ]
+            target.write_text(
+                "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+        elif path.suffix.lower() in TEXT_SUFFIXES or path.name in TEXT_NAMES:
+            text = str(anonymize_provenance(source_text))
+            target.write_text(text, encoding="utf-8")
+        else:
+            shutil.copyfile(path, target)
+
+
+def repair_current_route_study_anonymous_evidence(
+    destination: Path,
+    *,
+    manifest_status: str,
+    expected_run_files: int,
+    expected_terminal_records: int,
+    external_source_commits_included: bool,
+) -> None:
+    """Rebind a privacy-safe route study after withholding its private freeze commit."""
+
+    results = destination / "results"
+    aggregate_path = results / "aggregate.json"
+    execution_path = results / "execution-receipt.json"
+    privacy_path = results / "privacy-receipt.json"
+    plan_path = destination / "study-plan.json"
+    schedule_path = destination / "request-schedule.json"
+    required = (aggregate_path, execution_path, privacy_path, plan_path, schedule_path)
+    if any(not path.is_file() for path in required):
+        fail(f"current route study is incomplete: {destination.name}")
+
+    run_paths = sorted((results / "runs").glob("*.jsonl"))
+    if len(run_paths) != expected_run_files:
+        fail(f"current route study run-file count changed: {destination.name}")
+    run_hashes: Json = {}
+    terminal_records = 0
+    for path in run_paths:
+        rows = load_jsonl(path)
+        terminal_records += len(rows)
+        for row in rows:
+            _reject_hidden_reasoning(row, f"{destination.name}/{path.name}")
+            if (
+                row.get("frozen_plan_commit") != "0000000000000000000000000000000000000011"
+                or row.get("raw_response_text") is not None
+                or row.get("provider_response_id") is not None
+                or row.get("system_fingerprint") is not None
+            ):
+                fail(
+                    f"current route study privacy boundary changed: {destination.name}/{path.name}"
+                )
+            # A digest of withheld provider text remains a searchable response fingerprint and is
+            # unnecessary for recomputing the released endpoints.
+            row["raw_response_sha256"] = None
+        path.write_text(
+            "".join(f"{canonical_json(row)}\n" for row in rows),
+            encoding="utf-8",
+        )
+        run_hashes[path.name] = sha256_file(path)
+    if terminal_records != expected_terminal_records:
+        fail(f"current route study terminal-record count changed: {destination.name}")
+
+    execution = anonymize_provenance(load_object(execution_path))
+    execution["frozen_plan_commit"] = "0000000000000000000000000000000000000011"
+    execution["lane_output_sha256"] = run_hashes
+    execution.pop("request_intent_journal_sha256", None)
+    execution.pop("terminal_journal_sha256", None)
+    execution["source_journal_digests_included"] = False
+    write_json(execution_path, execution)
+
+    aggregate = anonymize_provenance(load_object(aggregate_path))
+
+    def rebind_run_digests(value: Any) -> None:
+        if isinstance(value, dict):
+            lane_id = value.get("lane_id")
+            if isinstance(lane_id, str) and "run_sha256" in value:
+                filename = f"{lane_id}.jsonl"
+                if filename not in run_hashes:
+                    fail(f"aggregate references an unknown lane: {destination.name}/{lane_id}")
+                value["run_sha256"] = run_hashes[filename]
+            for child in value.values():
+                rebind_run_digests(child)
+        elif isinstance(value, list):
+            for child in value:
+                rebind_run_digests(child)
+
+    rebind_run_digests(aggregate)
+    historical_anchors = aggregate.get("historical_anchors")
+    if isinstance(historical_anchors, list):
+        balanced_runs = destination.parent / "balanced-public-challenge" / "runs"
+        for anchor in historical_anchors:
+            if not isinstance(anchor, dict) or not isinstance(anchor.get("source_run_path"), str):
+                fail(f"current route study historical anchor is malformed: {destination.name}")
+            anchor_path = balanced_runs / Path(str(anchor["source_run_path"])).name
+            if not anchor_path.is_file():
+                fail(f"current route study historical anchor is missing: {anchor_path.name}")
+            anchor["source_run_path"] = f"../balanced-public-challenge/runs/{anchor_path.name}"
+            anchor["source_run_sha256"] = sha256_file(anchor_path)
+    freeze = aggregate.get("freeze")
+    if not isinstance(freeze, dict):
+        fail(f"current route study aggregate lacks freeze evidence: {destination.name}")
+    freeze["frozen_plan_commit"] = "0000000000000000000000000000000000000011"
+    freeze["plan_sha256"] = sha256_file(plan_path)
+    freeze["execution_receipt_sha256"] = sha256_file(execution_path)
+    write_json(aggregate_path, aggregate)
+
+    privacy = anonymize_provenance(load_object(privacy_path))
+    privacy["public_run_files"] = len(run_paths)
+    privacy["public_terminal_records"] = terminal_records
+    privacy["public_run_sha256"] = run_hashes
+    privacy["files_scanned"] = len(run_paths) + 2
+    privacy["aggregate_sha256"] = sha256_file(aggregate_path)
+    privacy["execution_receipt_sha256"] = sha256_file(execution_path)
+    privacy["raw_response_text_retained"] = False
+    privacy["provider_response_identifiers_retained"] = False
+    privacy["hidden_reasoning_retained"] = False
+    privacy["account_identifiers_retained"] = False
+    privacy["credentials_retained"] = False
+    write_json(privacy_path, privacy)
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest = {
+        "schema_version": "1.0.0-review",
+        "status": manifest_status,
+        "file_count": len(files),
+        "files": files,
+        "lane_files": {path.stem: f"results/runs/{path.name}" for path in run_paths},
+        "scope": {
+            "all_scheduled_terminal_outcomes_included": True,
+            "item_level_structured_decisions_included": True,
+            "raw_response_text_included": False,
+            "raw_response_fingerprints_included": False,
+            "free_form_provider_errors_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+            "private_freeze_commit_included": False,
+            "private_journal_digests_included": False,
+            "external_source_commits_included": external_source_commits_included,
+        },
+    }
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def repair_output_contract_transport_diagnostics(destination: Path) -> None:
+    """Rebind the content-free diagnostic to the anonymous terminal records."""
+
+    diagnostics = destination / "diagnostics"
+    report_path = diagnostics / "transport-diagnostics.json"
+    privacy_path = diagnostics / "privacy-receipt.json"
+    manifest_path = diagnostics / "manifest.json"
+    if any(not path.is_file() for path in (report_path, privacy_path, manifest_path)):
+        fail("output-contract transport diagnostic is incomplete")
+
+    report = load_object(report_path)
+    run_paths = sorted((destination / "results" / "runs").glob("*.jsonl"))
+    report["input_files_sha256"] = {
+        "execution-receipt.json": sha256_file(destination / "results" / "execution-receipt.json"),
+        **{path.name: sha256_file(path) for path in run_paths},
+        "request-schedule.json": sha256_file(destination / "request-schedule.json"),
+    }
+    report["self_digest"] = sha256_text(
+        canonical_json({key: value for key, value in report.items() if key != "self_digest"})
+    )
+    write_json(report_path, report)
+
+    privacy = load_object(privacy_path)
+    privacy["scanned_file_sha256"] = sha256_file(report_path)
+    write_json(privacy_path, privacy)
+
+    manifest = load_object(manifest_path)
+    manifest["files_sha256"] = {
+        "privacy-receipt.json": sha256_file(privacy_path),
+        "transport-diagnostics.json": sha256_file(report_path),
+    }
+    manifest["hashed_file_count"] = len(manifest["files_sha256"])
+    manifest["file_count"] = len(manifest["files_sha256"]) + 1
+    manifest["self_digest"] = sha256_text(
+        canonical_json({key: value for key, value in manifest.items() if key != "self_digest"})
+    )
+    write_json(manifest_path, manifest)
+
+    top_manifest_path = destination / "MANIFEST.json"
+    top_manifest = load_object(top_manifest_path)
+    top_manifest["files"] = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path != top_manifest_path
+    }
+    top_manifest["file_count"] = len(top_manifest["files"])
+    write_json(top_manifest_path, top_manifest)
+
+
+def build_factor_complete_route_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "factor-complete-route-breadth-v2"
+    copy_anonymized_tree(source, destination)
+    copy_tree(ROOT / "v2" / "balanced-public-challenge" / "dataset", destination / "dataset")
+    copy_file(
+        ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json",
+        destination / "prompt-packet.json",
+    )
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_FACTOR_COMPLETE_ROUTE_EVIDENCE",
+        expected_run_files=21,
+        expected_terminal_records=630,
+        external_source_commits_included=False,
+    )
+
+
+def build_external_agent_policy_anonymous_evidence(destination: Path) -> None:
+    copy_anonymized_tree(ROOT / "v2" / "external-agent-policy-revision-v2", destination)
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_EXTERNAL_AGENT_POLICY_EVIDENCE",
+        expected_run_files=24,
+        expected_terminal_records=480,
+        external_source_commits_included=True,
+    )
+
+
+def build_nonallow_policy_controls_anonymous_evidence(destination: Path) -> None:
+    copy_anonymized_tree(ROOT / "v2" / "nonallow-policy-controls-v1", destination)
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_NONALLOW_POLICY_CONTROLS_EVIDENCE",
+        expected_run_files=15,
+        expected_terminal_records=240,
+        external_source_commits_included=True,
+    )
+
+
+def build_output_contract_ablation_anonymous_evidence(destination: Path) -> None:
+    copy_anonymized_tree(ROOT / "v2" / "output-contract-ablation-v1", destination)
+    copy_tree(ROOT / "v2" / "balanced-public-challenge" / "dataset", destination / "dataset")
+    copy_file(
+        ROOT / "v2" / "balanced-public-challenge" / "prompt-packet.json",
+        destination / "prompt-packet.json",
+    )
+    repair_current_route_study_anonymous_evidence(
+        destination,
+        manifest_status="ANONYMOUS_OUTPUT_CONTRACT_ABLATION_EVIDENCE",
+        expected_run_files=12,
+        expected_terminal_records=360,
+        external_source_commits_included=False,
+    )
+    repair_output_contract_transport_diagnostics(destination)
+
+
+def repair_capable_anonymous_evidence(root: Path) -> None:
+    """Rebind canonical and attempt-history digests after provenance anonymization."""
+
+    run_paths: dict[tuple[str, str], Path] = {}
+    for path in sorted((root / "canonical" / "runs").glob("*.jsonl")):
+        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+        identities = {(str(row.get("lane_id")), str(row.get("phase"))) for row in rows}
+        if len(identities) != 1:
+            fail(f"capable evidence run has mixed identity: {path.relative_to(root)}")
+        identity = identities.pop()
+        if identity in run_paths:
+            fail(f"duplicate capable evidence run identity: {identity}")
+        run_paths[identity] = path
+
+    analysis_paths: dict[tuple[str, str], Path] = {}
+    for path in sorted((root / "canonical" / "analysis").glob("*.json")):
+        value = load_object(path)
+        identity = (str(value.get("lane_id")), str(value.get("phase")))
+        if identity not in run_paths or identity in analysis_paths:
+            fail(f"capable evidence analysis identity differs from runs: {identity}")
+        value["run_sha256"] = sha256_file(run_paths[identity])
+        path.write_text(
+            json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        analysis_paths[identity] = path
+    if set(analysis_paths) != set(run_paths):
+        fail("capable evidence canonical analysis matrix differs from run matrix")
+
+    attempt_run_paths = sorted((root / "attempt-history").glob("**/runs/*.jsonl"))
+    if len(attempt_run_paths) != 16:
+        fail("capable evidence must retain 14 pilot attempts and two full-pass copies")
+    attempt_phase_counts = {"pilot": 0, "full": 0}
+    attempt_digests: set[str] = set()
+    for run_path in attempt_run_paths:
+        analysis_path = run_path.parent.parent / "analysis" / f"{run_path.stem}.json"
+        if not analysis_path.is_file():
+            fail(f"capable attempt lacks analysis: {run_path.relative_to(root)}")
+        rows = [
+            json.loads(line) for line in run_path.read_text(encoding="utf-8").splitlines() if line
+        ]
+        phases = {str(row.get("phase")) for row in rows}
+        if len(phases) != 1 or next(iter(phases)) not in attempt_phase_counts:
+            fail(f"capable attempt has invalid phase: {run_path.relative_to(root)}")
+        attempt_phase_counts[next(iter(phases))] += 1
+        run_digest = sha256_file(run_path)
+        attempt_digests.add(run_digest)
+        value = load_object(analysis_path)
+        value["run_sha256"] = run_digest
+        analysis_path.write_text(
+            json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    if attempt_phase_counts != {"pilot": 14, "full": 2}:
+        fail(f"capable attempt-history phase counts changed: {attempt_phase_counts}")
+    if not {sha256_file(path) for path in run_paths.values()} <= attempt_digests:
+        fail("capable canonical runs are not bound to the released attempt history")
+
+    aggregate_path = root / "aggregate.json"
+    aggregate = load_object(aggregate_path)
+    qualification = aggregate.get("qualification")
+    complete = aggregate.get("models_with_complete_hidden_pass")
+    provenance = aggregate.get("provenance")
+    if (
+        not isinstance(qualification, dict)
+        or not isinstance(qualification.get("pilots"), list)
+        or not isinstance(complete, list)
+        or not isinstance(provenance, dict)
+    ):
+        fail("capable evidence aggregate is malformed")
+
+    for row in qualification["pilots"]:
+        identity = (str(row.get("lane_id")), "pilot")
+        if identity not in run_paths:
+            fail(f"capable aggregate pilot lacks canonical run: {identity[0]}")
+        row["run_sha256"] = sha256_file(run_paths[identity])
+    for row in complete:
+        identity = (str(row.get("lane_id")), "full")
+        if identity not in run_paths:
+            fail(f"capable aggregate full result lacks canonical run: {identity[0]}")
+        row["run_sha256"] = sha256_file(run_paths[identity])
+
+    for key, phase, paths in (
+        ("pilot_run_sha256", "pilot", run_paths),
+        ("full_run_sha256", "full", run_paths),
+        ("pilot_analysis_sha256", "pilot", analysis_paths),
+        ("full_analysis_sha256", "full", analysis_paths),
+    ):
+        original = provenance.get(key)
+        if not isinstance(original, dict):
+            fail(f"capable aggregate provenance lacks {key}")
+        rebuilt = {
+            lane: sha256_file(path)
+            for (lane, observed_phase), path in sorted(paths.items())
+            if observed_phase == phase
+        }
+        if set(rebuilt) != set(original):
+            fail(f"capable aggregate provenance lane set changed for {key}")
+        provenance[key] = rebuilt
+
+    aggregate_path.write_text(
+        json.dumps(aggregate, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def should_skip(path: Path) -> bool:
+    return (
+        any(part in SKIP_NAMES for part in path.parts)
+        or path.name in SKIP_FILES
+        or path.suffix.lower() in SKIP_SUFFIXES
+    )
+
+
+def copy_tree(source: Path, destination: Path) -> None:
+    if not source.exists():
+        fail(f"missing source path: {source.relative_to(ROOT)}")
+    for path in sorted(source.rglob("*")):
+        relative = path.relative_to(source)
+        if should_skip(relative):
+            continue
+        target = destination / relative
+        if path.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if path.suffix == ".json" and "schemas" in path.parts:
+            value = strip_schema_ids(json.loads(path.read_text(encoding="utf-8")))
+            target.write_text(
+                json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+        else:
+            shutil.copyfile(path, target)
+
+
+def copy_file(source: Path, destination: Path) -> None:
+    if not source.is_file():
+        fail(f"missing source file: {source.relative_to(ROOT)}")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if source.suffix == ".json" and "schemas" in source.parts:
+        value = strip_schema_ids(json.loads(source.read_text(encoding="utf-8")))
+        destination.write_text(
+            json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    else:
+        shutil.copyfile(source, destination)
+
+
+def rewrite_alpha_manifest(bundle: Path) -> None:
+    manifest_path = bundle / "data" / "alpha" / "manifest.json"
+    manifest = load_object(manifest_path)
+    schema_hashes = manifest.get("schema_sha256")
+    if not isinstance(schema_hashes, dict):
+        fail("alpha manifest lacks schema_sha256")
+    for name in sorted(schema_hashes):
+        schema_path = bundle / "schemas" / name
+        if not schema_path.is_file():
+            fail(f"anonymous bundle lacks alpha schema: {name}")
+        schema_hashes[name] = sha256_file(schema_path)
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def anonymize_v1_results(source: Json) -> Json:
+    runs = source.get("runs")
+    if not isinstance(runs, list) or len(runs) != 24:
+        fail("v1 public result source does not contain 24 runs")
+    return {
+        "schema_version": "1.0.0-review",
+        "study_kind": "FROZEN_V1_HIDDEN_RESULT_SUMMARY",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "dataset": {
+            "evaluation_time": source.get("dataset", {}).get("evaluation_time"),
+            "instances_per_run": 300,
+        },
+        "runs": runs,
+        "interpretation_boundary": (
+            "This compact summary is a convenience view. The reviewer-release hidden dataset, "
+            "source records, normalized records, and normalization map are included separately "
+            "under evidence/."
+        ),
+    }
+
+
+def remove_keys(value: Any, forbidden_keys: set[str]) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: remove_keys(child, forbidden_keys)
+            for key, child in value.items()
+            if key not in forbidden_keys
+        }
+    if isinstance(value, list):
+        return [remove_keys(child, forbidden_keys) for child in value]
+    return value
+
+
+def anonymize_v2_results(source: Json) -> Json:
+    cleaned = remove_keys(
+        source,
+        {
+            "source_workflow_run_id",
+            "study_sha256",
+            "run_sha256",
+            "run_path",
+        },
+    )
+    if not isinstance(cleaned, dict):
+        fail("unexpected v2 result structure")
+    cleaned["schema_version"] = "1.0.0-review"
+    cleaned["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    return cleaned
+
+
+def repair_v2_public_anonymous_evidence(root: Path) -> None:
+    aggregate_path = root / "aggregate.json"
+    cleaned = anonymize_v2_results(load_object(aggregate_path))
+    cleaned["interpretation_status"] = "RECOMPUTATION_VERIFIED_FOR_REPORTING"
+    aggregate_path.write_text(
+        json.dumps(cleaned, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _reject_hidden_reasoning(value: Any, label: str) -> None:
+    if isinstance(value, dict):
+        forbidden = {
+            "reasoning_content",
+            "thinking",
+            "thinking_content",
+            "thought",
+            "thoughts",
+        }
+        overlap = forbidden & set(value)
+        if overlap:
+            fail(f"{label} contains hidden-reasoning fields: {sorted(overlap)}")
+        block_type = str(value.get("type", "")).lower()
+        if block_type in {"reasoning", "thinking"}:
+            fail(f"{label} contains a hidden-reasoning content block")
+        for child in value.values():
+            _reject_hidden_reasoning(child, label)
+    elif isinstance(value, list):
+        for child in value:
+            _reject_hidden_reasoning(child, label)
+
+
+def _fresh_analysis_projection(value: Json) -> Json:
+    projected = deepcopy(value)
+    projected.pop("aggregate_sha256", None)
+    projected.pop("source_identity", None)
+    scores = projected.get("scores")
+    if isinstance(scores, dict):
+        for score in scores.values():
+            if isinstance(score, dict):
+                score.pop("run_sha256", None)
+    return projected
+
+
+def build_fresh_confirmatory_anonymous_evidence(source: Path, destination: Path) -> None:
+    """Create a compact, replayable, identity-free derivative of the safe r6 release."""
+
+    if not source.is_dir():
+        fail(f"missing fresh-confirmatory source: {source.relative_to(ROOT)}")
+    destination.mkdir(parents=True, exist_ok=True)
+
+    copy_tree(source / "dataset", destination / "dataset")
+    copy_file(ROOT / "v2" / "fresh-confirmatory-study-plan.json", destination / "study-plan.json")
+    correction_source = load_object(
+        ROOT / "v2" / "confirmatory" / "r6-execution" / "frozen-manifest-metadata-correction.json"
+    )
+    correction_source.pop("self_digest", None)
+    correction_source["source_manifest_path"] = "dataset/manifest.json"
+    correction_source["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    correction_source["self_digest"] = sha256_text(canonical_json(correction_source))
+    write_json(destination / "frozen-manifest-metadata-correction.json", correction_source)
+
+    packet_paths = sorted(source.glob("collected/*/confirmatory-packet.json"))
+    baseline_paths = sorted(source.glob("collected/*/confirmatory-baselines.json"))
+    c2_receipt_paths = sorted(source.glob("collected/*/c2-receipt.json"))
+    c2_run_paths = sorted(source.glob("collected/*/complete/*-c2-complete.jsonl"))
+    if not (
+        len(packet_paths) == len(baseline_paths) == len(c2_receipt_paths) == 1
+        and len(c2_run_paths) == 2
+    ):
+        fail("fresh-confirmatory source has an unexpected packet/baseline/C2 layout")
+    copy_file(packet_paths[0], destination / "prompt-packet.json")
+    copy_file(baseline_paths[0], destination / "baselines.json")
+
+    c2_source = load_object(c2_receipt_paths[0])
+    c2_review = {
+        "analysis_executed_before_receipt": c2_source.get("analysis_executed_before_receipt"),
+        "commitment_stage": c2_source.get("commitment_stage"),
+        "contains_gold_labels": c2_source.get("contains_gold_labels"),
+        "gold_loaded_before_receipt": c2_source.get("gold_loaded_before_receipt"),
+        "outcome_counts": c2_source.get("outcome_counts"),
+        "planned_cells": c2_source.get("planned_cells"),
+        "schema_version": "1.0.0-review",
+        "sealed_cells": c2_source.get("sealed_cells"),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "status": "C2_BEFORE_GOLD_UNBLINDING_OR_ANALYSIS",
+        "study_id": c2_source.get("study_id"),
+    }
+    write_json(destination / "c2-receipt-review.json", c2_review)
+
+    runs_destination = destination / "runs"
+    runs_destination.mkdir()
+    lane_files: dict[str, str] = {}
+    for source_run in c2_run_paths:
+        source_rows = [
+            json.loads(line)
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        lane_ids = {str(row.get("lane_id")) for row in source_rows}
+        if len(source_rows) != 300 or len(lane_ids) != 1:
+            fail(f"fresh-confirmatory C2 run has invalid coverage: {source_run.name}")
+        lane_id = lane_ids.pop()
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]+", lane_id) or lane_id in lane_files:
+            fail(f"fresh-confirmatory lane identity is invalid or duplicated: {lane_id}")
+        projected_rows: list[Json] = []
+        for source_row in source_rows:
+            projected = {
+                key: deepcopy(source_row[key])
+                for key in FRESH_CONFIRMATORY_ROW_FIELDS
+                if key in source_row
+            }
+            if set(projected) != set(FRESH_CONFIRMATORY_ROW_FIELDS):
+                missing = sorted(set(FRESH_CONFIRMATORY_ROW_FIELDS) - set(projected))
+                fail(f"fresh-confirmatory row lacks reviewer fields: {missing}")
+            _reject_hidden_reasoning(projected, f"fresh-confirmatory row {projected['item_id']}")
+            raw_text = projected.get("raw_final_text")
+            raw_sha = projected.get("raw_final_text_sha256")
+            if raw_text is None:
+                if raw_sha is not None:
+                    fail("fresh-confirmatory null final text has a digest")
+            elif raw_sha != sha256_text(str(raw_text)):
+                fail("fresh-confirmatory final-text digest changed")
+            projected["raw_final_text"] = None
+            projected["raw_final_text_sha256"] = None
+            projected["parse_detail"] = None
+            projected["network_error"] = None
+            projected_rows.append(projected)
+        target_name = f"{lane_id}.jsonl"
+        target_path = runs_destination / target_name
+        target_path.write_text(
+            "".join(f"{canonical_json(row)}\n" for row in projected_rows),
+            encoding="utf-8",
+        )
+        lane_files[lane_id] = f"runs/{target_name}"
+
+    source_analysis = load_object(source / "confirmatory-analysis-public.json")
+    reported_analysis = _fresh_analysis_projection(source_analysis)
+    reported_analysis["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    write_json(destination / "reported-analysis.json", reported_analysis)
+
+    source_result = load_object(ROOT / "v2" / "confirmatory" / "r6-execution" / "study-result.json")
+    for key in ("public_release", "scored_execution", "study_result_sha256"):
+        source_result.pop(key, None)
+    source_result["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    source_result["review_disposition"]["public_artifact"] = (
+        "GO_REDACTED_PERSISTENT_ANONYMOUS_DERIVATIVE"
+    )
+    write_json(destination / "study-result.json", source_result)
+
+    source_addendum = load_object(
+        ROOT / "v2" / "confirmatory" / "r6-execution" / "reviewer-reporting-addendum.json"
+    )
+    source_addendum.pop("self_digest", None)
+    source_addendum["sources"] = {
+        "anonymous_recomputation": (
+            "Recomputed from dataset/, runs/, and reported-analysis.json in this directory."
+        ),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
+    source_addendum["self_digest"] = sha256_text(canonical_json(source_addendum))
+    write_json(destination / "reporting-addendum.json", source_addendum)
+
+    source_redaction = load_object(source / "public-release-redaction-receipt.json")
+    source_equivalence = load_object(source / "public-release-scientific-equivalence.json")
+    anonymous_redaction = {
+        "hidden_reasoning_present_in_public_release": source_equivalence.get(
+            "hidden_reasoning_present_in_public_release"
+        ),
+        "original_scored_artifacts_modified": source_redaction.get(
+            "original_scored_artifacts_modified"
+        ),
+        "post_c2_transform": source_redaction.get("post_c2_transform"),
+        "public_provider_envelopes_allowlisted": source_equivalence.get(
+            "public_provider_envelopes_allowlisted"
+        ),
+        "redacted_unique_model_item_cells": source_redaction.get(
+            "redacted_unique_model_item_cells"
+        ),
+        "redaction_rule": source_redaction.get("redaction_rule"),
+        "redaction_rule_sha256": source_redaction.get("redaction_rule_sha256"),
+        "removed_content_blocks_including_raw_and_c2_copies": source_redaction.get(
+            "removed_content_blocks_including_raw_and_c2_copies"
+        ),
+        "schema_version": "1.0.0-review",
+        "scientific_analysis_payload_byte_identical": source_equivalence.get(
+            "scientific_analysis_payload_byte_identical"
+        ),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "source_to_derived_row_hashes_verified_before_anonymization": source_equivalence.get(
+            "source_to_derived_row_hashes_verified"
+        ),
+        "status": "POST_C2_PUBLIC_RELEASE_REDACTION_VERIFIED",
+    }
+    write_json(destination / "redaction-receipt-review.json", anonymous_redaction)
+
+    readme = """# Fresh confirmatory reviewer evidence
+
+This directory is a compact double-blind derivative of the immutable r6 execution. It contains the
+released 300-item paired dataset, the frozen prompt packet and baseline predictions, two projected
+C2-complete service-configuration runs, the preregistered study plan, and the complete scientific
+analysis with only source-identifying provenance hashes removed.
+
+The Qwen service configuration produced 272 valid decisions and achieved 86.00% end-to-end item
+accuracy and 75.33% pair accuracy. Among covered outputs it achieved 258/272 item accuracy; 123/150
+pairs had two valid decisions and 113/123 of those complete pairs were correct. The Flash lane
+returned 300 HTTP 401 responses and no model output; it is an authentication or client-service
+configuration failure, not an estimate of model accuracy. The Qwen result includes every failure as
+incorrect without retry and has zero DEMOTE recall (0/8). `reporting-addendum.json` exposes the
+full confusion matrix, factor-level pair outcomes, action-factor concentration, conditional metrics,
+and deterministic policy ceiling.
+
+Provider hidden-thinking blocks are not included. They were removed only in a deterministic
+post-C2 publication derivative; the original C2 seal and scores were not altered. `MANIFEST.json`
+binds every file in this directory. Recompute the reported analysis with
+`scripts/validate_anonymous_empirical_evidence.py` from the bundle root.
+
+The item records retain structured decisions, HTTP and parse classes, and all 600 scheduled cells.
+Raw final-response text, malformed contents, parser detail, and free-form network errors are
+omitted from this reviewer derivative.
+
+The immutable dataset manifest retains one stale non-operative `CFM_R5` namespace label and three
+construction-time `PENDING` values. The released IDs are all `v1-test-cfo-*`; the bound correction
+overlay explains why the original manifest remains byte-identical and how current states are carried
+by later receipts.
+"""
+    (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path != destination / "MANIFEST.json"
+    }
+    manifest: Json = {
+        "file_count": len(files),
+        "files": files,
+        "lane_files": lane_files,
+        "schema_version": "1.0.0-review",
+        "scope": {
+            "hidden_reasoning_included": False,
+            "item_level_structured_decisions_included": True,
+            "raw_final_response_text_included": False,
+            "free_form_error_text_included": False,
+            "all_scheduled_terminal_failures_included": True,
+            "original_reasoning_bearing_records_included": False,
+            "private_construction_salt_included": False,
+            "public_repository_identity_included": False,
+            "source_artifact_or_workflow_ids_included": False,
+        },
+        "status": "ANONYMOUS_FRESH_CONFIRMATORY_EVIDENCE",
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def build_balanced_public_anonymous_evidence(destination: Path) -> None:
+    """Create a replayable anonymous derivative of the balanced public challenge."""
+
+    source = ROOT / "v2" / "balanced-public-challenge"
+    results = source / "results"
+    destination.mkdir(parents=True, exist_ok=True)
+    copy_tree(source / "dataset", destination / "dataset")
+    copy_file(source / "prompt-packet.json", destination / "prompt-packet.json")
+    copy_file(
+        ROOT / "v2" / "balanced-public-challenge-study-plan.json",
+        destination / "study-plan.json",
+    )
+
+    run_destination = destination / "runs"
+    analysis_destination = destination / "analysis"
+    run_destination.mkdir()
+    analysis_destination.mkdir()
+    lane_files: dict[str, str] = {}
+    analysis_files: dict[str, str] = {}
+    run_paths: dict[str, Path] = {}
+    for source_run in sorted((results / "runs").glob("*.jsonl")):
+        rows = [
+            anonymize_provenance(json.loads(line))
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        lane_ids = {str(row.get("lane_id")) for row in rows}
+        if len(rows) != 180 or len(lane_ids) != 1:
+            fail(f"balanced challenge run has invalid coverage: {source_run.name}")
+        lane_id = lane_ids.pop()
+        if lane_id in lane_files:
+            fail(f"balanced challenge lane is duplicated: {lane_id}")
+        for row in rows:
+            _reject_hidden_reasoning(row, f"balanced challenge row {row.get('item_id')}")
+            if row.get("provider_response_id") is not None:
+                fail(f"balanced challenge retained a provider response ID: {row.get('item_id')}")
+            raw_text = row.get("raw_response_text")
+            raw_digest = row.get("raw_response_sha256")
+            if raw_text is None:
+                if raw_digest is not None:
+                    fail("balanced challenge null response has a digest")
+            elif raw_digest != sha256_text(str(raw_text)):
+                fail("balanced challenge response digest changed")
+            row["raw_response_text"] = None
+            row["raw_response_sha256"] = None
+            row["parse_error_detail"] = None
+            row["transport_error"] = None
+        target = run_destination / source_run.name
+        target.write_text(
+            "".join(f"{canonical_json(row)}\n" for row in rows),
+            encoding="utf-8",
+        )
+        lane_files[lane_id] = f"runs/{target.name}"
+        run_paths[lane_id] = target
+
+    for source_analysis in sorted((results / "analysis").glob("*.json")):
+        analysis = anonymize_provenance(load_object(source_analysis))
+        lane_id = str(analysis.get("lane_id"))
+        if lane_id not in run_paths or lane_id in analysis_files:
+            fail(f"balanced challenge analysis lane differs from runs: {lane_id}")
+        analysis["run_path"] = lane_files[lane_id]
+        analysis["run_sha256"] = sha256_file(run_paths[lane_id])
+        target = analysis_destination / source_analysis.name
+        write_json(target, analysis)
+        analysis_files[lane_id] = f"analysis/{target.name}"
+    if set(analysis_files) != set(lane_files):
+        fail("balanced challenge analysis matrix differs from run matrix")
+
+    source_aggregate = load_object(results / "aggregate.json")
+    source_correction = load_object(results / "reporting-correction-v1.json")
+    aggregate = anonymize_provenance(
+        apply_balanced_reporting_correction(source_aggregate, source_correction)
+    )
+    aggregate["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    external = aggregate.get("external_commitment")
+    lanes = aggregate.get("lanes")
+    if not isinstance(external, dict) or not isinstance(lanes, list):
+        fail("balanced challenge aggregate is malformed")
+    external["plan_sha256"] = sha256_file(destination / "study-plan.json")
+    external["workflow_run_url"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    for lane in lanes:
+        lane_id = str(lane.get("lane_id"))
+        if lane_id not in run_paths:
+            fail(f"balanced challenge aggregate contains an unknown lane: {lane_id}")
+        lane["run_sha256"] = sha256_file(run_paths[lane_id])
+    write_json(destination / "reported-aggregate.json", aggregate)
+
+    review_correction = {
+        "affected_lanes": deepcopy(source_correction["affected_lanes"]),
+        "anonymous_run_sha256": {
+            lane_id: sha256_file(run_path) for lane_id, run_path in sorted(run_paths.items())
+        },
+        "authoritative_reporting_rule": source_correction["authoritative_reporting_rule"],
+        "correction_id": source_correction["correction_id"],
+        "issued_on": source_correction["issued_on"],
+        "metric_convention": source_correction["metric_convention"],
+        "reason": source_correction["reason"],
+        "schema_version": "1.0.0-review",
+        "scope": deepcopy(source_correction["scope"]),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "status": "REPORTING_CORRECTION",
+    }
+    write_json(destination / "reporting-correction-review.json", review_correction)
+
+    source_receipt = load_object(results / "github-artifact-receipt.json")
+    validation = source_receipt.get("validation")
+    interpretation = source_receipt.get("interpretation")
+    if not isinstance(validation, dict) or not isinstance(interpretation, dict):
+        fail("balanced challenge source receipt is malformed")
+    receipt = {
+        "schema_version": "1.0.0-review",
+        "status": source_receipt.get("status"),
+        "truth_status": source_receipt.get("truth_status"),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "source_artifact_or_workflow_ids_included": False,
+        "raw_final_response_text_included": False,
+        "free_form_error_text_included": False,
+        "all_scheduled_terminal_failures_included": True,
+        "validation": deepcopy(validation),
+        "interpretation": deepcopy(interpretation),
+    }
+    write_json(destination / "privacy-receipt-review.json", receipt)
+
+    readme = """# Balanced public challenge reviewer evidence
+
+This directory contains the frozen 90-pair / 180-item public challenge, its prompt packet, two
+one-pass zero-retry service runs, lane analyses, a corrected reported aggregate, and the bound
+reporting-correction receipt. The invalid members are balanced across HOLD, DEMOTE, and ESCALATE
+(30 each), with 90 ALLOW members over 15 factors.
+
+Every non-OK response remains incorrect in end-to-end item and pair metrics. The two service
+stacks differ, so the lane comparison is descriptive and is not a causal model ablation or a
+hidden-test generalization estimate. `privacy-receipt-review.json` records the independent
+360-record validation and zero findings for provider account identifiers, retained provider
+response IDs, and hidden reasoning. Source workflow, artifact, repository, and commit identities
+are withheld during double-blind review.
+
+The projected records retain structured decisions, parse and failure classes, and every scheduled
+denominator. Raw final-response text and free-form errors, including malformed contents, are
+omitted.
+
+Run `scripts/validate_anonymous_empirical_evidence.py` from the bundle root to recompute coverage,
+conditional and end-to-end accuracy, per-action recall, and the complete confusion matrices.
+The correction defines zero-prediction classes as zero for fixed-four-class Macro-F1; it performs
+no model calls and changes no primary endpoint, confusion cell, recall, or item-level record.
+"""
+    (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_BALANCED_PUBLIC_CHALLENGE_EVIDENCE",
+        "file_count": len(files),
+        "files": files,
+        "lane_files": lane_files,
+        "analysis_files": analysis_files,
+        "scope": {
+            "hidden_reasoning_included": False,
+            "item_level_structured_decisions_included": True,
+            "raw_final_response_text_included": False,
+            "free_form_error_text_included": False,
+            "all_scheduled_terminal_failures_included": True,
+            "provider_response_identifiers_included": False,
+            "public_repository_identity_included": False,
+            "source_artifact_or_workflow_ids_included": False,
+        },
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+SYNTHETIC_POLICY_ROW_FIELDS = (
+    "actual_cost_usd",
+    "cost_status",
+    "dataset_manifest_sha256",
+    "evidence_ceiling",
+    "finish_reason",
+    "frozen_plan_commit",
+    "item_id",
+    "lane_id",
+    "latency_ms",
+    "model_family",
+    "model_requested",
+    "model_returned",
+    "packet_sha256",
+    "pair_id",
+    "parse_error_detail",
+    "parse_status",
+    "phase",
+    "postgate_decision",
+    "prompt_sha256",
+    "provider",
+    "provider_response_id",
+    "raw_decision",
+    "raw_response_sha256",
+    "raw_response_text",
+    "request_sha256",
+    "request_started_at_utc",
+    "response_format_sha256",
+    "response_received_at_utc",
+    "routed_provider",
+    "schema_version",
+    "study_id",
+    "system_fingerprint",
+    "transport_error",
+    "transport_status",
+    "usage",
+)
+
+
+def _synthetic_policy_manifest(destination: Path, *, study_kind: str, lane_files: Json) -> None:
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_SYNTHETIC_POLICY_EVIDENCE",
+        "study_kind": study_kind,
+        "file_count": len(files),
+        "files": files,
+        "lane_files": lane_files,
+        "scope": {
+            "credentials_included": False,
+            "hidden_reasoning_included": False,
+            "provider_response_identifiers_included": False,
+            "source_repository_or_commit_identity_included": False,
+            "raw_final_response_text_included": False,
+            "item_level_structured_decisions_included": True,
+            "all_scheduled_terminal_failures_included": True,
+        },
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def _project_synthetic_policy_dataset(source: Path, destination: Path) -> Json:
+    """Redact the schema identifier embedded in prompts and rebind the packet and manifest."""
+
+    copy_tree(source, destination)
+    source_packet = load_object(source / "evaluation-prompt-packet.json")
+    packet = anonymize_provenance(source_packet)
+    source_rows = source_packet.get("records")
+    projected_rows = packet.get("records")
+    if (
+        not isinstance(source_rows, list)
+        or not isinstance(projected_rows, list)
+        or len(source_rows) != 120
+        or len(projected_rows) != 120
+    ):
+        fail("synthetic-policy prompt packet coverage changed")
+    prompt_sha256: Json = {}
+    redacted_prompts = 0
+    for source_row, projected_row in zip(source_rows, projected_rows, strict=True):
+        item_id = str(projected_row.get("item_id"))
+        source_prompt = str(source_row.get("prompt"))
+        prompt = str(projected_row.get("prompt"))
+        if item_id in prompt_sha256 or item_id != str(source_row.get("item_id")):
+            fail("synthetic-policy prompt packet item identity changed")
+        if prompt != source_prompt:
+            redacted_prompts += 1
+        if prompt != str(anonymize_provenance(source_prompt)):
+            fail(f"synthetic-policy prompt redaction changed scientific content: {item_id}")
+        projected_row["utf8_bytes"] = len(prompt.encode("utf-8"))
+        projected_row["prompt_sha256"] = sha256_text(prompt)
+        prompt_sha256[item_id] = projected_row["prompt_sha256"]
+    if redacted_prompts != 120:
+        fail("synthetic-policy anonymous packet did not redact exactly 120 schema identifiers")
+    packet["packet_sha256"] = _digest_without(packet, "packet_sha256")
+    write_json(destination / "evaluation-prompt-packet.json", packet)
+
+    manifest_path = destination / "manifest.json"
+    manifest = load_object(manifest_path)
+    manifest["packet_sha256"] = packet["packet_sha256"]
+    manifest["packet_file_sha256"] = sha256_file(destination / "evaluation-prompt-packet.json")
+    write_json(manifest_path, manifest)
+    return {
+        "packet_sha256": packet["packet_sha256"],
+        "packet_file_sha256": sha256_file(destination / "evaluation-prompt-packet.json"),
+        "manifest_file_sha256": sha256_file(manifest_path),
+        "prompt_sha256": prompt_sha256,
+        "redacted_prompts": redacted_prompts,
+    }
+
+
+def _project_synthetic_policy_plan_and_schedule(
+    source_root: Path,
+    destination: Path,
+    dataset_projection: Json,
+    *,
+    dataset_bindings: Json | None = None,
+    environment_bindings: Json | None = None,
+) -> Json:
+    plan = anonymize_provenance(load_object(source_root / "study-plan.json"))
+    schedule = anonymize_provenance(load_object(source_root / "request-schedule.json"))
+    cells = schedule.get("cells")
+    if not isinstance(cells, list) or len(cells) != 240:
+        fail("synthetic-policy request schedule coverage changed")
+    request_sha256: Json = {}
+    for cell in cells:
+        lane_id = str(cell.get("lane_id"))
+        item_id = str(cell.get("item_id"))
+        prompt_hash = dataset_projection["prompt_sha256"].get(item_id)
+        key = f"{lane_id}\0{item_id}"
+        if not isinstance(prompt_hash, str) or key in request_sha256:
+            fail(f"synthetic-policy schedule prompt binding changed: {lane_id}/{item_id}")
+        projected_request_hash = sha256_text(
+            canonical_json(
+                {
+                    "anonymous_projection_version": "1.0.0-review",
+                    "item_id": item_id,
+                    "lane_id": lane_id,
+                    "prompt_sha256": prompt_hash,
+                }
+            )
+        )
+        cell["prompt_sha256"] = prompt_hash
+        cell["request_body_sha256"] = projected_request_hash
+        if "formatted_prompt_sha256" in cell:
+            cell["formatted_prompt_sha256"] = projected_request_hash
+        cell["request_digest_scope"] = "ANONYMOUS_LANE_ITEM_PROMPT_PROJECTION"
+        request_sha256[key] = projected_request_hash
+    schedule["schema_version"] = "1.0.0-review"
+    schedule["schedule_sha256"] = _digest_without(schedule, "schedule_sha256")
+
+    dataset = plan.get("dataset")
+    execution = plan.get("execution")
+    if not isinstance(dataset, dict) or not isinstance(execution, dict):
+        fail("synthetic-policy plan binding sections changed")
+    if "manifest_file_sha256" in dataset:
+        dataset["manifest_file_sha256"] = dataset_projection["manifest_file_sha256"]
+    if "manifest_sha256" in dataset:
+        dataset["manifest_sha256"] = dataset_projection["manifest_file_sha256"]
+    prompt = plan.get("prompt")
+    if isinstance(prompt, dict):
+        prompt["packet_sha256"] = dataset_projection["packet_sha256"]
+        if "packet_file_sha256" in prompt:
+            prompt["packet_file_sha256"] = dataset_projection["packet_file_sha256"]
+    elif "packet_sha256" in dataset:
+        dataset["packet_sha256"] = dataset_projection["packet_sha256"]
+    else:
+        fail("synthetic-policy plan lacks a prompt-packet binding")
+    if dataset_bindings is not None:
+        for key, value in dataset_bindings.items():
+            if key not in dataset:
+                fail(f"synthetic-policy plan lacks dataset field: {key}")
+            dataset[key] = value
+    freeze = plan.get("freeze")
+    if environment_bindings is not None:
+        if not isinstance(freeze, dict):
+            fail("local-model plan lacks environment bindings")
+        for key, value in environment_bindings.items():
+            if key not in freeze:
+                fail(f"local-model plan lacks frozen field: {key}")
+            freeze[key] = value
+    execution["schedule_sha256"] = schedule["schedule_sha256"]
+    plan["schema_version"] = "1.0.0-review"
+    plan["anonymous_projection"] = {
+        "scientific_prompt_content_changed": False,
+        "schema_identifier_redacted": True,
+        "source_request_body_digests_included": False,
+        "request_digest_scope": "ANONYMOUS_LANE_ITEM_PROMPT_PROJECTION",
+        "redacted_prompts": dataset_projection["redacted_prompts"],
+    }
+    write_json(destination / "study-plan.json", plan)
+    write_json(destination / "request-schedule.json", schedule)
+    return {
+        **dataset_projection,
+        **(environment_bindings or {}),
+        "plan_file_sha256": sha256_file(destination / "study-plan.json"),
+        "schedule_file_sha256": sha256_file(destination / "request-schedule.json"),
+        "schedule_sha256": schedule["schedule_sha256"],
+        "request_sha256": request_sha256,
+    }
+
+
+def _project_synthetic_policy_runs(
+    source_results: Path,
+    destination: Path,
+    *,
+    expected_lane_ids: set[str],
+    projection: Json,
+) -> Json:
+    lane_files: Json = {}
+    run_root = destination / "runs"
+    for source_run in sorted(source_results.glob("*.jsonl")):
+        rows = [
+            json.loads(line)
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        lane_ids = {str(row.get("lane_id")) for row in rows}
+        if len(rows) != 120 or len(lane_ids) != 1:
+            fail(f"synthetic-policy run has invalid coverage: {source_run.name}")
+        lane_id = next(iter(lane_ids))
+        if lane_id not in expected_lane_ids or lane_id in lane_files:
+            fail(f"synthetic-policy run has an unknown or duplicate lane: {lane_id}")
+        projected_rows: list[Json] = []
+        for row in rows:
+            _reject_hidden_reasoning(row, f"synthetic-policy row {row.get('item_id')}")
+            if row.get("provider_response_id") not in (None, ""):
+                fail(f"synthetic-policy run retained a provider response ID: {row.get('item_id')}")
+            projected: Json = {key: deepcopy(row.get(key)) for key in SYNTHETIC_POLICY_ROW_FIELDS}
+            projected["raw_response_text"] = None
+            projected["raw_response_sha256"] = None
+            projected["parse_error_detail"] = None
+            projected["transport_error"] = None
+            projected["provider_response_id"] = None
+            projected["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
+            projected["dataset_manifest_sha256"] = projection["manifest_file_sha256"]
+            projected["packet_sha256"] = projection["packet_sha256"]
+            projected["prompt_sha256"] = projection["prompt_sha256"][str(row["item_id"])]
+            projected["request_sha256"] = projection["request_sha256"][
+                f"{lane_id}\0{row['item_id']}"
+            ]
+            projected_rows.append(anonymize_provenance(projected))
+        target = run_root / source_run.name
+        write_jsonl(target, projected_rows)
+        lane_files[lane_id] = f"runs/{source_run.name}"
+    if set(lane_files) != expected_lane_ids:
+        fail("synthetic-policy result lane set differs from the frozen plan")
+    return lane_files
+
+
+def _project_synthetic_policy_aggregate(
+    source: Json,
+    destination: Path,
+    lane_files: Json,
+    *,
+    execution_receipt_sha256: str | None = None,
+    projection: Json | None = None,
+) -> Json:
+    aggregate = anonymize_provenance(source)
+    freeze = aggregate.get("freeze")
+    if isinstance(freeze, dict):
+        freeze["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
+        if execution_receipt_sha256 is not None:
+            freeze["execution_receipt_sha256"] = execution_receipt_sha256
+        if projection is not None:
+            freeze["plan_sha256"] = projection["plan_file_sha256"]
+            freeze["schedule_sha256"] = projection["schedule_sha256"]
+            freeze["dataset_manifest_sha256"] = projection["manifest_file_sha256"]
+            freeze["packet_sha256"] = projection["packet_sha256"]
+            for key in (
+                "catalog_sha256",
+                "snapshot_receipt_sha256",
+                "qualification_receipt_sha256",
+                "void_attempt_receipt_sha256",
+            ):
+                if key in freeze and key in projection:
+                    freeze[key] = projection[key]
+    lanes = aggregate.get("lanes")
+    if not isinstance(lanes, list):
+        fail("synthetic-policy aggregate lacks lanes")
+    for lane in lanes:
+        if not isinstance(lane, dict):
+            fail("synthetic-policy aggregate lane is malformed")
+        lane_id = str(lane.get("lane_id"))
+        relative = lane_files.get(lane_id)
+        if not isinstance(relative, str):
+            fail(f"synthetic-policy aggregate has an unknown lane: {lane_id}")
+        lane["run_sha256"] = sha256_file(destination / relative)
+    return aggregate
+
+
+def _project_synthetic_policy_execution_receipt(
+    source: Json,
+    destination: Path,
+    lane_files: Json,
+    *,
+    schedule_sha256: str,
+    projection: Json | None = None,
+) -> Json:
+    receipt = anonymize_provenance(source)
+    receipt["frozen_plan_commit"] = "0000000000000000000000000000000000000010"
+    receipt["request_intent_journal_sha256"] = None
+    receipt["terminal_journal_sha256"] = None
+    receipt["source_journal_digests_included"] = False
+    receipt["schedule_sha256"] = schedule_sha256
+    if projection is not None and "void_attempt_receipt_sha256" in receipt:
+        receipt["void_attempt_receipt_sha256"] = projection["void_attempt_receipt_sha256"]
+    receipt["lane_output_sha256"] = {
+        Path(str(relative)).name: sha256_file(destination / str(relative))
+        for relative in lane_files.values()
+    }
+    return receipt
+
+
+def _digest_without(value: Json, field: str) -> str:
+    return sha256_text(canonical_json({key: child for key, child in value.items() if key != field}))
+
+
+def _write_synthetic_policy_review_receipts(
+    *,
+    source_results: Path,
+    destination: Path,
+    dataset_manifest: Path,
+    baseline_report: Path,
+    lane_files: Json,
+) -> None:
+    """Validate the private seal and bind a new receipt chain to the redacted derivative."""
+
+    source_privacy = load_object(source_results / "privacy-receipt.json")
+    source_failure = load_object(source_results / "failure-taxonomy.json")
+    source_result = load_object(source_results / "result-receipt.json")
+    if (
+        source_privacy.get("status") != "PRIVATE_RESULTS_VALIDATED_ANONYMOUS_DERIVATIVE_REQUIRED"
+        or source_privacy.get("terminal_records_validated") != 240
+        or source_privacy.get("credentials_included") is not False
+        or source_privacy.get("provider_response_identifiers_included") is not False
+        or source_privacy.get("hidden_reasoning_fields_included") is not False
+        or source_privacy.get("anonymous_raw_final_response_text_allowed") is not False
+        or source_privacy.get("anonymous_free_form_error_text_allowed") is not False
+        or source_privacy.get("self_digest") != _digest_without(source_privacy, "self_digest")
+        or any(source_privacy.get("secret_pattern_findings", {}).values())
+    ):
+        fail("synthetic-policy private privacy seal changed")
+    if (
+        source_failure.get("status") != "COMPLETE_FROZEN_FAILURE_TAXONOMY"
+        or source_failure.get("free_form_error_text_included") is not False
+        or source_failure.get("self_digest") != _digest_without(source_failure, "self_digest")
+    ):
+        fail("synthetic-policy private failure taxonomy changed")
+    if (
+        source_result.get("status") != "SYNTHETIC_POLICY_RESULTS_SEALED"
+        or source_result.get("planned_and_terminal_cells") != 240
+        or source_result.get("application_posts_per_cell") != 1
+        or source_result.get("client_retry_count") != 0
+        or source_result.get("all_failures_retained_in_end_to_end_denominator") is not True
+        or source_result.get("self_digest") != _digest_without(source_result, "self_digest")
+        or source_result.get("failure_taxonomy_sha256")
+        != sha256_file(source_results / "failure-taxonomy.json")
+        or source_result.get("privacy_receipt_sha256")
+        != sha256_file(source_results / "privacy-receipt.json")
+    ):
+        fail("synthetic-policy private result seal changed")
+
+    failure = anonymize_provenance(source_failure)
+    failure["schema_version"] = "1.0.0-review"
+    failure["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    failure["self_digest"] = _digest_without(failure, "self_digest")
+    write_json(destination / "failure-taxonomy.json", failure)
+
+    review_file_hashes = {
+        "execution-receipt.json": sha256_file(destination / "execution-receipt.json"),
+        "failure-taxonomy.json": sha256_file(destination / "failure-taxonomy.json"),
+        "reported-aggregate.json": sha256_file(destination / "reported-aggregate.json"),
+        **{
+            str(relative): sha256_file(destination / str(relative))
+            for relative in lane_files.values()
+        },
+    }
+    privacy: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_SYNTHETIC_POLICY_DERIVATIVE_VALIDATED",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "terminal_records_validated": 240,
+        "credentials_included": False,
+        "provider_response_identifiers_included": False,
+        "hidden_reasoning_fields_included": False,
+        "raw_final_response_text_included": False,
+        "free_form_error_text_included": False,
+        "source_repository_or_commit_identity_included": False,
+        "all_scheduled_terminal_failures_included": True,
+        "dynamic_file_count_required": True,
+        "review_file_sha256": dict(sorted(review_file_hashes.items())),
+    }
+    privacy["self_digest"] = _digest_without(privacy, "self_digest")
+    write_json(destination / "privacy-receipt-review.json", privacy)
+
+    result: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_SYNTHETIC_POLICY_RESULTS_SEALED",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "study_id": failure["study_id"],
+        "planned_and_terminal_cells": 240,
+        "application_posts_per_cell": 1,
+        "client_retry_count": 0,
+        "plan_sha256": sha256_file(destination / "study-plan.json"),
+        "schedule_sha256": sha256_file(destination / "request-schedule.json"),
+        "dataset_manifest_sha256": sha256_file(dataset_manifest),
+        "baseline_report_sha256": sha256_file(baseline_report),
+        "execution_receipt_sha256": sha256_file(destination / "execution-receipt.json"),
+        "aggregate_sha256": sha256_file(destination / "reported-aggregate.json"),
+        "failure_taxonomy_sha256": sha256_file(destination / "failure-taxonomy.json"),
+        "privacy_receipt_sha256": sha256_file(destination / "privacy-receipt-review.json"),
+        "run_sha256": {
+            Path(str(relative)).name: sha256_file(destination / str(relative))
+            for relative in lane_files.values()
+        },
+        "all_failures_retained_in_end_to_end_denominator": True,
+    }
+    result["self_digest"] = _digest_without(result, "self_digest")
+    write_json(destination / "result-receipt-review.json", result)
+
+
+def build_slsa_portability_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "slsa-portability-v1"
+    replacement = source / "replacement-v2"
+    plan = load_object(replacement / "study-plan.json")
+    aggregate = load_object(replacement / "results" / "aggregate.json")
+    expected_lanes = {str(row["lane_id"]) for row in plan["formal_lanes"]}
+    if aggregate.get("status") != "COMPLETE":
+        fail("SLSA portability aggregate is not complete")
+
+    dataset_projection = _project_synthetic_policy_dataset(
+        replacement / "dataset", destination / "dataset"
+    )
+    copy_tree(replacement / "baseline", destination / "baseline")
+    copy_file(source / "policy-contract.json", destination / "policy-contract.json")
+    copy_file(source / "source-registry.json", destination / "source-registry.json")
+    copy_file(
+        replacement / "source-validation-receipt.json",
+        destination / "source-validation-receipt.json",
+    )
+    void_receipt = anonymize_provenance(
+        load_object(source / "void-attempt-v1" / "void-receipt.json")
+    )
+    void_receipt["frozen_plan_commit"] = "0000000000000000000000000000000000000011"
+    void_receipt["journal_sha256"] = None
+    void_receipt["source_journal_digest_included"] = False
+    write_json(destination / "void-exclusion-receipt.json", void_receipt)
+    projection = _project_synthetic_policy_plan_and_schedule(
+        replacement, destination, dataset_projection
+    )
+    lane_files = _project_synthetic_policy_runs(
+        replacement / "results",
+        destination,
+        expected_lane_ids=expected_lanes,
+        projection=projection,
+    )
+    execution_receipt = _project_synthetic_policy_execution_receipt(
+        load_object(replacement / "results" / "execution-receipt.json"),
+        destination,
+        lane_files,
+        schedule_sha256=projection["schedule_sha256"],
+    )
+    write_json(destination / "execution-receipt.json", execution_receipt)
+    write_json(
+        destination / "reported-aggregate.json",
+        _project_synthetic_policy_aggregate(
+            aggregate,
+            destination,
+            lane_files,
+            execution_receipt_sha256=sha256_file(destination / "execution-receipt.json"),
+            projection=projection,
+        ),
+    )
+    _write_synthetic_policy_review_receipts(
+        source_results=replacement / "results",
+        destination=destination,
+        dataset_manifest=destination / "dataset" / "manifest.json",
+        baseline_report=destination / "baseline" / "report.json",
+        lane_files=lane_files,
+    )
+    (destination / "README.md").write_text(
+        """# SLSA-derived portability reviewer evidence
+
+This directory contains the complete 120-item, 60-pair second-policy study. SLSA and in-toto
+ground the evidence fields; the transition policy and labels are author-defined. Every scheduled
+service or output failure remains in the end-to-end denominator. The incomplete predecessor is
+excluded by `void-exclusion-receipt.json`; its raw records are omitted.
+
+Raw response text, free-form provider errors, credentials, provider response IDs, hidden reasoning,
+and source repository or commit identity are excluded. Structured decisions, parser classes,
+usage, timings, hashes, gold labels, pair membership, and complete failure cells remain.
+""",
+        encoding="utf-8",
+    )
+    _synthetic_policy_manifest(
+        destination, study_kind="SLSA_DERIVED_POLICY_PORTABILITY", lane_files=lane_files
+    )
+
+
+def build_ox_alpha_minimal_route_anonymous_evidence(destination: Path) -> None:
+    """Project the 20-cell Ox route smoke replay without retaining private response text."""
+
+    source = ROOT / "v2" / "ox-alpha-minimal-route-v1"
+    plan = load_object(source / "study-plan.json")
+    selection = load_object(source / "selection-receipt.json")
+    schedule = load_object(source / "request-schedule.json")
+    aggregate = load_object(source / "results" / "aggregate.json")
+    source_privacy = load_object(source / "results" / "privacy-receipt.json")
+    execution = load_object(source / "private-results" / "execution-receipt.json")
+    source_run = source / "private-results" / "opencode-go-ox-alpha-free-minimal-route-v1.jsonl"
+    rows = [
+        json.loads(line)
+        for line in source_run.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    cells = schedule.get("cells")
+    if (
+        plan.get("status") != "FROZEN_BEFORE_SCORED_INFERENCE"
+        or plan.get("research_role") != "POSTHOC_TIME_STAMPED_AUXILIARY_ROUTE_SMOKE_REPLAY"
+        or selection.get("status") != "PREINFERENCE_ROUTE_AND_SUITE_SELECTION"
+        or selection.get("outcomes_used_for_selection") is not False
+        or selection.get("conditional_success_subset_allowed") is not False
+        or execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL"
+        or execution.get("planned_cells") != 20
+        or execution.get("durable_terminal_records") != 20
+        or execution.get("application_posts") != 20
+        or execution.get("client_retry_count") != 0
+        or execution.get("partial_resume_used") is not False
+        or aggregate.get("status") != "COMPLETE"
+        or aggregate.get("classification") != "COMPLETE_ROUTE_SMOKE_GATE_FAIL"
+        or aggregate.get("strict_smoke_gate_pass") is not False
+        or source_privacy.get("status") != "OX_ALPHA_ROUTE_PUBLIC_AGGREGATE_PRIVACY_PASS"
+        or source_privacy.get("private_route_records_eligible_for_anonymous_release") is not False
+        or not isinstance(cells, list)
+        or len(cells) != 20
+        or len(rows) != 20
+    ):
+        fail("Ox Alpha minimum-route source boundary changed")
+
+    projected_rows: list[Json] = []
+    for sequence, (cell, row) in enumerate(zip(cells, rows, strict=True)):
+        item_id = str(cell.get("item_id"))
+        pair_id = str(cell.get("pair_id"))
+        if (
+            cell.get("sequence") != sequence
+            or row.get("item_id") != item_id
+            or row.get("pair_id") != pair_id
+            or row.get("lane_id") != "opencode-go-ox-alpha-free-minimal-route-v1"
+        ):
+            fail(f"Ox Alpha route order or identity changed: {item_id}")
+        _reject_hidden_reasoning(row, f"Ox Alpha route row {item_id}")
+        if row.get("provider_response_id") not in (None, ""):
+            fail(f"Ox Alpha route retained a provider response ID: {item_id}")
+
+        parse_status = str(row.get("parse_status"))
+        raw_decision = row.get("raw_decision")
+        if parse_status == "OK":
+            if not isinstance(raw_decision, dict) or raw_decision.get("action") not in (
+                "ALLOW",
+                "HOLD",
+                "DEMOTE",
+                "ESCALATE",
+            ):
+                fail(f"Ox Alpha valid row lacks a supported action: {item_id}")
+            projected_decision: Json | None = {"action": str(raw_decision["action"])}
+            failure_class = None
+        elif parse_status == "TRANSPORT_ERROR":
+            if "503" not in str(row.get("transport_error")):
+                fail(f"Ox Alpha transport failure is not the sealed HTTP 503 class: {item_id}")
+            projected_decision = None
+            failure_class = "HTTP_503_ENDPOINT_UNAVAILABLE"
+        elif parse_status == "SEMANTIC_ERROR":
+            if "proposed_state is inconsistent with the declared action" not in str(
+                row.get("parse_error_detail")
+            ):
+                fail(f"Ox Alpha semantic failure class changed: {item_id}")
+            projected_decision = None
+            failure_class = "CROSS_FIELD_STATE_ACTION_INCONSISTENCY"
+        elif parse_status == "JSON_SYNTAX_ERROR":
+            if row.get("finish_reason") != "length":
+                fail(f"Ox Alpha syntax failure is not length-terminated: {item_id}")
+            projected_decision = None
+            failure_class = "LENGTH_TERMINATED_JSON"
+        else:
+            fail(f"Ox Alpha route has an unregistered failure class: {item_id}/{parse_status}")
+
+        projected_rows.append(
+            {
+                "schema_version": "1.0.0-review",
+                "sequence": sequence,
+                "item_id": item_id,
+                "pair_id": pair_id,
+                "parse_status": parse_status,
+                "raw_decision": projected_decision,
+                "failure_class": failure_class,
+            }
+        )
+
+    plan_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+        "study_id": plan["study_id"],
+        "research_role": plan["research_role"],
+        "identity_boundary": plan["identity_boundary"],
+        "reporting_boundary": plan["reporting_boundary"],
+        "route": {
+            "provider": plan["route"]["provider"],
+            "model": plan["route"]["model"],
+            "model_identity_status": plan["route"]["model_identity_status"],
+            "response_format": plan["route"]["response_format"],
+            "sampling_parameters_sent": plan["route"]["sampling_parameters_sent"],
+            "official_route_price_at_freeze": plan["budget"]["official_route_price"],
+        },
+        "execution": {
+            "planned_application_posts": 20,
+            "application_posts_per_cell": 1,
+            "client_retry_count": 0,
+            "partial_resume": "FORBIDDEN",
+            "failure_rule": plan["execution"]["failure_rule"],
+        },
+        "minimum_suite": {
+            "selected_pairs": 10,
+            "selected_items": 20,
+            "changed_rules_covered": 12,
+            "reachable_edges_covered": 10,
+            "contexts_per_edge": 1,
+        },
+        "strict_smoke_pass_rule": plan["statistics"]["strict_smoke_pass_rule"],
+        "private_source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
+    selection_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": selection["status"],
+        "study_id": selection["study_id"],
+        "known_result_boundary": selection["known_result_boundary"],
+        "suite_selection_basis": selection["suite_selection_basis"],
+        "route_selected_because": selection["route_selected_because"],
+        "selected_pair_ids": selection["selected_pair_ids"],
+        "selected_item_ids": selection["selected_item_ids"],
+        "outcomes_used_for_selection": False,
+        "conditional_success_subset_allowed": False,
+        "new_model_calls_for_selection": 0,
+        "private_source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+    }
+    schedule_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+        "study_id": plan["study_id"],
+        "planned_cells": 20,
+        "application_posts_per_cell": 1,
+        "client_retry_count": 0,
+        "contains_credentials": False,
+        "contains_gold": False,
+        "cells": [
+            {
+                "sequence": row["sequence"],
+                "item_id": row["item_id"],
+                "pair_id": row["pair_id"],
+            }
+            for row in projected_rows
+        ],
+    }
+    write_json(destination / "study-plan.json", plan_review)
+    write_json(destination / "selection-receipt.json", selection_review)
+    write_json(destination / "request-schedule.json", schedule_review)
+    write_jsonl(destination / "runs" / "ox-alpha-free-minimum-route.jsonl", projected_rows)
+
+    aggregate_review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": aggregate["status"],
+        "classification": aggregate["classification"],
+        "study_id": aggregate["study_id"],
+        "design": aggregate["design"],
+        "route_label": aggregate["route_label"],
+        "model_identity_status": aggregate["model_identity_status"],
+        "identity_boundary": aggregate["identity_boundary"],
+        "interpretation": aggregate["interpretation"],
+        "evidence_ceiling": aggregate["evidence_ceiling"],
+        "failure_rule": aggregate["failure_rule"],
+        "execution": aggregate["execution"],
+        "adequacy": aggregate["adequacy"],
+        "metrics": aggregate["metrics"],
+        "strict_smoke_gate_pass": aggregate["strict_smoke_gate_pass"],
+        "raw_model_outputs_in_anonymous_derivative": False,
+        "private_source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "anonymous_bindings": {
+            "study_plan_sha256": sha256_file(destination / "study-plan.json"),
+            "selection_receipt_sha256": sha256_file(destination / "selection-receipt.json"),
+            "request_schedule_sha256": sha256_file(destination / "request-schedule.json"),
+            "run_sha256": sha256_file(destination / "runs" / "ox-alpha-free-minimum-route.jsonl"),
+        },
+    }
+    write_json(destination / "reported-aggregate.json", aggregate_review)
+
+    (destination / "README.md").write_text(
+        """# Ox Alpha minimum-route smoke replay
+
+This directory retains all 20 scheduled outcomes from a one-pass, zero-retry replay of the
+previously derived ten-pair minimum policy-migration suite. The route was selected after other
+results were known, but its route, schedule, failure rule, and strict 20/20-item plus 10/10-pair
+gate were committed before the first call. Ox Alpha is a time-stamped stealth route label, not a
+model-family identity. The replay is an auxiliary route smoke test, not an independent policy
+replication, reliability estimate, provider ranking, or causal ablation.
+
+Each projected row retains the item, pair, parse class, action when valid, and a finite failure
+class. Raw response text, full structured decisions, free-form errors, provider identifiers,
+credentials, hidden reasoning, private paths, and commit identity are excluded. Every failed cell
+remains in the end-to-end denominator.
+""",
+        encoding="utf-8",
+        newline="\n",
+    )
+    review_files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file()
+    }
+    privacy: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_OX_ALPHA_ROUTE_DERIVATIVE_VALIDATED",
+        "terminal_records_validated": 20,
+        "all_scheduled_terminal_failures_included": True,
+        "raw_final_response_text_included": False,
+        "full_structured_decisions_included": False,
+        "free_form_error_text_included": False,
+        "provider_response_identifiers_included": False,
+        "hidden_reasoning_fields_included": False,
+        "credentials_included": False,
+        "private_repository_or_commit_identity_included": False,
+        "review_file_sha256": dict(sorted(review_files.items())),
+    }
+    privacy["self_digest"] = _digest_without(privacy, "self_digest")
+    write_json(destination / "privacy-receipt-review.json", privacy)
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_OX_ALPHA_MINIMUM_ROUTE_EVIDENCE",
+        "file_count": len(files),
+        "files": files,
+        "run_file": "runs/ox-alpha-free-minimum-route.jsonl",
+        "scope": {
+            "terminal_records": 20,
+            "all_scheduled_terminal_failures_included": True,
+            "item_level_action_records_included": True,
+            "raw_final_response_text_included": False,
+            "full_structured_decisions_included": False,
+            "free_form_error_text_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+            "credentials_included": False,
+            "private_repository_or_commit_identity_included": False,
+        },
+    }
+    manifest["manifest_sha256"] = _digest_without(manifest, "manifest_sha256")
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def build_policy_switch_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "policy-switch-v1"
+    frozen = source / "frozen"
+    plan = load_object(frozen / "study-plan.json")
+    aggregate = load_object(frozen / "results" / "aggregate.json")
+    expected_lanes = {str(row["lane_id"]) for row in plan["formal_lanes"]}
+    if aggregate.get("status") != "COMPLETE":
+        fail("policy-switch aggregate is not complete")
+
+    dataset_projection = _project_synthetic_policy_dataset(
+        frozen / "dataset", destination / "dataset"
+    )
+    copy_tree(frozen / "baseline", destination / "baseline")
+    copy_file(source / "policy-contract.json", destination / "policy-contract.json")
+    projection = _project_synthetic_policy_plan_and_schedule(
+        frozen, destination, dataset_projection
+    )
+    lane_files = _project_synthetic_policy_runs(
+        frozen / "results",
+        destination,
+        expected_lane_ids=expected_lanes,
+        projection=projection,
+    )
+    execution_receipt = _project_synthetic_policy_execution_receipt(
+        load_object(frozen / "results" / "execution-receipt.json"),
+        destination,
+        lane_files,
+        schedule_sha256=projection["schedule_sha256"],
+    )
+    write_json(destination / "execution-receipt.json", execution_receipt)
+    write_json(
+        destination / "reported-aggregate.json",
+        _project_synthetic_policy_aggregate(
+            aggregate,
+            destination,
+            lane_files,
+            execution_receipt_sha256=sha256_file(destination / "execution-receipt.json"),
+            projection=projection,
+        ),
+    )
+    _write_synthetic_policy_review_receipts(
+        source_results=frozen / "results",
+        destination=destination,
+        dataset_manifest=destination / "dataset" / "manifest.json",
+        baseline_report=destination / "baseline" / "report.json",
+        lane_files=lane_files,
+    )
+    (destination / "README.md").write_text(
+        """# Counterfactual policy-switch reviewer evidence
+
+Each of the 60 pairs holds the artifact, evidence, current state, and requested state fixed while
+changing only the published active policy profile. Both profiles and all labels are author-defined
+test instruments. The policy-aware and profile-blind Random Forest comparators were trained on the
+development split before scored inference.
+
+Every scheduled service or output failure remains in the end-to-end denominator. Raw response
+text, free-form provider errors, credentials, provider response IDs, hidden reasoning, and source
+repository or commit identity are excluded; structured decisions and all metric-bearing fields
+remain.
+""",
+        encoding="utf-8",
+    )
+    _synthetic_policy_manifest(
+        destination, study_kind="COUNTERFACTUAL_POLICY_PROFILE_SWITCH", lane_files=lane_files
+    )
+
+
+def build_hosted_policy_switch_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-switch-v1"
+        / "frozen"
+        / "results"
+        / "manuscript-exclusion-receipt.json"
+    )
+    decision = source.get("decision")
+    counts = source.get("observed_terminal_counts")
+    if (
+        source.get("status") != "HOSTED_POLICY_SWITCH_EXCLUDED_IN_FULL_SHARED_QUOTA_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("hosted_model_rows_enter_manuscript") is not False
+        or decision.get("successful_row_subset_selected") is not False
+        or decision.get("conditional_model_efficacy_interpreted") is not False
+        or decision.get("hosted_study_resumed_or_retried") is not False
+        or not isinstance(counts, dict)
+        or counts.get("scheduled_and_terminal") != 240
+        or counts.get("quota_or_rate_limit_errors") != 114
+        or counts.get("last_quota_or_rate_limit_sequence") != 239
+    ):
+        fail("hosted policy-switch exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "observed_terminal_counts": counts,
+        "decision": decision,
+        "interpretation": source["interpretation"],
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "valid_output_subset_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
+def build_hosted_policy_switch_replacement_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-switch-v1"
+        / "hosted-replacement-v2"
+        / "results"
+        / "manuscript-eligibility-receipt.json"
+    )
+    decision = source.get("decision")
+    classification = source.get("classification")
+    if (
+        source.get("status")
+        != "HOSTED_REPLACEMENT_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("all_240_terminal_outcomes_considered") is not True
+        or decision.get("hosted_model_rows_enter_manuscript") is not False
+        or decision.get("conditional_success_subset_selected") is not False
+        or not isinstance(classification, dict)
+        or classification.get("eligible_for_model_efficacy_reporting") is not False
+        or classification.get("explicit_resource_exhaustion_errors") != 240
+        or classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or classification.get("transport_status_counts") != {"ERROR": 240}
+        or classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 240}
+        or source.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted policy-switch replacement exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "classification": classification,
+        "decision": decision,
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "free_form_error_text_included": False,
+        "valid_output_subset_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
+def build_hosted_transition_graph_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-transition-graph-v1"
+        / "hosted-v1"
+        / "results"
+        / "manuscript-eligibility-receipt.json"
+    )
+    decision = source.get("decision")
+    classification = source.get("classification")
+    if (
+        source.get("status")
+        != "HOSTED_TRANSITION_GRAPH_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("all_240_terminal_outcomes_considered") is not True
+        or decision.get("hosted_model_rows_enter_manuscript") is not False
+        or decision.get("conditional_success_subset_selected") is not False
+        or not isinstance(classification, dict)
+        or classification.get("eligible_for_model_efficacy_reporting") is not False
+        or classification.get("explicit_resource_exhaustion_errors") != 240
+        or classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or classification.get("transport_status_counts") != {"ERROR": 240}
+        or classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 240}
+        or source.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted transition-graph exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "study_scope": "REACHABLE_POLICY_TRANSITION_GRAPH",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "classification": classification,
+        "decision": decision,
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "free_form_error_text_included": False,
+        "valid_output_subset_included": False,
+        "model_configuration_labels_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
+def build_hosted_minimum_migration_exclusion_receipt(destination: Path) -> None:
+    source = load_object(
+        ROOT
+        / "v2"
+        / "policy-transition-graph-v1"
+        / "hosted-minimal-v1"
+        / "results"
+        / "manuscript-eligibility-receipt.json"
+    )
+    decision = source.get("decision")
+    classification = source.get("classification")
+    if (
+        source.get("status")
+        != "HOSTED_MINIMUM_SUITE_EXCLUDED_IN_FULL_PERSISTENT_SHARED_RESOURCE_EXHAUSTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(decision, dict)
+        or decision.get("all_40_terminal_outcomes_considered") is not True
+        or decision.get("hosted_route_rows_enter_manuscript") is not False
+        or decision.get("conditional_success_subset_selected") is not False
+        or not isinstance(classification, dict)
+        or classification.get("eligible_for_route_conformance_reporting") is not False
+        or classification.get("explicit_resource_exhaustion_errors") != 40
+        or classification.get("persistent_exhaustion_trigger_sequence") != 0
+        or classification.get("transport_status_counts") != {"ERROR": 40}
+        or classification.get("parse_status_counts") != {"TRANSPORT_ERROR": 40}
+        or source.get("free_form_error_text_included") is not False
+    ):
+        fail("hosted minimum migration exclusion receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "study_scope": "MINIMUM_GRAPH_AND_RULE_COMPLETE_POLICY_MIGRATION_GATE",
+        "selected_pairs": 10,
+        "selected_items": 20,
+        "planned_route_cells": 40,
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "classification": classification,
+        "decision": decision,
+        "source_bindings_included": False,
+        "raw_terminal_records_included": False,
+        "free_form_error_text_included": False,
+        "valid_output_subset_included": False,
+        "model_configuration_labels_included": False,
+        "new_model_calls_performed_for_receipt": 0,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+
+
+def build_local_void_exclusion_receipt(source_root: Path, destination: Path) -> Json:
+    source = load_object(source_root / "frozen" / "slsa" / "void-exclusion-receipt.json")
+    counts = source.get("observed_counts")
+    boundary = source.get("failure_boundary")
+    decision = source.get("decision")
+    if (
+        source.get("status") != "INELIGIBLE_LOCAL_ATTEMPT_PRE_TERMINAL_SCHEMA_REJECTION"
+        or source.get("self_digest") != _digest_without(source, "self_digest")
+        or not isinstance(counts, dict)
+        or counts.get("application_invocations") != 1
+        or counts.get("durable_terminal_records") != 0
+        or counts.get("retained_model_outputs") != 0
+        or not isinstance(boundary, dict)
+        or boundary.get("benchmark_label_or_accuracy_consulted") is not False
+        or not isinstance(decision, dict)
+        or decision.get("attempt_enters_manuscript") is not False
+        or decision.get("resume_or_overwrite_used") is not False
+    ):
+        fail("local-model void-attempt receipt changed")
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": source["status"],
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "observed_counts": counts,
+        "failure_boundary": boundary,
+        "decision": decision,
+        "interpretation": source["interpretation"],
+        "source_bindings_included": False,
+        "raw_generation_text_included": False,
+        "model_outcome_included": False,
+    }
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination, review)
+    return review
+
+
+def derive_policy_difference_coverage(dataset_root: Path, policy_path: Path) -> Json:
+    script = ROOT / "scripts" / "derive_policy_difference_coverage.py"
+    spec = importlib.util.spec_from_file_location("anonymous_policy_difference_coverage", script)
+    if spec is None or spec.loader is None:
+        fail("could not load the policy-difference coverage derivation")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    derive = getattr(module, "derive", None)
+    if not callable(derive):
+        fail("policy-difference coverage derivation lacks derive()")
+    value = derive(dataset_root, policy_path)
+    if not isinstance(value, dict):
+        fail("policy-difference coverage derivation returned a non-object")
+    return value
+
+
+def derive_policy_migration_mutation_audit(
+    rule_root: Path,
+    graph_root: Path,
+) -> Json:
+    script = ROOT / "scripts" / "derive_policy_migration_mutation_audit.py"
+    spec = importlib.util.spec_from_file_location(
+        "anonymous_policy_migration_mutation_audit", script
+    )
+    if spec is None or spec.loader is None:
+        fail("could not load the policy-migration mutation audit")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    derive = getattr(module, "derive", None)
+    if not callable(derive):
+        fail("policy-migration mutation audit lacks derive()")
+    value = derive(
+        rule_root / "dataset" / "evaluation-pairs.json",
+        rule_root / "policy-difference-coverage.json",
+        graph_root / "dataset" / "evaluation-pairs.json",
+        graph_root / "transition-coverage.json",
+    )
+    if not isinstance(value, dict):
+        fail("policy-migration mutation audit returned a non-object")
+    return value
+
+
+def derive_minimal_policy_migration_suite(graph_root: Path) -> Json:
+    script = ROOT / "scripts" / "derive_minimal_policy_migration_suite.py"
+    spec = importlib.util.spec_from_file_location(
+        "anonymous_minimal_policy_migration_suite", script
+    )
+    if spec is None or spec.loader is None:
+        fail("could not load the minimum policy-migration suite derivation")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    derive = getattr(module, "derive", None)
+    if not callable(derive):
+        fail("minimum policy-migration suite derivation lacks derive()")
+    value = derive(
+        graph_root / "dataset" / "evaluation-pairs.json",
+        graph_root / "transition-coverage.json",
+    )
+    if not isinstance(value, dict):
+        fail("minimum policy-migration suite derivation returned a non-object")
+    return value
+
+
+def build_minimum_migration_subset_analysis(
+    *,
+    source_study: Path,
+    destination: Path,
+    lane_files: Json,
+) -> None:
+    """Project the prospectively frozen 20-item gate analysis onto reviewer records."""
+
+    source_result = load_object(source_study / "results" / "minimum-subset-analysis.json")
+    source_plan = (
+        ROOT
+        / "v2"
+        / "local-model-replication-v1"
+        / "transition-graph-v1"
+        / "minimum-subset-analysis-plan.json"
+    )
+    script = ROOT / "scripts" / "analyze_minimal_policy_migration_gate.py"
+    spec = importlib.util.spec_from_file_location("anonymous_minimum_migration_gate", script)
+    if spec is None or spec.loader is None:
+        fail("could not load the minimum migration gate analysis")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    analyze = getattr(module, "analyze", None)
+    if not callable(analyze):
+        fail("minimum migration gate analysis lacks analyze()")
+    recomputed = analyze(source_plan, source_study / "results")
+    if source_result != recomputed:
+        fail("minimum migration gate result differs from its frozen analysis")
+
+    selected_suite = load_object(destination / "minimal-release-suite.json")
+    execution = destination / "execution-receipt.json"
+    projected_lanes: list[Json] = []
+    for source_lane in source_result.get("lanes", []):
+        if not isinstance(source_lane, dict):
+            fail("minimum migration gate lane is malformed")
+        lane_id = str(source_lane.get("lane_id"))
+        relative = lane_files.get(lane_id)
+        if not isinstance(relative, str):
+            fail(f"minimum migration gate has an unknown lane: {lane_id}")
+        projected_lanes.append(
+            {
+                "lane_id": lane_id,
+                "model_family": source_lane.get("model_family"),
+                "run_sha256": sha256_file(destination / relative),
+                "metrics": deepcopy(source_lane.get("metrics")),
+                "strict_gate_pass": source_lane.get("strict_gate_pass"),
+            }
+        )
+
+    review: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "COMPLETE_PROSPECTIVE_MINIMUM_MIGRATION_SUBSET_ANALYSIS",
+        "truth_status": "COMPUTATIONAL",
+        "study_id": source_result.get("study_id"),
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "provenance": {
+            "analysis_plan_frozen_before_route_execution": True,
+            "full_graph_terminal_records_before_analysis_freeze": 0,
+            "minimum_suite_derived_before_route_execution": True,
+            "model_outputs_consulted": False,
+            "additional_model_or_client_calls": 0,
+        },
+        "source_bindings": {
+            "minimum_suite_sha256": sha256_file(destination / "minimal-release-suite.json"),
+            "execution_receipt_sha256": sha256_file(execution),
+            "evaluation_gold_sha256": sha256_file(
+                destination / "dataset" / "evaluation-gold.jsonl"
+            ),
+            "evaluation_pairs_sha256": sha256_file(
+                destination / "dataset" / "evaluation-pairs.json"
+            ),
+        },
+        "selection": deepcopy(source_result.get("selection")),
+        "gate": deepcopy(source_result.get("gate")),
+        "lanes": sorted(projected_lanes, key=lambda row: str(row["lane_id"])),
+        "scope": deepcopy(source_result.get("scope")),
+    }
+    if review["selection"].get("selected_pair_ids") != selected_suite.get(
+        "selected_pair_ids"
+    ) or review["selection"].get("selected_item_ids") != selected_suite.get("selected_item_ids"):
+        fail("minimum migration gate selection differs from the minimum suite")
+    review["self_digest"] = _digest_without(review, "self_digest")
+    write_json(destination / "minimum-subset-analysis.json", review)
+
+
+def build_transition_graph_review_receipts(
+    source_root: Path,
+    destination: Path,
+) -> Json:
+    source_coverage = load_object(source_root / "transition-coverage.json")
+    source_addendum = load_object(
+        source_root.parent / "transition-coverage-interpretation-addendum.json"
+    )
+    if (
+        source_coverage.get("status") != "POLICY_TRANSITION_GRAPH_COVERAGE_COMPLETE"
+        or source_coverage.get("directed_action_transitions_semantically_reachable") != 10
+        or source_coverage.get("directed_action_transitions_covered") != 10
+        or source_coverage.get("authored_profile_difference_rules_covered") != 12
+        or source_coverage.get("self_digest") != _digest_without(source_coverage, "self_digest")
+    ):
+        fail("policy-transition graph coverage receipt changed")
+    if (
+        source_addendum.get("status")
+        != "POST_FREEZE_TRANSITION_UNREACHABILITY_EXPLANATION_CORRECTED"
+        or source_addendum.get("source_transition_coverage_sha256")
+        != sha256_file(source_root / "transition-coverage.json")
+        or source_addendum.get("self_digest") != _digest_without(source_addendum, "self_digest")
+        or source_addendum.get("conclusions_changed") is not False
+        or source_addendum.get("client_or_model_calls") != 0
+    ):
+        fail("policy-transition graph interpretation addendum changed")
+    dataset = destination / "dataset"
+    coverage = anonymize_provenance(source_coverage)
+    coverage["schema_version"] = "1.0.0-review"
+    coverage["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    coverage["unreachability_certificate"] = source_addendum["corrected_certificate"]
+    coverage["historical_certificate_superseded"] = True
+    coverage["correction_scope"] = source_addendum["correction_scope"]
+    coverage["source_bindings"] = {
+        "manifest_sha256": sha256_file(dataset / "manifest.json"),
+        "evaluation_items_sha256": sha256_file(dataset / "evaluation-items.jsonl"),
+        "evaluation_gold_sha256": sha256_file(dataset / "evaluation-gold.jsonl"),
+        "evaluation_pairs_sha256": sha256_file(dataset / "evaluation-pairs.json"),
+        "base_policy_sha256": sha256_file(destination / "base-policy-contract.json"),
+        "switch_policy_sha256": sha256_file(destination / "policy-contract.json"),
+    }
+    coverage["self_digest"] = _digest_without(coverage, "self_digest")
+    write_json(destination / "transition-coverage.json", coverage)
+
+    source_decision = load_object(
+        ROOT
+        / "v2"
+        / "local-model-replication-v1"
+        / "transition-graph-v1"
+        / "frozen"
+        / "policy-transition-graph"
+        / "design-decision-receipt.json"
+    )
+    expected_source_baseline_predictions = {
+        name: sha256_file(source_root / "baseline" / name)
+        for name in (
+            "policy_aware-predictions.jsonl",
+            "profile_blind-predictions.jsonl",
+        )
+    }
+    if (
+        source_decision.get("status") != "PREINFERENCE_POLICY_TRANSITION_GRAPH_DESIGN_DECISION"
+        or source_decision.get("outcomes_used_to_choose_edges_or_contexts") is not False
+        or source_decision.get("transition_graph_model_calls_before_freeze") != 0
+        or source_decision.get("evaluation_gold_used_to_train_comparators") is not False
+        or source_decision.get("baseline_report_sha256")
+        != sha256_file(source_root / "baseline" / "report.json")
+        or source_decision.get("baseline_prediction_sha256") != expected_source_baseline_predictions
+        or source_decision.get("self_digest") != _digest_without(source_decision, "self_digest")
+    ):
+        fail("policy-transition graph design-decision receipt changed")
+    decision = anonymize_provenance(source_decision)
+    decision["schema_version"] = "1.0.0-review"
+    decision["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    decision["dataset_manifest_sha256"] = sha256_file(dataset / "manifest.json")
+    decision["transition_coverage_sha256"] = sha256_file(destination / "transition-coverage.json")
+    decision["baseline_report_sha256"] = sha256_file(destination / "baseline" / "report.json")
+    decision["baseline_prediction_sha256"] = {
+        name: sha256_file(destination / "baseline" / name)
+        for name in (
+            "policy_aware-predictions.jsonl",
+            "profile_blind-predictions.jsonl",
+        )
+    }
+    decision["self_digest"] = _digest_without(decision, "self_digest")
+    write_json(destination / "design-decision-receipt.json", decision)
+    return {
+        "dataset": {
+            "baseline_report_sha256": sha256_file(destination / "baseline" / "report.json"),
+            "transition_coverage_sha256": sha256_file(destination / "transition-coverage.json"),
+        },
+        "freeze": {
+            "design_decision_receipt_sha256": sha256_file(
+                destination / "design-decision-receipt.json"
+            ),
+            "transition_graph_model_calls_before_freeze": 0,
+        },
+    }
+
+
+def build_local_model_replications_anonymous_evidence(destination: Path) -> None:
+    source = ROOT / "v2" / "local-model-replication-v1"
+    study_source = source / "replacement-v2" / "frozen"
+    destination.mkdir(parents=True, exist_ok=True)
+    catalog = anonymize_provenance(load_object(source / "model-catalog.json"))
+    write_json(destination / "model-catalog.json", catalog)
+    copy_file(source / "requirements.txt", destination / "requirements.txt")
+
+    snapshot = anonymize_provenance(load_object(source / "model-snapshot-receipt.json"))
+    snapshot["schema_version"] = "1.0.0-review"
+    snapshot["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    snapshot["catalog_sha256"] = sha256_file(destination / "model-catalog.json")
+    snapshot["self_digest"] = _digest_without(snapshot, "self_digest")
+    write_json(destination / "model-snapshot-receipt.json", snapshot)
+
+    qualification = anonymize_provenance(load_object(source / "environment-qualification.json"))
+    qualification["schema_version"] = "1.0.0-review"
+    qualification["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    qualification["catalog_sha256"] = sha256_file(destination / "model-catalog.json")
+    qualification["snapshot_receipt_self_digest"] = snapshot["self_digest"]
+    qualification["self_digest"] = _digest_without(qualification, "self_digest")
+    write_json(destination / "environment-qualification.json", qualification)
+
+    void_receipt = build_local_void_exclusion_receipt(
+        source, destination / "initial-void-exclusion.json"
+    )
+
+    environment_bindings: Json = {
+        "catalog_sha256": sha256_file(destination / "model-catalog.json"),
+        "requirements_sha256": sha256_file(destination / "requirements.txt"),
+        "snapshot_receipt_sha256": sha256_file(destination / "model-snapshot-receipt.json"),
+        "snapshot_receipt_self_digest": snapshot["self_digest"],
+        "qualification_receipt_sha256": sha256_file(destination / "environment-qualification.json"),
+        "qualification_receipt_self_digest": qualification["self_digest"],
+        "void_attempt_receipt_sha256": sha256_file(destination / "initial-void-exclusion.json"),
+        "void_attempt_receipt_self_digest": void_receipt["self_digest"],
+    }
+    configurations = {
+        "slsa": {
+            "dataset": ROOT / "v2" / "slsa-portability-v1" / "replacement-v2" / "dataset",
+            "baseline": ROOT / "v2" / "slsa-portability-v1" / "replacement-v2" / "baseline",
+            "policy": ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json",
+            "study_kind": "LOCAL_MODEL_SLSA_POLICY_REPLICATION",
+        },
+        "policy-switch": {
+            "dataset": ROOT / "v2" / "policy-switch-v1" / "frozen" / "dataset",
+            "baseline": ROOT / "v2" / "policy-switch-v1" / "frozen" / "baseline",
+            "policy": ROOT / "v2" / "policy-switch-v1" / "policy-contract.json",
+            "study_kind": "LOCAL_MODEL_POLICY_SWITCH_REPLICATION",
+        },
+        "policy-transition-graph": {
+            "source_study": (source / "transition-graph-v1" / "frozen" / "policy-transition-graph"),
+            "dataset": ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "dataset",
+            "baseline": ROOT / "v2" / "policy-transition-graph-v1" / "frozen" / "baseline",
+            "policy": ROOT / "v2" / "policy-switch-v1" / "policy-contract.json",
+            "base_policy": ROOT / "v2" / "slsa-portability-v1" / "policy-contract.json",
+            "study_kind": "LOCAL_MODEL_POLICY_TRANSITION_GRAPH_REPLICATION",
+        },
+    }
+    for dataset_key, configuration in configurations.items():
+        source_study = Path(configuration.get("source_study", study_source / dataset_key))
+        study_destination = destination / dataset_key
+        dataset_projection = _project_synthetic_policy_dataset(
+            Path(configuration["dataset"]), study_destination / "dataset"
+        )
+        copy_tree(Path(configuration["baseline"]), study_destination / "baseline")
+        copy_file(Path(configuration["policy"]), study_destination / "policy-contract.json")
+        graph_bindings: Json = {"dataset": {}, "freeze": {}}
+        if dataset_key == "policy-transition-graph":
+            copy_file(
+                Path(configuration["base_policy"]),
+                study_destination / "base-policy-contract.json",
+            )
+            graph_bindings = build_transition_graph_review_receipts(
+                ROOT / "v2" / "policy-transition-graph-v1" / "frozen",
+                study_destination,
+            )
+        study_environment_bindings = {**environment_bindings, **graph_bindings["freeze"]}
+        projection = _project_synthetic_policy_plan_and_schedule(
+            source_study,
+            study_destination,
+            dataset_projection,
+            dataset_bindings=graph_bindings["dataset"],
+            environment_bindings=study_environment_bindings,
+        )
+        plan = load_object(source_study / "study-plan.json")
+        expected_lanes = {str(row["lane_id"]) for row in plan["formal_lanes"]}
+        results = source_study / "results"
+        aggregate = load_object(results / "aggregate.json")
+        if aggregate.get("status") != "COMPLETE":
+            fail(f"local-model aggregate is not complete: {dataset_key}")
+        lane_files = _project_synthetic_policy_runs(
+            results,
+            study_destination,
+            expected_lane_ids=expected_lanes,
+            projection=projection,
+        )
+        execution = _project_synthetic_policy_execution_receipt(
+            load_object(results / "execution-receipt.json"),
+            study_destination,
+            lane_files,
+            schedule_sha256=projection["schedule_sha256"],
+            projection=projection,
+        )
+        write_json(study_destination / "execution-receipt.json", execution)
+        write_json(
+            study_destination / "reported-aggregate.json",
+            _project_synthetic_policy_aggregate(
+                aggregate,
+                study_destination,
+                lane_files,
+                execution_receipt_sha256=sha256_file(study_destination / "execution-receipt.json"),
+                projection=projection,
+            ),
+        )
+        _write_synthetic_policy_review_receipts(
+            source_results=results,
+            destination=study_destination,
+            dataset_manifest=study_destination / "dataset" / "manifest.json",
+            baseline_report=study_destination / "baseline" / "report.json",
+            lane_files=lane_files,
+        )
+        if dataset_key == "policy-switch":
+            write_json(
+                study_destination / "policy-difference-coverage.json",
+                derive_policy_difference_coverage(
+                    study_destination / "dataset",
+                    study_destination / "policy-contract.json",
+                ),
+            )
+        if dataset_key == "policy-transition-graph":
+            write_json(
+                study_destination / "mutation-audit.json",
+                derive_policy_migration_mutation_audit(
+                    destination / "policy-switch",
+                    study_destination,
+                ),
+            )
+            write_json(
+                study_destination / "minimal-release-suite.json",
+                derive_minimal_policy_migration_suite(study_destination),
+            )
+            build_minimum_migration_subset_analysis(
+                source_study=source_study,
+                destination=study_destination,
+                lane_files=lane_files,
+            )
+        (study_destination / "README.md").write_text(
+            (
+                f"# Pinned local-model {dataset_key} replication reviewer evidence\n\n"
+                "This derivative contains all 240 zero-retry terminal outcomes for two pinned "
+                "four-bit MLX snapshots. Raw generations, free-form runtime errors, local paths, "
+                "provider identifiers, credentials, and hidden reasoning are excluded. Model "
+                "repositories, exact revisions, snapshot file digests, generation settings, "
+                "structured decisions, failures, and recomputable metrics remain. Between-route "
+                "differences are descriptive.\n"
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        _synthetic_policy_manifest(
+            study_destination,
+            study_kind=str(configuration["study_kind"]),
+            lane_files=lane_files,
+        )
+
+    (destination / "README.md").write_text(
+        """# Pinned open-weight local replications
+
+The two preselected model families were fixed before any benchmark inference. The bundle records
+exact model revisions and snapshot file digests but does not redistribute model weights. The SLSA
+evidence contrast, rule-stratified policy contrast, and reachable transition graph each contain
+two complete 120-item local routes.
+An initial schema-incompatible attempt retained one request intent and no terminal model output;
+it is excluded in full and represented only by a redacted receipt. The replacement runs add
+replayable configuration breadth, not a model-population estimate or causal model comparison.
+""",
+        encoding="utf-8",
+        newline="\n",
+    )
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path != destination / "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_LOCAL_MODEL_REPLICATIONS",
+        "file_count": len(files),
+        "files": files,
+        "studies": ["policy-switch", "policy-transition-graph", "slsa"],
+        "model_weights_included": False,
+        "exact_model_revisions_included": True,
+        "snapshot_file_digests_included": True,
+        "raw_generation_text_included": False,
+        "hidden_reasoning_included": False,
+        "credentials_included": False,
+        "source_repository_or_commit_identity_included": False,
+        "initial_void_attempt_excluded_in_full": True,
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def build_public_model_breadth_anonymous_evidence(destination: Path) -> None:
+    """Create a replayable anonymous projection of the seven-lane breadth supplement."""
+
+    source = ROOT / "v2" / "public-model-breadth-v1"
+    results = source / "results"
+    source_receipt = load_object(results / "privacy-receipt.json")
+    source_files = {
+        path.relative_to(results).as_posix(): sha256_file(path)
+        for path in sorted(results.rglob("*"))
+        if path.is_file()
+        and path.name not in {"failure-cause-addendum.json", "privacy-receipt.json"}
+    }
+    if (
+        source_receipt.get("status") != "POST_EXECUTION_PUBLIC_SAFE_DERIVATIVE"
+        or source_receipt.get("derived_files_sha256") != source_files
+        or source_receipt.get("terminal_records_validated") != 1260
+        or source_receipt.get("raw_final_response_text_included") is not False
+        or source_receipt.get("free_form_error_detail_included") is not False
+        or source_receipt.get("provider_response_identifiers_included") is not False
+        or source_receipt.get("hidden_reasoning_fields_included") is not False
+        or source_receipt.get("credentials_included") is not False
+    ):
+        fail("public model-breadth source is not a sealed public-safe derivative")
+
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in ("study-plan.json", "request-schedule.json", "catalog-snapshot.json"):
+        value = anonymize_provenance(load_object(source / name))
+        write_json(destination / name, value)
+    failure_addendum = load_object(results / "failure-cause-addendum.json")
+    if (
+        failure_addendum.get("status") != "POST_RUN_FROZEN_LOG_AUDIT_COMPLETE"
+        or failure_addendum.get("transport_failures") != 630
+        or failure_addendum.get("transport_failure_categories")
+        != {
+            "AUTHORIZATION": 76,
+            "CONNECTION": 1,
+            "QUOTA_RATE_LIMIT": 547,
+            "SERVER": 5,
+            "TIMEOUT": 1,
+        }
+        or failure_addendum.get("quota_cutoff", {}).get("cells") != 547
+        or failure_addendum.get("quota_cutoff", {}).get("contiguous_schedule_tail") is not True
+        or failure_addendum.get("privacy", {}).get("raw_error_text_included") is not False
+    ):
+        fail("public model-breadth failure addendum changed")
+    write_json(destination / "failure-cause-addendum.json", failure_addendum)
+
+    plan = load_object(destination / "study-plan.json")
+    lane_order = plan.get("execution", {}).get("base_lane_order")
+    source_lane_files = source_receipt.get("public_lane_files")
+    if (
+        not isinstance(lane_order, list)
+        or len(lane_order) != 7
+        or not isinstance(source_lane_files, dict)
+        or set(source_lane_files) != {str(value) for value in lane_order}
+    ):
+        fail("public model-breadth lane map differs from the frozen seven-lane plan")
+
+    run_destination = destination / "runs"
+    run_destination.mkdir()
+    review_lane_files: dict[str, str] = {}
+    review_lane_hashes: dict[str, str] = {}
+    review_row_hashes: list[Json] = []
+    for lane_value in lane_order:
+        lane_id = str(lane_value)
+        source_run = results / str(source_lane_files[lane_id])
+        rows = [
+            json.loads(line)
+            for line in source_run.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        if (
+            len(rows) != 180
+            or {str(row.get("lane_id")) for row in rows} != {lane_id}
+            or len({str(row.get("item_id")) for row in rows}) != 180
+        ):
+            fail(f"public model-breadth run coverage changed: {lane_id}")
+        review_rows: list[Json] = []
+        for row in rows:
+            label = f"public model-breadth row {lane_id}:{row.get('item_id')}"
+            if any(
+                row.get(field) is not None
+                for field in ("raw_response_text", "transport_error", "parse_error_detail")
+            ):
+                fail(f"{label} retains private response or error text")
+            if (
+                row.get("provider_response_id") is not None
+                or row.get("system_fingerprint") is not None
+            ):
+                fail(f"{label} retains a provider identifier")
+            _reject_hidden_reasoning(row, label)
+            projected = anonymize_provenance(row)
+            review_rows.append(projected)
+            review_row_hashes.append(
+                {
+                    "item_id": projected.get("item_id"),
+                    "lane_id": projected.get("lane_id"),
+                    "review_row_sha256": sha256_text(canonical_json(projected)),
+                    "scientific_fields_unchanged": True,
+                }
+            )
+        target = run_destination / source_run.name
+        write_jsonl(target, review_rows)
+        review_lane_files[lane_id] = target.relative_to(destination).as_posix()
+        review_lane_hashes[lane_id] = sha256_file(target)
+
+    write_jsonl(destination / "review-row-hashes.jsonl", review_row_hashes)
+
+    aggregate = anonymize_provenance(load_object(results / "reported-aggregate.json"))
+    aggregate_lanes = aggregate.get("lanes")
+    if not isinstance(aggregate_lanes, list):
+        fail("public model-breadth aggregate lanes are malformed")
+    seen_lanes: set[str] = set()
+    for lane in aggregate_lanes:
+        if not isinstance(lane, dict):
+            fail("public model-breadth aggregate contains a malformed lane")
+        lane_id = str(lane.get("lane_id"))
+        if lane_id not in review_lane_hashes or lane_id in seen_lanes:
+            fail(f"public model-breadth aggregate lane changed: {lane_id}")
+        seen_lanes.add(lane_id)
+        lane["run_sha256"] = review_lane_hashes[lane_id]
+    if seen_lanes != set(review_lane_hashes):
+        fail("public model-breadth aggregate omits a frozen lane")
+    external = aggregate.get("external_commitment")
+    if not isinstance(external, dict):
+        fail("public model-breadth aggregate commitment is malformed")
+    external["plan_sha256"] = sha256_file(destination / "study-plan.json")
+    external["workflow_run_url"] = None
+    external["workflow_run_attempt"] = None
+    aggregate["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    scope_limits = aggregate.get("scope_limits")
+    service_comparison = aggregate.get("service_comparison")
+    if not isinstance(scope_limits, dict) or not isinstance(service_comparison, dict):
+        fail("public model-breadth aggregate interpretation fields are malformed")
+    scope_limits["breadth_dimension_added"] = "SERVICE_ROUTE_FAILURE_ONLY"
+    scope_limits["shared_quota_confound_present"] = True
+    service_comparison.update(
+        {
+            "model_family_comparison_supported": False,
+            "route_reliability_comparison_supported": False,
+            "scope": "QUOTA_CONFOUNDED_OPERATIONAL_RECORD",
+        }
+    )
+    aggregate["post_run_interpretation"] = deepcopy(failure_addendum["interpretation_boundary"])
+    write_json(destination / "reported-aggregate.json", aggregate)
+
+    execution = anonymize_provenance(load_object(results / "execution-receipt.json"))
+    if execution.get("status") != "COMPLETE_ALL_FROZEN_CELLS_TERMINAL":
+        fail("public model-breadth execution receipt is not complete")
+    execution["schema_version"] = "1.0.0-review"
+    execution["schedule_sha256"] = load_object(destination / "request-schedule.json")[
+        "schedule_sha256"
+    ]
+    execution["lane_output_sha256"] = {
+        Path(review_lane_files[lane_id]).name: review_lane_hashes[lane_id]
+        for lane_id in sorted(review_lane_files)
+    }
+    execution.pop("request_intent_journal_sha256", None)
+    execution.pop("terminal_journal_sha256", None)
+    execution["source_journal_digests_included"] = False
+    execution["source_identity"] = "WITHHELD_DURING_DOUBLE_BLIND_REVIEW"
+    write_json(destination / "execution-receipt-review.json", execution)
+
+    readme = """# Frozen service-route reviewer evidence
+
+This directory contains seven frozen service configurations on the known 180-item pair-balanced
+public challenge. Each scheduled cell has one terminal outcome and zero client retries. Every
+unusable outcome remains incorrect in end-to-end metrics.
+
+The runs retain scoring fields and final-response digests but exclude final-response text,
+free-form error detail, provider response identifiers, account identifiers, credentials, and
+hidden reasoning. `failure-cause-addendum.json` records a post-run audit of the sealed private
+errors: a shared quota/rate-limit condition occupies the final 547 schedule cells. The supplement
+therefore supports neither route-reliability comparison nor model-family ranking. The shared
+dataset and prompt packet are in the sibling `balanced-public-challenge` evidence directory.
+"""
+    (destination / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+
+    review_files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name not in {"MANIFEST.json", "privacy-receipt-review.json"}
+    }
+    privacy_receipt: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_PUBLIC_MODEL_BREADTH_DERIVATIVE",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "terminal_records_validated": len(review_row_hashes),
+        "raw_final_response_text_included": False,
+        "free_form_error_detail_included": False,
+        "provider_response_identifiers_included": False,
+        "system_fingerprints_included": False,
+        "hidden_reasoning_fields_included": False,
+        "credentials_included": False,
+        "source_row_hashes_included": False,
+        "scientific_fields_unchanged": True,
+        "model_calls_performed": 0,
+        "review_lane_files": review_lane_files,
+        "review_lane_files_sha256": review_lane_hashes,
+        "review_row_hashes": {
+            "path": "review-row-hashes.jsonl",
+            "rows": len(review_row_hashes),
+            "sha256": sha256_file(destination / "review-row-hashes.jsonl"),
+        },
+        "review_files_sha256": review_files,
+    }
+    privacy_receipt["privacy_receipt_sha256"] = sha256_text(canonical_json(privacy_receipt))
+    write_json(destination / "privacy-receipt-review.json", privacy_receipt)
+
+    files = {
+        path.relative_to(destination).as_posix(): sha256_file(path)
+        for path in sorted(destination.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_PUBLIC_MODEL_BREADTH_EVIDENCE",
+        "file_count": len(files),
+        "files": files,
+        "lane_files": review_lane_files,
+        "scope": {
+            "breadth_dimension_added": "SERVICE_ROUTE_FAILURE_ONLY",
+            "hidden_generalization_claimed": False,
+            "hidden_reasoning_included": False,
+            "naturalistic_cases": 0,
+            "provider_response_identifiers_included": False,
+            "public_known_challenge": True,
+            "shared_quota_confound_present": True,
+            "source_row_hashes_included": False,
+        },
+    }
+    manifest["manifest_sha256"] = sha256_text(canonical_json(manifest))
+    write_json(destination / "MANIFEST.json", manifest)
+
+
+def _write_dynamic_tree_manifest(
+    root: Path,
+    *,
+    status: str,
+    scope: Json,
+) -> None:
+    files = {
+        path.relative_to(root).as_posix(): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path.name != "MANIFEST.json"
+    }
+    manifest: Json = {
+        "schema_version": "1.0.0-review",
+        "status": status,
+        "file_count": len(files),
+        "files": files,
+        "scope": scope,
+    }
+    manifest["manifest_sha256"] = _digest_without(manifest, "manifest_sha256")
+    write_json(root / "MANIFEST.json", manifest)
+
+
+def build_upstream_route_repetition_anonymous_evidence(destination: Path) -> None:
+    """Project the frozen route repetition without private terminal payloads."""
+
+    source = ROOT / "v2" / "upstream-policy-route-repetition-v1"
+    for name in (
+        "catalog-snapshot.json",
+        "request-schedule.json",
+        "selection-receipt.json",
+        "study-plan.json",
+    ):
+        copy_file(source / name, destination / name)
+    copy_anonymized_tree(source / "results", destination / "results")
+    copy_anonymized_tree(source / "diagnostics", destination / "diagnostics")
+
+    results = destination / "results"
+    aggregate_path = results / "aggregate.json"
+    aggregate = load_object(aggregate_path)
+    if aggregate.get("frozen_plan_commit") != "0000000000000000000000000000000000000011":
+        fail("anonymous repetition aggregate retained its private preinference commit")
+
+    privacy_path = results / "privacy-receipt.json"
+    privacy = load_object(privacy_path)
+    scanned = privacy.get("scanned_files_sha256")
+    if not isinstance(scanned, dict):
+        fail("upstream repetition privacy receipt lacks a scanned file map")
+    privacy["scanned_files_sha256"] = {
+        relative: sha256_file(results / str(relative)) for relative in sorted(scanned)
+    }
+    write_json(privacy_path, privacy)
+
+    manifest_path = results / "manifest.json"
+    manifest = load_object(manifest_path)
+    files = {
+        path.relative_to(results).as_posix(): sha256_file(path)
+        for path in sorted(results.rglob("*"))
+        if path.is_file() and path != manifest_path
+    }
+    manifest["file_count"] = len(files) + 1
+    manifest["hashed_file_count"] = len(files)
+    manifest["files_sha256"] = files
+    manifest["self_digest"] = _digest_without(manifest, "self_digest")
+    write_json(manifest_path, manifest)
+
+    _write_dynamic_tree_manifest(
+        destination,
+        status="ANONYMOUS_UPSTREAM_ROUTE_REPETITION_EVIDENCE",
+        scope={
+            "scheduled_terminal_records": 144,
+            "all_scheduled_failures_included_in_denominators": True,
+            "content_free_failure_modes_included": True,
+            "raw_response_text_included": False,
+            "free_form_transport_errors_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+            "credentials_included": False,
+            "private_repository_or_commit_identity_included": False,
+        },
+    )
+    scan_identity(destination)
+    scan_sensitive_payloads(destination)
+
+
+def _load_dual_endpoint_builder() -> Any:
+    path = ROOT / "scripts" / "build_dual_endpoint_audit.py"
+    spec = importlib.util.spec_from_file_location("review_dual_endpoint_builder", path)
+    if spec is None or spec.loader is None:
+        fail("cannot load the dual-endpoint audit builder")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def build_dual_endpoint_anonymous_evidence(destination: Path) -> None:
+    """Release endpoint metrics with content-free item records for exact replay."""
+
+    module = _load_dual_endpoint_builder()
+    source = ROOT / "v2" / "dual-endpoint-audit-v1"
+    registry = load_object(source / "registry.json")
+    aggregate = load_object(source / "aggregate.json")
+    canonical_routes = {
+        str(row["route_stack_id"]): row
+        for row in aggregate.get("routes", [])
+        if isinstance(row, dict)
+    }
+    registry_routes = registry.get("routes")
+    if not isinstance(registry_routes, list) or len(registry_routes) != 10:
+        fail("dual-endpoint registry boundary changed")
+
+    projected_rows: list[Json] = []
+    source_bindings: Json = {}
+    for route in registry_routes:
+        if not isinstance(route, dict):
+            fail("dual-endpoint registry contains a malformed route")
+        route_id = str(route["route_stack_id"])
+        gold_path = ROOT / str(route["gold"])
+        pairs_path = ROOT / str(route["pairs"])
+        run_path = ROOT / str(route["run"])
+        gold = [json.loads(line) for line in gold_path.read_text(encoding="utf-8").splitlines()]
+        pairs = json.loads(pairs_path.read_text(encoding="utf-8"))
+        records = [json.loads(line) for line in run_path.read_text(encoding="utf-8").splitlines()]
+        rebuilt = module.derive_metrics(gold, pairs, records)
+        if route_id not in canonical_routes or rebuilt != canonical_routes[route_id].get("metrics"):
+            fail(f"dual-endpoint source replay differs before redaction: {route_id}")
+
+        gold_by_id = {str(row["id"]): str(row["decision"]["action"]) for row in gold}
+        pair_by_item = {
+            str(item_id): str(pair["pair_id"]) for pair in pairs for item_id in pair["member_ids"]
+        }
+        for record in records:
+            item_id = str(record["item_id"])
+            raw_action, raw_source = module.raw_strict_action(record)
+            parser_action, parser_provenance = module.registered_parser_action(record)
+            parse_status = str(record.get("parse_status"))
+            contract_action = parser_action if parse_status == "OK" else None
+            projected_rows.append(
+                {
+                    "schema_version": "1.1.0-review",
+                    "route_stack_id": route_id,
+                    "lane_id": str(route["record_lane_id"]),
+                    "task_id": str(route["task_id"]),
+                    "item_id": item_id,
+                    "pair_id": pair_by_item[item_id],
+                    "gold_action": gold_by_id[item_id],
+                    "parse_status": parse_status,
+                    "raw_strict_action": raw_action,
+                    "raw_strict_source": raw_source,
+                    "registered_parser_action": parser_action,
+                    "registered_parser_provenance": parser_provenance,
+                    "contract_action": contract_action,
+                }
+            )
+        source_bindings[route_id] = {
+            "gold_sha256": sha256_file(gold_path),
+            "pairs_sha256": sha256_file(pairs_path),
+            "terminal_record_count": len(records),
+        }
+
+    projected_rows.sort(key=lambda row: (str(row["route_stack_id"]), str(row["item_id"])))
+    if len(projected_rows) != 1320:
+        fail(f"dual-endpoint projection has {len(projected_rows)} rows instead of 1320")
+    write_jsonl(destination / "items.jsonl", projected_rows)
+    write_json(destination / "aggregate.json", aggregate)
+    privacy: Json = {
+        "schema_version": "1.1.0-review",
+        "status": "ANONYMOUS_DUAL_ENDPOINT_DERIVATIVE_VALIDATED",
+        "item_records": len(projected_rows),
+        "route_stacks": len(registry_routes),
+        "source_bindings": source_bindings,
+        "raw_response_text_included": False,
+        "full_structured_decisions_included": False,
+        "free_form_error_text_included": False,
+        "provider_response_identifiers_included": False,
+        "hidden_reasoning_included": False,
+        "model_calls_performed": 0,
+        "items_sha256": sha256_file(destination / "items.jsonl"),
+        "aggregate_sha256": sha256_file(destination / "aggregate.json"),
+    }
+    privacy["self_digest"] = _digest_without(privacy, "self_digest")
+    write_json(destination / "privacy-receipt.json", privacy)
+    _write_dynamic_tree_manifest(
+        destination,
+        status="ANONYMOUS_DUAL_ENDPOINT_AUDIT_EVIDENCE",
+        scope={
+            "item_level_endpoint_records_included": True,
+            "scheduled_terminal_records": len(projected_rows),
+            "raw_response_text_included": False,
+            "full_structured_decisions_included": False,
+            "provider_response_identifiers_included": False,
+            "hidden_reasoning_included": False,
+        },
+    )
+    scan_identity(destination)
+    scan_sensitive_payloads(destination)
+
+
+def anonymize_stronger_results(source: Json) -> Json:
+    pilot = source.get("pilot")
+    full = source.get("full")
+    if not isinstance(pilot, dict) or not isinstance(full, dict):
+        fail("unexpected GPT-5.4 result structure")
+    pilot_keys = (
+        "records",
+        "parseable_decisions",
+        "transport_errors",
+        "gate",
+        "raw_action_accuracy",
+        "raw_pair_accuracy",
+        "raw_flip_rate",
+        "routed_provider_values",
+        "model_returned_values",
+    )
+    full_keys = (
+        "records",
+        "parseable_decisions",
+        "decision_coverage",
+        "complete_pairs",
+        "pair_coverage",
+        "raw_correct_decisions",
+        "raw_action_accuracy",
+        "raw_correct_pairs",
+        "raw_pair_accuracy",
+        "raw_flip_rate",
+        "false_promotions",
+        "invalid_promotion_trials",
+        "raw_false_promotion_rate",
+        "valid_promotions",
+        "valid_promotion_trials",
+        "raw_valid_promotion_rate",
+        "status_counts",
+        "raw_action_distribution",
+        "postgate_action_distribution",
+        "single_nonparseable_case",
+        "routed_provider_values",
+        "model_returned_values",
+    )
+    return {
+        "schema_version": "1.0.0-review",
+        "study_kind": "POST_PROTOCOL_GPT54_PUBLIC_DEVELOPMENT_FOLLOWUP",
+        "source_identity": "WITHHELD_DURING_DOUBLE_BLIND_REVIEW",
+        "interpretation_boundary": source.get("interpretation_boundary"),
+        "pilot": {key: pilot[key] for key in pilot_keys},
+        "full": {key: full[key] for key in full_keys},
+        "raw_prompts_or_responses_in_summary": False,
+    }
+
+
+def minimal_pyproject() -> str:
+    return """[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claimpromote-bench-anonymous-review"
+version = "0.1.0"
+description = "Anonymous public-data validation bundle"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+dependencies = ["jsonschema>=4.23,<5"]
+
+[project.optional-dependencies]
+test = ["pytest>=8.3,<10", "pytest-cov>=6,<8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.coverage.run]
+branch = true
+source = ["claimpromotebench"]
+"""
+
+
+def anonymous_license() -> str:
+    source = (ROOT / "LICENSE").read_text(encoding="utf-8")
+    lines = source.splitlines()
+    copyright_indexes = [
+        index for index, line in enumerate(lines) if line.startswith("Copyright (c) ")
+    ]
+    if len(copyright_indexes) != 1:
+        fail("source LICENSE must contain exactly one copyright notice")
+    lines[copyright_indexes[0]] = "Copyright (c) 2026 Anonymous Authors"
+    return "\n".join(lines) + "\n"
+
+
+def review_readme() -> str:
+    return """# ClaimPromoteBench anonymous reviewer bundle
+
+This bundle provides deterministic source and score replay for the paper's policy-transition
+benchmarks and retained model-service records. It never issues hosted calls. The evidence includes
+exact Gatekeeper, Trivy, Cosign, and Agent Governance Toolkit source revisions; agentgateway test
+evidence; six sanitized Gatekeeper route repetitions; the imbalanced evidence-state suite and
+balanced challenge; two public `AGENTS.md` revisions; a factor-complete route study; the
+non-ALLOW policy controls; an output-contract ablation; the SLSA-inspired migration and local
+replications; and a privacy-filtered endpoint reanalysis.
+
+## Reproduce the review environment
+
+Use Python 3.11 or newer.
+
+```bash
+python -m pip install --require-hashes -r requirements-review.lock
+python -m pip install --no-deps -e .
+python scripts/run_review_checks.py
+```
+
+The default command validates source bindings, controlled-pair contracts, benchmark invariants,
+empirical aggregates, privacy receipts, selected tests, and Lean fixtures. `--python-only` runs the
+Python replay when Lean is unavailable.
+
+## Evidence map
+
+- `v2/upstream-policy-revisions-v1/`, `v2/trivy-policy-revision-v1/`, and
+  `v2/sigstore-policy-verifier-revision-v1/` bind upstream source, tests, licenses, constructed
+  finite contexts, and deterministic validation receipts.
+- `v2/agent-governance-policy-interface-revision-v1/` reproduces the parent/fixed Rego verdict gap;
+  `v2/external-evidence-audit-v1/` binds the source-screen registry and agentgateway test evidence.
+- `evidence/upstream-policy-route-repetition/` retains all 144 scheduled terminal classes and the
+  six sanitized 24-item result files used for the three-repetition analysis.
+- `evidence/fresh-confirmatory/` and `evidence/balanced-public-challenge/` reproduce the imbalanced
+  suite's coverage addendum and balanced challenge.
+- `evidence/external-agent-policy/` binds two independently authored public `AGENTS.md` histories,
+  ten author-mapped pairs, and 480 terminal route records. Public upstream commits remain visible;
+  the private study commit is withheld.
+- `evidence/factor-complete-route/` retains 630 terminal records for one fixed pair per registered
+  factor across seven routes and three repetitions.
+- `evidence/nonallow-policy-controls/` binds eight source-traceable non-ALLOW pairs, 240 terminal
+  route records, and deterministic shortcut controls.
+- `evidence/output-contract-ablation/` retains 360 terminal records across registered output caps
+  and schema modes, plus a content-free transport diagnostic.
+- `evidence/slsa-portability/` and `evidence/local-model-replications/` reproduce the SLSA-inspired
+  migration and fixed-policy studies.
+- `evidence/dual-endpoint-audit/` provides 1,320 content-free item records that recompute
+  raw-strict, registered-parser, and full-contract endpoints with parser provenance. The included
+  endpoint parser source makes the distinction inspectable without releasing response text.
+
+## Release boundary
+
+Every scheduled service, syntax, schema, and semantic failure stays in its registered end-to-end
+denominator. Paper-facing records retain actions, terminal classes, and correctness fields needed
+for metric replay. The release omits raw response text, free-form transport errors, provider
+response identifiers, account identifiers, credentials, hidden reasoning, Git history, and author
+provenance. Each manifest derives its file count from the generated tree.
+
+The private construction seed is unnecessary for score recomputation and remains outside the
+bundle. A versioned metadata overlay supplies current terminology while preserving the source-bound
+manifest. The source screen covered 465 public repository seeds, inspected 11 candidates, and
+retained two executable boundary-fault cases with zero model calls. The separate model-facing study
+uses naturally occurring prose-policy revisions and author-defined action mappings.
+
+Exploratory outputs that contribute no manuscript metric are excluded. The central model IDs share
+one provider/API and adapter configuration, with opaque provider-side serving internals; cross-route
+values are descriptive. The balanced challenge was fixed before inference and measures robustness
+on known cases. SLSA labels are author policy mappings, the deterministic executor defines the
+policy ceiling, and Naive Bayes supplies a weak shortcut control.
+"""
+
+
+def review_validator() -> str:
+    return r'''#!/usr/bin/env python3
+"""Validate anonymous compact v1/v2 result summaries."""
+
+from __future__ import annotations
+
+import json
+import math
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+V1 = ROOT / "results" / "v1-paper-results.json"
+V2 = ROOT / "results" / "v2-public-pilot-study.json"
+V3 = ROOT / "results" / "v2-gpt54-public-dev-followup.json"
+MODELS = ("0.6B", "1.7B")
+ARMS = ("narrative", "ledger", "ledger_verifier", "ledger_verifier_gate")
+SEEDS = (104729, 130363, 169087)
+EXPECTED_ERRORS = {
+    ("0.6B", "narrative"): 900,
+    ("0.6B", "ledger"): 261,
+    ("0.6B", "ledger_verifier"): 335,
+    ("0.6B", "ledger_verifier_gate"): 585,
+    ("1.7B", "narrative"): 900,
+    ("1.7B", "ledger"): 900,
+    ("1.7B", "ledger_verifier"): 900,
+    ("1.7B", "ledger_verifier_gate"): 546,
+}
+
+
+def fail(message: str) -> None:
+    raise SystemExit(f"review-results: {message}")
+
+
+def load(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        fail(f"{path.name} is not a JSON object")
+    return value
+
+
+def close(observed: Any, expected: float, label: str) -> None:
+    if not isinstance(observed, (int, float)) or isinstance(observed, bool):
+        fail(f"{label} is not numeric")
+    if not math.isclose(float(observed), expected, rel_tol=0.0, abs_tol=1e-12):
+        fail(f"{label}: expected {expected}, got {observed}")
+
+
+def validate_v1(value: dict[str, Any]) -> None:
+    runs = value.get("runs")
+    if not isinstance(runs, list) or len(runs) != 24:
+        fail("v1 summary must contain 24 runs")
+    seen: set[tuple[str, str, int]] = set()
+    errors: Counter[tuple[str, str]] = Counter()
+    python_versions: Counter[str] = Counter()
+    total_errors = 0
+    total_parseable = 0
+    gate_cov: dict[str, list[float]] = defaultdict(list)
+    gate_pair_cov: dict[str, list[float]] = defaultdict(list)
+    for row in runs:
+        identity = (str(row["m"]), str(row["a"]), int(row["s"]))
+        if identity in seen:
+            fail(f"duplicate v1 run: {identity}")
+        seen.add(identity)
+        format_errors = int(row["fe"])
+        parseable = 300 - format_errors
+        close(row["cov"], parseable / 300, f"{identity}.coverage")
+        total_errors += format_errors
+        total_parseable += parseable
+        errors[(identity[0], identity[1])] += format_errors
+        python_versions[str(row["py"])] += 1
+        if parseable:
+            close(row["fpr"], 1.0, f"{identity}.raw_fpr")
+            close(row["vpr"], 1.0, f"{identity}.raw_vpr")
+            close(row["pta"], 0.0, f"{identity}.raw_pta")
+            if identity[1] == "ledger_verifier_gate":
+                close(row["efpr"], 0.0, f"{identity}.effective_fpr")
+                close(row["epta"], 1.0, f"{identity}.effective_pta")
+                gate_cov[identity[0]].append(float(row["cov"]))
+                gate_pair_cov[identity[0]].append(float(row["pcov"]))
+        elif any(row.get(key) is not None for key in ("fpr", "vpr", "pta")):
+            fail(f"undefined v1 rates are populated: {identity}")
+    expected = {(model, arm, seed) for model in MODELS for arm in ARMS for seed in SEEDS}
+    if seen != expected:
+        fail("v1 run matrix is incomplete")
+    if dict(errors) != EXPECTED_ERRORS:
+        fail("v1 model/arm format-error totals changed")
+    if (total_errors, total_parseable) != (5327, 1873):
+        fail("v1 headline totals changed")
+    if python_versions != Counter({"3.11.15": 21, "3.11.16": 3}):
+        fail("v1 Python identity distribution changed")
+    expected_ranges = {
+        "0.6B": ((0.14, 0.49), (0.07333333333333333, 0.35333333333333333)),
+        "1.7B": ((0.21666666666666667, 0.48333333333333334), (0.1, 0.38)),
+    }
+    for model, (coverage, pair_coverage) in expected_ranges.items():
+        if (min(gate_cov[model]), max(gate_cov[model])) != coverage:
+            fail(f"v1 {model} gate coverage range changed")
+        if (min(gate_pair_cov[model]), max(gate_pair_cov[model])) != pair_coverage:
+            fail(f"v1 {model} gate pair-coverage range changed")
+
+
+def validate_v2(value: dict[str, Any]) -> None:
+    if value.get("aggregate_status_counts") != {"OK": 108, "SCHEMA_ERROR": 52}:
+        fail("v2 aggregate status counts changed")
+    protocol = value.get("protocol")
+    if not isinstance(protocol, dict) or protocol.get("total_decisions") != 160:
+        fail("v2 protocol changed")
+    runs = value.get("runs")
+    if not isinstance(runs, list) or len(runs) != 4:
+        fail("v2 must contain four run summaries")
+    expected = {
+        ("Qwen/Qwen3-0.6B", "free"): (0.75, 0.70, 30),
+        ("Qwen/Qwen3-0.6B", "json_schema"): (1.0, 1.0, 40),
+        ("Qwen/Qwen3-1.7B", "free"): (0.0, 0.0, 0),
+        ("Qwen/Qwen3-1.7B", "json_schema"): (0.95, 0.90, 38),
+    }
+    constrained_ok = 0
+    constrained_pairs = 0
+    for row in runs:
+        identity = (str(row["model_id"]), str(row["decoding_mode"]))
+        if identity not in expected:
+            fail(f"unexpected v2 run: {identity}")
+        summary = row["summary"]
+        coverage, pair_coverage, ok = expected[identity]
+        close(summary["decision_coverage"], coverage, f"{identity}.coverage")
+        close(summary["pair_coverage"], pair_coverage, f"{identity}.pair_coverage")
+        if int(summary["status_counts"]["OK"]) != ok:
+            fail(f"{identity} OK count changed")
+        if ok:
+            close(summary["raw_action_accuracy"], 0.5, f"{identity}.raw_accuracy")
+            close(summary["raw_pair_accuracy"], 0.0, f"{identity}.pair_accuracy")
+            close(summary["raw_flip_rate"], 0.0, f"{identity}.flip_rate")
+            close(summary["raw_fpr"], 1.0, f"{identity}.raw_fpr")
+            close(summary["raw_vpr"], 1.0, f"{identity}.raw_vpr")
+        if identity[1] == "json_schema":
+            constrained_ok += ok
+            constrained_pairs += int(summary["covered_pairs"])
+    if (constrained_ok, constrained_pairs) != (78, 38):
+        fail("v2 constrained headline counts changed")
+
+
+def validate_v3(value: dict[str, Any]) -> None:
+    pilot = value.get("pilot")
+    full = value.get("full")
+    if not isinstance(pilot, dict) or not isinstance(full, dict):
+        fail("GPT-5.4 follow-up summary is malformed")
+    if (pilot.get("records"), pilot.get("parseable_decisions"), pilot.get("gate")) != (
+        12,
+        12,
+        "GO",
+    ):
+        fail("GPT-5.4 pilot headline counts changed")
+    expected_full = {
+        "records": 100,
+        "parseable_decisions": 99,
+        "complete_pairs": 49,
+        "raw_correct_decisions": 99,
+        "raw_correct_pairs": 49,
+        "false_promotions": 0,
+        "invalid_promotion_trials": 49,
+        "valid_promotions": 50,
+        "valid_promotion_trials": 50,
+    }
+    for key, expected in expected_full.items():
+        if full.get(key) != expected:
+            fail(f"GPT-5.4 full result changed: {key}")
+    close(full.get("decision_coverage"), 0.99, "GPT-5.4 decision coverage")
+    close(full.get("pair_coverage"), 0.98, "GPT-5.4 pair coverage")
+    for key in ("raw_action_accuracy", "raw_pair_accuracy", "raw_flip_rate"):
+        close(full.get(key), 1.0, f"GPT-5.4 {key}")
+    if full.get("status_counts") != {"OK": 99, "SCHEMA_ERROR": 1}:
+        fail("GPT-5.4 status counts changed")
+    if full.get("raw_action_distribution") != {
+        "ALLOW": 50,
+        "HOLD": 45,
+        "DEMOTE": 2,
+        "ESCALATE": 2,
+    }:
+        fail("GPT-5.4 action distribution changed")
+    if full.get("routed_provider_values") != ["OpenAI"]:
+        fail("GPT-5.4 routed provider changed")
+
+
+def main() -> int:
+    validate_v1(load(V1))
+    validate_v2(load(V2))
+    validate_v3(load(V3))
+    print("review-results: PASS (v1 7,200; v2 160; GPT-5.4 100 decisions)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+'''
+
+
+def review_runner() -> str:
+    return r'''#!/usr/bin/env python3
+"""Run public anonymous-review checks."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+PYTHON_COMMANDS = [
+    [sys.executable, "-m", "claimpromotebench", "validate", "data/alpha"],
+    [
+        sys.executable,
+        "scripts/audit_public_pair_contracts.py",
+        "--dataset",
+        "data/alpha",
+        "--out",
+        "work/public-pair-contract-audit.json",
+    ],
+    [
+        sys.executable,
+        "-m",
+        "claimpromotebench.shortcuts",
+        "--dataset",
+        "data/alpha",
+        "--out",
+        "work/shortcut-audit.json",
+    ],
+    [
+        sys.executable,
+        "-m",
+        "claimpromotebench.invariance",
+        "--dataset",
+        "data/alpha",
+        "--out",
+        "work/invariance-audit.json",
+    ],
+    [
+        sys.executable,
+        "-m",
+        "claimpromotebench.executable",
+        "--fixtures",
+        "fixtures/executable",
+        "--out",
+        "work/executable-fixtures.json",
+    ],
+    [sys.executable, "scripts/validate_anonymous_empirical_evidence.py"],
+    [sys.executable, "scripts/validate_upstream_policy_revision_study.py"],
+    [sys.executable, "scripts/validate_trivy_policy_revision.py"],
+    [sys.executable, "scripts/validate_sigstore_policy_verifier_revision.py"],
+    [sys.executable, "scripts/validate_agent_governance_policy_interface_revision.py"],
+    [sys.executable, "scripts/validate_external_evidence_audit.py"],
+    [sys.executable, "scripts/validate_anonymous_current_evidence.py"],
+    [
+        sys.executable,
+        "scripts/derive_policy_difference_coverage.py",
+        "--dataset-root",
+        "evidence/local-model-replications/policy-switch/dataset",
+        "--policy",
+        "evidence/local-model-replications/policy-switch/policy-contract.json",
+        "--expect",
+        "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
+        "--out",
+        "work/policy-difference-coverage.json",
+    ],
+    [
+        sys.executable,
+        "scripts/derive_policy_migration_mutation_audit.py",
+        "--rule-pairs",
+        "evidence/local-model-replications/policy-switch/dataset/evaluation-pairs.json",
+        "--rule-coverage",
+        "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
+        "--graph-pairs",
+        "evidence/local-model-replications/policy-transition-graph/dataset/evaluation-pairs.json",
+        "--graph-coverage",
+        "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
+        "--expect",
+        "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
+        "--out",
+        "work/policy-migration-mutation-audit.json",
+    ],
+    [
+        sys.executable,
+        "scripts/derive_minimal_policy_migration_suite.py",
+        "--pairs",
+        "evidence/local-model-replications/policy-transition-graph/dataset/evaluation-pairs.json",
+        "--coverage",
+        "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
+        "--expect",
+        "evidence/local-model-replications/policy-transition-graph/minimal-release-suite.json",
+        "--out",
+        "work/minimal-policy-migration-suite.json",
+    ],
+    [
+        sys.executable,
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_v2.py",
+        "tests/test_policy_difference_compiler.py",
+        "tests/test_upstream_policy_revision_study.py",
+        "tests/test_trivy_policy_revision.py",
+        "tests/test_sigstore_policy_verifier_revision.py",
+        "tests/test_agent_governance_policy_interface_revision.py",
+        "tests/test_endpoint_parser_policy.py",
+        "tests/test_external_evidence_audit.py",
+    ],
+]
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--python-only",
+        action="store_true",
+        help="run a partial replay without the pinned Lean checks",
+    )
+    args = parser.parse_args()
+    (ROOT / "work").mkdir(exist_ok=True)
+    env = os.environ.copy()
+    package_root = str(ROOT / "src")
+    existing_pythonpath = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = (
+        package_root + os.pathsep + existing_pythonpath
+        if existing_pythonpath
+        else package_root
+    )
+    for command in PYTHON_COMMANDS:
+        print("+", " ".join(command), flush=True)
+        subprocess.run(command, cwd=ROOT, check=True, env=env)
+    if args.python_only:
+        print("anonymous-review-checks: PARTIAL_PASS (Python only; Lean explicitly skipped)")
+        return 0
+
+    lake = shutil.which("lake")
+    if lake is None:
+        raise SystemExit(
+            "anonymous-review-checks: lake is required for full replay; "
+            "install Lean or pass --python-only for a partial replay"
+        )
+    formal_root = ROOT / "data" / "alpha"
+    formal_commands = [
+        [lake, "build"],
+        [lake, "env", "leanchecker", "ClaimPromoteFormal"],
+        [
+            sys.executable,
+            "-m",
+            "claimpromotebench.formal",
+            "--dataset",
+            "data/alpha",
+            "--fixtures",
+            "fixtures/formal/cases.json",
+            "--out",
+            "work/formal-fixtures.json",
+        ],
+    ]
+    for command in formal_commands:
+        print("+", " ".join(command), flush=True)
+        cwd = formal_root if command[0] == lake else ROOT
+        subprocess.run(command, cwd=cwd, check=True, env=env)
+    print("anonymous-review-checks: PASS (Python and Lean)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+'''
+
+
+def scan_identity(bundle: Path) -> None:
+    findings: list[str] = []
+    for path in sorted(bundle.rglob("*")):
+        if not path.is_file():
+            continue
+        relative_text = path.relative_to(bundle).as_posix()
+        for token in sorted(FORBIDDEN_TEXT):
+            if token.lower() in relative_text.lower():
+                findings.append(f"{relative_text}: filename contains {token}")
+        if path.suffix.lower() not in TEXT_SUFFIXES and path.name not in TEXT_NAMES:
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for token in sorted(FORBIDDEN_TEXT):
+            if token.lower() in text.lower():
+                findings.append(f"{path.relative_to(bundle)}: {token}")
+        for label, pattern in FORBIDDEN_CREDENTIAL_PATTERNS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(bundle)}: possible {label}")
+        for label, pattern in FORBIDDEN_PROVIDER_RESPONSE_PATTERNS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(bundle)}: possible {label}")
+        for label, (pattern, _replacement) in SENSITIVE_PROVENANCE_REPLACEMENTS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(bundle)}: possible {label}")
+    if findings:
+        fail("identity/provenance leak detected:\n" + "\n".join(findings))
+
+
+def scan_sensitive_payloads(bundle: Path) -> None:
+    """Reject retained provider IDs and machine-readable hidden-reasoning content."""
+
+    def inspect(value: Any, label: str) -> None:
+        if isinstance(value, dict):
+            hidden_keys = {
+                "reasoning_content",
+                "thinking",
+                "thinking_content",
+                "thought",
+                "thoughts",
+            }
+            overlap = hidden_keys & set(value)
+            if overlap:
+                fail(f"{label}: hidden-reasoning fields survived: {sorted(overlap)}")
+            if str(value.get("type", "")).lower() in {"reasoning", "thinking"}:
+                fail(f"{label}: hidden-reasoning content block survived")
+            for key in ("provider_response_id", "provider_request_id"):
+                if value.get(key) not in (None, ""):
+                    fail(f"{label}: retained {key}")
+            for child in value.values():
+                inspect(child, label)
+        elif isinstance(value, list):
+            for child in value:
+                inspect(child, label)
+
+    for path in sorted(bundle.rglob("*")):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(bundle)
+        label = relative.as_posix()
+        if "schemas" in relative.parts or path.name.endswith(".schema.json"):
+            # Schema property names document the record contract; they are not retained values.
+            # Literal identifiers in schema examples remain covered by the text-pattern scan.
+            continue
+        if path.suffix == ".json":
+            inspect(json.loads(path.read_text(encoding="utf-8")), label)
+        elif path.suffix == ".jsonl":
+            for index, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+                if line.strip():
+                    inspect(json.loads(line), f"{label}:{index}")
+
+
+def verify_bundle(bundle: Path) -> None:
+    manifest_path = bundle / "MANIFEST.json"
+    if not manifest_path.is_file():
+        fail("MANIFEST.json is missing")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        fail("MANIFEST.json does not contain a file map")
+
+    declared = manifest["files"]
+    if manifest.get("file_count") != len(declared):
+        fail("MANIFEST.json file_count differs from its generated file map")
+    actual_paths = {
+        str(path.relative_to(bundle)).replace("\\", "/"): path
+        for path in sorted(bundle.rglob("*"))
+        if path.is_file() and path != manifest_path
+    }
+    if set(declared) != set(actual_paths):
+        missing = sorted(set(declared) - set(actual_paths))
+        extra = sorted(set(actual_paths) - set(declared))
+        fail(f"manifest coverage mismatch; missing={missing}, extra={extra}")
+
+    for relative, path in actual_paths.items():
+        if should_skip(Path(relative)):
+            fail(f"generated or excluded file survived staging: {relative}")
+        if declared[relative] != sha256_file(path):
+            fail(f"manifest digest mismatch: {relative}")
+
+    required = {
+        "DATA_LICENSE.md",
+        "LICENSE",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "docs/PUBLIC_RELEASE_BOUNDARY.md",
+        "docs/POLICY_DIFFERENCE_COMPILER.md",
+        "pyproject.toml",
+        "requirements-review.lock",
+        "scripts/build_agent_governance_policy_interface_revision.py",
+        "scripts/build_policy_switch_study.py",
+        "scripts/build_policy_transition_graph_study.py",
+        "scripts/build_slsa_portability_study.py",
+        "scripts/build_sigstore_policy_verifier_revision.py",
+        "scripts/build_trivy_policy_revision.py",
+        "scripts/build_upstream_policy_revision_study.py",
+        "scripts/derive_minimal_policy_migration_suite.py",
+        "scripts/derive_policy_migration_mutation_audit.py",
+        "scripts/policy_transition_graph_local.py",
+        "scripts/run_policy_transition_graph_local_study.py",
+        "scripts/train_policy_switch_baselines.py",
+        "scripts/train_slsa_structured_baseline.py",
+        "scripts/validate_agent_governance_policy_interface_revision.py",
+        "scripts/validate_anonymous_current_evidence.py",
+        "scripts/validate_external_evidence_audit.py",
+        "scripts/validate_policy_transition_graph_study.py",
+        "scripts/validate_sigstore_policy_verifier_revision.py",
+        "scripts/validate_trivy_policy_revision.py",
+        "scripts/validate_upstream_policy_revision_study.py",
+        "src/claimpromotebench/policy_difference.py",
+        "evidence/fresh-confirmatory/MANIFEST.json",
+        "evidence/fresh-confirmatory/frozen-manifest-metadata-correction.json",
+        "evidence/fresh-confirmatory/redaction-receipt-review.json",
+        "evidence/fresh-confirmatory/reported-analysis.json",
+        "evidence/fresh-confirmatory/runs/opencode-go-deepseek-v4-flash-matched.jsonl",
+        "evidence/fresh-confirmatory/runs/opencode-go-qwen3.7-max.jsonl",
+        "evidence/balanced-public-challenge/MANIFEST.json",
+        "evidence/balanced-public-challenge/privacy-receipt-review.json",
+        "evidence/balanced-public-challenge/reported-aggregate.json",
+        "evidence/balanced-public-challenge/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl",
+        "evidence/balanced-public-challenge/runs/opencode-go-qwen3.7-max-full.jsonl",
+        "evidence/slsa-portability/MANIFEST.json",
+        "evidence/slsa-portability/execution-receipt.json",
+        "evidence/slsa-portability/reported-aggregate.json",
+        "evidence/slsa-portability/void-exclusion-receipt.json",
+        "evidence/upstream-policy-route-repetition/MANIFEST.json",
+        "evidence/upstream-policy-route-repetition/study-plan.json",
+        "evidence/upstream-policy-route-repetition/request-schedule.json",
+        "evidence/upstream-policy-route-repetition/results/aggregate.json",
+        "evidence/upstream-policy-route-repetition/results/manifest.json",
+        "evidence/upstream-policy-route-repetition/results/privacy-receipt.json",
+        "evidence/upstream-policy-route-repetition/diagnostics/failure-modes.json",
+        "evidence/upstream-policy-route-repetition/results/records/opencode-go-deepseek-v4-flash-upstream-repeat-v1-r1.jsonl",
+        "evidence/upstream-policy-route-repetition/results/records/opencode-go-qwen3.7-max-upstream-repeat-v1-r1.jsonl",
+        "evidence/dual-endpoint-audit/MANIFEST.json",
+        "evidence/dual-endpoint-audit/aggregate.json",
+        "evidence/dual-endpoint-audit/items.jsonl",
+        "evidence/dual-endpoint-audit/privacy-receipt.json",
+        "evidence/factor-complete-route/MANIFEST.json",
+        "evidence/factor-complete-route/results/aggregate.json",
+        "evidence/factor-complete-route/results/execution-receipt.json",
+        "evidence/factor-complete-route/results/privacy-receipt.json",
+        "evidence/external-agent-policy/MANIFEST.json",
+        "evidence/external-agent-policy/source-receipt.json",
+        "evidence/external-agent-policy/results/aggregate.json",
+        "evidence/external-agent-policy/results/execution-receipt.json",
+        "evidence/external-agent-policy/results/privacy-receipt.json",
+        "evidence/nonallow-policy-controls/MANIFEST.json",
+        "evidence/nonallow-policy-controls/mapping-audit.json",
+        "evidence/nonallow-policy-controls/source-receipt.json",
+        "evidence/nonallow-policy-controls/results/aggregate.json",
+        "evidence/nonallow-policy-controls/results/execution-receipt.json",
+        "evidence/nonallow-policy-controls/results/privacy-receipt.json",
+        "evidence/output-contract-ablation/MANIFEST.json",
+        "evidence/output-contract-ablation/results/aggregate.json",
+        "evidence/output-contract-ablation/results/execution-receipt.json",
+        "evidence/output-contract-ablation/results/privacy-receipt.json",
+        "evidence/output-contract-ablation/diagnostics/manifest.json",
+        "evidence/output-contract-ablation/diagnostics/privacy-receipt.json",
+        "evidence/output-contract-ablation/diagnostics/transport-diagnostics.json",
+        "evidence/local-model-replications/MANIFEST.json",
+        "evidence/local-model-replications/model-catalog.json",
+        "evidence/local-model-replications/model-snapshot-receipt.json",
+        "evidence/local-model-replications/environment-qualification.json",
+        "evidence/local-model-replications/slsa/MANIFEST.json",
+        "evidence/local-model-replications/slsa/reported-aggregate.json",
+        "evidence/local-model-replications/policy-switch/MANIFEST.json",
+        "evidence/local-model-replications/policy-switch/policy-difference-coverage.json",
+        "evidence/local-model-replications/policy-switch/reported-aggregate.json",
+        "evidence/local-model-replications/policy-transition-graph/MANIFEST.json",
+        "evidence/local-model-replications/policy-transition-graph/design-decision-receipt.json",
+        "evidence/local-model-replications/policy-transition-graph/minimal-release-suite.json",
+        "evidence/local-model-replications/policy-transition-graph/minimum-subset-analysis.json",
+        "evidence/local-model-replications/policy-transition-graph/mutation-audit.json",
+        "evidence/local-model-replications/policy-transition-graph/transition-coverage.json",
+        "evidence/local-model-replications/policy-transition-graph/reported-aggregate.json",
+        "v2/upstream-policy-revisions-v1/artifact-manifest.json",
+        "v2/upstream-policy-revisions-v1/source-validation-receipt.json",
+        "v2/trivy-policy-revision-v1/artifact-manifest.json",
+        "v2/trivy-policy-revision-v1/source-validation-receipt.json",
+        "v2/sigstore-policy-verifier-revision-v1/artifact-manifest.json",
+        "v2/sigstore-policy-verifier-revision-v1/source-validation-receipt.json",
+        "v2/agent-governance-policy-interface-revision-v1/artifact-manifest.json",
+        "v2/agent-governance-policy-interface-revision-v1/source-validation-receipt.json",
+        "v2/external-evidence-audit-v1/study-plan.json",
+        "v2/external-evidence-audit-v1/formal-search-seeds.json",
+        "v2/external-evidence-audit-v1/candidate-registry.json",
+        "v2/external-evidence-audit-v1/audit-receipt.json",
+        "v2/external-evidence-audit-v1/source-checks/agentgateway-bedrock-guardrail.json",
+    }
+    if (bundle / "evidence" / "public-model-breadth").exists():
+        fail("excluded seven-route evidence survived anonymous staging")
+    if (bundle / "evidence" / "policy-switch").exists():
+        fail("excluded hosted policy-switch records survived anonymous staging")
+    for excluded_evidence in (
+        "ox-alpha-minimal-route",
+        "public-model-breadth",
+    ):
+        if (bundle / "evidence" / excluded_evidence).exists():
+            fail(f"out-of-scope evidence survived anonymous staging: {excluded_evidence}")
+    for excluded_receipt in (
+        "hosted-policy-switch-exclusion.json",
+        "hosted-policy-switch-replacement-exclusion.json",
+        "hosted-policy-transition-graph-exclusion.json",
+        "hosted-minimum-policy-migration-exclusion.json",
+    ):
+        if (bundle / "evidence" / excluded_receipt).exists():
+            fail(f"out-of-scope exclusion receipt survived staging: {excluded_receipt}")
+    absent = sorted(required - set(actual_paths))
+    if absent:
+        fail(f"required reviewer-bundle files are missing: {absent}")
+
+    excluded = {
+        "configs/decoding-v1.json",
+        "scripts/aggregate_capable_hidden_study.py",
+        "scripts/analyze_stronger_model_study.py",
+        "scripts/build_v1_dataset.py",
+        "src/claimpromotebench/review.py",
+        "src/claimpromotebench/review_analysis.py",
+        "scripts/validate_v1_plan.py",
+        "scripts/validate_v1_public_dev_freeze.py",
+    }
+    survived = sorted(excluded & set(actual_paths))
+    if survived:
+        fail(f"unused human-review workflow files survived staging: {survived}")
+    scan_identity(bundle)
+    scan_sensitive_payloads(bundle)
+
+
+def write_manifest(bundle: Path) -> None:
+    files = {
+        str(path.relative_to(bundle)).replace("\\", "/"): sha256_file(path)
+        for path in sorted(bundle.rglob("*"))
+        if path.is_file() and path != bundle / "MANIFEST.json"
+    }
+    fresh_confirmatory_included = (bundle / "evidence" / "fresh-confirmatory").is_dir()
+    balanced_challenge_included = (bundle / "evidence" / "balanced-public-challenge").is_dir()
+    slsa_portability_included = (bundle / "evidence" / "slsa-portability").is_dir()
+    upstream_sources_included = (bundle / "v2" / "upstream-policy-revisions-v1").is_dir()
+    trivy_sources_included = (bundle / "v2" / "trivy-policy-revision-v1").is_dir()
+    sigstore_sources_included = (bundle / "v2" / "sigstore-policy-verifier-revision-v1").is_dir()
+    agent_governance_sources_included = (
+        bundle / "v2" / "agent-governance-policy-interface-revision-v1"
+    ).is_dir()
+    external_audit_included = (bundle / "v2" / "external-evidence-audit-v1").is_dir()
+    upstream_repetition_included = (
+        bundle / "evidence" / "upstream-policy-route-repetition"
+    ).is_dir()
+    dual_endpoint_included = (bundle / "evidence" / "dual-endpoint-audit").is_dir()
+    factor_complete_included = (bundle / "evidence" / "factor-complete-route").is_dir()
+    external_agent_policy_included = (bundle / "evidence" / "external-agent-policy").is_dir()
+    nonallow_policy_controls_included = (bundle / "evidence" / "nonallow-policy-controls").is_dir()
+    output_contract_ablation_included = (bundle / "evidence" / "output-contract-ablation").is_dir()
+    local_replications_included = (bundle / "evidence" / "local-model-replications").is_dir()
+    local_replication_root = bundle / "evidence" / "local-model-replications"
+    local_slsa_included = (local_replication_root / "slsa").is_dir()
+    local_policy_switch_included = (local_replication_root / "policy-switch").is_dir()
+    local_transition_graph_included = (local_replication_root / "policy-transition-graph").is_dir()
+    local_minimum_gate_included = (
+        local_replication_root / "policy-transition-graph" / "minimum-subset-analysis.json"
+    ).is_file()
+    manifest = {
+        "schema_version": "1.0.0-review",
+        "status": "ANONYMOUS_REVIEW_BUNDLE",
+        "file_count": len(files),
+        "files": files,
+        "scope": {
+            "public_alpha_included": True,
+            "reviewer_release_hidden_data_included": True,
+            "human_subject_study_records_included": False,
+            "public_repository_identity_included": False,
+            "item_level_empirical_records_included": True,
+            "legacy_v1_evidence_included": False,
+            "public_pilot_evidence_included": False,
+            "gpt54_public_development_evidence_included": False,
+            "capable_hidden_evidence_included": False,
+            "fresh_confirmatory_summary_included": fresh_confirmatory_included,
+            "fresh_confirmatory_item_level_records_included": fresh_confirmatory_included,
+            "fresh_confirmatory_hidden_reasoning_included": False,
+            "fresh_confirmatory_raw_response_text_included": False,
+            "balanced_public_challenge_summary_included": balanced_challenge_included,
+            "balanced_public_challenge_item_level_records_included": (balanced_challenge_included),
+            "balanced_public_challenge_hidden_reasoning_included": False,
+            "balanced_public_challenge_raw_response_text_included": False,
+            "slsa_portability_summary_included": slsa_portability_included,
+            "slsa_portability_item_level_records_included": slsa_portability_included,
+            "slsa_portability_raw_response_text_included": False,
+            "slsa_portability_void_raw_records_included": False,
+            "upstream_gatekeeper_source_evidence_included": upstream_sources_included,
+            "trivy_source_evidence_included": trivy_sources_included,
+            "sigstore_source_evidence_included": sigstore_sources_included,
+            "agent_governance_source_evidence_included": agent_governance_sources_included,
+            "external_boundary_evidence_audit_included": external_audit_included,
+            "upstream_route_repetition_summary_included": upstream_repetition_included,
+            "upstream_route_repetition_item_level_records_included": (upstream_repetition_included),
+            "upstream_route_repetition_raw_response_text_included": False,
+            "dual_endpoint_summary_included": dual_endpoint_included,
+            "dual_endpoint_item_level_records_included": dual_endpoint_included,
+            "dual_endpoint_raw_response_text_included": False,
+            "factor_complete_route_summary_included": factor_complete_included,
+            "factor_complete_route_item_level_records_included": factor_complete_included,
+            "factor_complete_route_raw_response_text_included": False,
+            "external_agent_policy_summary_included": external_agent_policy_included,
+            "external_agent_policy_item_level_records_included": external_agent_policy_included,
+            "external_agent_policy_raw_response_text_included": False,
+            "external_agent_policy_public_source_commits_included": external_agent_policy_included,
+            "nonallow_policy_controls_summary_included": nonallow_policy_controls_included,
+            "nonallow_policy_controls_item_level_records_included": (
+                nonallow_policy_controls_included
+            ),
+            "nonallow_policy_controls_raw_response_text_included": False,
+            "nonallow_policy_controls_public_source_commits_included": (
+                nonallow_policy_controls_included
+            ),
+            "output_contract_ablation_summary_included": output_contract_ablation_included,
+            "output_contract_ablation_item_level_records_included": (
+                output_contract_ablation_included
+            ),
+            "output_contract_ablation_transport_diagnostic_included": (
+                output_contract_ablation_included
+            ),
+            "output_contract_ablation_raw_response_text_included": False,
+            "local_model_replications_included": local_replications_included,
+            "local_model_replication_item_level_records_included": local_replications_included,
+            "local_model_replication_raw_generation_text_included": False,
+            "local_model_weights_included": False,
+            "local_slsa_replication_summary_included": local_slsa_included,
+            "local_slsa_replication_item_level_records_included": local_slsa_included,
+            "local_policy_switch_summary_included": local_policy_switch_included,
+            "local_policy_switch_item_level_records_included": local_policy_switch_included,
+            "local_policy_transition_graph_summary_included": local_transition_graph_included,
+            "local_policy_transition_graph_item_level_records_included": (
+                local_transition_graph_included
+            ),
+            "local_minimum_policy_migration_gate_included": local_minimum_gate_included,
+            "provider_response_identifiers_included": False,
+            "private_construction_seed_included": False,
+        },
+    }
+    (bundle / "MANIFEST.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def project_python_module(source_path: Path, roots: set[str], description: str) -> str:
+    """Return the transitive function closure needed by ``roots``.
+
+    Reviewer code should not carry archived study implementations merely because the private
+    validator imports them. The projection retains only referenced imports, constants, and local
+    helpers, and deliberately omits CLI entry points and unrelated module-level side effects.
+    """
+
+    source = source_path.read_text(encoding="utf-8")
+    tree = ast.parse(source, filename=str(source_path))
+    functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    missing = roots - set(functions)
+    if missing:
+        fail(f"Python projection roots are missing from {source_path}: {sorted(missing)}")
+
+    selected_functions: set[str] = set()
+    pending = list(roots)
+    while pending:
+        name = pending.pop()
+        if name in selected_functions:
+            continue
+        selected_functions.add(name)
+        loaded = {
+            node.id
+            for node in ast.walk(functions[name])
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+        }
+        pending.extend(sorted((loaded & set(functions)) - selected_functions))
+
+    selected_nodes: list[ast.stmt] = [functions[name] for name in selected_functions]
+    loaded_names = {
+        node.id
+        for selected in selected_nodes
+        for node in ast.walk(selected)
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+    }
+
+    assignments: list[ast.Assign | ast.AnnAssign] = []
+    for node in tree.body:
+        target: ast.expr | None = None
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+        elif isinstance(node, ast.AnnAssign):
+            target = node.target
+        if isinstance(target, ast.Name) and target.id in loaded_names:
+            assignments.append(node)
+    loaded_names.update(
+        node.id
+        for assignment in assignments
+        for node in ast.walk(assignment)
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+    )
+
+    imports: list[ast.stmt] = []
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            aliases = [
+                alias
+                for alias in node.names
+                if (alias.asname or alias.name.split(".")[0]) in loaded_names
+            ]
+            if aliases:
+                imports.append(ast.Import(names=aliases))
+        elif isinstance(node, ast.ImportFrom):
+            if node.module == "__future__":
+                imports.append(node)
+                continue
+            aliases = [
+                alias for alias in node.names if (alias.asname or alias.name) in loaded_names
+            ]
+            if aliases:
+                imports.append(ast.ImportFrom(module=node.module, names=aliases, level=node.level))
+
+    body: list[ast.stmt] = [
+        ast.Expr(value=ast.Constant(value=description)),
+        *imports,
+        *assignments,
+        *sorted(selected_nodes, key=lambda node: node.lineno),
+    ]
+    projected = ast.unparse(ast.fix_missing_locations(ast.Module(body=body, type_ignores=[])))
+    return "#!/usr/bin/env python3\n" + projected.rstrip() + "\n"
+
+
+def paper_balanced_analyzer() -> str:
+    return project_python_module(
+        ROOT / "scripts" / "analyze_balanced_public_challenge.py",
+        {"combine_lane_metrics", "derive_reporting_metrics"},
+        "Minimal balanced-challenge metrics used by the anonymous reviewer replay.",
+    )
+
+
+def paper_empirical_validator() -> str:
+    """Project the shared validator onto the paper-facing empirical studies."""
+
+    projected = project_python_module(
+        ROOT / "scripts" / "validate_anonymous_empirical_evidence.py",
+        {
+            "validate_fresh_confirmatory",
+            "validate_balanced_public_challenge",
+            "validate_external_agent_policy",
+            "validate_factor_complete_route",
+            "validate_nonallow_policy_controls",
+            "validate_output_contract_ablation",
+            "validate_slsa_portability",
+            "validate_local_model_replications",
+        },
+        "Recompute the paper-facing studies from anonymous item-level records.",
+    ).rstrip()
+    main = """
+
+def main() -> int:
+    result = {
+        "status": "PASS",
+        "fresh_confirmatory": validate_fresh_confirmatory(),
+        "balanced_public_challenge": validate_balanced_public_challenge(),
+        "factor_complete_route": validate_factor_complete_route(),
+        "nonallow_policy_controls": validate_nonallow_policy_controls(),
+        "output_contract_ablation": validate_output_contract_ablation(),
+        "external_agent_policy": validate_external_agent_policy(),
+        "slsa_portability": validate_slsa_portability(),
+        "local_model_replications": validate_local_model_replications(),
+    }
+    print(json.dumps(result, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+"""
+    projected += main
+    forbidden = (
+        "aggregate_capable_hidden_study",
+        "analyze_stronger_model_study",
+        "def validate_capable_hidden",
+        "def validate_public_model_breadth",
+        "def validate_v1_",
+        "public-model-breadth",
+        "quota/rate-limit",
+        "1,260",
+        "78/1,260",
+    )
+    if any(token in projected for token in forbidden):
+        fail("excluded study code leaked into projected empirical validator")
+    return projected
+
+
+def build(destination: Path) -> None:
+    if destination.exists():
+        shutil.rmtree(destination)
+    destination.mkdir(parents=True)
+
+    for directory in ("src/claimpromotebench", "data/alpha", "policies", "schemas", "fixtures"):
+        copy_tree(ROOT / directory, destination / directory)
+
+    selected_files = (
+        "DATA_LICENSE.md",
+        "LICENSE",
+        "THIRD_PARTY_NOTICES.md",
+        "docs/PUBLIC_RELEASE_BOUNDARY.md",
+        "docs/POLICY_DIFFERENCE_COMPILER.md",
+        "scripts/analyze_confirmatory_hidden_study.py",
+        "scripts/analyze_local_model_replication.py",
+        "scripts/analyze_policy_transition_graph_local_study.py",
+        "scripts/audit_public_pair_contracts.py",
+        "scripts/build_agent_governance_policy_interface_revision.py",
+        "scripts/build_alpha.py",
+        "scripts/build_dual_endpoint_audit.py",
+        "scripts/build_policy_switch_study.py",
+        "scripts/build_policy_transition_graph_study.py",
+        "scripts/build_slsa_portability_study.py",
+        "scripts/build_sigstore_policy_verifier_revision.py",
+        "scripts/build_trivy_policy_revision.py",
+        "scripts/build_upstream_policy_revision_study.py",
+        "scripts/derive_minimal_policy_migration_suite.py",
+        "scripts/derive_policy_difference_coverage.py",
+        "scripts/derive_policy_migration_mutation_audit.py",
+        "scripts/finalize_synthetic_policy_results.py",
+        "scripts/finalize_local_model_results.py",
+        "scripts/freeze_local_model_replications.py",
+        "scripts/freeze_policy_transition_graph_local_study.py",
+        "scripts/frozen_run_io.py",
+        "scripts/local_model_replication.py",
+        "scripts/qualify_local_model_environment.py",
+        "scripts/policy_switch.py",
+        "scripts/policy_transition_graph_local.py",
+        "scripts/run_local_model_replication.py",
+        "scripts/run_policy_transition_graph_local_study.py",
+        "scripts/slsa_policy.py",
+        "scripts/synthetic_policy_output.py",
+        "scripts/train_policy_switch_baselines.py",
+        "scripts/train_slsa_structured_baseline.py",
+        "scripts/upstream_policy_revision.py",
+        "scripts/upstream_route_repetition.py",
+        "scripts/validate_agent_governance_policy_interface_revision.py",
+        "scripts/validate_anonymous_current_evidence.py",
+        "scripts/validate_external_evidence_audit.py",
+        "scripts/validate_local_model_replications.py",
+        "scripts/validate_policy_switch_study.py",
+        "scripts/validate_policy_transition_graph_local_study.py",
+        "scripts/validate_policy_transition_graph_study.py",
+        "scripts/validate_slsa_portability_study.py",
+        "scripts/validate_sigstore_policy_verifier_revision.py",
+        "scripts/validate_trivy_policy_revision.py",
+        "scripts/validate_upstream_policy_revision_study.py",
+        "tests/test_agent_governance_policy_interface_revision.py",
+        "tests/test_endpoint_parser_policy.py",
+        "tests/test_external_evidence_audit.py",
+        "tests/test_v2.py",
+        "tests/test_policy_switch_study.py",
+        "tests/test_policy_transition_graph_local_study.py",
+        "tests/test_policy_transition_graph_study.py",
+        "tests/test_policy_difference_compiler.py",
+        "tests/test_sigstore_policy_verifier_revision.py",
+        "tests/test_trivy_policy_revision.py",
+        "tests/test_upstream_policy_revision_study.py",
+        "v2/local-model-replication-v1/model-catalog.json",
+        "v2/local-model-replication-v1/requirements.txt",
+        "v2/schemas/local-model-run-record.schema.json",
+        "v2/schemas/slsa-agent-decision.schema.json",
+        "v2/schemas/run-record-v2.schema.json",
+        "v2/schemas/stronger-model-run-record.schema.json",
+        "v2/schemas/upstream-policy-decision.schema.json",
+    )
+    anonymous_validator_files = {
+        "scripts/validate_agent_governance_policy_interface_revision.py",
+        "scripts/validate_external_evidence_audit.py",
+        "scripts/validate_sigstore_policy_verifier_revision.py",
+        "scripts/validate_trivy_policy_revision.py",
+        "scripts/validate_upstream_policy_revision_study.py",
+    }
+    for relative in selected_files:
+        source = ROOT / relative
+        target = destination / relative
+        if relative in anonymous_validator_files:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            validator_text = str(anonymize_provenance(source.read_text(encoding="utf-8")))
+            validator_text = validator_text.replace('"Chih-Kai"', '"anonymous-author-marker"')
+            target.write_text(validator_text, encoding="utf-8", newline="\n")
+        elif relative == "v2/schemas/upstream-policy-decision.schema.json":
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
+        else:
+            copy_file(source, target)
+    for study in (
+        "upstream-policy-revisions-v1",
+        "trivy-policy-revision-v1",
+        "sigstore-policy-verifier-revision-v1",
+        "agent-governance-policy-interface-revision-v1",
+        "external-evidence-audit-v1",
+    ):
+        copy_tree(ROOT / "v2" / study, destination / "v2" / study)
+    validator_path = destination / "scripts" / "validate_anonymous_empirical_evidence.py"
+    validator_path.parent.mkdir(parents=True, exist_ok=True)
+    validator_path.write_text(paper_empirical_validator(), encoding="utf-8", newline="\n")
+    (destination / "scripts" / "analyze_balanced_public_challenge.py").write_text(
+        paper_balanced_analyzer(), encoding="utf-8", newline="\n"
+    )
+    copy_file(
+        ROOT / "release" / "requirements-review.lock",
+        destination / "requirements-review.lock",
+    )
+
+    (destination / "LICENSE").write_text(anonymous_license(), encoding="utf-8", newline="\n")
+
+    rewrite_alpha_manifest(destination)
+
+    empirical_sources = {
+        "fresh-confirmatory": (
+            ROOT / "release" / "reviewer-evidence-source" / "fresh-confirmatory"
+        ),
+    }
+    for name, source in empirical_sources.items():
+        evidence_destination = destination / "evidence" / name
+        if name == "fresh-confirmatory":
+            build_fresh_confirmatory_anonymous_evidence(source, evidence_destination)
+        else:
+            copy_anonymized_tree(source, evidence_destination)
+    build_balanced_public_anonymous_evidence(destination / "evidence" / "balanced-public-challenge")
+    build_slsa_portability_anonymous_evidence(destination / "evidence" / "slsa-portability")
+    build_local_model_replications_anonymous_evidence(
+        destination / "evidence" / "local-model-replications"
+    )
+    build_upstream_route_repetition_anonymous_evidence(
+        destination / "evidence" / "upstream-policy-route-repetition"
+    )
+    build_dual_endpoint_anonymous_evidence(destination / "evidence" / "dual-endpoint-audit")
+    build_factor_complete_route_anonymous_evidence(
+        destination / "evidence" / "factor-complete-route"
+    )
+    build_external_agent_policy_anonymous_evidence(
+        destination / "evidence" / "external-agent-policy"
+    )
+    build_nonallow_policy_controls_anonymous_evidence(
+        destination / "evidence" / "nonallow-policy-controls"
+    )
+    build_output_contract_ablation_anonymous_evidence(
+        destination / "evidence" / "output-contract-ablation"
+    )
+    (destination / "pyproject.toml").write_text(minimal_pyproject(), encoding="utf-8")
+    (destination / "README.md").write_text(review_readme(), encoding="utf-8")
+    (destination / "scripts" / "run_review_checks.py").write_text(review_runner(), encoding="utf-8")
+
+    scan_identity(destination)
+    scan_sensitive_payloads(destination)
+    write_manifest(destination)
+    scan_identity(destination)
+    scan_sensitive_payloads(destination)
+    verify_bundle(destination)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    destination_group = parser.add_mutually_exclusive_group(required=True)
+    destination_group.add_argument("--out", type=Path)
+    destination_group.add_argument("--verify", type=Path)
+    args = parser.parse_args()
+    if args.verify is not None:
+        destination = args.verify.resolve()
+        if not destination.is_dir():
+            fail(f"bundle directory does not exist: {destination}")
+        verify_bundle(destination)
+        print(json.dumps({"status": "PASS", "verified": str(destination)}, sort_keys=True))
+        return 0
+
+    if args.out is None:
+        fail("--out is required when not verifying")
+    destination = args.out.resolve()
+    build(destination)
+    print(
+        json.dumps(
+            {
+                "status": "PASS",
+                "output": str(destination),
+                "manifest_sha256": sha256_file(destination / "MANIFEST.json"),
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

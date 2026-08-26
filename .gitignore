@@ -6,11 +6,15 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.tools/
 dist/
 build/
 *.egg-info/
 work/
+v2/nonallow-policy-controls-v1/journal/
+v2/nonallow-policy-controls-v1/private-results/
+v2/output-contract-ablation-v1/journal/
+v2/output-contract-ablation-v1/private-results/
 .lake/
 *.olean
 *.ilean
-

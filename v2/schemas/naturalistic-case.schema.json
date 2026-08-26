@@ -1,0 +1,430 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f0909172434/claimpromote-bench/v2/schemas/naturalistic-case.schema.json",
+  "title": "ClaimPromoteBenchV2NaturalisticCase",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_status",
+        "computation_status",
+        "formal_status",
+        "review_status"
+      ],
+      "properties": {
+        "research_status": {
+          "enum": ["PROPOSED", "OPEN", "RESOLVED"]
+        },
+        "computation_status": {
+          "enum": ["NONE", "COMPUTATIONAL"]
+        },
+        "formal_status": {
+          "enum": ["NONE", "FORMALLY_CERTIFIED"]
+        },
+        "review_status": {
+          "enum": ["UNREVIEWED", "INDEPENDENTLY_VERIFIED"]
+        }
+      }
+    },
+    "evidence_pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "evidence_type",
+        "description",
+        "source_pointer",
+        "observed_at",
+        "copied_source_bytes"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_type": {
+          "enum": [
+            "COMPUTATION",
+            "RUNTIME",
+            "FORMAL_PROOF",
+            "REVIEW",
+            "CONTRADICTION",
+            "PROVENANCE",
+            "OTHER"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_pointer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "artifact_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/sha256"
+            }
+          ]
+        },
+        "copied_source_bytes": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "candidate_id",
+    "source",
+    "selection",
+    "label_status",
+    "model_visible",
+    "evaluator_only",
+    "release"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^naturalistic-[a-z0-9][a-z0-9-]*$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "path",
+        "stable_url",
+        "source_sha256",
+        "license_review",
+        "redistribution_mode",
+        "evaluation_time"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[^/]+/[^/]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": ["string", "null"]
+        },
+        "stable_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "license_review": {
+          "enum": ["VERIFIED", "POINTER_ONLY", "UNCLEAR"]
+        },
+        "redistribution_mode": {
+          "enum": ["POINTER_ONLY", "COPY_VERIFIED_FIELDS", "COPY_VERIFIED_ARTIFACT"]
+        },
+        "evaluation_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sampling_rank_sha256",
+        "inclusion_status",
+        "inclusion_decided_without_model_outputs",
+        "decision_note"
+      ],
+      "properties": {
+        "sampling_rank_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "inclusion_status": {
+          "enum": ["PENDING", "INCLUDED", "EXCLUDED"]
+        },
+        "inclusion_decided_without_model_outputs": {
+          "const": true
+        },
+        "decision_note": {
+          "type": "string"
+        }
+      }
+    },
+    "label_status": {
+      "enum": ["UNLABELED", "LABELED", "EXCLUDED"]
+    },
+    "model_visible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_text",
+        "current_state",
+        "requested_target_state",
+        "evidence_snapshot"
+      ],
+      "properties": {
+        "claim_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_state": {
+          "$ref": "#/$defs/state"
+        },
+        "requested_target_state": {
+          "$ref": "#/$defs/state"
+        },
+        "evidence_snapshot": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence_pointer"
+          }
+        }
+      }
+    },
+    "evaluator_only": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_version",
+        "action",
+        "reason_codes",
+        "label_rationale",
+        "interpretation_choices",
+        "source_checks"
+      ],
+      "properties": {
+        "policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]
+            }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          }
+        },
+        "label_rationale": {
+          "type": "string"
+        },
+        "interpretation_choices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pointer_only",
+        "copied_source_bytes",
+        "license_verified_for_copied_bytes"
+      ],
+      "properties": {
+        "pointer_only": {
+          "type": "boolean"
+        },
+        "copied_source_bytes": {
+          "type": "boolean"
+        },
+        "license_verified_for_copied_bytes": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "label_status": {
+            "const": "LABELED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "selection": {
+            "properties": {
+              "inclusion_status": {
+                "const": "INCLUDED"
+              }
+            }
+          },
+          "evaluator_only": {
+            "properties": {
+              "action": {
+                "enum": ["ALLOW", "HOLD", "DEMOTE", "ESCALATE"]
+              },
+              "label_rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "label_status": {
+            "const": "UNLABELED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evaluator_only": {
+            "properties": {
+              "action": {
+                "type": "null"
+              },
+              "reason_codes": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "label_status": {
+            "const": "EXCLUDED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "selection": {
+            "properties": {
+              "inclusion_status": {
+                "const": "EXCLUDED"
+              },
+              "decision_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "evaluator_only": {
+            "properties": {
+              "action": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "release": {
+            "properties": {
+              "copied_source_bytes": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "properties": {
+              "license_review": {
+                "const": "VERIFIED"
+              }
+            }
+          },
+          "release": {
+            "properties": {
+              "pointer_only": {
+                "const": false
+              },
+              "license_verified_for_copied_bytes": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "release": {
+            "properties": {
+              "pointer_only": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "release": {
+            "properties": {
+              "copied_source_bytes": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

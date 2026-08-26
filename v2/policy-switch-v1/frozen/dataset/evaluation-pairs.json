@@ -1,0 +1,1202 @@
+[
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-001-a",
+      "psw-eva-001-b"
+    ],
+    "pair_id": "psw-eva-001",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-002-a",
+      "psw-eva-002-b"
+    ],
+    "pair_id": "psw-eva-002",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-003-a",
+      "psw-eva-003-b"
+    ],
+    "pair_id": "psw-eva-003",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-004-a",
+      "psw-eva-004-b"
+    ],
+    "pair_id": "psw-eva-004",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_provenance_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-005-a",
+      "psw-eva-005-b"
+    ],
+    "pair_id": "psw-eva-005",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-006-a",
+      "psw-eva-006-b"
+    ],
+    "pair_id": "psw-eva-006",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-007-a",
+      "psw-eva-007-b"
+    ],
+    "pair_id": "psw-eva-007",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-008-a",
+      "psw-eva-008-b"
+    ],
+    "pair_id": "psw-eva-008",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-009-a",
+      "psw-eva-009-b"
+    ],
+    "pair_id": "psw-eva-009",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_signature_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-010-a",
+      "psw-eva-010-b"
+    ],
+    "pair_id": "psw-eva-010",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-011-a",
+      "psw-eva-011-b"
+    ],
+    "pair_id": "psw-eva-011",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-012-a",
+      "psw-eva-012-b"
+    ],
+    "pair_id": "psw-eva-012",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-013-a",
+      "psw-eva-013-b"
+    ],
+    "pair_id": "psw-eva-013",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-014-a",
+      "psw-eva-014-b"
+    ],
+    "pair_id": "psw-eva-014",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_subject_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-015-a",
+      "psw-eva-015-b"
+    ],
+    "pair_id": "psw-eva-015",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-016-a",
+      "psw-eva-016-b"
+    ],
+    "pair_id": "psw-eva-016",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-017-a",
+      "psw-eva-017-b"
+    ],
+    "pair_id": "psw-eva-017",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "HOLD",
+      "ALLOW"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-018-a",
+      "psw-eva-018-b"
+    ],
+    "pair_id": "psw-eva-018",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-019-a",
+      "psw-eva-019-b"
+    ],
+    "pair_id": "psw-eva-019",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "HOLD"
+    ],
+    "factor_id": "candidate_attester_profile",
+    "family": "candidate_admission",
+    "member_ids": [
+      "psw-eva-020-a",
+      "psw-eva-020-b"
+    ],
+    "pair_id": "psw-eva-020",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-021-a",
+      "psw-eva-021-b"
+    ],
+    "pair_id": "psw-eva-021",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-022-a",
+      "psw-eva-022-b"
+    ],
+    "pair_id": "psw-eva-022",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-023-a",
+      "psw-eva-023-b"
+    ],
+    "pair_id": "psw-eva-023",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-024-a",
+      "psw-eva-024-b"
+    ],
+    "pair_id": "psw-eva-024",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_builder_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-025-a",
+      "psw-eva-025-b"
+    ],
+    "pair_id": "psw-eva-025",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-026-a",
+      "psw-eva-026-b"
+    ],
+    "pair_id": "psw-eva-026",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-027-a",
+      "psw-eva-027-b"
+    ],
+    "pair_id": "psw-eva-027",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-028-a",
+      "psw-eva-028-b"
+    ],
+    "pair_id": "psw-eva-028",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-029-a",
+      "psw-eva-029-b"
+    ],
+    "pair_id": "psw-eva-029",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_uri_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-030-a",
+      "psw-eva-030-b"
+    ],
+    "pair_id": "psw-eva-030",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-031-a",
+      "psw-eva-031-b"
+    ],
+    "pair_id": "psw-eva-031",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-032-a",
+      "psw-eva-032-b"
+    ],
+    "pair_id": "psw-eva-032",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-033-a",
+      "psw-eva-033-b"
+    ],
+    "pair_id": "psw-eva-033",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-034-a",
+      "psw-eva-034-b"
+    ],
+    "pair_id": "psw-eva-034",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_source_ref_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-035-a",
+      "psw-eva-035-b"
+    ],
+    "pair_id": "psw-eva-035",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-036-a",
+      "psw-eva-036-b"
+    ],
+    "pair_id": "psw-eva-036",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-037-a",
+      "psw-eva-037-b"
+    ],
+    "pair_id": "psw-eva-037",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-038-a",
+      "psw-eva-038-b"
+    ],
+    "pair_id": "psw-eva-038",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "DEMOTE",
+      "ALLOW"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-039-a",
+      "psw-eva-039-b"
+    ],
+    "pair_id": "psw-eva-039",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "DEMOTE"
+    ],
+    "factor_id": "current_policy_digest_profile",
+    "family": "current_basis",
+    "member_ids": [
+      "psw-eva-040-a",
+      "psw-eva-040-b"
+    ],
+    "pair_id": "psw-eva-040",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-041-a",
+      "psw-eva-041-b"
+    ],
+    "pair_id": "psw-eva-041",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-042-a",
+      "psw-eva-042-b"
+    ],
+    "pair_id": "psw-eva-042",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-043-a",
+      "psw-eva-043-b"
+    ],
+    "pair_id": "psw-eva-043",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-044-a",
+      "psw-eva-044-b"
+    ],
+    "pair_id": "psw-eva-044",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "source_revision_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-045-a",
+      "psw-eva-045-b"
+    ],
+    "pair_id": "psw-eva-045",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-046-a",
+      "psw-eva-046-b"
+    ],
+    "pair_id": "psw-eva-046",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-047-a",
+      "psw-eva-047-b"
+    ],
+    "pair_id": "psw-eva-047",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-048-a",
+      "psw-eva-048-b"
+    ],
+    "pair_id": "psw-eva-048",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-049-a",
+      "psw-eva-049-b"
+    ],
+    "pair_id": "psw-eva-049",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "build_parameters_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-050-a",
+      "psw-eva-050-b"
+    ],
+    "pair_id": "psw-eva-050",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-051-a",
+      "psw-eva-051-b"
+    ],
+    "pair_id": "psw-eva-051",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-052-a",
+      "psw-eva-052-b"
+    ],
+    "pair_id": "psw-eva-052",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-053-a",
+      "psw-eva-053-b"
+    ],
+    "pair_id": "psw-eva-053",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-054-a",
+      "psw-eva-054-b"
+    ],
+    "pair_id": "psw-eva-054",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_BLUE",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "vsa_policy_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-055-a",
+      "psw-eva-055-b"
+    ],
+    "pair_id": "psw-eva-055",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-056-a",
+      "psw-eva-056-b"
+    ],
+    "pair_id": "psw-eva-056",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-057-a",
+      "psw-eva-057-b"
+    ],
+    "pair_id": "psw-eva-057",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-058-a",
+      "psw-eva-058-b"
+    ],
+    "pair_id": "psw-eva-058",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ALLOW",
+      "ESCALATE"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-059-a",
+      "psw-eva-059-b"
+    ],
+    "pair_id": "psw-eva-059",
+    "split": "evaluation"
+  },
+  {
+    "active_profiles": [
+      "POLICY_AMBER",
+      "POLICY_BLUE"
+    ],
+    "binding_profile": "POLICY_AMBER",
+    "controlled_path": "/active_policy_profile",
+    "expected_actions": [
+      "ESCALATE",
+      "ALLOW"
+    ],
+    "factor_id": "verification_result_conflict_profile",
+    "family": "authenticated_conflict",
+    "member_ids": [
+      "psw-eva-060-a",
+      "psw-eva-060-b"
+    ],
+    "pair_id": "psw-eva-060",
+    "split": "evaluation"
+  }
+]

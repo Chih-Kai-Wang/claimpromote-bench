@@ -1,0 +1,53 @@
+{
+  "baseline_predictions_sha256": "sha256:e0fe8e6e8bcb40b0d9e05cfdc1b4f60bb8c23074ff6454b0532a18e95275dcd5",
+  "c1_receipt_sha256": "sha256:843a64530f144f4c440edf8c174195444cc5b8022e1904098e21f46dfd52ec9c",
+  "commitment_stage": "C1_BEFORE_ANY_MODEL_POST",
+  "contains_gold_labels": false,
+  "contains_hidden_rows": false,
+  "contains_prompts": false,
+  "contains_request_bodies": false,
+  "contains_seed_bytes": false,
+  "dataset_manifest_sha256": "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de",
+  "no_model_post_before_receipt": true,
+  "packet_sha256": "sha256:4263ec938879c8f426157afca80e24b209ad617a3410127b0e951a446523ccaf",
+  "plan_file_sha256": "sha256:a93dc958abe1854134fdbb90e402b5c06063d9244ae4efa7653932a2ee07b4e9",
+  "planned_cells": 600,
+  "planned_items_per_lane": 300,
+  "planned_lanes": 2,
+  "request_body_hash_set_sha256": "sha256:4061038bd832503803d839bc130d80ddf2e514bdc96a1c8a5e55b669e8014468",
+  "schedule_sha256": "sha256:bd8a0748c18fd8591346f5ee667f9a1de2b2adf1aba8604dd11e8eae00fd8e4b",
+  "schema_version": "1.0.0",
+  "shallow_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
+  "subscription_authorization": {
+    "adaptive_stop_on_usage_or_results": false,
+    "alternate_provider_fallback": false,
+    "authorization_contract_sha256": "sha256:b597d67b3afc715340ede4694b120c982a4ee4c1702511481a0a16fde2b3c2e4",
+    "authorized_lane_ids": [
+      "opencode-go-qwen3.7-max",
+      "opencode-go-deepseek-v4-flash-matched"
+    ],
+    "budget_mode": "PREEXISTING_SUBSCRIPTION_QUOTA_ONLY",
+    "cash_balance_fallback": false,
+    "contains_credentials": false,
+    "contains_prompts": false,
+    "contains_request_bodies": false,
+    "incremental_cash_cap_usd": 0.0,
+    "max_output_tokens_per_post": 1536,
+    "per_lane_cells_verified": {
+      "opencode-go-deepseek-v4-flash-matched": 300,
+      "opencode-go-qwen3.7-max": 300
+    },
+    "per_lane_token_usd_cap": null,
+    "planned_application_posts": 600,
+    "planned_posts_per_lane": 300,
+    "pre_post_token_cost_gate": "NOT_APPLICABLE",
+    "provider_reported_usage_and_quota_value": "POSTHOC_DESCRIPTIVE_ONLY",
+    "quota_exhaustion": "CELL_INCORRECT_NO_RETRY",
+    "schedule_cells_verified": 600,
+    "schedule_recomputed_from_exact_request_bodies": true,
+    "schema_version": "1.0.0",
+    "status": "SUBSCRIPTION_AUTHORIZATION_GATE_PASS",
+    "workflow_initiated_purchase_or_recharge": false
+  }
+}

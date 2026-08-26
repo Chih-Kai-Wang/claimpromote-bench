@@ -1,0 +1,23 @@
+{
+  "candidate_cases": 6,
+  "coverage": {
+    "action_edges": {
+      "covered": 2,
+      "total": 2
+    },
+    "documented_fault_modes": {
+      "covered": 4,
+      "total": 4
+    }
+  },
+  "lower_bound_cases": 4,
+  "schema_version": "1.0.0",
+  "selected_case_ids": [
+    "sigstore-01",
+    "sigstore-02",
+    "sigstore-03",
+    "sigstore-05"
+  ],
+  "status": "EXACT_MINIMUM_RELATIVE_TO_COMMITTED_CASES",
+  "witness_cases": 4
+}

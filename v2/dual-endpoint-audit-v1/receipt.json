@@ -1,0 +1,30 @@
+{
+  "aggregate_sha256": "sha256:630f61f296396de9262cb9d5e7c3a478a908518a557ccea3a9e43bcdc5047f75",
+  "model_calls": 0,
+  "provider_response_ids_written": false,
+  "raw_response_content_written": false,
+  "registry_sha256": "sha256:80d7526d2bfac70b2bd6f83c176b007c205696843fdabbc434d02231e1c459cb",
+  "route_stacks": 10,
+  "schema_version": "1.1.0",
+  "source_digests": {
+    "v2/balanced-public-challenge/dataset/gold.jsonl": "sha256:35035a5a7505b0f54dc5577bd9d26380c733041b3ab95b118237876e27509056",
+    "v2/balanced-public-challenge/dataset/pairs.json": "sha256:af5f397f981fb0f2f8db3f7616b1db305d90a8764575333f78d78afbd44c9a26",
+    "v2/balanced-public-challenge/results/runs/opencode-go-deepseek-v4-flash-matched-full.jsonl": "sha256:ae5a4664d77853267a7d253bc6f7fe02d6f858837eea47a80f2ffd854636a81b",
+    "v2/balanced-public-challenge/results/runs/opencode-go-qwen3.7-max-full.jsonl": "sha256:e13a560c7ce5027aad6a0dcfdf862b3f181a07e49059ef1a9f87bc0ab6475949",
+    "v2/local-model-replication-v1/replacement-v2/frozen/policy-switch/results/local-mlx-mistral-small-3.2-24b-policy-switch-v2.jsonl": "sha256:8f4318811849f73b731d2b7f24478266ffdf9f96641285deea844803d88c3355",
+    "v2/local-model-replication-v1/replacement-v2/frozen/policy-switch/results/local-mlx-phi-4-policy-switch-v2.jsonl": "sha256:8958eb132c722b7909f75eab10c01229e83064340b3c52c8f66e5f872a46572d",
+    "v2/local-model-replication-v1/replacement-v2/frozen/slsa/results/local-mlx-mistral-small-3.2-24b-slsa-v2.jsonl": "sha256:e87d544b0b60ee65abeef5ce5adcb3c635bfe637639f11beb59c55a09773f636",
+    "v2/local-model-replication-v1/replacement-v2/frozen/slsa/results/local-mlx-phi-4-slsa-v2.jsonl": "sha256:de8604c599a20a948ed58990e6c20dd23bc1f070876fd1eb0d532f9623fb956f",
+    "v2/local-model-replication-v1/transition-graph-v1/frozen/policy-transition-graph/results/local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2.jsonl": "sha256:44b4b40aebdc55fce0a88ac3b469d2cef974ce92d184e00c7001e28a364cea80",
+    "v2/local-model-replication-v1/transition-graph-v1/frozen/policy-transition-graph/results/local-mlx-phi-4-policy-transition-graph-v2.jsonl": "sha256:cb530c1379d72efed6b102e800e39accc4d4dccfef6bdb1512d61235598cd781",
+    "v2/policy-switch-v1/frozen/dataset/evaluation-gold.jsonl": "sha256:6d00cd3476b56f7a7e70afc21fc04d3af321a92fa5a3d8d54ea2a7ab7638d45e",
+    "v2/policy-switch-v1/frozen/dataset/evaluation-pairs.json": "sha256:c6cc8488a9183357caf10faaaf8ee0fbeda424cb8eb165cc9b2f2f2f33606b24",
+    "v2/policy-transition-graph-v1/frozen/dataset/evaluation-gold.jsonl": "sha256:a63587d8b10de4c4288d461e51e2d967f021ba8b54f36595903560c8a3192b9e",
+    "v2/policy-transition-graph-v1/frozen/dataset/evaluation-pairs.json": "sha256:afe3959c0b6271d002b1e599ff6ea9be9de6029cb6c2c5323c242f458c763201",
+    "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-gold.jsonl": "sha256:c39836c4b6c20814ebec4ee489476e348d6f8e19d96079dc540666be013addee",
+    "v2/slsa-portability-v1/replacement-v2/dataset/evaluation-pairs.json": "sha256:ffea5dc122b37c2092938085545dd08827640964968be75cd233328d339f53fe",
+    "v2/slsa-portability-v1/replacement-v2/results/opencode-go-deepseek-v4-flash-slsa-v2.jsonl": "sha256:d892d6d2ae788e0f3cd7d54522529c14271523b60c0674292ef121bd4d79b994",
+    "v2/slsa-portability-v1/replacement-v2/results/opencode-go-qwen3.7-max-slsa-v2.jsonl": "sha256:1232b0b1c33908eb4fc9996032dfd71469b8e885752141050f7c31af82436263"
+  },
+  "status": "DUAL_ENDPOINT_AUDIT_REBUILT_FROM_FROZEN_RECORDS"
+}

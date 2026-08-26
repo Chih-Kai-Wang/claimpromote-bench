@@ -1,0 +1,2419 @@
+{
+  "budget": {
+    "billing_mode": "PREEXISTING_SUBSCRIPTION_INCLUDED_QUOTA",
+    "host_usage_derived_quota_value_usd": 3.5798411779999997,
+    "incremental_cash_spend_usd": 0.0,
+    "quota_value_is_not_incremental_cash_spend": true
+  },
+  "design": "PUBLIC_PRECOMMITTED_MODEL_BREADTH_SUPPLEMENT",
+  "deterministic_policy_executor": {
+    "end_to_end_item_accuracy": 1.0,
+    "end_to_end_pair_accuracy": 1.0,
+    "items": 1260,
+    "label": "DEFINITIONAL_POLICY_CEILING_NOT_A_LEARNED_EMPIRICAL_BASELINE",
+    "pairs": 630
+  },
+  "external_commitment": {
+    "dataset_manifest_sha256": "sha256:64193afaa40d3f38cef2b7efe202a12e198e8c1088f1e2a2928ce89f551f160b",
+    "frozen_plan_commit": "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
+    "packet_sha256": "sha256:8a190523c5faf85980968530691cf26854366c41093bd646611df754e4106d41",
+    "plan_sha256": "sha256:e9ff587dbf6094249250499557e2f8b56ece1317357d7483a4d832ba9b94b31d",
+    "workflow_run_attempt": null,
+    "workflow_run_url": null
+  },
+  "interpretation": "Prospectively frozen model-family breadth evidence on a known public synthetic challenge; not hidden generalization.",
+  "lanes": [
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 0.7822309439999999,
+        "records": 180,
+        "records_with_computed_cost": 102,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-deepseek-v4-pro-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.0,
+        "conditional_balanced_action_recall": 0.0,
+        "conditional_item_accuracy": null,
+        "conditional_macro_f1": 0.0,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 90
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 0,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "end_to_end_item_accuracy": 0.0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.0,
+        "pair_coverage": 0.0,
+        "pairs": 90,
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 102,
+          "TRANSPORT_ERROR": 78
+        },
+        "parseable_items": 0,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 90,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "deepseek-v4-pro",
+      "model_returned_values": [
+        "deepseek-v4-pro"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:0caee36f654faf89af23bee8b30092172159dc75299c2c03c66edc4fdf9c4a33",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 78,
+          "input_tokens": 78,
+          "output_tokens": 78,
+          "reasoning_tokens": 78,
+          "total_tokens": 78
+        },
+        "totals": {
+          "cached_input_tokens": 164736,
+          "input_tokens": 281831,
+          "output_tokens": 156671,
+          "reasoning_tokens": 156671,
+          "total_tokens": 438502
+        }
+      }
+    },
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 0.83705916,
+        "records": 180,
+        "records_with_computed_cost": 101,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-glm-5.3-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.0,
+        "conditional_balanced_action_recall": 0.0,
+        "conditional_item_accuracy": null,
+        "conditional_macro_f1": 0.0,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 90
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 0,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "end_to_end_item_accuracy": 0.0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.0,
+        "pair_coverage": 0.0,
+        "pairs": 90,
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 101,
+          "TRANSPORT_ERROR": 79
+        },
+        "parseable_items": 0,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 90,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "glm-5.3",
+      "model_returned_values": [
+        "glm-5.3"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:dfcd5fe3c9db5a4b01052a45c9966fb366198b93fb7d05f12c4685f096865885",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 79,
+          "input_tokens": 79,
+          "output_tokens": 79,
+          "reasoning_tokens": 79,
+          "total_tokens": 79
+        },
+        "totals": {
+          "cached_input_tokens": 163456,
+          "input_tokens": 243429,
+          "output_tokens": 155136,
+          "reasoning_tokens": 154977,
+          "total_tokens": 398565
+        }
+      }
+    },
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 0.12341458,
+        "records": 180,
+        "records_with_computed_cost": 102,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-hy3-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.0,
+        "conditional_balanced_action_recall": 0.0,
+        "conditional_item_accuracy": null,
+        "conditional_macro_f1": 0.0,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 90
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 0,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "end_to_end_item_accuracy": 0.0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.0,
+        "pair_coverage": 0.0,
+        "pairs": 90,
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 102,
+          "TRANSPORT_ERROR": 78
+        },
+        "parseable_items": 0,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 90,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "hy3",
+      "model_returned_values": [
+        "hy3"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:f20bf21c7462ccb59e1c58fd8b51eabad0f11fb7658a2610a8119bba2884e07f",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 78,
+          "input_tokens": 78,
+          "output_tokens": 78,
+          "reasoning_tokens": 78,
+          "total_tokens": 78
+        },
+        "totals": {
+          "cached_input_tokens": 40128,
+          "input_tokens": 262559,
+          "output_tokens": 156672,
+          "reasoning_tokens": 156672,
+          "total_tokens": 419231
+        }
+      }
+    },
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 0.544956,
+        "records": 180,
+        "records_with_computed_cost": 19,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-kimi-k3-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.05555555555555555,
+        "conditional_balanced_action_recall": 0.75,
+        "conditional_item_accuracy": 1.0,
+        "conditional_macro_f1": 0.75,
+        "conditional_pair_accuracy": 1.0,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 8,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 82
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 2,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 28
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 28
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 12,
+        "correct_pairs": 4,
+        "covered_pairs": 4,
+        "decision_coverage": 0.06666666666666667,
+        "end_to_end_item_accuracy": 0.06666666666666667,
+        "end_to_end_pair_accuracy": 0.044444444444444446,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.16666666666666666,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.16666666666666666,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.16666666666666666,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.16666666666666666,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.10331632653061225,
+        "pair_coverage": 0.044444444444444446,
+        "pairs": 90,
+        "parse_status_counts": {
+          "JSON_SYNTAX_ERROR": 7,
+          "OK": 12,
+          "TRANSPORT_ERROR": 161
+        },
+        "parseable_items": 12,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 8,
+            "end_to_end_f1": 0.163265306122449,
+            "end_to_end_recall": 0.08888888888888889,
+            "gold_instances": 90,
+            "parseable_gold_instances": 8,
+            "precision": 1.0,
+            "predicted_instances": 8
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 2,
+            "end_to_end_f1": 0.125,
+            "end_to_end_recall": 0.06666666666666667,
+            "gold_instances": 30,
+            "parseable_gold_instances": 2,
+            "precision": 1.0,
+            "predicted_instances": 2
+          },
+          "HOLD": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 2,
+            "end_to_end_f1": 0.125,
+            "end_to_end_recall": 0.06666666666666667,
+            "gold_instances": 30,
+            "parseable_gold_instances": 2,
+            "precision": 1.0,
+            "predicted_instances": 2
+          }
+        }
+      },
+      "model_requested": "kimi-k3",
+      "model_returned_values": [
+        "kimi-k3"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:435507981a66450c23e92a0962ef601782400c50d2ee669cda0bf50cbfc51eda",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 161,
+          "input_tokens": 161,
+          "output_tokens": 161,
+          "reasoning_tokens": 161,
+          "total_tokens": 161
+        },
+        "totals": {
+          "cached_input_tokens": 25600,
+          "input_tokens": 44627,
+          "output_tokens": 32013,
+          "reasoning_tokens": 30826,
+          "total_tokens": 76640
+        }
+      }
+    },
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 0.205861894,
+        "records": 180,
+        "records_with_computed_cost": 102,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-mimo-v2.5-pro-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.0,
+        "conditional_balanced_action_recall": 0.0,
+        "conditional_item_accuracy": null,
+        "conditional_macro_f1": 0.0,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 90
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 0,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.0,
+        "end_to_end_item_accuracy": 0.0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.0,
+        "pair_coverage": 0.0,
+        "pairs": 90,
+        "parse_status_counts": {
+          "SCHEMA_ERROR": 102,
+          "TRANSPORT_ERROR": 78
+        },
+        "parseable_items": 0,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 90,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "mimo-v2.5-pro",
+      "model_returned_values": [
+        "mimo-v2.5-pro"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:9239dd58015ff6e374d7319339dd20a5cee84e8fc8f45b1d85ada24f025214fa",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 78,
+          "input_tokens": 78,
+          "output_tokens": 78,
+          "reasoning_tokens": 78,
+          "total_tokens": 78
+        },
+        "totals": {
+          "cached_input_tokens": 135808,
+          "input_tokens": 294578,
+          "output_tokens": 156672,
+          "reasoning_tokens": 0,
+          "total_tokens": 451250
+        }
+      }
+    },
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 0.0289596,
+        "records": 180,
+        "records_with_computed_cost": 102,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-minimax-m3-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.14722222222222223,
+        "conditional_balanced_action_recall": 0.5271929824561403,
+        "conditional_item_accuracy": 0.6,
+        "conditional_macro_f1": 0.44214980421876976,
+        "conditional_pair_accuracy": 0.14285714285714285,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 32,
+              "DEMOTE": 0,
+              "ESCALATE": 4,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 52
+            },
+            "DEMOTE": {
+              "ALLOW": 15,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 1,
+              "NO_VALID_DECISION": 14
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 4,
+              "HOLD": 2,
+              "NO_VALID_DECISION": 24
+            },
+            "HOLD": {
+              "ALLOW": 2,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 3,
+              "NO_VALID_DECISION": 25
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 39,
+        "correct_pairs": 3,
+        "covered_pairs": 21,
+        "decision_coverage": 0.3611111111111111,
+        "end_to_end_item_accuracy": 0.21666666666666667,
+        "end_to_end_pair_accuracy": 0.03333333333333333,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 2,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.3333333333333333,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 4,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.6666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 3,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.5,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 3,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.5,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 0.0,
+            "correct_pairs": 0,
+            "covered_pairs": 4,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.6666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 1,
+            "covered_pairs": 1,
+            "end_to_end_pair_accuracy": 0.16666666666666666,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.16666666666666666,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": 1.0,
+            "correct_pairs": 2,
+            "covered_pairs": 2,
+            "end_to_end_pair_accuracy": 0.3333333333333333,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.3333333333333333,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.2072131768269595,
+        "pair_coverage": 0.23333333333333334,
+        "pairs": 90,
+        "parse_status_counts": {
+          "OK": 65,
+          "SEMANTIC_ERROR": 37,
+          "TRANSPORT_ERROR": 78
+        },
+        "parseable_items": 65,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 0.735632183908046,
+            "conditional_recall": 0.8421052631578947,
+            "correct": 32,
+            "end_to_end_f1": 0.460431654676259,
+            "end_to_end_recall": 0.35555555555555557,
+            "gold_instances": 90,
+            "parseable_gold_instances": 38,
+            "precision": 0.6530612244897959,
+            "predicted_instances": 49
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 16,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.5714285714285715,
+            "conditional_recall": 0.6666666666666666,
+            "correct": 4,
+            "end_to_end_f1": 0.2105263157894737,
+            "end_to_end_recall": 0.13333333333333333,
+            "gold_instances": 30,
+            "parseable_gold_instances": 6,
+            "precision": 0.5,
+            "predicted_instances": 8
+          },
+          "HOLD": {
+            "conditional_f1": 0.4615384615384615,
+            "conditional_recall": 0.6,
+            "correct": 3,
+            "end_to_end_f1": 0.15789473684210528,
+            "end_to_end_recall": 0.1,
+            "gold_instances": 30,
+            "parseable_gold_instances": 5,
+            "precision": 0.375,
+            "predicted_instances": 8
+          }
+        }
+      },
+      "model_requested": "minimax-m3",
+      "model_returned_values": [
+        "minimax-m3"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:218fb2b96733fd5f5ffe60cf8bc54e1966509e9190d438269fc5c965e40cac06",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 84,
+          "input_tokens": 78,
+          "output_tokens": 78,
+          "reasoning_tokens": 180,
+          "total_tokens": 78
+        },
+        "totals": {
+          "cached_input_tokens": 136905,
+          "input_tokens": 122136,
+          "output_tokens": 9175,
+          "reasoning_tokens": null,
+          "total_tokens": 131311
+        }
+      }
+    },
+    {
+      "host_usage_derived_quota_value": {
+        "actual_cost_usd": 1.057359,
+        "records": 180,
+        "records_with_computed_cost": 102,
+        "status": "PARTIAL"
+      },
+      "lane_id": "opencode-go-qwen3.8-max-breadth",
+      "metrics": {
+        "balanced_action_recall": 0.002777777777777778,
+        "conditional_balanced_action_recall": 0.25,
+        "conditional_item_accuracy": 1.0,
+        "conditional_macro_f1": 0.25,
+        "conditional_pair_accuracy": null,
+        "confusion_matrix": {
+          "column_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE",
+            "NO_VALID_DECISION"
+          ],
+          "column_semantics": "raw model action or absence of a valid decision",
+          "counts": {
+            "ALLOW": {
+              "ALLOW": 1,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 89
+            },
+            "DEMOTE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "ESCALATE": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            },
+            "HOLD": {
+              "ALLOW": 0,
+              "DEMOTE": 0,
+              "ESCALATE": 0,
+              "HOLD": 0,
+              "NO_VALID_DECISION": 30
+            }
+          },
+          "row_order": [
+            "ALLOW",
+            "HOLD",
+            "DEMOTE",
+            "ESCALATE"
+          ],
+          "row_semantics": "gold action"
+        },
+        "correct_items": 1,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "decision_coverage": 0.005555555555555556,
+        "end_to_end_item_accuracy": 0.005555555555555556,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_metrics": [
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "age",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_claim_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_freshness",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_reviewer_identity",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_status",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "contradiction_verifier_execution",
+            "family": "STALE_CONTRADICTION",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_binding",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_stale",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_computation_verifier",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_environment",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "current_review_identity",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "dependency_verifier",
+            "family": "DEPENDENCY",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "repetitions",
+            "family": "NUMERICAL",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "reviewer_identity",
+            "family": "PROVENANCE",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          },
+          {
+            "conditional_pair_accuracy": null,
+            "correct_pairs": 0,
+            "covered_pairs": 0,
+            "end_to_end_pair_accuracy": 0.0,
+            "factor_id": "tool_exit",
+            "family": "RUNTIME",
+            "pair_coverage": 0.0,
+            "pairs": 6
+          }
+        ],
+        "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+        "items": 180,
+        "macro_f1": 0.005494505494505495,
+        "pair_coverage": 0.0,
+        "pairs": 90,
+        "parse_status_counts": {
+          "OK": 1,
+          "SCHEMA_ERROR": 101,
+          "TRANSPORT_ERROR": 78
+        },
+        "parseable_items": 1,
+        "per_action": {
+          "ALLOW": {
+            "conditional_f1": 1.0,
+            "conditional_recall": 1.0,
+            "correct": 1,
+            "end_to_end_f1": 0.02197802197802198,
+            "end_to_end_recall": 0.011111111111111112,
+            "gold_instances": 90,
+            "parseable_gold_instances": 1,
+            "precision": 1.0,
+            "predicted_instances": 1
+          },
+          "DEMOTE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "ESCALATE": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          },
+          "HOLD": {
+            "conditional_f1": 0.0,
+            "conditional_recall": 0.0,
+            "correct": 0,
+            "end_to_end_f1": 0.0,
+            "end_to_end_recall": 0.0,
+            "gold_instances": 30,
+            "parseable_gold_instances": 0,
+            "precision": 0.0,
+            "predicted_instances": 0
+          }
+        }
+      },
+      "model_requested": "qwen3.8-max",
+      "model_returned_values": [
+        "qwen3.8-max"
+      ],
+      "provider": "OpenCode Go",
+      "routed_provider_values": [],
+      "run_sha256": "sha256:62c296a5deecb67b7f2f480df04b66555cc42829b70d533817c55d215ee84624",
+      "usage": {
+        "records_missing_field": {
+          "cached_input_tokens": 78,
+          "input_tokens": 78,
+          "output_tokens": 78,
+          "reasoning_tokens": 180,
+          "total_tokens": 78
+        },
+        "totals": {
+          "cached_input_tokens": 138240,
+          "input_tokens": 137436,
+          "output_tokens": 156724,
+          "reasoning_tokens": null,
+          "total_tokens": 294160
+        }
+      }
+    }
+  ],
+  "pooled_model_item_cells": {
+    "balanced_action_recall": 0.029365079365079365,
+    "conditional_balanced_action_recall": 0.5841565349544073,
+    "conditional_item_accuracy": 0.6666666666666666,
+    "conditional_macro_f1": 0.5089635854341736,
+    "conditional_pair_accuracy": 0.28,
+    "confusion_matrix": {
+      "column_order": [
+        "ALLOW",
+        "HOLD",
+        "DEMOTE",
+        "ESCALATE",
+        "NO_VALID_DECISION"
+      ],
+      "column_semantics": "raw model action or absence of a valid decision",
+      "counts": {
+        "ALLOW": {
+          "ALLOW": 41,
+          "DEMOTE": 0,
+          "ESCALATE": 4,
+          "HOLD": 2,
+          "NO_VALID_DECISION": 583
+        },
+        "DEMOTE": {
+          "ALLOW": 15,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 1,
+          "NO_VALID_DECISION": 194
+        },
+        "ESCALATE": {
+          "ALLOW": 0,
+          "DEMOTE": 0,
+          "ESCALATE": 6,
+          "HOLD": 2,
+          "NO_VALID_DECISION": 202
+        },
+        "HOLD": {
+          "ALLOW": 2,
+          "DEMOTE": 0,
+          "ESCALATE": 0,
+          "HOLD": 5,
+          "NO_VALID_DECISION": 203
+        }
+      },
+      "row_order": [
+        "ALLOW",
+        "HOLD",
+        "DEMOTE",
+        "ESCALATE"
+      ],
+      "row_semantics": "gold action"
+    },
+    "correct_items": 52,
+    "correct_pairs": 7,
+    "covered_pairs": 25,
+    "decision_coverage": 0.06190476190476191,
+    "end_to_end_item_accuracy": 0.04126984126984127,
+    "end_to_end_pair_accuracy": 0.011111111111111112,
+    "factor_metrics": [
+      {
+        "conditional_pair_accuracy": 0.0,
+        "correct_pairs": 0,
+        "covered_pairs": 2,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "age",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.047619047619047616,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "contradiction_claim_identity",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.0,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "contradiction_freshness",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.0,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 0.5,
+        "correct_pairs": 1,
+        "covered_pairs": 2,
+        "end_to_end_pair_accuracy": 0.023809523809523808,
+        "factor_id": "contradiction_reviewer_identity",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.047619047619047616,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "contradiction_status",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.0,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 0.023809523809523808,
+        "factor_id": "contradiction_verifier_execution",
+        "family": "STALE_CONTRADICTION",
+        "pair_coverage": 0.023809523809523808,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 0.0,
+        "correct_pairs": 0,
+        "covered_pairs": 4,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "current_computation_binding",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.09523809523809523,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 0.0,
+        "correct_pairs": 0,
+        "covered_pairs": 3,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "current_computation_stale",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.07142857142857142,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 0.0,
+        "correct_pairs": 0,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "current_computation_verifier",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.023809523809523808,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 0.0,
+        "correct_pairs": 0,
+        "covered_pairs": 3,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "current_review_environment",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.07142857142857142,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 0.0,
+        "correct_pairs": 0,
+        "covered_pairs": 4,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "current_review_identity",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.09523809523809523,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 0.023809523809523808,
+        "factor_id": "dependency_verifier",
+        "family": "DEPENDENCY",
+        "pair_coverage": 0.023809523809523808,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 1,
+        "covered_pairs": 1,
+        "end_to_end_pair_accuracy": 0.023809523809523808,
+        "factor_id": "repetitions",
+        "family": "NUMERICAL",
+        "pair_coverage": 0.023809523809523808,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": null,
+        "correct_pairs": 0,
+        "covered_pairs": 0,
+        "end_to_end_pair_accuracy": 0.0,
+        "factor_id": "reviewer_identity",
+        "family": "PROVENANCE",
+        "pair_coverage": 0.0,
+        "pairs": 42
+      },
+      {
+        "conditional_pair_accuracy": 1.0,
+        "correct_pairs": 3,
+        "covered_pairs": 3,
+        "end_to_end_pair_accuracy": 0.07142857142857142,
+        "factor_id": "tool_exit",
+        "family": "RUNTIME",
+        "pair_coverage": 0.07142857142857142,
+        "pairs": 42
+      }
+    ],
+    "failure_rule": "Every non-OK response remains in the denominator as incorrect.",
+    "items": 1260,
+    "macro_f1": 0.054796511627906976,
+    "pair_coverage": 0.03968253968253968,
+    "pairs": 630,
+    "parse_status_counts": {
+      "JSON_SYNTAX_ERROR": 312,
+      "OK": 78,
+      "SCHEMA_ERROR": 203,
+      "SEMANTIC_ERROR": 37,
+      "TRANSPORT_ERROR": 630
+    },
+    "parseable_items": 78,
+    "per_action": {
+      "ALLOW": {
+        "conditional_f1": 0.780952380952381,
+        "conditional_recall": 0.8723404255319149,
+        "correct": 41,
+        "end_to_end_f1": 0.11918604651162791,
+        "end_to_end_recall": 0.06507936507936508,
+        "gold_instances": 630,
+        "parseable_gold_instances": 47,
+        "precision": 0.7068965517241379,
+        "predicted_instances": 58
+      },
+      "DEMOTE": {
+        "conditional_f1": 0.0,
+        "conditional_recall": 0.0,
+        "correct": 0,
+        "end_to_end_f1": 0.0,
+        "end_to_end_recall": 0.0,
+        "gold_instances": 210,
+        "parseable_gold_instances": 16,
+        "precision": 0.0,
+        "predicted_instances": 0
+      },
+      "ESCALATE": {
+        "conditional_f1": 0.6666666666666665,
+        "conditional_recall": 0.75,
+        "correct": 6,
+        "end_to_end_f1": 0.054545454545454536,
+        "end_to_end_recall": 0.02857142857142857,
+        "gold_instances": 210,
+        "parseable_gold_instances": 8,
+        "precision": 0.6,
+        "predicted_instances": 10
+      },
+      "HOLD": {
+        "conditional_f1": 0.588235294117647,
+        "conditional_recall": 0.7142857142857143,
+        "correct": 5,
+        "end_to_end_f1": 0.04545454545454545,
+        "end_to_end_recall": 0.023809523809523808,
+        "gold_instances": 210,
+        "parseable_gold_instances": 7,
+        "precision": 0.5,
+        "predicted_instances": 10
+      }
+    }
+  },
+  "raw_prompts_or_responses_in_aggregate": false,
+  "schema_version": "1.0.0",
+  "scope_limits": {
+    "breadth_dimension_added": "MODEL_FAMILY_ONLY",
+    "hidden_generalization_claimed": false,
+    "naturalistic_cases": 0,
+    "ontology_count": 1,
+    "policy_count": 1,
+    "public_known_challenge": true
+  },
+  "service_comparison": {
+    "causal_model_ablation_claimed": false,
+    "reason": "Model identity, serving implementation, and API adapter may differ even under one subscription endpoint and one prompt-only output contract.",
+    "scope": "DESCRIPTIVE_ONLY"
+  },
+  "status": "COMPLETE",
+  "study_id": "claimpromotebench-v2-public-model-breadth-2026-08-v1",
+  "truth_status": "COMPUTATIONAL"
+}

@@ -1,0 +1,131 @@
+{
+  "cases": [
+    {
+      "case_id": "trivy-01",
+      "configured": true,
+      "input": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {
+          "labels": {
+            "component": "kube-apiserver",
+            "tier": "control-plane"
+          },
+          "name": "apiserver"
+        },
+        "spec": {
+          "containers": [
+            {
+              "command": [
+                "kube-apiserver",
+                "--advertise-address=192.168.49.2",
+                "--encryption-provider-config=<filename>"
+              ],
+              "image": "busybox",
+              "name": "hello"
+            }
+          ]
+        }
+      },
+      "origin": "UPSTREAM_REGRESSION_TEST_SEMANTICS",
+      "upstream_test_name": "test_encryption_provider_config_is_set"
+    },
+    {
+      "case_id": "trivy-02",
+      "configured": false,
+      "input": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {
+          "labels": {
+            "component": "kube-apiserver",
+            "tier": "control-plane"
+          },
+          "name": "apiserver"
+        },
+        "spec": {
+          "containers": [
+            {
+              "command": [
+                "kube-apiserver",
+                "--advertise-address=192.168.49.2",
+                "--anonymous-auth=false"
+              ],
+              "image": "busybox",
+              "name": "hello"
+            }
+          ]
+        }
+      },
+      "origin": "UPSTREAM_REGRESSION_TEST_SEMANTICS",
+      "upstream_test_name": "test_encryption_provider_config_is_not_set"
+    },
+    {
+      "case_id": "trivy-03",
+      "configured": true,
+      "input": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {
+          "labels": {
+            "component": "kube-apiserver",
+            "tier": "control-plane"
+          },
+          "name": "apiserver"
+        },
+        "spec": {
+          "containers": [
+            {
+              "args": [
+                "--advertise-address=192.168.49.2",
+                "--encryption-provider-config=<filename>"
+              ],
+              "command": [
+                "kube-apiserver"
+              ],
+              "image": "busybox",
+              "name": "hello"
+            }
+          ]
+        }
+      },
+      "origin": "UPSTREAM_REGRESSION_TEST_SEMANTICS",
+      "upstream_test_name": "test_encryption_provider_config_is_set_args"
+    },
+    {
+      "case_id": "trivy-04",
+      "configured": false,
+      "input": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {
+          "labels": {
+            "component": "kube-apiserver",
+            "tier": "control-plane"
+          },
+          "name": "apiserver"
+        },
+        "spec": {
+          "containers": [
+            {
+              "args": [
+                "--advertise-address=192.168.49.2",
+                "--anonymous-auth=false"
+              ],
+              "command": [
+                "kube-apiserver"
+              ],
+              "image": "busybox",
+              "name": "hello"
+            }
+          ]
+        }
+      },
+      "origin": "UPSTREAM_REGRESSION_TEST_SEMANTICS",
+      "upstream_test_name": "test_encryption_provider_config_is_not_set_args"
+    }
+  ],
+  "model_calls": 0,
+  "schema_version": "1.0.0",
+  "status": "FROZEN_UPSTREAM_REGRESSION_TEST_SEMANTICS"
+}

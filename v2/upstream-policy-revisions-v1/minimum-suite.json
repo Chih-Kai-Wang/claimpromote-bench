@@ -1,0 +1,22 @@
+{
+  "candidate_pairs": 12,
+  "coverage": {
+    "action_edges": {
+      "covered": 2,
+      "total": 2
+    },
+    "changed_rules": {
+      "covered": 2,
+      "total": 2
+    }
+  },
+  "lower_bound_pairs": 2,
+  "lower_bound_reason": "Each pair realizes one old-to-new action edge, so two distinct required edges need at least two pairs.",
+  "schema_version": "1.0.0",
+  "selected_pair_ids": [
+    "upr-flex-01",
+    "upr-unique-01"
+  ],
+  "status": "PROVABLY_MINIMUM_RELATIVE_TO_COMMITTED_GRAMMAR",
+  "witness_pairs": 2
+}

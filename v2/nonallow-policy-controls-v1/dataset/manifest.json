@@ -1,0 +1,23 @@
+{
+  "changed_pairs": 2,
+  "contains_allow_gold": false,
+  "decision_schema_path": "v2/schemas/nonallow-policy-decision.schema.json",
+  "decision_schema_sha256": "sha256:4cac7312dc7c53e9b4d748a4b82ea621a2c25e5ccbc2ee743f5bf57e00299f48",
+  "gold_action_counts": {
+    "DEMOTE": 4,
+    "ESCALATE": 6,
+    "HOLD": 6
+  },
+  "gold_sha256": "sha256:f98b95ab84d0dd6684b6de8f463b9109bd0e69d7d70fa34e49bd1ce2772c88a6",
+  "inputs_sha256": "sha256:90eea9589ee5981a67a9960f08c40e083c0d64354c3ae2d33c01f7e08b796e76",
+  "items": 16,
+  "label_provenance": "Deterministic author policy mapping frozen before calls; no policy-owner labels, human annotators, or agreement statistic.",
+  "mapping_audit_sha256": "sha256:7acdf921c74b88a88e3c4a2ae3105775f0b2fcae100b5d225f9746eb3f894624",
+  "pairs": 8,
+  "pairs_sha256": "sha256:2e99c2a615da9845121283ed845c8ecf5962b92d717d5a4dc9a3f4b0f4ce971b",
+  "schema_version": "1.0.0",
+  "source_receipt_sha256": "sha256:36b76bb78f4ff3d387f89aae59ef562423e070bef9b4f73be64b6b028fe383b5",
+  "stable_control_pairs": 6,
+  "status": "FROZEN_BEFORE_SCORED_MODEL_CALLS",
+  "study_id": "claimpromotebench-nonallow-policy-controls-2026-08-v1"
+}

@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-stronger-model-public-dev-openrouter-v2",
+  "truth_status": "COMPUTATIONAL",
+  "interpretation_boundary": "Separately frozen, interface-corrected, post-protocol public-development evidence from one GPT-5.4 pass. This is neither the preregistered hidden study nor the unexecuted official OpenAI API lane.",
+  "plan": {
+    "path": "v2/stronger-model-openrouter-amendment-v2.json",
+    "sha256": "sha256:8dd8d4887f48f053202c0ae6e51ca492ef9a4bc07e93ea101c7a918b2c515e5a",
+    "frozen_commit": "3634ce85785e9b516abc519711fff12388307331"
+  },
+  "lineage": {
+    "openrouter_v1_summary": "v2/stronger-model-results/openrouter-openai-gpt-5.4-v1-pilot.json",
+    "openrouter_v1_gate": "STOP",
+    "openrouter_v1_transport_errors": 12,
+    "openrouter_v1_model_responses": 0,
+    "v2_changed_only_output_token_parameter": true,
+    "v2_output_token_parameter": "max_tokens"
+  },
+  "pilot": {
+    "started_at_utc": "2026-08-20T15:00:59.933301Z",
+    "completed_at_utc": "2026-08-20T15:03:47.905427Z",
+    "records": 12,
+    "parseable_decisions": 12,
+    "transport_errors": 0,
+    "gate": "GO",
+    "raw_action_accuracy": 1.0,
+    "raw_pair_accuracy": 1.0,
+    "raw_flip_rate": 1.0,
+    "routed_provider_values": ["OpenAI"],
+    "model_returned_values": ["openai/gpt-5.4"],
+    "run_sha256": "sha256:ba6ba3057d96443af989e5c6e28f405d891c0504cdb7d997a9c83453addda355",
+    "analysis_sha256": "sha256:41480fba50bccfb955007a487dd0370f23daa876e82cd55a8d6601d0df64a9c8",
+    "computed_cost_usd": 0.221792
+  },
+  "full": {
+    "started_at_utc": "2026-08-20T15:09:40.055025Z",
+    "completed_at_utc": "2026-08-20T15:34:06.251513Z",
+    "records": 100,
+    "parseable_decisions": 99,
+    "decision_coverage": 0.99,
+    "complete_pairs": 49,
+    "pair_coverage": 0.98,
+    "raw_correct_decisions": 99,
+    "raw_action_accuracy": 1.0,
+    "raw_correct_pairs": 49,
+    "raw_pair_accuracy": 1.0,
+    "raw_flip_rate": 1.0,
+    "false_promotions": 0,
+    "invalid_promotion_trials": 49,
+    "raw_false_promotion_rate": 0.0,
+    "valid_promotions": 50,
+    "valid_promotion_trials": 50,
+    "raw_valid_promotion_rate": 1.0,
+    "status_counts": {
+      "OK": 99,
+      "SCHEMA_ERROR": 1
+    },
+    "raw_action_distribution": {
+      "ALLOW": 50,
+      "HOLD": 45,
+      "DEMOTE": 2,
+      "ESCALATE": 2
+    },
+    "postgate_action_distribution": {
+      "ALLOW": 50,
+      "HOLD": 45,
+      "DEMOTE": 2,
+      "ESCALATE": 2
+    },
+    "single_nonparseable_case": {
+      "item_id": "v1-dev-run-002-b",
+      "pair_id": "v1-dev-run-002",
+      "parse_status": "SCHEMA_ERROR",
+      "finish_reason": "length",
+      "sanitized_detail": "The 3,072-token output budget was exhausted by reasoning tokens, leaving no final response text."
+    },
+    "routed_provider_values": ["OpenAI"],
+    "model_returned_values": ["openai/gpt-5.4"],
+    "run_sha256": "sha256:0054a4d73bdbd81e0ba31871ab4e51140ebf5f2421feda7cce40d57639b53ef7",
+    "analysis_sha256": "sha256:f2bb2e976da6e5b3bf2a6b3739e628aa28578e48a90ce9c6a20ae7105bc3d4c4",
+    "computed_cost_usd": 1.9665275
+  },
+  "cost": {
+    "authorized_cap_usd": 8.0,
+    "computed_total_cost_usd": 2.1883195
+  },
+  "raw_prompts_or_responses_in_summary": false
+}

@@ -1,0 +1,108 @@
+{
+  "audit_id": "claimpromotebench-policy-migration-edge-mutant-audit-2026-08-v1",
+  "model_or_client_calls": 0,
+  "mutant_family": {
+    "definition": "For each reachable BLUE-to-AMBER oracle-action edge e=(a,b), mutant m_e returns the stale BLUE action a on AMBER executions whose correct transition is e, and otherwise agrees with the published executor.",
+    "detection_criterion": "A controlled pair kills m_e exactly when its BLUE-to-AMBER action transition is e. Therefore a suite kills every mutant in this registered family if and only if it covers every reachable directed action edge.",
+    "interpretation_boundary": "This deterministic oracle-side audit gives operational meaning to transition coverage. It is not a prevalence model for deployment faults and does not use or evaluate model outputs.",
+    "name": "SINGLE_EDGE_STALE_POLICY"
+  },
+  "reachable_edge_inventory": [
+    "ALLOW->DEMOTE",
+    "ALLOW->ESCALATE",
+    "ALLOW->HOLD",
+    "DEMOTE->ALLOW",
+    "DEMOTE->ESCALATE",
+    "ESCALATE->ALLOW",
+    "ESCALATE->DEMOTE",
+    "ESCALATE->HOLD",
+    "HOLD->ALLOW",
+    "HOLD->ESCALATE"
+  ],
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:711b8c6c13770218ad2baebabc13cd1342937a012b483c4686fe5537b2b15790",
+  "source_bindings": {
+    "graph_coverage_sha256": "sha256:bb02a0165b3be0db63dc842442b93fa25d4bd37aa9a45bdeff1b502d6331df83",
+    "graph_pairs_sha256": "sha256:afe3959c0b6271d002b1e599ff6ea9be9de6029cb6c2c5323c242f458c763201",
+    "rule_coverage_sha256": "sha256:4ecd6d7e2aa8abfa9e09e883f4554ba6dc120dee72be187753af7dcb7a66c245",
+    "rule_pairs_sha256": "sha256:c6cc8488a9183357caf10faaaf8ee0fbeda424cb8eb165cc9b2f2f2f33606b24"
+  },
+  "status": "EDGE_LOCAL_MIGRATION_MUTATION_AUDIT_COMPLETE",
+  "structurally_unreachable_edges": [
+    "HOLD->DEMOTE",
+    "DEMOTE->HOLD"
+  ],
+  "suites": {
+    "rule_stratified": {
+      "changed_rule_coverage": {
+        "denominator": 12,
+        "numerator": 12
+      },
+      "edge_local_mutant_detection": {
+        "denominator": 10,
+        "numerator": 6,
+        "value": 0.6
+      },
+      "edge_local_mutants_detected": [
+        "ALLOW->DEMOTE",
+        "ALLOW->ESCALATE",
+        "ALLOW->HOLD",
+        "DEMOTE->ALLOW",
+        "ESCALATE->ALLOW",
+        "HOLD->ALLOW"
+      ],
+      "edge_local_mutants_missed": [
+        "DEMOTE->ESCALATE",
+        "ESCALATE->DEMOTE",
+        "ESCALATE->HOLD",
+        "HOLD->ESCALATE"
+      ],
+      "evaluation_pairs": 60,
+      "transition_counts": {
+        "ALLOW->DEMOTE": 10,
+        "ALLOW->ESCALATE": 10,
+        "ALLOW->HOLD": 10,
+        "DEMOTE->ALLOW": 10,
+        "ESCALATE->ALLOW": 10,
+        "HOLD->ALLOW": 10
+      }
+    },
+    "transition_graph": {
+      "changed_rule_coverage": {
+        "denominator": 12,
+        "numerator": 12
+      },
+      "edge_local_mutant_detection": {
+        "denominator": 10,
+        "numerator": 10,
+        "value": 1.0
+      },
+      "edge_local_mutants_detected": [
+        "ALLOW->DEMOTE",
+        "ALLOW->ESCALATE",
+        "ALLOW->HOLD",
+        "DEMOTE->ALLOW",
+        "DEMOTE->ESCALATE",
+        "ESCALATE->ALLOW",
+        "ESCALATE->DEMOTE",
+        "ESCALATE->HOLD",
+        "HOLD->ALLOW",
+        "HOLD->ESCALATE"
+      ],
+      "edge_local_mutants_missed": [],
+      "evaluation_pairs": 60,
+      "transition_counts": {
+        "ALLOW->DEMOTE": 6,
+        "ALLOW->ESCALATE": 6,
+        "ALLOW->HOLD": 6,
+        "DEMOTE->ALLOW": 6,
+        "DEMOTE->ESCALATE": 6,
+        "ESCALATE->ALLOW": 6,
+        "ESCALATE->DEMOTE": 6,
+        "ESCALATE->HOLD": 6,
+        "HOLD->ALLOW": 6,
+        "HOLD->ESCALATE": 6
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.0",
+  "status": "FROZEN_R6_SCORED_SOURCE_ARTIFACT_REGISTRY",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
+  "github_run_id": 32453310192,
+  "workflow_id": 335516192,
+  "run_attempt": 1,
+  "source_commit": "f44b01eb97418d87aa6d7486fa785c0f49b9dda2",
+  "started_at_utc": "2026-08-21T06:10:12Z",
+  "completed_at_utc": "2026-08-21T09:35:36Z",
+  "jobs": {
+    "prepare": {
+      "job_id": 96685692157,
+      "conclusion": "success"
+    },
+    "credential_free_preflight": {
+      "job_id": 96685785893,
+      "conclusion": "success"
+    },
+    "opencode-go-qwen3.7-max": {
+      "job_id": 96685831204,
+      "conclusion": "success",
+      "application_posts": 300,
+      "response_records": 300,
+      "client_retries": 0
+    },
+    "opencode-go-deepseek-v4-flash-matched": {
+      "job_id": 96685831249,
+      "conclusion": "success",
+      "application_posts": 300,
+      "response_records": 300,
+      "client_retries": 0
+    },
+    "c2": {
+      "conclusion": "success",
+      "sealed_cells": 600
+    },
+    "analysis": {
+      "conclusion": "success"
+    }
+  },
+  "artifacts": [
+    {
+      "artifact_id": 9441631293,
+      "name": "claimpromotebench-fresh-confirmatory-reviewer-evidence",
+      "zip_sha256": "sha256:2a96860807666734cd18401e48b645f0ebc181bf435740b0c993376d62575e0c",
+      "size_in_bytes": 1988201,
+      "created_at_utc": "2026-08-21T09:35:34Z"
+    },
+    {
+      "artifact_id": 9441597079,
+      "name": "cpb-fresh-confirmatory-c2-32453310192",
+      "zip_sha256": "sha256:d4159bfe81c290d9b6ebc29d0b1ef158e3f3a8f213ebd5bfe12068854e5c66f7",
+      "size_in_bytes": 688666,
+      "created_at_utc": "2026-08-21T09:34:26Z"
+    },
+    {
+      "artifact_id": 9441591171,
+      "name": "cpb-fresh-confirmatory-lane-opencode-go-qwen3.7-max-32453310192",
+      "zip_sha256": "sha256:9d385fbb867e07b4efcbb3412f143d68d023662ed09762a1a682ba8d40e85f89",
+      "size_in_bytes": 581248,
+      "created_at_utc": "2026-08-21T09:34:14Z"
+    },
+    {
+      "artifact_id": 9436504765,
+      "name": "cpb-fresh-confirmatory-lane-opencode-go-deepseek-v4-flash-matched-32453310192",
+      "zip_sha256": "sha256:c9cf0477b346b117f3b7e5905c25f800f93255c2aa0ff3738abab4114731a47e",
+      "size_in_bytes": 140479,
+      "created_at_utc": "2026-08-21T06:16:08Z"
+    },
+    {
+      "artifact_id": 9436368466,
+      "name": "cpb-fresh-confirmatory-private-c1-32453310192",
+      "zip_sha256": "sha256:099864a906e0d49fb015e2c6159d6f66c623da4b4c1f481af820055cc39ad127",
+      "size_in_bytes": 384205,
+      "created_at_utc": "2026-08-21T06:10:36Z"
+    }
+  ],
+  "uncompressed_source_files_sha256": {
+    "confirmatory-analysis.json": "sha256:625402d1027fd60ad99eef56aedb238804a5fda75fd649c410e5f1f9ca151a7e",
+    "c2-receipt.json": "sha256:8ded42597329414d105d8ef4e464f0a3d56d7d9d6dfd68338f013bac8296362e",
+    "opencode-go-deepseek-v4-flash-matched-journal.jsonl": "sha256:845e70f9978da9e34c1047d679b71fefab92233e88f523ddfefdfbae1f2ec198",
+    "opencode-go-deepseek-v4-flash-matched-run.jsonl": "sha256:e0e57273721308666fb4772f210d1a024f2baf77f989cfe030b1643eb92d93aa",
+    "opencode-go-deepseek-v4-flash-matched-c2-complete.jsonl": "sha256:e96ac11de96b83f99177eba4a9a1327f02ae0bf6c2d9c037257fd21e95452454",
+    "opencode-go-qwen3.7-max-journal.jsonl": "sha256:8eff9f60fded563206cd17243ac57611f8a0ee47bf3e45eea73146fb621a1a77",
+    "opencode-go-qwen3.7-max-run.jsonl": "sha256:48755692416ab7527e16d7c9965fef26c73d6d275161a75b790fbcd9d3f7c69e",
+    "opencode-go-qwen3.7-max-c2-complete.jsonl": "sha256:69c0be6dd655313c21384166cfbe1b092116df583531a2e929847ac1678a950e"
+  },
+  "self_digests": {
+    "c2_receipt_sha256": "sha256:1e5219507584b788864cd5244b24009ff47174ca401bc60be7dde7c6a0f6d42a",
+    "confirmatory_analysis_sha256": "sha256:43c4601859cb613d755970c3663a72067897cbcc0506c1221e58801b4a08a261"
+  },
+  "post_c2_reporting_defect": {
+    "classification": "PUBLIC_ARTIFACT_RELEASE_BLOCKER_NOT_SCIENTIFIC_SCORE_CONTAMINATION",
+    "affected_lane": "opencode-go-qwen3.7-max",
+    "affected_unique_response_records": 275,
+    "affected_raw_and_c2_copies": 550,
+    "field": "sanitized_provider_envelope.content[type=thinking].thinking",
+    "registered_boundary": "retain_hidden_reasoning_content=false",
+    "reasoning_used_by_parser_or_score": false,
+    "required_publication_action": "POST_C2_DETERMINISTIC_REDACTION_WITH_SOURCE_TO_DERIVED_HASH_RECEIPT"
+  },
+  "original_artifact_retention_boundary": "Original scored artifacts remain immutable for local audit until a scientifically equivalent redacted public release is committed. They are not approved for anonymous-public distribution.",
+  "source_artifact_registry_sha256": "sha256:3062ecbd647e317d40b686769a0fe54e9b36c12ef9269782d4ca4fe9adbd1358"
+}

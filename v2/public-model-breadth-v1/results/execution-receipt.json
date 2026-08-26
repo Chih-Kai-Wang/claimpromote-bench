@@ -1,0 +1,73 @@
+{
+  "application_posts_per_cell": 1,
+  "client_retry_count": 0,
+  "completed_at_utc": "2026-08-23T01:38:17.709473Z",
+  "credentials_retained": false,
+  "durable_request_intents": 1260,
+  "durable_terminal_records": 1260,
+  "frozen_plan_commit": "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
+  "hidden_reasoning_blocks_retained": false,
+  "lane_output_sha256": {
+    "opencode-go-deepseek-v4-pro-breadth.jsonl": "sha256:0caee36f654faf89af23bee8b30092172159dc75299c2c03c66edc4fdf9c4a33",
+    "opencode-go-glm-5.3-breadth.jsonl": "sha256:dfcd5fe3c9db5a4b01052a45c9966fb366198b93fb7d05f12c4685f096865885",
+    "opencode-go-hy3-breadth.jsonl": "sha256:f20bf21c7462ccb59e1c58fd8b51eabad0f11fb7658a2610a8119bba2884e07f",
+    "opencode-go-kimi-k3-breadth.jsonl": "sha256:435507981a66450c23e92a0962ef601782400c50d2ee669cda0bf50cbfc51eda",
+    "opencode-go-mimo-v2.5-pro-breadth.jsonl": "sha256:9239dd58015ff6e374d7319339dd20a5cee84e8fc8f45b1d85ada24f025214fa",
+    "opencode-go-minimax-m3-breadth.jsonl": "sha256:218fb2b96733fd5f5ffe60cf8bc54e1966509e9190d438269fc5c965e40cac06",
+    "opencode-go-qwen3.8-max-breadth.jsonl": "sha256:62c296a5deecb67b7f2f480df04b66555cc42829b70d533817c55d215ee84624"
+  },
+  "lanes": [
+    {
+      "lane_id": "opencode-go-qwen3.8-max-breadth",
+      "parseable": 1,
+      "records": 180,
+      "transport_errors": 78
+    },
+    {
+      "lane_id": "opencode-go-deepseek-v4-pro-breadth",
+      "parseable": 0,
+      "records": 180,
+      "transport_errors": 78
+    },
+    {
+      "lane_id": "opencode-go-glm-5.3-breadth",
+      "parseable": 0,
+      "records": 180,
+      "transport_errors": 79
+    },
+    {
+      "lane_id": "opencode-go-kimi-k3-breadth",
+      "parseable": 12,
+      "records": 180,
+      "transport_errors": 161
+    },
+    {
+      "lane_id": "opencode-go-mimo-v2.5-pro-breadth",
+      "parseable": 0,
+      "records": 180,
+      "transport_errors": 78
+    },
+    {
+      "lane_id": "opencode-go-minimax-m3-breadth",
+      "parseable": 65,
+      "records": 180,
+      "transport_errors": 78
+    },
+    {
+      "lane_id": "opencode-go-hy3-breadth",
+      "parseable": 0,
+      "records": 180,
+      "transport_errors": 78
+    }
+  ],
+  "partial_resume_used": false,
+  "planned_cells": 1260,
+  "provider_response_identifiers_retained": false,
+  "request_intent_journal_sha256": "sha256:cfdc75473240659e25f5e06e7b1df3aca13a9f96f9503b3e172c4c6564ba2422",
+  "schedule_sha256": "sha256:dc7edcd3d310973a2113152d6a84c55a2a73ae25d65dcba671ee197a723ebed0",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-22T21:01:50.859292Z",
+  "status": "COMPLETE_ALL_FROZEN_CELLS_TERMINAL",
+  "study_id": "claimpromotebench-v2-public-model-breadth-2026-08-v1",
+  "terminal_journal_sha256": "sha256:8756a3a4f44e008fca5f3d04549ab3395052da942127cf7f13b8ab4dd43b7aed"
+}

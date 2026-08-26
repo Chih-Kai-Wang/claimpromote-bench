@@ -1,0 +1,35 @@
+{
+  "anonymous_free_form_error_text_allowed": false,
+  "anonymous_raw_final_response_text_allowed": false,
+  "credentials_included": false,
+  "dynamic_file_count_required": true,
+  "hidden_reasoning_fields_included": false,
+  "private_raw_final_response_text_retained": true,
+  "provider_response_identifiers_included": false,
+  "schema_version": "1.0.0",
+  "secret_pattern_findings": {
+    "anthropic_response_id": 0,
+    "bearer_credential": 0,
+    "exact_supplied_credential": 0,
+    "github_token": 0,
+    "google_api_key": 0,
+    "hidden_reasoning_blocks": 0,
+    "hidden_reasoning_fields": 0,
+    "hidden_reasoning_text_keys": 0,
+    "openai_response_id": 0,
+    "openai_style_secret": 0,
+    "private_key_header": 0,
+    "provider_response_identifiers": 0
+  },
+  "self_digest": "sha256:e60fb3f18adbf8087e4b471c27afec0cca253f4f4b268ad9229190c377f69310",
+  "source_repository_or_commit_identity_allowed_in_anonymous_derivative": false,
+  "status": "PRIVATE_RESULTS_VALIDATED_ANONYMOUS_DERIVATIVE_REQUIRED",
+  "study_id": "claimpromotebench-policy-transition-graph-hosted-2026-08-v1",
+  "terminal_records_validated": 240,
+  "validated_file_sha256": {
+    "aggregate.json": "sha256:c62136289153496a039bcde2338c547e6e6a524d6bb3f3ab81c6e7bb6619f944",
+    "execution-receipt.json": "sha256:5d0c118106e762f80055110a59097f88925fccdc0282f2cbde25573b2bf52adb",
+    "opencode-go-deepseek-v4-flash-policy-transition-graph-hosted-v1.jsonl": "sha256:1eca2253f4589c91497e680ef1425df6dc9f955d0e1ea5d6fe7f3a4beb64e6dc",
+    "opencode-go-qwen3.7-max-policy-transition-graph-hosted-v1.jsonl": "sha256:656b509c37fdc82e6ebed4c2fc25314a4ca9172945bb516217110199bf91351f"
+  }
+}

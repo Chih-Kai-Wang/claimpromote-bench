@@ -1,0 +1,78 @@
+{
+  "benchmark_id": "claimpromotebench-v2-balanced-public-challenge",
+  "confirmatory_dataset_id": "claimpromotebench-v2-balanced-public-challenge-test",
+  "identifier_namespace": "PUBLIC_PRECOMMITTED_BALANCED_CPB_V1",
+  "design_status": "PUBLIC_PRECOMMITTED_ROBUSTNESS_CHALLENGE",
+  "pairs": 120,
+  "instances": 240,
+  "pair_members": 2,
+  "splits": {
+    "dev": {
+      "pairs": 30,
+      "instances": 60,
+      "public": true,
+      "invalid_side_counts": {"A": 15, "B": 15}
+    },
+    "test": {
+      "pairs": 90,
+      "instances": 180,
+      "public_before_model_execution": true,
+      "invalid_side_counts": {"A": 45, "B": 45}
+    }
+  },
+  "family_pair_counts": {
+    "DEPENDENCY": 8,
+    "NUMERICAL": 48,
+    "RUNTIME": 8,
+    "STALE_CONTRADICTION": 48,
+    "PROVENANCE": 8
+  },
+  "factors": [
+    {"factor_id": "dependency_verifier", "family": "DEPENDENCY", "pairs": 8, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "repetitions", "family": "NUMERICAL", "pairs": 8, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "tool_exit", "family": "RUNTIME", "pairs": 8, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "reviewer_identity", "family": "PROVENANCE", "pairs": 8, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "age", "family": "STALE_CONTRADICTION", "pairs": 8, "invalid_action": "HOLD", "dev_variants": [0, 1]},
+    {"factor_id": "current_computation_binding", "family": "NUMERICAL", "pairs": 8, "invalid_action": "DEMOTE", "dev_variants": [0, 1]},
+    {"factor_id": "current_computation_stale", "family": "NUMERICAL", "pairs": 8, "invalid_action": "DEMOTE", "dev_variants": [0, 1]},
+    {"factor_id": "current_computation_verifier", "family": "NUMERICAL", "pairs": 8, "invalid_action": "DEMOTE", "dev_variants": [0, 1]},
+    {"factor_id": "current_review_identity", "family": "NUMERICAL", "pairs": 8, "invalid_action": "DEMOTE", "dev_variants": [0, 1]},
+    {"factor_id": "current_review_environment", "family": "NUMERICAL", "pairs": 8, "invalid_action": "DEMOTE", "dev_variants": [0, 1]},
+    {"factor_id": "contradiction_status", "family": "STALE_CONTRADICTION", "pairs": 8, "invalid_action": "ESCALATE", "dev_variants": [0, 1]},
+    {"factor_id": "contradiction_claim_identity", "family": "STALE_CONTRADICTION", "pairs": 8, "invalid_action": "ESCALATE", "dev_variants": [0, 1]},
+    {"factor_id": "contradiction_freshness", "family": "STALE_CONTRADICTION", "pairs": 8, "invalid_action": "ESCALATE", "dev_variants": [0, 1]},
+    {"factor_id": "contradiction_reviewer_identity", "family": "STALE_CONTRADICTION", "pairs": 8, "invalid_action": "ESCALATE", "dev_variants": [0, 1]},
+    {"factor_id": "contradiction_verifier_execution", "family": "STALE_CONTRADICTION", "pairs": 8, "invalid_action": "ESCALATE", "dev_variants": [0, 1]}
+  ],
+  "invalid_side_rule": "A iff (factor_index_zero_based + variant_index) is even; otherwise B",
+  "overall_invalid_side_counts": {"A": 60, "B": 60},
+  "overall_invalid_action_counts": {"HOLD": 40, "DEMOTE": 40, "ESCALATE": 40},
+  "dev_invalid_action_counts": {"HOLD": 10, "DEMOTE": 10, "ESCALATE": 10},
+  "test_invalid_action_counts": {"HOLD": 30, "DEMOTE": 30, "ESCALATE": 30},
+  "surface_profiles": [
+    "algebraic_identity",
+    "order_inequality",
+    "finite_sequence",
+    "polynomial_grid",
+    "matrix_property",
+    "graph_property",
+    "recurrence",
+    "probability_bound",
+    "number_theory",
+    "set_relation"
+  ],
+  "surface_requirements": {
+    "same_within_pair": true,
+    "no_family_or_factor_label_in_model_prompt": true,
+    "no_gold_or_split_label_in_model_prompt": true,
+    "numerical_profiles_must_bind_to_recomputable_exact_rational_artifacts": true
+  },
+  "study_boundary": {
+    "public_before_model_execution": true,
+    "dataset_and_gold_frozen_in_the_same_source_commit": true,
+    "model_outputs_known_before_freeze": false,
+    "adaptive_item_selection_after_outputs": false,
+    "interpretation": "A publicly precommitted robustness challenge, not a private hidden test."
+  },
+  "freeze_rule": "Any change to policy, factors, prompts, items, gold, lane adapters, statistics, or execution after the first model call creates a new challenge version."
+}

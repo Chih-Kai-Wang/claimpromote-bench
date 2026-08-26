@@ -1,0 +1,255 @@
+name: capable hidden evidence collection
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/iclr2027-v2-low-cost-study
+    paths:
+      - .github/workflows/capable-hidden-aggregate-recovery.yml
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: capable-hidden-evidence-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: recompute reviewer-visible capable hidden evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out the accuracy-blind collection source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Check out the original hidden-commitment source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 8d9b3f5c831f432cf6b321e6402724c4f52bb3e1
+          path: work/v1-commitment-source
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install benchmark
+        run: python -m pip install -e .
+
+      - name: Download the first accepted-request attempt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          github-token: ${{ github.token }}
+          run-id: 32402993463
+          pattern: cpb-capable-hidden-*
+          path: work/capable-hidden-study/attempt-history/run-32402993463
+
+      - name: Download the canonical matched-Flash attempt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          github-token: ${{ github.token }}
+          run-id: 32403718086
+          pattern: cpb-capable-hidden-*
+          path: work/capable-hidden-study/attempt-history/run-32403718086
+
+      - name: Download the final adapter qualification attempt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          github-token: ${{ github.token }}
+          run-id: 32405565039
+          pattern: cpb-capable-adapter-*
+          path: work/capable-hidden-study/attempt-history/run-32405565039
+
+      - name: Reconstruct and reverify the reviewer-release hidden set
+        env:
+          CPB_V1_HIDDEN_SEED: ${{ secrets.CPB_V1_HIDDEN_SEED }}
+        run: |
+          set -euo pipefail
+          if ! printf '%s' "$CPB_V1_HIDDEN_SEED" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo '::error::CPB_V1_HIDDEN_SEED is not exactly 64 hexadecimal characters'
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$CPB_V1_HIDDEN_SEED" > "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"
+          python work/v1-commitment-source/scripts/build_v1_dataset.py \
+            --split test \
+            --out work/capable-hidden-study/hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" >/dev/null
+          python work/v1-commitment-source/scripts/validate_v1_plan.py \
+            --test-dir work/capable-hidden-study/hidden >/dev/null
+          python work/v1-commitment-source/scripts/freeze_prompt_manifest.py \
+            --dataset work/capable-hidden-study/hidden \
+            --out work/capable-hidden-study/v1-prompt-manifest.json >/dev/null
+          python work/v1-commitment-source/scripts/make_hidden_test_commitment.py \
+            --dataset work/capable-hidden-study/hidden \
+            --seed-file "$RUNNER_TEMP/cpb-v1-hidden-seed.hex" \
+            --prompt-manifest work/capable-hidden-study/v1-prompt-manifest.json \
+            --out work/capable-hidden-study/recomputed-commitment.json >/dev/null
+          diff -u \
+            configs/v1-hidden-test-commitment.json \
+            work/capable-hidden-study/recomputed-commitment.json >/dev/null
+          python scripts/build_stronger_model_packet.py \
+            --dataset work/capable-hidden-study/hidden \
+            --plan v2/capable-hidden-study-plan.json \
+            --out work/capable-hidden-study/packet.json >/dev/null
+          echo 'CAPABLE_HIDDEN_RELEASE_DATASET_REPRODUCED'
+
+      - name: Select the canonical accuracy-blind pilots and required full passes
+        run: |
+          set -euo pipefail
+          history=work/capable-hidden-study/attempt-history
+          canonical=work/capable-hidden-study/canonical
+          mkdir -p "$canonical/runs" "$canonical/analysis"
+
+          copy_exact() {
+            local root="$1"
+            local pattern="$2"
+            local destination="$3"
+            mapfile -t matches < <(find "$root" -type f -name "$pattern" | sort)
+            test "${#matches[@]}" -eq 1
+            cp "${matches[0]}" "$destination/"
+          }
+
+          flash=opencode-go-deepseek-v4-flash-matched
+          copy_exact "$history/run-32403718086" "$flash-pilot.jsonl" "$canonical/runs"
+          copy_exact "$history/run-32403718086" "$flash-pilot.json" "$canonical/analysis"
+          copy_exact "$history/run-32403718086" "$flash-full.jsonl" "$canonical/runs"
+          copy_exact "$history/run-32403718086" "$flash-full.json" "$canonical/analysis"
+
+          for lane in \
+            opencode-go-qwen3.7-max \
+            opencode-go-glm-5.2 \
+            opencode-go-deepseek-v4-pro \
+            bai-deepseek-v4-flash-primary \
+            opencode-go-hy3 \
+            opencode-go-muse-spark-1.2-contributor; do
+            copy_exact "$history/run-32405565039" "$lane-pilot.jsonl" "$canonical/runs"
+            copy_exact "$history/run-32405565039" "$lane-pilot.json" "$canonical/analysis"
+          done
+
+          qwen=opencode-go-qwen3.7-max
+          copy_exact "$history/run-32405565039" "$qwen-full.jsonl" "$canonical/runs"
+          copy_exact "$history/run-32405565039" "$qwen-full.json" "$canonical/analysis"
+
+          test "$(find "$canonical/runs" -type f -name '*-pilot.jsonl' | wc -l)" -eq 7
+          test "$(find "$canonical/analysis" -type f -name '*-pilot.json' | wc -l)" -eq 7
+          test "$(find "$canonical/runs" -type f -name '*-full.jsonl' | wc -l)" -eq 2
+          test "$(find "$canonical/analysis" -type f -name '*-full.json' | wc -l)" -eq 2
+          echo 'CANONICAL_GATE_DERIVED_MATRIX_SELECTED'
+
+      - name: Validate every canonical raw record and recompute the aggregate
+        run: |
+          set -euo pipefail
+          canonical=work/capable-hidden-study/canonical
+          mapfile -t all_runs < <(find "$canonical/runs" -type f -name '*.jsonl' | sort)
+          validate_args=()
+          for path in "${all_runs[@]}"; do validate_args+=(--run "$path"); done
+          python scripts/validate_stronger_model_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            "${validate_args[@]}" >/dev/null
+
+          mapfile -t pilot_runs < <(find "$canonical/runs" -type f -name '*-pilot.jsonl' | sort)
+          mapfile -t pilot_analyses < <(find "$canonical/analysis" -type f -name '*-pilot.json' | sort)
+          mapfile -t full_runs < <(find "$canonical/runs" -type f -name '*-full.jsonl' | sort)
+          mapfile -t full_analyses < <(find "$canonical/analysis" -type f -name '*-full.json' | sort)
+          aggregate_args=()
+          for path in "${pilot_runs[@]}"; do aggregate_args+=(--pilot-run "$path"); done
+          for path in "${pilot_analyses[@]}"; do aggregate_args+=(--pilot-analysis "$path"); done
+          for path in "${full_runs[@]}"; do aggregate_args+=(--full-run "$path"); done
+          for path in "${full_analyses[@]}"; do aggregate_args+=(--full-analysis "$path"); done
+          python scripts/aggregate_capable_hidden_study.py \
+            --dataset work/capable-hidden-study/hidden \
+            --packet work/capable-hidden-study/packet.json \
+            --plan v2/capable-hidden-study-plan.json \
+            "${aggregate_args[@]}" \
+            --out work/capable-hidden-study/aggregate.json >/dev/null
+          echo 'CAPABLE_HIDDEN_AGGREGATE_RECOMPUTED_FROM_ITEM_RECORDS'
+
+      - name: Assemble complete reviewer-visible evidence and provenance
+        run: |
+          set -euo pipefail
+          root=work/capable-hidden-study
+          evidence="$root/reviewer-evidence"
+          mkdir -p \
+            "$evidence/dataset" \
+            "$evidence/canonical/runs" \
+            "$evidence/canonical/analysis" \
+            "$evidence/attempt-history"
+          cp -R "$root/hidden/." "$evidence/dataset/"
+          cp "$root/packet.json" "$evidence/prompt-packet.json"
+          cp v2/capable-hidden-study-plan.json "$evidence/study-plan.json"
+          cp "$root/aggregate.json" "$evidence/aggregate.json"
+          cp -R "$root/canonical/runs/." "$evidence/canonical/runs/"
+          cp -R "$root/canonical/analysis/." "$evidence/canonical/analysis/"
+          cp -R "$root/attempt-history/." "$evidence/attempt-history/"
+          find "$evidence/attempt-history" -type f -name packet.json -delete
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          evidence = Path('work/capable-hidden-study/reviewer-evidence')
+          value = {
+              'schema_version': '1.0.0',
+              'truth_status': 'COMPUTATIONAL',
+              'hidden_commitment_source': '8d9b3f5c831f432cf6b321e6402724c4f52bb3e1',
+              'attempts': [
+                  {
+                      'github_run_id': 32402699174,
+                      'accepted_model_requests': 0,
+                      'boundary': 'Stopped before model requests because post-commitment source bytes could not reproduce the old hidden commitment.',
+                  },
+                  {
+                      'github_run_id': 32402993463,
+                      'boundary': 'OpenCode lanes stopped before accepted requests because credential values contained trailing newlines; the B.AI pilot stopped before a full pass.',
+                  },
+                  {
+                      'github_run_id': 32403718086,
+                      'attempt': 2,
+                      'boundary': 'Valid-credential accuracy-blind qualification; matched DeepSeek V4 Flash passed and completed one fresh full pass.',
+                  },
+                  {
+                      'github_run_id': 32405565039,
+                      'boundary': 'Final accuracy-blind adapter qualification; Qwen 3.7 Max passed and completed one fresh full pass, while the other five lanes stopped before full inference.',
+                  },
+              ],
+              'canonical_rule': 'One canonical pilot per registered lane; a canonical full pass exists exactly for a GO pilot. STOP is not scored as 300 incorrect items.',
+              'private_seed_included': False,
+              'raw_prompts_responses_and_gold_included': True,
+          }
+          (evidence / 'provenance.json').write_text(
+              json.dumps(value, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+          if find "$evidence" -type f \( -iname '*seed*' -o -iname '*.hex' \) | grep -q .; then
+            echo '::error::private seed material survived reviewer-evidence assembly'
+            exit 1
+          fi
+          (
+            cd "$evidence"
+            find . -type f ! -name SHA256SUMS -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS >/dev/null
+          )
+          echo 'REVIEWER_EVIDENCE_MANIFEST_VERIFIED'
+
+      - name: Upload complete capable hidden reviewer evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-capable-hidden-reviewer-evidence
+          path: work/capable-hidden-study/reviewer-evidence
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Destroy private seed material
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cpb-v1-hidden-seed.hex"

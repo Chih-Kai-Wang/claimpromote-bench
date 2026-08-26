@@ -1,0 +1,22 @@
+{
+  "aggregate_sha256": "sha256:0824747d1e96813fab5363c9d88df8603c4998206e1d5f0c9502c89ba378d910",
+  "all_failures_retained_in_end_to_end_denominator": true,
+  "application_posts_per_cell": 1,
+  "baseline_report_sha256": "sha256:df450053d032990fba95f53442523012a046333288ff8047a8d69ff48659084a",
+  "client_retry_count": 0,
+  "dataset_manifest_sha256": "sha256:975083349726771cbb61484ce161c1ab0e670e1b1b1baea662b3e8664eaaec98",
+  "execution_receipt_sha256": "sha256:6a2b3cde06ffc2dbb79415d39fd72fbbf616233d274578f0c28b5520299cfc19",
+  "failure_taxonomy_sha256": "sha256:04ad846f70f79da9596df1cac6a10c219ff793de5556c33a16526986005f361c",
+  "plan_sha256": "sha256:1efc8db63d3da2dd09c6aa3eca1a7b2947524815f818fd45376b8e2cd2fba03d",
+  "planned_and_terminal_cells": 240,
+  "privacy_receipt_sha256": "sha256:2a939d83bb4d9d4e8ab475ea7b9e971b4ef6f0969f36ee6a4c646bc0db4bc8ca",
+  "run_sha256": {
+    "opencode-go-deepseek-v4-flash-slsa-v2.jsonl": "sha256:d892d6d2ae788e0f3cd7d54522529c14271523b60c0674292ef121bd4d79b994",
+    "opencode-go-qwen3.7-max-slsa-v2.jsonl": "sha256:1232b0b1c33908eb4fc9996032dfd71469b8e885752141050f7c31af82436263"
+  },
+  "schedule_sha256": "sha256:f054a70e123cca8da715210a973f8f7fb68d0c7ee4f8ed7bd882593fb6a0f061",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:6f1ecb9df8130539481ec6febe47ec886049173b084828b61ef151992c13b5d1",
+  "status": "SYNTHETIC_POLICY_RESULTS_SEALED",
+  "study_id": "claimpromotebench-slsa-policy-portability-2026-08-v2"
+}

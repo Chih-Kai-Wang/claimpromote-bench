@@ -1,0 +1,92 @@
+{
+  "execution": {
+    "additional_model_or_client_calls": 0,
+    "full_graph_application_posts": 240,
+    "full_graph_client_retries": 0,
+    "reuse_only_complete_sealed_full_graph_records": true
+  },
+  "freeze": {
+    "analysis_freeze_parent_commit": "2be7e338239a915525e2c5717ec842420173da5c",
+    "full_graph_terminal_records_before_analysis_freeze": 0,
+    "minimum_suite_derived_before_route_execution": true
+  },
+  "gate": {
+    "failure_rule": "EVERY_SERVICE_SYNTAX_SCHEMA_OR_SEMANTIC_FAILURE_IS_INCORRECT",
+    "pass_rule": "ALL_20_ITEMS_VALID_AND_CORRECT_AND_ALL_10_PAIRS_CORRECT"
+  },
+  "interpretation_boundary": {
+    "independent_model_sample": false,
+    "natural_input_distribution_claimed": false,
+    "replaces_balanced_diagnostic_suite": false,
+    "route_comparisons_causal": false,
+    "scope": "PROSPECTIVE_STRUCTURAL_SUBSET_OF_THE_SAME_FROZEN_LOCAL_GRAPH_EXECUTION"
+  },
+  "schema_version": "1.0.0",
+  "selection": {
+    "changed_rules_covered": 12,
+    "model_outputs_consulted": false,
+    "reachable_edges_covered": 10,
+    "selected_before_route_execution": true,
+    "selected_item_ids": [
+      "ptg-eva-007-a",
+      "ptg-eva-007-b",
+      "ptg-eva-013-a",
+      "ptg-eva-013-b",
+      "ptg-eva-001-a",
+      "ptg-eva-001-b",
+      "ptg-eva-031-a",
+      "ptg-eva-031-b",
+      "ptg-eva-037-a",
+      "ptg-eva-037-b",
+      "ptg-eva-043-a",
+      "ptg-eva-043-b",
+      "ptg-eva-056-a",
+      "ptg-eva-056-b",
+      "ptg-eva-052-a",
+      "ptg-eva-052-b",
+      "ptg-eva-020-a",
+      "ptg-eva-020-b",
+      "ptg-eva-028-a",
+      "ptg-eva-028-b"
+    ],
+    "selected_pair_ids": [
+      "ptg-eva-007",
+      "ptg-eva-013",
+      "ptg-eva-001",
+      "ptg-eva-031",
+      "ptg-eva-037",
+      "ptg-eva-043",
+      "ptg-eva-056",
+      "ptg-eva-052",
+      "ptg-eva-020",
+      "ptg-eva-028"
+    ]
+  },
+  "source_bindings": {
+    "analysis_script": {
+      "path": "scripts/analyze_minimal_policy_migration_gate.py",
+      "sha256": "sha256:e53ed4871a1b3d7b9ce18888f705e838c153791ee7c6e20917368b68ac482d3a"
+    },
+    "evaluation_gold": {
+      "path": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-gold.jsonl",
+      "sha256": "sha256:a63587d8b10de4c4288d461e51e2d967f021ba8b54f36595903560c8a3192b9e"
+    },
+    "evaluation_pairs": {
+      "path": "v2/policy-transition-graph-v1/frozen/dataset/evaluation-pairs.json",
+      "sha256": "sha256:afe3959c0b6271d002b1e599ff6ea9be9de6029cb6c2c5323c242f458c763201"
+    },
+    "local_request_schedule": {
+      "path": "v2/local-model-replication-v1/transition-graph-v1/frozen/policy-transition-graph/request-schedule.json",
+      "sha256": "sha256:2ce6786bf2515afa7cf12db20ac2e0298ecb3e78df807f31e3fbcd26dd660849"
+    },
+    "local_study_plan": {
+      "path": "v2/local-model-replication-v1/transition-graph-v1/frozen/policy-transition-graph/study-plan.json",
+      "sha256": "sha256:fb513469695e0bda68810b499a0a36d9e9405c189e0c9fae3cef012ecfb6760d"
+    },
+    "minimum_suite": {
+      "path": "v2/policy-transition-graph-v1/minimal-release-suite.json",
+      "sha256": "sha256:911fedf5de57dbad9728a0b1725324416d5553c34cb9aa17864129b468fe996b"
+    }
+  },
+  "status": "PROSPECTIVELY_FROZEN_MINIMUM_MIGRATION_SUBSET_ANALYSIS"
+}

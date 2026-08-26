@@ -1,0 +1,22 @@
+{
+  "aggregate_sha256": "sha256:0cad719b989395788d77618354b71d793930803f69b4b9db9ea7a9ffaef69b0e",
+  "all_failures_retained_in_end_to_end_denominator": true,
+  "application_posts_per_cell": 1,
+  "baseline_report_sha256": "sha256:6b96c979cbafa3ff337904f28b01197ee2bdbacadc53d571cfc99d5865d2243a",
+  "client_retry_count": 0,
+  "dataset_manifest_sha256": "sha256:74db5b754619a65a12f202c908de4467e0ec166d078693f0f07b42a942dc1c23",
+  "execution_receipt_sha256": "sha256:6db82612f2f917e4fcd3b26e8641ccd27375a54ee7f24962e5de2ed533b45253",
+  "failure_taxonomy_sha256": "sha256:6b83475d3a7900666940bda17ec62d613e6211d784e8a9b8062053cfd7984dc6",
+  "plan_sha256": "sha256:fb513469695e0bda68810b499a0a36d9e9405c189e0c9fae3cef012ecfb6760d",
+  "planned_and_terminal_cells": 240,
+  "privacy_receipt_sha256": "sha256:9eb36600166963410061b9369336e4d34de5c6484c64a02b3a0d32dbcac2afc5",
+  "run_sha256": {
+    "local-mlx-mistral-small-3.2-24b-policy-transition-graph-v2.jsonl": "sha256:44b4b40aebdc55fce0a88ac3b469d2cef974ce92d184e00c7001e28a364cea80",
+    "local-mlx-phi-4-policy-transition-graph-v2.jsonl": "sha256:cb530c1379d72efed6b102e800e39accc4d4dccfef6bdb1512d61235598cd781"
+  },
+  "schedule_sha256": "sha256:2ce6786bf2515afa7cf12db20ac2e0298ecb3e78df807f31e3fbcd26dd660849",
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:58dc47d5e93c3589c1208a058b538408967e2288a592e1e81972dac3536bb6fc",
+  "status": "SYNTHETIC_POLICY_RESULTS_SEALED",
+  "study_id": "claimpromotebench-policy-transition-graph-local-model-replication-2026-08-v2"
+}

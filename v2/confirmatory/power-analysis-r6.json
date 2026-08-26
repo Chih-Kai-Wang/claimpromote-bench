@@ -1,0 +1,60 @@
+{
+  "all_comparisons_pass_0_80": true,
+  "comparisons": [
+    {
+      "bonferroni_sufficient_power": 0.8132626158167235,
+      "comparison_id": "qwen_service_vs_public_dev_text_nb",
+      "nonzero_pair_rate": 0.7066666666666667,
+      "old_action_accuracy_effect": 0.34,
+      "old_pair_difference_histogram": {
+        "-1": 2,
+        "0": 44,
+        "1": 104
+      },
+      "passes_0_80": true,
+      "positive_sign_probability_at_minimum_effect": 0.6415094339622641
+    },
+    {
+      "bonferroni_sufficient_power": 0.9999968579841118,
+      "comparison_id": "flash_service_vs_public_dev_text_nb",
+      "nonzero_pair_rate": 0.21333333333333335,
+      "old_action_accuracy_effect": 0.02666666666666667,
+      "old_pair_difference_histogram": {
+        "-1": 12,
+        "0": 118,
+        "1": 20
+      },
+      "passes_0_80": true,
+      "positive_sign_probability_at_minimum_effect": 0.96875
+    }
+  ],
+  "design": {
+    "confirmatory_family_size": 2,
+    "familywise_alpha": 0.05,
+    "holm_interpretation": "Bonferroni rejection at alpha/family_size is a conservative sufficient condition for rejection under the registered Holm procedure.",
+    "items": 300,
+    "minimum_action_accuracy_effect": 0.1,
+    "pairs": 150,
+    "raw_bonferroni_alpha": 0.025,
+    "required_power": 0.8,
+    "test_model": "Exact pair-sign power after clipping each old whole-pair correctness difference to magnitude one; the empirical nonzero-pair rate is retained, and signs are tilted to the registered minimum effect."
+  },
+  "minimum_power": 0.8132626158167235,
+  "schema_version": "1.0.0",
+  "source_assumptions": {
+    "boundary": "The numerical assumptions are copied unchanged from r5 and ultimately use only the prior adaptive/exploratory capable-study evidence. r4 and r5 produced zero model POSTs and zero model outputs. Neither r4 opened content nor the r5 private realization or recovered prompt hashes are used to change the power assumptions, hypotheses, baseline, adapters, parser, or statistics.",
+    "old_flash_full_jsonl_sha256": "sha256:b044984d4699603949e16d1d886cbe4eef1defa462872b87bf0efd2c641d0a20",
+    "old_gold_jsonl_sha256": "sha256:577ae7de8c364321d5922a96ba7c8a05f7114940f31bb1dc932f1bcd92396b04",
+    "old_prompt_packet_sha256": "sha256:12242737ee5ec197123af8abfe4879cc676d2bb4e5195d3797aa8c725df0cde6",
+    "old_qwen_full_jsonl_sha256": "sha256:fb6ce0adfabcadeddd221aff7fbc56eae99ef246d77331e51aed1e3b4f18f793",
+    "public_only_nb_model_sha256": "sha256:9b1aa78e3ab6ca55aa30de85298464d4760403243769c72d88321b727dcb8dea",
+    "r4_zero_post_execution_receipt": "v2/confirmatory/r4-execution/execution-receipt.json",
+    "r5_model_output_count": 0,
+    "r5_model_post_count": 0,
+    "r5_void_pre_post_receipt": "v2/confirmatory/c1-r5/void-pre-post-receipt.json",
+    "reviewer_evidence_run": 32421292779
+  },
+  "status": "PRE_HIDDEN_POWER_GATE_PASS",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
+  "uses_fresh_hidden_seed_or_outputs": false
+}

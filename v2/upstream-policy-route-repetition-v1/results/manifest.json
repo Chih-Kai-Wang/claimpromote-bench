@@ -1,0 +1,20 @@
+{
+  "contains_private_run_records": false,
+  "contains_raw_model_responses": false,
+  "file_count": 9,
+  "files_sha256": {
+    "aggregate.json": "sha256:5d92d8fd8be03ed9aef4ffb0940efb7ee081635bd7f2003a207845d943b0c6a8",
+    "privacy-receipt.json": "sha256:623d8ed366660efa4b61b77ede450dd8b648c7864a6e052f36c1b298082852c6",
+    "records/opencode-go-deepseek-v4-flash-upstream-repeat-v1-r1.jsonl": "sha256:059b220a85b99494b140469e8dcf6d1cc6cf631877f8cd7f1ef502b1ed2e2399",
+    "records/opencode-go-deepseek-v4-flash-upstream-repeat-v1-r2.jsonl": "sha256:bafae5c8963a9f08d2501c1fdcb21c8703e1f867ecaf0331ad61b8af35d5979b",
+    "records/opencode-go-deepseek-v4-flash-upstream-repeat-v1-r3.jsonl": "sha256:036a3dcc9a381c24527e4ea6901ef455490d4c13a9432c3ca09d224fb59abd5e",
+    "records/opencode-go-qwen3.7-max-upstream-repeat-v1-r1.jsonl": "sha256:b0a6620e545b6a5556d3a02e881a986a3309163917fad95523dc38d959bd9c7b",
+    "records/opencode-go-qwen3.7-max-upstream-repeat-v1-r2.jsonl": "sha256:c8b50f548778c7708bce886a691af89106380520e3124da46982285d7d48cec1",
+    "records/opencode-go-qwen3.7-max-upstream-repeat-v1-r3.jsonl": "sha256:5f48613a0ed7308f9544d44c4438a9dc9976697c47866daa5d6e3b3b5b4c10c5"
+  },
+  "hashed_file_count": 8,
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:f35700fc432f3c7c2a807e6f5e1769973ba2dcf943b9f8cdf65f9e96e399d195",
+  "status": "DYNAMIC_SANITIZED_RESULTS_MANIFEST",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}

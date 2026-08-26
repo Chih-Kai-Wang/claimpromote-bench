@@ -1,0 +1,44 @@
+name: fresh confirmatory public evidence
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/fresh-confirmatory-public-release.yml"
+      - "release/reviewer-evidence-source/fresh-confirmatory/**"
+      - "release/tools/**"
+      - "v2/confirmatory/r6-execution/**"
+      - "scripts/lint_paper_submission.py"
+      - "tests/test_fresh_confirmatory_public_evidence.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fresh-confirmatory-public-evidence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate committed reasoning-free public evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out committed public evidence
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate permanent public evidence and scientific equivalence
+        run: python -m pytest -q tests/test_fresh_confirmatory_public_evidence.py
+
+      - name: Recheck manuscript bindings to the committed derivative
+        run: python scripts/lint_paper_submission.py

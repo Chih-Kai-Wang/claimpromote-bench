@@ -1,0 +1,44 @@
+{
+  "algorithm": "sklearn.ensemble.RandomForestClassifier",
+  "comparators": {
+    "policy_aware": {
+      "feature_count": 27,
+      "include_active_policy_profile": true,
+      "predictions_sha256": "sha256:c9df032a9913847f7b10557c9c9854631639b49fe5888d078cc70f25e76e62e9",
+      "training_accuracy": 1.0,
+      "training_correct": 72
+    },
+    "profile_blind": {
+      "feature_count": 25,
+      "include_active_policy_profile": false,
+      "predictions_sha256": "sha256:e8494a4a9ac9b36b3d98f50dc86c0cacdf865bc66e42c28c165770a0102cf6f0",
+      "training_accuracy": 0.5,
+      "training_correct": 36
+    }
+  },
+  "configuration": {
+    "all_other_parameters": "scikit-learn defaults",
+    "class_weight": "balanced_subsample",
+    "n_estimators": 500,
+    "n_jobs": 1,
+    "random_state": 20260823
+  },
+  "development_action_counts": {
+    "ALLOW": 36,
+    "DEMOTE": 12,
+    "ESCALATE": 12,
+    "HOLD": 12
+  },
+  "development_gold_sha256": "sha256:90d820a209cc349df18c485665afc30e1516ca5e0148900b7126c97c9c256237",
+  "development_items": 72,
+  "development_items_sha256": "sha256:fb10f617a0f034fc4c204164ad6664d527b353a14fa887021ee4442530380910",
+  "evaluation_gold_loaded": false,
+  "evaluation_items_sha256": "sha256:21dc59c12f6954d550b194670f7f8f276fdd6a3ed9b3740eab93bf57a63f9833",
+  "evaluation_predictions_per_comparator": 120,
+  "feature_boundary": "Both comparators use flattened model-visible state and verifier fields. The policy-aware comparator also observes active_policy_profile; the ablated comparator does not. Both exclude IDs, pair/factor metadata, policy-oracle calls, evaluation labels, and model outputs.",
+  "model_outputs_loaded": false,
+  "registered_shortcut_boundary": "The profile-blind comparator receives identical features for both members of every evaluation pair and therefore cannot predict both action-changing labels.",
+  "schema_version": "1.0.0",
+  "scikit_learn_version": "1.9.0",
+  "status": "FROZEN_DEVELOPMENT_TRAINED_POLICY_SWITCH_COMPARATORS"
+}

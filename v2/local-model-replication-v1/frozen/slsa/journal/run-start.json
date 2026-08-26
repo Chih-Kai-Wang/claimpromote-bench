@@ -1,0 +1,10 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "41b99b36de1346b8693d084ec83228749197cd35",
+  "planned_cells": 240,
+  "schedule_sha256": "sha256:c7c26d14b3e0d226cb71745789e6ef223ad534b2c4b90b8066a5d3f5ffc2d880",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T11:21:07.519653Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-slsa-local-model-replication-2026-08-v1"
+}

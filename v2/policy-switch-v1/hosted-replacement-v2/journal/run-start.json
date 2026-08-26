@@ -1,0 +1,10 @@
+{
+  "credentials_retained": false,
+  "frozen_plan_commit": "3cc76854219a4bef0d58570c840374b948a63104",
+  "planned_cells": 240,
+  "schedule_sha256": "sha256:7c2261986deaf27f96c87bfc24ccd2f5ed7ace61d660b6017c719db1d7cba79c",
+  "schema_version": "1.0.0",
+  "started_at_utc": "2026-08-23T12:39:05.863484Z",
+  "status": "EXECUTION_STARTED",
+  "study_id": "claimpromotebench-policy-profile-switch-hosted-replacement-2026-08-v2"
+}

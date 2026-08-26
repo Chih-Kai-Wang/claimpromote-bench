@@ -1,0 +1,34 @@
+{
+  "adaptive_stopping_allowed": false,
+  "conditional_success_subset_allowed": false,
+  "docs_response_sha256": "sha256:0ac6482bbb2bc000cd3a2d32c1a2f705ada5c22ae5eddef7c5c6783a4d7c4f57",
+  "docs_url": "https://dev.opencode.ai/docs/go/",
+  "new_model_calls_for_selection": 0,
+  "new_route_outputs_used_for_selection": false,
+  "planned_application_posts": 144,
+  "published_typical_request_reference": {
+    "deepseek-v4-flash": {
+      "allocated_requests": 72,
+      "five_hour_requests": 7600,
+      "weekly_requests": 18900
+    },
+    "qwen3.7-max": {
+      "allocated_requests": 72,
+      "five_hour_requests": 340,
+      "weekly_requests": 840
+    }
+  },
+  "recorded_at_utc": "2026-08-24T10:53:09.284816Z",
+  "schema_version": "1.0.0",
+  "selected_items_per_repetition": 24,
+  "selected_model_ids": [
+    "qwen3.7-max",
+    "deepseek-v4-flash"
+  ],
+  "selected_repetitions": 3,
+  "selection_basis": "Two previously studied named routes provide protocol continuity. Three exact repetitions estimate time-local within-route stability on the same historical revision packet.",
+  "self_digest": "sha256:b4aac622b1300cd20efb14cd12aef5e1ba2c4e074fe3729fe11301ae7b733c4b",
+  "status": "ROUTES_AND_REPETITIONS_SELECTED_BEFORE_NEW_OUTPUTS",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1",
+  "workflow_initiated_purchase_or_recharge": false
+}

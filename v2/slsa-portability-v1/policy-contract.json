@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "claimpromotebench-slsa-artifact-admission-v1",
+  "status": "AUTHOR_OPERATIONALIZATION_OF_PINNED_EXTERNAL_REQUIREMENTS",
+  "source_registry": "v2/slsa-portability-v1/source-registry.json",
+  "interpretation_boundary": "SLSA 1.2 and in-toto Attestation 1.2 define the evidence fields and verifier checks. The authors define this admission state machine, conflict escalation rule, precedence, and labels. An ALLOW decision is not a SLSA certification.",
+  "action_precedence": ["DEMOTE", "ESCALATE", "HOLD", "ALLOW"],
+  "action_semantics": {
+    "ALLOW": "Admit the artifact at the requested verified build level, or retain an already admitted artifact whose basis remains valid.",
+    "HOLD": "Keep a candidate out of the protected release channel because required attestation evidence is absent or insufficient.",
+    "DEMOTE": "Remove an admitted artifact from the protected release channel because its recorded admission basis no longer satisfies the policy.",
+    "ESCALATE": "Quarantine the artifact and require incident review because authenticated evidence conflicts on a policy-critical field."
+  },
+  "boolean_checks": [
+    {"field": "provenance_present", "reason_code": "PROVENANCE_MISSING", "source_basis": "SLSA Build L1 requires provenance."},
+    {"field": "envelope_signature_verified", "reason_code": "SIGNATURE_NOT_VERIFIED", "source_basis": "SLSA verification begins by verifying the attestation signature."},
+    {"field": "attester_recognized", "reason_code": "ATTESTER_NOT_RECOGNIZED", "source_basis": "in-toto validation rejects an envelope with no recognized attester."},
+    {"field": "statement_type_valid", "reason_code": "STATEMENT_TYPE_INVALID", "source_basis": "in-toto validation requires the versioned Statement type."},
+    {"field": "subject_digest_matches", "reason_code": "SUBJECT_DIGEST_MISMATCH", "source_basis": "SLSA and in-toto verification bind the attestation subject to the artifact digest."},
+    {"field": "predicate_type_valid", "reason_code": "PREDICATE_TYPE_INVALID", "source_basis": "SLSA verification requires the SLSA provenance predicate type."},
+    {"field": "builder_id_matches_policy", "reason_code": "BUILDER_ID_MISMATCH", "source_basis": "The verifier checks builder identity against its roots of trust and local expectations."},
+    {"field": "source_uri_matches", "reason_code": "SOURCE_URI_MISMATCH", "source_basis": "Artifact verification may require the expected source repository."},
+    {"field": "source_ref_matches", "reason_code": "SOURCE_REF_MISMATCH", "source_basis": "Artifact verification may require the expected source branch, tag, or immutable revision."},
+    {"field": "external_parameters_match", "reason_code": "BUILD_PARAMETERS_MISMATCH", "source_basis": "SLSA provenance records external parameters in the build definition."},
+    {"field": "build_completed", "reason_code": "BUILD_NOT_COMPLETED", "source_basis": "The provenance run details describe the execution that produced the artifact."},
+    {"field": "policy_digest_matches", "reason_code": "POLICY_DIGEST_MISMATCH", "source_basis": "SLSA verification summaries can bind the policy resource and its digest."}
+  ],
+  "level_check": {
+    "field": "build_level_verified",
+    "reason_code": "BUILD_LEVEL_BELOW_TARGET",
+    "source_basis": "SLSA build levels are cumulative; admission requires a verified level at least as high as the requested level."
+  },
+  "authenticated_conflict_codes": [
+    "SOURCE_REVISION_CONFLICT",
+    "BUILD_PARAMETERS_CONFLICT",
+    "VSA_POLICY_CONFLICT",
+    "VERIFICATION_RESULT_CONFLICT"
+  ],
+  "reason_order": [
+    "CURRENT_RELEASE_BASIS_INVALID",
+    "AUTHENTICATED_ATTESTATION_CONFLICT",
+    "PROVENANCE_MISSING",
+    "SIGNATURE_NOT_VERIFIED",
+    "ATTESTER_NOT_RECOGNIZED",
+    "STATEMENT_TYPE_INVALID",
+    "SUBJECT_DIGEST_MISMATCH",
+    "PREDICATE_TYPE_INVALID",
+    "BUILDER_ID_MISMATCH",
+    "SOURCE_URI_MISMATCH",
+    "SOURCE_REF_MISMATCH",
+    "BUILD_PARAMETERS_MISMATCH",
+    "BUILD_NOT_COMPLETED",
+    "POLICY_DIGEST_MISMATCH",
+    "BUILD_LEVEL_BELOW_TARGET",
+    "SOURCE_REVISION_CONFLICT",
+    "BUILD_PARAMETERS_CONFLICT",
+    "VSA_POLICY_CONFLICT",
+    "VERIFICATION_RESULT_CONFLICT",
+    "POLICY_SATISFIED"
+  ]
+}

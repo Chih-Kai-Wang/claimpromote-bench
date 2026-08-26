@@ -1,0 +1,17 @@
+{
+  "files": {
+    "cases.json": "sha256:769fa87c63142604acabea81a9473900760a4bd5919cb6acf12145593d9e1711",
+    "minimum-suite.json": "sha256:6c51c79ab021c3f5fc123e96ece450d1a359937bf51e517d8ed0fa54981af9ff",
+    "results.json": "sha256:e8d2c4d6a7e583cd7c70583fe2f58ef9cd93b8218852ea4b2915e75289535291",
+    "source-validation-receipt.json": "sha256:56ca680324b57ea2426562683e42f3dc6db49b42f99d5875816df470f36dcb53"
+  },
+  "schema_version": "1.0.0",
+  "self_digest": "sha256:80f3ad564f4fadad6c0b84b48152b19390a1be531862733381676b74b80b820d",
+  "source_files": {
+    "v2/agent-governance-policy-interface-revision-v1/sources/LICENSE": "sha256:7df20dcdf9197e9945c14858d41c60f11b52b93e5b69e2b63416b874d598d322",
+    "v2/agent-governance-policy-interface-revision-v1/sources/new.rego": "sha256:f5fabe6f1c44c6a77fb6eb71975c4f66a8ee4c3fef56383a16d03bbef1efd9fe",
+    "v2/agent-governance-policy-interface-revision-v1/sources/old.rego": "sha256:9f5a668d0b5212e81055cd7270ed3176094b60b2ff464122084ff70fc457dd6e",
+    "v2/agent-governance-policy-interface-revision-v1/sources/patterns_test.rego": "sha256:e73da38aeb53bbc035953cbca0105e3fc5528dae6ce6062b9a19e9a964796589"
+  },
+  "status": "COMPLETE_DETERMINISTIC_BUILD"
+}

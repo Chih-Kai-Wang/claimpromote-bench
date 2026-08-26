@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "status": "VOID_R5_PROMPT_HASH_RECOVERY_PUBLIC_EVIDENCE_VERIFIED",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "purpose": "Freeze only the 300 r5 model-facing prompt SHA-256 values for r6 exact-reuse prevention after r5 was voided with zero model POSTs.",
+  "github": {
+    "run_id": 32444435405,
+    "job_id": 96661277046,
+    "artifact_id": 9433560637,
+    "artifact_name": "cpb-void-r5-prompt-hash-recovery-32444435405",
+    "artifact_size_bytes": 35427,
+    "head_commit": "4a940c986976e16ac58529436fb99fc8dbb981d3",
+    "event": "workflow_dispatch",
+    "run_attempt": 1,
+    "created_at_utc": "2026-08-21T03:44:11Z",
+    "started_at_utc": "2026-08-21T03:44:17Z",
+    "completed_at_utc": "2026-08-21T03:44:34Z",
+    "conclusion": "success"
+  },
+  "implementation": {
+    "workflow_path": ".github/workflows/prepare-review-alpha.yml",
+    "workflow_file_sha256_at_head_commit": "sha256:d366c645fe187dcdab399598c18d91dc9d0ef18600f85f6e15d59247cb941537",
+    "recovery_script_path": "scripts/recover_void_confirmatory_prompt_hashes.py",
+    "recovery_script_file_sha256_at_head_commit": "sha256:8b33f5ac2da5320f4c7781f88fa75c3c7cc5b6bfe1351c3d169896777e832004",
+    "r5_c1_source_files_reverified": 53,
+    "r5_c1_source_commit": "d58efb6a098645973918414ef5a3df7592cf19f6",
+    "r5_seed_derivation_receipt_exactly_reproduced": true,
+    "r5_packet_self_digest_exactly_reproduced": true,
+    "private_material_destroyed_step_conclusion": "success"
+  },
+  "r5_frozen_identities": {
+    "c1_github_run_id": 32442717831,
+    "commitment_sha256": "sha256:c7fffa601e5b03aca1961301038c6766071c9e85ca7ed44850f2f3711029090a",
+    "dataset_manifest_sha256": "sha256:3528cf2c0c8595ea63cf4c8bf090c7f111c036d1b4829a4758e2f837bd45580c",
+    "packet_sha256": "sha256:ff7bb03af863f40cce0c83d21afbbe3dc21440f3ec40e35237477ace751e22ad",
+    "recovered_prompt_hash_set_sha256": "sha256:0f8b4fccc3a26eddee11f4566db31249d1eccaa704a4d890960aefda815e4796"
+  },
+  "outputs": {
+    "configs/prior-hidden-prompt-hash-denylist-r6.json": "sha256:148b0f0386881d72092dccf947ff573c601045ade0d1028563dcbaf880f2c8f3",
+    "v2/confirmatory/c1-r5/prompt-hash-recovery-receipt.json": "sha256:f44053b00d862d35e7aba94d2ab90bf03b488879318b6445763dc08d2a47c74d",
+    "combined_denylist_sha256": "sha256:1b6614a39feb003fc7bfc8bf81bd0325a30502615b5e51642454ac586de3ea16",
+    "combined_prompt_count": 900,
+    "contains_only_two_public_safe_json_files": true
+  },
+  "execution_boundary": {
+    "opencode_model_credential_injected": false,
+    "application_post_count": 0,
+    "client_retry_count": 0,
+    "model_calls": 0,
+    "model_inference_evidence": "NONE",
+    "incremental_cash_spend_usd": 0.0,
+    "subscription_quota_consumed": false,
+    "contains_item_ids": false,
+    "contains_prompt_text": false,
+    "contains_hidden_rows": false,
+    "contains_gold_labels": false,
+    "contains_private_salt_bytes": false,
+    "contains_derived_seed_bytes": false
+  },
+  "offline_verification": {
+    "denylist_self_digest_recomputed": true,
+    "denylist_file_digest_recomputed": true,
+    "recovery_receipt_self_digest_recomputed": true,
+    "recovery_receipt_file_digest_recomputed": true,
+    "r5_c1_commitment_identity_matches": true,
+    "r5_prompt_hash_set_identity_matches_c1": true,
+    "all_900_hashes_are_unique": true,
+    "public_safety_flags_and_forbidden_key_scan_pass": true
+  },
+  "run_receipt_sha256": "sha256:5184c934fcb3a64e4db9f0a60ea5681074a4b011472542eb789ff5914e71fd53"
+}

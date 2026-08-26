@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "status": "VOID_INCOMPLETE_PROTOCOL_DEFECT",
+  "study_id": "claimpromotebench-slsa-policy-portability-2026-08-v1",
+  "frozen_plan_commit": "da98dff7af3a62040b88a0a7f077663ad904d656",
+  "schedule_sha256": "sha256:a06253ca678cb217f00b78e59479157c19120325d4f28b76b730e66ce99c7a5a",
+  "started_at_utc": "2026-08-23T07:46:33.471227Z",
+  "voided_at_utc": "2026-08-23T07:56:18Z",
+  "planned_cells": 240,
+  "durable_request_intents": 24,
+  "durable_terminal_records": 23,
+  "ambiguous_in_flight_cells": 1,
+  "unattempted_cells": 216,
+  "client_retry_count": 0,
+  "partial_resume_used": false,
+  "reason": "The prompt-only route was told the six field names but was not told that p_admissible must be a JSON number in [0,1]. Ten of eleven terminal Qwen responses used a JSON boolean. The strict-schema route received the missing type constraint. This asymmetric under-specification makes the attempt unsuitable for policy-portability inference.",
+  "observed_only_to_diagnose_protocol": {
+    "valid_terminal_records": 13,
+    "schema_error_terminal_records": 10,
+    "transport_error_terminal_records": 0,
+    "qwen_terminal_records": 11,
+    "qwen_boolean_p_admissible_schema_errors": 10,
+    "deepseek_terminal_records": 12,
+    "deepseek_valid_terminal_records": 12
+  },
+  "future_study_boundary": {
+    "v1_records_eligible_for_manuscript_metrics": false,
+    "v1_records_eligible_for_model_or_item_selection": false,
+    "resume_authorized": false,
+    "reissue_v1_prompts_authorized": false,
+    "replacement_requires_new_study_id": true,
+    "replacement_requires_fresh_model_prompts": true,
+    "replacement_requires_full_schema_visible_to_every_route": true,
+    "replacement_requires_new_remote_freeze_commit": true
+  },
+  "privacy": {
+    "credentials_retained": false,
+    "provider_response_identifiers_retained": false,
+    "hidden_reasoning_blocks_retained": false
+  },
+  "journal_sha256": {
+    "run-start.json": "sha256:5b08f41c43471a3cc8c5f926d341b23af271a232521566f07a1ac51b7629f530",
+    "request-intents.jsonl": "sha256:95d95b70b0de7f2aa687bda21a58123baf3d59941f16f08dc4ef2f0aead630c8",
+    "terminal-records.jsonl": "sha256:b605ef8c7a6c6252c1d615b3126ceefda21de2be3a2a11a99f3d4b2e88f5dabb"
+  }
+}

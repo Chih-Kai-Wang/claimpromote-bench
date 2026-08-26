@@ -1,0 +1,45 @@
+{
+  "contains_gold_labels": false,
+  "contains_prompt_text": false,
+  "exact_prompt_overlap_count": 0,
+  "fresh_dataset_manifest_sha256": "sha256:8c799c5ec4abc74ef354a95be455233fb8986142d7ca59e40942e8f94eec31de",
+  "fresh_prompt_count": 300,
+  "fresh_prompt_set_sha256": "sha256:8f158ddad1e4791ba1add395ae7763118c97245ebc2fa8144d24f1b7ce1d073d",
+  "fresh_unique_prompt_count": 300,
+  "interpretation_boundary": "Zero byte-identical prompts prevents direct prompt reuse. The controlled factor ontology and most synthetic templates remain shared across realizations, so this is not evidence of naturalistic-domain generalization.",
+  "novelty_report_sha256": "sha256:d1020be273a7e81d0dad51fba4a6955a7473f623d7f9e8a2bed727c80338a354",
+  "prior_dataset_manifest_sha256": "sha256:18d2c570ad1561fa1369229a283d0eec5e8a75f8315a8313f50506aeae4e7f30",
+  "prior_prompt_count": 900,
+  "prior_prompt_set_sha256": "sha256:613b72867965bcc5af6a5f4619aa9720e01da7ef8613cf4f9467b88b9dece664",
+  "prior_prompt_source": {
+    "denylist_sha256": "sha256:1b6614a39feb003fc7bfc8bf81bd0325a30502615b5e51642454ac586de3ea16",
+    "file_sha256": "sha256:148b0f0386881d72092dccf947ff573c601045ade0d1028563dcbaf880f2c8f3",
+    "kind": "FROZEN_RELEASED_PROMPT_HASH_DENYLIST",
+    "prompt_hash_set_sha256": "sha256:613b72867965bcc5af6a5f4619aa9720e01da7ef8613cf4f9467b88b9dece664",
+    "source": {
+      "base": {
+        "denylist_sha256": "sha256:fc3a0db15d9db2a45657351d72833fe740a3238604de5821f0194281a6b201b2",
+        "file_sha256": "sha256:90c559db5c486ea77514e359a4cedfbb45853d2403c77c0829d7a8d77df35101",
+        "prompt_hash_set_sha256": "sha256:0465bfb81ab921093c7f23eda901c600b8d0e42f0da783f34f9b1d5e430d9550"
+      },
+      "kind": "UNION_WITH_VOID_ZERO_POST_RECOVERY",
+      "recovered_member": {
+        "c1_github_run_id": 32442717831,
+        "commitment_sha256": "sha256:c7fffa601e5b03aca1961301038c6766071c9e85ca7ed44850f2f3711029090a",
+        "fresh_prompt_hash_set_sha256": "sha256:0f8b4fccc3a26eddee11f4566db31249d1eccaa704a4d890960aefda815e4796",
+        "kind": "VOID_PRE_POST_RECOVERED_PROMPT_HASH_SET",
+        "model_calls": 0,
+        "model_post_intents": 0,
+        "packet_sha256": "sha256:ff7bb03af863f40cce0c83d21afbbe3dc21440f3ec40e35237477ace751e22ad",
+        "recovery_github_run_id": 32444435405,
+        "source_commit": "d58efb6a098645973918414ef5a3df7592cf19f6",
+        "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5"
+      }
+    }
+  },
+  "prior_unique_prompt_count": 900,
+  "prompt_arm": "ledger_verifier",
+  "provider_neutral_control_suffix": "",
+  "schema_version": "1.0.0",
+  "status": "ZERO_EXACT_PROMPT_OVERLAP"
+}

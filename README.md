@@ -1,179 +1,185 @@
-# ClaimPromoteBench
+# ClaimPromoteBench: Paired Regression Tests for Versioned Agent Policies
 
-**A benchmark for deciding when evidence justifies a change in research-claim status.**
+ClaimPromoteBench turns versioned policy changes into paired tests for a model-service boundary.
+For executable policies, it enumerates the behavioral difference between two caller-supplied
+evaluators. For versioned prose, it binds immutable source versions to a declared action mapping.
+Changed pairs hold the request fixed and use a different target under the second source; stable
+controls keep the target fixed. Executable policies supply exact targets. Prose targets are frozen
+author mappings and are not policy-owner ground truth.
 
-> **v1 primary hidden study complete; paper in final submission preparation.**  
-> The primary study contains 24 runs and 7,200 hidden decisions. The numbers below come from the validated recovered study, not from partial logs.
+The benchmark is a synthetic, policy-constrained evaluation. Its claims concern finite authored
+context grammars and time-stamped route stacks. A direct deterministic executor remains the
+preferred enforcement path when an application can call the policy itself.
 
-ClaimPromoteBench asks a narrow question: **given a mathematical research claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy?**
+Eight public histories illustrate the tested fault classes. Public `AGENTS.md` revisions and Awell
+policy records provide model-facing sources. The study authors map 18 frozen scenarios to finite
+actions under pinned source versions; no human or policy-owner annotation enters the evaluation.
 
-The benchmark is not a theorem-truth classifier or a general scientific fact checker. It keeps research status, computation, formal certification, and independent review separate and uses four possible actions:
+## What the enumerator and reducer produce
 
-`ALLOW` · `HOLD` · `DEMOTE` · `ESCALATE`
+Given `P_old`, `P_new`, a finite context set with stable identifiers, registered changed-rule
+witnesses, and declared coverage inventories, the implementation:
 
-A deterministic gate can replace an invalid `ALLOW` after the model responds. We report that gate behavior separately from the model's own decision.
+1. executes both policies over every context;
+2. retains contexts whose prescribed actions differ;
+3. creates paired items that vary only the policy source;
+4. reports changed-rule and directed action-transition coverage relative to those inputs; and
+5. selects a cardinality-minimum structural-coverage suite.
 
-## v1 benchmark
+Policy parsing, context synthesis, rule-change discovery, and witness inference remain caller
+responsibilities.
 
-| Component | v1 |
-|---|---|
-| Total benchmark | 200 controlled pairs / 400 instances |
-| Public development | 50 pairs / 100 instances |
-| Private hidden primary test | 150 pairs / 300 instances |
-| Policy factors | 20 |
-| Primary models | Qwen3-0.6B Q8_0; Qwen3-1.7B Q8_0 |
-| Arms | narrative; ledger; ledger + passive verifier; ledger + verifier + gate |
-| Seeds | 104729; 130363; 169087 |
-| Primary matrix | 300 × 2 × 4 × 3 = **7,200 decisions** |
-| llama.cpp | `de699957b92f490efebad149665b0dccf127eaff` |
-| Hidden commitment commit | `8d9b3f5c831f432cf6b321e6402724c4f52bb3e1` |
-| Scored inference | workflow `32255636879`, head `aa5268dcde2aa44f8eabf0246631efbca27de7e5` |
-| Recovery | workflow `32274814703`, head `e2b09f30b0573cf7bcb244eef1917691755f2877` |
-| Recovered matrix | 24 original runs + 24 normalized runs; 7,200 records each |
-| Study SHA-256 | `sha256:3eb5b534ab486dac774a62de3d623fa33009be3705d9e8d620bb9942e8bfe664` |
+The reusable implementation is in `src/claimpromotebench/policy_difference.py`.
 
-Primary scoring uses only the 300 hidden instances. The public development data are for implementation and descriptive pilot work.
+## Scoring endpoints
 
-## Main result
+Every scheduled call remains in end-to-end denominators. The evaluator separates four reporting
+layers:
 
-The result is mostly negative:
+- **raw-strict action**: the retained response is exactly one duplicate-free top-level JSON object
+  containing a registered action;
+- **registered-parser action**: the frozen route parser records a valid action, with provenance for
+  direct parsing or deterministic single-object extraction;
+- **contract action**: the registered action agrees with its target after the complete task contract passes;
+  and
+- **full decision**: the complete structured decision matches the registered target and reason.
 
-- **5,327 / 7,200 decisions (73.99%) are `FORMAT_ERROR`.**
-- All **1,873 parseable raw model decisions are `ALLOW`.**
-- Wherever the raw rates are defined, raw false-promotion rate is 1.00, valid-promotion recall is 1.00, and paired transition accuracy is 0.
-- In the gate arm, the final false-promotion rate is 0 on parseable decisions, with catch rate 1 and false-block rate 0.
-- Gate-arm decision coverage is low: 14.0%–49.0% for Qwen3-0.6B and 21.7%–48.3% for Qwen3-1.7B.
+The raw-strict parser performs no repair, code-fence extraction, coercion, or duplicate-key
+recovery. Registered-parser semantics remain route-specific because the historical records are
+frozen; the audit reports that provenance instead of relabeling it as raw-strict parsing. No
+audited response contains a duplicate key. Transport, syntax, schema, and semantic failures remain
+terminal errors. Conditional metrics are reported beside the corresponding coverage denominator.
 
-The gate uses the same fixed policy that defines the benchmark labels. Its perfect conditional gate scores therefore show that the implementation follows that policy on parseable cases; they do **not** show that the model learned the policy or reasoned better.
+## Evidence layers
 
-### Format errors by model and arm
+| Instrument | Evidence role | Size | Main certificate or result |
+|---|---|---:|---|
+| OPA and Woo `AGENTS.md` revisions | external model-facing policy study | 10 pairs; 8 routes | changed and stable source-version tests |
+| OPA, Woo, and Awell controls | non-`ALLOW` policy study | 8 pairs; 3 routes | restrictive-action stable controls and two changed pairs |
+| Request-cap comparison | selected route study | 15 pairs; 3 routes | request caps and strict JSON schema |
+| Matched factor-complete routes | route-interface diagnostic | 15 pairs; 7 routes | full factor support and three repetitions |
+| Gatekeeper revisions | executable policy study | 12 pairs | 2/2 rules, 2/2 edges, two-pair minimum |
+| Gatekeeper repeated routes | executable-policy route study | 144 calls | three repetitions on each of two routes |
+| Trivy KCV0030 | independent policy-fault reproduction | 4 cases | inverted predicate, two transition directions |
+| Cosign Rego verifier | independent interface-fault reproduction | 6 cases | four documented verifier fault modes |
+| Agent Governance Toolkit | agent-policy interface reproduction | 2 cases | 11/15 parent versus 15/15 fixed upstream tests |
+| agentgateway Bedrock adapter | versioned guardrail-interface audit | 33 tests | exact fixed commit passes 33/33 offline tests |
+| Authored SLSA migration | four-action structural stress test | 60 graph pairs | 12/12 rules, 10/10 reachable edges, ten-pair minimum |
+| Research r6 | evidence-state coverage addendum | 150 pairs | rare-action support and complete denominators |
+| Public balanced challenge | commit-frozen authored diagnostic | 90 pairs | 15 factors and balanced non-`ALLOW` actions |
 
-Each cell contains 900 decisions across three seeds.
+Exact old and new upstream source bytes, commit bindings, licenses, source-validation receipts, and
+minimum-suite certificates are stored under:
 
-| Model | Narrative | Ledger | Ledger + verifier | Ledger + verifier + gate |
+- `v2/upstream-policy-revisions-v1/`
+- `v2/trivy-policy-revision-v1/`
+- `v2/sigstore-policy-verifier-revision-v1/`
+- `v2/agent-governance-policy-interface-revision-v1/`
+- `v2/external-evidence-audit-v1/`
+- `v2/external-agent-policy-revision-v2/`
+
+## Model-facing policy result
+
+Two public `AGENTS.md` histories contribute six changed pairs and four stable controls. Eight hosted
+routes receive the same 20 items for three repetitions: 480 calls, one request per cell, and zero
+client retries.
+
+| Scope | Valid | Item agreement | Pair agreement | Conditional item/pair |
 |---|---:|---:|---:|---:|
-| Qwen3-0.6B | 900 | 261 | 335 | 585 |
-| Qwen3-1.7B | 900 | 900 | 900 | 546 |
+| Designated first replication | 132/160 | 128/160 | 52/80 | 128/132; 52/55 |
+| All three repetitions | 399/480 | 387/480 | 158/240 | 387/399; 158/169 |
 
-All three seeds are kept in the study.
+In the designated first replication, changed pairs agree with author targets on 23/48 end-to-end
+pairs and 23/26 complete pairs; stable controls reach 29/32 and 29/29. The pooled 81 terminal failures comprise 26 server-side
+transport failures, nine length-terminated JSON failures, and 46 action/reason-code conflicts.
+Failed outputs never enter decision counts and remain errors in end-to-end denominators.
 
-## Recovery of evaluator failures
+The non-`ALLOW` extension contains two stable pairs for each restrictive action and two
+`HOLD`-to-`ESCALATE` pairs. Every valid item agrees with its author target. Stable pairs decompose
+into 50 target-agreeing, zero complete-disagreeing, and four incomplete outcomes; changed pairs
+decompose into 6, 0, and 12. This is a completion difference on author-constructed cases, not an
+isolated policy-use effect.
 
-The original model calls finished, but some jobs later failed during evaluation because an output could pass the JSON schema while violating a cross-field rule, such as returning `ALLOW` without proposing the requested target state.
+A 360-call same-item comparison varies prompt-only request caps and strict JSON schema on three
+selected routes, with one call per cell. From 4096 to 12288 tokens, complete target-agreeing pairs
+change from 0/15 to 7/15, 0/15 to 9/15, and 7/15 to 7/15. The run records 63
+quota-or-billing rejections in its final 17 seconds. The
+registered primary contrast contains the same five rejected item IDs in both conditions for each
+route; every failure remains in the fixed denominator.
 
-The recovery procedure did not rerun the models and did not rewrite otherwise valid decisions. It:
+## Auxiliary evidence-state results
 
-1. used exactly the 24 original source artifacts from workflow `32255636879`;
-2. required 24 `run.jsonl` files and 7,200 source records;
-3. rebuilt the committed hidden set and prompt identity from the original scoring source;
-4. reclassified only the affected invalid structured outputs as `FORMAT_ERROR`;
-5. validated all 24 normalized runs and prompt hashes;
-6. produced the 10,000-pair-bootstrap aggregate and recovery record.
+The executable-policy repetition sends 24 Gatekeeper items to two routes three times. Flash reaches
+53/72 raw-strict actions and 21/36 pairs; Qwen reaches 10/72 and 0/36. All 63 extracted actions match
+the executable oracle. The other cells comprise 12 read timeouts and 69 serialization or
+output-envelope failures.
 
-Exactly **27 records** were reclassified by `semantic-format-error-v1`. The one-time recovery trigger was removed after the recovery succeeded.
+R6 Qwen returns 272/300 contract-valid decisions. Its end-to-end item/pair scores are 258/300 and
+113/150, compared with 258/272 and 113/123 conditional. The historical r6 Flash path returned HTTP
+401 before model output on all 300 calls; this path is excluded from model evidence.
 
-Study identifiers:
+The public balanced challenge contains 90 `ALLOW` items and 30 items for each of `HOLD`, `DEMOTE`,
+and `ESCALATE`.
 
-- commitment SHA-256: `sha256:55a3d2bffb6f23b7253715a9f091d951daaf589e205033d3f46dfd9e6ff6590e`
-- dataset-manifest SHA-256: `sha256:fe838548389ee1516d9cf9442201a22c291add0ddb6cabf4f39de99b6489caba`
-- prompt-manifest SHA-256: `sha256:b6c1dacdb6db34aef4a9532df8e24a6e6f51724df75b0f2e8a14ffa01dca2957`
-- hidden-seed SHA-256: `sha256:b91b5b36268bf2af3acc4c2d0890613b92c02a125db3fe5a1e12c099800fe285`
+| Route | Valid | E2E item/pair | Conditional item/pair | `DEMOTE` recall |
+|---|---:|---:|---:|---:|
+| Qwen | 148/180 | 132/180; 48/90 | 132/148; 48/64 | 4/30 |
+| Flash | 146/180 | 90/180; 13/90 | 90/146; 13/61 | 0/30 |
 
-The raw hidden seed remains a GitHub Actions secret and is not printed or committed.
+An offline audit of 1,320 prior route items separates raw-strict actions, actions retained by each
+frozen registered parser, and the full contract. Raw-strict parsing recovers 69 actions outside the
+full contract, including 49 correct actions and 40 correct pairs. Conversely, registered parsers
+retain actions from responses that raw-strict parsing rejects; six balanced-challenge Qwen records
+use deterministic single-object extraction from a fenced response. The audit reports parser
+provenance, changes no frozen record, and makes zero model calls.
 
-## Matched-comparison limitation
+## Install and verify
 
-The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Because the Python patch version is part of that identity, the final aggregate has nine groups instead of the intended six model×seed groups; only three contain all four arms.
-
-We keep the original grouping rather than combining runs after seeing the results. Exact McNemar/Holm comparisons are therefore available only when both arms occur in the same recorded group. A later replication should pin the exact Python patch release.
-
-## Human policy audit
-
-Two independent reviewers completed a 20-item blinded audit using the public alpha data.
-
-| Evidence | Result |
-|---|---:|
-| reviewer-01 action agreement | 18/20 = 0.90 |
-| reviewer-01 exact reason agreement | 18/20 = 0.90 |
-| `reviwer-02` action agreement | 15/20 = 0.75 |
-| `reviwer-02` exact reason agreement | 14/20 = 0.70 |
-| pairwise action agreement | 17/20 = 0.85 |
-| pairwise exact reason agreement | 16/20 = 0.80 |
-| diagnostic Cohen κ | ≈ 0.716 |
-
-The preregistered audit criterion requires every reviewer to reach 0.80 action agreement, so the result is **mixed / not PASS**. The `reviwer-02` identifier typo is part of the immutable submission and is kept as-is.
-
-## What the executable evidence means
-
-Numerical cases use exact-rational finite-grid artifacts whose registered values, extrema, predicates, repetitions, and scope are recomputed. Formal cases use generated Lean sources under a pinned toolchain. Provenance, freshness, dependencies, contradictions, review independence, statement identity, and runtime success remain separate policy requirements.
-
-A Lean check supports the exact formal statement that was checked. A finite computation supports only its registered computational scope. Neither automatically settles a broader research claim.
-
-## Reproduce public checks
-
-Python 3.11+:
+Python 3.11 or newer is required.
 
 ```bash
-python -m pip install -e ".[dev]"
-python scripts/build_alpha.py
-python -m claimpromotebench validate data/alpha
-python -m claimpromotebench.shortcuts --dataset data/alpha --out work/shortcut-audit.json
-python -m claimpromotebench.invariance --dataset data/alpha --out work/invariance-audit.json
-python -m claimpromotebench.executable --fixtures fixtures/executable --out work/executable-fixtures.json
-python -m pytest --cov --cov-branch --cov-fail-under=80
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/python -m pytest
+.venv/bin/python -m ruff check .
+.venv/bin/python -m ruff format --check .
+.venv/bin/python -m mypy
 ```
 
-Formal checks with the pinned Lean environment:
+Run the paper and source bindings:
 
 ```bash
-cd data/alpha
-lake build
-lake env leanchecker ClaimPromoteFormal
-cd ../..
-python -m claimpromotebench.formal \
-  --dataset data/alpha \
-  --fixtures fixtures/formal/cases.json \
-  --out work/formal-fixtures.json
+.venv/bin/python scripts/validate_upstream_policy_revision_study.py
+.venv/bin/python scripts/validate_agent_governance_policy_interface_revision.py
+.venv/bin/python scripts/validate_external_evidence_audit.py
+.venv/bin/python scripts/validate_upstream_policy_route_repetition_results.py
+.venv/bin/python scripts/lint_paper_submission.py
 ```
 
-Evaluate a run or compare matched runs:
+Build venue-specific TeX sources:
 
 ```bash
-python -m claimpromotebench evaluate-runs \
-  --gold data/alpha/gold.jsonl \
-  --runs work/example-run.jsonl \
-  --out work/example-run.eval.json
-
-python -m claimpromotebench compare-runs \
-  --gold data/alpha/gold.jsonl \
-  --runs work/*.jsonl \
-  --out work/study.json
+.venv/bin/python scripts/build_submission_tex.py --out work/submission
 ```
 
-`FORMAT_ERROR` is never silently counted as `HOLD`.
+The official ICLR style files are hash-pinned by
+`technical-report/iclr2027-style-lock.json`. `technical-report/main.tex` is the canonical
+scientific source.
 
-## Scope
+## Interpretation and release boundary
 
-ClaimPromoteBench does not claim to invent claim ledgers, evidence-state maintenance, counterfactual examples, evidence reversal, generic policy-compliance evaluation, or verifier-governed research agents. Recent close neighbors include SteerBench-Work, ST-WebAgentBench, CofCA, MEDSYN, RECV, SeekBench, Omni-Decision, EviGraph, and ClaimLedger, in addition to scientific claim-verification and reproducibility benchmarks.
+The deterministic executor defines every structured target and is the **definitional policy ceiling**.
+The r6 multinomial Naive Bayes control reaches 184/300 items and 34/150 pairs and serves as a weak
+shortcut check. The balanced challenge was author-created and commit-frozen before calls according
+to retained workflow receipts. Route differences support descriptive interpretation only.
 
-The contribution is narrower: evaluating whether **typed scientific evidence licenses a requested change in a research claim's epistemic state** under a fixed policy. The benchmark separates research, computation, formal-certification, and independent-review status; applies dependency, provenance, scope, staleness, contradiction, and artifact checks; and reports raw model decisions separately from deterministic enforcement.
+Reviewer-facing derivatives exclude raw response text and hashes, free-form errors, provider
+response identifiers, hidden reasoning, account identity, and private commit identity. They replay
+scores from parsed decisions and content-free terminal records but cannot re-adjudicate parsing or
+provider messages. Their manifests derive file counts from the generated trees. Completed one-shot
+studies remain frozen.
 
-The paper does not make an unqualified “first benchmark” or “first system” claim.
+The durable export rules are recorded in `docs/PUBLIC_RELEASE_BOUNDARY.md`.
 
-## Post-v1 follow-up
-
-A separate Draft PR (#20) contains a low-cost post-v1 study designed to diagnose the main unresolved interface confound without changing the frozen v1 results. The pilot retains complete raw responses, separates JSON syntax/schema/semantic failures, compares free generation with schema-constrained decoding under identical model-facing prompts, and evaluates the deterministic gate only after generation.
-
-This follow-up uses the existing public alpha data and existing Qwen3 model artifacts. It is **not preregistered v1 evidence**, and no result from it should be quoted until the corresponding run artifacts and aggregate summary are complete.
-
-## Paper and project status
-
-- Technical report: `technical-report/main.tex`
-- Submission checklist: `technical-report/SUBMISSION_GATE.md`
-- Experiment protocol/history: `docs/EXPERIMENTS.md`
-- Roadmap: `docs/ROADMAP.md`
-- Related-work boundary: `docs/RELATED_WORK.md`
-- Submission risk audit: `docs/SUBMISSION_RISK_AUDIT.md`
-- AI assistance disclosure: `AI_ASSISTANCE.md`
-
-The v1 hidden model outputs are fixed and should not be rerun or rewritten to make the result cleaner. The post-v1 study remains separate until its own protocol and evidence are complete.
+The repository, PR, and submission state are operational controls. A passing local build does not
+authorize a merge, public release, OpenReview submission, or arXiv upload.

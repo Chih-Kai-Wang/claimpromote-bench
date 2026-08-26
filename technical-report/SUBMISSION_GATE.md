@@ -4,19 +4,17 @@ This file is deliberately fail-closed. A polished manuscript is not evidence tha
 
 ## Current verdict
 
-**PREPRINT READY — ARCHIVAL / ICLR ACCOUNT-AND-ETHICS GATES STILL OPEN**
+**PREPRINT READY — ARCHIVAL RELEASE GATES STILL OPEN**
 
-The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, primary manuscript Results, authoritative bibliography checks, ICLR 2027 AI-disclosure checks, hosted CI, LaTeX/submission-package builds, quantitative cross-check, and prior PDF visual/anonymity audit are complete. A fresh 2026-08-20 related-work pass has also narrowed the novelty language after finding close policy-action and counterfactual benchmarks. Archival-submission readiness remains separate and still requires the release, ethics, and account-side gates below. The v1 infrastructure-identity limitation remains disclosed and unchanged.
+The private hidden freeze, frozen inference source, 24-run / 7,200-decision artifact-only recovery, aggregate study, primary manuscript Results, authoritative bibliography check, ICLR 2027 AI-disclosure check, final hosted CI, LaTeX/submission-package builds, quantitative cross-check, and PDF visual/anonymity audit are complete. Archival-submission readiness remains separate and still requires the release/clean-environment gates below. The v1 infrastructure-identity limitation remains disclosed and unchanged.
 
 ## Gate A — research boundary and novelty
 
-- [x] Narrow target: policy-governed scientific evidence-state transition admissibility, not general truth classification.
-- [x] Distinguish claim/evidence verification, abstention, computational reproducibility, hypothesis validation, policy-aware agent actions, counterfactual evaluation, evidence-state maintenance, verifier-governed claim workflows, and formal-specification generation from the transition benchmark.
+- [x] Narrow target: policy-governed evidence-state transition admissibility, not general truth classification.
+- [x] Distinguish claim/evidence verification, abstention, computational reproducibility, hypothesis validation, evidence-state maintenance, verifier-governed claim workflows, and formal-specification generation from the transition benchmark.
 - [x] Use cautious priority language; do not claim “first” without qualification.
-- [x] Fresh related-work search refreshed on 2026-08-20 in `docs/RELATED_WORK.md`.
-- [x] Manuscript now directly positions SteerBench-Work, ST-WebAgentBench, CofCA, MEDSYN, RECV, SeekBench, Omni-Decision, EviGraph, and ClaimLedger.
-- [x] Do not claim novelty for counterfactual pairs, evidence reversal, generic policy compliance, or the phrase `evidence sensitivity`.
-- [x] Bibliography entries rechecked against authoritative records (ACL Anthology, ICLR/OpenReview or proceedings, arXiv for contemporaneous preprints, PMLR, AAAI, and the cited official ClaimLedger report page as applicable).
+- [x] Fresh related-work search recorded on 2026-08-19 in `docs/RELATED_WORK.md`; positioning was narrowed after finding SeekBench, Omni-Decision, EviGraph, and the contemporaneous ClaimLedger technical report.
+- [x] Bibliography entries rechecked on 2026-08-20 against authoritative records (ACL Anthology, OpenReview, PMLR, AAAI, arXiv, and the cited official ClaimLedger report page as applicable).
 
 ## Gate B — v1 benchmark freeze
 
@@ -66,7 +64,7 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Recovered GitHub artifact `claimpromotebench-v1-scored-study-recovered` is bound to recovery run `32274814703`.
 - [x] The one-shot recovery trigger was removed after successful recovery.
 
-## Gate E — benchmark and annotation integrity
+## Gate E — benchmark and label integrity
 
 ### Deterministic engineering evidence
 
@@ -78,14 +76,14 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Hidden-test commitment demonstrably predates scored inference.
 - [x] Recovery revalidated hidden construction and prompt freeze before reading source artifacts.
 
-### Supplementary independent human audit
 
-- [x] Two real independent reviewers returned complete submissions for the frozen 20-item procedural-blind alpha audit.
-- [x] Both submissions were validated and SHA-256 frozen before unblinding.
-- [x] Reviewer-versus-gold action agreement is 0.90 and 0.75; pairwise action agreement is 0.85.
-- [x] The conservative multi-reviewer supplementary gate is reported as **mixed / not PASS** because one reviewer is below 0.80.
-- [x] Review disagreements are retained and are not used to rewrite frozen gold or policy.
-- [ ] Human-audit ethics / IRB applicability and reviewer-consent facts are documented using `docs/HUMAN_AUDIT_ETHICS_CHECKLIST.md`; no approval, exemption, or consent language may be invented.
+### Machine-checkable pair-contract audit
+
+- [x] All 20 public controlled factors are checked from released pair descriptors.
+- [x] Every public pair contains one policy-admissible `ALLOW` member and one non-`ALLOW` member.
+- [x] All 40 public gold decisions are recomputed exactly from the versioned policy.
+- [x] Any member difference outside the registered JSON pointers fails the audit.
+- [x] The audit is described as construction consistency, not independent human or universal normative validation.
 
 ## Gate F — manuscript integrity
 
@@ -98,37 +96,24 @@ Three hosted jobs recorded Python 3.11.16 while most recorded Python 3.11.15. Be
 - [x] Manuscript distinguishes raw-intent behavior from deterministic gate enforcement.
 - [x] Semantic recovery is disclosed and explicitly states that legal model answers were not changed.
 - [x] Exact source/recovery workflow IDs and core commitment/study identities are recorded.
-- [x] External audit remains supplementary mixed evidence, not a PASS.
+- [x] No human-subject audit or human-annotation result is used in the manuscript.
 - [x] Limitations disclose high format-error rate, non-retention of free-form text for pre-existing parse failures, exact-identity group drift, gate-prompt disclosure, small-model scope, synthetic control, and author-constructed benchmark risk.
-- [x] Related Work explicitly acknowledges the closest current action-boundary, counterfactual, and evidence-sensitivity precedents.
-- [x] Submission builder treats unresolved citations/references, horizontal overflow, page-limit violations, and anonymity leaks as failures.
-- [x] AI-assistance disclosure includes significant research/writing assistance and a human-responsibility statement rather than implying AI was unused.
-- [ ] Final hosted paper/submission-package run on the latest substantive manuscript must finish successfully after the 2026-08-20 novelty/figure revision.
-- [ ] Latest compiled ICLR and arXiv PDFs must be rendered and visually inspected again after that revision.
+- [x] Final hosted paper workflow and submission-package LaTeX builds succeed on the post-results manuscript with unresolved citations/references and horizontal overflow treated fail-closed.
+- [x] Compiled ICLR and arXiv PDFs were rendered and inspected for table overflow, broken references, anonymity/identity placement, stale blocker text, and obvious layout defects; the ICLR PDF carries no author metadata and visually remains anonymous.
+- [x] Final quantitative manuscript values were cross-checked against the validated recovered artifact after the final scientific-text edit: 24 normalized runs × 300 records = 7,200 decisions, 5,327 `FORMAT_ERROR`, 1,873 parseable raw decisions all `ALLOW`, gate conditional metrics and coverage ranges match the artifact.
+- [x] AI-assistance disclosure checked on 2026-08-20 against the official ICLR 2027 AI Policy for Authors and Author Guidelines; the venue wrapper includes a mandatory detailed AI-use section and human-responsibility statement.
 
 ## Gate G — reproducibility release
 
-- [ ] Clean-environment reproduction of final benchmark validation succeeds from the release candidate.
-- [ ] Clean-environment reproduction of all paper tables/statistics succeeds from released artifact inputs.
+- [x] Clean-environment reproduction of final public benchmark validation succeeds from the release candidate.
+- [x] Clean-environment reproduction of all paper tables/statistics succeeds from committed v1/v2 aggregate inputs without model inference.
 - [ ] Release/tag is immutable and all cited artifact hashes match it.
 - [ ] Archive code/data artifacts in a citable long-term repository if required by the target venue.
-- [ ] `CITATION.cff`, README, manuscript, and release notes agree on title/version/status.
-
-## Gate H — ICLR account and ethics readiness
-
-- [ ] OpenReview profile exists, is current, and is usable before the abstract deadline.
-- [ ] Author information and reciprocal-reviewing status shown by OpenReview are checked by the human author.
-- [ ] Human-audit ethics / review-board applicability has an actual documented determination where required.
-- [ ] Reviewer consent / privacy / release permissions are documented consistently with the material released in the repository.
-- [ ] Any Ethics Statement added to the manuscript contains only documented facts.
-- [ ] Final OpenReview title, abstract, author list/order, subject areas, ethics acknowledgement, and uploaded-PDF preview are checked account-side by the human author.
-
-## Post-v1 evidence rule
-
-Draft PR #20 contains a separate low-cost follow-up that retains raw responses, separates syntax/schema/semantic output failures, compares free and schema-constrained decoding under identical prompts, and computes a pure post-processing gate. It is **post-v1** evidence. Until its own run artifacts and aggregate are complete, it must not be quoted as a result. If later used in the ICLR paper, its provenance and limitations must be reported separately rather than changing v1 chronology or tables.
+- [x] `CITATION.cff`, README, manuscript, and submission metadata agree on the canonical title and current pre-submission status.
+- [ ] Release notes and final package version agree with the future immutable tag.
 
 ## Readiness rule
 
-The frozen v1 empirical study is complete. **PREPRINT READY** refers to the scientific v1 preprint, not to every conference-side requirement. **ARCHIVAL / ICLR SUBMISSION READY** remains fail-closed until Gates F, G, and H are closed or explicitly determined not applicable.
+The empirical study and preprint-finalization checks are complete. **PREPRINT READY** is satisfied for the current v1 paper state. **ARCHIVAL SUBMISSION READY** remains fail-closed until Gate G and any venue-specific artifact/release requirements applicable at submission time are complete.
 
-Do not rerun or rewrite the frozen v1 primary inference to make the negative result cleaner. A future replication that pins the exact Python patch version, retains raw malformed model text, changes the output interface, or adds stronger models must be labeled as a new or supplementary study, not a replacement for v1.
+Do not rerun or rewrite the frozen v1 primary inference to make the negative result cleaner. A future replication that pins the exact Python patch version or retains raw malformed model text must be labeled as a new or supplementary study, not a replacement for v1.

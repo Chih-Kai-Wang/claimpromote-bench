@@ -1,0 +1,124 @@
+{
+  "credentials_used_or_retained": false,
+  "fetched_at_utc": "2026-08-25T15:49:59.198053Z",
+  "model_calls": 0,
+  "receipt_sha256": "sha256:57d17d556652632f1cfa41e51d0af91be68c91c93b27595b6edd34fb2d35f41d",
+  "schema_version": "1.0.0",
+  "selection_method": "Purposive source selection for explicit non-ALLOW rules and an unrelated policy revision preserving each registered stable rule; no scored model output informed case or source selection.",
+  "source_count": 4,
+  "sources": [
+    {
+      "change_url": "https://github.com/open-policy-agent/opa/commit/6f52916ab1025c26bddc2d5c6d1b19e95e6a4883",
+      "license": {
+        "path": "v2/nonallow-policy-controls-v1/sources/opa-agent-security-policy-LICENSE.txt",
+        "sha256": "sha256:c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+        "spdx": "Apache-2.0"
+      },
+      "path": "AGENTS.md",
+      "repository": "open-policy-agent/opa",
+      "snapshots": {
+        "after": {
+          "commit": "6f52916ab1025c26bddc2d5c6d1b19e95e6a4883",
+          "path": "v2/nonallow-policy-controls-v1/sources/opa-agent-security-policy-after.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/open-policy-agent/opa/6f52916ab1025c26bddc2d5c6d1b19e95e6a4883/AGENTS.md",
+          "sha256": "sha256:2b9cb0ff34fce47ac71aff9a5cd04b44090480711a517011847cdc4a2ff34e6c",
+          "utf8_bytes": 2217
+        },
+        "before": {
+          "commit": "e7909e1875ae382e6f7b4ea6542e95990a764e0c",
+          "path": "v2/nonallow-policy-controls-v1/sources/opa-agent-security-policy-before.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/open-policy-agent/opa/e7909e1875ae382e6f7b4ea6542e95990a764e0c/AGENTS.md",
+          "sha256": "sha256:27cef9693e030bca4f41b51d09b9e2fc6fcc3148d56368e06223d2450849be2f",
+          "utf8_bytes": 1863
+        }
+      },
+      "source_authors_independent_of_study_author": true,
+      "source_id": "opa-agent-security-policy"
+    },
+    {
+      "change_url": "https://github.com/Automattic/woocommerce-services/commit/2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7",
+      "license": {
+        "path": "v2/nonallow-policy-controls-v1/sources/woocommerce-agent-bc-policy-LICENSE.txt",
+        "sha256": "sha256:f5dbc8865e0acf45e8ce9f2b1e3942f63c7d16a22ba2d0a762bf9eea774bd013",
+        "spdx": "GPL-2.0"
+      },
+      "path": "AGENTS.md",
+      "repository": "Automattic/woocommerce-services",
+      "snapshots": {
+        "after": {
+          "commit": "2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7",
+          "path": "v2/nonallow-policy-controls-v1/sources/woocommerce-agent-bc-policy-after.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7/AGENTS.md",
+          "sha256": "sha256:a11905586aac24ffcad9e92d7101e5d142f3f8347bd82f1e0afd99edec407b92",
+          "utf8_bytes": 9474
+        },
+        "before": {
+          "commit": "7429d3412895756ee3dba699f7a11dd65b727fe8",
+          "path": "v2/nonallow-policy-controls-v1/sources/woocommerce-agent-bc-policy-before.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/7429d3412895756ee3dba699f7a11dd65b727fe8/AGENTS.md",
+          "sha256": "sha256:28345ff4d88dde3b1a4217eeb7acc8a220cdf463b37ff7cf62affb29caabeee5",
+          "utf8_bytes": 3788
+        }
+      },
+      "source_authors_independent_of_study_author": true,
+      "source_id": "woocommerce-agent-bc-policy"
+    },
+    {
+      "change_url": "https://github.com/Automattic/woocommerce-services/commit/7fb9c2af8211e7a9b854159a68d5cc60111af95b",
+      "license": {
+        "path": "v2/nonallow-policy-controls-v1/sources/woocommerce-agent-test-environment-policy-LICENSE.txt",
+        "sha256": "sha256:f5dbc8865e0acf45e8ce9f2b1e3942f63c7d16a22ba2d0a762bf9eea774bd013",
+        "spdx": "GPL-2.0"
+      },
+      "path": "AGENTS.md",
+      "repository": "Automattic/woocommerce-services",
+      "snapshots": {
+        "after": {
+          "commit": "7fb9c2af8211e7a9b854159a68d5cc60111af95b",
+          "path": "v2/nonallow-policy-controls-v1/sources/woocommerce-agent-test-environment-policy-after.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/7fb9c2af8211e7a9b854159a68d5cc60111af95b/AGENTS.md",
+          "sha256": "sha256:a64e87372c23bf4be9caa26cea109158c50132b21f2e9da13ed52ff20e2b36f0",
+          "utf8_bytes": 12451
+        },
+        "before": {
+          "commit": "2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7",
+          "path": "v2/nonallow-policy-controls-v1/sources/woocommerce-agent-test-environment-policy-before.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/Automattic/woocommerce-services/2e25e1ac5c16c36c64eeba322dec1010c9ebc8c7/AGENTS.md",
+          "sha256": "sha256:a11905586aac24ffcad9e92d7101e5d142f3f8347bd82f1e0afd99edec407b92",
+          "utf8_bytes": 9474
+        }
+      },
+      "source_authors_independent_of_study_author": true,
+      "source_id": "woocommerce-agent-test-environment-policy"
+    },
+    {
+      "change_url": "https://github.com/awell-health/awell-score/commit/a8f75a5e5bbf78b5e092d3568d2d496cde67b224",
+      "license": {
+        "path": "v2/nonallow-policy-controls-v1/sources/awell-score-authoring-policy-LICENSE.txt",
+        "sha256": "sha256:6b47c3ad9ab32f5596f37dad8e1e4a813fb6c60490b689b7ed3f45d33fb133ff",
+        "spdx": "MIT"
+      },
+      "path": "AGENTS.md",
+      "repository": "awell-health/awell-score",
+      "snapshots": {
+        "after": {
+          "commit": "a8f75a5e5bbf78b5e092d3568d2d496cde67b224",
+          "path": "v2/nonallow-policy-controls-v1/sources/awell-score-authoring-policy-after.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/awell-health/awell-score/a8f75a5e5bbf78b5e092d3568d2d496cde67b224/AGENTS.md",
+          "sha256": "sha256:25e07a7d373ed779411bfa76f1f540a28ddf973b823af84ae5b345d8ccf152a6",
+          "utf8_bytes": 5563
+        },
+        "before": {
+          "commit": "e41b308b5ee60d4da893f97dccab679877770fb7",
+          "path": "v2/nonallow-policy-controls-v1/sources/awell-score-authoring-policy-before.AGENTS.md",
+          "raw_url": "https://raw.githubusercontent.com/awell-health/awell-score/e41b308b5ee60d4da893f97dccab679877770fb7/AGENTS.md",
+          "sha256": "sha256:572233ae252d83af6a5c8f3d105874db500e3283b9cf4106d44f64a6c3967e0c",
+          "utf8_bytes": 5383
+        }
+      },
+      "source_authors_independent_of_study_author": true,
+      "source_id": "awell-score-authoring-policy"
+    }
+  ],
+  "status": "PINNED_EXTERNAL_AGENT_POLICY_SOURCES_VERIFIED"
+}

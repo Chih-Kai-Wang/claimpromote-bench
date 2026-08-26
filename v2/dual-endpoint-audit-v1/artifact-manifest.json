@@ -1,0 +1,9 @@
+{
+  "files": {
+    "aggregate.json": "sha256:630f61f296396de9262cb9d5e7c3a478a908518a557ccea3a9e43bcdc5047f75",
+    "receipt.json": "sha256:c53efd269bae44d6ae6562be69d90c5a0686655abdf87ac121ecd32664138d62"
+  },
+  "schema_version": "1.1.0",
+  "self_digest": "sha256:c55677b169fbefe2e13d1a33c3388d25abf536b74882df185627bf58a4608f9f",
+  "status": "COMPLETE_DETERMINISTIC_BUILD"
+}

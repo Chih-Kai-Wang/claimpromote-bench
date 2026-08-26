@@ -1,0 +1,128 @@
+{
+  "construction": {
+    "all_pairs_change_definitional_action": true,
+    "all_pairs_change_only_active_policy_profile": true,
+    "client_or_model_calls": 0,
+    "evaluation_items": 120,
+    "evaluation_pairs": 60,
+    "fixed_profile_direction": [
+      "POLICY_BLUE",
+      "POLICY_AMBER"
+    ]
+  },
+  "coverage": {
+    "authored_profile_difference_factors_covered": 12,
+    "authored_profile_difference_factors_total": 12,
+    "blue_to_amber_transition_counts": {
+      "ALLOW->DEMOTE": 10,
+      "ALLOW->ESCALATE": 10,
+      "ALLOW->HOLD": 10,
+      "DEMOTE->ALLOW": 10,
+      "ESCALATE->ALLOW": 10,
+      "HOLD->ALLOW": 10
+    },
+    "contexts_per_factor": 5,
+    "directed_nonself_action_transitions_covered": 6,
+    "directed_nonself_action_transitions_possible_over_four_actions": 12,
+    "factors": [
+      {
+        "binding_profile": "POLICY_AMBER",
+        "blue_to_amber_transition": "ALLOW->ESCALATE",
+        "evaluation_pairs": 5,
+        "factor_id": "build_parameters_conflict_profile"
+      },
+      {
+        "binding_profile": "POLICY_AMBER",
+        "blue_to_amber_transition": "ALLOW->HOLD",
+        "evaluation_pairs": 5,
+        "factor_id": "candidate_attester_profile"
+      },
+      {
+        "binding_profile": "POLICY_BLUE",
+        "blue_to_amber_transition": "HOLD->ALLOW",
+        "evaluation_pairs": 5,
+        "factor_id": "candidate_provenance_profile"
+      },
+      {
+        "binding_profile": "POLICY_AMBER",
+        "blue_to_amber_transition": "ALLOW->HOLD",
+        "evaluation_pairs": 5,
+        "factor_id": "candidate_signature_profile"
+      },
+      {
+        "binding_profile": "POLICY_BLUE",
+        "blue_to_amber_transition": "HOLD->ALLOW",
+        "evaluation_pairs": 5,
+        "factor_id": "candidate_subject_profile"
+      },
+      {
+        "binding_profile": "POLICY_BLUE",
+        "blue_to_amber_transition": "DEMOTE->ALLOW",
+        "evaluation_pairs": 5,
+        "factor_id": "current_builder_profile"
+      },
+      {
+        "binding_profile": "POLICY_AMBER",
+        "blue_to_amber_transition": "ALLOW->DEMOTE",
+        "evaluation_pairs": 5,
+        "factor_id": "current_policy_digest_profile"
+      },
+      {
+        "binding_profile": "POLICY_BLUE",
+        "blue_to_amber_transition": "DEMOTE->ALLOW",
+        "evaluation_pairs": 5,
+        "factor_id": "current_source_ref_profile"
+      },
+      {
+        "binding_profile": "POLICY_AMBER",
+        "blue_to_amber_transition": "ALLOW->DEMOTE",
+        "evaluation_pairs": 5,
+        "factor_id": "current_source_uri_profile"
+      },
+      {
+        "binding_profile": "POLICY_BLUE",
+        "blue_to_amber_transition": "ESCALATE->ALLOW",
+        "evaluation_pairs": 5,
+        "factor_id": "source_revision_conflict_profile"
+      },
+      {
+        "binding_profile": "POLICY_AMBER",
+        "blue_to_amber_transition": "ALLOW->ESCALATE",
+        "evaluation_pairs": 5,
+        "factor_id": "verification_result_conflict_profile"
+      },
+      {
+        "binding_profile": "POLICY_BLUE",
+        "blue_to_amber_transition": "ESCALATE->ALLOW",
+        "evaluation_pairs": 5,
+        "factor_id": "vsa_policy_conflict_profile"
+      }
+    ],
+    "profile_action_support": {
+      "POLICY_AMBER": {
+        "ALLOW": 30,
+        "DEMOTE": 10,
+        "ESCALATE": 10,
+        "HOLD": 10
+      },
+      "POLICY_BLUE": {
+        "ALLOW": 30,
+        "DEMOTE": 10,
+        "ESCALATE": 10,
+        "HOLD": 10
+      }
+    },
+    "transition_scope": "ADMISSION_CENTERED_STAR_NOT_COMPLETE_ACTION_GRAPH"
+  },
+  "interpretation_boundary": "The suite distinguishes every rule difference authored into POLICY_BLUE and POLICY_AMBER on five contexts. It covers only ALLOW-to-or-from-non-ALLOW action changes, not the complete four-action transition graph or unseen policies.",
+  "record_sha256": "sha256:4d23226ceecce5801a2fcf2f2f16548cb8db481589cef23a60a164a82b58ffcd",
+  "schema_version": "1.0.0",
+  "source_bindings": {
+    "dataset_manifest_sha256": "sha256:e9e857557ae244e85a7cf686d8ff0adf1d6a74f86ea833a7b4c27dbbd59986dd",
+    "evaluation_gold_sha256": "sha256:6d00cd3476b56f7a7e70afc21fc04d3af321a92fa5a3d8d54ea2a7ab7638d45e",
+    "evaluation_items_sha256": "sha256:21dc59c12f6954d550b194670f7f8f276fdd6a3ed9b3740eab93bf57a63f9833",
+    "evaluation_pairs_sha256": "sha256:c6cc8488a9183357caf10faaaf8ee0fbeda424cb8eb165cc9b2f2f2f33606b24",
+    "policy_contract_sha256": "sha256:f8c045667715238e9717bf6cec75aa87dc750191b617a3b414e77a5c40981f3c"
+  },
+  "status": "POLICY_DIFFERENCE_COVERAGE_COMPLETE"
+}

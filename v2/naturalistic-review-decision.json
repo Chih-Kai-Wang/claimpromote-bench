@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "status": "NO_CASES_INCLUDED_AFTER_SOURCE_LEVEL_REVIEW",
+  "reviewed_at": "2026-08-21T20:54:55Z",
+  "candidate_pool": {
+    "path": "v2/naturalistic-candidates.json",
+    "sha256": "sha256:bf37e1b780d64e4db076a06288f1657fda22fc8a50cfe9d92ac8dcbff631bf1f",
+    "candidate_count": 12
+  },
+  "source_snapshot": {
+    "repository": "siegelz/core-bench",
+    "commit": "e32a2980e72fe6eb04ee04eb749458f570625663",
+    "path": "benchmark/dataset/core_train.json",
+    "sha256": "sha256:3df47f1b3fa1cb60045018eb1a0f1ad4ecf6a53f72318c845a879ce0313b0730",
+    "record_fields_reviewed": [
+      "capsule_doi",
+      "capsule_id",
+      "capsule_title",
+      "field",
+      "language",
+      "results",
+      "task_prompt"
+    ],
+    "result_sets_per_candidate": 3
+  },
+  "reviewed_candidate_ids": [
+    "core-bench:capsule-3249574",
+    "core-bench:capsule-0396930",
+    "core-bench:capsule-9022937",
+    "core-bench:capsule-4645832",
+    "core-bench:capsule-5286757",
+    "core-bench:capsule-4098236",
+    "core-bench:capsule-6460826",
+    "core-bench:capsule-4884085",
+    "core-bench:capsule-9370340",
+    "core-bench:capsule-3272782",
+    "core-bench:capsule-9166182",
+    "core-bench:capsule-5367566"
+  ],
+  "decision": {
+    "cases_created": 0,
+    "model_calls": 0,
+    "claimpromotebench_model_outputs_consulted": false,
+    "human_annotators": 0,
+    "agreement_statistic": null,
+    "selection_frozen_before_model_calls": true
+  },
+  "exclusion_reasons": [
+    "The pinned candidate records provide task instructions and benchmark answer fields, but no time-stamped execution artifact, exit status, or immutable runtime receipt.",
+    "The records do not expose the dependency, provenance, and current-state bindings needed to apply the ClaimPromoteBench transition policy without adding unsupported author assumptions.",
+    "The repository license covers the benchmark repository; copying capsule-level evidence requires case-specific license verification that was not established by this review."
+  ],
+  "interpretation_boundary": "This is a pre-model-call source-level inclusion decision, not a naturalistic benchmark result. No author policy mapping, human label, agreement estimate, or model score was produced."
+}

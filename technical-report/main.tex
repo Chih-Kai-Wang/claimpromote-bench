@@ -4,6 +4,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
@@ -15,272 +16,1141 @@
 \newcommand{\demote}{\texttt{DEMOTE}}
 \newcommand{\escalate}{\texttt{ESCALATE}}
 
-\title{\cpb: Evaluating Whether Evidence Justifies Claim-State Transitions in AI Research Agents}
+\title{\cpb: Paired Regression Tests for Versioned Agent Policies}
 \author{Anonymous Author(s)}
 \date{}
 
 \begin{document}
+\raggedbottom
 \maketitle
 
 \begin{abstract}
-AI research agents may have valid evidence and still make a claim that is too strong. We study a narrower decision problem: given a claim, its evidence, its current status, and a requested status change, should that change be allowed under a fixed policy? We introduce \cpb, a controlled benchmark for this problem. Version~1 contains 200 controlled pairs over 20 policy factors, including a preregistered 150-pair hidden test. Numerical and formal cases are tied to executable artifacts, and the hidden set and exact model prompts were committed before scored inference. The primary study contains 7,200 hidden decisions from two Qwen3 models, four intervention arms, and three fixed seeds. The main result is negative: 5,327 outputs (73.99\%) are \texttt{FORMAT\_ERROR}, and all 1,873 parseable raw decisions are \allow{}. A deterministic gate prevents false promotion among the parseable cases on which it can act, but decision coverage in the gate arm is only 14.0--49.0\% for Qwen3-0.6B and 21.7--48.3\% for Qwen3-1.7B. Because the gate applies the same fixed policy used to define the benchmark labels, this result is evidence about rule enforcement rather than improved model reasoning. A small blinded human audit is mixed rather than passing.
+Repository policies are versioned inputs to coding agents, yet evaluations usually score versions
+independently. We present \cpb, a paired regression protocol that binds two policy versions, an
+unchanged case, and a target action relation. For finite executable policies, it enumerates
+action-changing contexts and derives cardinality-minimum suites with relative rule and transition
+coverage. For prose policies, targets are declared author mappings, not policy-owner ground truth.
+Route records retain transport, syntax, schema, and semantic failures in end-to-end denominators.
+Eight public histories illustrate the supported fault classes. On ten author-mapped pairs from two
+\texttt{AGENTS.md} revisions, eight hosted routes yield 128/160 item agreements and 52/80 pair
+agreements. In a prespecified non-\allow{} extension, every valid item agrees with its author target;
+incomplete outputs leave 50/54 stable pairs but only 6/18 changed pairs complete. On selected
+routes, a same-item request-cap comparison changes complete target-agreeing pairs from 0/15 to 7/15
+and 0/15 to 9/15, with one call per cell. The protocol supports auditable frozen-case regression
+tests. The executable studies also retain exact action confusion matrices and source-bound
+verification receipts. Deployment validity and model-family effects remain unmeasured.
 \end{abstract}
 
 \section{Introduction}
 
-A research agent can have valid evidence and still make the wrong decision about what that evidence supports. A finite computation may be correct without proving a theorem over an infinite domain. A Lean certificate may prove the exact encoded statement without establishing a broader natural-language claim. An internal reproduction may succeed without counting as independent external review. In each example, the evidence itself can be sound while the requested \emph{claim-state transition} is not justified.
+Repository context files are versioned inputs to coding agents. One study finds them in 466
+open-source projects; another identifies 2,303 files across 1,925 repositories
+\cite{mohsenimofidi2026context,chatlatanagulchai2025agentreadmes}. Controlled evaluations show that
+agents follow these files and that their effects on task success, cost, and latency vary
+\cite{lulla2026agentsmd,gloaguen2026agentsmd,khatri2026contextfiles}. A repository can therefore
+change the policy governing an agent while leaving the user's request unchanged.
 
-Most existing evaluations ask nearby questions. They test scientific claim verification, computational reproducibility, data-driven research tasks, hypothesis falsification, or abstention \cite{javaji2025claimbench,huang2026deepfact,siegel2025corebench,chen2025scienceagentbench,huang2025popper,kirichenko2025abstentionbench}. We focus on the decision in between: whether the evidence already on record is enough to justify a specific change in research status.
+Two public histories make the regression concrete. Open Policy Agent added vulnerability-triage
+guidance to \texttt{AGENTS.md}; WooCommerce Services added backward-compatibility guardrails after
+an interface break \cite{opa2026agentssecurity,woocommerce2026agentsbc}. Other histories change
+executable admission policy, verifier semantics, or guardrail adapters
+\cite{gatekeeper2020flexvolume,gatekeeper2021selector,aquasecurity2024trivy,sigstore2022rego,
+microsoft2026agentgovernance,agentgateway2026bedrock}. In each case, source version belongs in the
+test fixture because it determines an executable target or informs a declared prose mapping.
 
-Our question is therefore:
-\begin{quote}
-\emph{Given a claim, typed evidence, a current evidence state, and a requested transition, can an AI system decide whether that transition is allowed by a fixed, machine-checkable policy?}
-\end{quote}
+Existing context-file studies vary file presence or construction strategy. GuideBench tests
+synthetic guideline updates, and TDAD tests evolution of author-supplied specifications
+\cite{diao2025guidebench,rehan2026tdad}. Policy-differencing methods produce change witnesses;
+structured-output benchmarks measure interface completion. \cpb joins an immutable upstream
+revision, an unchanged case, its executable or author-declared target relation, and the
+model-service route that must deliver both decisions.
 
-\cpb turns this question into a controlled evaluation. It keeps research status, computational evidence, formal certification, and independent review as separate parts of the evidence state. Each controlled pair keeps the claim and requested transition fixed while changing one policy-relevant prerequisite. The oracle checks whether the requested transition satisfies the policy; it does not try to decide whether an unrestricted mathematical statement is true. Numerical and formal cases use executable artifacts, and the hidden data and exact prompts were fixed before the scored runs.
+\cpb evaluates synthetic, policy-constrained evidence-state transitions and frozen author mappings
+of prose revisions. For executable policies, it enumerates a declared finite context set,
+retains action-changing contexts, certifies changed-rule and directed-transition coverage, and
+selects a cardinality-minimum structural suite. For prose policy, it binds immutable source versions
+to an explicit author mapping. A \emph{route} includes the model identifier, provider, API adapter,
+prompt, parser, output contract, and execution time. Every scheduled call contributes to
+end-to-end item and pair metrics; conditional metrics describe the subset that produced valid
+decisions. Users remain responsible for policy parsing, grammar synthesis, rule-change discovery,
+and witness inference.
 
-\begin{figure}[t]
-\centering
-\small
-\begin{tabular}{@{}c@{\;\(\longrightarrow\)\;}c@{\;\(\longrightarrow\)\;}c@{\;\(\longrightarrow\)\;}c@{}}
-\fbox{\parbox[c][10mm][c]{0.19\linewidth}{\centering Claim + evidence\\current state + request}} &
-\fbox{\parbox[c][10mm][c]{0.15\linewidth}{\centering Raw model\\decision}} &
-\fbox{\parbox[c][10mm][c]{0.15\linewidth}{\centering Fixed-policy\\gate}} &
-\fbox{\parbox[c][10mm][c]{0.15\linewidth}{\centering Final\\action}}
-\end{tabular}
-\caption{Evaluation setup. The raw model decision is reported separately from the action after deterministic enforcement. The gate can veto an invalid \allow{} but cannot supply a missing model decision.}
-\label{fig:overview}
-\end{figure}
+The result is a behavioral regression test indexed by source version. A changed pair tests a
+declared action transition; a stable pair tests whether an unrelated source change perturbs the
+action. For prose cases, scores measure agreement with the study authors' frozen mapping. Neither
+item agreement nor completion alone identifies both failure modes.
 
-The hidden study produced a clear negative result. Of 7,200 decisions, 73.99\% fail the required output format. Every one of the 1,873 parseable raw decisions is \allow{}, so the tested models do not distinguish allowed from disallowed transitions when they do return a valid structured answer. The gate changes the final system action on the cases it can process, but it does not fix the low coverage or the nonselective model behavior. This distinction is central to the paper.
+The evaluation uses eight public histories, two model-facing \texttt{AGENTS.md} revisions, and
+synthetic evidence-state instruments. A prespecified, commit-frozen non-\allow{} extension tests all three
+restrictive actions and includes case-only, source-shuffled, Always-\allow{}, and copy-before
+controls. A second prespecified study compares request caps and JSON-schema mode on three fixed routes.
+The deterministic executor is the definitional policy ceiling; the Naive Bayes control remains a
+weak shortcut check.
 
-Our contributions are:
+The contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item We define a four-action benchmark for deciding whether typed scientific evidence justifies a requested claim-state transition, with 200 controlled pairs over 20 policy factors.
-  \item We tie numerical cases to exact computations and formal cases to pinned Lean artifacts, and we commit the hidden set and exact prompts before scored inference.
-  \item We evaluate model decisions separately from deterministic gate actions, so an engineering safeguard is not mistaken for better model reasoning.
-  \item We report the complete hidden study, including the high format-error rate, the all-\allow{} raw behavior, the low coverage of the gate arm, and a small human audit that did not meet the preregistered pass criterion.
+  \item a benchmark object that binds policy-version pairs to relative rule and transition
+  certificates and a cardinality-minimum structural suite;
+  \item a route-level scoring protocol that separates raw-strict, registered-parser,
+  contract-action, and exact-decision endpoints while preserving complete denominators; and
+  \item source-traceable route evidence over eight upstream histories, including non-\allow{}
+  controls and a same-item request-cap comparison.
 \end{enumerate}
+The finite enumerator uses established semantic-differencing and set-cover machinery. The technical
+contribution is their integration with immutable source pairs, stable and changed cases,
+failure-inclusive route records, and relative structural certificates; we do not claim a new
+learning or suite-reduction algorithm.
 
 \section{Related Work}
 
-\paragraph{Scientific claim verification.}
-CLAIM-BENCH evaluates claim--evidence extraction and validation in scientific papers \cite{javaji2025claimbench}. DeepFact studies claim-level factuality in deep-research reports \cite{huang2026deepfact}, while ClaimDB evaluates fact verification over large structured databases \cite{theologitis2026claimdb}. RECV decomposes evidence-based claim verification into deductive and abductive reasoning requirements and tests them on synthetic and real-world claims \cite{dougrezlewis2025recv}. These tasks ask whether evidence supports a factual claim. \cpb instead starts from an explicit evidence record and asks whether it licenses a particular change in research status.
+\paragraph{Repository context for coding agents.}
+Empirical studies characterize repository context files as evolving configuration artifacts and
+measure their presence against task completion, latency, token use, and tool behavior
+\cite{mohsenimofidi2026context,chatlatanagulchai2025agentreadmes,lulla2026agentsmd,
+gloaguen2026agentsmd,khatri2026contextfiles}. Their controlled coordinate is usually context-file
+presence or construction strategy. We hold the route and case fixed, vary a naturally occurring
+policy version, and score an executable target or a provenance-qualified author mapping.
 
-\paragraph{Research-agent evaluation and reproducibility.}
-ScienceAgentBench evaluates executable data-driven research tasks \cite{chen2025scienceagentbench}; CORE-Bench evaluates computational reproduction of published work \cite{siegel2025corebench}; and POPPER studies agentic hypothesis falsification with sequential statistical control \cite{huang2025popper}. \cpb does not attempt end-to-end scientific discovery or truth determination. It studies the narrower decision between producing evidence and assigning a stronger status to a claim.
+\paragraph{Behavioral tests, contrasts, and metamorphic relations.}
+CheckList organizes behavioral tests by capability, and contrast sets probe local decision
+boundaries through controlled input changes \cite{ribeiro2020checklist,gardner2020contrastsets}.
+Metamorphic testing evaluates relations among transformed executions \cite{chan1998metamorphic}.
+The policy-version pair is a contrast whose relation is defined by an executable evaluator or a
+declared source-to-action mapping.
 
-\paragraph{Policy-aware agent decisions.}
-ST-WebAgentBench measures whether web agents complete enterprise tasks while respecting explicit safety and trustworthiness policies \cite{levy2026stwebagentbench}. The concurrent SteerBench-Work is especially close methodologically: it evaluates proceed-versus-hold decisions at workplace action boundaries and includes evidence-reversed incident mirrors \cite{serdar2026steerbenchwork}. These benchmarks show that action-level policy compliance and evidence changes can expose failures hidden by task success alone. Our target is different: the action under evaluation is a change to a \emph{scientific claim's epistemic state}, with separate computation, formal-certification, review, and research-status axes; the policy also reasons about evidence dependencies, provenance, scope, staleness, and contradictions. We therefore do not claim novelty for counterfactual pairs or evidence reversal by themselves.
+\paragraph{Conformance, semantic differencing, and regression.}
+Labelled-transition-system and finite-state-machine methods derive conformance tests from explicit
+behavioral models \cite{tretmans1996conformance,chow1978fsm}. Semantic differencing identifies
+behavioral changes between test-design models \cite{tzorefbrill2017semantic}. Margrave computes
+witnesses for access-control policy disagreement, while Cirg uses change-impact analysis to generate
+and reduce policy tests \cite{fisler2005policychange,martin2007policytests}. Mutation testing and
+suite reduction supply established adequacy machinery
+\cite{martin2007policymutation,harrold1993testsuite}. Prompt regression measures service evolution
+under a fixed application task \cite{ma2024promptregression}. \cpb uses the policy version as the
+controlled coordinate and carries each witness through a model-service contract.
 
-\paragraph{Counterfactual and evidence-sensitive evaluation.}
-CofCA uses step-wise counterfactual multi-hop questions to separate context-based reasoning from memorized factual answers \cite{wu2025cofca}. MEDSYN introduces an evidence-sensitivity analysis for multimodal clinical diagnosis and shows that models can fail to use heterogeneous evidence effectively \cite{chen2026medsyn}. These works motivate controlled changes to evidence as an evaluation tool. In \cpb the controlled change is tied to a named policy prerequisite and the outcome is a four-way claim-state transition, so the main object of study is transition admissibility rather than the counterfactual construction technique itself.
-
-\paragraph{Evidence-state maintenance and verifier-governed workflows.}
-SeekBench evaluates grounding, recovery, and answer calibration as evidence quality changes \cite{shao2025seekbench}. Omni-Decision maintains a structured evidence state for multimodal question answering \cite{ma2026omnidecision}; EviGraph tracks claim--support consistency in autonomous research \cite{ren2026evigraph}; and the contemporaneous ClaimLedger report proposes verifier-governed claim maintenance \cite{elliman2026claimledger}. These systems are close in motivation. Our benchmark is narrower: the policy is fixed, each pair changes a specific prerequisite, the answer space has four actions, and the model decision is evaluated separately from any deterministic gate. We do not claim that claim ledgers or verifier-governed maintenance are new.
-
-\paragraph{Abstention and formal verification.}
-AbstentionBench shows that models remain unreliable on unanswerable or underspecified questions \cite{kirichenko2025abstentionbench}. A \hold{} decision is related to abstention but is not the same: \cpb also includes \demote{} for a claim whose current status no longer has a valid basis and \escalate{} for an unresolved authoritative contradiction. OSVBench shows that formal-specification generation remains difficult \cite{li2026osvbench}. In \cpb, a proof artifact is one kind of evidence rather than a general-purpose ``verified'' label.
-
-\section{Task Definition}
-
-Each instance contains a claim record, typed evidence records, dependency and provenance metadata, a current evidence-state vector, and a requested transition. The model returns one action from
-\[
-\{\allow,\hold,\demote,\escalate\}
-\]
-plus an admissibility score and structured reason and evidence identifiers. \allow{} means the requested transition satisfies the policy; \hold{} means it is not currently justified; \demote{} means an already elevated state has lost its valid basis; and \escalate{} is reserved for an authoritative unresolved contradiction. Malformed output is recorded separately as \texttt{FORMAT\_ERROR}; it is not silently treated as a safe hold.
-
-\subsection{Separate evidence states}
-
-The benchmark tracks four state axes:
-\begin{align*}
-\texttt{research\_status} &\in \{\texttt{PROPOSED},\texttt{OPEN},\texttt{RESOLVED}\},\\
-\texttt{computation\_status} &\in \{\texttt{NONE},\texttt{COMPUTATIONAL}\},\\
-\texttt{formal\_status} &\in \{\texttt{NONE},\texttt{FORMALLY\_CERTIFIED}\},\\
-\texttt{review\_status} &\in \{\texttt{UNREVIEWED},\texttt{INDEPENDENTLY\_VERIFIED}\}.
-\end{align*}
-The axes are kept separate. Formal certification does not imply independent review, and a successful computation does not imply formal certification or research resolution.
-
-\subsection{Fixed policy oracle}
-
-A public policy lists the requirements for each transition at a fixed evaluation time. The oracle checks dependencies, evidence status, scope, staleness, provenance, runtime success, contradictions, and artifact integrity. Numerical and formal \allow{} cases also require the executable artifact to match the registered scope. The oracle answers a policy question about the registered evidence; it is not a theorem prover or a general scientific truth oracle.
-
-\section{Benchmark Construction}
-
-\subsection{Controlled pairs}
-
-Within each pair, the natural-language claim and requested transition are fixed. The two members differ only in registered fields that matter to the policy. This lets us ask a direct question: when the decisive prerequisite changes, does the model change its decision?
-
-Version~1 contains 200 pairs (400 instances) over 20 factors covering dependency closure, numerical sufficiency and scope, runtime completion, freshness and contradictions, provenance and independent review, statement identity, and formal trust-base binding. Fifty pairs (100 instances) are public development data. Primary scoring uses only the preregistered 150-pair private hidden split (300 instances).
-
-The public development split is rebuilt and checked end to end in hosted CI. Its inputs, fixed gold labels, pair descriptors, exact-rational artifacts, and generated Lean package pass the dataset, executable, and formal checks. The private hidden split was constructed and validated separately, and both the hidden data and exact model prompts were cryptographically committed before scored inference.
-
-\subsection{Executable evidence and shortcut checks}
-
-Numerical cases use exact-rational finite-grid artifacts. Validation recomputes their registered values, extrema, predicates, repetition digests, and scope fields. These artifacts support only the finite computational claim that was registered. Formal cases use generated Lean sources under a pinned toolchain; kernel acceptance supports only the exact encoded declaration in that environment.
-
-We also check for metadata-only and shallow structural shortcuts. Registered meaning-preserving transformations include identifier renaming, changes in evidence order, and insertion of irrelevant evidence. The oracle and prompt renderers must give the same result after normalization. These checks reduce obvious leakage and reduce room for changes after results are known, but they do not make the synthetic benchmark equivalent to real research records.
-
-\section{Intervention Arms}
-
-Table~\ref{tab:arms} summarizes the four fixed arms. The first three change what the model sees. Only the last arm changes the final action after the model has responded.
+\paragraph{Specification following.}
+RuleArena and SpecEval test rule-governed and specification-following behavior
+\cite{zhou2025rulearena,ahmed2025speceval}. GuideBench includes guideline updates, and TDAD studies
+specification evolution with hidden tests and semantic mutants
+\cite{diao2025guidebench,rehan2026tdad}. Policy-to-Tests translates governance prose into executable
+rules \cite{datla2025policytotests}. Policy-document benchmarks study comprehension,
+internalization, request compliance, and evolving moderation rules
+\cite{bao2026policyllm,liu2026policyinternalization,cisneros2026policycompliance,
+mullick2023evolving,ji2026argus}. COMPASS studies organization-specific alignment; augmented policy
+training targets guardrail generalization
+\cite{choi2026compass,liu2026augmentedpolicy}. PolicyBank introduces controlled policy gaps and a
+human oracle to separate policy alignment from execution; ReguSim separates stated reasoning,
+attempted action, enforcement, and monitoring evidence
+\cite{choi2026policybank,luo2026regusim}. Our endpoint is route completion and target agreement on a
+fixed case indexed by source version.
 
 \begin{table}[t]
 \centering
-\small
-\caption{Intervention arms. ``Gate'' indicates whether an invalid raw \allow{} may be replaced after generation.}
-\label{tab:arms}
-\begin{tabular}{lll}
+\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\caption{Closest evaluation objects. ``Author map'' denotes a target declared by benchmark authors,
+without policy-owner validation.}
+\label{tab:related-matrix}
+\begin{tabular}{@{}llll@{}}
 \toprule
-Arm & Model-facing information & Gate \\
+Work & Revision object & Target authority & Evaluated failure layer \\
 \midrule
-Narrative & Evidence rendered as prose & No \\
-Ledger & Typed evidence-state ledger & No \\
-Ledger + verifier & Ledger + deterministic verifier information & No \\
-Ledger + verifier + gate & Same information + disclosed enforcement & Yes \\
+GuideBench & synthetic guidelines & benchmark/human & model response \\
+TDAD & author specification & executable tests & agent and tests \\
+PolicyBank & controlled policy gaps & human oracle & alignment/execution \\
+ReguSim & visible financial rules & executable constraints & action/enforcement \\
+Prompt regression & service version & application tests & service behavior \\
+\cpb & upstream/finite policy & oracle or author map & complete route \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The gate never promotes a claim on the model's behalf. It can only block or replace an invalid \allow{} according to the fixed policy. Because the gate arm tells the model that enforcement may occur, raw differences between the passive-verifier and gate arms may partly reflect that prompt difference. The cleanest measure of the gate itself is therefore the difference between raw and final actions within the gate arm.
+\paragraph{Structured output and selective prediction.}
+Grammar-constrained decoding and incremental parsing improve syntactic validity
+\cite{scholak2021picard,geng2023grammar}; JSONSchemaBench and BFCL evaluate schemas and tool
+arguments \cite{geng2025jsonschemabench,patil2025bfcl}. Selective prediction evaluates risk under a
+learned reject option \cite{geifman2017selective,geifman2019selectivenet}. Our action set contains an
+explicit \hold{} decision; route failures remain terminal outcomes outside that action set.
 
-\section{Experimental Protocol}
+\paragraph{Research agents.}
+ScienceAgentBench, CORE-Bench, and POPPER evaluate data analysis, reproducibility, and sequential
+falsification \cite{chen2025scienceagentbench,siegel2025corebench,huang2025popper}. Our auxiliary
+evidence-state suites isolate one downstream policy transition within such workflows.
 
-The primary study contains 150 hidden controlled pairs (300 instances), Qwen3-0.6B Q8\_0 and Qwen3-1.7B Q8\_0, four arms, and three fixed seeds (104729, 130363, 169087):
+\section{Method}
+
+\subsection{Finite policy-difference enumeration}
+
+The benchmark takes deterministic evaluators $P_0$ and $P_1$, a finite set $\mathcal X$ of complete
+typed contexts with stable identifiers, registered changed-rule witnesses, and the rule inventory
+to cover. Let $\pi_P(c)$ denote the prescribed action. The enumerator executes both evaluators and
+defines
 \[
-300\times 2\times4\times3 = 7{,}200
+\Delta(P_0,P_1;\mathcal X)=
+\{c\in\mathcal X:\pi_{P_0}(c)\neq\pi_{P_1}(c)\}.
 \]
-scored decisions. Public development instances are not included in primary scoring. The hidden set was committed to Git before the scored runs; the inference source is workflow run \texttt{32255636879}. Both models use llama.cpp commit \texttt{de699957b92f490efebad149665b0dccf127eaff}.
+Each $c\in\Delta$ yields a pair $((P_0,c),(P_1,c))$. The context, query, and output contract are
+identical; only the policy source changes. This construction makes policy-version sensitivity a
+necessary condition for pair correctness. A deterministic route invariant to the policy returns
+the same action twice, so at most one member can be correct and pair accuracy is zero.
 
-The primary metrics are false promotion rate (FPR), valid promotion recall (VPR), false-hold rate, and paired transition accuracy (PTA). Decision coverage is the fraction of hidden instances for which the model returns a parseable decision under the fixed output contract. Complete-pair coverage requires both members of a controlled pair to be parseable. Secondary metrics include promotion false discovery rate, counterfactual flip accuracy, calibration metrics, structured reason and evidence scores, and format-error rate. Missing or malformed output remains visible in the evaluation and is never counted as \hold{}, so conditional rates must be read together with coverage.
+The enumerator associates every candidate with its registered changed-rule witnesses and directed action
+edge $(\pi_{P_0}(c),\pi_{P_1}(c))$. For suite $T$, adequacy is
+\[
+A(T)=\left(\frac{|R(T)|}{|R_\Delta|},
+             \frac{|E(T)|}{|E_{\mathrm{reach}}|}\right),
+\]
+where $R_\Delta$ is the registered changed-rule inventory and $E_{\mathrm{reach}}$ is the action-edge
+set observed by exhaustive execution over $\mathcal X$. Both certificates are relative to the
+declared context set and registered witnesses. Their validity depends on context completeness
+and witness correctness.
 
-Confidence intervals resample whole controlled pairs. Arm comparisons use exact two-sided McNemar tests within exact model-artifact/runtime/seed/hardware identity groups, with Holm correction applied separately to comparisons of raw decisions and final system actions.
+Selecting the smallest structural-coverage suite with $A(T)=(1,1)$ is a set-cover instance. We use a standard exact
+bit-mask dynamic program with $O(n2^{r+k})$ state updates for $n$ candidates, $r$ rules, and $k$
+edges. A specialized search selects one context per edge while tracking rule masks; a complete
+$k$-pair witness meets the edge lower bound and is globally minimum for the candidate pool.
+Appendix~\ref{app:enumerator} gives the proof and optimality certificate.
 
-\subsection{Recovery after evaluator failures}
+For versioned prose, we replace the executable oracle with a declared mapping
+$M_v(c)\in\mathcal A$ from a pinned source version and case to a finite action. Source authorship,
+case authorship, and mapping authorship are recorded separately. A changed pair satisfies
+$M_0(c)\neq M_1(c)$; a stable control satisfies equality. These pairs test source-version
+sensitivity under the declared mapping. Their outcomes are target-agreement measurements, not
+estimates of policy-owner intent. Rule-coverage and minimum-suite claims apply only where an
+executable evaluator and registered witnesses define the coverage universe.
 
-Some source jobs completed all 300 model calls but failed during evaluation because an output could satisfy the JSON schema while still violating a cross-field rule, for example by returning \allow{} without proposing the requested target state. We fixed the evaluator rather than changing the model outputs. The recovery procedure downloads the 24 original source artifacts, reconstructs the committed hidden set and prompt identity from the original scoring source, and reclassifies only these invalid structured outputs as \texttt{FORMAT\_ERROR}. It does not query either model again and does not rewrite any otherwise valid decision. Exactly 27 of 7,200 records were reclassified. Recovery run \texttt{32274814703} then validated all 24 normalized runs, their prompt hashes, and the complete matrix before the aggregate statistics were produced.
+Table~\ref{tab:worked-example} gives a complete prose-policy example. Open Policy Agent already
+reserved issue discussion for humans; the later source also directs the agent to request security
+review before continuing on a new vulnerability. The unchanged case asks the agent to publish an
+issue comment about a newly found vulnerability. Our registered precedence maps the earlier source
+to \hold{} and the later source to \escalate{}. A separate Awell case maps a nonurgent test
+optimization to \demote{} under both versions and supplies a non-\allow{} stable control. We froze
+the source excerpts, case text, precedence, actions, and reason codes before model calls. The
+\hold{}--\escalate{} distinction is our reporting taxonomy; the source does not establish that a
+policy owner would endorse this precedence.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Worked source-bound pairs. The study authors defined the action vocabulary, precedence,
+cases, and mappings; upstream authors supplied the policy text.}
+\label{tab:worked-example}
+\begin{tabular}{@{}p{0.15\linewidth}p{0.32\linewidth}p{0.21\linewidth}p{0.19\linewidth}@{}}
+\toprule
+Pair & Unchanged case & Source evidence & Mapped relation \\
+\midrule
+OPA changed & Publish an issue comment for a newly found vulnerability & New source requires user
+security review before work continues & \hold$\rightarrow$\escalate{} \\
+Awell stable & Consolidate registration tests after a 25-second run & Both sources call the
+optimization nonurgent & \demote$\rightarrow$\demote{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Parser and contract endpoints}
+
+For scheduled item $x$, let $y(x)$ be the executable-oracle action or, for prose, the declared
+author target; let $r(x)$ be the action parsed directly from retained raw text; let $p(x)$ be the
+action recorded by the route-specific registered parser; let $v(x)$
+indicate full output-contract validity; and let $d(x)$ be the parsed structured decision. The
+raw-strict parser accepts exactly one duplicate-free top-level JSON object and performs zero fence or
+substring extraction, repair, coercion, or non-standard constant handling. Registered parsers retain
+their historical route-specific behavior. Their provenance distinguishes direct parsing from
+deterministic single-object extraction. Every retained response has unique top-level keys. We report:
+\begin{align*}
+C_R(x)&=\mathbb 1[r(x)=y(x)], &&\text{raw-strict action},\\
+C_P(x)&=\mathbb 1[p(x)=y(x)], &&\text{registered-parser action},\\
+C_C(x)&=\mathbb 1[v(x)=1]\mathbb 1[p(x)=y(x)], &&\text{contract action},\\
+C_F(x)&=\mathbb 1[v(x)=1]\mathbb 1[d(x)=d^*(x)], &&\text{full decision}.
+\end{align*}
+The task-specific contract contains five fields for Gatekeeper and six fields for the evidence-state
+tasks. Pair success is the product of the two member indicators for the selected endpoint. We call
+this correctness only when $y$ comes from an executable or synthetic oracle; prose results report
+agreement with an author target.
+End-to-end metrics divide by every scheduled item or pair. Conditional item metrics divide by items
+for which the selected parser or contract succeeds; conditional pair metrics require both members to
+succeed. Transport, syntax, schema, and semantic failures are terminal route outcomes. They appear
+as \texttt{N} in confusion matrices, outside the policy action set, and remain incorrect in
+end-to-end metrics.
+
+\begin{figure}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}c@{\hspace{5pt}}c@{\hspace{5pt}}c@{}}
+\fbox{\parbox[c][0.58in][c]{0.25\linewidth}{\centering versioned policy\\sources $P_0,P_1$}} &
+\fbox{\parbox[c][0.58in][c]{0.27\linewidth}{\centering finite contexts $\mathcal X$\\and stable IDs}} &
+\fbox{\parbox[c][0.58in][c]{0.25\linewidth}{\centering registered witnesses\\and source tests}}\\[4pt]
+\multicolumn{3}{c}{$\downarrow$ source validation and declared action mapping $\downarrow$}\\[3pt]
+\multicolumn{3}{c}{\fbox{\parbox[c][0.52in][c]{0.73\linewidth}{\centering action-changing pairs $+$ relative rule/edge certificates\\$+$ minimum structural-coverage suite}}}\\[4pt]
+\multicolumn{3}{c}{$\downarrow$ scheduled model--service calls $\downarrow$}\\[3pt]
+\multicolumn{3}{c}{\fbox{\parbox[c][0.56in][c]{0.73\linewidth}{\centering raw-strict $\rightarrow$ registered parser $\rightarrow$ full contract $\rightarrow$ exact decision\\item/pair metrics with complete denominators}}}
+\end{tabular}
+\caption{Benchmark and evidence flow. Declared inputs precede enumeration; source
+validation and suite construction finish before model calls. Each scoring layer corresponds to a
+distinct interface requirement.}
+\label{fig:evidence-flow}
+\end{figure}
+
+\section{Evidence and Evaluation Design}
+
+\subsection{Source-traceable revisions}
+
+The model-facing study uses two public \texttt{AGENTS.md} histories. Open Policy Agent adds
+vulnerability-triage guidance, and WooCommerce Services adds backward-compatibility rules after an
+interface break. We pin each change and parent, verify source and license hashes, and retain the
+maintainer review record. Ten author-constructed cases yield six action-changing pairs and four
+stable controls. Upstream maintainers authored the policy text; we authored the scenarios, finite
+actions, precedence rule, action mapping, and labels. All were commit-frozen before replacement
+inference. These mappings are test targets rather than validated oracles; human agreement and
+policy-owner validity were not measured.
+
+A prespecified, commit-frozen extension removes \allow{} from the target support. It binds eight pairs to four
+source-version records from Open Policy Agent, WooCommerce Services, and Awell: two stable pairs
+each for \hold, \demote, and \escalate{}, plus two \hold$\rightarrow$\escalate{} pairs. Each of the
+16 item mappings includes the pinned source excerpt and an author rationale. The mapping audit
+records zero human annotators, zero policy-owner labels, and no agreement statistic. Model outputs
+played no role in source or label selection.
+
+Executable histories supply exact source checks. Open Policy Agent 1.19.1 reproduces two
+Gatekeeper changes on 12 contexts derived from upstream tests. We map zero violations to \allow{}
+and one or more to \hold{}. Trivy contributes four regression cases around an inverted predicate;
+Cosign contributes six verifier cases spanning four interface faults. Every source, parent and
+change commit, upstream test name, and license is retained.
+
+A fixed query screened 465 public repository seeds and inspected 11 model--policy candidates at
+source level. Microsoft Agent Governance Toolkit and agentgateway met the declared boundary,
+licensing, and evidence criteria. We execute the former's parent and fixed Rego sources. For the
+latter, we inspect the parent source and execute 33 selected tests at the fixed commit. This
+convenience sample establishes concrete boundary faults; prevalence remains unmeasured.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Evidence layers. Structural minima are exact relative to declared candidate sets.}
+\label{tab:evidence}
+\begin{tabular}{@{}p{0.19\linewidth}p{0.28\linewidth}p{0.28\linewidth}p{0.18\linewidth}@{}}
+\toprule
+Layer & Source or instrument & Role & Scope \\
+\midrule
+External prose policy & OPA, Woo, Awell & model-facing version tests & 18 pairs; 3--8 routes \\
+Executable policy & Gatekeeper and Trivy & exact policy differences & 16 cases; 4 edges \\
+Boundary faults & Cosign, Agent Governance, agentgateway & verifier and adapter validity & 6, 2, 33 cases \\
+Synthetic structure & SLSA-inspired migration & rule and edge coverage & 60 pairs; min. 10 \\
+Evidence state & imbalanced, balanced, factor-complete & action and route diagnostics & 150, 90, 15 pairs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Route studies and auxiliary instruments}
+
+The model-facing study sends the ten \texttt{AGENTS.md} pairs to eight hosted routes for three
+repetitions, totaling 480 scheduled calls. Every request includes the complete pinned policy file.
+Primary endpoints use the first repetition: coverage, item and pair accuracy, changed-pair action
+invariance, stable-control agreement, action recall, and the full confusion matrix. For prose cases,
+the stored accuracy fields are reported as author-target agreement. Repeated results
+measure within-route stability.
+
+The non-\allow{} extension sends 16 items to GLM 5.3, HY3, and Qwen 3.7 Plus through one endpoint.
+The full-policy condition has three prespecified repetitions; case-only and unmatched
+source-shuffled controls have one. Strict JSON schema, a 1536-token requested cap, temperature 0,
+top-$p$ 1, and seed 20260825 are fixed across 240 calls. Always-\allow{} and copy-before are
+deterministic offline controls, not learned baselines. The negative controls remain exploratory
+because source substitution also changes prompt content and completion behavior.
+
+The request-cap comparison uses the same three routes and the lexicographically first pair
+for each of 15 registered balanced-challenge factors. It crosses the 30 fixed items with prompt-only
+caps of 4096, 8192, and 12288 tokens and strict JSON schema at 4096, totaling 360 calls. Conditions
+rotate by item; each group sends the same item and condition to all three routes. Temperature,
+top-$p$, seed, endpoint, prompt, parser, and adapter remain fixed. The primary contrast is the exact
+same-item change from prompt-4096 to prompt-12288 for each route. The endpoint may count hidden
+reasoning and visible text against one cap, so we call \texttt{finish\_reason=length} request-cap
+exhaustion. The routes were selected after an earlier screen found frequent length failures; each
+cell receives one call. We report exact counts without population or provider-independent inference.
+
+Both extensions allow one application request per cell, zero client retries, and no partial resume.
+The server's internal retry behavior is unobservable. Every one of the 600 scheduled calls reached a
+terminal state. The study plans, schedules, data, prompts, schemas, catalog snapshots, and runtime
+sources were frozen at commit \texttt{a68cef6} before inference.
+
+Prior instruments provide depth and controls. A Gatekeeper study repeats 24 items three times on
+two routes sharing the same provider, base URL, API, prompt-only mode, and adapter settings. A
+SLSA-inspired migration defines four actions over structured attestation fields and covers 12 rules
+and ten reachable edges \cite{slsa2026v12,intoto2026attestation}. The deterministic executor is the
+\emph{definitional policy ceiling}; policy-aware and profile-blind random forests are learned
+controls. The evidence-state suite contains 300 imbalanced items, including eight \demote{} and
+eight \escalate{} labels. Its Naive Bayes control supplies a weak shortcut check. The public
+action-balanced challenge contains 90 pairs and 15 factors, with 30 \hold, 30 \demote, 30
+\escalate, and 90 \allow{} members. We fix its cases and labels before inference. Its estimand is
+robustness on known cases.
 
 \section{Results}
 
-The main result is not an advantage for one intervention arm. The larger problem is that the models often fail to produce a usable decision at all, and the decisions that are usable all choose the same action. Across the full study, 5,327 of 7,200 outputs (73.99\%) are \texttt{FORMAT\_ERROR}. The remaining 1,873 raw decisions are all \allow{}. The gate changes the final action on invalid promotions that reach it, but this happens only on the subset of cases with parseable output.
+\subsection{Source validation and finite structural coverage}
 
-\subsection{Raw model behavior}
+Open Policy Agent execution reproduces both Gatekeeper changes on all 12 contexts. A two-pair
+witness covers 2/2 changed rules and both \allow$\rightarrow$\hold{} and
+\hold$\rightarrow$\allow{} transitions, meeting the two-edge lower bound. Trivy reproduces two
+transitions in each direction around its inverted predicate, with a two-case minimum. Cosign
+reproduces four verifier fault modes and requires four cases to cover them.
 
-Table~\ref{tab:main-results} reports raw behavior before enforcement for every arm. Coverage triplets are ordered by seeds 104729, 130363, and 169087. FPR, VPR, and PTA are conditional on parseable decisions; ``undef.'' means that no decision in that run was parseable.
+Replaying the fixed revision's 15 upstream tests against the Agent Governance Toolkit parent yields
+11 passes; all 15 pass at the change. Both decision cases change from an undefined deny verdict to \texttt{deny}, yielding two
+mapped \allow$\rightarrow$\hold{} transitions and a one-case minimum. For agentgateway, we inspect
+the parent source and execute tests at the change commit, where all 33 selected tests pass. Together
+these revisions instantiate policy, verifier, and guardrail-interface faults.
 
-\begin{table}[t]
+The external policy receipt verifies both \texttt{AGENTS.md} parents and changes, source bytes,
+licenses, and maintainer reviews. The ten-case mapping contains six changed pairs and four stable
+controls: 14 \allow, three \hold, two \escalate, and one \demote{} item per replication. These are
+source-validation and author-mapping claims; route behavior is reported separately.
+
+The four-action migration gives a separate structural result. Its 12-rule stratified suite
+covers 12/12 changed rules and 6/10 reachable edges. The graph suite covers 12/12 rules and 10/10
+edges. An exact search selects a 10-pair, 20-call joint suite, reducing the 120-call graph suite by
+83.3\%. Mistral and Phi-4 score 10/60 and 2/60 pairs on the full graph. This minimum certifies
+coverage of the declared rules and observed edges. Stochastic fault detection and release
+sufficiency remain unmeasured. The registered policy-aware random-forest control reaches
+107/120 items and 47/60 pairs, while the profile-blind control reaches 57/120 items and 0/60 pairs.
+The zero-pair result shows that paired scoring detects policy-profile invariance on this graph. The
+weak Naive Bayes control reaches 184/300 items and 34/150 pairs on the imbalanced suite, with
+balanced action recall 0.328.
+
+\subsection{Model-facing policy revisions}
+
+Table~\ref{tab:external-routes} reports the designated first replication on the two public
+\texttt{AGENTS.md} revisions. Across eight routes, 132/160 scheduled items produce valid decisions,
+128/160 actions agree with author targets, and 121/160 exact decisions match both the target action
+and registered reason codes. Of 80 pairs, 55 are complete and 52 agree on both members, giving
+52/80 end-to-end and 52/55 conditional pair agreement.
+
+\begin{table}[H]
 \centering
-\small
-\caption{Primary hidden-test raw model behavior across all three seeds. Gate-arm rows are shown before enforcement.}
-\label{tab:main-results}
-\begin{tabular}{llcccc}
+\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\caption{External policy revisions, first replication. Scores are agreement with author targets.
+Changed and stable columns retain their 6- and 4-pair denominators.}
+\label{tab:external-routes}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Model & Arm & Coverage (3 seeds) & Raw FPR $\downarrow$ & Raw VPR $\uparrow$ & Raw PTA $\uparrow$ \\
+Route & Valid & Item agr. & Pair agr. & Changed & Stable & Cond. item/pair \\
 \midrule
-Qwen3-0.6B & Narrative & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-0.6B & Ledger & .667/.893/.570 & 1.00 & 1.00 & 0.00 \\
-Qwen3-0.6B & Ledger + verifier & .703/.787/.393 & 1.00 & 1.00 & 0.00 \\
-Qwen3-0.6B & Ledger + verifier + gate & .490/.420/.140 & 1.00 & 1.00 & 0.00 \\
-\midrule
-Qwen3-1.7B & Narrative & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-1.7B & Ledger & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-1.7B & Ledger + verifier & 0/0/0 & undef. & undef. & undef. \\
-Qwen3-1.7B & Ledger + verifier + gate & .483/.217/.480 & 1.00 & 1.00 & 0.00 \\
+GLM 5.3 & 16/20 & 16/20 & 6/10 & 2/6 & 4/4 & 16/16; 6/6 \\
+Luna 5.6 & 16/20 & 16/20 & 6/10 & 3/6 & 3/4 & 16/16; 6/6 \\
+HY3 & 18/20 & 18/20 & 8/10 & 4/6 & 4/4 & 18/18; 8/8 \\
+Kimi K2.7 Code & 18/20 & 18/20 & 8/10 & 5/6 & 3/4 & 18/18; 8/8 \\
+MiMo 2.5 Pro & 19/20 & 18/20 & 9/10 & 5/6 & 4/4 & 18/19; 9/9 \\
+MiniMax 2.7 & 16/20 & 15/20 & 5/10 & 1/6 & 4/4 & 15/16; 5/6 \\
+GLM 5.3 Flash (OX) & 12/20 & 12/20 & 4/10 & 1/6 & 3/4 & 12/12; 4/4 \\
+Qwen 3.7 Plus & 17/20 & 15/20 & 6/10 & 2/6 & 4/4 & 15/17; 6/8 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Each model--arm cell contains 900 decisions. For Qwen3-0.6B, the format-error counts are 900, 261, 335, and 585 for narrative, ledger, passive verifier, and gate. For Qwen3-1.7B they are 900, 900, 900, and 546. The ledger improves output coverage over narrative for Qwen3-0.6B, but neither the ledger nor the passive verifier makes the parseable decisions selective. Qwen3-1.7B produces no parseable decisions in the first three arms under this protocol. In every run where raw FPR can be computed, the preregistered 10,000-pair bootstrap 95\% interval is $[1.0,1.0]$. This happens because every parseable raw decision is \allow{}; it should not be read as uncertainty being small for the full system.
+The changed subset contributes 23/48 target-agreeing pairs end to end and 23/26 conditional on both
+decisions. Three complete changed pairs return the same action across source versions. Stable
+controls contribute 29/32 pairs end to end and 29/29 conditional. Across all three repetitions,
+387/480 items and 158/240 pairs agree with the mapping, compared with 387/399 valid items and
+158/169 complete pairs. The 81 terminal failures comprise 26 server-side transport failures, nine
+length-terminated JSON failures, and 46 outputs whose action conflicts with their reason codes.
+These counts establish agreement with one frozen interpretation, not policy-owner validity.
 
-The source records keep the parse status and any structured decision, but they do not keep the original free-form text for outputs that had already been classified as parse failures. We can therefore count these failures exactly, but we cannot tell from v1 how many came from syntax, schema adherence, interface compatibility, or the underlying reasoning task. We do not rerun the models after seeing the hidden results.
+\subsection{Non-\allow{} policy controls}
 
-\subsection{What the gate changes}
+Table~\ref{tab:nonallow-routes} aggregates the three full-policy repetitions. All 48 scheduled
+items per route remain in the item denominator, and all 24 pairs remain in each pair denominator.
+Across routes, stable restrictive-action controls score 50/54 pairs, whereas the two changed
+\hold$\rightarrow$\escalate{} cases score 6/18. Every valid item agrees with its author target:
+stable cases contain 104 valid-agreeing and four incomplete items, while changed cases contain 19
+valid-agreeing and 17 incomplete items. At pair level, the decomposition is 50 agreeing, zero
+complete-disagreeing, and four incomplete stable pairs versus 6, 0, and 12 changed pairs. The gap is
+therefore a completion difference on two author-constructed cases, not an isolated policy-use effect.
 
-In every gate-arm run with nonzero coverage, every parseable raw decision is \allow{}. The gate catches every false promotion among those decisions and does not block any covered valid promotion. Effective FPR is therefore 0 and effective VPR remains 1 on covered decisions. Table~\ref{tab:gate-results} reports coverage next to these numbers.
-
-\begin{table}[t]
+\begin{table}[H]
 \centering
-\small
-\caption{Raw and final behavior in the gate arm. Rates are conditional on parseable decisions.}
-\label{tab:gate-results}
-\begin{tabular}{lccccc}
+\scriptsize
+\setlength{\tabcolsep}{2.7pt}
+\caption{Non-\allow{} full-policy results over three repetitions. Scores are agreement with author
+targets; action columns give end-to-end recall.}
+\label{tab:nonallow-routes}
+\begin{tabular}{@{}lrrrrrrrr@{}}
 \toprule
-Model & Coverage range & Raw FPR & Effective FPR & Catch rate & False-block \\
+Route & Valid & E2E item & E2E pair & Stable & Changed & \hold{} & \demote{} & \escalate{} \\
 \midrule
-Qwen3-0.6B & .140--.490 & 1.00 & 0.00 & 1.00 & 0.00 \\
-Qwen3-1.7B & .217--.483 & 1.00 & 0.00 & 1.00 & 0.00 \\
+GLM 5.3 & 44/48 & 44/48 & 20/24 & 18/18 & 2/6 & 15/18 & 12/12 & 17/18 \\
+HY3 & 36/48 & 36/48 & 15/24 & 14/18 & 1/6 & 11/18 & 12/12 & 13/18 \\
+Qwen 3.7 Plus & 43/48 & 43/48 & 21/24 & 18/18 & 3/6 & 15/18 & 12/12 & 16/18 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Complete-pair coverage in the gate arm ranges from 7.3--35.3\% for Qwen3-0.6B and 10.0--38.0\% for Qwen3-1.7B. The gate also applies the same fixed policy used to define the benchmark labels. Its perfect conditional numbers mainly confirm that the gate implementation follows that policy on parseable cases. They are not evidence that the model learned the policy or became better at reasoning. The empirical failure is earlier in the pipeline: the raw model decisions are both hard to obtain reliably and nonselective when they are obtained.
+The deterministic Always-\allow{} control scores 0/16 items and 0/8 pairs. Copy-before scores
+14/16 items and 6/8 pairs because it solves every stable pair and neither changed pair. The first
+full-policy repetition scores 7/8, 5/8, and 7/8 pairs for GLM, HY3, and Qwen. The corresponding
+case-only results are 3/8, 0/8, and 5/8; unmatched source shuffling gives 0/8, 0/8, and 4/8. These
+prompt controls also change completion rates, so they do not identify reliance on the policy text.
 
-\subsection{Matched comparisons}
+\subsection{Request-cap comparison}
 
-The preregistered comparison code groups runs by exact model artifact, runtime, seed, and hardware summary. Most hosted jobs recorded Python 3.11.15, while three recorded Python 3.11.16. Because the Python patch version is part of the recorded identity, the final aggregate has nine identity groups rather than the intended six model--seed groups, and only three groups contain all four arms. We keep the preregistered grouping instead of combining runs after seeing the results. Exact McNemar/Holm comparisons are therefore available only when the required arms occur in the same recorded group. Missing comparisons here are a limitation of the run environment, not evidence for or against an intervention.
+Table~\ref{tab:output-contract} reports the prespecified same-item cap contrast on the selected
+routes. From 4096 to 12288 tokens, complete target-agreeing pairs change from 0/15 to 7/15 for GLM
+and from 0/15 to 9/15 for HY3, alongside 15 and 20 fewer length terminations. Qwen has no length
+terminations and remains at 7/15 pairs. This one-call-per-cell comparison measures completion under
+two inference budgets; it does not isolate policy reasoning.
 
-\subsection{Supplementary human audit}
-
-Two independent reviewers completed a fixed 20-item blinded policy-application audit using the public alpha data. Both submissions passed the validator before the answers were revealed. Reviewer~1 matched the gold action on 18/20 items (0.90) and the exact reason set on 18/20 (0.90). Reviewer~2 matched the gold action on 15/20 (0.75) and the exact reason set on 14/20 (0.70). The reviewers agreed with each other on 17/20 actions (0.85). Cohen's $\kappa\approx0.716$ is included only as a descriptive check because the sample is small and the action frequencies are imbalanced. Under the preregistered criterion, the audit is \emph{mixed}, not a pass.
-
-\begin{table}[t]
+\begin{table}[H]
 \centering
-\small
-\caption{Supplementary blinded human audit on 20 public alpha items.}
-\label{tab:human-audit}
-\begin{tabular}{lccc}
+\scriptsize
+\setlength{\tabcolsep}{2.7pt}
+\caption{Primary request-cap contrast. V/A/P gives valid decisions, target-agreeing items, and
+target-agreeing pairs; fixed denominators are 30/30/15.}
+\label{tab:output-contract}
+\begin{tabular}{@{}lrrrr@{}}
 \toprule
-Reviewer & Gold action agreement & Exact reason agreement & Mean confidence \\
+Route & 4096 V/A/P & 12288 V/A/P & Cond. pair & Length term. \\
 \midrule
-Reviewer 1 & 0.90 & 0.90 & 5.00 \\
-Reviewer 2 & 0.75 & 0.70 & 4.95 \\
+GLM & 4/4/0 & 18/18/7 & --; 7/7 & 21; 6 \\
+HY3 & 3/3/0 & 22/22/9 & --; 9/9 & 22; 2 \\
+Qwen+ & 22/18/7 & 21/19/7 & 7/9; 7/9 & 0; 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Both reviewers missed an insufficient-repetitions \hold{} case and an invalid-current-basis \demote{} case. We keep these disagreements and do not change the gold labels or policy after the audit. The fixed oracle is the benchmark rule; the human audit only measures how consistently two independent people applied that rule. It should not be treated as proof of a universal human ground truth.
+At strict JSON schema and 4096 tokens, GLM, HY3, and Qwen produce 7, 3, and 23 valid decisions;
+their end-to-end item/pair scores are 7/30; 2/15, 3/30; 0/15, and 13/30; 2/15. Conditional scores
+are 7/7; 2/2, 3/3; --, and 13/23; 2/11. The full four-condition table appears in
+Appendix~\ref{tab:output-all-conditions}.
+
+The run records 76 transport failures. A posthoc, content-free diagnostic classifies 63 as
+quota-or-billing rejections during the final 17 seconds, six as server errors, four as timeouts,
+and three as network errors. For the registered 4096-versus-12288 contrast, each route has five
+quota-rejected items in both conditions, with identical item IDs. Keeping those cells in both
+denominators balances that quota category in the primary contrast but does not balance the other
+transport failures or remove temporal service confounding. The study supports route-configuration
+descriptions for these selected calls; it does not estimate a model-family, policy-reasoning, or
+provider-independent effect. Appendix~\ref{app:complete-results} gives every action recall and
+confusion cell.
+
+\subsection{Executable-policy route repetitions}
+
+On the repeated Gatekeeper test, Flash reaches 53/72 raw-strict items and 21/36 pairs; Qwen reaches
+10/72 items and 0/36 pairs. All 63 extracted actions match the executable oracle. Interface losses
+come from 62 Qwen fenced objects and, for Flash, 12 read timeouts, three fenced objects, three
+non-JSON envelopes, and one length termination. Parsing is repair-free. Across repetitions, 13/24
+Flash items and 5/12 pairs pass every time; Qwen has zero fully stable items. Appendix~\ref{app:complete-results}
+reports each repetition and exact-decision score.
+
+\subsection{Endpoint sensitivity and evidence-state diagnostics}
+
+The endpoint reanalysis covers 1,320 previously scheduled items across ten route stacks.
+Raw-strict parsing finds 69 extractable actions outside the full six-field contract; 49 actions and
+40 pairs are correct. Conversely, 452 contract-valid registered-parser actions are unavailable to
+raw-strict parsing, including 329 correct actions and 78 correct pairs. Most of the latter occur on
+historical local routes whose registered parsers used deterministic single-object extraction.
+Neither endpoint contains the other, and each answers a different integration question.
+
+On the SLSA Qwen route, raw-strict action yields 120/120 items and 60/60 pairs, while the full
+contract yields 88/120 and 28/60. The registered balanced-challenge parser accepts six fenced Qwen
+objects, including four correct actions and two correct pairs. Qwen therefore scores 128/180 items
+and 46/90 pairs under raw-strict parsing, versus 132/180 and 48/90 under the contract. Flash changes
+from 105/180 and 19/90 to 90/180 and 13/90.
+
+The imbalanced Qwen route produces 272/300 valid decisions and scores 258/300 items and 113/150
+pairs end to end, versus 258/272 and 113/123 conditionally. Its \demote{} and \escalate{} recalls
+are 0/8 and 5/8. On the balanced challenge, Qwen produces 148/180 valid decisions and scores
+132/180 items and 48/90 pairs, versus 132/148 and 48/64 conditionally; Flash produces 146/180 and
+scores 90/180 and 13/90, versus 90/146 and 13/61. Their \demote{} recalls are 4/30 and 0/30.
+Appendix~\ref{app:complete-results} reports all action recalls and confusion cells with terminal
+failures retained.
 
 \section{Discussion}
 
-\subsection{Main interpretation}
+\paragraph{Policy version is a regression coordinate.}
+Among complete first-replication \texttt{AGENTS.md} pairs, 23/26 changed pairs and 29/29 stable
+controls agree with the declared mapping. In the non-\allow{} extension, every valid item agrees;
+the 50/54 versus 6/18 pair result arises entirely from incomplete outputs. Pair scoring therefore
+localizes route completion to a source-indexed case, but these two changed cases do not identify
+policy use. Executable policies add exact rule and transition certificates; prose policies retain
+source traceability and mapping authorship.
 
-The central empirical result is not that the gate solved the task. The tested models often fail before the gate has a useful decision to act on. When a raw decision is parseable, it is always \allow{}, so the models do not show the policy sensitivity that the benchmark is designed to test. For Qwen3-0.6B, the ledger helps the model return structured output more often than the narrative arm, but this does not improve the selectivity of the resulting decisions.
+\paragraph{Completion depends on the request cap.}
+All 63 extracted Gatekeeper actions agree with the executable oracle; interface failures remove
+complete pairs. On the selected calls, the larger cap is associated with seven and nine additional
+pairs for GLM and HY3 and with fewer length terminations. Qwen has no pair gain or length
+termination. Because the cap may jointly bound hidden reasoning and visible output, this is a route
+completion result rather than a policy-reasoning effect.
 
-The deterministic gate is still useful as an engineering safeguard. On parseable cases it changes invalid promotions to the action required by the fixed policy. But because the gate uses the same policy that defines the benchmark labels, its perfect conditional scores should be interpreted as correct rule enforcement, not as a learned capability. The practical lesson is that model quality and rule enforcement need to be measured separately.
+\paragraph{Pairs and action balance expose complementary shortcuts.}
+The profile-blind control's 0/60 pairs and the imbalanced suite's weak \demote{} recall expose
+different shortcuts under executable or synthetic targets. Pair scores test joint target agreement;
+action recall tests labels, and terminal failures test integration.
 
-\subsection{Implications for system design}
+\paragraph{Prospective use.}
+Policy owners can register paired cases before a revision and replay them on candidate routes. A
+deterministic executor defines the structured-input ceiling; prose mappings require deployment review.
 
-A research agent needs at least two things to make this kind of decision reliably. First, it must return a structured decision often enough for the surrounding system to inspect and act on it. Second, a system that cannot tolerate an invalid promotion needs an explicit rule-enforcement layer rather than relying only on the model's judgment. The present experiments show a failure of the first requirement and, among parseable outputs, a failure of model selectivity. They also show that a deterministic gate can enforce a fixed rule on the cases that reach it. Reporting coverage alongside gate performance is therefore necessary for judging the whole system.
+\section{Limitations}
 
-\section{Limitations and Threats to Validity}
+The prose evidence comprises 18 author-mapped pairs. Only two extension pairs change, both
+\hold$\rightarrow$\escalate{}, and none has \allow{} as its target. Maintainers wrote the policies;
+we wrote the cases, action taxonomy, precedence, and targets. Human and policy-owner labels,
+agreement, telemetry, and prevalence are absent. Both source versions already require stopping;
+our \hold{}--\escalate{} distinction is not an independently validated change in permitted behavior.
 
-\paragraph{Model and dataset scope.}
-Version~1 focuses on mathematical-research evidence states, uses synthetic controlled pairs, and evaluates only Qwen3-0.6B and Qwen3-1.7B Q8\_0. The controlled pairs make the policy difference easy to isolate, but they are less natural than unconstrained research records. The high format-error rates may not carry over to larger or API-hosted models.
+Study plans, schedules, and input hashes precede calls in the private repository history. The
+anonymous bundle redacts the private commit identity, so blind reviewers can verify internal
+bindings but cannot independently timestamp the pre-inference freeze until de-anonymization.
 
-\paragraph{Output-format failures.}
-The source records keep parse status and structured decisions but not the original free-form text for earlier parse failures. We therefore cannot separate syntax errors, schema failures, interface incompatibilities, and failures of the underlying reasoning task after the fact. The reported \texttt{FORMAT\_ERROR} rate covers all of these possibilities. Gate FPR, VPR, PTA, catch rate, and false-block rate are also conditional on covered decisions or complete covered pairs, so effective FPR=0 is not a measure of end-to-end reliability.
+The other histories are a convenience sample. Structural certificates depend on finite contexts and
+registered witnesses; omissions invalidate coverage. Minimum suites certify only the declared
+universe. Stochastic detection power, release sufficiency, and prevalence remain unmeasured.
 
-\paragraph{Gate interpretation and runtime variation.}
-The gate arm tells the model that an invalid \allow{} may be replaced, so raw differences from the passive-verifier arm are not a pure post-processing comparison. The raw-to-final comparison within the gate arm measures the gate itself, but the gate applies the same fixed policy as the oracle. Separately, three runs recorded Python 3.11.16 rather than 3.11.15, which split three intended matched groups. We keep the original grouping rather than combining runs after seeing the results.
+Each hosted route binds a model identifier, provider, adapter, prompt, output constraint, service
+state, and time; opaque internals preclude model-family rankings and provider-independent effects.
+The request-cap routes were selected after a screen for length failures and receive one call per
+cell. The cap may jointly constrain hidden reasoning and visible output. The same five
+quota-rejected IDs appear in both primary conditions per route, but 13 other transport failures are
+not balanced. Prompt controls do not isolate policy use. Z.ai disclosed after execution that OX
+Alpha was GLM-5.3-Flash~\cite{zai2026glm53flash}; exact checkpoint, serving state, and data terms
+remain opaque, so this frozen route remains separate from GLM 5.3.
 
-\paragraph{Benchmark construction and human audit.}
-The author designed the policy, the controlled pairs, and the item-generation procedure. Deterministic rebuilding, executable checks, the hidden commitment, shortcut checks, and meaning-preserving transformations reduce opportunities for changing the benchmark after results are known, but they are not substitutes for independent benchmark construction. A passing Lean artifact proves only the exact encoded statement in the pinned environment. The two-reviewer, 20-item audit is also small; its 0.90 and 0.75 action agreements provide limited evidence about human use of the policy rather than validating a universal ground truth.
-
-\section{Reproducibility and Artifact Policy}
-
-The primary hidden inference comes from workflow run \texttt{32255636879}; the hidden set was committed before that run. Recovery run \texttt{32274814703} reconstructed the fixed dataset and prompt identity, validated 24 original and 24 normalized runs, and produced the 7,200-record aggregate without querying the models again. The recovered study file has SHA-256 \texttt{3eb5b534...e8bfe664}. Full commit and manifest hashes are kept in the repository and recovery record.
-
-The raw hidden seed remains a GitHub Actions secret and is not printed or committed. The one-time recovery trigger was removed after recovery succeeded. Any future change to labels, policy rules, prompts, controlled factors, or hidden-test bytes is treated as a new benchmark version rather than a change to v1.
-
-\section{AI Assistance Disclosure}
-
-Generative AI tools were used as assistants during literature search, research planning and methodological discussion, early code drafting and debugging, analysis checks and result interpretation, and parts of manuscript drafting and editing. The author chose the research question, defined the benchmark policy and experimental protocol, made the final study and analysis decisions, checked the reported results against the released artifacts, checked the references, and is responsible for the final manuscript and submission. The quantitative results reported in this paper come from the validated study artifacts. AI systems are not listed as authors and were not used as independent human reviewers.
+A historical Flash lane is excluded from model evidence because all 300 calls returned HTTP 401
+before model output; later routes establish only their own executability. The public challenge
+covers frozen cases. Policy retrieval, source adjudication, evidence extraction, and downstream
+utility remain outside scope.
 
 \section{Conclusion}
 
-\cpb studies a simple failure that answer accuracy alone does not capture: valid evidence can still be used to justify a claim-state change that is too strong. In the hidden v1 study, the tested Qwen3 models often fail to return a valid structured decision, and every parseable raw decision is \allow{}. A deterministic gate prevents invalid promotion on the parseable cases by applying the fixed policy, but it does not improve the model's own decisions and it cannot act when the output is unusable. For research-agent evaluation, model behavior and deterministic safeguards should therefore be reported separately, with coverage shown alongside any conditional gate result.
+\cpb binds source revisions to paired cases, action transitions, parser provenance, complete
+denominators, and finite structural certificates. The prose studies measure agreement with frozen
+author targets; the request-cap comparison measures route completion on selected calls. The
+artifact supports auditable checks on frozen cases. Deterministic execution remains the
+definitional ceiling; policy-owner labels and field outcomes are required for deployment claims.
+
+\section{Reproducibility Statement}
+
+The released artifact binds policies, datasets, prompts, source tests, route configurations, and
+parsers. Replay starts from released parsed decisions and content-free terminal records, then
+recomputes source bindings, suites, endpoints, recalls, and confusion matrices. Raw response text,
+raw-response hashes, provider response IDs, private service metadata, and hidden reasoning are
+absent, so parsing and provider messages cannot be independently re-adjudicated.
+
+\section{AI Assistance Disclosure}
+
+Generative AI assisted literature search, code development, analysis checks, and editing. The author
+selected the research question and protocol, verified sources, results, and artifacts, and assumes
+responsibility for the paper.
 
 \bibliographystyle{plain}
 \bibliography{references}
+
+\appendix
+\section{Enumerator and Reducer Guarantees}
+\label{app:enumerator}
+
+\paragraph{Minimum-suite hardness.}
+Take a Set Cover instance with universe $U$ and subsets $S_1,\ldots,S_n$. Create one required rule
+for each element of $U$ and one candidate context for each $S_i$ whose rule-witness set is $S_i$.
+Assign every candidate the same required action edge. Any nonempty selection covers that edge, and
+it covers all required rules exactly when the corresponding subsets cover $U$. A minimum joint
+suite therefore gives a minimum set cover.
+
+\paragraph{Exact dynamic program.}
+Index the $r+k$ required rules and edges and encode coverage as a bit mask. After processing the
+first $j$ candidates, retain for every reachable mask the shortest subset, breaking ties by context
+identifier. Excluding candidate $j+1$ preserves each state; including it unions its coverage mask
+with each prior mask. Induction on $j$ proves that the final full-mask representative is
+cardinality-minimum. The implementation matches exhaustive enumeration on 64 deterministic small
+candidate pools.
+
+\paragraph{Edge lower bound.}
+Each pair realizes one directed edge. Covering $k$ edges requires at least $k$ pairs. If the
+specialized search selects one candidate per edge and also covers every rule, its $k$-pair witness
+meets the lower bound. This certifies the two-pair Gatekeeper suite and the ten-pair SLSA-inspired
+suite relative to their declared candidate pools.
+
+\section{Complete Action-Level Results}
+\label{app:complete-results}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Gatekeeper route results by repetition. All columns are end to end. $R$ is raw-strict
+action; $F$ is exact full decision. Contract action equals $R$ in every row.}
+\label{tab:repeat}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Route & Repetition & $R$ item & $F$ item & $R$ pair & $F$ pair \\
+\midrule
+Qwen & 1 & 3/24 & 3/24 & 0/12 & 0/12 \\
+Qwen & 2 & 2/24 & 2/24 & 0/12 & 0/12 \\
+Qwen & 3 & 5/24 & 5/24 & 0/12 & 0/12 \\
+\cmidrule(lr){2-6}
+& total & 10/72 & 10/72 & 0/36 & 0/36 \\
+\midrule
+DeepSeek Flash & 1 & 15/24 & 15/24 & 6/12 & 6/12 \\
+DeepSeek Flash & 2 & 19/24 & 18/24 & 7/12 & 6/12 \\
+DeepSeek Flash & 3 & 19/24 & 19/24 & 8/12 & 8/12 \\
+\cmidrule(lr){2-6}
+& total & 53/72 & 52/72 & 21/36 & 20/36 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.7pt}
+\caption{All output-contract conditions. Conditional scores use valid items or complete pairs;
+end-to-end scores retain 30-item and 15-pair denominators. ``Len.'' counts request-cap exhaustion.}
+\label{tab:output-all-conditions}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Route & Condition & Valid & E2E item/pair & Cond. item/pair & Len. \\
+\midrule
+GLM & prompt-4096 & 4/30 & 4/30; 0/15 & 4/4; -- & 21 \\
+GLM & prompt-8192 & 15/30 & 15/30; 6/15 & 15/15; 6/6 & 10 \\
+GLM & prompt-12288 & 18/30 & 18/30; 7/15 & 18/18; 7/7 & 6 \\
+GLM & schema-4096 & 7/30 & 7/30; 2/15 & 7/7; 2/2 & 17 \\
+\midrule
+HY3 & prompt-4096 & 3/30 & 3/30; 0/15 & 3/3; -- & 22 \\
+HY3 & prompt-8192 & 18/30 & 18/30; 7/15 & 18/18; 7/7 & 6 \\
+HY3 & prompt-12288 & 22/30 & 22/30; 9/15 & 22/22; 9/9 & 2 \\
+HY3 & schema-4096 & 3/30 & 3/30; 0/15 & 3/3; -- & 21 \\
+\midrule
+Qwen+ & prompt-4096 & 22/30 & 18/30; 7/15 & 18/22; 7/9 & 0 \\
+Qwen+ & prompt-8192 & 20/30 & 17/30; 5/15 & 17/20; 5/7 & 0 \\
+Qwen+ & prompt-12288 & 21/30 & 19/30; 7/15 & 19/21; 7/9 & 0 \\
+Qwen+ & schema-4096 & 23/30 & 13/30; 2/15 & 13/23; 2/11 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Non-\allow{} full-policy confusion counts pooled over three repetitions. Columns A, H,
+D, E, and \texttt{N} denote predicted actions and terminal route failure.}
+\label{tab:nonallow-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Target & A & H & D & E & \texttt{N} \\
+\midrule
+GLM & \hold{} & 0&15&0&0&3 \\
+GLM & \demote{} & 0&0&12&0&0 \\
+GLM & \escalate{} & 0&0&0&17&1 \\
+\midrule
+HY3 & \hold{} & 0&11&0&0&7 \\
+HY3 & \demote{} & 0&0&12&0&0 \\
+HY3 & \escalate{} & 0&0&0&13&5 \\
+\midrule
+Qwen+ & \hold{} & 0&15&0&0&3 \\
+Qwen+ & \demote{} & 0&0&12&0&0 \\
+Qwen+ & \escalate{} & 0&0&0&16&2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{GLM output-contract confusion counts. Every condition retains 30 scheduled items.}
+\label{tab:output-glm-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Target & A & H & D & E & \texttt{N} \\
+\midrule
+prompt-4096 & \allow{} & 3&0&0&0&12 \\
+ & \hold{} & 0&1&0&0&4 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\midrule
+prompt-8192 & \allow{} & 8&0&0&0&7 \\
+ & \hold{} & 0&4&0&0&1 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&3&2 \\
+\midrule
+prompt-12288 & \allow{} & 10&0&0&0&5 \\
+ & \hold{} & 0&4&0&0&1 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+schema-4096 & \allow{} & 5&0&0&0&10 \\
+ & \hold{} & 0&2&0&0&3 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{HY3 output-contract confusion counts. Every condition retains 30 scheduled items.}
+\label{tab:output-hy3-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Target & A & H & D & E & \texttt{N} \\
+\midrule
+prompt-4096 & \allow{} & 3&0&0&0&12 \\
+ & \hold{} & 0&0&0&0&5 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\midrule
+prompt-8192 & \allow{} & 10&0&0&0&5 \\
+ & \hold{} & 0&2&0&0&3 \\
+ & \demote{} & 0&0&2&0&3 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+prompt-12288 & \allow{} & 12&0&0&0&3 \\
+ & \hold{} & 0&3&0&0&2 \\
+ & \demote{} & 0&0&3&0&2 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+schema-4096 & \allow{} & 3&0&0&0&12 \\
+ & \hold{} & 0&0&0&0&5 \\
+ & \demote{} & 0&0&0&0&5 \\
+ & \escalate{} & 0&0&0&0&5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Qwen 3.7 Plus output-contract confusion counts. Every condition retains 30 scheduled
+items.}
+\label{tab:output-qwen-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Target & A & H & D & E & \texttt{N} \\
+\midrule
+prompt-4096 & \allow{} & 11&0&0&0&4 \\
+ & \hold{} & 0&2&0&0&3 \\
+ & \demote{} & 2&1&1&0&1 \\
+ & \escalate{} & 1&0&0&4&0 \\
+\midrule
+prompt-8192 & \allow{} & 10&0&0&1&4 \\
+ & \hold{} & 0&3&0&0&2 \\
+ & \demote{} & 1&1&0&0&3 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+prompt-12288 & \allow{} & 10&0&0&2&3 \\
+ & \hold{} & 0&3&0&0&2 \\
+ & \demote{} & 0&0&2&0&3 \\
+ & \escalate{} & 0&0&0&4&1 \\
+\midrule
+schema-4096 & \allow{} & 10&1&0&0&4 \\
+ & \hold{} & 2&2&0&0&1 \\
+ & \demote{} & 2&1&0&0&2 \\
+ & \escalate{} & 3&1&0&1&0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.3pt}
+\caption{External policy-revision first-replication confusion matrices. Columns A, H, D, E, and
+\texttt{N} denote \allow{}, \hold{}, \demote{}, \escalate{}, and terminal route failure;
+every row retains its full target support.}
+\label{tab:external-confusion}
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Target & A & H & D & E & \texttt{N} \\
+\midrule
+GLM & \allow{} & 12&0&0&0&2 \\
+GLM & \hold{} & 0&1&0&0&2 \\
+GLM & \demote{} & 0&0&1&0&0 \\
+GLM & \escalate{} & 0&0&0&2&0 \\
+\midrule
+Luna & \allow{} & 12&0&0&0&2 \\
+Luna & \hold{} & 0&1&0&0&2 \\
+Luna & \demote{} & 0&0&1&0&0 \\
+Luna & \escalate{} & 0&0&0&2&0 \\
+\midrule
+HY3 & \allow{} & 13&0&0&0&1 \\
+HY3 & \hold{} & 0&2&0&0&1 \\
+HY3 & \demote{} & 0&0&1&0&0 \\
+HY3 & \escalate{} & 0&0&0&2&0 \\
+\midrule
+Kimi & \allow{} & 13&0&0&0&1 \\
+Kimi & \hold{} & 0&2&0&0&1 \\
+Kimi & \demote{} & 0&0&1&0&0 \\
+Kimi & \escalate{} & 0&0&0&2&0 \\
+\bottomrule
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Target & A & H & D & E & \texttt{N} \\
+\midrule
+MiMo & \allow{} & 13&0&0&1&0 \\
+MiMo & \hold{} & 0&2&0&0&1 \\
+MiMo & \demote{} & 0&0&1&0&0 \\
+MiMo & \escalate{} & 0&0&0&2&0 \\
+\midrule
+MiniMax & \allow{} & 11&0&0&1&2 \\
+MiniMax & \hold{} & 0&1&0&0&2 \\
+MiniMax & \demote{} & 0&0&1&0&0 \\
+MiniMax & \escalate{} & 0&0&0&2&0 \\
+\midrule
+OX & \allow{} & 10&0&0&0&4 \\
+OX & \hold{} & 0&1&0&0&2 \\
+OX & \demote{} & 0&0&0&0&1 \\
+OX & \escalate{} & 0&0&0&1&1 \\
+\midrule
+Qwen+ & \allow{} & 11&1&0&1&1 \\
+Qwen+ & \hold{} & 0&2&0&0&1 \\
+Qwen+ & \demote{} & 0&0&0&0&1 \\
+Qwen+ & \escalate{} & 0&0&0&2&0 \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{End-to-end action recall for every route summarized in the main text. ``--'' marks actions
+outside a task's label set.}
+\label{tab:all-recall}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Configuration and endpoint & \allow{} & \hold{} & \demote{} & \escalate{} \\
+\midrule
+Gatekeeper Qwen, raw-strict & 4/36 & 6/36 & -- & -- \\
+Gatekeeper Flash, raw-strict & 32/36 & 21/36 & -- & -- \\
+Imbalanced Qwen, contract & 143/150 & 110/134 & 0/8 & 5/8 \\
+Challenge Qwen, raw-strict & 77/90 & 26/30 & 3/30 & 22/30 \\
+Challenge Qwen, contract & 79/90 & 26/30 & 4/30 & 23/30 \\
+Challenge Flash, raw-strict & 68/90 & 10/30 & 2/30 & 25/30 \\
+Challenge Flash, contract & 68/90 & 9/30 & 0/30 & 13/30 \\
+External GLM 5.3, rep. 1 & 12/14 & 1/3 & 1/1 & 2/2 \\
+External Luna 5.6, rep. 1 & 12/14 & 1/3 & 1/1 & 2/2 \\
+External HY3, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
+External Kimi K2.7, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
+External MiMo 2.5, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
+External MiniMax 2.7, rep. 1 & 11/14 & 1/3 & 1/1 & 2/2 \\
+External GLM 5.3 Flash (OX), rep. 1 & 10/14 & 1/3 & 0/1 & 1/2 \\
+External Qwen 3.7+, rep. 1 & 11/14 & 2/3 & 0/1 & 2/2 \\
+Non-\allow{} GLM, 3 reps. & -- & 15/18 & 12/12 & 17/18 \\
+Non-\allow{} HY3, 3 reps. & -- & 11/18 & 12/12 & 13/18 \\
+Non-\allow{} Qwen+, 3 reps. & -- & 15/18 & 12/12 & 16/18 \\
+Output GLM, prompt-4096 & 3/15 & 1/5 & 0/5 & 0/5 \\
+Output GLM, prompt-8192 & 8/15 & 4/5 & 0/5 & 3/5 \\
+Output GLM, prompt-12288 & 10/15 & 4/5 & 0/5 & 4/5 \\
+Output GLM, schema-4096 & 5/15 & 2/5 & 0/5 & 0/5 \\
+Output HY3, prompt-4096 & 3/15 & 0/5 & 0/5 & 0/5 \\
+Output HY3, prompt-8192 & 10/15 & 2/5 & 2/5 & 4/5 \\
+Output HY3, prompt-12288 & 12/15 & 3/5 & 3/5 & 4/5 \\
+Output HY3, schema-4096 & 3/15 & 0/5 & 0/5 & 0/5 \\
+Output Qwen+, prompt-4096 & 11/15 & 2/5 & 1/5 & 4/5 \\
+Output Qwen+, prompt-8192 & 10/15 & 3/5 & 0/5 & 4/5 \\
+Output Qwen+, prompt-12288 & 10/15 & 3/5 & 2/5 & 4/5 \\
+Output Qwen+, schema-4096 & 10/15 & 2/5 & 0/5 & 1/5 \\
+Factor GLM 5.3, rep. 1 & 7/15 & 1/5 & 0/5 & 1/5 \\
+Factor Luna 5.6, rep. 1 & 14/15 & 4/5 & 3/5 & 5/5 \\
+Factor HY3, rep. 1 & 3/15 & 0/5 & 0/5 & 0/5 \\
+Factor Kimi K2.7, rep. 1 & 10/15 & 3/5 & 0/5 & 2/5 \\
+Factor MiMo 2.5, rep. 1 & 9/15 & 0/5 & 0/5 & 2/5 \\
+Factor MiniMax 2.7, rep. 1 & 6/15 & 0/5 & 0/5 & 1/5 \\
+Factor Qwen 3.7+, rep. 1 & 14/15 & 5/5 & 2/5 & 4/5 \\
+SLSA Qwen, raw-strict & 60/60 & 20/20 & 20/20 & 20/20 \\
+SLSA Qwen, contract & 60/60 & 20/20 & 1/20 & 7/20 \\
+SLSA Flash, raw-strict & 59/60 & 17/20 & 17/20 & 17/20 \\
+SLSA Flash, contract & 59/60 & 17/20 & 15/20 & 17/20 \\
+Graph Mistral, contract & 9/36 & 18/24 & 0/24 & 13/36 \\
+Graph Phi-4, contract & 21/36 & 5/24 & 0/24 & 1/36 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Factor-complete first-replication confusion matrices. \texttt{N} is a terminal route
+failure. Every row retains its full target support.}
+\label{tab:factor-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+\midrule
+GLM & \allow{} & 7&0&0&0&8 \\
+GLM & \hold{} & 0&1&0&0&4 \\
+GLM & \demote{} & 0&0&0&0&5 \\
+GLM & \escalate{} & 0&0&0&1&4 \\
+\midrule
+Luna & \allow{} & 14&1&0&0&0 \\
+Luna & \hold{} & 0&4&0&0&1 \\
+Luna & \demote{} & 2&0&3&0&0 \\
+Luna & \escalate{} & 0&0&0&5&0 \\
+\midrule
+HY3 & \allow{} & 3&0&0&0&12 \\
+HY3 & \hold{} & 0&0&0&0&5 \\
+HY3 & \demote{} & 0&0&0&0&5 \\
+HY3 & \escalate{} & 0&0&0&0&5 \\
+\midrule
+Kimi & \allow{} & 10&0&0&0&5 \\
+Kimi & \hold{} & 0&3&0&0&2 \\
+Kimi & \demote{} & 1&0&0&0&4 \\
+Kimi & \escalate{} & 0&0&0&2&3 \\
+\midrule
+MiMo & \allow{} & 9&0&0&2&4 \\
+MiMo & \hold{} & 0&0&0&0&5 \\
+MiMo & \demote{} & 3&0&0&0&2 \\
+MiMo & \escalate{} & 0&0&0&2&3 \\
+\midrule
+MiniMax & \allow{} & 6&0&0&0&9 \\
+MiniMax & \hold{} & 0&0&0&0&5 \\
+MiniMax & \demote{} & 2&0&0&0&3 \\
+MiniMax & \escalate{} & 0&0&0&1&4 \\
+\midrule
+Qwen+ & \allow{} & 14&0&0&1&0 \\
+Qwen+ & \hold{} & 0&5&0&0&0 \\
+Qwen+ & \demote{} & 1&0&2&0&2 \\
+Qwen+ & \escalate{} & 0&0&0&4&1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Gatekeeper aggregate raw-strict confusion counts over three repetitions (left) and
+SLSA-inspired transition-graph contract-action confusion counts (right). Columns A, H, D, E, and
+\texttt{N} denote \allow{}, \hold{}, \demote{}, \escalate{}, and terminal route failure.}
+\label{tab:gate-confusion}
+\label{tab:graph-confusion}
+\begin{minipage}[t]{0.31\textwidth}
+\centering
+\textbf{Gatekeeper}\par\smallskip
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Route & Target & A & H & \texttt{N} \\
+\midrule
+Qwen & \allow{} & 4 & 0 & 32 \\
+Qwen & \hold{} & 0 & 6 & 30 \\
+Flash & \allow{} & 32 & 0 & 4 \\
+Flash & \hold{} & 0 & 21 & 15 \\
+\bottomrule
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.65\textwidth}
+\centering
+\textbf{SLSA-inspired graph}\par\smallskip
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Route & Target & A & H & D & E & \texttt{N} \\
+\midrule
+Mistral & \allow{} & 9 & 8 & 0 & 9 & 10 \\
+Mistral & \hold{} & 2 & 18 & 0 & 4 & 0 \\
+Mistral & \demote{} & 3 & 0 & 0 & 0 & 21 \\
+Mistral & \escalate{} & 2 & 3 & 0 & 13 & 18 \\
+\midrule
+Phi-4 & \allow{} & 21 & 0 & 0 & 0 & 15 \\
+Phi-4 & \hold{} & 1 & 5 & 0 & 0 & 18 \\
+Phi-4 & \demote{} & 3 & 12 & 0 & 0 & 9 \\
+Phi-4 & \escalate{} & 0 & 0 & 0 & 1 & 35 \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Imbalanced-suite and balanced-challenge full-contract confusion counts. Columns are terminal predicted
+actions; \texttt{N} is a contract failure.}
+\label{tab:evidence-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+\midrule
+Imbalanced Qwen & \allow{} & 143 & 0 & 0 & 0 & 7 \\
+Imbalanced Qwen & \hold{} & 4 & 110 & 0 & 2 & 18 \\
+Imbalanced Qwen & \demote{} & 8 & 0 & 0 & 0 & 0 \\
+Imbalanced Qwen & \escalate{} & 0 & 0 & 0 & 5 & 3 \\
+\midrule
+Challenge Qwen & \allow{} & 79 & 0 & 0 & 0 & 11 \\
+Challenge Qwen & \hold{} & 0 & 26 & 0 & 0 & 4 \\
+Challenge Qwen & \demote{} & 8 & 4 & 4 & 4 & 10 \\
+Challenge Qwen & \escalate{} & 0 & 0 & 0 & 23 & 7 \\
+\midrule
+Challenge Flash & \allow{} & 68 & 4 & 0 & 8 & 10 \\
+Challenge Flash & \hold{} & 13 & 9 & 0 & 0 & 8 \\
+Challenge Flash & \demote{} & 25 & 3 & 0 & 0 & 2 \\
+Challenge Flash & \escalate{} & 0 & 3 & 0 & 13 & 14 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Balanced-challenge raw-strict action confusion counts. \texttt{N} marks a
+terminal extraction failure.}
+\label{tab:challenge-strict-confusion}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+\midrule
+Challenge Qwen & \allow{} & 77 & 0 & 0 & 0 & 13 \\
+Challenge Qwen & \hold{} & 0 & 26 & 1 & 0 & 3 \\
+Challenge Qwen & \demote{} & 7 & 3 & 3 & 4 & 13 \\
+Challenge Qwen & \escalate{} & 0 & 0 & 0 & 22 & 8 \\
+\midrule
+Challenge Flash & \allow{} & 68 & 4 & 5 & 13 & 0 \\
+Challenge Flash & \hold{} & 13 & 10 & 7 & 0 & 0 \\
+Challenge Flash & \demote{} & 25 & 3 & 2 & 0 & 0 \\
+Challenge Flash & \escalate{} & 0 & 3 & 2 & 25 & 0 \\
+\bottomrule
+\end{tabular}
+\par\bigskip
+\caption{SLSA-inspired raw-strict and contract-action confusion counts. \texttt{N} is the endpoint's
+terminal failure category.}
+\label{tab:slsa-confusion}
+\begin{tabular}{@{}lllrrrrr@{}}
+\toprule
+Route & Endpoint & Target & \allow{} & \hold{} & \demote{} & \escalate{} & \texttt{N} \\
+\midrule
+Qwen & raw-strict & \allow{} & 60&0&0&0&0 \\
+Qwen & raw-strict & \hold{} & 0&20&0&0&0 \\
+Qwen & raw-strict & \demote{} & 0&0&20&0&0 \\
+Qwen & raw-strict & \escalate{} & 0&0&0&20&0 \\
+Qwen & contract & \allow{} & 60&0&0&0&0 \\
+Qwen & contract & \hold{} & 0&20&0&0&0 \\
+Qwen & contract & \demote{} & 0&0&1&0&19 \\
+Qwen & contract & \escalate{} & 0&0&0&7&13 \\
+\midrule
+Flash & raw-strict & \allow{} & 59&0&0&0&1 \\
+Flash & raw-strict & \hold{} & 0&17&0&0&3 \\
+Flash & raw-strict & \demote{} & 0&0&17&0&3 \\
+Flash & raw-strict & \escalate{} & 0&0&0&17&3 \\
+Flash & contract & \allow{} & 59&0&0&0&1 \\
+Flash & contract & \hold{} & 0&17&0&0&3 \\
+Flash & contract & \demote{} & 0&0&15&0&5 \\
+Flash & contract & \escalate{} & 0&0&0&17&3 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{document}

@@ -1,0 +1,9 @@
+{
+  "name": "claimpromotebench-drand-verifier",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "drand-client": "1.4.2"
+  }
+}

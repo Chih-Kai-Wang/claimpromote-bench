@@ -1,0 +1,36 @@
+{
+  "archive_scope": "PRIVATE_DEVELOPMENT_REPOSITORY_ONLY",
+  "credential_exact_bytes_loaded_from_keychain": true,
+  "credential_retained": false,
+  "execution_hash_bindings_verified": 9,
+  "findings": {
+    "credential_pattern_classes": 0,
+    "email_addresses": 0,
+    "github_account_identifiers": 0,
+    "hidden_reasoning_keys": 0,
+    "local_absolute_paths": 0,
+    "local_account_names": 0,
+    "provider_account_identifiers": 0,
+    "provider_response_identifiers": 0,
+    "system_fingerprints": 0
+  },
+  "frozen_plan_commit": "e3823dbc2df2ac596df43ee4d6c3b5fb2ff16516",
+  "json_objects_scanned": 8459,
+  "jsonl_records_scanned": 3780,
+  "model_calls_performed_by_scan": 0,
+  "public_derivative_binding": {
+    "privacy_receipt_file_sha256": "sha256:8c7c8f9397ed8492aa13594ee290e6fbc5d54e99bdc63c1290906f1bba264ed2",
+    "privacy_receipt_self_sha256": "sha256:96c9542b72bfcf89e5b7bf023bf8b423bf798f2989703e02951bcdb64a1da11a",
+    "reported_aggregate_sha256": "sha256:76128458639bd043b088aefdeb6147a16df6625e5bc1037b06e20295f58df47e"
+  },
+  "scanned_at_utc": "2026-08-23T01:43:14Z",
+  "source_archive_bytes_excluding_receipt": 5763030,
+  "source_archive_files_excluding_receipt": 13,
+  "source_bindings": {
+    "aggregate_sha256": "sha256:22cf488f31d479aa000a2cf68615f8f88fe3684169a74b52faaf4dc6dae25176",
+    "execution_receipt_sha256": "sha256:3e4a0d639037fbe3d0737b40cedf92fb2f0e5c754814f486b267e90c94ea4de0",
+    "study_plan_sha256": "sha256:e9ff587dbf6094249250499557e2f8b56ece1317357d7483a4d832ba9b94b31d"
+  },
+  "status": "PRIVATE_ARCHIVE_PRIVACY_PASS",
+  "terminal_records": 1260
+}

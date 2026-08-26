@@ -1,0 +1,22 @@
+{
+  "analysis_executed_before_receipt": false,
+  "c2_receipt_sha256": "sha256:0b2dd3d07cddad26a3a38fe608dce2ec20c008ab9c49bc092a5c9f038f0a459d",
+  "commitment_stage": "C2_BEFORE_GOLD_UNBLINDING_OR_ANALYSIS",
+  "complete_lane_files": {
+    "opencode-go-deepseek-v4-flash-matched-c2-complete.jsonl": "sha256:42ed8adc8894832870c0574c84a0cc189a4b90d3e8a83740fbda1228f27c3a5d",
+    "opencode-go-qwen3.7-max-c2-complete.jsonl": "sha256:18699e707125fd60c5665229eb91452de3df64c153798ea6f337dbcba24b5c04"
+  },
+  "contains_gold_labels": false,
+  "gold_loaded_before_receipt": false,
+  "journal_files": {},
+  "missing_cells_are_incorrect_and_cannot_be_retried": true,
+  "outcome_counts": {
+    "NOT_ATTEMPTED_ORCHESTRATION_FAILURE": 600
+  },
+  "planned_cells": 600,
+  "raw_run_files": {},
+  "schedule_sha256": "sha256:d201a39182b7ac6f180353fc7cd0cadf04c4f3512f82e60949c492cb1f6e0447",
+  "schema_version": "1.0.0",
+  "sealed_cells": 600,
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r4"
+}

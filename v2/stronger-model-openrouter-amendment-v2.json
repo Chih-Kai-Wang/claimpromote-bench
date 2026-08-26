@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0.0-amendment",
+  "study_id": "claimpromotebench-stronger-model-public-dev-openrouter-v2",
+  "status": "FROZEN_BEFORE_SCORED_INFERENCE",
+  "truth_status": "OPEN",
+  "purpose": "Run a separately labeled interface-corrected OpenRouter-mediated GPT-5.4 public-development follow-up without altering the failed v1 run or the original official-API protocol.",
+  "amendment": {
+    "kind": "POST_TRANSPORT_FAILURE_INTERFACE_REVISION",
+    "base_plan": "v2/stronger-model-study-plan.json",
+    "base_plan_sha256": "sha256:e83df93b598032627e4ce5a59189780d5ae57538d4fc8e98173b1343da07ff0d",
+    "base_frozen_commit": "4de6e3b68bc1628c028e7b74561bf76766083b1f",
+    "openrouter_v1_plan": "v2/stronger-model-openrouter-amendment.json",
+    "openrouter_v1_plan_sha256": "sha256:57ba2c63ca53890b3c90844961149dc70dcd30cb2c00ddb6d7f87c266b225ef4",
+    "openrouter_v1_frozen_commit": "22126629f3584ec2fbbb8e7b77c34faea67d833c",
+    "openrouter_v1_run_sha256": "sha256:a7154c939a040150dde4d23408ed70a131033ae05c674ec0a830974cba26abc5",
+    "openrouter_v1_gate": "STOP",
+    "openrouter_v1_transport_errors": 12,
+    "openrouter_v1_parseable_decisions": 0,
+    "openrouter_v1_full_phase_executed": false,
+    "openrouter_v1_actual_spend_usd": 0.0,
+    "v1_transport_failure_informed_interface_revision": true,
+    "v1_model_responses_observed": false,
+    "v2_outputs_seen_before_freeze": false,
+    "official_openai_lane_replaced": false,
+    "openrouter_v1_plan_or_results_modified": false,
+    "interpretation": "V1 retained its no-endpoint STOP outcome. V2 changes only the output-token parameter after the live endpoint capability list showed that the direct OpenAI endpoint accepts max_tokens, not max_completion_tokens. V2 remains post-protocol public-development evidence."
+  },
+  "endpoint_capability_snapshot": {
+    "source": "https://openrouter.ai/api/v1/models/openai/gpt-5.4/endpoints",
+    "checked_at": "2026-08-20T22:56:12+08:00",
+    "direct_provider": "OpenAI",
+    "canonical_model": "openai/gpt-5.4-20260305",
+    "supports_strict_response_format": true,
+    "supports_max_tokens": true,
+    "supports_max_completion_tokens": false,
+    "supports_reasoning_effort": true
+  },
+  "design": {
+    "analysis_split": "PUBLIC_DEV",
+    "held_out_generalization_claim": false,
+    "cross_provider_ranking_claim": false,
+    "selection_uses_openrouter_v1_transport_outcome": true,
+    "selection_uses_openrouter_v2_outputs": false,
+    "interpretation": "Descriptive post-transport-failure interface revision on the frozen public-development split.",
+    "structured_output_policy": "Require strict JSON Schema, route only to the OpenAI provider endpoint, disable provider fallbacks, cap acceptable endpoint prices, and apply deterministic local schema and semantic validation.",
+    "full_phase_rule": "After GO, re-execute all 100 public-development instances as a separate full phase; pilot outputs are not substituted into the full result.",
+    "attempts_per_item_per_phase": 1,
+    "sampling_parameters": "No temperature, top_p, or seed parameter is sent; reasoning effort is fixed at medium.",
+    "max_output_budget_rule": "The 3,072-token maximum and $2.50/$15 per-million input/output price ceiling are fixed before v2 inference; the conservative pilot-plus-full upper bound remains below the authorized lane cap.",
+    "repeatability_limit": "One no-retry pass per phase does not estimate within-model stochastic variance. Request timestamps, returned model and provider identifiers, request hashes, final-response hashes, and usage are retained."
+  },
+  "dataset": {
+    "source": "deterministically rebuilt v1 public dev split",
+    "build_command": "python scripts/build_v1_dataset.py --split dev --out work/stronger-model-study/dev",
+    "pairs": 50,
+    "instances": 100,
+    "factors": 20,
+    "benchmark_plan_sha256": "sha256:60a87c61ed23e9a834182f51956380bb9dd53bff778e4fae4b8e619de1ae83fc",
+    "dataset_manifest_sha256": "sha256:d04b2458ec34bafb2a818c720d6b85131c27d80c1d182b8911aa106c1ba2f014",
+    "public_before_inference": true
+  },
+  "prompt": {
+    "arm": "ledger_verifier",
+    "provider_neutral_control_suffix": "",
+    "renderer_sha256": "sha256:9764f2d9b294a2050df5f9e811f6c8892d732618183ef4a50713ecf01f04d121",
+    "policy_sha256": "sha256:97f865336b34a62038b6556037d986e67441c7196ac64817bfc721ba3aeae018",
+    "decision_schema_sha256": "sha256:f741bc11665efe5757bb9b7babc96bd3d54d7f133be2ea000bdd5e1b1d4ee2b0",
+    "expected_packet_sha256": "sha256:22eb6a666736b0011c7cb34d135e984bceb81fff6f3cee3744a8e1bf0c05c3a5"
+  },
+  "pilot": {
+    "selection_rule": "the same lexicographically first pair_id in each of the six benchmark families fixed by the base protocol and retained from v1",
+    "pairs": [
+      "v1-dev-dep-001",
+      "v1-dev-formal-001",
+      "v1-dev-num-001",
+      "v1-dev-prov-001",
+      "v1-dev-run-001",
+      "v1-dev-stale-001"
+    ],
+    "instances": 12,
+    "go_rule": "Execute the full 100-item run iff the pilot has zero transport failures and at least 10 of 12 decisions pass JSON-schema and semantic validation. Accuracy and action distribution do not affect GO/STOP.",
+    "retry_count": 0
+  },
+  "formal_lanes": [
+    {
+      "lane_id": "openrouter-openai-gpt-5.4-max-tokens",
+      "provider": "OpenRouter (OpenAI upstream only; max_tokens interface)",
+      "api_kind": "openai_compatible",
+      "base_url": "https://openrouter.ai/api/v1",
+      "model": "openai/gpt-5.4",
+      "model_canonical_expected": "openai/gpt-5.4-20260305",
+      "model_family": "OpenAI",
+      "auth_env": "OPENROUTER_API_KEY",
+      "response_format": "json_schema",
+      "constraint_strength": "OPENROUTER_STRICT_JSON_SCHEMA_PLUS_DETERMINISTIC_POSTVALIDATION",
+      "reasoning_effort": "medium",
+      "max_output_tokens": 3072,
+      "max_output_parameter": "max_tokens",
+      "provider_routing": {
+        "order": ["openai"],
+        "allow_fallbacks": false,
+        "require_parameters": true,
+        "max_price": {
+          "prompt": 2.5,
+          "completion": 15.0
+        }
+      },
+      "required_routed_provider": "OpenAI",
+      "input_usd_per_million": 2.5,
+      "cached_input_usd_per_million": 0.25,
+      "output_usd_per_million": 15.0,
+      "spend_cap_usd": 8.0,
+      "pricing_source": "https://openrouter.ai/openai/gpt-5.4/api",
+      "endpoint_source": "https://openrouter.ai/api/v1/models/openai/gpt-5.4/endpoints",
+      "upstream_model_source": "https://developers.openai.com/api/docs/models/gpt-5.4",
+      "pricing_checked_at": "2026-08-20T22:56:12+08:00"
+    }
+  ],
+  "exploratory_lanes": [],
+  "budget": {
+    "total_paid_cap_usd": 8.0,
+    "openrouter_credit_balance_before_usd": 9.97,
+    "openrouter_v1_actual_spend_usd": 0.0,
+    "preexisting_base_paid_spend_usd": 0.042680605,
+    "combined_project_paid_spend_ceiling_usd": 8.042680605,
+    "user_authorized_project_ceiling_usd": 10.0,
+    "no_auto_recharge": true,
+    "stop_before_request_if_conservative_upper_bound_exceeds_lane_cap": true,
+    "actual_cost_rule": "Compute from host-reported tokens and the frozen price ceiling, and separately read back the OpenRouter credit balance and key usage."
+  },
+  "reporting": {
+    "retain_final_raw_response_text": true,
+    "retain_provider_response_id": true,
+    "retain_routed_provider": true,
+    "retain_hidden_reasoning_content": false,
+    "retain_host_reported_usage": true,
+    "report_every_executed_item_without_retry": true,
+    "separate_model_decisions_from_postgate_actions": true,
+    "promotion_rule": "A validated full run may be reported only as an interface-corrected, post-transport-failure, OpenRouter-mediated GPT-5.4 public-development follow-up. It must not be described as the failed v1 lane, the unexecuted official OpenAI API lane, a preregistered study, or held-out generalization."
+  }
+}

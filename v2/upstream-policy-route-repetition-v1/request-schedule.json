@@ -1,0 +1,1458 @@
+{
+  "base_lane_order": [
+    "opencode-go-qwen3.7-max-upstream-repeat-v1",
+    "opencode-go-deepseek-v4-flash-upstream-repeat-v1"
+  ],
+  "cells": [
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-01-a",
+      "item_id": "upr-flex-01-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:a1eb6cd88259f55799ce70d1e90c80110d8ac6dbe6d6e76f8e454eadac28ea81",
+      "repetition": 1,
+      "request_body_sha256": "sha256:8dbd2d5283c579cafa831d8c4fcdffc2c0c24684fc9b8d4cdd4b51500630e5a9",
+      "sequence": 0
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-01-a",
+      "item_id": "upr-flex-01-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:a1eb6cd88259f55799ce70d1e90c80110d8ac6dbe6d6e76f8e454eadac28ea81",
+      "repetition": 1,
+      "request_body_sha256": "sha256:5289c09ac4474663c54e37321f6d3ca03e0f056376b91b8afb9d1893b9fc698e",
+      "sequence": 1
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-01-b",
+      "item_id": "upr-flex-01-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:ae62f2728b84a5ff48ac0a982c1b30993b1056be7341bcc23067fbf2dbafdb4e",
+      "repetition": 1,
+      "request_body_sha256": "sha256:886be3e61a8a3e5734289f3b7855b7b66116a2be29eaf0bd7a316a8a7fe1feee",
+      "sequence": 2
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-01-b",
+      "item_id": "upr-flex-01-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:ae62f2728b84a5ff48ac0a982c1b30993b1056be7341bcc23067fbf2dbafdb4e",
+      "repetition": 1,
+      "request_body_sha256": "sha256:e6c81be3329704e9fc3e4dacaa75d5adf860a75e0b0f87a36bc0f70d2c245feb",
+      "sequence": 3
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-02-a",
+      "item_id": "upr-flex-02-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:5fcf91996aba5b8b2672e8311f399b978d789fa4eab61afe7f5c2e7ee26e2f00",
+      "repetition": 1,
+      "request_body_sha256": "sha256:a851f86fb3def6a620db469cbc2bd1d774c94d02fac306c42055ee9342891fa5",
+      "sequence": 4
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-02-a",
+      "item_id": "upr-flex-02-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:5fcf91996aba5b8b2672e8311f399b978d789fa4eab61afe7f5c2e7ee26e2f00",
+      "repetition": 1,
+      "request_body_sha256": "sha256:082870218691d90bda10b2ec692aba53ecec542dd55450aa0548a6408d4fdbfc",
+      "sequence": 5
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-02-b",
+      "item_id": "upr-flex-02-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:f672e66d02bfb41d540e0d50ea866c36076c9b90617bd4e130217a6064af05d7",
+      "repetition": 1,
+      "request_body_sha256": "sha256:a77e14aa2b329ac5f85576c64112cff1b089a767384b76f68c1fa81bcfda93e1",
+      "sequence": 6
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-02-b",
+      "item_id": "upr-flex-02-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:f672e66d02bfb41d540e0d50ea866c36076c9b90617bd4e130217a6064af05d7",
+      "repetition": 1,
+      "request_body_sha256": "sha256:94d29b1ab611e3bf099f30a09526cc880a4368af0ce5b44d30c1fd1365cc810d",
+      "sequence": 7
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-03-a",
+      "item_id": "upr-flex-03-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:d2302c91d3db62fd2418e91f3699071d02afa6a1b6e786ff0bd72a5bba3b69f1",
+      "repetition": 1,
+      "request_body_sha256": "sha256:e4dbad966a891cc03209dded057af28452694d998787e771df10ac8e3a915b15",
+      "sequence": 8
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-03-a",
+      "item_id": "upr-flex-03-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:d2302c91d3db62fd2418e91f3699071d02afa6a1b6e786ff0bd72a5bba3b69f1",
+      "repetition": 1,
+      "request_body_sha256": "sha256:b918e223655ced11c4edbf4278da1cdd7eca757b15861187dad7c88369109ed8",
+      "sequence": 9
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-03-b",
+      "item_id": "upr-flex-03-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:cba5b2cfc7a51767eebfe8baf5c080b1b03f3efb425f6dfb49cdb46fd16b6d34",
+      "repetition": 1,
+      "request_body_sha256": "sha256:3798b58a7ba0b99bedd29a6eb3d0e5caa06f5be31d57a712b9fa138572cf55cc",
+      "sequence": 10
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-03-b",
+      "item_id": "upr-flex-03-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:cba5b2cfc7a51767eebfe8baf5c080b1b03f3efb425f6dfb49cdb46fd16b6d34",
+      "repetition": 1,
+      "request_body_sha256": "sha256:0b2702b962119750bd5dc518895cfbb861d476818b91845f7c3ec9da589bb321",
+      "sequence": 11
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-04-a",
+      "item_id": "upr-flex-04-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:67a27ffdb5952c9ad871b1b7ab3a23e09e38ec3d351f5d38dc2e2aab07db3150",
+      "repetition": 1,
+      "request_body_sha256": "sha256:bd43d3029f287c9a5df70a77cbec05445f6bd1af9228bb470f18f4f12b3c86f2",
+      "sequence": 12
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-04-a",
+      "item_id": "upr-flex-04-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:67a27ffdb5952c9ad871b1b7ab3a23e09e38ec3d351f5d38dc2e2aab07db3150",
+      "repetition": 1,
+      "request_body_sha256": "sha256:dacffdc2565d08e7d1326e27888d5f372ce88d58e21d147976ccb96e6cb8c61f",
+      "sequence": 13
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-04-b",
+      "item_id": "upr-flex-04-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:b626ab7146f3816c04b5be126378491048cb68427f20674f6f5ce0463e6a5b00",
+      "repetition": 1,
+      "request_body_sha256": "sha256:edf928c33b6d10e951a23f178825fab04f320146591333285e5e267accee98da",
+      "sequence": 14
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-04-b",
+      "item_id": "upr-flex-04-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:b626ab7146f3816c04b5be126378491048cb68427f20674f6f5ce0463e6a5b00",
+      "repetition": 1,
+      "request_body_sha256": "sha256:4eaa92e225705a452e14c6d336d02754a6e2772700f92d4cb48579f3a99fcebc",
+      "sequence": 15
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-05-a",
+      "item_id": "upr-flex-05-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:f7d4b09c63031af933ed5810da410d93cfa7314579b8b38c231c132bc322df1d",
+      "repetition": 1,
+      "request_body_sha256": "sha256:e19242b96f7a5ea0c79bafcc47df1833a6d731125aa591d88e99766c94ef061b",
+      "sequence": 16
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-05-a",
+      "item_id": "upr-flex-05-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:f7d4b09c63031af933ed5810da410d93cfa7314579b8b38c231c132bc322df1d",
+      "repetition": 1,
+      "request_body_sha256": "sha256:d52cec676d66411edbbbf52be7f493402fe6a5ea88a265ffad9ce7f5c2cdc5a4",
+      "sequence": 17
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-05-b",
+      "item_id": "upr-flex-05-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:59547b652b514a02093c31aca530b553293df6691fc753628b2dec61daf5801c",
+      "repetition": 1,
+      "request_body_sha256": "sha256:1ea735792eff8e19b1e048abb9bdf50912b3cd5ad9b8bb1d654268180cb08a98",
+      "sequence": 18
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-05-b",
+      "item_id": "upr-flex-05-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:59547b652b514a02093c31aca530b553293df6691fc753628b2dec61daf5801c",
+      "repetition": 1,
+      "request_body_sha256": "sha256:df69b0029c3b87b0dfea997079fc160eb224b0257c016b25eb532b14cc7e602a",
+      "sequence": 19
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-06-a",
+      "item_id": "upr-flex-06-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:6a8fcec3e28236037020f0452278c392c886474bfb3da0c25693e6d7764b8b53",
+      "repetition": 1,
+      "request_body_sha256": "sha256:93a0f8274b8ae11adf55d8328245e22a6587b0429113e90016d5f859cd93a681",
+      "sequence": 20
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-06-a",
+      "item_id": "upr-flex-06-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:6a8fcec3e28236037020f0452278c392c886474bfb3da0c25693e6d7764b8b53",
+      "repetition": 1,
+      "request_body_sha256": "sha256:c04027527c584e11cae43ca45da22a43381af7b65c68e7fdebd1eeaa4c6bc1f6",
+      "sequence": 21
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-flex-06-b",
+      "item_id": "upr-flex-06-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:433c3697911f6791782b22923c52ca9cd5bc71704869d17220cbc868c12464fe",
+      "repetition": 1,
+      "request_body_sha256": "sha256:01c0441411160daa54c125f7af27931b9d8942ca22065d3c2b73b57e63c04e4a",
+      "sequence": 22
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-flex-06-b",
+      "item_id": "upr-flex-06-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:433c3697911f6791782b22923c52ca9cd5bc71704869d17220cbc868c12464fe",
+      "repetition": 1,
+      "request_body_sha256": "sha256:da25a3eafd41959dea2a1c879e9676d0d0d623d23e84dc0359bce7b520e346c7",
+      "sequence": 23
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-01-a",
+      "item_id": "upr-unique-01-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:a0a556c21ddf0dce4e99a9b76f0dfa86f2179d395dab02a356951533ff130ca6",
+      "repetition": 1,
+      "request_body_sha256": "sha256:a37566947c35b02395f269e986dbec30fab45301d5baf78e910b057bc78cab05",
+      "sequence": 24
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-01-a",
+      "item_id": "upr-unique-01-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:a0a556c21ddf0dce4e99a9b76f0dfa86f2179d395dab02a356951533ff130ca6",
+      "repetition": 1,
+      "request_body_sha256": "sha256:3ae829a6d01409e04d7525a3e1d5922f540b67416a4c19782ac2afb3114ebf58",
+      "sequence": 25
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-01-b",
+      "item_id": "upr-unique-01-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:8315c9b133016ef2b42d28dbeb8d0f5d64314973ac25214abb29e2d492a116f9",
+      "repetition": 1,
+      "request_body_sha256": "sha256:0a33d9d6a49e80c851a891680ad5e18af653462072a6a8f150141937d5a662f8",
+      "sequence": 26
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-01-b",
+      "item_id": "upr-unique-01-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:8315c9b133016ef2b42d28dbeb8d0f5d64314973ac25214abb29e2d492a116f9",
+      "repetition": 1,
+      "request_body_sha256": "sha256:72cf34de45eb699792b0544cfccd7068f7b8f67b6bc722ef07a98dfc96c16e3b",
+      "sequence": 27
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-02-a",
+      "item_id": "upr-unique-02-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:1c521bd7237b5729beb7dd5c9b34f834c4971dea20700fb12f5327156850dce5",
+      "repetition": 1,
+      "request_body_sha256": "sha256:bac429f72ca3eb7c3afebae7b13b94f54fe269292b9d64acff772a806c9ec2dd",
+      "sequence": 28
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-02-a",
+      "item_id": "upr-unique-02-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:1c521bd7237b5729beb7dd5c9b34f834c4971dea20700fb12f5327156850dce5",
+      "repetition": 1,
+      "request_body_sha256": "sha256:4f51b9449a36d329321d9fbadf5fc07c76f1c3d01e276b7a5805fefe6e184634",
+      "sequence": 29
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-02-b",
+      "item_id": "upr-unique-02-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:fc40ba94e8d79cab57290989e884aedbe46d2aaa4532413dc2e0decf5e79a1cc",
+      "repetition": 1,
+      "request_body_sha256": "sha256:a851a84349477b4d274bda7c6bd85cd501dd714ef9d8a140f47ce75954acb120",
+      "sequence": 30
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-02-b",
+      "item_id": "upr-unique-02-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:fc40ba94e8d79cab57290989e884aedbe46d2aaa4532413dc2e0decf5e79a1cc",
+      "repetition": 1,
+      "request_body_sha256": "sha256:bf0287ed76ace08db593e16899d559e1c888d966e74e391c640126edd9151526",
+      "sequence": 31
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-03-a",
+      "item_id": "upr-unique-03-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:612e2ac8f78fec0b30c08c3f6da539f8882667802b8c009170e5904f6a8c5952",
+      "repetition": 1,
+      "request_body_sha256": "sha256:eb27aad787a114c9bda7cdeb5ee761d3f67891f3b989c66d86670f94e0b8441e",
+      "sequence": 32
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-03-a",
+      "item_id": "upr-unique-03-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:612e2ac8f78fec0b30c08c3f6da539f8882667802b8c009170e5904f6a8c5952",
+      "repetition": 1,
+      "request_body_sha256": "sha256:5b923f8b6c239c838dbd68c5025bf89d274b7e1dc57e130d9777c805f141aad4",
+      "sequence": 33
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-03-b",
+      "item_id": "upr-unique-03-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:19f2d516a9d6a909986fea7136ed56c68c76886c086a0a6117573e5a80c64c47",
+      "repetition": 1,
+      "request_body_sha256": "sha256:6349898fd310c3e9d8509083d6ca5004b5e1cbd24180bf79d879bd05e342ea72",
+      "sequence": 34
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-03-b",
+      "item_id": "upr-unique-03-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:19f2d516a9d6a909986fea7136ed56c68c76886c086a0a6117573e5a80c64c47",
+      "repetition": 1,
+      "request_body_sha256": "sha256:c73b039e50bd01d7346625f2c54b40828ab2adf2a7eb2bbe184baa0f2f4d7067",
+      "sequence": 35
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-04-a",
+      "item_id": "upr-unique-04-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:4e82ef0f5d88ce1f15062415a40c4c421a1796db00ff4368b9143efa90c722f5",
+      "repetition": 1,
+      "request_body_sha256": "sha256:e143365350ef8ee43f5bfa973833bf438d3e5d93134596c84c2e23eb731fbc08",
+      "sequence": 36
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-04-a",
+      "item_id": "upr-unique-04-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:4e82ef0f5d88ce1f15062415a40c4c421a1796db00ff4368b9143efa90c722f5",
+      "repetition": 1,
+      "request_body_sha256": "sha256:b3c859a6eaac8522c981ca8a6782ccfe5db71696da4833999f0980696e9c6422",
+      "sequence": 37
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-04-b",
+      "item_id": "upr-unique-04-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:34641a3e01eddec49d117161282f0357f7be7ce81e1a8f66f2538ec15025cb19",
+      "repetition": 1,
+      "request_body_sha256": "sha256:cade16359ae6d90c0addd749ff439699bdce7c55bacbb54c9a2a4d70cffc4895",
+      "sequence": 38
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-04-b",
+      "item_id": "upr-unique-04-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:34641a3e01eddec49d117161282f0357f7be7ce81e1a8f66f2538ec15025cb19",
+      "repetition": 1,
+      "request_body_sha256": "sha256:4d7f12f387ca73e38b17af6aa5bd1fe6cf4defe7804eb953554abe64a0271b10",
+      "sequence": 39
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-05-a",
+      "item_id": "upr-unique-05-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:23ea921dedb2eff6638c891ba8947fac6a5e4a08c55e2d59002d4f59604a2f52",
+      "repetition": 1,
+      "request_body_sha256": "sha256:26cc00f101dbccfb8719ee381144b79c706747eccb30377c52f4edd04ba78552",
+      "sequence": 40
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-05-a",
+      "item_id": "upr-unique-05-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:23ea921dedb2eff6638c891ba8947fac6a5e4a08c55e2d59002d4f59604a2f52",
+      "repetition": 1,
+      "request_body_sha256": "sha256:320515af20ff49d84e3baeb0261350ac7efb26de081f776673786fc3ccd96489",
+      "sequence": 41
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-05-b",
+      "item_id": "upr-unique-05-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:7ba9789378582c48526e5d7099028448c732785b460612e9b2ddd6b7a0fdad52",
+      "repetition": 1,
+      "request_body_sha256": "sha256:0fe40459365bc0a911b89b03d36a2d9fd2e7af65473f46c743e5de1270bc24ce",
+      "sequence": 42
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-05-b",
+      "item_id": "upr-unique-05-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:7ba9789378582c48526e5d7099028448c732785b460612e9b2ddd6b7a0fdad52",
+      "repetition": 1,
+      "request_body_sha256": "sha256:f876fd6ea8003ae0282aa3ebf4ecf6be80e23c5cbf20bb703229a33edd6910f7",
+      "sequence": 43
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-06-a",
+      "item_id": "upr-unique-06-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:8a333a83cd549559bb503091435e4283ba9ebda902f91efcd6d50f2ee88f708a",
+      "repetition": 1,
+      "request_body_sha256": "sha256:315b601a6f321d37ca22e451278339378145f03c14fba65e4b1c140d16d2ddee",
+      "sequence": 44
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-06-a",
+      "item_id": "upr-unique-06-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:8a333a83cd549559bb503091435e4283ba9ebda902f91efcd6d50f2ee88f708a",
+      "repetition": 1,
+      "request_body_sha256": "sha256:45514d885d6b49557206e061158fb9b143d1b82ac70f37acb1016f099fe2bb3f",
+      "sequence": 45
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r1/upr-unique-06-b",
+      "item_id": "upr-unique-06-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:b095fbd074bdde37b21f8eceb8381ee2e3a890a1bb43d5f87269343b73e52a6d",
+      "repetition": 1,
+      "request_body_sha256": "sha256:436009a2b170ef459623f8f5bc79987fdc33bfad3658f7fb8a99b48d4046bb79",
+      "sequence": 46
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r1/upr-unique-06-b",
+      "item_id": "upr-unique-06-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:b095fbd074bdde37b21f8eceb8381ee2e3a890a1bb43d5f87269343b73e52a6d",
+      "repetition": 1,
+      "request_body_sha256": "sha256:9164906e0ed03f5478690d0fe9a631f199923459b0096484f4eadb57ff87748c",
+      "sequence": 47
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-01-a",
+      "item_id": "upr-flex-01-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:a1eb6cd88259f55799ce70d1e90c80110d8ac6dbe6d6e76f8e454eadac28ea81",
+      "repetition": 2,
+      "request_body_sha256": "sha256:5289c09ac4474663c54e37321f6d3ca03e0f056376b91b8afb9d1893b9fc698e",
+      "sequence": 48
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-01-a",
+      "item_id": "upr-flex-01-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:a1eb6cd88259f55799ce70d1e90c80110d8ac6dbe6d6e76f8e454eadac28ea81",
+      "repetition": 2,
+      "request_body_sha256": "sha256:8dbd2d5283c579cafa831d8c4fcdffc2c0c24684fc9b8d4cdd4b51500630e5a9",
+      "sequence": 49
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-01-b",
+      "item_id": "upr-flex-01-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:ae62f2728b84a5ff48ac0a982c1b30993b1056be7341bcc23067fbf2dbafdb4e",
+      "repetition": 2,
+      "request_body_sha256": "sha256:e6c81be3329704e9fc3e4dacaa75d5adf860a75e0b0f87a36bc0f70d2c245feb",
+      "sequence": 50
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-01-b",
+      "item_id": "upr-flex-01-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:ae62f2728b84a5ff48ac0a982c1b30993b1056be7341bcc23067fbf2dbafdb4e",
+      "repetition": 2,
+      "request_body_sha256": "sha256:886be3e61a8a3e5734289f3b7855b7b66116a2be29eaf0bd7a316a8a7fe1feee",
+      "sequence": 51
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-02-a",
+      "item_id": "upr-flex-02-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:5fcf91996aba5b8b2672e8311f399b978d789fa4eab61afe7f5c2e7ee26e2f00",
+      "repetition": 2,
+      "request_body_sha256": "sha256:082870218691d90bda10b2ec692aba53ecec542dd55450aa0548a6408d4fdbfc",
+      "sequence": 52
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-02-a",
+      "item_id": "upr-flex-02-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:5fcf91996aba5b8b2672e8311f399b978d789fa4eab61afe7f5c2e7ee26e2f00",
+      "repetition": 2,
+      "request_body_sha256": "sha256:a851f86fb3def6a620db469cbc2bd1d774c94d02fac306c42055ee9342891fa5",
+      "sequence": 53
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-02-b",
+      "item_id": "upr-flex-02-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:f672e66d02bfb41d540e0d50ea866c36076c9b90617bd4e130217a6064af05d7",
+      "repetition": 2,
+      "request_body_sha256": "sha256:94d29b1ab611e3bf099f30a09526cc880a4368af0ce5b44d30c1fd1365cc810d",
+      "sequence": 54
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-02-b",
+      "item_id": "upr-flex-02-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:f672e66d02bfb41d540e0d50ea866c36076c9b90617bd4e130217a6064af05d7",
+      "repetition": 2,
+      "request_body_sha256": "sha256:a77e14aa2b329ac5f85576c64112cff1b089a767384b76f68c1fa81bcfda93e1",
+      "sequence": 55
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-03-a",
+      "item_id": "upr-flex-03-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:d2302c91d3db62fd2418e91f3699071d02afa6a1b6e786ff0bd72a5bba3b69f1",
+      "repetition": 2,
+      "request_body_sha256": "sha256:b918e223655ced11c4edbf4278da1cdd7eca757b15861187dad7c88369109ed8",
+      "sequence": 56
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-03-a",
+      "item_id": "upr-flex-03-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:d2302c91d3db62fd2418e91f3699071d02afa6a1b6e786ff0bd72a5bba3b69f1",
+      "repetition": 2,
+      "request_body_sha256": "sha256:e4dbad966a891cc03209dded057af28452694d998787e771df10ac8e3a915b15",
+      "sequence": 57
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-03-b",
+      "item_id": "upr-flex-03-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:cba5b2cfc7a51767eebfe8baf5c080b1b03f3efb425f6dfb49cdb46fd16b6d34",
+      "repetition": 2,
+      "request_body_sha256": "sha256:0b2702b962119750bd5dc518895cfbb861d476818b91845f7c3ec9da589bb321",
+      "sequence": 58
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-03-b",
+      "item_id": "upr-flex-03-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:cba5b2cfc7a51767eebfe8baf5c080b1b03f3efb425f6dfb49cdb46fd16b6d34",
+      "repetition": 2,
+      "request_body_sha256": "sha256:3798b58a7ba0b99bedd29a6eb3d0e5caa06f5be31d57a712b9fa138572cf55cc",
+      "sequence": 59
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-04-a",
+      "item_id": "upr-flex-04-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:67a27ffdb5952c9ad871b1b7ab3a23e09e38ec3d351f5d38dc2e2aab07db3150",
+      "repetition": 2,
+      "request_body_sha256": "sha256:dacffdc2565d08e7d1326e27888d5f372ce88d58e21d147976ccb96e6cb8c61f",
+      "sequence": 60
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-04-a",
+      "item_id": "upr-flex-04-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:67a27ffdb5952c9ad871b1b7ab3a23e09e38ec3d351f5d38dc2e2aab07db3150",
+      "repetition": 2,
+      "request_body_sha256": "sha256:bd43d3029f287c9a5df70a77cbec05445f6bd1af9228bb470f18f4f12b3c86f2",
+      "sequence": 61
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-04-b",
+      "item_id": "upr-flex-04-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:b626ab7146f3816c04b5be126378491048cb68427f20674f6f5ce0463e6a5b00",
+      "repetition": 2,
+      "request_body_sha256": "sha256:4eaa92e225705a452e14c6d336d02754a6e2772700f92d4cb48579f3a99fcebc",
+      "sequence": 62
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-04-b",
+      "item_id": "upr-flex-04-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:b626ab7146f3816c04b5be126378491048cb68427f20674f6f5ce0463e6a5b00",
+      "repetition": 2,
+      "request_body_sha256": "sha256:edf928c33b6d10e951a23f178825fab04f320146591333285e5e267accee98da",
+      "sequence": 63
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-05-a",
+      "item_id": "upr-flex-05-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:f7d4b09c63031af933ed5810da410d93cfa7314579b8b38c231c132bc322df1d",
+      "repetition": 2,
+      "request_body_sha256": "sha256:d52cec676d66411edbbbf52be7f493402fe6a5ea88a265ffad9ce7f5c2cdc5a4",
+      "sequence": 64
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-05-a",
+      "item_id": "upr-flex-05-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:f7d4b09c63031af933ed5810da410d93cfa7314579b8b38c231c132bc322df1d",
+      "repetition": 2,
+      "request_body_sha256": "sha256:e19242b96f7a5ea0c79bafcc47df1833a6d731125aa591d88e99766c94ef061b",
+      "sequence": 65
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-05-b",
+      "item_id": "upr-flex-05-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:59547b652b514a02093c31aca530b553293df6691fc753628b2dec61daf5801c",
+      "repetition": 2,
+      "request_body_sha256": "sha256:df69b0029c3b87b0dfea997079fc160eb224b0257c016b25eb532b14cc7e602a",
+      "sequence": 66
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-05-b",
+      "item_id": "upr-flex-05-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:59547b652b514a02093c31aca530b553293df6691fc753628b2dec61daf5801c",
+      "repetition": 2,
+      "request_body_sha256": "sha256:1ea735792eff8e19b1e048abb9bdf50912b3cd5ad9b8bb1d654268180cb08a98",
+      "sequence": 67
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-06-a",
+      "item_id": "upr-flex-06-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:6a8fcec3e28236037020f0452278c392c886474bfb3da0c25693e6d7764b8b53",
+      "repetition": 2,
+      "request_body_sha256": "sha256:c04027527c584e11cae43ca45da22a43381af7b65c68e7fdebd1eeaa4c6bc1f6",
+      "sequence": 68
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-06-a",
+      "item_id": "upr-flex-06-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:6a8fcec3e28236037020f0452278c392c886474bfb3da0c25693e6d7764b8b53",
+      "repetition": 2,
+      "request_body_sha256": "sha256:93a0f8274b8ae11adf55d8328245e22a6587b0429113e90016d5f859cd93a681",
+      "sequence": 69
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-flex-06-b",
+      "item_id": "upr-flex-06-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:433c3697911f6791782b22923c52ca9cd5bc71704869d17220cbc868c12464fe",
+      "repetition": 2,
+      "request_body_sha256": "sha256:da25a3eafd41959dea2a1c879e9676d0d0d623d23e84dc0359bce7b520e346c7",
+      "sequence": 70
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-flex-06-b",
+      "item_id": "upr-flex-06-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:433c3697911f6791782b22923c52ca9cd5bc71704869d17220cbc868c12464fe",
+      "repetition": 2,
+      "request_body_sha256": "sha256:01c0441411160daa54c125f7af27931b9d8942ca22065d3c2b73b57e63c04e4a",
+      "sequence": 71
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-01-a",
+      "item_id": "upr-unique-01-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:a0a556c21ddf0dce4e99a9b76f0dfa86f2179d395dab02a356951533ff130ca6",
+      "repetition": 2,
+      "request_body_sha256": "sha256:3ae829a6d01409e04d7525a3e1d5922f540b67416a4c19782ac2afb3114ebf58",
+      "sequence": 72
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-01-a",
+      "item_id": "upr-unique-01-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:a0a556c21ddf0dce4e99a9b76f0dfa86f2179d395dab02a356951533ff130ca6",
+      "repetition": 2,
+      "request_body_sha256": "sha256:a37566947c35b02395f269e986dbec30fab45301d5baf78e910b057bc78cab05",
+      "sequence": 73
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-01-b",
+      "item_id": "upr-unique-01-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:8315c9b133016ef2b42d28dbeb8d0f5d64314973ac25214abb29e2d492a116f9",
+      "repetition": 2,
+      "request_body_sha256": "sha256:72cf34de45eb699792b0544cfccd7068f7b8f67b6bc722ef07a98dfc96c16e3b",
+      "sequence": 74
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-01-b",
+      "item_id": "upr-unique-01-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:8315c9b133016ef2b42d28dbeb8d0f5d64314973ac25214abb29e2d492a116f9",
+      "repetition": 2,
+      "request_body_sha256": "sha256:0a33d9d6a49e80c851a891680ad5e18af653462072a6a8f150141937d5a662f8",
+      "sequence": 75
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-02-a",
+      "item_id": "upr-unique-02-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:1c521bd7237b5729beb7dd5c9b34f834c4971dea20700fb12f5327156850dce5",
+      "repetition": 2,
+      "request_body_sha256": "sha256:4f51b9449a36d329321d9fbadf5fc07c76f1c3d01e276b7a5805fefe6e184634",
+      "sequence": 76
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-02-a",
+      "item_id": "upr-unique-02-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:1c521bd7237b5729beb7dd5c9b34f834c4971dea20700fb12f5327156850dce5",
+      "repetition": 2,
+      "request_body_sha256": "sha256:bac429f72ca3eb7c3afebae7b13b94f54fe269292b9d64acff772a806c9ec2dd",
+      "sequence": 77
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-02-b",
+      "item_id": "upr-unique-02-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:fc40ba94e8d79cab57290989e884aedbe46d2aaa4532413dc2e0decf5e79a1cc",
+      "repetition": 2,
+      "request_body_sha256": "sha256:bf0287ed76ace08db593e16899d559e1c888d966e74e391c640126edd9151526",
+      "sequence": 78
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-02-b",
+      "item_id": "upr-unique-02-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:fc40ba94e8d79cab57290989e884aedbe46d2aaa4532413dc2e0decf5e79a1cc",
+      "repetition": 2,
+      "request_body_sha256": "sha256:a851a84349477b4d274bda7c6bd85cd501dd714ef9d8a140f47ce75954acb120",
+      "sequence": 79
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-03-a",
+      "item_id": "upr-unique-03-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:612e2ac8f78fec0b30c08c3f6da539f8882667802b8c009170e5904f6a8c5952",
+      "repetition": 2,
+      "request_body_sha256": "sha256:5b923f8b6c239c838dbd68c5025bf89d274b7e1dc57e130d9777c805f141aad4",
+      "sequence": 80
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-03-a",
+      "item_id": "upr-unique-03-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:612e2ac8f78fec0b30c08c3f6da539f8882667802b8c009170e5904f6a8c5952",
+      "repetition": 2,
+      "request_body_sha256": "sha256:eb27aad787a114c9bda7cdeb5ee761d3f67891f3b989c66d86670f94e0b8441e",
+      "sequence": 81
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-03-b",
+      "item_id": "upr-unique-03-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:19f2d516a9d6a909986fea7136ed56c68c76886c086a0a6117573e5a80c64c47",
+      "repetition": 2,
+      "request_body_sha256": "sha256:c73b039e50bd01d7346625f2c54b40828ab2adf2a7eb2bbe184baa0f2f4d7067",
+      "sequence": 82
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-03-b",
+      "item_id": "upr-unique-03-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:19f2d516a9d6a909986fea7136ed56c68c76886c086a0a6117573e5a80c64c47",
+      "repetition": 2,
+      "request_body_sha256": "sha256:6349898fd310c3e9d8509083d6ca5004b5e1cbd24180bf79d879bd05e342ea72",
+      "sequence": 83
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-04-a",
+      "item_id": "upr-unique-04-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:4e82ef0f5d88ce1f15062415a40c4c421a1796db00ff4368b9143efa90c722f5",
+      "repetition": 2,
+      "request_body_sha256": "sha256:b3c859a6eaac8522c981ca8a6782ccfe5db71696da4833999f0980696e9c6422",
+      "sequence": 84
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-04-a",
+      "item_id": "upr-unique-04-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:4e82ef0f5d88ce1f15062415a40c4c421a1796db00ff4368b9143efa90c722f5",
+      "repetition": 2,
+      "request_body_sha256": "sha256:e143365350ef8ee43f5bfa973833bf438d3e5d93134596c84c2e23eb731fbc08",
+      "sequence": 85
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-04-b",
+      "item_id": "upr-unique-04-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:34641a3e01eddec49d117161282f0357f7be7ce81e1a8f66f2538ec15025cb19",
+      "repetition": 2,
+      "request_body_sha256": "sha256:4d7f12f387ca73e38b17af6aa5bd1fe6cf4defe7804eb953554abe64a0271b10",
+      "sequence": 86
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-04-b",
+      "item_id": "upr-unique-04-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:34641a3e01eddec49d117161282f0357f7be7ce81e1a8f66f2538ec15025cb19",
+      "repetition": 2,
+      "request_body_sha256": "sha256:cade16359ae6d90c0addd749ff439699bdce7c55bacbb54c9a2a4d70cffc4895",
+      "sequence": 87
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-05-a",
+      "item_id": "upr-unique-05-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:23ea921dedb2eff6638c891ba8947fac6a5e4a08c55e2d59002d4f59604a2f52",
+      "repetition": 2,
+      "request_body_sha256": "sha256:320515af20ff49d84e3baeb0261350ac7efb26de081f776673786fc3ccd96489",
+      "sequence": 88
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-05-a",
+      "item_id": "upr-unique-05-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:23ea921dedb2eff6638c891ba8947fac6a5e4a08c55e2d59002d4f59604a2f52",
+      "repetition": 2,
+      "request_body_sha256": "sha256:26cc00f101dbccfb8719ee381144b79c706747eccb30377c52f4edd04ba78552",
+      "sequence": 89
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-05-b",
+      "item_id": "upr-unique-05-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:7ba9789378582c48526e5d7099028448c732785b460612e9b2ddd6b7a0fdad52",
+      "repetition": 2,
+      "request_body_sha256": "sha256:f876fd6ea8003ae0282aa3ebf4ecf6be80e23c5cbf20bb703229a33edd6910f7",
+      "sequence": 90
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-05-b",
+      "item_id": "upr-unique-05-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:7ba9789378582c48526e5d7099028448c732785b460612e9b2ddd6b7a0fdad52",
+      "repetition": 2,
+      "request_body_sha256": "sha256:0fe40459365bc0a911b89b03d36a2d9fd2e7af65473f46c743e5de1270bc24ce",
+      "sequence": 91
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-06-a",
+      "item_id": "upr-unique-06-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:8a333a83cd549559bb503091435e4283ba9ebda902f91efcd6d50f2ee88f708a",
+      "repetition": 2,
+      "request_body_sha256": "sha256:45514d885d6b49557206e061158fb9b143d1b82ac70f37acb1016f099fe2bb3f",
+      "sequence": 92
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-06-a",
+      "item_id": "upr-unique-06-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:8a333a83cd549559bb503091435e4283ba9ebda902f91efcd6d50f2ee88f708a",
+      "repetition": 2,
+      "request_body_sha256": "sha256:315b601a6f321d37ca22e451278339378145f03c14fba65e4b1c140d16d2ddee",
+      "sequence": 93
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r2/upr-unique-06-b",
+      "item_id": "upr-unique-06-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:b095fbd074bdde37b21f8eceb8381ee2e3a890a1bb43d5f87269343b73e52a6d",
+      "repetition": 2,
+      "request_body_sha256": "sha256:9164906e0ed03f5478690d0fe9a631f199923459b0096484f4eadb57ff87748c",
+      "sequence": 94
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r2/upr-unique-06-b",
+      "item_id": "upr-unique-06-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:b095fbd074bdde37b21f8eceb8381ee2e3a890a1bb43d5f87269343b73e52a6d",
+      "repetition": 2,
+      "request_body_sha256": "sha256:436009a2b170ef459623f8f5bc79987fdc33bfad3658f7fb8a99b48d4046bb79",
+      "sequence": 95
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-01-a",
+      "item_id": "upr-flex-01-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:a1eb6cd88259f55799ce70d1e90c80110d8ac6dbe6d6e76f8e454eadac28ea81",
+      "repetition": 3,
+      "request_body_sha256": "sha256:8dbd2d5283c579cafa831d8c4fcdffc2c0c24684fc9b8d4cdd4b51500630e5a9",
+      "sequence": 96
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-01-a",
+      "item_id": "upr-flex-01-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:a1eb6cd88259f55799ce70d1e90c80110d8ac6dbe6d6e76f8e454eadac28ea81",
+      "repetition": 3,
+      "request_body_sha256": "sha256:5289c09ac4474663c54e37321f6d3ca03e0f056376b91b8afb9d1893b9fc698e",
+      "sequence": 97
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-01-b",
+      "item_id": "upr-flex-01-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:ae62f2728b84a5ff48ac0a982c1b30993b1056be7341bcc23067fbf2dbafdb4e",
+      "repetition": 3,
+      "request_body_sha256": "sha256:886be3e61a8a3e5734289f3b7855b7b66116a2be29eaf0bd7a316a8a7fe1feee",
+      "sequence": 98
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-01-b",
+      "item_id": "upr-flex-01-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-01",
+      "prompt_sha256": "sha256:ae62f2728b84a5ff48ac0a982c1b30993b1056be7341bcc23067fbf2dbafdb4e",
+      "repetition": 3,
+      "request_body_sha256": "sha256:e6c81be3329704e9fc3e4dacaa75d5adf860a75e0b0f87a36bc0f70d2c245feb",
+      "sequence": 99
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-02-a",
+      "item_id": "upr-flex-02-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:5fcf91996aba5b8b2672e8311f399b978d789fa4eab61afe7f5c2e7ee26e2f00",
+      "repetition": 3,
+      "request_body_sha256": "sha256:a851f86fb3def6a620db469cbc2bd1d774c94d02fac306c42055ee9342891fa5",
+      "sequence": 100
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-02-a",
+      "item_id": "upr-flex-02-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:5fcf91996aba5b8b2672e8311f399b978d789fa4eab61afe7f5c2e7ee26e2f00",
+      "repetition": 3,
+      "request_body_sha256": "sha256:082870218691d90bda10b2ec692aba53ecec542dd55450aa0548a6408d4fdbfc",
+      "sequence": 101
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-02-b",
+      "item_id": "upr-flex-02-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:f672e66d02bfb41d540e0d50ea866c36076c9b90617bd4e130217a6064af05d7",
+      "repetition": 3,
+      "request_body_sha256": "sha256:a77e14aa2b329ac5f85576c64112cff1b089a767384b76f68c1fa81bcfda93e1",
+      "sequence": 102
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-02-b",
+      "item_id": "upr-flex-02-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-02",
+      "prompt_sha256": "sha256:f672e66d02bfb41d540e0d50ea866c36076c9b90617bd4e130217a6064af05d7",
+      "repetition": 3,
+      "request_body_sha256": "sha256:94d29b1ab611e3bf099f30a09526cc880a4368af0ce5b44d30c1fd1365cc810d",
+      "sequence": 103
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-03-a",
+      "item_id": "upr-flex-03-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:d2302c91d3db62fd2418e91f3699071d02afa6a1b6e786ff0bd72a5bba3b69f1",
+      "repetition": 3,
+      "request_body_sha256": "sha256:e4dbad966a891cc03209dded057af28452694d998787e771df10ac8e3a915b15",
+      "sequence": 104
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-03-a",
+      "item_id": "upr-flex-03-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:d2302c91d3db62fd2418e91f3699071d02afa6a1b6e786ff0bd72a5bba3b69f1",
+      "repetition": 3,
+      "request_body_sha256": "sha256:b918e223655ced11c4edbf4278da1cdd7eca757b15861187dad7c88369109ed8",
+      "sequence": 105
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-03-b",
+      "item_id": "upr-flex-03-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:cba5b2cfc7a51767eebfe8baf5c080b1b03f3efb425f6dfb49cdb46fd16b6d34",
+      "repetition": 3,
+      "request_body_sha256": "sha256:3798b58a7ba0b99bedd29a6eb3d0e5caa06f5be31d57a712b9fa138572cf55cc",
+      "sequence": 106
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-03-b",
+      "item_id": "upr-flex-03-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-03",
+      "prompt_sha256": "sha256:cba5b2cfc7a51767eebfe8baf5c080b1b03f3efb425f6dfb49cdb46fd16b6d34",
+      "repetition": 3,
+      "request_body_sha256": "sha256:0b2702b962119750bd5dc518895cfbb861d476818b91845f7c3ec9da589bb321",
+      "sequence": 107
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-04-a",
+      "item_id": "upr-flex-04-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:67a27ffdb5952c9ad871b1b7ab3a23e09e38ec3d351f5d38dc2e2aab07db3150",
+      "repetition": 3,
+      "request_body_sha256": "sha256:bd43d3029f287c9a5df70a77cbec05445f6bd1af9228bb470f18f4f12b3c86f2",
+      "sequence": 108
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-04-a",
+      "item_id": "upr-flex-04-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:67a27ffdb5952c9ad871b1b7ab3a23e09e38ec3d351f5d38dc2e2aab07db3150",
+      "repetition": 3,
+      "request_body_sha256": "sha256:dacffdc2565d08e7d1326e27888d5f372ce88d58e21d147976ccb96e6cb8c61f",
+      "sequence": 109
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-04-b",
+      "item_id": "upr-flex-04-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:b626ab7146f3816c04b5be126378491048cb68427f20674f6f5ce0463e6a5b00",
+      "repetition": 3,
+      "request_body_sha256": "sha256:edf928c33b6d10e951a23f178825fab04f320146591333285e5e267accee98da",
+      "sequence": 110
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-04-b",
+      "item_id": "upr-flex-04-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-04",
+      "prompt_sha256": "sha256:b626ab7146f3816c04b5be126378491048cb68427f20674f6f5ce0463e6a5b00",
+      "repetition": 3,
+      "request_body_sha256": "sha256:4eaa92e225705a452e14c6d336d02754a6e2772700f92d4cb48579f3a99fcebc",
+      "sequence": 111
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-05-a",
+      "item_id": "upr-flex-05-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:f7d4b09c63031af933ed5810da410d93cfa7314579b8b38c231c132bc322df1d",
+      "repetition": 3,
+      "request_body_sha256": "sha256:e19242b96f7a5ea0c79bafcc47df1833a6d731125aa591d88e99766c94ef061b",
+      "sequence": 112
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-05-a",
+      "item_id": "upr-flex-05-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:f7d4b09c63031af933ed5810da410d93cfa7314579b8b38c231c132bc322df1d",
+      "repetition": 3,
+      "request_body_sha256": "sha256:d52cec676d66411edbbbf52be7f493402fe6a5ea88a265ffad9ce7f5c2cdc5a4",
+      "sequence": 113
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-05-b",
+      "item_id": "upr-flex-05-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:59547b652b514a02093c31aca530b553293df6691fc753628b2dec61daf5801c",
+      "repetition": 3,
+      "request_body_sha256": "sha256:1ea735792eff8e19b1e048abb9bdf50912b3cd5ad9b8bb1d654268180cb08a98",
+      "sequence": 114
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-05-b",
+      "item_id": "upr-flex-05-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-05",
+      "prompt_sha256": "sha256:59547b652b514a02093c31aca530b553293df6691fc753628b2dec61daf5801c",
+      "repetition": 3,
+      "request_body_sha256": "sha256:df69b0029c3b87b0dfea997079fc160eb224b0257c016b25eb532b14cc7e602a",
+      "sequence": 115
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-06-a",
+      "item_id": "upr-flex-06-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:6a8fcec3e28236037020f0452278c392c886474bfb3da0c25693e6d7764b8b53",
+      "repetition": 3,
+      "request_body_sha256": "sha256:93a0f8274b8ae11adf55d8328245e22a6587b0429113e90016d5f859cd93a681",
+      "sequence": 116
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-06-a",
+      "item_id": "upr-flex-06-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:6a8fcec3e28236037020f0452278c392c886474bfb3da0c25693e6d7764b8b53",
+      "repetition": 3,
+      "request_body_sha256": "sha256:c04027527c584e11cae43ca45da22a43381af7b65c68e7fdebd1eeaa4c6bc1f6",
+      "sequence": 117
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-flex-06-b",
+      "item_id": "upr-flex-06-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:433c3697911f6791782b22923c52ca9cd5bc71704869d17220cbc868c12464fe",
+      "repetition": 3,
+      "request_body_sha256": "sha256:01c0441411160daa54c125f7af27931b9d8942ca22065d3c2b73b57e63c04e4a",
+      "sequence": 118
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-flex-06-b",
+      "item_id": "upr-flex-06-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-flex-06",
+      "prompt_sha256": "sha256:433c3697911f6791782b22923c52ca9cd5bc71704869d17220cbc868c12464fe",
+      "repetition": 3,
+      "request_body_sha256": "sha256:da25a3eafd41959dea2a1c879e9676d0d0d623d23e84dc0359bce7b520e346c7",
+      "sequence": 119
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-01-a",
+      "item_id": "upr-unique-01-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:a0a556c21ddf0dce4e99a9b76f0dfa86f2179d395dab02a356951533ff130ca6",
+      "repetition": 3,
+      "request_body_sha256": "sha256:a37566947c35b02395f269e986dbec30fab45301d5baf78e910b057bc78cab05",
+      "sequence": 120
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-01-a",
+      "item_id": "upr-unique-01-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:a0a556c21ddf0dce4e99a9b76f0dfa86f2179d395dab02a356951533ff130ca6",
+      "repetition": 3,
+      "request_body_sha256": "sha256:3ae829a6d01409e04d7525a3e1d5922f540b67416a4c19782ac2afb3114ebf58",
+      "sequence": 121
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-01-b",
+      "item_id": "upr-unique-01-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:8315c9b133016ef2b42d28dbeb8d0f5d64314973ac25214abb29e2d492a116f9",
+      "repetition": 3,
+      "request_body_sha256": "sha256:0a33d9d6a49e80c851a891680ad5e18af653462072a6a8f150141937d5a662f8",
+      "sequence": 122
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-01-b",
+      "item_id": "upr-unique-01-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-01",
+      "prompt_sha256": "sha256:8315c9b133016ef2b42d28dbeb8d0f5d64314973ac25214abb29e2d492a116f9",
+      "repetition": 3,
+      "request_body_sha256": "sha256:72cf34de45eb699792b0544cfccd7068f7b8f67b6bc722ef07a98dfc96c16e3b",
+      "sequence": 123
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-02-a",
+      "item_id": "upr-unique-02-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:1c521bd7237b5729beb7dd5c9b34f834c4971dea20700fb12f5327156850dce5",
+      "repetition": 3,
+      "request_body_sha256": "sha256:bac429f72ca3eb7c3afebae7b13b94f54fe269292b9d64acff772a806c9ec2dd",
+      "sequence": 124
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-02-a",
+      "item_id": "upr-unique-02-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:1c521bd7237b5729beb7dd5c9b34f834c4971dea20700fb12f5327156850dce5",
+      "repetition": 3,
+      "request_body_sha256": "sha256:4f51b9449a36d329321d9fbadf5fc07c76f1c3d01e276b7a5805fefe6e184634",
+      "sequence": 125
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-02-b",
+      "item_id": "upr-unique-02-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:fc40ba94e8d79cab57290989e884aedbe46d2aaa4532413dc2e0decf5e79a1cc",
+      "repetition": 3,
+      "request_body_sha256": "sha256:a851a84349477b4d274bda7c6bd85cd501dd714ef9d8a140f47ce75954acb120",
+      "sequence": 126
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-02-b",
+      "item_id": "upr-unique-02-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-02",
+      "prompt_sha256": "sha256:fc40ba94e8d79cab57290989e884aedbe46d2aaa4532413dc2e0decf5e79a1cc",
+      "repetition": 3,
+      "request_body_sha256": "sha256:bf0287ed76ace08db593e16899d559e1c888d966e74e391c640126edd9151526",
+      "sequence": 127
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-03-a",
+      "item_id": "upr-unique-03-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:612e2ac8f78fec0b30c08c3f6da539f8882667802b8c009170e5904f6a8c5952",
+      "repetition": 3,
+      "request_body_sha256": "sha256:eb27aad787a114c9bda7cdeb5ee761d3f67891f3b989c66d86670f94e0b8441e",
+      "sequence": 128
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-03-a",
+      "item_id": "upr-unique-03-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:612e2ac8f78fec0b30c08c3f6da539f8882667802b8c009170e5904f6a8c5952",
+      "repetition": 3,
+      "request_body_sha256": "sha256:5b923f8b6c239c838dbd68c5025bf89d274b7e1dc57e130d9777c805f141aad4",
+      "sequence": 129
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-03-b",
+      "item_id": "upr-unique-03-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:19f2d516a9d6a909986fea7136ed56c68c76886c086a0a6117573e5a80c64c47",
+      "repetition": 3,
+      "request_body_sha256": "sha256:6349898fd310c3e9d8509083d6ca5004b5e1cbd24180bf79d879bd05e342ea72",
+      "sequence": 130
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-03-b",
+      "item_id": "upr-unique-03-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-03",
+      "prompt_sha256": "sha256:19f2d516a9d6a909986fea7136ed56c68c76886c086a0a6117573e5a80c64c47",
+      "repetition": 3,
+      "request_body_sha256": "sha256:c73b039e50bd01d7346625f2c54b40828ab2adf2a7eb2bbe184baa0f2f4d7067",
+      "sequence": 131
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-04-a",
+      "item_id": "upr-unique-04-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:4e82ef0f5d88ce1f15062415a40c4c421a1796db00ff4368b9143efa90c722f5",
+      "repetition": 3,
+      "request_body_sha256": "sha256:e143365350ef8ee43f5bfa973833bf438d3e5d93134596c84c2e23eb731fbc08",
+      "sequence": 132
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-04-a",
+      "item_id": "upr-unique-04-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:4e82ef0f5d88ce1f15062415a40c4c421a1796db00ff4368b9143efa90c722f5",
+      "repetition": 3,
+      "request_body_sha256": "sha256:b3c859a6eaac8522c981ca8a6782ccfe5db71696da4833999f0980696e9c6422",
+      "sequence": 133
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-04-b",
+      "item_id": "upr-unique-04-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:34641a3e01eddec49d117161282f0357f7be7ce81e1a8f66f2538ec15025cb19",
+      "repetition": 3,
+      "request_body_sha256": "sha256:cade16359ae6d90c0addd749ff439699bdce7c55bacbb54c9a2a4d70cffc4895",
+      "sequence": 134
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-04-b",
+      "item_id": "upr-unique-04-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-04",
+      "prompt_sha256": "sha256:34641a3e01eddec49d117161282f0357f7be7ce81e1a8f66f2538ec15025cb19",
+      "repetition": 3,
+      "request_body_sha256": "sha256:4d7f12f387ca73e38b17af6aa5bd1fe6cf4defe7804eb953554abe64a0271b10",
+      "sequence": 135
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-05-a",
+      "item_id": "upr-unique-05-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:23ea921dedb2eff6638c891ba8947fac6a5e4a08c55e2d59002d4f59604a2f52",
+      "repetition": 3,
+      "request_body_sha256": "sha256:26cc00f101dbccfb8719ee381144b79c706747eccb30377c52f4edd04ba78552",
+      "sequence": 136
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-05-a",
+      "item_id": "upr-unique-05-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:23ea921dedb2eff6638c891ba8947fac6a5e4a08c55e2d59002d4f59604a2f52",
+      "repetition": 3,
+      "request_body_sha256": "sha256:320515af20ff49d84e3baeb0261350ac7efb26de081f776673786fc3ccd96489",
+      "sequence": 137
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-05-b",
+      "item_id": "upr-unique-05-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:7ba9789378582c48526e5d7099028448c732785b460612e9b2ddd6b7a0fdad52",
+      "repetition": 3,
+      "request_body_sha256": "sha256:0fe40459365bc0a911b89b03d36a2d9fd2e7af65473f46c743e5de1270bc24ce",
+      "sequence": 138
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-05-b",
+      "item_id": "upr-unique-05-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-05",
+      "prompt_sha256": "sha256:7ba9789378582c48526e5d7099028448c732785b460612e9b2ddd6b7a0fdad52",
+      "repetition": 3,
+      "request_body_sha256": "sha256:f876fd6ea8003ae0282aa3ebf4ecf6be80e23c5cbf20bb703229a33edd6910f7",
+      "sequence": 139
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-06-a",
+      "item_id": "upr-unique-06-a",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:8a333a83cd549559bb503091435e4283ba9ebda902f91efcd6d50f2ee88f708a",
+      "repetition": 3,
+      "request_body_sha256": "sha256:315b601a6f321d37ca22e451278339378145f03c14fba65e4b1c140d16d2ddee",
+      "sequence": 140
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-06-a",
+      "item_id": "upr-unique-06-a",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:8a333a83cd549559bb503091435e4283ba9ebda902f91efcd6d50f2ee88f708a",
+      "repetition": 3,
+      "request_body_sha256": "sha256:45514d885d6b49557206e061158fb9b143d1b82ac70f37acb1016f099fe2bb3f",
+      "sequence": 141
+    },
+    {
+      "cell_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1/r3/upr-unique-06-b",
+      "item_id": "upr-unique-06-b",
+      "lane_id": "opencode-go-deepseek-v4-flash-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:b095fbd074bdde37b21f8eceb8381ee2e3a890a1bb43d5f87269343b73e52a6d",
+      "repetition": 3,
+      "request_body_sha256": "sha256:436009a2b170ef459623f8f5bc79987fdc33bfad3658f7fb8a99b48d4046bb79",
+      "sequence": 142
+    },
+    {
+      "cell_id": "opencode-go-qwen3.7-max-upstream-repeat-v1/r3/upr-unique-06-b",
+      "item_id": "upr-unique-06-b",
+      "lane_id": "opencode-go-qwen3.7-max-upstream-repeat-v1",
+      "pair_id": "upr-unique-06",
+      "prompt_sha256": "sha256:b095fbd074bdde37b21f8eceb8381ee2e3a890a1bb43d5f87269343b73e52a6d",
+      "repetition": 3,
+      "request_body_sha256": "sha256:9164906e0ed03f5478690d0fe9a631f199923459b0096484f4eadb57ff87748c",
+      "sequence": 143
+    }
+  ],
+  "contains_credentials": false,
+  "contains_gold": false,
+  "contains_prompts": false,
+  "packet_file_sha256": "sha256:789237633e1d136efe87ed133886c92759bfa2a6e9203ed06ca84b4a5c8d2197",
+  "packet_sha256": "sha256:0f8782f024d87e5e6c37dd1da08c8cab7224cbce9b4a8fda47e5cd5e5c99da35",
+  "planned_cells": 144,
+  "repetitions": 3,
+  "schedule_sha256": "sha256:e4776de2f0677267eaa4c26decc7d7b7e76863e474bb928bf25952d9005ba066",
+  "schema_version": "1.0.0",
+  "study_id": "claimpromotebench-upstream-policy-route-repetition-2026-08-v1"
+}

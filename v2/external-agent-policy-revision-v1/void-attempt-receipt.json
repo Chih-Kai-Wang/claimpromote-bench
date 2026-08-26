@@ -1,0 +1,40 @@
+{
+  "application_posts_upper_bound": 8,
+  "cause": {
+    "exception_class": "DatasetIntegrityError",
+    "failing_field": "model_family",
+    "failing_model_family": "Undisclosed OX Alpha",
+    "layer": "LOCAL_POST_RESPONSE_RUN_RECORD_SCHEMA_VALIDATION",
+    "schema_path": "v2/schemas/stronger-model-run-record.schema.json"
+  },
+  "durable_request_intents": 8,
+  "durable_terminal_records": 3,
+  "frozen_plan_commit": "4aff56984d306b5fc98f7b34b5909e46d4442ba9",
+  "journal_sha256": {
+    "request-intents.jsonl": "sha256:09b09b634de74d5c7f775b5afc2b9e8cbf54eee70a2a1a17b5b2e79f5ae97561",
+    "run-start.json": "sha256:6c21bb68ed042105ac7e55565c83081b1affb6bc595645f698e651c4e1c5866e",
+    "terminal-records.jsonl": "sha256:1b3a21fdf5302b51d5afd6c1f9bbb2200eb7a4e63f8a041107de444f4f716b00"
+  },
+  "model_output_content_inspected": false,
+  "model_outputs_used_for_replacement_design": false,
+  "planned_cells": 480,
+  "replacement_boundary": {
+    "cases_changed": false,
+    "client_retry_rule_changed": false,
+    "output_schema_change": "ADD_UNDISCLOSED_OX_ALPHA_MODEL_FAMILY_ENUM_VALUE",
+    "prompts_changed": false,
+    "replications_changed": false,
+    "routes_changed": false,
+    "schedule_identity_reissued_under_v1": false,
+    "study_id_and_lane_ids_change": true
+  },
+  "request_schedule_file_sha256": "sha256:ef71b39eab7c327062959c5130a558d22609fd6ed54096d70c6be09dcbeeca60",
+  "request_schedule_sha256": "sha256:ff2a578d21ad299d666ff9170ba68629ea7c27186a91846c69b5751c8607ddb5",
+  "requests_reissued_under_v1": 0,
+  "result_derivative_created": false,
+  "schema_version": "1.0.0",
+  "scored_terminal_records": 0,
+  "status": "VOID_INFRASTRUCTURE_ABORT_NO_RESUME",
+  "study_id": "claimpromotebench-external-agent-policy-revision-2026-08-v1",
+  "study_plan_sha256": "sha256:77d7873bc20de965f949906a0aafa5fba37f2cceaa6d03564ef8e5bb744afd94"
+}

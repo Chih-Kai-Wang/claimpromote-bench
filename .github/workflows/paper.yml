@@ -4,9 +4,28 @@ on:
   pull_request:
     paths:
       - "technical-report/**"
+      - "docs/MANUSCRIPT_STYLE_AUDIT_2026-08-23.json"
+      - "docs/PAPER_STYLE_CORPUS_MANIFEST_2026-08-23.json"
+      - "docs/PAPER_STYLE_CORPUS_STATISTICS_2026-08-23.json"
       - "release/v1-paper-results.json"
+      - "v2/pilot-results/v2-public-pilot-study.json"
+      - "v2/capable-hidden-results/**"
+      - "v2/confirmatory/r6-execution/**"
+      - "v2/ox-alpha-minimal-route-v1/**"
+      - "v2/public-model-breadth-v1/**"
+      - "v2/factor-complete-route-breadth-v2/**"
+      - "v2/external-agent-policy-revision-v2/**"
+      - "release/reviewer-evidence-source/fresh-confirmatory/confirmatory-analysis-public.json"
+      - "release/reviewer-evidence-source/fresh-confirmatory/public-release-scientific-equivalence.json"
+      - "release/reviewer-evidence-source/fresh-confirmatory/PERMANENT-MANIFEST.json"
       - "scripts/lint_paper_submission.py"
+      - "scripts/analyze_ox_alpha_minimal_route_study.py"
+      - "scripts/analyze_public_model_breadth_study.py"
+      - "scripts/analyze_factor_complete_route_breadth.py"
+      - "scripts/analyze_external_agent_policy_revision.py"
+      - "release/tools/verify_public_model_breadth_public_evidence.py"
       - "scripts/validate_v1_release_results.py"
+      - "scripts/validate_v2_public_pilot_study.py"
       - ".github/workflows/paper.yml"
   workflow_dispatch:
 
@@ -27,8 +46,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Fail-closed manuscript lint
         run: python scripts/lint_paper_submission.py
-      - name: Validate public result release
+      - name: Validate public v1 paper results
         run: python scripts/validate_v1_release_results.py
+      - name: Validate post-v1 public pilot
+        run: python scripts/validate_v2_public_pilot_study.py
       - name: Install TeX dependencies
         run: |
           sudo apt-get update
@@ -44,12 +65,17 @@ jobs:
           bibtex main
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
-      - name: Fail on undefined citations or references
+      - name: Fail on undefined citations, references, or horizontal overflow
         working-directory: technical-report
         shell: bash
         run: |
+          set -euo pipefail
           if grep -E "LaTeX Warning: (Citation|Reference).*(undefined|multiply defined)|There were undefined references" main.log; then
             echo "Manuscript contains unresolved citations or references." >&2
+            exit 1
+          fi
+          if grep -F 'Overfull \\hbox' main.log; then
+            echo "Manuscript contains horizontal overflow." >&2
             exit 1
           fi
       - name: Confirm PDF exists

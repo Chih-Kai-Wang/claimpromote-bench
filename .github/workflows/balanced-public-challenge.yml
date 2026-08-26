@@ -1,0 +1,331 @@
+name: balanced public challenge
+run-name: claimpromotebench-balanced-public-v1-singleton
+
+on:
+  workflow_call:
+    inputs:
+      confirm:
+        required: true
+        type: string
+    secrets:
+      OPENCODE_GO_API_KEY:
+        required: true
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type RUN_BALANCED_PUBLIC_CHALLENGE_V1 to execute the frozen study once
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  PYTHONPATH: src
+
+concurrency:
+  group: balanced-public-challenge-v1
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    name: prove the public commitment before credential access
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Require the explicit first-attempt trigger
+        run: |
+          set -euo pipefail
+          test '${{ inputs.confirm }}' = 'RUN_BALANCED_PUBLIC_CHALLENGE_V1'
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Prove this is the only v1 challenge dispatch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mapfile -t singleton_runs < <(
+            gh api --method GET --paginate \
+              "repos/$GITHUB_REPOSITORY/actions/runs" \
+              -f event=workflow_dispatch \
+              -f per_page=100 \
+              --jq '.workflow_runs[] | select(.display_title == "claimpromotebench-balanced-public-v1-singleton") | .id'
+          )
+          test "${#singleton_runs[@]}" -eq 1
+          test "${singleton_runs[0]}" = "$GITHUB_RUN_ID"
+
+      - name: Check out the frozen public source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up the hash-locked runtime
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+
+      - name: Install frozen runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Rebuild every public inference input without credentials
+        run: |
+          set -euo pipefail
+          test -z "${OPENCODE_GO_API_KEY:-}"
+          test ! -e v2/balanced-public-challenge/results
+          python scripts/build_v1_dataset.py \
+            --split test \
+            --confirmatory-rekey \
+            --plan configs/balanced-public-challenge-plan.json \
+            --identifier-prefix v1-test-bal \
+            --seed-file configs/balanced-public-challenge-seed.hex \
+            --out work/balanced-preflight/dataset >/dev/null
+          diff -qr \
+            v2/balanced-public-challenge/dataset \
+            work/balanced-preflight/dataset >/dev/null
+          python scripts/build_stronger_model_packet.py \
+            --dataset work/balanced-preflight/dataset \
+            --plan v2/balanced-public-challenge-study-plan.json \
+            --out work/balanced-preflight/prompt-packet.json >/dev/null
+          cmp \
+            v2/balanced-public-challenge/prompt-packet.json \
+            work/balanced-preflight/prompt-packet.json
+          python scripts/validate_stronger_model_study.py \
+            --dataset v2/balanced-public-challenge/dataset \
+            --packet v2/balanced-public-challenge/prompt-packet.json \
+            --plan v2/balanced-public-challenge-study-plan.json >/dev/null
+          echo 'BALANCED_PUBLIC_COMMITMENT_REPRODUCED_WITHOUT_MODEL_CREDENTIALS'
+
+  run:
+    name: one no-retry pass — ${{ matrix.lane }}
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        lane:
+          - opencode-go-qwen3.7-max
+          - opencode-go-deepseek-v4-flash-matched
+    steps:
+      - name: Forbid every workflow rerun before credential injection
+        run: test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Check out the frozen public source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up the hash-locked runtime
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+
+      - name: Install frozen runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Execute all 180 cells once and preserve every terminal outcome
+        env:
+          OPENCODE_GO_API_KEY: ${{ secrets.OPENCODE_GO_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "${OPENCODE_GO_API_KEY:-}"
+          mkdir -p work/balanced/runs work/balanced/analysis
+          python scripts/run_stronger_model_study.py \
+            --dataset v2/balanced-public-challenge/dataset \
+            --packet v2/balanced-public-challenge/prompt-packet.json \
+            --plan v2/balanced-public-challenge-study-plan.json \
+            --lane-id '${{ matrix.lane }}' \
+            --phase full \
+            --frozen-plan-commit "$GITHUB_SHA" \
+            --timeout 600 \
+            --out 'work/balanced/runs/${{ matrix.lane }}-full.jsonl' >/dev/null
+          python scripts/validate_stronger_model_study.py \
+            --dataset v2/balanced-public-challenge/dataset \
+            --packet v2/balanced-public-challenge/prompt-packet.json \
+            --plan v2/balanced-public-challenge-study-plan.json \
+            --run 'work/balanced/runs/${{ matrix.lane }}-full.jsonl' >/dev/null
+          python scripts/analyze_stronger_model_study.py \
+            --dataset v2/balanced-public-challenge/dataset \
+            --packet v2/balanced-public-challenge/prompt-packet.json \
+            --plan v2/balanced-public-challenge-study-plan.json \
+            --run 'work/balanced/runs/${{ matrix.lane }}-full.jsonl' \
+            --out 'work/balanced/analysis/${{ matrix.lane }}-full.json' >/dev/null
+          echo 'BALANCED_PUBLIC_LANE_COMPLETE'
+
+      - name: Reject credentials, account identifiers, and hidden reasoning in durable evidence
+        env:
+          OPENCODE_GO_API_KEY: ${{ secrets.OPENCODE_GO_API_KEY }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          root = Path('work/balanced')
+          key = os.environ['OPENCODE_GO_API_KEY']
+          account = re.compile(
+              r'\buser_(?=[A-Za-z0-9_-]{20,64}\b)'
+              r'(?=[A-Za-z0-9_-]*[A-Z])(?=[A-Za-z0-9_-]*[a-z])'
+              r'(?=[A-Za-z0-9_-]*[0-9])[A-Za-z0-9_-]+\b'
+          )
+          forbidden_fields = {
+              'reasoning_content', 'thought', 'thoughts', 'thinking_content'
+          }
+          for path in root.rglob('*'):
+              if not path.is_file():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              assert key not in text
+              assert account.search(text) is None
+              values = (
+                  [json.loads(line) for line in text.splitlines() if line.strip()]
+                  if path.suffix == '.jsonl'
+                  else [json.loads(text)]
+              )
+              for value in values:
+                  stack = [value]
+                  while stack:
+                      current = stack.pop()
+                      if isinstance(current, dict):
+                          assert not (forbidden_fields & set(current))
+                          if 'provider_response_id' in current:
+                              assert current['provider_response_id'] is None
+                          stack.extend(current.values())
+                      elif isinstance(current, list):
+                          stack.extend(current)
+          print('DURABLE_EVIDENCE_PRIVACY_SCAN_PASS')
+          PY
+
+      - name: Upload the complete lane evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cpb-balanced-public-lane-${{ matrix.lane }}-${{ github.run_id }}
+          path: |
+            work/balanced/runs/${{ matrix.lane }}-full.jsonl*
+            work/balanced/analysis/${{ matrix.lane }}-full.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  aggregate:
+    name: recompute the complete failure-aware report
+    needs: run
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Forbid every workflow rerun
+        run: test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Check out the frozen public source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up the hash-locked runtime
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11.16"
+
+      - name: Install frozen runtime dependencies
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all:
+          -r tools/confirmatory-python311.lock
+
+      - name: Download both complete lane artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: cpb-balanced-public-lane-*-${{ github.run_id }}
+          path: work/balanced/collected
+
+      - name: Validate all 360 cells and recompute the registered metrics
+        run: |
+          set -euo pipefail
+          mapfile -t runs < <(find work/balanced/collected -type f -name '*-full.jsonl' | sort)
+          mapfile -t analyses < <(find work/balanced/collected -type f -name '*-full.json' | sort)
+          test "${#runs[@]}" -eq 2
+          test "${#analyses[@]}" -eq 2
+          validate_args=()
+          analyze_args=()
+          for path in "${runs[@]}"; do
+            validate_args+=(--run "$path")
+            analyze_args+=(--run "$path")
+          done
+          python scripts/validate_stronger_model_study.py \
+            --dataset v2/balanced-public-challenge/dataset \
+            --packet v2/balanced-public-challenge/prompt-packet.json \
+            --plan v2/balanced-public-challenge-study-plan.json \
+            "${validate_args[@]}" >/dev/null
+          python scripts/analyze_balanced_public_challenge.py \
+            --dataset v2/balanced-public-challenge/dataset \
+            --packet v2/balanced-public-challenge/prompt-packet.json \
+            --plan v2/balanced-public-challenge-study-plan.json \
+            "${analyze_args[@]}" \
+            --workflow-run-url "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --workflow-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --out work/balanced/aggregate.json >/dev/null
+          echo 'BALANCED_PUBLIC_360_CELLS_RECOMPUTED'
+
+      - name: Assemble a reviewer-visible evidence directory and receipt
+        run: |
+          set -euo pipefail
+          mkdir -p \
+            work/balanced/reviewer-evidence/dataset \
+            work/balanced/reviewer-evidence/runs \
+            work/balanced/reviewer-evidence/analysis
+          cp -R v2/balanced-public-challenge/dataset/. \
+            work/balanced/reviewer-evidence/dataset/
+          cp v2/balanced-public-challenge/prompt-packet.json \
+            work/balanced/reviewer-evidence/prompt-packet.json
+          cp v2/balanced-public-challenge-study-plan.json \
+            work/balanced/reviewer-evidence/study-plan.json
+          cp work/balanced/aggregate.json \
+            work/balanced/reviewer-evidence/aggregate.json
+          find work/balanced/collected -type f -name '*-full.jsonl' \
+            -exec cp {} work/balanced/reviewer-evidence/runs/ \;
+          find work/balanced/collected -type f -name '*-full.json' \
+            -exec cp {} work/balanced/reviewer-evidence/analysis/ \;
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path('work/balanced/reviewer-evidence')
+          files = {
+              path.relative_to(root).as_posix(): 'sha256:' + hashlib.sha256(path.read_bytes()).hexdigest()
+              for path in sorted(root.rglob('*'))
+              if path.is_file()
+          }
+          receipt = {
+              'schema_version': '1.0.0',
+              'status': 'COMPLETE',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': int(os.environ['GITHUB_RUN_ID']),
+              'workflow_run_attempt': int(os.environ['GITHUB_RUN_ATTEMPT']),
+              'workflow_run_url': (
+                  f"https://github.com/{os.environ['GITHUB_REPOSITORY']}"
+                  f"/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+              ),
+              'files_before_receipt': files,
+          }
+          (root / 'workflow-receipt.json').write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          print('BALANCED_PUBLIC_REVIEWER_EVIDENCE_ASSEMBLED')
+          PY
+
+      - name: Upload complete balanced public challenge evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: claimpromotebench-balanced-public-complete-${{ github.run_id }}
+          path: work/balanced/reviewer-evidence
+          if-no-files-found: error
+          retention-days: 30

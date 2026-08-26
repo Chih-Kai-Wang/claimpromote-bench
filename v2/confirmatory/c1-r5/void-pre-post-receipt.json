@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "status": "VOID_PRE_POST_C0_IMPLEMENTATION_MISMATCH",
+  "study_id": "claimpromotebench-v1-fresh-confirmatory-2026-08-r5",
+  "terminal": true,
+  "voided_at_utc": "2026-08-21T03:31:47Z",
+  "truth_status": "VOID_WITHOUT_MODEL_INFERENCE",
+  "reason": "The frozen r5 C0 required a C1-computed per-lane quota-value bound and a stop before the first application POST when that bound exceeded a lane cap. C1 published no such bound, and the scored runner had no corresponding credential-free pre-POST gate. Selecting an estimator after C1 would be a post-registration method change, so r5 is permanently void rather than repaired or executed.",
+  "registered_contract": {
+    "plan_path": "v2/confirmatory/c1-r5/fresh-confirmatory-study-plan.json",
+    "plan_file_sha256": "sha256:07149cb821319eff3c8bf1d8abfb6010f4efe9f4162cfe418f8292aed1324b72",
+    "qwen_lane_spend_cap_usd": 12.0,
+    "flash_lane_spend_cap_usd": 2.0,
+    "subscription_quota_value_cap_usd": 14.0,
+    "stop_before_first_post_if_c1_bound_exceeds_lane_cap": true
+  },
+  "implementation_audit": {
+    "c1_receipt_path": "v2/confirmatory/c1-r5/confirmatory-c1-receipt.json",
+    "c1_receipt_sha256": "sha256:f87c0075798bf73bdb6db66a0edd1942dd383ba94fe561c0ca116b42e22e9131",
+    "c1_receipt_contains_registered_quota_bound": false,
+    "c1_receipt_contains_budget_gate_result": false,
+    "c1_builder_sha256": "sha256:048d86d3017193cd8e71e38a3ffe35721307c9ec6c28ef2f84abc5e837512d06",
+    "gold_free_runner_sha256": "sha256:fdd625a486b4367dd876c6d2f7560be36443c3e309d1f61fe858d647d069dc30",
+    "scored_workflow_sha256": "sha256:2b9113b5e0defebf4919e923f6112ed46015376d70b58b0cfb1351ac333ede11",
+    "credential_free_preflight_enforces_registered_quota_bound": false,
+    "runner_enforces_registered_quota_bound_before_post_intent": false,
+    "provider_usage_is_available_only_after_response": true,
+    "post_c1_external_estimation_permitted": false
+  },
+  "execution": {
+    "scored_workflow_dispatched": false,
+    "application_post_count": 0,
+    "client_retry_count": 0,
+    "model_calls": 0,
+    "model_inference_evidence": "NONE",
+    "incremental_cash_spend_usd": 0.0,
+    "subscription_quota_consumed": false,
+    "gold_bearing_analysis_dispatched": false,
+    "author_inspection_of_hidden_rows_prompts_or_gold": false,
+    "hidden_rows_prompts_or_gold_released": false
+  },
+  "provenance": {
+    "c0_commit": "69b1e6aa0b5d21efcf05c1396b9cf18595eedadb",
+    "salt_commit": "d58efb6a098645973918414ef5a3df7592cf19f6",
+    "c1_github_run_id": 32442717831,
+    "c1_github_job_id": 96656422788,
+    "c1_github_artifact_id": 9433003270,
+    "c1_public_commit": "d7a14727935fc72f938c645c15dfc54212ed5537",
+    "c1_commitment_sha256": "sha256:c7fffa601e5b03aca1961301038c6766071c9e85ca7ed44850f2f3711029090a",
+    "dataset_manifest_sha256": "sha256:3528cf2c0c8595ea63cf4c8bf090c7f111c036d1b4829a4758e2f837bd45580c",
+    "packet_sha256": "sha256:ff7bb03af863f40cce0c83d21afbbe3dc21440f3ec40e35237477ace751e22ad",
+    "schedule_sha256": "sha256:1116339cf4f81cf44ecd8bf5af42df920780eac13c957dcbf1dcad07a757aca3"
+  },
+  "disposition": {
+    "r5_may_be_resumed": false,
+    "r5_may_be_reported_as_model_failure_or_zero_accuracy": false,
+    "r5_prompt_hashes_may_be_recovered_without_model_calls_for_future_novelty_audit": true,
+    "next_permitted_confirmatory_version": "claimpromotebench-v1-fresh-confirmatory-2026-08-r6",
+    "new_c0_salt_future_beacon_seed_dataset_and_c1_required": true
+  },
+  "independent_strict_review": {
+    "verdict": "R5_VOID_R6_REQUIRED",
+    "confidence": 0.98
+  },
+  "void_receipt_sha256": "sha256:9352c8272a026c47b64d802cee3bcd93cefee033e1778d0a922ec63188359acf"
+}
