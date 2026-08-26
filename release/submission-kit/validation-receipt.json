@@ -2,7 +2,7 @@
   "anonymous_bundle": {
     "manifest_file_count": 967,
     "manifest_plus_self_file_count": 968,
-    "manifest_sha256": "ea8c7c72bc8bb4c009bed1c1f108cb7d0ddf238e293fe5b3452adcc4ba324e12",
+    "manifest_sha256": "924e9e894e0bbfaf102f2250449fdfad676f0c4503b036349730ff9dbe41cb45",
     "privacy_scope": {
       "agent_governance_source_evidence_included": true,
       "balanced_public_challenge_hidden_reasoning_included": false,
@@ -70,24 +70,24 @@
   },
   "artifacts": {
     "arxiv.pdf": {
-      "bytes": 404683,
-      "sha256": "745c1b6008c6cdb451832621f6bed55474c06d4bcb8045a4006451b135fbce73"
+      "bytes": 406113,
+      "sha256": "23ec52ae9eca3c1f43825e4c482c28b1846d0b0a8111d29a96ebbbeb1cfedb4d"
     },
     "claimpromotebench-anonymous-review-bundle.zip": {
-      "bytes": 2914830,
-      "sha256": "d42657ba3fcddaa45a812cd8b4b4102883785d05c80407b748ce7724db1555ff"
+      "bytes": 2915112,
+      "sha256": "993ae8db14547e7dcde38241874c9924403affc02d1298217e3fdd08eabcb9cd"
     },
     "claimpromotebench-arxiv-source.zip": {
-      "bytes": 27287,
-      "sha256": "2148ee181d20930a4ddcf849cfbb2f43589a3ec820652f1c044f457b6d792906"
+      "bytes": 27460,
+      "sha256": "ea5ea1aa89f7503d35afe1153e9171a6c8cd46234191ccde0a802f0498f1b981"
     },
     "claimpromotebench-iclr2027-source.zip": {
-      "bytes": 54327,
-      "sha256": "889ea785d468bad733a82e3d99be94dab67ff73e3f116625e3e02a469cbfa354"
+      "bytes": 54500,
+      "sha256": "db349b9fcb3bd42aa1fcb11fe0462fb1bc2e617286293bc70edb02de9aa386ac"
     },
     "iclr2027.pdf": {
-      "bytes": 273490,
-      "sha256": "4bd7f70ac7e0e220ffa3fb8db6f16310915491f832faa8775ea3db83418e9b7d"
+      "bytes": 273885,
+      "sha256": "c48b21fe2ec723425cd15cfb164e791eeb2a384d71c52107b2b8050144336222"
     }
   },
   "checks": {
@@ -126,16 +126,17 @@
         "all_embedded": true,
         "font_count": 27,
         "fonts": [
-          "/AGNEIY+CMR7",
           "/BSTKNX+MSBM10",
           "/CLROKM+CMMI8",
           "/EUWOLL+CMBX9",
+          "/EXSQAR+CMR10",
           "/GBPAZZ+CMBX8",
+          "/GUWOKV+CMR7",
           "/IEICJG+CMSY10",
           "/JOLSUR+CMR17",
           "/KSMIOQ+CMBX10",
+          "/LBJETQ+CMR8",
           "/LQBNTO+CMR12",
-          "/NJCKEG+CMR10",
           "/NMBGRK+CMMI10",
           "/NNZZQI+CMTI10",
           "/POFRLQ+CMCSC10",
@@ -146,10 +147,9 @@
           "/QQOUOM+CMMI7",
           "/QXVNND+CMSY8",
           "/TFVNFO+CMR6",
-          "/TMTQIW+CMR9",
           "/UGPVTL+CMTT10",
           "/WATVRQ+CMTT8",
-          "/XCHAEX+CMR8",
+          "/YNTFXT+CMR9",
           "/YTNBGM+CMBX12",
           "/ZPGVCH+CMEX10",
           "/ZXILHJ+CMR5"

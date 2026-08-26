@@ -444,7 +444,7 @@ HY3 & 18/20 & 18/20 & 8/10 & 4/6 & 4/4 & 18/18; 8/8 \\
 Kimi K2.7 Code & 18/20 & 18/20 & 8/10 & 5/6 & 3/4 & 18/18; 8/8 \\
 MiMo 2.5 Pro & 19/20 & 18/20 & 9/10 & 5/6 & 4/4 & 18/19; 9/9 \\
 MiniMax 2.7 & 16/20 & 15/20 & 5/10 & 1/6 & 4/4 & 15/16; 5/6 \\
-OX Alpha & 12/20 & 12/20 & 4/10 & 1/6 & 3/4 & 12/12; 4/4 \\
+GLM 5.3 Flash (OX) & 12/20 & 12/20 & 4/10 & 1/6 & 3/4 & 12/12; 4/4 \\
 Qwen 3.7 Plus & 17/20 & 15/20 & 6/10 & 2/6 & 4/4 & 15/17; 6/8 \\
 \bottomrule
 \end{tabular}
@@ -613,8 +613,9 @@ state, and time; opaque internals preclude model-family rankings and provider-in
 The request-cap routes were selected after a screen for length failures and receive one call per
 cell. The cap may jointly constrain hidden reasoning and visible output. The same five
 quota-rejected IDs appear in both primary conditions per route, but 13 other transport failures are
-not balanced. Prompt controls do not isolate policy use. OX Alpha's model identity and data terms
-were undisclosed.
+not balanced. Prompt controls do not isolate policy use. Z.ai disclosed after execution that OX
+Alpha was GLM-5.3-Flash~\cite{zai2026glm53flash}; exact checkpoint, serving state, and data terms
+remain opaque, so this frozen route remains separate from GLM 5.3.
 
 A historical Flash lane is excluded from model evidence because all 300 calls returned HTTP 401
 before model output; later routes establish only their own executability. The public challenge
@@ -945,7 +946,7 @@ External HY3, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
 External Kimi K2.7, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
 External MiMo 2.5, rep. 1 & 13/14 & 2/3 & 1/1 & 2/2 \\
 External MiniMax 2.7, rep. 1 & 11/14 & 1/3 & 1/1 & 2/2 \\
-External OX Alpha, rep. 1 & 10/14 & 1/3 & 0/1 & 1/2 \\
+External GLM 5.3 Flash (OX), rep. 1 & 10/14 & 1/3 & 0/1 & 1/2 \\
 External Qwen 3.7+, rep. 1 & 11/14 & 2/3 & 0/1 & 2/2 \\
 Non-\allow{} GLM, 3 reps. & -- & 15/18 & 12/12 & 17/18 \\
 Non-\allow{} HY3, 3 reps. & -- & 11/18 & 12/12 & 13/18 \\

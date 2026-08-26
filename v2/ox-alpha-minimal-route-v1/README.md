@@ -3,8 +3,11 @@
 This auxiliary study replays the preexisting ten-pair minimum policy-migration witness on the
 time-stamped OpenCode Go route labeled `ox-alpha-free`. The route was selected after the earlier
 ClaimPromoteBench results were known, but the plan, request bodies, item order, failure rule, and
-strict pass criterion were committed before the first Ox Alpha call. Ox Alpha is a stealth label;
-the study makes no claim about its developer, weights, architecture, or model family.
+strict pass criterion were committed before the first Ox Alpha call. At execution, Ox Alpha was a
+stealth label and the frozen study made no claim about its developer, weights, architecture, or
+model family. On 2026-08-26, Z.ai disclosed that GLM-5.3-Flash had been tested anonymously as
+`ox-alpha` on OpenCode and OpenRouter. This is a post-hoc identity annotation; the frozen route,
+records, status fields, metrics, and interpretation remain unchanged.
 
 The run made 20 application requests with zero client retries and no incremental cash cost. It
 returned 13 valid decisions, all of which had the correct policy action. Six pairs were complete and
@@ -24,4 +27,5 @@ response identifiers, hidden reasoning, credentials, or account identity.
 
 This 20-item replay is a structural route smoke test with one context per reachable edge. It does
 not estimate temporal reliability, production error rates, policy-family generalization, or a
-causal model or provider effect.
+causal model or provider effect. It must not be merged with either the separate GLM 5.3 route or a
+new call to the post-release `glm-5.3-flash` endpoint.

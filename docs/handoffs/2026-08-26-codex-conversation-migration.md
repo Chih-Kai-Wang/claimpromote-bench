@@ -159,6 +159,10 @@ ready-for-review transition has been recorded.
   breadth study was retained as route/quota evidence and not used for model-family ranking.
 - Tested a free Ox Alpha route as a bounded route smoke study; it was not elevated into a broad
   capability claim.
+- On 2026-08-27, recorded Z.ai's official 2026-08-26 disclosure that GLM-5.3-Flash had been tested
+  anonymously as `ox-alpha` on OpenCode and OpenRouter. The paper now uses a post-hoc identity
+  annotation, preserves all frozen route IDs and records, keeps OX separate from GLM 5.3, and does
+  not rerun either one-shot study.
 
 ### 8. External model-facing policy study
 

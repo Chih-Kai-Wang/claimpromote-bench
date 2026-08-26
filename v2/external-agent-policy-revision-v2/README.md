@@ -39,3 +39,12 @@ pairs. These are descriptive route-stack observations on ten frozen author-mappe
 public result files omit prompts, raw responses, provider response identifiers, hidden reasoning,
 credentials, and account identifiers; `privacy-receipt.json` and the offline validator bind this
 claim to the released bytes.
+
+## Post-hoc route identity disclosure
+
+On 2026-08-26, after this schedule had completed, Z.ai disclosed that GLM-5.3-Flash had been tested
+anonymously as `ox-alpha` on OpenCode and OpenRouter in its official release announcement:
+<https://z.ai/blog/glm-5.3-flash>. The OX rows are therefore labeled GLM-5.3-Flash (OX) in the
+current manuscript. This does not alter the exact requested route ID, historical disclosure status,
+provider or serving-state boundary, frozen records, or scores. The OX condition remains separate
+from the study's GLM 5.3 route and was not rerun.

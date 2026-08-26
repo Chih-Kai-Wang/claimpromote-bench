@@ -10,6 +10,11 @@ explicit author confirmation. See `docs/submissions/2026-08-25-iclr2027-openrevi
 original private submission receipt and
 `docs/submissions/2026-08-26-iclr2027-openreview-revision.md` for the revision receipt.
 
+A 2026-08-27 local candidate adds only the post-hoc GLM-5.3-Flash/Ox Alpha identity annotation to
+the manuscript and supplementary provenance. Its title, abstract, empirical records, and scores
+are unchanged, and it has not been uploaded to OpenReview. See
+`docs/submissions/2026-08-27-iclr2027-ox-alpha-update-preview.md`.
+
 ## ICLR 2027 title
 
 ```text
@@ -63,6 +68,11 @@ Joins finite action-changing differences between caller-supplied policy evaluato
 ```
 
 ## Main empirical findings
+
+- Z.ai disclosed on 2026-08-26 that GLM-5.3-Flash had been tested anonymously as `ox-alpha` on
+  OpenCode and OpenRouter. Current paper labels annotate the frozen OX route accordingly while
+  keeping it separate from the distinct GLM 5.3 route. No hosted call was rerun, and the original
+  route IDs, historical status fields, records, and scores remain unchanged.
 
 - Two public `AGENTS.md` revisions contribute ten author-mapped pairs per replication: six changed
   pairs and four stable controls. Upstream maintainers authored the policy text; the study authors
