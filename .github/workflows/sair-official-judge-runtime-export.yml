@@ -1,0 +1,79 @@
+name: SAIR official Judge runtime export
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sair-official-judge-runtime-export.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  OFFICIAL_COMMIT: '2848228ff490422442878fd6f5abaf4cfa95257d'
+
+jobs:
+  build-and-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out pinned official evaluator
+        uses: actions/checkout@v4
+        with:
+          repository: SAIRcompetition/equational-theories-lean-stage2
+          ref: ${{ env.OFFICIAL_COMMIT }}
+          path: official
+
+      - name: Build pinned official Judge
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C official rev-parse HEAD)" = "$OFFICIAL_COMMIT"
+          (cd official && SKIP_DOCKER=1 bash scripts/setup.sh)
+          source official/.env.judge
+          lean --version
+          lake --version
+
+      - name: Package relocatable runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime/home
+          cp -a official runtime/official
+          cp -a "$HOME/.elan" runtime/home/.elan
+          rm -rf runtime/official/.git
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          root = Path('runtime')
+          manifest = {
+              'record_type': 'sair_official_judge_runtime_export',
+              'official_commit': os.environ['OFFICIAL_COMMIT'],
+              'lean_toolchain': Path('official/lean-toolchain').read_text(encoding='utf-8').strip(),
+              'runtime_bytes_uncompressed': sum(p.stat().st_size for p in root.rglob('*') if p.is_file()),
+          }
+          Path('runtime-manifest.json').write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+          tar -C runtime -czf sair-official-judge-runtime-${OFFICIAL_COMMIT}.tar.gz .
+          sha256sum sair-official-judge-runtime-${OFFICIAL_COMMIT}.tar.gz > runtime-sha256.txt
+          du -h sair-official-judge-runtime-${OFFICIAL_COMMIT}.tar.gz
+
+      - name: Upload official Judge runtime
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-official-judge-runtime-${{ env.OFFICIAL_COMMIT }}
+          path: |
+            sair-official-judge-runtime-${{ env.OFFICIAL_COMMIT }}.tar.gz
+            runtime-manifest.json
+            runtime-sha256.txt
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1

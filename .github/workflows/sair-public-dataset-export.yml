@@ -1,0 +1,81 @@
+name: SAIR public dataset export
+
+on:
+  push:
+    branches:
+      - agent/sair-public-dataset-export
+    paths:
+      - '.github/workflows/sair-public-dataset-export.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sair-public-dataset-export.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  OFFICIAL_COMMIT: '2848228ff490422442878fd6f5abaf4cfa95257d'
+
+jobs:
+  export-public-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out pinned official evaluator
+        uses: actions/checkout@v4
+        with:
+          repository: SAIRcompetition/equational-theories-lean-stage2
+          ref: ${{ env.OFFICIAL_COMMIT }}
+          path: official
+
+      - name: Verify and package released public problems
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C official rev-parse HEAD)" = "$OFFICIAL_COMMIT"
+          test -d official/examples/problems
+          find official/examples/problems -maxdepth 1 -type f -printf '%f\n' | sort > public-problems-files.txt
+          tar -C official -czf sair-public-problems-${OFFICIAL_COMMIT}.tar.gz examples/problems
+          sha256sum sair-public-problems-${OFFICIAL_COMMIT}.tar.gz > public-problems-sha256.txt
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path('official/examples/problems')
+          files = []
+          for path in sorted(root.iterdir()):
+              if not path.is_file():
+                  continue
+              data = path.read_bytes()
+              files.append({
+                  'path': str(path.relative_to(Path('official'))),
+                  'bytes': len(data),
+                  'sha256': hashlib.sha256(data).hexdigest(),
+                  'lines': len(data.splitlines()),
+              })
+          manifest = {
+              'record_type': 'sair_released_public_problem_export',
+              'official_commit': os.environ['OFFICIAL_COMMIT'],
+              'files': files,
+          }
+          Path('public-problems-manifest.json').write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Upload public data artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sair-public-problems-${{ env.OFFICIAL_COMMIT }}
+          path: |
+            sair-public-problems-${{ env.OFFICIAL_COMMIT }}.tar.gz
+            public-problems-manifest.json
+            public-problems-files.txt
+            public-problems-sha256.txt
+          if-no-files-found: error
+          retention-days: 3
