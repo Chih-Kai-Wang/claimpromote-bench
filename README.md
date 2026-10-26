@@ -2,9 +2,18 @@
 
 **Policy-Governed Evidence-State Transitions for Mathematical Research Agents**
 
-> **ALPHA RESEARCH SCAFFOLD — MODEL EXPERIMENTS: PENDING**  
-> No quantitative model result, technical report, completed external review, or independent
-> reproduction is claimed in this repository yet.
+> **MAIN-BRANCH ALPHA SNAPSHOT — MODEL EXPERIMENTS IN THIS SNAPSHOT: PENDING**
+>
+> The alpha source tree documented below contains no quantitative model result, technical report,
+> completed external review, or independent reproduction.
+
+Later research and submission records live in the still-unmerged draft
+[PR #20](https://github.com/f0909172434/claimpromote-bench/pull/20). Its current research scope is
+paired regression tests for versioned agent policies. The branch contains OpenReview submission
+and revision receipts; it also contains a later upload preview that is not a submission receipt.
+The `PENDING` labels below describe this alpha snapshot, not the complete research program.
+See [Repository and submission status](docs/REPOSITORY_STATUS.md) for dated, commit-bound pointers
+and the separate CI and release boundaries. No later study or frozen result is imported here.
 
 ClaimPromoteBench asks a narrow question: can a machine-checkable evidence ledger and a
 versioned deterministic transition gate reduce policy-invalid claim promotion while
@@ -19,7 +28,7 @@ exact-grid recomputation, pinned Lean formal-artifact execution, and blinded hum
 infrastructure before any model experiment. Model execution, model consistency measurement,
 and real independent review remain pending.
 
-## Current alpha
+## Alpha snapshot on main
 
 | Artifact | Checkable status |
 |---|---|
