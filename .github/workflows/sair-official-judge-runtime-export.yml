@@ -67,7 +67,7 @@ jobs:
           du -h sair-official-judge-runtime-${OFFICIAL_COMMIT}.tar.gz
 
       - name: Upload official Judge runtime
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-judge-runtime-${{ env.OFFICIAL_COMMIT }}
           path: |
