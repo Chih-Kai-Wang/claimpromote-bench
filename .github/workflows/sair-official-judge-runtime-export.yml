@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - name: Check out pinned official evaluator
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: SAIRcompetition/equational-theories-lean-stage2
           ref: ${{ env.OFFICIAL_COMMIT }}
