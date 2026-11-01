@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Download hash-bound runtime artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.SOURCE_ARTIFACT }}
           path: source
