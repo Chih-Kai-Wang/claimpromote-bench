@@ -56,7 +56,7 @@ jobs:
           find parts -maxdepth 1 -type f -printf '%f %s\n' | sort
 
       - name: Upload toolchain part 00
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-part-00
           path: parts/toolchain.part.00
@@ -64,7 +64,7 @@ jobs:
           compression-level: 0
           retention-days: 1
       - name: Upload toolchain part 01
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-part-01
           path: parts/toolchain.part.01
@@ -72,7 +72,7 @@ jobs:
           compression-level: 0
           retention-days: 1
       - name: Upload toolchain part 02
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-part-02
           path: parts/toolchain.part.02
@@ -80,7 +80,7 @@ jobs:
           compression-level: 0
           retention-days: 1
       - name: Upload toolchain part 03
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-part-03
           path: parts/toolchain.part.03
@@ -88,7 +88,7 @@ jobs:
           compression-level: 0
           retention-days: 1
       - name: Upload toolchain part 04
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-part-04
           path: parts/toolchain.part.04
@@ -96,7 +96,7 @@ jobs:
           compression-level: 0
           retention-days: 1
       - name: Upload toolchain part 05
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-part-05
           path: parts/toolchain.part.05
@@ -104,7 +104,7 @@ jobs:
           compression-level: 0
           retention-days: 1
       - name: Upload metadata
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-toolchain-runtime-metadata
           path: |

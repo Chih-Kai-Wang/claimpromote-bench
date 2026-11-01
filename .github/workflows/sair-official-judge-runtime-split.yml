@@ -44,63 +44,63 @@ jobs:
           sha256sum "source/$ARCHIVE" > runtime-archive-sha256.txt
 
       - name: Upload runtime part 00
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-00
           path: parts/runtime.part.00
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 01
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-01
           path: parts/runtime.part.01
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 02
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-02
           path: parts/runtime.part.02
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 03
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-03
           path: parts/runtime.part.03
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 04
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-04
           path: parts/runtime.part.04
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 05
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-05
           path: parts/runtime.part.05
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 06
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-06
           path: parts/runtime.part.06
           compression-level: 0
           retention-days: 1
       - name: Upload runtime part 07
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-part-07
           path: parts/runtime.part.07
           compression-level: 0
           retention-days: 1
       - name: Upload split metadata
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sair-official-runtime-split-metadata
           path: |
