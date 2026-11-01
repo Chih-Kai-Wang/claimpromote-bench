@@ -94,7 +94,7 @@ jobs:
       - name: Install runtime dependencies
         run: python -m pip install -e .
       - name: Build pinned Lean environment
-        uses: leanprover/lean-action@96e06131c0e9943c780388fd166f55d1e2fa0433
+        uses: leanprover/lean-action@bd5cb0b830eda614ce3fc186d8429b9409b16c47
         with:
           lake-package-directory: data/alpha
           auto-config: false
