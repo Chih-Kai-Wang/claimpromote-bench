@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/review-packet-manifest.schema.json",
+  "$id": "https://github.com/Chih-Kai-Wang/claimpromote-bench/schemas/review-packet-manifest.schema.json",
   "title": "ReviewPacketManifest",
   "$defs": {
     "sha256": {

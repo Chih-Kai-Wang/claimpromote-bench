@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/transition-policy.schema.json",
+  "$id": "https://github.com/Chih-Kai-Wang/claimpromote-bench/schemas/transition-policy.schema.json",
   "title": "ClaimPromoteBenchTransitionPolicy",
   "$defs": {
     "reason": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},

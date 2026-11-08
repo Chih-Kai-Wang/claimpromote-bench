@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/benchmark-input.schema.json",
+  "$id": "https://github.com/Chih-Kai-Wang/claimpromote-bench/schemas/benchmark-input.schema.json",
   "title": "BenchmarkInput",
   "$defs": {
     "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/f0909172434/claimpromote-bench/schemas/evidence.schema.json",
+  "$id": "https://github.com/Chih-Kai-Wang/claimpromote-bench/schemas/evidence.schema.json",
   "title": "Evidence",
   "$defs": {
     "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
