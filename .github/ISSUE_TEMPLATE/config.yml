@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Model run contribution guide
-    url: https://github.com/f0909172434/claimpromote-bench/blob/main/CONTRIBUTING_RUNS.md
+    url: https://github.com/Chih-Kai-Wang/claimpromote-bench/blob/main/CONTRIBUTING_RUNS.md
     about: Read the immutable run-data contract before offering compute or submitting results.

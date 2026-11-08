@@ -7,7 +7,7 @@
 > completed external review or independent reproduction.
 
 Later research and submission records live in draft
-[PR #20](https://github.com/f0909172434/claimpromote-bench/pull/20), which has not been merged. Its
+[PR #20](https://github.com/Chih-Kai-Wang/claimpromote-bench/pull/20), which has not been merged. Its
 current research scope is paired regression tests for versioned agent policies. The branch contains
 OpenReview submission and revision receipts. It also contains a later upload preview, which is not a
 submission receipt. The `PENDING` labels in this README describe the alpha snapshot only, not the

@@ -43,8 +43,8 @@ cpb-review-report = "claimpromotebench.review_analysis:main"
 cpb-validate-contribution = "claimpromotebench.contributions:main"
 
 [project.urls]
-Repository = "https://github.com/f0909172434/claimpromote-bench"
-Issues = "https://github.com/f0909172434/claimpromote-bench/issues"
+Repository = "https://github.com/Chih-Kai-Wang/claimpromote-bench"
+Issues = "https://github.com/Chih-Kai-Wang/claimpromote-bench/issues"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
